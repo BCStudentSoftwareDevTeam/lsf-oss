@@ -1,5 +1,4 @@
-'''The purpose of this file is to setup the virtual environment
-   In order to run the app you must use the command "source setup.sh"'''
+
 
 # Establish variables for specific versions of libraries
 FLASK_VERSION="${FLASK_VERSION:-0.12.2}"                  #0.12.2
@@ -13,17 +12,15 @@ MYSQLPYTHON_VERSION="${MYSQLPYTHON_VERSION=-1.2.5}"   #1.2.5
 PYDNS="${PYDNS:-2.3.6}"                                   #2.3.6
 
 
-# Check for virtualenv
-command -v virtualenv >/dev/null 2>&1 || {
-    echo >&2 "setup.sh requires 'virtualenv' but it is not installed";
-    exit 1;
-}
-
-# Check for pip
-command -v pip >/dev/null 2>&1 || {
- echo >&2 "source.sh requires 'pip' but it's not installed.";
- exit 1;
-}
+# # Check for virtualenv
+# command -v virtualenv >/dev/null 2>&1 || {
+#     echo >&2 "setup.sh requires 'virtualenv' but it is not installed";
+# }
+#
+# # Check for pip
+# command -v pip3 >/dev/null 2>&1 || {
+#  echo >&2 "source.sh requires 'pip' but it's not installed.";
+# }
 
 # Create the data directory if it doesn't exist
 mkdir -p data
@@ -36,44 +33,45 @@ fi
 
 . venv/bin/activate
 
-# upgrade pip
-pip install --upgrade pip
+
+# upgrade pip #Try sudo -H if it doesnt work
+pip3 install --upgrade pip
 
 #install libraries needed for software
 
-pip install "flask==$FLASK_VERSION"
+pip3 install "flask==$FLASK_VERSION"
 # http://flask.pocoo.org/
 
-pip install "peewee==$PEEWEE_VERSION"
+pip3 install "peewee==$PEEWEE_VERSION"
 # http://docs.peewee-orm.com/en/latest/
 
-pip install "flask-admin==$FLASK_ADMIN_VERSION"
+pip3 install "flask-admin==$FLASK_ADMIN_VERSION"
 # https://flask-admin.readthedocs.io/en/latest/
 
-pip install "wtf-peewee==$WTF_PEEWEE_VERSION"
+pip3 install "wtf-peewee==$WTF_PEEWEE_VERSION"
 # https://github.com/coleifer/wtf-peewee
 
-pip install "XlsxWriter==$XLSXWRITER_VERSION"
+pip3 install "XlsxWriter==$XLSXWRITER_VERSION"
 
-pip install "pyyaml==$PYAML_VERSION"
+pip3 install "pyyaml==$PYAML_VERSION"
 
-pip install "email_validator==$EMAIL_VERSION"
+pip3 install "email_validator==$EMAIL_VERSION"
 
-pip install "pyDNS==$PYDNS"
+pip3 install "pyDNS==$PYDNS"
 
-pip install "MySQL-python" #==$MYSQLPYTHON_VERSION"
+pip3 install "MySQL-python" #==$MYSQLPYTHON_VERSION"
 
-pip install "pymysql"
+pip3 install "pymysql"
 
-pip install "flask-admin==$FLASK_ADMIN_VERSION"
-pip install "wtf-peewee==$WTF_PEEWEE_VERSION"
-pip install "flask_login==$FLASK_LOGIN_VERSION"
-pip install git+https://github.com/memo330179/migrant-cli.git
-pip install --upgrade setuptools
-pip install flask-mysql
-pip install --upgrade pip enum34
+pip3 install "flask-admin==$FLASK_ADMIN_VERSION"
+pip3 install "wtf-peewee==$WTF_PEEWEE_VERSION"
+pip3 install "flask_login==$FLASK_LOGIN_VERSION"
+pip3 install git+https://github.com/memo330179/migrant-cli.git
+pip3 install --upgrade setuptools
+pip3 install flask-mysql
+pip3 install --upgrade pip3 enum34
 
-pip install git+https://github.com/mzdaniel/loadconfig
+pip3 install git+https://github.com/mzdaniel/loadconfig
 
-pip install mysql-connector
+pip3 install mysql-connector
  ##FIX ME: ADD UPDATE_SCHEMA PLS ##
