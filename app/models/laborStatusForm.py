@@ -6,18 +6,19 @@ from app.models.util import *
 
 class laborStatusForm (baseModel):
     formID                      = PrimaryKeyField() #I THINK this is the primary key
-    primarySupervisor           = Charfield()
-    createdDate                 = CharField()
-    jobType                     = CharField()
-    supervisee                  = CharField()#is this the student? can we change it to....student?
-    supervisor                  = CharField() #how is this different from primary supervisor? is this strictly for secondary?
-    creator                     = CharField()
     term                        = CharField()
+    supervisee                  = CharField()#is this the student? can we change it to....student?
+    primarySupervisor           = Charfield()
+    department                  = Charfield()
+    supervisor                  = CharField() #how is this different from primary supervisor? is this strictly for secondary?
+    jobType                     = CharField()
     position                    = CharField()
     hours                       = CharField()#do we need a separate for per week for regular terms and total for summer???
     startDate                   = CharField()
     endDate                     = CharField()
     supervisorNotes             = CharField()
+    creator                     = CharField()
+    createdDate                 = CharField()
 
     def __str__(self):
         return str(self.formID)
@@ -41,11 +42,11 @@ def select_single_laborStatusForm(self, formID):
 def insert(self, formID, primarySupervisor, createdDate, jobType, supervisee, supervisor,
         creator, term, position, hours, startDate, endDate, supervisorNotes):
         try:
-            laborStatusForm = laborStatusForm(formID = formID, primarySupervisor = primarySupervisor,createdDate = createdDate, jobType = jobType,
-                                            supervisee = supervisee, supervisor = supervisor, creator = creator, term = term, position = position,
-                                            hours = hours, startDate = startDate, endDate = endDate, supervisorNotes = supervisorNotes)
+            laborStatusForm = laborStatusForm(formID = formID, term = term, supervisee = supervisee, primarySupervisor = primarySupervisor,
+                                            department = department, supervisor = supervisor, jobType = jobType, position = position,
+                                            hours = hours, startDate = startDate, endDate = endDate, supervisorNotes = supervisorNotes,
+                                            creator = creator,  createdDate = createdDate)
             laborStatusForm.save()
             return laborStatusForm
         except Exception as e:
              return e
-        return False
