@@ -11,13 +11,15 @@ class laborStatusForm (baseModel):
     supervisee                  = CharField() #is this the student? can we change it to....student?lmao
     primarySupervisor           = Charfield()
     department                  = Charfield()
-    supervisor                  = CharField() #how is this different from primary supervisor? is this strictly for secondary? this field should reflect that (secondarySupervisor)
+    supervisor                  = CharField() #how is this different from primary supervisor?
+                                            #is this strictly for secondary? this field should reflect that (secondarySupervisor)
+                                            #if it is just for secodary supervisor, this should be null=True
     jobType                     = CharField()
     position                    = CharField()
     hours                       = CharField() #do we need a separate for per week for regular terms and total for summer??? Eg weeklyHours and totalHours?
     startDate                   = CharField()
     endDate                     = CharField()
-    supervisorNotes             = CharField()
+    supervisorNotes             = CharField(null=True) #null=True allows saving of null in db, and a supervisor may not always have notes
     creator                     = CharField()
     createdDate                 = CharField()
 
@@ -41,7 +43,7 @@ def select_single_laborStatusForm(self, formID):
       return False
 
 def insert_laborstatusForm(self, formID, primarySupervisor, createdDate, jobType, supervisee, supervisor,
-        creator, term, position, hours, startDate, endDate, supervisorNotes):
+                            creator, term, position, hours, startDate, endDate, supervisorNotes):
         try:
             laborStatusForm = laborStatusForm(formID = formID, term = term, supervisee = supervisee, primarySupervisor = primarySupervisor,
                                             department = department, supervisor = supervisor, jobType = jobType, position = position,
