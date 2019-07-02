@@ -10,7 +10,7 @@ class student (baseModel):
     email                           = CharField()
     lastSupervisorUsername          = ForeignKeyField(user)
     #Do we need any more infor about past labor supervisor?
-    #Any more info about student?? studata.cs has pidm, last_sup_pidm, id but i assume id is bnumber...)
+    #Any more info about student?? studata.cs has: pidm, last_sup_pidm, and id, but i assume id is bnumber...)
     def __str__(self):
         return str(self.bNumber)
 
