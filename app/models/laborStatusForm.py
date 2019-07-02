@@ -22,7 +22,7 @@ class laborStatusForm (baseModel):
     supervisorNotes             = CharField(null=True) #null=True allows saving of null in db, and a supervisor may not always have notes
     creator                     = CharField()
     createdDate                 = CharField()
-    laborDepartmentNotes        = Charfield()#delete if redundant, but i think we need two spots for notes now
+    laborDepartmentNotes        = Charfield(null=True)#delete if redundant, but i think we need two spots for notes now
 
     def __str__(self):
         return str(self.formID)
@@ -44,12 +44,12 @@ def select_single_laborStatusForm(self, formID):
       return False
 
 def insert_laborstatusForm(self, formID, primarySupervisor, createdDate, jobType, supervisee, supervisor,
-                            creator, term, position, hours, startDate, endDate, supervisorNotes):
+                            creator, term, position, hours, startDate, endDate, supervisorNotes, laborDepartmentNotes):
         try:
             laborStatusForm = laborStatusForm(formID = formID, term = term, supervisee = supervisee, primarySupervisor = primarySupervisor,
                                             department = department, supervisor = supervisor, jobType = jobType, position = position,
                                             hours = hours, startDate = startDate, endDate = endDate, supervisorNotes = supervisorNotes,
-                                            creator = creator,  createdDate = createdDate)
+                                            creator = creator,  createdDate = createdDate, laborDepartmentNotes = laborDepartmentNotes)
             laborStatusForm.save()
             return laborStatusForm
         except Exception as e:
