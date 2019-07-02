@@ -22,6 +22,7 @@ class laborStatusForm (baseModel):
     supervisorNotes             = CharField(null=True) #null=True allows saving of null in db, and a supervisor may not always have notes
     creator                     = CharField()
     createdDate                 = CharField()
+    laborDepartmentNotes        = Charfield()#delete if redundant, but i think we need two spots for notes now
 
     def __str__(self):
         return str(self.formID)
