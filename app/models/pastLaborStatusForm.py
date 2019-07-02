@@ -31,3 +31,23 @@ class pastLaborStatusForm (baseModel):
     #Department account
     #WLS
     #Positionc (i think this is a typo? it was in LSF.cs and PLSF.cs)
+    def __str__(self):
+        return str(self.formID)
+
+#Queries as helper functions
+####FIX ME: these are currently written as if they were in a class. FIx them to work with the laborStatusForm class
+
+def select_all_pastLaborStatusForms(self):
+    try:
+        pastLaborStatusForms = pastLaborStatusForm.select()
+        return pastLaborStatusForms
+    except Exception as e:
+      return False
+
+def select_single_pastLaborStatusForm(self, formID):
+    try:
+      pastLaborStatusForm = pastLaborStatusForm.get(pastlaborStatusForm.formID == formID)
+      return pastlaborStatusForm
+    except Exception as e:
+      print ("select_single_pastLaborStatusForm",e)
+      return False

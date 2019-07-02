@@ -10,7 +10,7 @@ class user (baseModel):
     isAdmin                     = BooleanField(default=False)
 
     def __str__(self):
-        return self.username
+        return str(self.username)
 
 #Queries as helper functions to user class
 ####FIX ME: these are currently written as if they were in a class. FIx them to work with the laborStatusForm class
@@ -45,5 +45,5 @@ def insert_user(self):
         return True
       except Exception as e:
         # Log Exception
-        print e
+        print ("insert_user",e)
     return False
