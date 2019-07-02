@@ -1,3 +1,4 @@
+#Modeled after Form.py in Advancement Office
 from app.models.util import *
 #Any foreign keys
 #Any other imports
@@ -34,12 +35,12 @@ def select_all_laborStatusForms(self):
 def select_single_laborStatusForm(self, formID):
     try:
       laborStatusForm = laborStatusForm.get(laborStatusForm.formID == formID)
-      return form
+      return laborStatusForm
     except Exception as e:
-      print ("select_single",e)
+      print ("select_single_laborStatusForm",e)
       return False
 
-def insert(self, formID, primarySupervisor, createdDate, jobType, supervisee, supervisor,
+def insert_laborstatusForm(self, formID, primarySupervisor, createdDate, jobType, supervisee, supervisor,
         creator, term, position, hours, startDate, endDate, supervisorNotes):
         try:
             laborStatusForm = laborStatusForm(formID = formID, term = term, supervisee = supervisee, primarySupervisor = primarySupervisor,
