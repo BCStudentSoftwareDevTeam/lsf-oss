@@ -46,12 +46,12 @@ def select_single_laborStatusForm(self, formID):
 
 def insert_laborstatusForm(self, formID, primarySupervisor, createdDate, jobType, supervisee, supervisor,
                             creator, term, position, hours, startDate, endDate, supervisorNotes, laborDepartmentNotes):
-        try:
-            laborStatusForm = laborStatusForm(formID = formID, term = term, supervisee = supervisee, primarySupervisor = primarySupervisor,
-                                            department = department, supervisor = supervisor, jobType = jobType, position = position,
-                                            hours = hours, startDate = startDate, endDate = endDate, supervisorNotes = supervisorNotes,
-                                            creator = creator,  createdDate = createdDate, laborDepartmentNotes = laborDepartmentNotes)
-            laborStatusForm.save()
-            return laborStatusForm
-        except Exception as e:
-             return e
+    try:
+        laborStatusForm = laborStatusForm(formID = formID, term = term, supervisee = supervisee, primarySupervisor = primarySupervisor,
+                                        department = department, supervisor = supervisor, jobType = jobType, position = position,
+                                        hours = hours, startDate = startDate, endDate = endDate, supervisorNotes = supervisorNotes,
+                                        creator = creator,  createdDate = createdDate, laborDepartmentNotes = laborDepartmentNotes)
+        laborStatusForm.save()
+        return laborStatusForm
+    except Exception as e:
+         return e

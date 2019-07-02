@@ -40,10 +40,9 @@ def insert_user(self):
     bools  = [isAdmin]
     if checkStrings(strings) and checkBooleans(bools):
       try:
-        user = user(username=username,  firstname=firstName, lastname=lastName, isAdmin=isAdmin,)
+        user = user(username=username,  firstname=firstName, lastname=lastName, isAdmin=isAdmin)
         user.save(force_insert=True)
         return True
       except Exception as e:
-        # Log Exception
         print ("insert_user",e)
     return False
