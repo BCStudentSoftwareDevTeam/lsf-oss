@@ -1,6 +1,7 @@
 #Modeled after Form.py in Advancement Office
 from app.models.util import *
-#Any foreign keys
+from app.models.student import *
+#Any foreign keys^^^
 #Any other imports
 
 #Note: if you update the model, you will need to update the queries to pull the right attributes you want
@@ -8,7 +9,7 @@ from app.models.util import *
 class laborStatusForm (baseModel):
     formID                      = PrimaryKeyField() #I THINK this is the primary key
     term                        = CharField()
-    supervisee                  = CharField() #is this the student? can we change it to....student?lmao
+    supervisee                  = CharField() #is this the student? can we change it to....student?Foreign key to students b#?
     primarySupervisor           = Charfield()
     department                  = Charfield()
     supervisor                  = CharField() #how is this different from primary supervisor?
