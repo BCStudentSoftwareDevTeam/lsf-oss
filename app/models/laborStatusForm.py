@@ -8,13 +8,13 @@ from app.models.util import *
 class laborStatusForm (baseModel):
     formID                      = PrimaryKeyField() #I THINK this is the primary key
     term                        = CharField()
-    supervisee                  = CharField()#is this the student? can we change it to....student?
+    supervisee                  = CharField() #is this the student? can we change it to....student?lmao
     primarySupervisor           = Charfield()
     department                  = Charfield()
-    supervisor                  = CharField() #how is this different from primary supervisor? is this strictly for secondary?
+    supervisor                  = CharField() #how is this different from primary supervisor? is this strictly for secondary? this field should reflect that (secondarySupervisor)
     jobType                     = CharField()
     position                    = CharField()
-    hours                       = CharField()#do we need a separate for per week for regular terms and total for summer???
+    hours                       = CharField() #do we need a separate for per week for regular terms and total for summer??? Eg weeklyHours and totalHours?
     startDate                   = CharField()
     endDate                     = CharField()
     supervisorNotes             = CharField()
@@ -24,7 +24,7 @@ class laborStatusForm (baseModel):
     def __str__(self):
         return str(self.formID)
 #Queries as helper functions
-####FIX ME: these are currently written as if they were in a class. FIx them to work with the laborStatusForm class
+####FIX ME: these are currently written as if they were in a class. Fix them to work with the laborStatusForm class
 def select_all_laborStatusForms(self):
     try:
         laborStatusForms = laborStatusForm.select()
