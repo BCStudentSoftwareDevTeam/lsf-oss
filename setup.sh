@@ -34,30 +34,32 @@ pip install "peewee"
 
 pip install "flask-admin"
 # # https://flask-admin.readthedocs.io/en/latest/
-#
+
 pip install "wtf-peewee"
 # # https://github.com/coleifer/wtf-peewee
-#
+
 pip install "XlsxWriter"
-#
+
+# On MAC OSX, uninstall libyaml first and this succeeds: brew uninstall libyaml
 pip install "pyyaml"
-#
+
 pip install "email_validator"
-#
-pip install "pyDNS"
-#
-pip install "MySQL-python"
-#
-########pip install "pymysql"
-#
+
+# pip install "pyDNS"
+
+# Not needed, it's a client to use mysql, not the server itself
+# pip install "MySQL-python"
+
+#pip install "pymysql"
+
 pip install "flask_login"
 pip install git+https://github.com/memo330179/migrant-cli.git
 pip install --upgrade setuptools
 pip install flask-mysql
 pip install --upgrade pip enum34
-#
+
 pip install git+https://github.com/mzdaniel/loadconfig
-#
+
 pip install mysql-connector
-#
+
 #Fix me: ADD UPDATE_SCHEMA 
