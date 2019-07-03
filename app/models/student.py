@@ -15,7 +15,7 @@ class student (baseModel):
         return str(self.bNumber)
 
 #Queries as helper functions
-####FIX ME: these are currently written as if they were in a class. Fix them to work with the laborStatusForm class
+####FIX ME: these are currently written as if they were in a class. Fix them to work with the student class
 def select_all_students(self):
     try:
         students = student.select()

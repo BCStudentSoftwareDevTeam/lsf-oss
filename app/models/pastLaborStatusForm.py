@@ -36,7 +36,7 @@ class pastLaborStatusForm (baseModel):
         return str(self.formID)
 
 #Queries as helper functions
-####FIX ME: these are currently written as if they were in a class. FIx them to work with the laborStatusForm class
+####FIX ME: these are currently written as if they were in a class. FIx them to work with the pastLaborStatusForm class
 
 def select_all_pastLaborStatusForms(self):
     try:
@@ -53,4 +53,4 @@ def select_single_pastLaborStatusForm(self, formID):
       print ("select_single_pastLaborStatusForm",e)
       return False
 
-#TOdo: maybe add an Insert function??
+#TOdo: maybe add an Insert function I tbh dont get why this is a separate thing from LSFs..??
