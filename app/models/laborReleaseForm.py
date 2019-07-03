@@ -1,15 +1,16 @@
 #Modeled after separate py file structure in Advancement Office
 from app.models.util import *
 from app.models.student import *
+from app.models.user import *
 #Any foreign keys or other imports
 
 #Note: if you update the model, you will need to update the queries to pull the right attributes you want
 
 class laborReleaseForm (baseModel):
     laborReleaseFormID          = PrimaryKeyField() #I THINK this is the primary key
-    term                        = CharField()
+    term                        = CharField() #foriegn key or banner??
     supervisee                  = CharField() #is this the student? can we change it to....student?Foreign key to students b#?
-    primarySupervisor           = Charfield()
+    primarySupervisor           = Charfield()#foreign key to user?
     department                  = Charfield()
     supervisor                  = CharField() #how is this different from primary supervisor?
                                             #is this strictly for secondary? this field should reflect that (secondarySupervisor)
