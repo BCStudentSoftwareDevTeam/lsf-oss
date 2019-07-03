@@ -5,7 +5,7 @@ from app.models.util import *
 
 #Note: if you update the model, you will need to update the queries to pull the right attributes you want
 class emailTemplate (baseModel):
-    emailTemplateID                 = PrimaryKeyField()
+    emailTemplateID                 = IntegerField(primary_key = True)
     purpose                         = CharField()
     subject                         = CharField()
     body                            = Charfield()

@@ -8,7 +8,7 @@ from app.models.user import *
 #Note: if you update the model, you will need to update the queries to pull the right attributes you want
 
 class pastLaborStatusForm (baseModel):
-    pastLaborStatusFormID       = PrimaryKeyField()
+    pastLaborStatusFormID       = IntegerField(primary_key = True)
     term                        = CharField() #foriegn key or banner??
     supervisee                  = CharField() #is this the student? can we change it to....student?Foreign key to students b#?
     primarySupervisor           = CharField() #foreign key to user?
