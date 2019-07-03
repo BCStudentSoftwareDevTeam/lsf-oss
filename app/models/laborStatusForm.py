@@ -7,7 +7,7 @@ from app.models.student import *
 #Note: if you update the model, you will need to update the queries to pull the right attributes you want
 
 class laborStatusForm (baseModel):
-    formID                      = PrimaryKeyField() #I THINK this is the primary key
+    laborStatusFormID                      = PrimaryKeyField() #I THINK this is the primary key
     term                        = CharField()
     supervisee                  = CharField() #is this the student? can we change it to....student?Foreign key to students b#?
     primarySupervisor           = Charfield()
@@ -26,7 +26,7 @@ class laborStatusForm (baseModel):
     laborDepartmentNotes        = Charfield(null=True)#delete if redundant, but i think we need two spots for notes now
 
     def __str__(self):
-        return str(self.formID)
+        return str(self.laborStatusFormID)
 #Queries as helper functions
 ####FIX ME: these are currently written as if they were in a class. Fix them to work with the laborStatusForm class
 def select_all_laborStatusForms(self):
@@ -36,18 +36,18 @@ def select_all_laborStatusForms(self):
     except Exception as e:
       return False
 
-def select_single_laborStatusForm(self, formID):
+def select_single_laborStatusForm(self, laborStatusFormID):
     try:
-      laborStatusForm = laborStatusForm.get(laborStatusForm.formID == formID)
+      laborStatusForm = laborStatusForm.get(laborStatusForm.laborStatusFormID == laborStatusFormID)
       return laborStatusForm
     except Exception as e:
       print ("select_single_laborStatusForm",e)
       return False
 
-def insert_laborstatusForm(self, formID, primarySupervisor, createdDate, jobType, supervisee, supervisor,
+def insert_laborstatusForm(self, laborStatusFormID, primarySupervisor, createdDate, jobType, supervisee, supervisor,
                             creator, term, position, hours, startDate, endDate, supervisorNotes, laborDepartmentNotes):
     try:
-        laborStatusForm = laborStatusForm(formID = formID, term = term, supervisee = supervisee, primarySupervisor = primarySupervisor,
+        laborStatusForm = laborStatusForm(laborStatusFormID = laborStatusFormID, term = term, supervisee = supervisee, primarySupervisor = primarySupervisor,
                                         department = department, supervisor = supervisor, jobType = jobType, position = position,
                                         hours = hours, startDate = startDate, endDate = endDate, supervisorNotes = supervisorNotes,
                                         creator = creator,  createdDate = createdDate, laborDepartmentNotes = laborDepartmentNotes)

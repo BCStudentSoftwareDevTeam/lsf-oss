@@ -7,7 +7,7 @@ from app.models.student import *
 #Note: if you update the model, you will need to update the queries to pull the right attributes you want
 
 class pastLaborStatusForm (baseModel):
-    formID                      = PrimaryKeyField() #I THINK this is the primary key
+    pastLaborStatusFormID       = PrimaryKeyField()
     term                        = CharField()
     supervisee                  = CharField() #is this the student? can we change it to....student?Foreign key to students b#?
     primarySupervisor           = CharField()
@@ -33,7 +33,7 @@ class pastLaborStatusForm (baseModel):
     #WLS
     #Positionc (i think this is a typo? it was in LSF.cs and PLSF.cs)
     def __str__(self):
-        return str(self.formID)
+        return str(self.pastLaborStatusFormID)
 
 #Queries as helper functions
 ####FIX ME: these are currently written as if they were in a class. FIx them to work with the pastLaborStatusForm class
@@ -45,9 +45,9 @@ def select_all_pastLaborStatusForms(self):
     except Exception as e:
       return False
 
-def select_single_pastLaborStatusForm(self, formID):
+def select_single_pastLaborStatusForm(self, pastLaborStatusFormID):
     try:
-      pastLaborStatusForm = pastLaborStatusForm.get(pastlaborStatusForm.formID == formID)
+      pastLaborStatusForm = pastLaborStatusForm.get(pastlaborStatusForm.pastLaborStatusFormID == pastLaborStatusFormID)
       return pastlaborStatusForm
     except Exception as e:
       print ("select_single_pastLaborStatusForm",e)
