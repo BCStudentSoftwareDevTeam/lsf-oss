@@ -3,4 +3,4 @@
 from app.models.util import *
 #Any foreign keys or other imports
 
-class
+# class

@@ -1,3 +1,4 @@
+
 # Establish variables for specific versions of libraries
 FLASK_VERSION="${FLASK_VERSION:-0.12.2}"                  #0.12.2
 PEEWEE_VERSION="${PEEWEE_VERSION:-2.10.1}"                #2.10.1
@@ -61,5 +62,9 @@ pip install --upgrade pip enum34
 pip install git+https://github.com/mzdaniel/loadconfig
 
 pip install mysql-connector
+
+pip install flask-bootstrap
+
+pip install cryptography
 
 #Fix me: ADD UPDATE_SCHEMA 

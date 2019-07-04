@@ -1,29 +1,25 @@
 DEBUG:
-    user: "heggens"
+  user: "heggens"
 
 databases:
-    laborstatusforms: "data/laborstatus.sql"
+  laborstatusforms: "data/laborstatus.sql"
 
 db:
-    db_name: mysql
-    host: localhost
-    password: ''
-    username: root
+  db_name: mysql
+  host: localhost
+  password: ''
+  username: root
 
 log:
-
-    filename: "changeme"
-
+  filename: "changeme"
 
 terms:
-    spring:
-	"Spring 2019"
-    fall:
-	"Fall 2019" 
+  spring:
+    "Spring 2019"
+  fall:
+    "Fall 2019" 
 
 roles:
-   -faculty
-   -administrators
-   -students
-
-	
+  - faculty
+  - administrators
+  - students  

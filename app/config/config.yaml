@@ -1,0 +1,5 @@
+db:
+  db_name: "lsf"
+  host: "localhost"
+  username: "lsf_user"
+  password: "password"

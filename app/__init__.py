@@ -1,10 +1,22 @@
-'''
-This file is called by "from app import app" inside the app.py file.
+from flask import Flask
+import yaml
+from flask_bootstrap import Bootstrap
+# from flask_login import LoginManager
+import cryptography
 
-It includes all the imports to be used in the app (from allImports import *).
-It also includes all the application files that are used as "pages" in the app
-(e.g., "from app import start" imports all the code in start.py that is behind the start.html webpage)
-'''
+app = Flask(__name__)
+bootstrap = Bootstrap(app)
+# login = LoginManager(app)
 
-from allImports import *
-from app import allImports
+def load_config(file):
+    with open(file, 'r') as ymlfile:
+        cfg = yaml.load(ymlfile)
+    return cfg
+
+from app.errors import bp as errors_bp
+app.register_blueprint(errors_bp)
+
+from app.main_pages import bp as main_bp
+app.register_blueprint(main_bp)
+
+from app.models import *
