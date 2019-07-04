@@ -13,7 +13,7 @@ def before_request():
 # @login_required
 def index():
     username = load_user('heggens')
-    return render_template( 'index.html',
+    return render_template( 'main/index.html',
 				            title=('Home'),
                             username = username
                           )

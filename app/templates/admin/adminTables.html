@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Hi, {{username.firstname}}!</h1>
+    <p>For the sake of demonstration...</p>
+    <hr>
+    {% for user in users %}
+        <ul>
+            {% for k in user["__data__"] %}
+                <li>{{k}} - {{user[k]}}</li>
+            {% endfor %}
+        </ul>
+        <hr>
+    {% endfor %}
+{% endblock %}

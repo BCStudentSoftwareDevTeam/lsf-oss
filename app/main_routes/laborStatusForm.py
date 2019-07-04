@@ -6,7 +6,7 @@ from app.models.laborStatusForm import *
 def laborStatusForm():
     username = load_user('heggens')  #FIXME Hardcoding users is bad
     forms = LaborStatusForm.select()
-    return render_template( 'laborstatusform.html',
+    return render_template( 'main/laborstatusform.html',
 				            title=('Labor Status Form'),
                             username = username,
                             forms = forms
