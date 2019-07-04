@@ -1,6 +1,7 @@
-from app.main_routes import *
+from app.controllers.admin_routes import *
 from app.models.user import *
-from app.admin_routes import admin
+from app.controllers.admin_routes import admin
+
 
 @admin.route('/admin', methods=['GET', 'POST'])
 # @login_required
