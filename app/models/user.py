@@ -4,8 +4,9 @@ from peewee import CharField
 
 
 class User(baseModel):
-    username  = CharField(primary_key = True)
-    firstname = CharField(null = False)
+    username  = CharField(primary_key=True)
+    firstname = CharField(null=False)
+    lastname  = CharField(null=False)
 
 # @login.user_loader
 def load_user(username):

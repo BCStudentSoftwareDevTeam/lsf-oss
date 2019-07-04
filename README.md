@@ -5,7 +5,8 @@
 ## Updating models
 Use Peewee Migrator to update models: https://pypi.org/project/peewee-migrations/
 
-1. Install: ```pip install peewee-migrations```
+
+1. Install: ```pip install peewee-migrations``` (included in setup.sh, so you shouldn't need this)
 2. ```pem init```
 3. Add models to watch: ```pem add app.models.user.User```
 4. Watch the model for changes: ```pem watch```

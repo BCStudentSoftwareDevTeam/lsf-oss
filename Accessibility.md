@@ -98,11 +98,11 @@ right now we just want to make sure that every website at least fits the Beginne
 20. Does the page have a lang attribute? **(Correct Answer: Yes)**  
 21. Do any elements change when they receive focus, excluding focus ring? **(Correct Answer: No)**  
 22. Do any elements change when they receive input? **(Correct Answer: No)**  
-23. Are any input errors clearly identified (not using color only)? **(Correct Answer: Yes)**  
+23. Are any input errors_routes clearly identified (not using color only)? **(Correct Answer: Yes)**
 24. Are elements labeled, in a clear, logical, and meaningful way? **(Correct Answer: Yes)**  
 25. Are form elements labeled correctly? **(Correct Answer: Yes)**  
 26. Are instructions given in accessible ways? **(Correct Answer: Yes)**  
-27. Are there any major code errors? **(Correct Answer: No)**  
+27. Are there any major code errors_routes? **(Correct Answer: No)**
 28. Are the correct aria tags used (such as name, role, and value)? **(Correct Answer: Yes)**  
 29. Is the contrast ratio between text and background at least 4.5:1? **(Correct Answer: Yes)**  
 30. Are any images of text used to convey information (Logos do not count)? **(Correct Answer: No)**  
@@ -120,7 +120,7 @@ right now we just want to make sure that every website at least fits the Beginne
     1. Do you tell the user when that change occurs? **(Correct Answer: Yes)**  
 7. Are menus used consistently? **(Correct Answer:Yes)**  
 8. Are icon and buttons used consistently? **(Correct Answer: Yes)**
-9. Are fixes suggested when users make errors? **(Correct Answer: Yes)**
+9. Are fixes suggested when users make errors_routes? **(Correct Answer: Yes)**
 
 ### Expert   
 
@@ -147,4 +147,4 @@ right now we just want to make sure that every website at least fits the Beginne
 16. Are any words that are hard to pronounce explained? **(Correct Answer: Yes)**
 17. Are any element changes without the user's permission? **(Correct Answer: Yes)**
 18. Is detailed help and instructions provided? **(Correct Answer: Yes)**
-19. Are the risk of all input errors reduced? **(Correct Answer: Yes)**
+19. Are the risk of all input errors_routes reduced? **(Correct Answer: Yes)**

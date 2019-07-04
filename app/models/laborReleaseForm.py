@@ -1,46 +1,44 @@
 #Modeled after separate py file structure in Advancement Office
-from app.models.util import *
-from app.models.student import *
-from app.models.user import *
+from app.models import *
+from app.models.user import User
+
 #Any foreign keys or other imports
 
 #Note: if you update the model, you will need to update the queries to pull the right attributes you want
 
-class laborReleaseForm (baseModel):
+
+
+class LaborReleaseForm (baseModel):
     laborReleaseFormID          = IntegerField(primary_key = True) #I THINK this is the primary key
     term                        = CharField() #foriegn key or banner??
-    supervisee                  = CharField() #is this the student? can we change it to....student?Foreign key to students b#?
-    primarySupervisor           = Charfield()#foreign key to user?
-    department                  = Charfield()
-    supervisor                  = CharField() #how is this different from primary supervisor?
-                                            #is this strictly for secondary? this field should reflect that (secondarySupervisor)
-                                            #if it is just for secodary supervisor, this should be null=True..
-    ####I think this fom should just have 1 supervisor field. I dont think there's a spot to differentiate
-    ###between primary and secondary supervisor, since that distinction is made in the position field
-    jobType                     = CharField()#primary or secondary
+    studentSupervisee           = ForeignKeyField(User, null = False, related_name='supervisee', on_delete= 'RESTRICT') #is this the student? can we change it to....student?Foreign key to students b#?
+    primarySupervisor           = ForeignKeyField(User, null = False, related_name='supervisee', on_delete= 'RESTRICT')   # Primary supervisor
+    secondarySupervisor         = ForeignKeyField(User, null = True, related_name='supervisee', on_delete= 'RESTRICT')
+    departmentCode              = IntegerField()   # Org code
+    department                  = CharField()   # Org name
+    jobType                     = CharField()   # primary or secondary
     position                    = CharField()
     releaseDate                 = CharField()
-    conditionAtRelease          = Charfield()#performance
+    conditionAtRelease          = CharField()   # Performance (satisfactory or unsatisfactory
     reasonForRelease            = CharField()
-    creator                     = CharField()#i think this can be taken out
-    createdDate                 = CharField()#I think this can be taken out too...??
-    processedBy                 = Charfield()
-    laborDepartmentNotes        = Charfield(null=True)#delete if redundant
+    creator                     = CharField()   # Need for records tracking
+    createdDate                 = CharField()   # Need for records tracking
+    processed                 = BooleanField(null = False, default=False)  # Track if form has been processed by labor office
+    processedBy                 = CharField()   # Need for records tracking
+    supervisorNotes             = CharField()   # Allow supervisor to add additional notes in form
+    laborDepartmentNotes        = CharField(null=True)  # Allow labor office to make notes about the form
 
     def __str__(self):
         return str(self.laborReleaseFormID)
 
-#Queries as helper functions
 
-
-def insert_laborReleaseForm(self, laborReleaseFormID, term, supervisee, primarySupervisor, department, supervisor, jobType, position,
-                            releaseDate, reasonForRelease, creator, createdDate, processedBy, laborDepartmentNotes):
-    try:
-        laborReleaseForm = laborReleaseForm(laborReleaseFormID = laborReleaseFormID, term = term, supervisee = supervisee, primarySupervisor = primarySupervisor,
-                                            department = department, supervisor = supervisor, jobType = jobType, position = position, releaseDate = releaseDate,
-                                            reasonForRelease = reasonForRelease, creator = creator, createdDate = createdDate, processedBy = processedBy,
-                                            laborDepartmentNotes = laborDepartmentNotes)
-        laborReleaseForm.save()
-        return laborReleaseForm
-    except Exception as e:
-         return e
+    # I don't think simple functions like this are necessary.
+    # Ones that are necessary involve modifying data before inserting/selecting
+    # We'll see when we start actually using the models. Skip for now.
+    def insert_laborReleaseForm(self, releaseFormObject):
+        try:
+            releaseFormObject.save()
+            return True
+        except Exception as e:
+             print("Labor release Model error: ", e)
+             return False

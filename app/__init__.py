@@ -2,7 +2,7 @@ from flask import Flask
 import yaml
 from flask_bootstrap import Bootstrap
 # from flask_login import LoginManager
-import cryptography
+# import cryptography
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
@@ -13,10 +13,10 @@ def load_config(file):
         cfg = yaml.load(ymlfile)
     return cfg
 
-from app.errors import bp as errors_bp
+from app.errors_routes import bp as errors_bp
 app.register_blueprint(errors_bp)
 
-from app.main_pages import bp as main_bp
+from app.main_routes import bp as main_bp
 app.register_blueprint(main_bp)
 
 from app.models import *

@@ -67,4 +67,6 @@ pip install flask-bootstrap
 
 pip install cryptography
 
+pip install peewee-migrations
+
 #Fix me: ADD UPDATE_SCHEMA 
