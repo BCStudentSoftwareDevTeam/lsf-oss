@@ -1,16 +1,19 @@
-# Rework of Labor Status Forms.net into a flask application
+# Rework of Labor Status Forms .NET into a Flask application
 
 ## FIX ME: Add initial setup for future developers ##
+
 
 ## Updating models
 Use Peewee Migrator to update models: https://pypi.org/project/peewee-migrations/
 
-
 1. Install: ```pip install peewee-migrations``` (included in setup.sh, so you shouldn't need this)
 2. ```pem init```
-3. Add models to watch: ```pem add app.models.user.User```
+3. Add models to watch: e.g., ```pem add app.models.user.User```
 4. Watch the model for changes: ```pem watch```
 5. When done changing models, run the migrator to modify the db: ```pem migrate```
+
+NOTE: You don't need to watch the files before you begin making changes.
+The watch will compare the db to your model file and make any changes that are inconsistent.
 
 Additional helpful commands:
 List active migrations: ```pem list```
