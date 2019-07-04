@@ -28,7 +28,7 @@ class LaborStatusForm (baseModel):
     formStatus                  = CharField(null=False)   # Store the state of the form, e.g., pending, approved, denied
 
     def __str__(self):
-        return str(self.laborStatusFormID)
+        return str(self.__dict__)
 
 
 # Scott: Skip queries for now.

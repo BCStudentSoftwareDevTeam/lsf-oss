@@ -3,29 +3,13 @@
 {% block content %}
     <h1>Hi, {{username.firstname}}!</h1>
     <p>For the sake of demonstration...</p>
+    <hr>
     {% for form in forms %}
         <ul>
-            <li>{{form.laborStatusFormID}}</li>
-            <li>{{form.term}}</li>
-            <li>{{form.studentSupervisee}}</li>
-            <li>{{form.primarySupervisor}}</li>
+            {% for k in form["__data__"] %}
+                <li>{{k}} - {{form[k]}}</li>
+            {% endfor %}
         </ul>
-    {# department                  = CharField()
-    departmentCode              = IntegerField()
-    secondarySupervisor         = CharField(null = True)
-    jobType                     = CharField()
-    position                    = CharField()
-    SummerBreakHours            = IntegerField(null = True) # do we need a separate for per week for regular terms and total for summer??? Eg weeklyHours and totalHours?
-    RegularTermHours            = IntegerField(null = True)
-    startDate                   = CharField()
-    endDate                     = CharField()
-    supervisorNotes             = CharField(null=True) #null=True allows saving of null in db, and a supervisor may not always have notes
-    creator                     = CharField()
-    createdDate                 = CharField()
-    laborDepartmentNotes        = CharField(null=True)
-    formStatus                  = CharField(null=False)  #}
-
-
-        </ul>
+        <hr>
     {% endfor %}
 {% endblock %}
