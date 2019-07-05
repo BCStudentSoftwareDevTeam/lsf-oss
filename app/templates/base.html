@@ -1,13 +1,23 @@
+{# see: https://pythonhosted.org/Flask-Bootstrap/ #}
 {% extends 'bootstrap/base.html' %}
 
-{% block title %}
-    {% if title %}{{ title }} - Microblog{% else %}Welcome to Microblog{% endif %}
+{% block styles %}
+{{super()}}   {# Allows us to add stylesheets without overwriting existing ones already imported elsewhere (e.g., flask-bootstrap #}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
 {% endblock %}
 
+{% block scripts %}
+{{super()}}
+    <script type=text/javascript src="{{url_for('static', filename='js/bootstrap-select.js') }}"></script>
+{% endblock %}
+
+{% block title %}
+    {% if title %}{{ title }} - Labor Status Forms{% else %}Welcome to Labor Status Forms{% endif %}
+{% endblock %}
+    {% block html_attribs %} lang="en"{% endblock %}
+
 {% block navbar %}
-    <nav class="navbar navbar-default">
-      Navbar here
-    </nav>
+    {{nav.thenavbar.render()}}
 {% endblock %}
 
 {% block content %}
@@ -24,3 +34,4 @@
         {% block app_content %}{% endblock %}
     </div>
 {% endblock %}
+

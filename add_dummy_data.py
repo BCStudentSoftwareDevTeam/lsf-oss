@@ -1,5 +1,3 @@
-from app.models import *
-
 #############################
 # USERS
 #############################
@@ -20,12 +18,11 @@ users = [
 
 User.insert_many(users).on_conflict_replace().execute()
 
+
 #############################
 # Labor Status Forms
 #############################
 from app.models.laborStatusForm import LaborStatusForm
-
-#TODO To be continued...
 
 lsfs = [{
     "laborStatusFormID": 1,
@@ -61,5 +58,36 @@ lsfs = [{
     }
 ]
 
-
 LaborStatusForm.insert_many(lsfs).on_conflict_replace().execute()
+
+
+#############################
+# Terms
+#############################
+from app.models.term import Term
+
+terms = [
+    {
+        "termID": 1,
+        "termName": "Spring 2019",
+        "termCode": 201812,
+        "active": True
+    },
+    {
+        "termID": 2,
+        "termName": "Fall 2019",
+        "termCode": 201911,
+        "active": True
+    },
+    {
+        "termID": 3,
+        "termName": "Spring 2018",
+        "termCode": 201712,
+        "active": False
+    }
+]
+
+Term.insert_many(terms).on_conflict_replace().execute()
+
+
+#TODO To be continued...
