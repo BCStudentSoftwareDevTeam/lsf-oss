@@ -53,7 +53,7 @@
                           data-live-search='true'
                           title="Please select the student to hire:">
                     {% for student in students %}
-                        <option value="{{student.username}}" data-subtext="{{student.username}}">{{student.firstname}} {{student.lastname}}</option>
+                        <option value="{{student.ID}}" data-subtext="{{student.ID}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
                     {% endfor %}
                   </select>
                 </div>

@@ -3,3 +3,10 @@ db:
   host: "localhost"
   username: "lsf_user"
   password: "password"
+
+tracy:
+  db_name: "UTE"
+  host: "localhost"
+  username: "tracy_user"
+  password: "password"
+

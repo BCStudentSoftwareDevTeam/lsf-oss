@@ -4,8 +4,6 @@ from app.models import *
 #Any foreign keys^^^
 #Any other imports
 
-#Note: if you update the model, you will need to update the queries to pull the right attributes you want
-
 # NOTE: Always start classes with a capital letter
 class LaborStatusForm (baseModel):
     laborStatusFormID           = IntegerField(primary_key = True)

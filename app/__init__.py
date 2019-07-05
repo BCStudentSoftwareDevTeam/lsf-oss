@@ -14,6 +14,7 @@ def load_config(file):
         cfg = yaml.load(ymlfile)
     return cfg
 
+
 # Registers blueprints (controllers). These are general routes, like /index
 from app.controllers.main_routes import main_bp as main_bp
 app.register_blueprint(main_bp)
@@ -26,11 +27,10 @@ app.register_blueprint(admin_bp)
 from app.controllers.errors_routes import error as errors_bp
 app.register_blueprint(errors_bp)
 
-# Add the models
-from app.models import *
-
 # Configures the navigation bar
 nav = Nav()
+
+
 @nav.navigation()
 def thenavbar():
     return Navbar(
