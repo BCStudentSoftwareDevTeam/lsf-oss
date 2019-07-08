@@ -1,6 +1,14 @@
 # Rework of Labor Status Forms .NET into a Flask application
 
-## FIX ME: Add initial setup for future developers ##
+## Developing on Labor Status Forms
+
+1. Pull down the repo: git clone <URL>
+2. Run ```source setup.sh```
+3. Run ```python add_dummy_data.py``` to load in fake data
+4. Run the app with ```python app.py```
+5. A Tracy simulator is included.
+   You'll need to add the dummy data for it to a SQL database (MySQL is fine).
+   Run the SQL commands from **app/models/Tracy/TRACY_Simulator.sql**
 
 
 ## Updating models
