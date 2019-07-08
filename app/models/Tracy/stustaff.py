@@ -1,3 +1,4 @@
+#THIS IS A TRACY FILE! NO TOUCHY!
 from app.models.Tracy import *
 
 
@@ -13,4 +14,3 @@ class STUSTAFF(baseModel):
 
 	def __str__(self):
 		return str(self.__dict__)
-
