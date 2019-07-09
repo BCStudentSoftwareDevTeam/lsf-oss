@@ -1,7 +1,6 @@
 # Rework of Labor Status Forms .NET into a Flask application
 
 ## Developing on Labor Status Forms
-
 1. Pull down the repo: git clone <URL>
 2. Run ```source setup.sh```
 3. Run ```python add_dummy_data.py``` to load in fake data
@@ -10,6 +9,8 @@
    You'll need to add the dummy data for it to a SQL database (MySQL is fine).
    Run the SQL commands from **app/models/Tracy/TRACY_Simulator.sql**
 
+## Updating pip dependencies (imports)
+1. Run ```pip freeze > requirements.txt``` to export all imports to a file. This file is used by **setup.sh** when the next user runs ```source setup.sh```
 
 ## Updating models
 Use Peewee Migrator to update models: https://pypi.org/project/peewee-migrations/
