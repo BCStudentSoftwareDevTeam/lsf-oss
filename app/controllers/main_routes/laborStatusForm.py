@@ -4,6 +4,7 @@ from app.models.laborStatusForm import *
 from app.models.term import *
 from flask_bootstrap import bootstrap_find_resource
 from app.models.Tracy.studata import *
+
 @main_bp.route('/laborstatusform', methods=['GET', 'POST'])
 # @login_required
 def laborStatusForm():
