@@ -2,6 +2,10 @@
 
 CREATE DATABASE UTE;
 
+CREATE USER 'root'@'localhost' IDENTIFIED BY 'local';
+GRANT ALL ON *.* TO 'root'@'%';
+
+
 CREATE TABLE UTE.`STUPOSN` (
 	POSN_CODE varchar(24) NULL,
 	POSN_TITLE varchar(120) NULL,
