@@ -1,19 +1,5 @@
 {% extends "base.html" %}
-
 {% block app_content %}
-    <h1>Hi, {{username.firstname}}!</h1>
-{# Keeping for demo purposes only... delete as needed
-    <p>For the sake of demonstration...</p>
-    <hr>
-    {% for form in forms %}
-        <ul>
-            {% for k in form["__data__"] %}
-                <li>{{k}} - {{form[k]}}</li>
-            {% endfor %}
-        </ul>
-        <hr>
-    {% endfor %}
-#}
 
 {# HTML gutted from old LSF. Probably can trim out a fair bit of extra stuff #}
 <div id="Content2">
@@ -23,25 +9,39 @@
                     Establish a student's work status in the Labor Program.
             </h4>
             <div class="col-xs-10 col-xs-offset-1">
+              <br />
                 <div class="col-xs-1   col-xs-offset-3 " style="min-width: 108px;">
                     <label>Supervisor: </label>
                 </div>
                 <div class="col-xs-4" >
                     <!--selectpicker for supervisor-->
-                    <br />
-
+                  <select class="selectpicker"
+                          name='supervisor'
+                          id='supervisor'
+                          data-live-search='true'
+                          title="Please select the supervior">
+                  </select>
                 </div>
             </div>
+            <br />
             <div class="col-xs-10 col-xs-offset-1">
+              <br />
                 <div class="col-xs-1   col-xs-offset-3" style="min-width: 108px;">
                     <label>Department: </label>
                 </div>
                 <div class="col-xs-4" >
                     <!--selectpicker for dept-->
-                    <br />
+                    <select class="selectpicker"
+                            name='department'
+                            id='department'
+                            data-live-search='true'
+                            title="Please select the department">
+                    </select>
                 </div>
             </div>
+            <br />
             <div class="col-xs-10 col-xs-offset-1">
+              <br />
                 <div class=" col-xs-1   col-xs-offset-3" style="min-width: 108px;">
                     <label>Term: </label>
                 </div>
@@ -59,6 +59,43 @@
                   </select>
                 </div>
             </div>
+            <br />
+            <div id="dates"  class="col-xs-10 col-xs-offset-1">
+              <br />
+                <div class=" col-xs-1  col-xs-offset-3" style="min-width: 108px;">
+                    <label>Start Date: </label>
+                </div>
+                <div class="col-xs-4" >
+                    <!--Datepicker for start date-->
+                   <div class="form-group">
+                     <div class='input-group date' id='datetimepicker1'>
+                         <input type='text' class="form-control" />
+                         <span class="input-group-addon">
+                             <span class="glyphicon glyphicon-calendar"></span>
+                         </span>
+                     </div>
+                  </div>
+                </div>
+            </div>
+            <br />
+            <div id="dates" class="col-xs-10 col-xs-offset-1">
+              <br />
+                <div class=" col-xs-1  col-xs-offset-3" style="min-width: 108px;">
+                    <label>End Date: </label>
+                </div>
+                <div class="col-xs-4" >
+                    <!--Datepicker for start date-->
+                    <div class="form-group">
+                      <div class='input-group date' id='datetimepicker2'>
+                          <input type='text' class="form-control" />
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                   </div>
+                </div>
+            </div>
+            <br />
             <div class="col-xs-10 col-xs-offset-1">
                 <br />
                 <div class="col-xs-1  col-xs-offset-3" style="min-width: 108px;">
@@ -76,52 +113,58 @@
                   </select>
                 </div>
             </div>
-            {# Stopped here... #}
-
-
+            <br />
             <div class="col-xs-10 col-xs-offset-1">
+              <br />
                 <div class="col-xs-1   col-xs-offset-3" style="min-width: 108px;">
                     <label>Position: </label>
                 </div>
                 <div class="col-xs-4" >
                     <!--selectpicker for position-->
-                    <br />
+                    <select class="selectpicker"
+                            name='position'
+                            id='position'
+                            data-live-search='true'
+                            title="Please select the position">
+                    </select>
 
                 </div>
             </div>
-
-
-            <div id="dates" hidden class="col-xs-10 col-xs-offset-1">
-                <div class=" col-xs-1  col-xs-offset-3" style="min-width: 108px;">
-                    <label>Start Date: </label>
-                </div>
-                <div class="col-xs-4" >
-                    <!--Datepicker for start date-->
-
-                </div>
-            </div>
-            <div class="col-xs-10 col-xs-offset-1" id="JobTypeDIV" hidden>
+            <br />
+            <div class="col-xs-10 col-xs-offset-1" id="JobTypeDIV">
+              <br />
                 <div class=" col-xs-1   col-xs-offset-3" style="min-width: 108px;">
                     <label>Job Type: </label>
                 </div>
                 <div class="col-xs-4" >
                     <!--selectpicker for Job type-->
-                    <br />
-
+                    <select class="selectpicker"
+                            name='jobtype'
+                            id='jobtype'
+                            data-live-search='true'
+                            title="Please select the job type">
+                    </select>
                 </div>
             </div>
-            <div class="col-xs-10 col-xs-offset-1" id="HourlyContractDIV" hidden>
+            <br />
+            <div class="col-xs-10 col-xs-offset-1" id="HourlyContractDIV">
+              <br />
                 <div class=" col-xs-1   col-xs-offset-3" style="min-width: 108px;">
                     <label>Hours per Week: </label>
                 </div>
                 <div class="col-xs-4" >
                     <!--selectpicker for hrs per week-->
-                    <br />
+                    <select class="selectpicker"
+                            name='hours_perweek'
+                            id='hours_perweek'
+                            data-live-search='true'
+                            title="Please select the hours per week">
+                    </select>
 
                 </div>
             </div>
             <br />
-
+            {# THIS IS FOR SUMMER WILL USE IT LATER#}
             <div class="col-xs-10 col-xs-offset-1" id="LongBreakDiv" hidden>
                 <div class="col-xs-1  col-xs-offset-3" style="min-width: 108px;">
                     <label id="LongBreakLabel">Total Contract Hours:</label>
@@ -133,7 +176,8 @@
                 </div>
             </div>
             <br />
-
+            {# THIS IS FOR SUMMER WILL USE IT LATER#}
+            {# THIS IS FOR SECONDARY WILL USE IT LATER#}
             <div id="primary_for_secondary" hidden class="col-xs-10 col-xs-offset-1">
                 <div class="col-xs-6 col-xs-offset-3" style="margin-bottom: 1.2em;">
                     <strong>NOTE: The labor student and the supervisor of this secondary position  should <br />obtain permission from the primary supervisor before submitting this labor status form!</strong>
@@ -152,25 +196,17 @@
 
             </div>
             <br />
+            {# THIS IS FOR SECONDARY WILL USE IT LATER#}
 
-
-
-
-                <div id="ctl00_MainContent_wls5or6" class="col-xs-10 col-xs-offset-1">
+            {# USE LATER #}
+                <div id="ctl00_MainContent_wls5or6" class="col-xs-10 col-xs-offset-1" hidden>
                     <div class="col-xs-5 col-xs-offset-3 ">
                     <p class="text-warning">  Student with WLS Level 5 or 6 must have at least a 15 hour contract. These positions require special authorization as specified at <a href="http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS" target="_blank">The Labor Program Website</a></p>
                     </div>
                     <br />
                 </div>
 
-
-            <div class="col-xs-12">
-                <br />
-            </div>
-
-
-
-                <div id="ctl00_MainContent_twentyhrs" class="col-xs-10 col-xs-offset-1">
+                <div id="ctl00_MainContent_twentyhrs" class="col-xs-10 col-xs-offset-1" hidden>
                     <div class="col-xs-5 col-xs-offset-3">
                         <p class="text-warning">
                             Students working more than 15 hours must fill out a <a href="http://www.berea.edu/labor-program-office/files/2013/07/20130705-Labor-Overload-Application.pdf" target="_blank">labor overload application.</a>
@@ -179,11 +215,16 @@
                     </div>
                     <br />
                 </div>
+            {# USE LATER #}
+
+
+
 
             <div class="col-xs-10 col-xs-offset-1">
                 <br />
                 <div class="col-xs-2 col-xs-offset-3" style="min-width: 108px;">
-                    <!--submit button-->
+                    <!--Review button-->
+                    <button type="button" class="btn btn-primary">Review</button>
                 </div>
             </div>
 
