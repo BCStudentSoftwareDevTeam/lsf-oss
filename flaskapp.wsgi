@@ -6,5 +6,5 @@ import logging
 
 logging.basicConfig(stream=sys.stderr)
 sys.path.insert(0,"/var/www/html/lsf-flask/")
-# from app import app
-from app import app as application
+from app import app #Commented out below and used this instead. ran python app.py in terminal
+#from app import app as application
