@@ -7,16 +7,16 @@ from app.models import *
 # NOTE: Always start classes with a capital letter
 class LaborStatusForm (baseModel):
     laborStatusFormID           = IntegerField(primary_key = True)
-    term                        = CharField() #foreign key
-    studentSupervisee           = CharField()  # foreign key to Student or user table (not sure which yet)
-    primarySupervisor           = CharField() #foreign key to user???
+    term                        = CharField() #TODO: foreign key to term
+    studentSupervisee           = CharField()  #TRACY field
+    primarySupervisor           = CharField() #TRACY field
     department                  = CharField()
     departmentCode              = IntegerField()
     secondarySupervisor         = CharField(null = True)
-    jobType                     = CharField()
-    position                    = CharField()
-    SummerBreakHours            = IntegerField(null = True) # do we need a separate for per week for regular terms and total for summer??? Eg weeklyHours and totalHours?
-    RegularTermHours            = IntegerField(null = True)
+    jobType                     = CharField() #Primary or secondary
+    position                    = CharField() #WLS level
+    SummerBreakHours            = IntegerField(null = True) #total hours for summer term
+    RegularTermHours            = IntegerField(null = True) #weekly hours
     startDate                   = CharField()
     endDate                     = CharField()
     supervisorNotes             = CharField(null=True) #null=True allows saving of null in db, and a supervisor may not always have notes
