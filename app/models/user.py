@@ -1,18 +1,12 @@
-#####LSF USER FILE#####
 from app.models import *
 from peewee import CharField
 # from app import login
 
 
 class User(baseModel):
-    supervisorUsername  = CharField(primary_key=True)
-    firstName           = CharField(null=False)
-    lastName            = CharField(null=False)
-    email               = Charfield()
-    isLaborAdmin        = Booleanfield()
-    isFinancialAidAdmin = Booleanfield()
-    isSaasAdmin         = Booleanfield()
-
+    username  = CharField(primary_key=True)
+    firstname = CharField(null=False)
+    lastname  = CharField(null=False)
 
 # @login.user_loader
 def load_user(username):
