@@ -1,12 +1,20 @@
 {% extends "base.html" %}
 {% block app_content %}
 <link rel="stylesheet" href="/static/css/laborstatusform.css" type="text/css"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
 <div class="from">
-            <h1 class="col-xs-11 text-center">Labor Status Form <span class="glyphicon glyphicon-bookmark" data-toggle="tooltip" data-tooltip="true" title="Term changes will be accepted but not tracked" data-placement = "right" id="glyphicon"></span></h1>
-            <h4 class="col-xs-11 text-center">
-                    Establish a student's work status in the Labor Program.
-            </h4>
+            <h1 class="col-xs-11 text-center">Labor Status Form
+              <span class="glyphicon glyphicon-bookmark"
+              <a href="#"
+                    data-toggle="tooltip" data-tooltip="true"
+                    title="Establish a student's work status in the Labor Program."
+                    data-placement = "right" id="glyphicon">
+              </a>
+             </span></h1>
+
             <div class="form-group col-md-12">
                     <!--selectpicker for supervisor-->
                   <select class="selectpicker"
@@ -173,19 +181,21 @@
 
 
 
-            <div class="col-xs-10 col-xs-offset-1">
+            <div class="col-md-12 " id="review-button">
                 <br />
-                <div class="col-xs-2 col-xs-offset-3" style="min-width: 108px;">
+                <!-- <div class="col-xs-2 col-xs-offset-3" style="min-width: 108px;"> -->
                     <!--Review button-->
-                    <button type="button" class="btn btn-primary">Review</button>
-                </div>
+                    <button type="button" class="btn btn-primary" >Review</button>
+                <!-- </div> -->
+                <br />
             </div>
+
 
         </div>
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
-    $('[data-tooltip="true"]').tooltip({trigger:"hover"});
+    $('[data-tooltip="true"]').tooltip();
 });
 </script>
 {% endblock %}
