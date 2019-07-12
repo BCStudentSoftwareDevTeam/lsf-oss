@@ -84,7 +84,7 @@ terms = [
     "termState":"open",
     },
     {
-    "termCode":201712,
+    "termCode":201712,dent
     "termName" :"201712's name",
     "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
     "termEnd":"2018-05-10",
