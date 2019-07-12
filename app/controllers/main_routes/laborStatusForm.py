@@ -15,7 +15,7 @@ def laborStatusForm():
     terms = Term.select().where(Term.termState == "open")#changed to term state, open, closed, inactive
     return render_template( 'main/laborstatusform.html',
 				            title=('Labor Status Form'),
-                            username = username,
+                            username = username,#Passing of variables from controller to front
                             forms = forms,
                             students = students,
                             terms = terms
