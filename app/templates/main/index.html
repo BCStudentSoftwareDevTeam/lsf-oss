@@ -1,19 +1,38 @@
 {% extends "base.html" %}
-
 {% block app_content %}
+<div align= "right">
+
+  <script type="text/javascript" src="/static/js/index.js"></script>
+  <link rel="stylesheet" type="text/css" href="/static/css/index.css" />
 
     <div align="center">
       <h1>Supervisor Portal</h1>
-      <h4>Current Labor Students</h4>
     </div>
-    
-    <div align="center">
-      <table>
-        <tr><td> Hailey Barnett (00696081) </td></tr>
-        <tr><td> May Jue (00123456) </td></tr>
-        <tr><td> Evan Johnson (00654321) </td></tr>
+  <input  type="text" id="myInput" onkeyup="searching()" placeholder="Search">
+    <div align= "right"><button class="btn">Download</button></div>
+
+
+    <div align= "center">
+      <table id="studentTable" >
+        <tr class="header">
+          <th style="width:60%;">Current Labor Students</th>
+        </tr>
+        <tr>
+          <td>Kat Adams</td>
+        </tr>
+        <tr>
+          <td>Hailey Barnett</td>
+        </tr>
+        <tr>
+          <td>Evan Johnson</td>
+        </tr>
+        <tr>
+          <td>May Jue</td>
+        </tr>
+
       </table>
+
     </div>
-    
-    
+
+</div>
 {% endblock %}
