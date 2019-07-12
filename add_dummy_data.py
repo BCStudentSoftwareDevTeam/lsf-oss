@@ -1,3 +1,5 @@
+'''Add new fields to this file and run it to add new enteries into your local database.
+Chech phpmyadmin to see if your changes are reflected '''
 #############################
 # USERS
 #############################
@@ -68,23 +70,31 @@ from app.models.term import Term
 
 terms = [
     {
-        "termID": 1,
-        "termName": "Spring 2019",
-        "termCode": 201812,
-        "active": True
+    "termCode":201612,
+    "termName" :"201612's name",
+    "termStart":"2017-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2017-05-10",
+    "termState":"open",
     },
     {
-        "termID": 2,
-        "termName": "Fall 2019",
-        "termCode": 201911,
-        "active": True
+    "termCode":201712,
+    "termName" :"201712's name",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"closed",
     },
-    {
-        "termID": 3,
-        "termName": "Spring 2018",
-        "termCode": 201712,
-        "active": False
-    }
+    # {
+    #     "termID": 2,
+    #     "termName": "Fall 2019",
+    #     "termCode": 201911,
+    #     "active": True
+    # },
+    # {
+    #     "termID": 3,
+    #     "termName": "Spring 2018",
+    #     "termCode": 201712,
+    #     "active": False
+    # }
 ]
 
 Term.insert_many(terms).on_conflict_replace().execute()
