@@ -6,61 +6,45 @@
             <h4 class="col-xs-11 text-center">
                     Establish a student's work status in the Labor Program.
             </h4>
-            <div class="col-xs-10 col-xs-offset-1">
-              <br />
-                <div class="col-xs-1   col-xs-offset-3 " style="min-width: 108px;">
-                    <!-- <label>Supervisor: </label> -->
-
-                <div class="col-xs-4" >
+            <div class="form-group col-md-12">
                     <!--selectpicker for supervisor-->
                   <select class="selectpicker"
                           name='supervisor'
                           id='supervisor'
                           data-live-search='true'
-                          title="Supervisor">
+                          title="Supervisor"
+                          data-width="1109px" >
                   </select>
-                </div>
-                </div>
             </div>
             <br />
-            <div class="col-xs-10 col-xs-offset-1">
-              <br />
-                <div class="col-xs-1   col-xs-offset-3" style="min-width: 108px;">
-                    <!-- <label>Department: </label> -->
 
-                <div class="col-xs-4" >
+            <div class="form-group col-md-12">
                     <!--selectpicker for dept-->
                     <select class="selectpicker"
                             name='department'
                             id='department'
                             data-live-search='true'
-                            title="Department">
+                            title="Department"
+                            data-width="1109px">
                     </select>
-                </div>
-                </div>
             </div>
             <br />
-            <div class="col-xs-10 col-xs-offset-1">
-              <br />
-                <div class=" col-xs-1   col-xs-offset-3" style="min-width: 108px;">
-                    <!-- <label>Term: </label> -->
 
-                <div class="col-xs-4" >
-                    <!--selectpicker for term-->
+            <div class="form-group col-md-12">
+              <!-- selectpicker for term  -->
                     <select class="selectpicker"
                             name='term'
                             id='term'
                             data-live-search="true"
                             title="Term"
-                            >
+                            data-width="1109px">
                     {% for term in terms %}
                         <option value = "{{term.termID}}">{{term.termName}}</option>
                     {% endfor %}
                   </select>
-                </div>
-                </div>
             </div>
             <br />
+
           <div  class="form-group col-md-6">
                     <!--Datepicker for start date-->
              <div class='input-group date' id='datetimepicker1'>
@@ -71,6 +55,7 @@
              </div>
           </div>
             <br />
+
             <div class="form-group col-md-6">
                     <!--Datepicker for End date-->
                       <div class='input-group date' id='datetimepicker2' />
@@ -82,65 +67,55 @@
             </div>
             <br />
             <div class="form-group col-md-3">
-                <div class="col-xs-4" >
                   <select class="selectpicker"
                           name='student'
                           id='student'
                           data-live-search='true'
-                          title="Student">
+                          title="Student"
+                          data-width="258px">
                     {% for student in students %}
                         <option value="{{student.ID}}" data-subtext="{{student.ID}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
                     {% endfor %}
                   </select>
-                </div>
-
             </div>
             <br />
+
             <div class="form-group col-md-3">
-
-
-                <div class="col-xs-4" >
                     <!--selectpicker for position-->
                     <select class="selectpicker"
                             name='position'
                             id='position'
                             data-live-search='true'
-                            title="Position">
+                            title="Position"
+                            data-width="258px">
                     </select>
-
-
-                </div>
             </div>
             <br />
-            <div class="form-group col-md-3">
 
-                <div class="col-xs-4" >
+            <div class="form-group col-md-3">
                     <!--selectpicker for Job type-->
                     <select class="selectpicker"
                             name='jobtype'
                             id='jobtype'
                             data-live-search='true'
-                            title="Job Type">
+                            title="Job Type"
+                            data-width="258px">
                     </select>
-
-                </div>
             </div>
             <br />
-            <div class="form-group col-md-3">
 
-                <div class="col-xs-4" >
+            <div class="form-group col-md-3">
                     <!--selectpicker for hrs per week-->
                     <select class="selectpicker"
                             name='hours_perweek'
                             id='hours_perweek'
                             data-live-search='true'
-                            title="Hours per week">
+                            title="Hours per week"
+                            data-width="258px">
                     </select>
-
-
-                </div>
             </div>
             <br />
+
             {# THIS IS FOR SUMMER WILL USE IT LATER#}
             <div class="col-xs-10 col-xs-offset-1" id="LongBreakDiv" hidden>
                 <div class="col-xs-1  col-xs-offset-3" style="min-width: 108px;">
