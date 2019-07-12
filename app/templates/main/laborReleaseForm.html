@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="wrapper">
+ <h1> Labor Release Form </h1>
+ <form>
+
+   <div class="form-group">
+     <label for="studentInput">Student</label>
+     <input type="text" class="form-control" id="studentInput" placeholder="Student" readonly>
+   </div>
+
+   <div class="form-group">
+     <label for="supervisorInput">Supervisor</label>
+     <input type="text" class="form-control" id="supervisorInput" placeholder="Supervisor" readonly>
+   </div>
+
+   <div class="form-group">
+     <label for="departmentInput">Department</label>
+     <input type="text" class="form-control" id="departmentInput" placeholder="Department" readonly>
+   </div>
+
+   <div class="form-group">
+     <label for="positionInput">Position</label>
+     <input type="text" class="form-control" id="positionInput" placeholder="Position" readonly>
+   </div>
+
+   <div class="form-group">
+     <label for="positionTypeInput">Position Type</label>
+     <input type="text" class="form-control" id="positionTypeInput" placeholder="Position Type" readonly>
+   </div>
+
+   <div class="">
+     <label for="conditionInput">Condition at Release</label>
+       <select class="select-form" id="conditionInput">
+         <option>Satisfactory</option>
+         <option>Unsatisfactory</option>
+       </select>
+   </div>
+
+   <div class="form-group  col-lg-offset-3  col-lg-6 row" id= "dateDiv">
+     <label for="datetimepicker0" class="required-asterisk">Date Needed</label>
+     <div class="input-group">
+       <input type="text" class="form-control" id="datetimepicker0" placeholder="MM/DD/YYYY" name="date_needed" required/>
+       <span class="input-group-addon" onlick="toggle(datetimepicker0)"><span class="glyphicon glyphicon-calendar"></span></span>
+     </div>
+   </div>
+
+
+ </form>
+ </div>
+ <script src="/static/js/laborReleaseForm.js"></script>
+{% endblock %}
