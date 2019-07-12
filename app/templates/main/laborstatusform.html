@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block app_content %}
 <link rel="stylesheet" href="/static/css/laborstatusform.css" type="text/css"/>
+
 <div class="from">
-            <h1 class="col-xs-11 text-center">Labor Status Form</h1>
+            <h1 class="col-xs-11 text-center">Labor Status Form <span class="glyphicon glyphicon-bookmark" data-toggle="tooltip" data-tooltip="true" title="Term changes will be accepted but not tracked" data-placement = "right" id="glyphicon"></span></h1>
             <h4 class="col-xs-11 text-center">
                     Establish a student's work status in the Labor Program.
             </h4>
@@ -182,5 +183,9 @@
 
         </div>
 </div>
-
+<script type="text/javascript">
+$(document).ready(function(){
+    $('[data-tooltip="true"]').tooltip({trigger:"hover"});
+});
+</script>
 {% endblock %}
