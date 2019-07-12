@@ -1,52 +1,66 @@
 {% extends "base.html" %}
-{% block body %}
-<div class="wrapper">
- <h1> Labor Release Form </h1>
- <form>
+{% block app_content %}
 
-   <div class="form-group">
-     <label for="studentInput">Student</label>
-     <input type="text" class="form-control" id="studentInput" placeholder="Student" readonly>
-   </div>
+<div class="form">
+ <h1 align="center"> Labor Release Form <span id="glyphicon" class="glyphicon glyphicon-bookmark"></span></h1>
 
-   <div class="form-group">
-     <label for="supervisorInput">Supervisor</label>
-     <input type="text" class="form-control" id="supervisorInput" placeholder="Supervisor" readonly>
-   </div>
-
-   <div class="form-group">
-     <label for="departmentInput">Department</label>
-     <input type="text" class="form-control" id="departmentInput" placeholder="Department" readonly>
-   </div>
-
-   <div class="form-group">
-     <label for="positionInput">Position</label>
-     <input type="text" class="form-control" id="positionInput" placeholder="Position" readonly>
-   </div>
-
-   <div class="form-group">
-     <label for="positionTypeInput">Position Type</label>
-     <input type="text" class="form-control" id="positionTypeInput" placeholder="Position Type" readonly>
-   </div>
-
-   <div class="">
-     <label for="conditionInput">Condition at Release</label>
-       <select class="select-form" id="conditionInput">
-         <option>Satisfactory</option>
-         <option>Unsatisfactory</option>
-       </select>
-   </div>
-
-   <div class="form-group  col-lg-offset-3  col-lg-6 row" id= "dateDiv">
-     <label for="datetimepicker0" class="required-asterisk">Date Needed</label>
-     <div class="input-group">
-       <input type="text" class="form-control" id="datetimepicker0" placeholder="MM/DD/YYYY" name="date_needed" required/>
-       <span class="input-group-addon" onlick="toggle(datetimepicker0)"><span class="glyphicon glyphicon-calendar"></span></span>
+   <div class="form-row">
+     <div class="form-group col-md-6">
+         <label for="inputEmail4">Student:</label>
+         <input id="student" type="email" class="form-control" id="inputEmail4" placeholder="Student" readonly>
+     </div>
+     <div class="form-group col-md-6">
+         <label for="inputPassword4">Condition at Release:</label>
+         <select class="selectpicker" name="Condition" placeholder="Performance" data-width="540px">
+           <option value="Satisfactory">Satisfactory</option>
+           <option value="Unsatisfactory">Unsatisfactory</option>
+         </select>
      </div>
    </div>
 
+   <div class="form-row">
+     <div class="form-group col-md-6">
+         <label for="inputEmail4">Supervisor:</label>
+         <input id="supervisor" type="email" class="form-control" id="inputEmail4" placeholder="Supervisor" readonly>
+     </div>
+     <div class="form-group col-md-6">
+         <label for="inputPassword4">Release Date:</label>
+          <div class='input-group date' id='datetimepicker2' />
+              <input type='text' class="form-control" placeholder="MM/DD/YYYY"/>
+              <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+              </span>
+      </div>
+     </div>
 
- </form>
- </div>
- <script src="/static/js/laborReleaseForm.js"></script>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+          <label for="inputEmail4">Department:</label>
+          <input id="department" type="email" class="form-control" id="inputEmail4" placeholder="Department" readonly>
+      </div>
+      <div class="form-group col-md-6">
+          <label for="inputPassword4">Reason for Release:</label>
+          <textarea id="reasonForRelease"rows="2" cols="80" placeholder="Reason"></textarea>
+      </div>
+     </div>
+
+   <div class="form-row">
+     <div class="form-group col-md-12">
+         <label for="inputEmail4">Position:</label>
+         <input id="position" width="10px" type="email" class="form-control" id="inputEmail4" placeholder="Position" readonly>
+     </div>
+   </div>
+
+   <div class="form-group col-md-12">
+         <label for="inputEmail4">Released from Primary or Secondary:</label>
+         <input id="jobType" type="email" class="form-control" id="inputEmail4" placeholder="Job Type" readonly>
+   </div>
+
+   <button id="cancel" type="button" name="button">Cancel</button>
+   <button id="submit" type="submit" name="button">Submit</button>
+
+</div>
+
+<link rel='stylesheet' type="text/css" href='/static/css/laborReleaseForm.css' />
 {% endblock %}
