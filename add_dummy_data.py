@@ -95,5 +95,6 @@ terms = [
 
 Term.insert_many(terms).on_conflict_replace().execute()
 
+print("Dummy data added")
 
 #TODO To be continued...
