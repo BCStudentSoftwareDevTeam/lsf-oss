@@ -3,199 +3,190 @@
 <link rel="stylesheet" href="/static/css/laborstatusform.css" type="text/css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-
 <div class="from">
-            <h1 class="col-xs-11 text-center">Labor Status Form
-              <span class="glyphicon glyphicon-bookmark"
-              <a href="#"
-                    data-toggle="tooltip" data-tooltip="true"
-                    title="Establish a student's work status in the Labor Program."
-                    data-placement = "right" id="glyphicon">
-              </a>
-             </span></h1>
-
-            <div class="form-group col-md-12">
-                    <!--selectpicker for supervisor-->
-                  <select class="selectpicker"
-                          name='supervisor'
-                          id='supervisor'
-                          data-live-search='true'
-                          title="Supervisor"
-                          data-width="1109px" >
-                  </select>
-            </div>
-            <br />
-
-            <div class="form-group col-md-12">
-                    <!--selectpicker for dept-->
-                    <select class="selectpicker"
-                            name='department'
-                            id='department'
-                            data-live-search='true'
-                            title="Department"
-                            data-width="1109px">
-                    </select>
-            </div>
-            <br />
-
-            <div class="form-group col-md-12">
-              <!-- selectpicker for term  -->
-                    <select class="selectpicker"
-                            name='term'
-                            id='term'
-                            data-live-search="true"
-                            title="Term"
-                            data-width="1109px">
-                    {% for term in terms %}
-                        <option value = "{{term.termID}}">{{term.termName}}</option>
-                    {% endfor %}
-                  </select>
-            </div>
-            <br />
-
-          <div  class="form-group col-md-6">
-                    <!--Datepicker for start date-->
-             <div class='input-group date' id='datetimepicker1'>
-                 <input type='text' class="form-control" placeholder="Start Date"/>
-                 <span class="input-group-addon">
-                     <span class="glyphicon glyphicon-calendar"></span>
-                 </span>
-             </div>
-          </div>
-            <br />
-
-            <div class="form-group col-md-6">
-                    <!--Datepicker for End date-->
-                      <div class='input-group date' id='datetimepicker2' />
-                          <input type='text' class="form-control" placeholder="End Date"/>
-                          <span class="input-group-addon">
-                              <span class="glyphicon glyphicon-calendar"></span>
-                          </span>
-                      </div>
-            </div>
-            <br />
-            <div class="form-group col-md-3">
-                  <select class="selectpicker"
-                          name='student'
-                          id='student'
-                          data-live-search='true'
-                          title="Student"
-                          data-width="258px">
-                    {% for student in students %}
-                        <option value="{{student.ID}}" data-subtext="{{student.ID}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
-                    {% endfor %}
-                  </select>
-            </div>
-            <br />
-
-            <div class="form-group col-md-3">
-                    <!--selectpicker for position-->
-                    <select class="selectpicker"
-                            name='position'
-                            id='position'
-                            data-live-search='true'
-                            title="Position"
-                            data-width="258px">
-                    </select>
-            </div>
-            <br />
-
-            <div class="form-group col-md-3">
-                    <!--selectpicker for Job type-->
-                    <select class="selectpicker"
-                            name='jobtype'
-                            id='jobtype'
-                            data-live-search='true'
-                            title="Job Type"
-                            data-width="258px">
-                    </select>
-            </div>
-            <br />
-
-            <div class="form-group col-md-3">
-                    <!--selectpicker for hrs per week-->
-                    <select class="selectpicker"
-                            name='hours_perweek'
-                            id='hours_perweek'
-                            data-live-search='true'
-                            title="Hours per week"
-                            data-width="258px">
-                    </select>
-            </div>
-            <br />
-
-            {# THIS IS FOR SUMMER WILL USE IT LATER#}
-            <div class="col-xs-10 col-xs-offset-1" id="LongBreakDiv" hidden>
-                <div class="col-xs-1  col-xs-offset-3" style="min-width: 108px;">
-                    <label id="LongBreakLabel">Total Contract Hours:</label>
-                </div>
-                <div class="col-xs-4" >
-                    <!--selectpicker for hrs per contract-->
-                    <br />
-
-                </div>
-            </div>
-            <br />
-            {# THIS IS FOR SUMMER WILL USE IT LATER#}
-            {# THIS IS FOR SECONDARY WILL USE IT LATER#}
-            <div id="primary_for_secondary" hidden class="col-xs-10 col-xs-offset-1">
-                <div class="col-xs-6 col-xs-offset-3" style="margin-bottom: 1.2em;">
-                    <strong>NOTE: The labor student and the supervisor of this secondary position  should <br />obtain permission from the primary supervisor before submitting this labor status form!</strong>
-                </div>
-                <div class="col-xs-1 col-xs-offset-3" style=" min-width: 108px;">
-                    <label>Primary Supervisor: </label>
-                </div>
-                <div class="col-xs-4">
-                    <!--selectpicker for secondary supervisor-->
-                    <br />
-
-                </div>
-
-
-            </div>
-
-            </div>
-            <br />
-            {# THIS IS FOR SECONDARY WILL USE IT LATER#}
-
-            {# USE LATER #}
-                <div id="ctl00_MainContent_wls5or6" class="col-xs-10 col-xs-offset-1" hidden>
-                    <div class="col-xs-5 col-xs-offset-3 ">
-                    <p class="text-warning">  Student with WLS Level 5 or 6 must have at least a 15 hour contract. These positions require special authorization as specified at <a href="http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS" target="_blank">The Labor Program Website</a></p>
-                    </div>
-                    <br />
-                </div>
-
-                <div id="ctl00_MainContent_twentyhrs" class="col-xs-10 col-xs-offset-1" hidden>
-                    <div class="col-xs-5 col-xs-offset-3">
-                        <p class="text-warning">
-                            Students working more than 15 hours must fill out a <a href="http://www.berea.edu/labor-program-office/files/2013/07/20130705-Labor-Overload-Application.pdf" target="_blank">labor overload application.</a>
-                        </p>
-
-                    </div>
-                    <br />
-                </div>
-            {# USE LATER #}
-
-
-
-
-            <div class="col-md-12 " id="review-button">
-                <br />
-                <!-- <div class="col-xs-2 col-xs-offset-3" style="min-width: 108px;"> -->
-                    <!--Review button-->
-                    <button type="button" class="btn btn-primary" >Review</button>
-                <!-- </div> -->
-                <br />
-            </div>
-
-
-        </div>
+  <h1 class="col-xs-11 text-center">Labor Status Form
+    <span class="glyphicon glyphicon-bookmark"
+      <a  data-toggle="tooltip" data-tooltip="true"
+          title="This online labor status form is used to
+          establish a student's work status in the Labor Program."
+          data-placement = "right" id="glyphicon">
+      </a>
+    </span>
+  </h1>
+  <div class="form-group col-md-12">
+    <!--selectpicker for supervisor-->
+    <select class="selectpicker"
+            name='supervisor'
+            id='supervisor'
+            data-live-search='true'
+            title="Supervisor"
+            data-width="1109px" >
+    </select>
+  </div>
+  <br />
+  <div class="form-group col-md-12">
+    <!--selectpicker for department-->
+    <select class="selectpicker"
+            name='department'
+            id='department'
+            data-live-search='true'
+            title="Department"
+            data-width="1109px">
+    </select>
+  </div>
+  <br />
+  <div class="form-group col-md-12">
+    <!-- selectpicker for term  -->
+    <select class="selectpicker"
+            name='term'
+            id='term'
+            data-live-search="true"
+            title="Term"
+            data-width="1109px">
+    {% for term in terms %}
+        <option value = "{{term.termID}}">{{term.termName}}</option>
+    {% endfor %}
+  </select>
+  </div>
+  <br />
+  <div  class="form-group col-md-6">
+    <!--Datepicker for start date-->
+    <div class='input-group date' id='datetimepicker1'>
+      <input type='text' class="form-control" placeholder="Start Date"/>
+      <span class="input-group-addon">
+        <span class="glyphicon glyphicon-calendar"></span>
+      </span>
+    </div>
+  </div>
+  <br />
+  <div class="form-group col-md-6">
+    <!--Datepicker for End date-->
+    <div class='input-group date' id='datetimepicker2' />
+        <input type='text' class="form-control" placeholder="End Date"/>
+        <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+    </div>
+  </div>
+  <br />
+  <div class="form-group col-md-3">
+    <!-- selectpicker for student  -->
+    <select class="selectpicker"
+            name='student'
+            id='student'
+            data-live-search='true'
+            title="Student"
+            data-width="258px">
+      {% for student in students %}
+          <option value="{{student.ID}}" data-subtext="{{student.ID}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <br />
+  <div class="form-group col-md-3">
+    <!--selectpicker for position-->
+    <select class="selectpicker"
+            name='position'
+            id='position'
+            data-live-search='true'
+            title="Position"
+            data-width="258px">
+    </select>
+  </div>
+  <br />
+  <div class="form-group col-md-3">
+    <!--selectpicker for Job type-->
+    <select class="selectpicker"
+            name='jobtype'
+            id='jobtype'
+            data-live-search='true'
+            title="Job Type"
+            data-width="258px">
+    </select>
+  </div>
+  <br />
+  <div class="form-group col-md-3">
+    <!--selectpicker for hrs per week-->
+    <select class="selectpicker"
+            name='hours_perweek'
+            id='hours_perweek'
+            data-live-search='true'
+            title="Hours per week"
+            data-width="258px">
+    </select>
+  </div>
+  <br />
+  <div class="col-md-12 " id="review-button">
+    <button type="button" class="btn btn-primary" >Review</button>
+  </div>
+  <br />
 </div>
 <script type="text/javascript">
-$(document).ready(function(){
-    $('[data-tooltip="true"]').tooltip();
-});
+  $(document).ready(function(){
+      $('[data-tooltip="true"]').tooltip();
+  });
 </script>
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+    {# THIS IS FOR SUMMER WILL USE IT LATER#}
+    <div class="col-xs-10 col-xs-offset-1" id="LongBreakDiv" hidden>
+        <div class="col-xs-1  col-xs-offset-3" style="min-width: 108px;">
+            <label id="LongBreakLabel">Total Contract Hours:</label>
+        </div>
+        <div class="col-xs-4" >
+            <!--selectpicker for hrs per contract-->
+            <br />
+
+        </div>
+    </div>
+    <br />
+    {# THIS IS FOR SUMMER WILL USE IT LATER#}
+    {# THIS IS FOR SECONDARY WILL USE IT LATER#}
+    <div id="primary_for_secondary" hidden class="col-xs-10 col-xs-offset-1">
+        <div class="col-xs-6 col-xs-offset-3" style="margin-bottom: 1.2em;">
+            <strong>NOTE: The labor student and the supervisor of this secondary position  should <br />obtain permission from the primary supervisor before submitting this labor status form!</strong>
+        </div>
+        <div class="col-xs-1 col-xs-offset-3" style=" min-width: 108px;">
+            <label>Primary Supervisor: </label>
+        </div>
+        <div class="col-xs-4">
+            <!--selectpicker for secondary supervisor-->
+            <br />
+
+        </div>
+
+
+    </div>
+
+    </div>
+    <br />
+    {# THIS IS FOR SECONDARY WILL USE IT LATER#}
+
+    {# USE LATER #}
+        <div id="ctl00_MainContent_wls5or6" class="col-xs-10 col-xs-offset-1" hidden>
+            <div class="col-xs-5 col-xs-offset-3 ">
+            <p class="text-warning">  Student with WLS Level 5 or 6 must have at least a 15 hour contract. These positions require special authorization as specified at <a href="http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS" target="_blank">The Labor Program Website</a></p>
+            </div>
+            <br />
+        </div>
+
+        <div id="ctl00_MainContent_twentyhrs" class="col-xs-10 col-xs-offset-1" hidden>
+            <div class="col-xs-5 col-xs-offset-3">
+                <p class="text-warning">
+                    Students working more than 15 hours must fill out a <a href="http://www.berea.edu/labor-program-office/files/2013/07/20130705-Labor-Overload-Application.pdf" target="_blank">labor overload application.</a>
+                </p>
+
+            </div>
+            <br />
+        </div>
+    {# USE LATER #}
