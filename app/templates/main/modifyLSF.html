@@ -1,0 +1,101 @@
+
+{% extends "base.html" %}
+
+{% block app_content %}
+<head>
+ <title>Bootstrap Example</title>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1">
+ <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+ <link rel="stylesheet" type="text/css" href="/static/css/modifyLSF.css" />
+</head>
+<body>
+
+<div>
+ <div align="center">
+   <h2>Modify Labor Status Form</h2>
+ </div>
+
+
+
+ <form class="form-horizontal" action="/index">
+   <div class="floatleft">
+       <div class="form-group">
+         <label for="Student">Student:</label>
+         <div>
+           <input type="Student" class="form-control" id="Student">
+         </div>
+       </div>
+       <div class="form-group">
+         <label for="Supervisor">Supervisor:</label>
+         <div>
+           <input type="Supervisor" class="form-control" id="Supervisor">
+         </div>
+       </div>
+       <div class="form-group">
+         <label for="Supervisor">Department:</label>
+         <div>
+           <input type="Supervisor" class="form-control" id="Supervisor">
+         </div>
+       </div>
+       <div class="form-group">
+         <label for="Supervisor">Position:</label>
+         <div>
+           <input type="Supervisor" class="form-control" id="Supervisor">
+         </div>
+       </div>
+       <div class="form-group">
+         <label for="Supervisor">WLS:</label>
+         <div>
+           <input type="Supervisor" class="form-control" id="Supervisor">
+         </div>
+       </div>
+       <div class="form-group">
+         <label for="Supervisor">Job Type:</label>
+         <div>
+           <input type="Supervisor" class="form-control" id="Supervisor">
+         </div>
+       </div>
+       <div class="floatleft">
+         <button type="cancel" class="btn btn-default">Cancel</button>
+       </div>
+   </div>
+
+
+
+  <div class= "floatright" >
+     <div class="form-group">
+       <label for="Supervisor">Supervisor:</label>
+       <div >
+         <input type="Supervisor" class="form-control" id="Supervisor">
+       </div>
+     </div>
+     <div class="form-group">
+       <label for="Supervisor">Hours:</label>
+       <div>
+         <input type="Supervisor" class="form-control" id="Supervisor">
+       </div>
+     </div>
+     <div class="form-group">
+       <label for="Supervisor">Effective Date:</label>
+       <div>
+         <input type="Supervisor" class="form-control" id="Supervisor">
+       </div>
+     </div>
+     <div class="form-group">
+       <label for="Notes">Notes</label>
+       <div>
+         <textarea name="notes" rows="9" cols="80"></textarea>
+       </div>
+     </div>
+     <div class="floatright">
+       <button type="submit" class="btn btn-default">Submit</button>
+     </div>
+  </div>
+
+ </form>
+
+</body>
+{% endblock %}
