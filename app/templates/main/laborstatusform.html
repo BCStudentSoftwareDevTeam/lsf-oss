@@ -3,7 +3,10 @@
 <link rel="stylesheet" href="/static/css/laborstatusform.css" type="text/css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-<div class="from">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<div class="form">
   <h1 class="col-xs-11 text-center">Labor Status Form
     <span class="glyphicon glyphicon-bookmark"
       <a  data-toggle="tooltip" data-tooltip="true"
@@ -51,8 +54,8 @@
   <br />
   <div  class="form-group col-md-6">
     <!--Datepicker for start date-->
-    <div class='input-group date' id='datetimepicker1'>
-      <input type='text' class="form-control" placeholder="Start Date"/>
+    <div class='input-group date' >
+      <input type='text' class="form-control" id='datetimepicker1' placeholder="Start Date"/>
       <span class="input-group-addon">
         <span class="glyphicon glyphicon-calendar"></span>
       </span>
@@ -61,8 +64,8 @@
   <br />
   <div class="form-group col-md-6">
     <!--Datepicker for End date-->
-    <div class='input-group date' id='datetimepicker2' />
-        <input type='text' class="form-control" placeholder="End Date"/>
+    <div class='input-group date' />
+        <input type='text' class="form-control" id='datetimepicker2' placeholder="End Date"/>
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
@@ -119,8 +122,7 @@
 
   <div class="form-group col-md-1">
     <span class="glyphicon glyphicon-plus"
-    <a
-            data-toggle="tooltip"
+    <a      data-toggle="tooltip"
             data-tooltip="true"
             title="Add more students"
             data-placement = "center"
@@ -139,6 +141,12 @@
   $(document).ready(function(){
       $('[data-tooltip="true"]').tooltip();
   });
+</script>
+<script type="text/javascript">
+   var j = jQuery.noConflict();
+   j( function() {
+       j( "#datetimepicker1, #datetimepicker2" ).datepicker();
+   } );
 </script>
 {% endblock %}
 
