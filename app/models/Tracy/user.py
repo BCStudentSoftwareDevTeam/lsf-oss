@@ -5,13 +5,15 @@ from peewee import CharField
 
 
 class User(baseModel):
-    supervisorUsername  = CharField(primary_key=True)
-    firstName           = CharField(null=False)
-    lastName            = CharField(null=False)
-    email               = Charfield()
-    isLaborAdmin        = Booleanfield()
-    isFinancialAidAdmin = Booleanfield()
-    isSaasAdmin         = Booleanfield()
+    username            = CharField(primary_key=True)
+    firstname           = CharField(null=False)
+    lastname            = CharField(null=False)#Still having trouble migrating so the updates is commented below.
+    # firstName           = CharField(null=False)
+    # lastName            = CharField(null=False)
+    # email               = CharField()
+    # isLaborAdmin        = BooleanField()
+    # isFinancialAidAdmin = BooleanField()
+    # isSaasAdmin         = BooleanField()
 
 
 # @login.user_loader
