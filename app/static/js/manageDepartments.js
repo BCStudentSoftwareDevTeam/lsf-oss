@@ -9,6 +9,12 @@ b1.onclick = function() {
   }
 }
 
+
 $(document).ready( function(){
-    $('#departmentsTable').DataTable();
+x = $('#departmentsTable')
+console.log(x);
+x.DataTable( {
+      'ordering': true
+    }
+    );
   } );
