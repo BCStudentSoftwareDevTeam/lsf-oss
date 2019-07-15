@@ -1,6 +1,5 @@
-#cancel {
-  margin-left: 20px;
-  margin-right: 600px;
+#submit {
+  margin-left: 500px;
 }
 
 #student {
@@ -27,4 +26,16 @@
 
 #glyphicon {
   color: #337ab7;
+}
+ #submitModal {
+   margin-left: 431px;
+ }
+
+.floatleft {
+float: left;
+width: 47%;
+}
+.floatright {
+float: right;
+width: 47%;
 }

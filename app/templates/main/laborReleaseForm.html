@@ -1,66 +1,111 @@
 {% extends "base.html" %}
 {% block app_content %}
+<!-- These are the outside links for the datepicker-->
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+ <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!-- These are the outside links for the effective date calendar-->
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+ <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
-<div class="form">
- <h1 align="center"> Labor Release Form <span id="glyphicon" class="glyphicon glyphicon-bookmark"></span></h1>
 
-   <div class="form-row">
-     <div class="form-group col-md-6">
-         <label for="inputEmail4">Student:</label>
-         <input id="student" type="email" class="form-control" id="inputEmail4" placeholder="Student" readonly>
-     </div>
-     <div class="form-group col-md-6">
-         <label for="inputPassword4">Condition at Release:</label>
-         <select class="selectpicker" name="Condition" placeholder="Performance" data-width="540px">
-           <option value="Satisfactory">Satisfactory</option>
-           <option value="Unsatisfactory">Unsatisfactory</option>
-         </select>
+
+
+ <h1 align="center"> Labor Release Form <span title="This is just some placeholder text." id="glyphicon" class="glyphicon glyphicon-bookmark"></span></h1>
+
+<form  action="/index">
+
+ <div class="container">
+
+   <div class="floatleft">
+        <div class="form-group">
+          <label>Student:</label>
+          <div>
+            <input type="text" class="form-control" id="student" placeholder="Student" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Supervisor:</label>
+          <div>
+            <input type="text" class="form-control" id="supervisor" placeholder="Supervisor" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Department:</label>
+          <div>
+            <input type="text" class="form-control" id="department" placeholder="Department" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Realsed from Primary or Secondary:</label>
+          <div>
+            <input type="text" class="form-control" id="jobType" placeholder="Job Type" readonly>
+          </div>
+        </div>
+    </div>
+
+
+<div class= "floatright" >
+  <div class="form-group">
+        <label>Condition at Release:</label>
+        <div>
+          <select class="selectpicker" name="Condition" placeholder="Performance" data-width="540px">
+            <option value="Satisfactory">Satisfactory</option>
+            <option value="Unsatisfactory">Unsatisfactory</option>
+          </select>
+        </div>
+  </div>
+  <div class="form-group" id= "dateDiv">
+    <label for="datepicker" class="required-asterisk">Date Needed:</label>
+    <div class="input-group date">
+      <input type="text" class="form-control" class="datepicker" id="datepicker0" placeholder="MM/DD/YYYY">
+      <span class="input-group-addon">
+        <span class="glyphicon glyphicon-calendar"></span>
+      </span>
+    </div>
+  </div>
+   <div class="form-group">
+     <label for="Notes">Reason for Release</label>
+     <div>
+       <textarea name="notes" rows="6" cols="75"></textarea>
      </div>
    </div>
-
-   <div class="form-row">
-     <div class="form-group col-md-6">
-         <label for="inputEmail4">Supervisor:</label>
-         <input id="supervisor" type="email" class="form-control" id="inputEmail4" placeholder="Supervisor" readonly>
-     </div>
-     <div class="form-group col-md-6">
-         <label for="inputPassword4">Release Date:</label>
-          <div class='input-group date' id='datetimepicker2' />
-              <input type='text' class="form-control" placeholder="MM/DD/YYYY"/>
-              <span class="input-group-addon">
-                  <span class="glyphicon glyphicon-calendar"></span>
-              </span>
-      </div>
-     </div>
-
-
-    <div class="form-row">
-      <div class="form-group col-md-6">
-          <label for="inputEmail4">Department:</label>
-          <input id="department" type="email" class="form-control" id="inputEmail4" placeholder="Department" readonly>
-      </div>
-      <div class="form-group col-md-6">
-          <label for="inputPassword4">Reason for Release:</label>
-          <textarea id="reasonForRelease"rows="2" cols="80" placeholder="Reason"></textarea>
-      </div>
-     </div>
-
-   <div class="form-row">
-     <div class="form-group col-md-12">
-         <label for="inputEmail4">Position:</label>
-         <input id="position" width="10px" type="email" class="form-control" id="inputEmail4" placeholder="Position" readonly>
-     </div>
-   </div>
-
-   <div class="form-group col-md-12">
-         <label for="inputEmail4">Released from Primary or Secondary:</label>
-         <input id="jobType" type="email" class="form-control" id="inputEmail4" placeholder="Job Type" readonly>
-   </div>
-
-   <button id="cancel" type="button" name="button">Cancel</button>
-   <button id="submit" type="submit" name="button">Submit</button>
+</div>
 
 </div>
 
+  <div class="container">
+
+    <button id="cancel" type="button" class="btn btn-danger">Cancel</button>
+    <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#modal">Submit</button>
+
+    <div class="modal fade" id="modal" role="dialog">
+        <div class="modal-dialog">
+
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Are you sure you want to submit?</h4>
+            </div>
+            <div class="modal-body">
+              <p>Submitting this form will put the selected student up for release from their current
+              labor position pending approval from the labor office within one business day.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success" id="submitModal">Submit</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+  </div>
+
+</form>
+
 <link rel='stylesheet' type="text/css" href='/static/css/laborReleaseForm.css' />
+<script src="/static/js/laborReleaseForm.js"></script>
 {% endblock %}
