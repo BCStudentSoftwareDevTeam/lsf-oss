@@ -130,19 +130,19 @@ lsfs = [
 #     "formStatus": "Pending"
 #     },
 #NEWFORMATTING
-    # {
-    # "laborStatusFormID": 1,
-    # "termCode": Term.get("termCode" == "201612"),
-    # # "studentSupervisee_id": Student.get("ID"="FIXME"",
-    # # "primarySupervisor_id": User.get("ID"=
-    # # "department_id": Department.get()
-    # "jobType": "Primary",
-    # "WLS":"1",
-    # "POSN_TITLE":"Dummy boi",
-    # "POSN_CODE":"S12345",
-    # "startDate": "1/2/3",
-    # "endDate": "3/2/1"
-    # }
+    {
+    "laborStatusFormID": 1,
+    "termCode": Term.get(Term.termCode == "201612"),
+    # "studentSupervisee_id": Student.get("ID"="FIXME"",
+    # "primarySupervisor_id": User.get("ID"=
+    # "department_id": Department.get()
+    "jobType": "Primary",
+    "WLS":"1",
+    "POSN_TITLE":"Dummy boi",
+    "POSN_CODE":"S12345",
+    "startDate": "1/2/3",
+    "endDate": "3/2/1"
+    }
 ]
 LaborStatusForm.insert_many(lsfs).on_conflict_replace().execute()
 print("LSF added")

@@ -1,6 +1,10 @@
 #LSF file all caps fields are pulled from TRACY
 #Modeled after Form.py in Advancement Office
 from app.models import *
+from app.models.term import Term
+from app.models.student import Student
+from app.models.user import User
+from app.models.department import Department
 
 #Any foreign keys^^^
 #Any other imports
@@ -8,10 +12,10 @@ from app.models import *
 # NOTE: Always start classes with a capital letter
 class LaborStatusForm (baseModel):
     laborStatusFormID           = IntegerField(primary_key = True)
-    term                        = CharField() #TODO: foreign key to term
-    studentSupervisee           = CharField()  #foreign key to student
-    primarySupervisor           = CharField() #foreign key to user
-    department                  = CharField() #Foreign key to department
+    termCode                    = ForeignKeyField(column_name='termCode', model=Term)#FK to term
+    # studentSupervisee           = ForeignKeyField(Student)  #foreign key to student
+    # primarySupervisor           = ForeignKeyField(User) #foreign key to user
+    # department                  = ForeignKeyField(Department) #Foreign key to department
     secondarySupervisor         = CharField(null = True)
     jobType                     = CharField() #Primary or secondary
     WLS                         = CharField() #pulled from tracy
