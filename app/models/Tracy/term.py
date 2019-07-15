@@ -1,4 +1,4 @@
-######LSF Term File#####
+######TRACY Term File#####
 #Modeled after User.py in Advancement Office with inspo from CAS models
 from app.models import *
 #Any foreign keys or other imports

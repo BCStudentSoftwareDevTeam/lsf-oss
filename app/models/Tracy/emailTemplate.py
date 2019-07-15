@@ -1,3 +1,4 @@
+#TRACY File
 #Modeled after User.py in Advancement Office with inspo from URCPP models
 from app.models import *
 

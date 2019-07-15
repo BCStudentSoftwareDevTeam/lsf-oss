@@ -1,4 +1,4 @@
-#lsf file, not tracy
+#TRACY FILE
 #Modeled after separate py file structure in Advancement Office
 from app.models import *
 #Any foreign keys or other imports
@@ -12,15 +12,3 @@ class LaborReleaseForm (baseModel):
 
     def __str__(self):
         return str(self.laborReleaseFormID)
-
-
-    # I don't think simple functions like this are necessary.
-    # Ones that are necessary involve modifying data before inserting/selecting
-    # We'll see when we start actually using the models. Skip for now.
-    def insert_laborReleaseForm(self, releaseFormObject):
-        try:
-            releaseFormObject.save()
-            return True
-        except Exception as e:
-             print("Labor release Model error: ", e)
-             return False
