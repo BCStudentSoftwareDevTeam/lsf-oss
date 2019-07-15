@@ -7,17 +7,10 @@ This file will need to be changed if the format of models changes (new fields, d
 #############################
 from app.models.user import User
 users = [
-     # {
-     #    "username": "pearcej",
-     #    "firstname": "Jan",
-     #    "lastname": "Pearce"
-     # },
-     ###NEW FORMAT:###
      {
      "username": "heggens",
      "FIRST_NAME":"Scott",
      "LAST_NAME": "Heggen",
-     # "bNumber": "B01234567"
      }
     ]
 User.insert_many(users).on_conflict_replace().execute()
@@ -29,19 +22,19 @@ from app.models.Tracy.studata import STUDATA
 
 students = [
     {
-    "PIDM":"1"
-	"ID":"B00730361"
-	"FIRST_NAME":"Elaheh"
-	"LAST_NAME":"Jamali"
-	"CLASS_LEVEL":"Junior"
-	"ACADEMIC_FOCUS":"Computer Science"
-	"MAJOR":"Computer Science"
-	"PROBATION":"0"
-	"ADVISOR":"Jan Pearce"
-	"STU_EMAIL":"jamalie@berea.edu"
-	"STU_CPO":"718"
-	"LAST_POSN":"Media Technician"
-	"LAST_SUP_PIDM":"7"
+    "PIDM":"1",
+	"ID":"B00730361",
+	"FIRST_NAME":"Elaheh",
+	"LAST_NAME":"Jamali",
+	"CLASS_LEVEL":"Junior",
+	"ACADEMIC_FOCUS":"Computer Science",
+	"MAJOR":"Computer Science",
+	"PROBATION":"0",
+	"ADVISOR":"Jan Pearce",
+	"STU_EMAIL":"jamalie@berea.edu",
+	"STU_CPO":"718",
+	"LAST_POSN":"Media Technician",
+	"LAST_SUP_PIDM":"7",
     }
 ]
 STUDATA.insert_many(students).on_conflict_replace().execute()
@@ -54,12 +47,12 @@ from app.models.Tracy.stuposn import STUPOSN
 
 positions = [
     {
-    "POSN_CODE": "S61406, S61407"
-    "POSN_TITLE": "Student Programmer"
-    "WLS": "1 - Entry Level"
-    "ORG" : "2114"
-    "ACCOUNT":"123456"
-    "DEPT_NAME":"Computer Science"
+    "POSN_CODE": "S61406, S61407",
+    "POSN_TITLE": "Student Programmer",
+    "WLS": "1 - Entry Level",
+    "ORG" : "2114",
+    "ACCOUNT":"123456",
+    "DEPT_NAME":"Computer Science",
     }
 ]
 STUPOSN.insert_many(positions).on_conflict_replace().execute()
@@ -177,5 +170,3 @@ print("LSF added")
 
 
 print("Dummy data added")
-
-#TODO To be continued...
