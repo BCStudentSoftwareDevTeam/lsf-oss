@@ -10,6 +10,7 @@ class EmailTemplate (baseModel):
     purpose                         = CharField()
     subject                         = CharField()
     body                            = CharField()
+    audience                        = CharField()
 
 
 
