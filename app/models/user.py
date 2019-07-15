@@ -1,3 +1,4 @@
+#LSF file
 from app.models import *
 from peewee import CharField
 # from app import login
@@ -10,9 +11,9 @@ class User(baseModel):
     # firstName           = CharField(null=False)
     # lastName            = CharField(null=False)
     # email               = CharField()
-    # isLaborAdmin        = BooleanField()
-    # isFinancialAidAdmin = BooleanField()
-    # isSaasAdmin         = BooleanField()
+    # isLaborAdmin        = BooleanField(null=True)
+    # isFinancialAidAdmin = BooleanField(null=True)
+    # isSaasAdmin         = BooleanField(null=True)
 # @login.user_loader
 def load_user(username):
     return User.get(User.username == username)

@@ -9,8 +9,10 @@ from app.models.user import User
 users = [
      {
          "username": "heggens",
-         "firstname": "Scott",
-         "lastname": "Heggen"
+         "firstName": "Scott",
+         "lastName": "Heggen",
+         "email":"heggens@berea.edu",
+
      },
      {
         "username": "pearcej",
