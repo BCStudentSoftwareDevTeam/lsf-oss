@@ -1,4 +1,4 @@
-#LSF file
+#LSF file all caps fields are pulled from TRACY
 #Modeled after Form.py in Advancement Office
 from app.models import *
 
@@ -14,9 +14,9 @@ class LaborStatusForm (baseModel):
     department                  = CharField() #Foreign key to department
     secondarySupervisor         = CharField(null = True)
     jobType                     = CharField() #Primary or secondary
-    positionWLS                 = CharField() #WLS level
-    positionName                = CharField() #eg. student programmer, customer engagement specialist, receptionist, teaching assistant
-    positionCode                = CharField()
+    WLS                         = CharField() #pulled from tracy
+    POSN_TITLE                  = CharField() #pulled from tracy eg. student programmer, customer engagement specialist, receptionist, teaching assistant
+    POSN_CODE                   = CharField() #pulled from tracy
     contractHours               = IntegerField(null = True) #total hours for break terms
     weeklyHours                 = IntegerField(null = True) #weekly hours 10,12,15...
     startDate                   = CharField(null = True) #in case they start different than term start date

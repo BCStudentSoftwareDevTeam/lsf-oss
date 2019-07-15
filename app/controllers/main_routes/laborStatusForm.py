@@ -4,6 +4,7 @@ from app.models.laborStatusForm import *
 from app.models.term import *
 from flask_bootstrap import bootstrap_find_resource
 from app.models.Tracy.studata import *
+from app.models.Tracy.stustaff import *
 
 @main_bp.route('/laborstatusform', methods=['GET', 'POST'])
 # @login_required
@@ -13,10 +14,12 @@ def laborStatusForm():
     forms = LaborStatusForm.select()
     students = STUDATA.select()
     terms = Term.select().where(Term.termState == "open")#changed to term state, open, closed, inactive
+    staffs = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc())
     return render_template( 'main/laborStatusForm.html',
 				            title=('Labor Status Form'),
                             username = username,#Passing of variables from controller to front
                             forms = forms,
                             students = students,
-                            terms = terms
+                            terms = terms,
+                            staffs = staffs
                           )
