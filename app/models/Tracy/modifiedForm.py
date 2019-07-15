@@ -1,8 +1,0 @@
-#TRACY File
-from app.models import *
-
-class modifiedForm(baseModel):
-    fieldModified           = CharField(primary_key=True)#Not sure if primary key
-    oldValue                = CharField()
-    newValue                = CharField()
-    effectiveDate           = DateField()

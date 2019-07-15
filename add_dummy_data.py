@@ -7,23 +7,24 @@ This file will need to be changed if the format of models changes (new fields, d
 from app.models.user import User
 
 users = [
-     {
-         "username": "heggens",
-         "firstname": "Scott",
-         "lastname": "Heggen"
-     },
-     {
-        "username": "pearcej",
-        "firstname": "Jan",
-        "lastname": "Pearce"
-     },
-     ###NEW FORMAT:###
      # {
-     # "username": "heggens",
-     # "firstName":"Scott",
-     # "lastName": "Heggen",
-     # "bNumber": "B01234567"
-     # }
+     #     "username": "heggens",
+     #     "firstName": "Scott",
+     #     "lastName": "Heggen",
+     #     "email":"heggens@berea.edu",
+     #
+     # },
+     # {
+     #    "username": "pearcej",
+     #    "firstname": "Jan",
+     #    "lastname": "Pearce"
+     # },
+     ###NEW FORMAT:###
+     {
+     "username": "heggens",
+     "FIRST_NAME":"Scott",
+     "LAST_NAME": "Heggen"
+     }
     ]
 
 User.insert_many(users).on_conflict_replace().execute()
@@ -75,9 +76,9 @@ lsfs = [
     "primarySupervisor": "Scott Heggen",#FIXME foreign key eventually
     "department": "CS", #FIXME: Foreign key eventually
     "jobType": "Primary",
-    "positionWLS":"WLS-1", #FIXME: idk how this is gonna be formatted
-    "positionName" :"Student programmer",
-    "positionCode": "S12345",
+    "WLS":"WLS-1", #FIXME: idk how this is gonna be formatted
+    "POSN_TITLE" :"Student programmer",
+    "POSN_CODE": "S12345",
     "weeklyHours":12,
     "startDate": "1/2/3",
     "endDate": "3/2/1"
