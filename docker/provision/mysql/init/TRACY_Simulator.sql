@@ -1,10 +1,6 @@
 -- Run the following commands in MySQL to build a simulated Tracy database
 
-CREATE DATABASE UTE;
-
-CREATE USER 'root'@'localhost' IDENTIFIED BY 'local';
-GRANT ALL ON *.* TO 'root'@'%';
-
+CREATE DATABASE IF NOT EXISTS `UTE`;
 
 CREATE TABLE UTE.`STUPOSN` (
 	POSN_CODE varchar(24) NULL,
