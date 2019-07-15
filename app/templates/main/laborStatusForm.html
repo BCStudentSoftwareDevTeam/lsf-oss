@@ -22,8 +22,8 @@
             name='supervisor'
             id='supervisor'
             data-live-search='true'
-            title="Supervisorss"
-            data-width="1109px" >
+            title="Supervisor"
+            data-width="1109px" required>
       {% for staff in staffs %}
         <option value="{{staff.PIDM}}">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
       {% endfor %}
@@ -37,7 +37,10 @@
             id='department'
             data-live-search='true'
             title="Department"
-            data-width="1109px">
+            data-width="1109px" required>
+      {% for department in departments %}
+        <option value="{{department.DEPT_NAME}}">{{department.DEPT_NAME}}</option>
+      {% endfor %}
     </select>
   </div>
   <br />
@@ -48,7 +51,7 @@
             id='term'
             data-live-search="true"
             title="Term"
-            data-width="1109px">
+            data-width="1109px" required>
     {% for term in terms %}
         <option value = "{{term.termID}}">{{term.termName}}</option>
     {% endfor %}
@@ -58,7 +61,7 @@
   <div  class="form-group col-md-6">
     <!--Datepicker for start date-->
     <div class='input-group date' >
-      <input type='text' class="form-control" id='datetimepicker1' placeholder="Start Date"/>
+      <input type='text' class="form-control" id='datetimepicker1' placeholder="Start Date" required/>
       <span class="input-group-addon">
         <span class="glyphicon glyphicon-calendar"></span>
       </span>
@@ -68,7 +71,7 @@
   <div class="form-group col-md-6">
     <!--Datepicker for End date-->
     <div class='input-group date' />
-        <input type='text' class="form-control" id='datetimepicker2' placeholder="End Date"/>
+        <input type='text' class="form-control" id='datetimepicker2' placeholder="End Date" required/>
         <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
         </span>
@@ -82,7 +85,7 @@
             id='student'
             data-live-search='true'
             title="Student"
-            data-width="258px">
+            data-width="258px" required>
       {% for student in students %}
           <option value="{{student.ID}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
       {% endfor %}
@@ -96,7 +99,10 @@
             id='position'
             data-live-search='true'
             title="Position"
-            data-width="258px">
+            data-width="258px" required>
+      {% for position in positions %}
+        <option value="{{position.POSN_CODE}}">{{position.POSN_TITLE}}</option>
+      {% endfor %}
     </select>
   </div>
   <br />
@@ -107,7 +113,7 @@
             id='jobtype'
             data-live-search='true'
             title="Job Type"
-            data-width="258px">
+            data-width="258px" required>
     </select>
   </div>
   <br />
@@ -118,7 +124,7 @@
             id='hours_perweek'
             data-live-search='true'
             title="Hours per week"
-            data-width="217px">
+            data-width="217px" required>
     </select>
   </div>
   <br />

@@ -35,7 +35,6 @@ students = [
 	"STU_CPO":"718",
 	"LAST_POSN":"Media Technician",
 	"LAST_SUP_PIDM":"7"
-
     }
 ]
 STUDATA.insert_many(students).on_conflict_replace().execute()
