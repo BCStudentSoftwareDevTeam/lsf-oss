@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+<head>
+  <script type="text/javascript" src="/static/js/termManagement.js"></script>
+  <link rel="stylesheet" href="/static/css/termManagement.css" type="text/css" />
+    <style>
+      h1 {
+        text-align: center;
+      }
+      p {
+        text-align: center;
+      }
+      label {
+        text-align: center;
+      }
+    </style>
+</head>
+
+<h1>Term Management</h1>
+<p>Add or Remove terms here</p>
+
+<button class="accordion">Section 1</button>
+<div class="panel">
+  <p>Lorem ipsum...</p>
+</div>
+
+<button class="accordion">Section 2</button>
+<div class="panel">
+  <p>Lorem ipsum...</p>
+</div>
+
+<button class="accordion">Section 3</button>
+<div class="panel">
+  <p>Lorem ipsum...</p>
+</div>
+{% endblock %}

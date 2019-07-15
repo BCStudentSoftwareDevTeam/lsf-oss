@@ -15,7 +15,14 @@ users = [
         "username": "pearcej",
         "firstname": "Jan",
         "lastname": "Pearce"
-     }
+     },
+     ###NEW FORMAT:###
+     # {
+     # "username": "heggens",
+     # "firstName":"Scott",
+     # "lastName": "Heggen",
+     # "bNumber": "B01234567"
+     # }
     ]
 
 User.insert_many(users).on_conflict_replace().execute()
@@ -83,18 +90,7 @@ terms = [
     "termEnd":"2018-05-10",
     "termState":"closed",
     },
-    # {
-    #     "termID": 2,
-    #     "termName": "Fall 2019",
-    #     "termCode": 201911,
-    #     "active": True
-    # },
-    # {
-    #     "termID": 3,
-    #     "termName": "Spring 2018",
-    #     "termCode": 201712,
-    #     "active": False
-    # }
+    #add more term cases here
 ]
 
 Term.insert_many(terms).on_conflict_replace().execute()

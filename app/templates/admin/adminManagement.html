@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+<head>
+  <link rel="stylesheet" href="emailTemplates.css">
+    <style>
+      h1 {
+        text-align: center;
+      }
+      p {
+        text-align: center;
+      }
+      label {
+        text-align: center;
+      }
+    </style>
+</head>
+
+<h1>Manage Administrators</h1>
+<p>Add or Remove admins here</p>
+
+<div class="form-group col-md-4">
+
+</div>
+
+<div class="form-group col-md-8">
+
+  <div class="container">
+   <h4>Add Administrator</h4>
+   <div class="form-inline">
+       <div class = "form-group" id="addAdmin">
+             <select class = "form-control selectpicker" data-width="258px"
+             data-show-subtext="true" data-live-search="true" name="addAdmin">
+             <option value = "---" disabled selected>Select User</option>
+             {% for user in users %}     <!-- placeholder for emailTemplate table database -->
+                <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.username}} {{user.firstname}}</option>
+             {% endfor %}
+             </select>
+         </div>
+       <button class="btn btn-primary">Add</button>
+   </div>
+  </div>
+
+  <div class="container">
+   <h4>Remove Adminitrator</h4>
+   <div class="form-inline">
+         <div class = "form-group" id="addAdmin">
+             <select class = "form-control selectpicker" data-width="258px"
+             data-show-subtext="true" data-live-search="true" name="addAdmin">
+                <option value = "---" disabled selected>Select User</option>
+             {% for user in users %}     <!-- placeholder for emailTemplate table database -->
+                <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.username}} {{user.firstname}}</option>
+             {% endfor %}
+             </select>
+         </div>
+       <button class="btn btn-primary">Remove</button>
+   </div>
+  </div>
+
+</div>
+{% endblock %}
