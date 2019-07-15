@@ -15,7 +15,6 @@ RUN pip install -r requirements.txt
 COPY . /
 ENTRYPOINT [ "python" ]
 
-RUN ["/bin/bash", "-c", "source migrate_db.sh"]
-RUN python add_dummy_data.py
+CMD ["add_dummy_data.py"]
 
 CMD [ "app.py" ]
