@@ -1,4 +1,5 @@
 from peewee import *
+import os
 
 # from app import login
 from app import load_config
@@ -6,7 +7,11 @@ from app import load_config
 
 def getMySQLDB():
     cfg = load_config('app/config/secret_config.yaml')
-    theDB = MySQLDatabase(cfg['db']['db_name'], host = cfg['db']['host'], user = cfg['db']['username'], passwd = cfg['db']['password'])
+    if os.environ.get("USING_CONTAINER", False):
+        cfg['lsfdb']['host'] = 'db'
+    else:
+        cfg['lsfdb']['host'] = 'localhost'
+    theDB = MySQLDatabase(cfg['lsfdb']['db_name'], host = cfg['lsfdb']['host'], user = cfg['lsfdb']['username'], passwd = cfg['lsfdb']['password'])
     return theDB
 
 mainDB = getMySQLDB() # MySQL (current)
