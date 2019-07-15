@@ -24,6 +24,9 @@
             data-live-search='true'
             title="Supervisor"
             data-width="1109px" >
+    {% for user in users %}
+      <option value="{{user.username}}">{{user.firstName}} {{user.lastName}}</option>
+    {% endfor %}
     </select>
   </div>
   <br />
