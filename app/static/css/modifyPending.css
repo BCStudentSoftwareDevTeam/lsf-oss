@@ -1,30 +1,14 @@
-#cancel {
- margin-left: 20px;
- margin-right: 600px;
+.floatleft {
+  float: left;
+  width: 47%;
+
 }
 
-#student {
- background-color: #660CE8;
-}
+.floatright {
+  float: right;
+  width: 47%;
 
-#supervisor {
- background-color: #660CE8;
 }
-
-#department {
- background-color: #660CE8;
-}
-
-#position {
- background-color: #660CE8;
- width: 540px;
-}
-
-#jobType {
- background-color: #660CE8;
-   width: 540px;
-}
-
-#glyphicon {
- color: #337ab7;
+.submitbutton {
+  float: right;
 }

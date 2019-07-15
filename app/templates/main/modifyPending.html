@@ -1,66 +1,136 @@
 {% extends "base.html" %}
+
 {% block app_content %}
-
-<div class="form">
-<h1 align="center"> Labor Release Form <span id="glyphicon" class="glyphicon glyphicon-bookmark"></span></h1>
-
-  <div class="form-row">
-    <div class="form-group col-md-6">
-        <label for="inputEmail4">Student:</label>
-        <input id="student" type="email" class="form-control" id="inputEmail4" placeholder="Student" readonly>
-    </div>
-    <div class="form-group col-md-6">
-        <label for="inputPassword4">Condition at Release:</label>
-        <select class="selectpicker" name="Condition" placeholder="Performance" data-width="540px">
-          <option value="Satisfactory">Satisfactory</option>
-          <option value="Unsatisfactory">Unsatisfactory</option>
-        </select>
-    </div>
-  </div>
-
-  <div class="form-row">
-    <div class="form-group col-md-6">
-        <label for="inputEmail4">Supervisor:</label>
-        <input id="supervisor" type="email" class="form-control" id="inputEmail4" placeholder="Supervisor" readonly>
-    </div>
-    <div class="form-group col-md-6">
-        <label for="inputPassword4">Release Date:</label>
-         <div class='input-group date' id='datetimepicker2' />
-             <input type='text' class="form-control" placeholder="MM/DD/YYYY"/>
-             <span class="input-group-addon">
-                 <span class="glyphicon glyphicon-calendar"></span>
-             </span>
-     </div>
-    </div>
+<!-- These are the link to the css files we have in the static folder-->
+<link rel="stylesheet" type="text/css" href="/static/css/modifyPending.css" />
 
 
-   <div class="form-row">
-     <div class="form-group col-md-6">
-         <label for="inputEmail4">Department:</label>
-         <input id="department" type="email" class="form-control" id="inputEmail4" placeholder="Department" readonly>
-     </div>
-     <div class="form-group col-md-6">
-         <label for="inputPassword4">Reason for Release:</label>
-         <textarea id="reasonForRelease"rows="8" cols="80" placeholder="Reason"></textarea>
-     </div>
-    </div>
-
-  <div class="form-row">
-    <div class="form-group col-md-12">
-        <label for="inputEmail4">Position:</label>
-        <input id="position" width="10px" type="email" class="form-control" id="inputEmail4" placeholder="Position" readonly>
-    </div>
-  </div>
-
-  <div class="form-group col-md-12">
-        <label for="inputEmail4">Released from Primary or Secondary:</label>
-        <input id="jobType" type="email" class="form-control" id="inputEmail4" placeholder="Job Type" readonly>
-  </div>
-
-  <button id="cancel" type="button" name="button">Cancel</button>
-  <button id="submit" type="submit" name="button">Submit</button>
-
+<div align="center">
+   <h2>Modify Pending Labor Status Form</h2>
 </div>
 
-<link rel='stylesheet' type="text/css" href='/static/css/laborReleaseForm.css' />
+
+<form  action="/index">
+  <div class="container">
+
+<!-- the forms to the left: Student, Supervisor, Department, Position, WLS, and Job Type -->
+    <div class="floatleft">
+      <div class="form-group">
+        <label for="Student">Student:</label>
+        <div>
+          <input type="Student" class="form-control" id="Student">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Supervisor">Supervisor:</label>
+        <div>
+          <input type="Supervisor" class="form-control" id="Supervisor">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Department">Department:</label>
+        <div>
+          <input type="Department" class="form-control" id="Department">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Position">Position:</label>
+        <div>
+          <input type="Position" class="form-control" id="Position">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="WLS">WLS:</label>
+        <div>
+          <input type="WLS" class="form-control" id="WLS">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="JobType">Job Type:</label>
+        <div>
+          <input type="JobType" class="form-control" id="JobType">
+        </div>
+      </div>
+    </div>
+
+<!-- the forms to the right: Term, Hours, Effective Date, and Notes -->
+    <div class= "floatright" >
+      <div class="form-group">
+        <label for="Term">Term:</label>
+        <div>
+          <input type="Term" class="form-control" id="Term">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Hours">Hours:</label>
+        <div>
+          <input type="Hours" class="form-control" id="Hours">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="Notes">Notes:</label>
+        <div>
+          <textarea name="notes" rows="9" cols="73"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- the cancel and submit buttons -->
+<div class="container">
+  <div class="floatleft">
+    <button id="withdraw"type="button" class="btn btn-danger" data-toggle="modal" data-target="#withdrawModal">Withdraw Form</button>
+  </div>
+  <div class="submitbutton">
+     <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal">Submit Changes</button>
+   </div>
+
+  <!-- start of modal -->
+    <div class="modal fade" id="withdrawModal" role="dialog">
+        <div class="modal-dialog">
+
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal">&times;</button>
+              <h4 class="modal-title">Are you sure you want to withdraw this form?</h4>
+            </div>
+            <div class="modal-body">
+              <p>withdrawing this form will withdraw the current pending application.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-success" id="modal">Submit</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+<!-- start of modal -->
+   <div class="modal fade" id="submitModal" role="dialog">
+       <div class="modal-dialog">
+
+         <div class="modal-content">
+           <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <h4 class="modal-title">Are you sure you want to submit?</h4>
+           </div>
+           <div class="modal-body">
+             <p>Submitting this form will modify the current pending application.</p>
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+             <button type="button" class="btn btn-success" id="modal">Submit</button>
+           </div>
+         </div>
+
+       </div>
+     </div>
+
+ </div>
+
+
+
+<script language="JavaScript" type="text/javascript" src="/static/js/modifyPending.js"></script>
 {% endblock %}
