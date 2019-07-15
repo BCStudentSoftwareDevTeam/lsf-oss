@@ -1,7 +1,7 @@
 #lsf File
 from app.models import *
 
-class overloadForm(baseModel):
+class OverloadForm(baseModel):
     overloadReason          = CharField(primary_key=True)#Not sure if primary key
     financialAidApproved    = BooleanField()
     financialAidApprover    = CharField()#foreign key to USERS
