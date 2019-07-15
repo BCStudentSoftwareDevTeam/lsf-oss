@@ -5,6 +5,14 @@ from app.models.term import *
 from flask_bootstrap import bootstrap_find_resource
 from app.models.Tracy.studata import *
 from app.models.Tracy.stustaff import *
+from app.models.department import *
+from app.models.Tracy.stuposn import STUPOSN
+from flask import jsonify
+from flask import request
+
+@main_bp.route("/getPositions", methods=['POST'])
+def getPositions():
+    return jsonify({"S1234": "Student Stuffer"})
 
 @main_bp.route('/laborstatusform', methods=['GET', 'POST'])
 # @login_required
@@ -15,11 +23,17 @@ def laborStatusForm():
     students = STUDATA.select().order_by(STUDATA.FIRST_NAME.asc()) # getting student names from TRACY
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
     staffs = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # getting supervisors from TRACY
+    departments = STUPOSN.select(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT).distinct()
+
+    # Department.select().order_by(Department.DEPT_NAME.asc()) # getting the names of the departments
+    # positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == Department.DEPT_NAME)
     return render_template( 'main/laborStatusForm.html',
 				            title=('Labor Status Form'),
                             username = username,#Passing of variables from controller to front
                             forms = forms,
                             students = students,
                             terms = terms,
-                            staffs = staffs
+                            staffs = staffs,
+                            departments = departments
+                            # positions   = positions
                           )
