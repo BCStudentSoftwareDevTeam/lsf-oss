@@ -7,25 +7,24 @@ This file will need to be changed if the format of models changes (new fields, d
 from app.models.user import User
 
 users = [
-     {
-         "username": "heggens",
-         "firstName": "Scott",
-         "lastName": "Heggen",
-         "email":"heggens@berea.edu",
-
-     },
-     {
-        "username": "pearcej",
-        "firstname": "Jan",
-        "lastname": "Pearce"
-     },
-     ###NEW FORMAT:###
      # {
-     # "username": "heggens",
-     # "firstName":"Scott",
-     # "lastName": "Heggen",
-     # "bNumber": "B01234567"
-     # }
+     #     "username": "heggens",
+     #     "firstName": "Scott",
+     #     "lastName": "Heggen",
+     #     "email":"heggens@berea.edu",
+     #
+     # },
+     # {
+     #    "username": "pearcej",
+     #    "firstname": "Jan",
+     #    "lastname": "Pearce"
+     # },
+     ###NEW FORMAT:###
+     {
+     "username": "heggens",
+     "firstName":"Scott",
+     "lastName": "Heggen"
+     }
     ]
 
 User.insert_many(users).on_conflict_replace().execute()
