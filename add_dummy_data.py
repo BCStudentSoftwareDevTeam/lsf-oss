@@ -112,6 +112,24 @@ terms = [
 ]
 
 Term.insert_many(terms).on_conflict_replace().execute()
+#############################
+# Staff
+#############################
+from app.models.Tracy.stustaff import STUSTAFF
+
+staffs = [
+    {
+    "PIDM":"heggens",
+	"ID": "B12361006",
+	"FIRST_NAME":"Scott",
+	"LAST_NAME" : "Heggen",
+	"EMAIL"  :"heggens@berea.edu",
+	"CPO":"6300",
+	"ORG":"Berea College",
+	"DEPT_NAME": "CS"
+    }
+]
+STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
 
 print("Dummy data added")
 

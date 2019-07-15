@@ -22,11 +22,11 @@
             name='supervisor'
             id='supervisor'
             data-live-search='true'
-            title="Supervisor"
+            title="Supervisorss"
             data-width="1109px" >
-    {% for user in users %}
-      <option value="{{user.username}}">{{user.firstName}} {{user.lastName}}</option>
-    {% endfor %}
+      {% for staff in staffs %}
+        <option value="{{staff.PIDM}}">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
+      {% endfor %}
     </select>
   </div>
   <br />
