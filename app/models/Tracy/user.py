@@ -6,16 +6,14 @@ from peewee import CharField
 
 class User(baseModel):
     username            = CharField(primary_key=True)
-    firstname           = CharField(null=False)
-    lastname            = CharField(null=False)#Still having trouble migrating so the updates is commented below.
-    # firstName           = CharField(null=False)
-    # lastName            = CharField(null=False)
-    # email               = CharField()
-    # isLaborAdmin        = BooleanField()
-    # isFinancialAidAdmin = BooleanField()
-    # isSaasAdmin         = BooleanField()
-
-
+    # firstname           = CharField(null=False)
+    # lastname            = CharField(null=False)#Still having trouble migrating so the updates are commented below.
+    firstName           = CharField(null=False)
+    lastName            = CharField(null=False)
+    email               = CharField(null=True)
+    isLaborAdmin        = BooleanField(null=True)
+    isFinancialAidAdmin = BooleanField(null=True)
+    isSaasAdmin         = BooleanField(null=True)
 # @login.user_loader
 def load_user(username):
     return User.get(User.username == username)
