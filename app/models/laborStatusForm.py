@@ -13,9 +13,9 @@ from app.models.department import Department
 class LaborStatusForm (baseModel):
     laborStatusFormID           = IntegerField(primary_key = True)
     termCode                    = ForeignKeyField(column_name='termCode', model=Term)#FK to term
-    # studentSupervisee           = ForeignKeyField(Student)  #foreign key to student
-    # primarySupervisor           = ForeignKeyField(User) #foreign key to user
-    # department                  = ForeignKeyField(Department) #Foreign key to department
+    studentSupervisee           = ForeignKeyField(column_name='ID', model=Student)  #foreign key to student
+    primarySupervisor           = ForeignKeyField(column_name='username', model=User) #foreign key to user
+    department                  = ForeignKeyField(column_name='DEPT_NAME',model=Department) #Foreign key to department
     secondarySupervisor         = CharField(null = True)
     jobType                     = CharField() #Primary or secondary
     WLS                         = CharField() #pulled from tracy

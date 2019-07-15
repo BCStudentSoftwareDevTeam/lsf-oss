@@ -29,7 +29,7 @@ from app.models.student import Student
 students = [
     {
     "PIDM":"1",# Unique random ID
-    # "ID ":"B012341234",# B-number
+    "ID":"B012341234",# B-number
     "FIRST_NAME" : "Jose",
     "LAST_NAME":"Garcia",
     "CLASS_LEVEL":"Sophomore",
@@ -97,45 +97,12 @@ print("staats added")
 #############################
 from app.models.laborStatusForm import LaborStatusForm
 lsfs = [
-#{
-#     "laborStatusFormID": 1,
-#     "term": "201621",
-#     "studentSupervisee": "Kat Adams",  #FIXME foreign key eventually
-#     "primarySupervisor": "Scott Heggen",
-#     "department": "CS",
-#     "departmentCode": 2014,
-#     "jobType": "Primary",
-#     "position": "S12345",
-#     "RegularTermHours": 12,
-#     "startDate": "1/2/3",
-#     "endDate": "3/2/1",
-#     "creator": "heggens",
-#     "createdDate": "1/2/3",
-#     "formStatus": "Pending"
-#     },
-#     {
-#     "laborStatusFormID": 2,
-#     "term": "Fall 2019",
-#     "studentSupervisee": "May Jue",  #FIXME foreign key eventually
-#     "primarySupervisor": "Bria Williams",
-#     "department": "CS",
-#     "departmentCode": 2014,
-#     "jobType": "Primary",
-#     "position": "S12345",
-#     "RegularTermHours": 12,
-#     "startDate": "1/2/3",
-#     "endDate": "3/2/1",
-#     "creator": "heggens",
-#     "createdDate": "1/2/3",
-#     "formStatus": "Pending"
-#     },
-#NEWFORMATTING
     {
     "laborStatusFormID": 1,
     "termCode": Term.get(Term.termCode == "201612"),
-    # "studentSupervisee_id": Student.get("ID"="FIXME"",
-    # "primarySupervisor_id": User.get("ID"=
-    # "department_id": Department.get()
+    "ID": Student.get(Student.ID == "B012341234"),
+    "username": User.get(User.username == "heggens"),
+    "DEPT_NAME": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Primary",
     "WLS":"1",
     "POSN_TITLE":"Dummy boi",
