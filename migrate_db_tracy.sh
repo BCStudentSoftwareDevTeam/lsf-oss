@@ -5,6 +5,8 @@ pem init
 pem add app.models.Tracy.studata.STUDATA
 pem add app.models.Tracy.stustaff.STUSTAFF
 pem add app.models.Tracy.stuposn.STUPOSN
+
+
 pem watch
 
 pem migrate
