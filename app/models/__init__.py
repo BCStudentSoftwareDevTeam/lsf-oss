@@ -7,7 +7,7 @@ from app import load_config
 
 def getMySQLDB():
     cfg = load_config('app/config/secret_config.yaml')
-    if os.environ["USING_CONTAINER"]:
+    if os.environ.get("USING_CONTAINER", False):
         cfg['lsfdb']['host'] = 'db'
     else:
         cfg['lsfdb']['host'] = 'localhost'
