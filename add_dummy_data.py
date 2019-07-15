@@ -22,8 +22,8 @@ users = [
      ###NEW FORMAT:###
      {
      "username": "heggens",
-     "firstName":"Scott",
-     "lastName": "Heggen"
+     "FIRST_NAME":"Scott",
+     "LAST_NAME": "Heggen"
      }
     ]
 
@@ -76,9 +76,9 @@ lsfs = [
     "primarySupervisor": "Scott Heggen",#FIXME foreign key eventually
     "department": "CS", #FIXME: Foreign key eventually
     "jobType": "Primary",
-    "positionWLS":"WLS-1", #FIXME: idk how this is gonna be formatted
-    "positionName" :"Student programmer",
-    "positionCode": "S12345",
+    "WLS":"WLS-1", #FIXME: idk how this is gonna be formatted
+    "POSN_TITLE" :"Student programmer",
+    "POSN_CODE": "S12345",
     "weeklyHours":12,
     "startDate": "1/2/3",
     "endDate": "3/2/1"

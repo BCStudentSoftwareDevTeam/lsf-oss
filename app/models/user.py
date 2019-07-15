@@ -6,14 +6,17 @@ from peewee import CharField
 
 class User(baseModel):
     username            = CharField(primary_key=True)
-    # firstname           = CharField(null=False)
-    # lastname            = CharField(null=False)#Still having trouble migrating so the updates are commented below.
-    firstName           = CharField(null=False)
-    lastName            = CharField(null=False)
-    email               = CharField(null=True)
+    FIRST_NAME          = CharField(null=True) #pulled from tracy
+    LAST_NAME           = CharField(null=True)
+    EMAIL               = CharField(null=True)
+    CPO                 = CharField(null=True)
+    ORG                 = CharField(null=True)
+    DEPT_NAME           = CharField(null=True)#pulled from TRACY
     isLaborAdmin        = BooleanField(null=True)
     isFinancialAidAdmin = BooleanField(null=True)
     isSaasAdmin         = BooleanField(null=True)
+    def __str__(self):
+        return str(self.__dict__)
 # @login.user_loader
 def load_user(username):
     return User.get(User.username == username)
