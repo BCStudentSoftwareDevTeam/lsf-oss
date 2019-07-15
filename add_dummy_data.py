@@ -7,17 +7,10 @@ This file will need to be changed if the format of models changes (new fields, d
 #############################
 from app.models.user import User
 users = [
-     # {
-     #    "username": "pearcej",
-     #    "firstname": "Jan",
-     #    "lastname": "Pearce"
-     # },
-     ###NEW FORMAT:###
      {
      "username": "heggens",
      "FIRST_NAME":"Scott",
      "LAST_NAME": "Heggen",
-     # "bNumber": "B01234567"
      }
     ]
 User.insert_many(users).on_conflict_replace().execute()
@@ -198,5 +191,3 @@ print("LSF added")
 
 
 print("Dummy data added")
-
-#TODO To be continued...
