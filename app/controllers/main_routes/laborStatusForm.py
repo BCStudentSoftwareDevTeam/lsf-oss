@@ -13,7 +13,7 @@ def laborStatusForm():
     forms = LaborStatusForm.select()
     students = STUDATA.select()
     terms = Term.select().where(Term.termState == "open")#changed to term state, open, closed, inactive
-    return render_template( 'main/laborstatusform.html',
+    return render_template( 'main/laborStatusForm.html',
 				            title=('Labor Status Form'),
                             username = username,#Passing of variables from controller to front
                             forms = forms,
