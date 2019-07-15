@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block app_content %}
-<link rel="stylesheet" href="/static/css/laborstatusform.css" type="text/css"/>
+<link rel="stylesheet" href="/static/css/laborStatusForm.css" type="text/css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -22,8 +22,11 @@
             name='supervisor'
             id='supervisor'
             data-live-search='true'
-            title="Supervisor"
+            title="Supervisorss"
             data-width="1109px" >
+      {% for staff in staffs %}
+        <option value="{{staff.PIDM}}">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
+      {% endfor %}
     </select>
   </div>
   <br />
