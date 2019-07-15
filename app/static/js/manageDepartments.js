@@ -9,6 +9,6 @@ b1.onclick = function() {
   }
 }
 
-$(document).ready( function (){
-  $('#departmentsTable').DataTable();
-  });
+$(document).ready( function(){
+    $('#departmentsTable').DataTable();
+  } );

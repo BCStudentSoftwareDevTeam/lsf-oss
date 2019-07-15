@@ -1,9 +1,10 @@
 {% extends "base.html" %}
+
 {% block app_content %}
+<script src="/static/js/manageDepartments.js"</script>
+<link rel="stylesheet" href="cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js">
 <div class="wrapper">
-  <script src="/static/js/manageDepartments.js"</script>
-  <link rel="stylesheet" href="cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
-  <script type="cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 
   <h1> Manage Departments </h1>
   <p class="text-center">In Compliance: Position descriptions are up to date.</p>
@@ -23,7 +24,7 @@
       </tr>
       <tr>
         <th scope="row">Chemistry</th>
-          <td><button type="button" class="btn btn-danger" value="play">Not in Compliance</button></td>
+        <td><button type="button" class="btn btn-danger" value="play">Not in Compliance</button></td>
       </tr>
     </tbody>
   </table>
