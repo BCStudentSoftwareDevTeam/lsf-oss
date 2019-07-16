@@ -1,16 +1,22 @@
+#LSF file
 from app.models import *
 from peewee import CharField
 # from app import login
 
 
 class User(baseModel):
-    username  = CharField(primary_key=True)
-    firstname = CharField(null=False)
-    lastname  = CharField(null=False)
-    #Was having trouble migrating so i just left this file alone. Below are new fields and theres a spot in add dummy to uncomment for new format
-    # isLaborAdmin        = BooleanField(null=True)#Can be null, not every user will be an admin
-    # isFinancialAid      = BooleanField(null=True)#Can be null, not every user (very few actually) will be Fin Aid
-    # isSAAS              = BooleanField(null=True)#Can be null, not every user (very few actually) will be SAAS
+    username            = CharField(primary_key=True)
+    FIRST_NAME          = CharField(null=True) #pulled from tracy
+    LAST_NAME           = CharField(null=True)
+    EMAIL               = CharField(null=True)
+    CPO                 = CharField(null=True)
+    ORG                 = CharField(null=True)
+    DEPT_NAME           = CharField(null=True)#pulled from TRACY
+    isLaborAdmin        = BooleanField(null=True)
+    isFinancialAidAdmin = BooleanField(null=True)
+    isSaasAdmin         = BooleanField(null=True)
+    def __str__(self):
+        return str(self.__dict__)
 # @login.user_loader
 def load_user(username):
     return User.get(User.username == username)

@@ -1,5 +1,10 @@
+#LSF file all caps fields are pulled from TRACY
 #Modeled after Form.py in Advancement Office
 from app.models import *
+from app.models.term import Term
+from app.models.student import Student
+from app.models.user import User
+from app.models.department import Department
 
 #Any foreign keys^^^
 #Any other imports
@@ -7,23 +12,22 @@ from app.models import *
 # NOTE: Always start classes with a capital letter
 class LaborStatusForm (baseModel):
     laborStatusFormID           = IntegerField(primary_key = True)
-    term                        = CharField() #TODO: foreign key to term
-    studentSupervisee           = CharField()  #TRACY field
-    primarySupervisor           = CharField() #TRACY field
-    department                  = CharField()
-    departmentCode              = IntegerField()
-    secondarySupervisor         = CharField(null = True)
+    termCode                    = ForeignKeyField(Term)#FK to term
+    studentSupervisee           = ForeignKeyField(Student)  #foreign key to student
+    primarySupervisor           = ForeignKeyField(User) #foreign key to user
+    department                  = ForeignKeyField(Department) #Foreign key to department
+    secondarySupervisor         = ForeignKeyField(User, null=True)#student may not always have a secondary
     jobType                     = CharField() #Primary or secondary
-    position                    = CharField() #WLS level
-    SummerBreakHours            = IntegerField(null = True) #total hours for summer term
-    RegularTermHours            = IntegerField(null = True) #weekly hours
-    startDate                   = CharField()
-    endDate                     = CharField()
+    WLS                         = CharField() #pulled from tracy
+    POSN_TITLE                  = CharField() #pulled from tracy eg. student programmer, customer engagement specialist, receptionist, teaching assistant
+    POSN_CODE                   = CharField() #pulled from tracy
+    contractHours               = IntegerField(null = True) #total hours for break terms
+    weeklyHours                 = IntegerField(null = True) #weekly hours 10,12,15...
+    startDate                   = CharField(null = True) #in case they start different than term start date
+    endDate                     = CharField(null = True)
     supervisorNotes             = CharField(null=True) #null=True allows saving of null in db, and a supervisor may not always have notes
-    creator                     = CharField()
-    createdDate                 = CharField()
     laborDepartmentNotes        = CharField(null=True)
-    formStatus                  = CharField(null=False)   # Store the state of the form, e.g., pending, approved, denied
+
 
     def __str__(self):
         return str(self.__dict__)
