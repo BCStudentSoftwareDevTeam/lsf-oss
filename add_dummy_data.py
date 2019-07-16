@@ -118,8 +118,21 @@ terms = [
     "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
     "termEnd":"2018-05-10",
     "termState":"closed",
+    },
+    {
+    "termCode":"201812",
+    "termName" :"Summer 2018",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"open",
+    },
+    {
+    "termCode":"201912",
+    "termName" :"Summer 2019",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"closed",
     }
-    #add more term cases here
 ]
 Term.insert_many(terms).on_conflict_replace().execute()
 
@@ -220,6 +233,34 @@ lsfs = [
     "contractHours": 120,
     "startDate": "1/2/3",
     "endDate": "3/2/1"
+    },
+    {
+    "laborStatusFormID": 2,
+    "termCode": Term.get(Term.termCode == "201712"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "primarySupervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+    "jobType": "secondary",
+    "WLS":"2",
+    "POSN_TITLE":"CS TA",
+    "POSN_CODE":"S61419",
+    "weeklyHours": 5,
+    "startDate": "1/2/3",
+    "endDate": "3/2/1"
+    },
+    {
+    "laborStatusFormID": 3,
+    "termCode": Term.get(Term.termCode == "201812"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "primarySupervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+    "jobType": "",
+    "WLS":"2",
+    "POSN_TITLE":"CS TA",
+    "POSN_CODE":"S61419",
+    "contractHours": 120,
+    "startDate": "1/2/3",
+    "endDate": "3/2/1"
     }
 
 ]
@@ -237,7 +278,18 @@ print("LSF added")
 #############################
 # Modified Form
 #############################
-
+from app.models.modifiedForm import ModifiedForm
+modforms=[
+{
+"modifiedFormID":1,
+"fieldModified":"Term",
+"oldValue":"201612",
+"newValue":"201712",
+"effectiveDate":"1/2/3"
+}
+]
+ModifiedForm.insert_many(modforms).on_conflict_replace().execute()
+print("modforms added")
 #############################
 # Overload form
 #############################
