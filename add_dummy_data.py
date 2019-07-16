@@ -54,6 +54,14 @@ positions = [
     "ORG" : "2114",
     "ACCOUNT":"123456",
     "DEPT_NAME":"Computer Science"
+    },
+    {
+    "POSN_CODE": "S61419",
+    "POSN_TITLE": "TA",
+    "WLS": "1 - Entry Level",
+    "ORG" : "2115",
+    "ACCOUNT":"123455",
+    "DEPT_NAME":"Mathematics"
     }
 ]
 STUPOSN.insert_many(positions).on_conflict_replace().execute()
@@ -96,8 +104,21 @@ terms = [
     "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
     "termEnd":"2018-05-10",
     "termState":"closed",
+    },
+    {
+    "termCode":"201812",
+    "termName" :"Summer 2018",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"open",
+    },
+    {
+    "termCode":"201912",
+    "termName" :"Summer 2019",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"closed",
     }
-    #add more term cases here
 ]
 Term.insert_many(terms).on_conflict_replace().execute()
 print("terms added")
@@ -154,17 +175,46 @@ print("staats added")
 #############################
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.student import Student
+#primary/secondary supervisors are foreign keys to user table
 lsfs = [
     {
     "laborStatusFormID": 1,
     "termCode": Term.get(Term.termCode == "201612"),
-    "ID": Student.get(Student.ID == "B00730361"),
-    "username": User.get(User.username == "heggens"),
-    "DEPT_NAME": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "primarySupervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Primary",
     "WLS":"1",
     "POSN_TITLE":"Dummy boi",
     "POSN_CODE":"S12345",
+    "startDate": "1/2/3",
+    "endDate": "3/2/1"
+    },
+    {
+    "laborStatusFormID": 2,
+    "termCode": Term.get(Term.termCode == "201712"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "primarySupervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+    "jobType": "secondary",
+    "WLS":"2",
+    "POSN_TITLE":"CS TA",
+    "POSN_CODE":"S61419",
+    "weeklyHours": 5,
+    "startDate": "1/2/3",
+    "endDate": "3/2/1"
+    },
+    {
+    "laborStatusFormID": 3,
+    "termCode": Term.get(Term.termCode == "201812"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "primarySupervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+    "jobType": "",
+    "WLS":"2",
+    "POSN_TITLE":"CS TA",
+    "POSN_CODE":"S61419",
+    "contractHours": 120,
     "startDate": "1/2/3",
     "endDate": "3/2/1"
     }
@@ -174,20 +224,56 @@ print("LSF added")
 #############################
 # Form History
 #############################
+#insert form history cases here
 
 #############################
 # Labor Release Forms
 #############################
-
-
+from app.models.laborReleaseForm import LaborReleaseForm
+lrfs=[
+{
+    "laborReleaseFormID":1,
+    "conditionAtRelease":"Satisfactory",
+    "releaseDate":"1/2/3",
+    "reasonForRelease":"Taking a leave"
+}
+]
+LaborReleaseForm.insert_many(lrfs).on_conflict_replace().execute()
+print("Lrf added")
 #############################
 # Modified Form
 #############################
-
+from app.models.modifiedForm import ModifiedForm
+modforms=[
+{
+"modifiedFormID":1,
+"fieldModified":"Term",
+"oldValue":"201612",
+"newValue":"201712",
+"effectiveDate":"1/2/3"
+}
+]
+ModifiedForm.insert_many(modforms).on_conflict_replace().execute()
+print("modforms added")
 #############################
 # Overload form
 #############################
+#insert dummy overload case here
 
-
+#############################
+#emailtemplates
+#############################
+from app.models.emailTemplate import EmailTemplate
+emailtemps=[
+{
+"emailTemplateID":"1",
+"purpose":"Labor Status Form Received",
+"subject":"Heres a subject",
+"body":"body yo",
+"audience":"students"
+}
+]
+EmailTemplate.insert_many(emailtemps).on_conflict_replace().execute()
+print("emailtemplates added")
 
 print("Dummy data added")
