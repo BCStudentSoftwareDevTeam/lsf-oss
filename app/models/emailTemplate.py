@@ -23,6 +23,6 @@ class EmailTemplate (baseModel):
 #7:When lrf is approved: send to supervisor and student
 #8:When lrf is rejected: send to supervisor and student
 #Overload
-#1:When labor overload form submitted (by student): send to supervisor(??? and advisor???)
-#2: When labor overload approved: send to supervisor and student(??? and advisor???)
-#3: When laber overload rejected: send to supervisor and student (??? and advisor???)
+#9: When labor overload form submitted (by student): send to supervisor(??? and advisor???)
+#10: When labor overload approved: send to supervisor and student(??? and advisor???)
+#11: When laber overload rejected: send to supervisor and student (??? and advisor???)
