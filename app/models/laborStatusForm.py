@@ -8,11 +8,11 @@ from app.models.department import Department
 # All caps fields are pulled from TRACY
 class LaborStatusForm (baseModel):
     laborStatusFormID           = IntegerField(primary_key=True)
-    termCode                    = ForeignKeyField(Term)             # FK to term
-    studentSupervisee           = ForeignKeyField(Student)          # foreign key to student
-    primarySupervisor           = ForeignKeyField(User)             # foreign key to user
-    department                  = ForeignKeyField(Department)       # Foreign key to department
-    secondarySupervisor         = ForeignKeyField(User, null=True)  # student may not always have a secondary
+    termCode                    = ForeignKeyField(Term, on_delete="cascade")             # FK to term
+    studentSupervisee           = ForeignKeyField(Student, on_delete="cascade")          # foreign key to student
+    primarySupervisor           = ForeignKeyField(User, on_delete="cascade")             # foreign key to user
+    department                  = ForeignKeyField(Department, on_delete="cascade")       # Foreign key to department
+    secondarySupervisor         = ForeignKeyField(User, null=True, on_delete="cascade")  # student may not always have a secondary
     jobType                     = CharField()                       # Primary or secondary
     WLS                         = CharField()                       
     POSN_TITLE                  = CharField()                       # eg. student programmer, customer engagement specialist, receptionist, teaching assistant
