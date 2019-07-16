@@ -38,9 +38,25 @@ def thenavbar():
     return Navbar(
         'Labor Status Forms',
         View('Home', 'main.index'),
+        Subgroup(
+            'Supervisor Portal',
+            View('Current Labor Students', 'main.index'),  #FIXME needs correct link instead of 'main.index'
+            View('Past Labor Students', 'main.index'),     #FIXME needs correct link instead of 'main.index'
+            View('All Labor Students', 'main.index')       #FIXME needs correct link instead of 'main.index'
+            ),
+        Subgroup(
+            'Administration',
+            View('Pending Forms', 'main.index'),           #FIXME needs correct link instead of 'main.index'
+            View('All past forms', 'main.index'),          #FIXME needs correct link instead of 'main.index'
+            View('Manage Terms', 'main.index'),             #FIXME needs correct link instead of 'main.index'
+            View('Manage Departments', 'main.index'),      #FIXME needs correct link instead of 'main.index'
+            View('Manage Admins', 'main.index'),           #FIXME needs correct link instead of 'main.index'
+            View('Manage Email Templates', 'main.index')   #FIXME needs correct link instead of 'main.index'
+            ),
         View('Labor Status Form', 'main.laborStatusForm'),
-        View("Administration", "admin.admin_tables")
-    )
+        View('Logout', 'main.index')
+            )
 
+nav.register_element('side', nav)
 
 nav.init_app(app)
