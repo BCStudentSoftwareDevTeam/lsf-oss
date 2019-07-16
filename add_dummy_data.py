@@ -111,8 +111,8 @@ staffs = [
     "PIDM":"heggens",
 	"ID": "B12361006",
 	"FIRST_NAME":"Scott",
-	"LAST_NAME" : "Heggen",form
-	"EMAIL"  :"heggens@berea.edu",
+	"LAST_NAME" : "Heggen",
+	"EMAIL":"heggens@berea.edu",
 	"CPO":"6300",
 	"ORG":"Berea College",
 	"DEPT_NAME": "CS"
@@ -196,7 +196,7 @@ print("Lrf added")
 #############################
 from app.models.modifiedForm import ModifiedForm
 modforms=[
-{
+{"modifiedFormID":1,
 "fieldModified":"Term",
 "oldValue":"201612",
 "newValue":"201712",
