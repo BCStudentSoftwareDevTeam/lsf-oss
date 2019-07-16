@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% block app_content %}
-<link rel="stylesheet" href="/static/css/laborStatusForm.css" type="text/css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -37,7 +36,8 @@
             id='department'
             data-live-search='true'
             title="Department"
-            data-width="1109px" required>
+            data-width="1109px"
+            onchange = "getDepartment(this)" required>
       {% for department in departments %}
         <option value="{{department.DEPT_NAME}}">{{department.DEPT_NAME}}</option>
       {% endfor %}
@@ -99,10 +99,8 @@
             id='position'
             data-live-search='true'
             title="Position"
-            data-width="258px" required>
-      {% for position in positions %}
-        <option value="{{position.POSN_CODE}}">{{position.POSN_TITLE}}</option>
-      {% endfor %}
+            data-width="258px"
+            required>
     </select>
   </div>
   <br />
@@ -167,17 +165,10 @@
 </div>
 <!-- ModalEnds -->
 </div>
-<script type="text/javascript">
-  $(document).ready(function(){
-      $('[data-tooltip="true"]').tooltip();
-  });
-</script>
-<script type="text/javascript">
-   var j = jQuery.noConflict();
-   j( function() {
-       j( "#datetimepicker1, #datetimepicker2" ).datepicker();
-   } );
-</script>
+
+ <!-- css and javascript files -->
+<script src="/static/js/laborStatusForm.js"></script>
+<link rel="stylesheet" href="/static/css/laborStatusForm.css" type="text/css"/>
 {% endblock %}
 
 

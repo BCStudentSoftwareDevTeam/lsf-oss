@@ -7,12 +7,16 @@ from app.models.Tracy.studata import *
 from app.models.Tracy.stustaff import *
 from app.models.department import *
 from app.models.Tracy.stuposn import STUPOSN
-from flask import jsonify
+from flask import json
 from flask import request
 
-@main_bp.route("/getPositions", methods=['POST'])
-def getPositions():
-    return jsonify({"S1234": "Student Stuffer"})
+@main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
+def getPositions(department):
+    positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
+    position_dict = {}
+    for position in positions:
+        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE}
+    return json.dumps(position_dict)
 
 @main_bp.route('/laborstatusform', methods=['GET', 'POST'])
 # @login_required
