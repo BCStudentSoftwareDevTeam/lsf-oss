@@ -1,4 +1,3 @@
-#lsf File
 from app.models import *
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.laborReleaseForm import LaborReleaseForm
@@ -9,14 +8,14 @@ from app.models.user import User
 
 class FormHistory(baseModel):
     formHistoryID       = IntegerField(primary_key=True)
-    formID              = ForeignKeyField(LaborStatusForm) #foreign key to lsf
-    historyType         = CharField()#modified, released, overloaded
-    releaseForm         = ForeignKeyField(LaborReleaseForm,null=True) #if its a release form
-    modifiedForm        = ForeignKeyField(ModifiedForm,null=True) #if its a form modification
-    overloadForm        = ForeignKeyField(OverloadForm,null=True) #if its an overload application
-    createdBy           = ForeignKeyField(User)#Foreign key to USERS
+    formID              = ForeignKeyField(LaborStatusForm, on_delete="cascade")               # foreign key to lsf
+    historyType         = CharField()                                                         # modified, released, overloaded
+    releaseForm         = ForeignKeyField(LaborReleaseForm, null=True, on_delete="SET NULL")  # if its a release form
+    modifiedForm        = ForeignKeyField(ModifiedForm, null=True, on_delete="SET NULL")      # if its a form modification
+    overloadForm        = ForeignKeyField(OverloadForm, null=True, on_delete="SET NULL")      # if its an overload application
+    createdBy           = ForeignKeyField(User.username, related_name="creator",  on_delete="cascade") # Foreign key to USERS
     createdDate         = DateField()
-    reviewedDate        = DateField()
-    reviewedBy          = ForeignKeyField(User)#Foreign key to USERS
-    status              = ForeignKeyField(Status)#Foreign key to Status #Approved, rejected(or denied??), pending
-    rejectReason        = CharField() #This should not be null IF that status is rejected
+    reviewedDate        = DateField(null=True)
+    reviewedBy          = ForeignKeyField(User.username, null=True, related_name="reviewer",  on_delete="SET NULL") # Foreign key to USERS
+    status              = ForeignKeyField(Status)                       # Foreign key to Status # Approved, rejected(or denied??), pending
+    rejectReason        = CharField(null=True)                          # This should not be null IF that status is rejected
