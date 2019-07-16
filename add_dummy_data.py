@@ -196,12 +196,12 @@ print("Lrf added")
 #############################
 from app.models.modifiedForm import ModifiedForm
 modforms=[
-{"modifiedFormID":1,
-"fieldModified":"Term",
-"oldValue":"201612",
-"newValue":"201712",
-"effectiveDate":"1/2/3"
-}
+            {   "modifiedFormID":1,
+                "fieldModified":"Term",
+                "oldValue":"201612",
+                "newValue":"201712",
+                "effectiveDate":"1/2/3"
+            }
 ]
 ModifiedForm.insert_many(modforms).on_conflict_replace().execute()
 print("modforms added")
