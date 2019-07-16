@@ -18,7 +18,5 @@ pem add app.models.modifiedForm.ModifiedForm
 pem add app.models.overloadForm.OverloadForm
 pem add app.models.status.Status
 pem add app.models.student.Student
-
 pem watch
-
 pem migrate
