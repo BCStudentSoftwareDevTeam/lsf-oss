@@ -9,7 +9,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.css"/>
 {% endblock %}
 {% block app_content %}
-<form action="/admin/complianceStatus" method="POST">
+<!-- <form action="/admin/complianceStatus" method="POST"> -->
 <div class="wrapper">
 
   <h1> Manage Departments </h1>
@@ -27,11 +27,7 @@
       {% for department in department %}
       <tr>
         <th scope="row">{{department.DEPT_NAME}}</th>
-        {% if department.departmentCompliance == True %}
-        <th><button id="{{department.ACCOUNT}}" name="deptName" class="btn btn-success" onclick="status({{department.ACCOUNT}})" value="{{department.ACCOUNT}}">In Compliance</button></th>
-        {% else %}
-        <th><button id="{{department.ACCOUNT}}" name="deptName" class="btn btn-danger" onclick="status({{department.ACCOUNT}})" value="">Not in Compliance</button></th>
-        {% endif %}
+        <th><button id="{{department.departmentID}}" name="deptName" class="{% if department.departmentCompliance == True %} btn btn-success {% else %} btn btn-danger {% endif %}" onclick="status({{department.departmentID}})" value="{{department.departmentID}}">{% if department.departmentCompliance == True %} In Compliance {% else %} Not in Compliance {% endif %}</button></th>
       </tr>
       {% endfor %}
     </tbody>

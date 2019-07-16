@@ -7,6 +7,7 @@ from flask_bootstrap import bootstrap_find_resource
 from app.models.Tracy.studata import*
 from app.models.department import *
 from flask import request
+from flask import jsonify
 
 @admin.route('/admin/manageDepartments', methods=['GET'])
 # @login_required
@@ -23,17 +24,23 @@ def manage_departments():
 @admin.route('/admin/complianceStatus', methods=['POST'])
 #TODO MAKE A FUNCTION
 def complianceStatusCheck():
-    if request.form.get('deptName'): # MAKE SURE IT EQUALS TO THE VALUE OF THE BUTTON
-        print(request.form.get('deptName'))
-        deptName.complianceStatus =
-    #elif request.form.get('deptName'):
-    #    request.form['deptName'] == 'inCompliance'
-
-    #deptName = request.form.get("deptName")
-
-#def changeComplianceStatus():
-    #if request.form['complianceButton'] == 'inCompliance':
-    #    new = request.form.get("")
-    #elif request.form['complianceButton'] == 'notInCompliance':
-    #    pass
-    #pass
+    """
+    Placeholder docstring
+    """
+    print("Starting compliance changer")
+    try:
+        print("Get request")
+        rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
+        print(rsp)
+        if rsp:
+            print("Getting department name", rsp['deptName'])
+            print(type(rsp['deptName']))
+            department = Department.get(int(rsp['deptName']))
+            print(department)
+            department.departmentCompliance = not department.departmentCompliance
+            department.save()
+            print("worked")
+            return jsonify({"Success": True})
+    except Exception as e:
+        print(e)
+        return jsonify({"Success": False})
