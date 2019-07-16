@@ -34,11 +34,12 @@ students = [
 	"STU_EMAIL":"jamalie@berea.edu",
 	"STU_CPO":"718",
 	"LAST_POSN":"Media Technician",
-	"LAST_SUP_PIDM":"7",
+	"LAST_SUP_PIDM":"7"
     }
 ]
 STUDATA.insert_many(students).on_conflict_replace().execute()
-
+from app.models.student import Student
+Student.insert_many(students).on_conflict_replace().execute()
 print("students(TRACY) added")
 #############################
 # Positions (TRACY)
@@ -52,7 +53,7 @@ positions = [
     "WLS": "1 - Entry Level",
     "ORG" : "2114",
     "ACCOUNT":"123456",
-    "DEPT_NAME":"Computer Science",
+    "DEPT_NAME":"Computer Science"
     }
 ]
 STUPOSN.insert_many(positions).on_conflict_replace().execute()
@@ -101,6 +102,24 @@ terms = [
 Term.insert_many(terms).on_conflict_replace().execute()
 print("terms added")
 #############################
+# Staff
+#############################
+from app.models.Tracy.stustaff import STUSTAFF
+
+staffs = [
+    {
+    "PIDM":"heggens",
+	"ID": "B12361006",
+	"FIRST_NAME":"Scott",
+	"LAST_NAME" : "Heggen",
+	"EMAIL"  :"heggens@berea.edu",
+	"CPO":"6300",
+	"ORG":"Berea College",
+	"DEPT_NAME": "CS"
+    }
+]
+STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
+#############################
 # Department
 #############################
 from app.models.department import Department
@@ -134,11 +153,12 @@ print("staats added")
 # Labor Status Forms
 #############################
 from app.models.laborStatusForm import LaborStatusForm
+from app.models.student import Student
 lsfs = [
     {
     "laborStatusFormID": 1,
     "termCode": Term.get(Term.termCode == "201612"),
-    "ID": Student.get(Student.ID == "B012341234"),
+    "ID": Student.get(Student.ID == "B00730361"),
     "username": User.get(User.username == "heggens"),
     "DEPT_NAME": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Primary",
@@ -167,6 +187,7 @@ print("LSF added")
 #############################
 # Overload form
 #############################
+
 
 
 print("Dummy data added")
