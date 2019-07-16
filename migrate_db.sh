@@ -5,7 +5,13 @@ rm -f migrations.json 2> /dev/null
 
 pem init
 
-sed -i '' 's/migrations/lsf_migrations/g' migrations.json
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        # ...
+    sed -i 's/migrations/lsf_migrations/g' migrations.json
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+        # Mac OSX
+    sed -i '' 's/migrations/lsf_migrations/g' migrations.json
+fi
 
 pem add app.models.user.User
 pem add app.models.laborStatusForm.LaborStatusForm
