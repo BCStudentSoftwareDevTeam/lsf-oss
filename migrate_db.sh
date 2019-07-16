@@ -1,6 +1,12 @@
 #pip install peewee==3.9.6
 #pip install peewee-migrations==0.3.18
+
+rm -f migrations.json 2> /dev/null
+
 pem init
+
+sed -i '' 's/migrations/lsf_migrations/g' migrations.json
+
 pem add app.models.user.User
 pem add app.models.laborStatusForm.LaborStatusForm
 pem add app.models.laborReleaseForm.LaborReleaseForm
