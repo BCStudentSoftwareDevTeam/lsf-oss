@@ -3,7 +3,6 @@
 {% block app_content %}
 
 <head>
-  <link rel="stylesheet" href="emailTemplates.css">
     <style>
       h1 {
         text-align: center;
@@ -34,7 +33,7 @@
              data-show-subtext="true" data-live-search="true" name="addAdmin">
              <option value = "---" disabled selected>Select User</option>
              {% for user in users %}     <!-- placeholder for emailTemplate table database -->
-                <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.username}} {{user.firstname}}</option>
+                <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.firstname}} {{user.lastname}}, {{user.username}}</option>
              {% endfor %}
              </select>
          </div>
@@ -50,7 +49,7 @@
              data-show-subtext="true" data-live-search="true" name="addAdmin">
                 <option value = "---" disabled selected>Select User</option>
              {% for user in users %}     <!-- placeholder for emailTemplate table database -->
-                <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.username}} {{user.firstname}}</option>
+                <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.firstname}} {{user.lastname}}, {{user.username}}</option>
              {% endfor %}
              </select>
          </div>
