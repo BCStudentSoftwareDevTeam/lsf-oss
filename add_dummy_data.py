@@ -145,15 +145,18 @@ STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
 #############################
 from app.models.department import Department
 depts = [
-    {"DEPT_NAME":"Computer Science",
-    "ACCOUNT":"1234",
-    "ORG":"4321",
-    "departmentCompliance":"True"
+    {   "departmentID": 1,
+        "DEPT_NAME":"Computer Science",
+        "ACCOUNT":"1234",
+        "ORG":"4321",
+        "departmentCompliance":"True"
     },
-    {"DEPT_NAME":"Mathematics",
-    "ACCOUNT":"5678",
-    "ORG":"8765",
-    "departmentCompliance":"True"
+
+    {   "departmentID": 2,
+        "DEPT_NAME":"Mathematics",
+        "ACCOUNT":"5678",
+        "ORG":"8765",
+        "departmentCompliance":"True"
     }
 ]
 Department.insert_many(depts).on_conflict_replace().execute()
