@@ -1,0 +1,7 @@
+.navbar-collapse, .navbar-nav li {
+  clear:both;
+}
+
+.container-fluid {
+  margin-bottom: 350px;
+}

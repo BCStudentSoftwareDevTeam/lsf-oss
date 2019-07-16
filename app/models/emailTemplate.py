@@ -1,28 +1,28 @@
-#Modeled after User.py in Advancement Office with inspo from URCPP models
 from app.models import *
 
-#Any foreign keys or other imports
 
-
-#Note: if you update the model, you will need to update the queries to pull the right attributes you want
 class EmailTemplate (baseModel):
-    emailTemplateID                 = IntegerField(primary_key = True)
+    emailTemplateID                 = IntegerField(primary_key=True)
     purpose                         = CharField()
     subject                         = CharField()
     body                            = CharField()
     audience                        = CharField()
-
-
-
-#Queries as helper functions to user class
-####FIX ME: these are currently written as if they were in a class. FIx them to work with the emailTemplate class
-
-    def insert_emailTemplate(self, emailTemplateID, purpose, subject, body):
-        try:
-            emailTemplate = self.EmailTemplate(emailTemplateID = emailTemplateID, purpose = purpose, subject = subject,
-                                body  = body)
-            emailTemplate.save()
-            return True
-        except Exception as e:
-            print("EmailTemplate", e)
-            return False
+ 
+ 
+#since idk where to store this information-Kat:
+#Emails in labor status form:
+#LSF
+#1:When labor status form is submitted: send to student
+#2:When LSF is approved: send to supervisor and student
+#3:When LSF is rejected: send to supervisor and student
+#4:When LSF is modified: send to supervisor and student (?)
+#Pending
+#5:When a pending form is modified: send to supervisor and student
+#LRF
+#6:When labor release form is submitted: Send to student
+#7:When lrf is approved: send to supervisor and student
+#8:When lrf is rejected: send to supervisor and student
+#Overload
+#9: When labor overload form submitted (by student): send to supervisor(??? and advisor???)
+#10: When labor overload approved: send to supervisor and student(??? and advisor???)
+#11: When laber overload rejected: send to supervisor and student (??? and advisor???)
