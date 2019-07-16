@@ -5,7 +5,7 @@ rm -f migrations.json 2> /dev/null
 
 pem init
 
-sed -i 's/"directory": "migrations",/"directory": "tracy_migrations",/g' migrations.json
+sed -i '' 's/migrations/tracy_migrations/g' migrations.json
 
 
 pem add app.models.Tracy.studata.STUDATA
