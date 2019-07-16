@@ -37,21 +37,22 @@ nav = Nav()
 def thenavbar():
     return Navbar(
         'Labor Status Forms',
-        View('Home', 'main.index'),
         Subgroup(
             'Supervisor Portal',
-            View('Current Labor Students', 'main.index'),  #FIXME needs correct link instead of 'main.index'
-            View('Past Labor Students', 'main.index'),     #FIXME needs correct link instead of 'main.index'
-            View('All Labor Students', 'main.index')       #FIXME needs correct link instead of 'main.index'
+            View('Current Labor Students',"main.index"),# 'main.currentLaborStudents'),   #FIXME this link will not work because it does not exist yet
+            View('Labor Release Form', "main.index"), #'main.laborReleaseForm'),
+            View('Past Labor Students', "main.index"),# 'main.pastLaborStudents'),         #FIXME this link will not work because it does not exist yet
+            View('All Labor Students', "main.index"),#'main.allLaborStudents')            #FIXME this link will not work because it does not exist yet
             ),
         Subgroup(
             'Administration',
-            View('Pending Forms', 'main.index'),           #FIXME needs correct link instead of 'main.index'
-            View('All past forms', 'main.index'),          #FIXME needs correct link instead of 'main.index'
-            View('Manage Terms', 'main.index'),             #FIXME needs correct link instead of 'main.index'
-            View('Manage Departments', 'main.index'),      #FIXME needs correct link instead of 'main.index'
-            View('Manage Admins', 'main.index'),           #FIXME needs correct link instead of 'main.index'
-            View('Manage Email Templates', 'main.index')   #FIXME needs correct link instead of 'main.index'
+            View('Pending Forms', "main.index"),#'main.pendingForms'),                    #FIXME this link will not work because it does not exist yet
+            View('Overload Forms', 'main.index'),
+            View('All past forms', "main.index"),#'main.allPastForms'),                   #FIXME this link will not work because it does not exist yet
+            View('Manage Terms', "main.index"), #'admin.term_Management'),
+            View('Manage Departments', 'main.index'),  #FIXME this link will not work because it does not exist yet
+            View('Manage Admins', "main.index"), #'admin.admin_management'),
+            View('Manage Email Templates', "main.index")# 'admin.email_templates')
             ),
         View('Labor Status Form', 'main.laborStatusForm'),
         View('Logout', 'main.index')
