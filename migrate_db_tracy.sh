@@ -5,6 +5,7 @@ rm -f migrations.json 2> /dev/null
 
 pem init
 
+# See: https://stackoverflow.com/questions/394230/how-to-detect-the-os-from-a-bash-script/18434831
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
         # ...
     sed -i 's/migrations/tracy_migrations/g' migrations.json

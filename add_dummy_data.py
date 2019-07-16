@@ -54,6 +54,14 @@ positions = [
     "ORG" : "2114",
     "ACCOUNT":"123456",
     "DEPT_NAME":"Computer Science"
+    },
+    {
+    "POSN_CODE": "S61419",
+    "POSN_TITLE": "TA",
+    "WLS": "1 - Entry Level",
+    "ORG" : "2115",
+    "ACCOUNT":"123455",
+    "DEPT_NAME":"Mathematics"
     }
 ]
 STUPOSN.insert_many(positions).on_conflict_replace().execute()
@@ -96,8 +104,21 @@ terms = [
     "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
     "termEnd":"2018-05-10",
     "termState":"closed",
+    },
+    {
+    "termCode":"201812",
+    "termName" :"Summer 2018",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"open",
+    },
+    {
+    "termCode":"201912",
+    "termName" :"Summer 2019",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"closed",
     }
-    #add more term cases here
 ]
 Term.insert_many(terms).on_conflict_replace().execute()
 print("terms added")
@@ -112,7 +133,7 @@ staffs = [
 	"ID": "B12361006",
 	"FIRST_NAME":"Scott",
 	"LAST_NAME" : "Heggen",
-	"EMAIL":"heggens@berea.edu",
+	"EMAIL"  :"heggens@berea.edu",
 	"CPO":"6300",
 	"ORG":"Berea College",
 	"DEPT_NAME": "CS"
@@ -168,6 +189,34 @@ lsfs = [
     "POSN_CODE":"S12345",
     "startDate": "1/2/3",
     "endDate": "3/2/1"
+    },
+    {
+    "laborStatusFormID": 2,
+    "termCode": Term.get(Term.termCode == "201712"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "primarySupervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+    "jobType": "secondary",
+    "WLS":"2",
+    "POSN_TITLE":"CS TA",
+    "POSN_CODE":"S61419",
+    "weeklyHours": 5,
+    "startDate": "1/2/3",
+    "endDate": "3/2/1"
+    },
+    {
+    "laborStatusFormID": 3,
+    "termCode": Term.get(Term.termCode == "201812"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "primarySupervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+    "jobType": "",
+    "WLS":"2",
+    "POSN_TITLE":"CS TA",
+    "POSN_CODE":"S61419",
+    "contractHours": 120,
+    "startDate": "1/2/3",
+    "endDate": "3/2/1"
     }
 ]
 LaborStatusForm.insert_many(lsfs).on_conflict_replace().execute()
@@ -196,7 +245,8 @@ print("Lrf added")
 #############################
 from app.models.modifiedForm import ModifiedForm
 modforms=[
-{"modifiedFormID":1,
+{
+"modifiedFormID":1,
 "fieldModified":"Term",
 "oldValue":"201612",
 "newValue":"201712",
