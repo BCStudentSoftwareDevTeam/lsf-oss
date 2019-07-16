@@ -5,3 +5,19 @@
 .container-fluid {
   margin-bottom: 350px;
 }
+
+.footer {
+   position: absolute;
+   left: 0;
+  background-color:  #f0f3f4;
+  color:#1e2433;
+  text-align: center !important;
+   bottom: 55;
+   width: 100%;
+   /* Set the fixed height of the footer here */
+    height: 100px;
+    line-height: 100px; /* Vertically center the text there */
+ }
+a{
+  color: #66c2cc;
+}
