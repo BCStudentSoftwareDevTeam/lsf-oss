@@ -12,11 +12,11 @@ from app.models.department import Department
 # NOTE: Always start classes with a capital letter
 class LaborStatusForm (baseModel):
     laborStatusFormID           = IntegerField(primary_key = True)
-    termCode                    = ForeignKeyField(column_name='termCode', model=Term)#FK to term
-    studentSupervisee           = ForeignKeyField(column_name='ID', model=Student)  #foreign key to student
-    primarySupervisor           = ForeignKeyField(column_name='username', model=User) #foreign key to user
-    department                  = ForeignKeyField(column_name='DEPT_NAME',model=Department) #Foreign key to department
-    secondarySupervisor         = CharField(null = True)
+    termCode                    = ForeignKeyField(Term)#FK to term
+    studentSupervisee           = ForeignKeyField(Student)  #foreign key to student
+    primarySupervisor           = ForeignKeyField(User) #foreign key to user
+    department                  = ForeignKeyField(Department) #Foreign key to department
+    secondarySupervisor         = ForeignKeyField(User, null=True)#student may not always have a secondary
     jobType                     = CharField() #Primary or secondary
     WLS                         = CharField() #pulled from tracy
     POSN_TITLE                  = CharField() #pulled from tracy eg. student programmer, customer engagement specialist, receptionist, teaching assistant
