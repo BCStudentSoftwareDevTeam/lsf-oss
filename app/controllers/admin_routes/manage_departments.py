@@ -11,7 +11,6 @@ from app.models.Tracy.stuposn import *
 from app.models.department import *
 from flask import request
 from flask import jsonify
-from flask import flash
 
 @admin.route('/admin/manageDepartments', methods=['GET'])
 # @login_required
@@ -38,28 +37,6 @@ def manage_departments():
         d.ORG = dept.ORG
         d.save()
         print("D saved", d.ORG)
-    # print(tracyDepartmentList)
-    #
-    # department = Department.select()
-    # lsfDepartmentList = []
-    # lsfDepartmentIDlist = []
-    # for n in department:
-    #     #print(n.DEPT_NAME)
-    #     lsfDepartmentList.append(n.DEPT_NAME)
-    #     lsfDepartmentIDlist.append(n.departmentID)
-    # print(lsfDepartmentList)
-    # print(lsfDepartmentIDlist)
-    #
-    # currentMaxID = max(lsfDepartmentIDlist)
-    # print(currentMaxID)
-    # for dept in tracyDepartmentList:
-    #     if dept in lsfDepartmentList:
-    #         print(str(dept) + " is already in the database")
-    #     else:
-    #         newDept = STUPOSN.select(STUPOSN.ACCOUNT, STUPOSN.ORG).distinct().where(STUPOSN.DEPT_NAME == dept)
-    #         currentMax += 1
-    #         for k in newDept:
-    #             Department.create(departmentID = currentMax, DEPT_NAME = dept, ACCOUNT = k.ACCOUNT, ORG = k.ORG, departmentCompliance = True)
     department = Department.select()
     return render_template( 'admin/manageDepartments.html',
     title = ("Manage departments"),
@@ -85,7 +62,6 @@ def complianceStatusCheck():
             #print(department)
             department.departmentCompliance = not department.departmentCompliance
             department.save()
-            flash("Department compliance changed")
             #print("worked")
             return jsonify({"Success": True})
     except Exception as e:

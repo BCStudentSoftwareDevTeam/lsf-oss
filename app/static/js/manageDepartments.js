@@ -1,10 +1,21 @@
+// $.fn.dataTable.ext.type.order['compliance-status'] = function ( d ) {
+//     switch ( d ) {
+//         case 'In Compliance':    return 1;
+//         case 'Not in Compliance': return 2;
+//     }
+//     return 0;
+// };
+
+
 $(document).ready( function(){
 x = $('#departmentsTable')
 //console.log(x);
 x.DataTable( {
-'ordering': true
-  });
-
+  // "columnDefs": [ {
+  //     "type": "compliance-status",
+  //     "targets": 1
+  // } ]
+});
 });
 
 function status(department) {
@@ -19,10 +30,10 @@ function status(department) {
     success: function(response) {
       console.log(response);
       if(response["Success"]) {
-        category = "success"
-        msg = "Department compliance changed";
+        category = "info"
+        msg = "Department compliance changed.";
         $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-        $("#flasher").delay(1000).fadeOut()
+        $("#flasher").delay(3000).fadeOut()
         var departmentID = "#" + department;
         //console.log(departmentID);
         if ($(departmentID).hasClass("btn-success")){
