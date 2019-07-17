@@ -44,7 +44,6 @@ def manageLaborAdmin():
         removeLaborAdmin()
     return redirect(url_for('admin.admin_Management'))
 
-
 def addLaborAdmin():
     newAdmins = request.form.get('addAdmin')
     newAdmin = User.get(User.username == newAdmins)
@@ -55,3 +54,46 @@ def removeLaborAdmin():
     user = User.get(User.username == request.form.get('removeAdmin'))
     user.isLaborAdmin = 0
     user.save()
+
+
+
+def manageFinancialAidAdmin():
+    if request.form.get("addAid") == "addAid":
+        addFinancialAdmin()
+    elif request.form.get("removeAid") == "removeAid":
+        # print("Hello Ela!!")
+        removeFinancialAdmin()
+    return redirect(url_for('admin.admin_Management'))
+
+
+def addFinancialAdmin():
+    newFinAidAdmins = request.form.get('addFinancialAidAdmin')
+    newFinAidAdmin = User.get(User.username == newFinAidAdmins)
+    newFinAidAdmin.isFinancialAidAdmin = 1
+    newFinAidAdmin.save()
+
+def removeFinancialAdmin():
+    FinAiduser = FinAidUser.get(User.username == request.form.get('removeFinancialAidAdmin'))
+    FinAiduser.isFinancialAidAdmin = 0
+    FinAiduser.save()
+
+
+
+def manageSAASAdmin():
+    if request.form.get("addSAAS") == "addSAAS":
+        addSAASAdmin()
+    elif request.form.get("removeSAAS") == "removeSAAS":
+        # print("Hello Ela!!")
+        removeSAASAdmin()
+    return redirect(url_for('admin.admin_Management'))
+
+def addSAASAdmin():
+    newSAASAdmins = request.form.get('addSAASAdmin')
+    newSAASAdmin = User.get(User.username == newSAASAdmins)
+    newSAASAdmin.isSaasAdmin = 1
+    newSAASAdmin.save()
+
+def removeSAASAdmin():
+    SAASuser = SAASUser.get(User.username == request.form.get('removeSAASAdmin'))
+    SAASuser.isSaasAdmin = 0
+    SAASuser.save()

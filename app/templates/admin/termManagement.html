@@ -25,13 +25,27 @@
         <div class="container">
         <table class="table table-condensed"  id="myTable">
           <thead>
-              <tr>
-                  <th>Term Name</th>
-                  <th>Start Date</th>
-                  <th>End Date</th>
-                  <th>Term State</th>
-              </tr>
-          </thead>
+            <tr>
+                <th>Term Name</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Term State</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tbody>
+                {% for user in users %}
+                  {% if {term.termCode[:3]} == 2019 %}
+                    <tr>
+                      <td>{{term.termName}}</td>
+                      <td>{{term.termStart}}</td>
+                      <td>{{term.termEnd}}</td>
+                      <td>{{term.termState}}</td>
+                    </tr>
+                  {% endif %}
+                {% endfor %}
+              </tbody>
+            </tbody>
         </table>
       </div>
       </div>

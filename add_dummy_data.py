@@ -113,6 +113,55 @@ terms = [
     "termState":"open",
     },
     {
+    "termCode":"201911",
+    "termName" :"Fall 2019",
+    "termStart":"2019-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"open",
+    },
+    {
+    "termCode":"201912",
+    "termName" :"Spring 2020",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"open",
+    },
+    {
+    "termCode":"201901",
+    "termName" :"Thanksgiving 2019",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"open",
+    },
+    {
+    "termCode":"201902",
+    "termName" :"Christmas 2019",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"open",
+    },
+    {
+    "termCode":"201903",
+    "termName" :"Spring Break 2020",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"open",
+    },
+    {
+    "termCode":"201913",
+    "termName" :"Summer 2020",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"open",
+    },
+    {
+    "termCode":"201900",
+    "termName" :"AY",
+    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+    "termEnd":"2018-05-10",
+    "termState":"open",
+    },
+    {
     "termCode":"201912",
     "termName" :"Summer 2019",
     "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
