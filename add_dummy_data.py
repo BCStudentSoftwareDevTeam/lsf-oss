@@ -119,6 +119,13 @@ terms = [
     "termEnd":"2018-05-10",
     "termState":"closed",
     },
+    {
+    "termCode":"201901",  # termcode for ThanksGiving
+    "termName" :"ThanksGiving",
+    "termStart":"2018-01-10",
+    "termEnd":"2018-05-10",
+    "termState":"open",
+    },
 ]
 Term.insert_many(terms).on_conflict_replace().execute()
 
@@ -215,6 +222,20 @@ lsfs = [
     "jobType": "",
     "WLS":"2",
     "POSN_TITLE":"CS TA",
+    "POSN_CODE":"S61419",
+    "contractHours": 120,
+    "startDate": "1/2/3",
+    "endDate": "3/2/1"
+    },
+    {
+    "laborStatusFormID": 4,
+    "termCode":"201901",    #ThanksGiving break code
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "primarySupervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+    "jobType": "",
+    "WLS":"2",
+    "POSN_TITLE":"Teaching Assistant",
     "POSN_CODE":"S61419",
     "contractHours": 120,
     "startDate": "1/2/3",

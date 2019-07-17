@@ -23,8 +23,9 @@ function displayContractHours(obj) {
   var whichterm = termcode.toString().substr(-2);
   console.log(whichterm)
   if (whichterm != 11 && whichterm !=12) {
-    console.log("break time")
+    console.log("summer")
   }
+
   // if (this != )
 }
 
