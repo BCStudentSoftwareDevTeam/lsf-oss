@@ -10,4 +10,8 @@ from app.config.loadConfig import *
 cfg=get_cfg()
 @app.route("/contributors", methods = ["GET"])
 def contributors():
-    return render_template("main/contributors.html", cfg=cfg)
+    username = load_user('heggens')
+    return render_template("main/contributors.html", 
+           cfg=cfg,
+           username = username,
+           )

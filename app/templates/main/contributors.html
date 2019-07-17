@@ -1,23 +1,31 @@
 {% extends "base.html" %}
 {% set currentPage = "contributors" %}
-{% block body %}
-<div class="contributors" id="List of Names">
-    <h2>Contributors</h2>
+{% block scripts %}
+
+<div class ="container">
+  <h1>Hi, {{username.firstname}}!</h1>
+  <div class="contributors" id="List of Names" align= "center">  
+    <h2>Contributors </h2>
     <p> These are the students who helped to create this database and continue to work on it.</p>
-    <table class="table table-bordered">
-        
-    <tr class"info"> 
+    <table class="table table-bordered" style = "width:50%" align="center">   
+      <tr class"info"> 
         <th>Name</th>
         <th>Graduating Year</th>
-    </tr>
+      </tr>
     {% for contrib in cfg.contributors %}
-        <tr class"info">
-            <td>{{contrib.name}}</td>
-            <td>{{contrib.year}}</td>
-        </tr>
+      <tr class"info">
+        <td>{{contrib.name}}</td>
+        <td>{{contrib.year}}</td>
+      </tr>
     {% endfor %}
-    </table>
-    <button type='button' class='btn btn-success' style="padding: 7px 30px; margin-top: 5px" onclick ="history.back()">Back</button>
+    </table>  
+  </div>
 </div>
-<br>
+<div class= "btn-holder">
+<button type='button' class='btn btn-newcolor' style="padding: 7px 30px; margin-top: 5px" onclick ="history.back()">Back</button>
+
+
+
+</div>
 {% endblock %}
+<br>

@@ -21,3 +21,9 @@
 a{
   color: #66c2cc;
 }
+
+.btn-newcolor {
+  background-color: #66c2cc !important; 
+  color: #ffffff;
+ 
+}
