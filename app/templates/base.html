@@ -11,6 +11,7 @@
 {% block scripts %}
 {{super()}}
     <script type=text/javascript src="{{url_for('static', filename='js/bootstrap-select.js') }}"></script>
+    <script type=text/javascript src="{{url_for('static', filename='js/base.js') }}"></script>
 {% endblock %}
 
 {% block title %}
@@ -26,16 +27,18 @@
 
 {% block content %}
     <div class="container col-xs-10">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-info" role="alert">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
+        <div id="flash_container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert  alert-{{category}}" role="alert" id="flasher">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
 
-        {% block app_content %}
-            {# application content needs to be provided in the app_content block #}
-        {% endblock %}
+            {% block app_content %}
+                {# application content needs to be provided in the app_content block #}
+            {% endblock %}
+        </div>
     </div>
 {% endblock %}
