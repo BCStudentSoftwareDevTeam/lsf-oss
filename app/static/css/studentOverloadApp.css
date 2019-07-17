@@ -1,0 +1,20 @@
+.floatleft {
+  float: left;
+  width: 47%;
+
+}
+
+.floatright {
+  float: right;
+  width: 47%;
+
+}
+
+.padding {
+  padding-right: 50px;
+  padding-left: 50px;
+}
+
+.spacing {
+  padding-top: 10cm;
+}
