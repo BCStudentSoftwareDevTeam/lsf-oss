@@ -22,6 +22,7 @@ $("#Student").hide();
 $("#Position").hide();
 $("#primary_for_secondary").hide();
 $("#plus").hide();
+$("#mytable").hide();
 
 function show_access_level(obj){
   $("#ContractHours").hide();
@@ -57,6 +58,7 @@ function secondary_access(obj){
     $("#primary_for_secondary").hide();
   }
 }
+
 
 function fill_positions(response) {
   var selected_positions = document.getElementById("position");
@@ -161,4 +163,26 @@ function getstudent(obj){
       fillprimarysupervisor(response)
     }
   })
+}
+
+function getstudentname(obj) {
+  var studentname = obj.options[obj.selectedIndex].text;
+  return studentname
+}
+
+
+// TABLE
+function displayTable() {
+  $("#mytable").show();
+  var table = document.getElementById("mytable");
+  var row = table.insertRow(-1);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(2);
+  var cell4 = row.insertCell(3);
+
+  cell1.innerHTML = getstudentname();
+  cell2.innerHTML = "NEW CELL2";
+  cell3.innerHTML = "NEW CELL3";
+  cell4.innerHTML = "NEW CELL4";
 }
