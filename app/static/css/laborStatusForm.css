@@ -1,6 +1,15 @@
 .container{
+  padding-right: 15px;
+  padding-left: 0px;
   background-color: #F9F9F9;
 }
+.col-md-6 {
+  width: 49%;
+}
+.col-md-1 {
+  padding-left: 0px;
+}
+
 #glyphicon{
       font-size: 29px;
       color: #337ab7;
@@ -10,7 +19,7 @@
   font-size: 29px;
   color: #337ab7;
   padding-right: 0px;
-  padding-left: 38px;
+  padding-left: 29px;
 }
 
 #review-button {
