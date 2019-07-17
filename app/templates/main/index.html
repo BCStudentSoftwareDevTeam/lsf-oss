@@ -15,18 +15,11 @@
 
     <div align= "center">
       <table id="studentTable" >
+        {% for form in forms_by_supervisees %}
         <tr>
-          <td>Kat Adams</td>
+          <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</a></td>
         </tr>
-        <tr>
-          <td>Hailey Barnett</td>
-        </tr>
-        <tr>
-          <td>Evan Johnson</td>
-        </tr>
-        <tr>
-          <td>May Jue</td>
-        </tr>
+        {% endfor %}
 
       </table>
 

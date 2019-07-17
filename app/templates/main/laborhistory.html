@@ -12,16 +12,11 @@
 
   <div align= "center">
     <table id="positionTable" >
+      {% for form in studentForms %}
       <tr>
-        <td>Fall 2019</td>
+        <td>{{form.POSN_TITLE}}</td>
       </tr>
-      <tr>
-        <td>Fall 2018</td>
-      </tr>
-      <tr>
-        <td>Fall 2017</td>
-      </tr>
-
+      {% endfor %}
     </table>
 
   </div>

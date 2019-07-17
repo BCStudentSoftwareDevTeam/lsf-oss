@@ -24,8 +24,38 @@ students = [
     {
     "PIDM":"1",
 	"ID":"B00730361",
-	"FIRST_NAME":"Elaheh",
-	"LAST_NAME":"Jamali",
+	"FIRST_NAME":"Ela",
+    "LAST_NAME":"Jam",
+	"CLASS_LEVEL":"Junior",
+	"ACADEMIC_FOCUS":"Computer Science",
+	"MAJOR":"Computer Science",
+	"PROBATION":"0",
+	"ADVISOR":"Jan Pearce",
+	"STU_EMAIL":"jamalie@berea.edu",
+	"STU_CPO":"718",
+	"LAST_POSN":"Media Technician",
+	"LAST_SUP_PIDM":"7"
+    },
+    {
+    "PIDM":"2",
+	"ID":"B00730362",
+	"FIRST_NAME":"May",
+    "LAST_NAME":"Jue",
+	"CLASS_LEVEL":"Junior",
+	"ACADEMIC_FOCUS":"Computer Science",
+	"MAJOR":"Computer Science",
+	"PROBATION":"0",
+	"ADVISOR":"Jan Pearce",
+	"STU_EMAIL":"jamalie@berea.edu",
+	"STU_CPO":"718",
+	"LAST_POSN":"Media Technician",
+	"LAST_SUP_PIDM":"7"
+    },
+    {
+    "PIDM":"3",
+	"ID":"B00730363",
+	"FIRST_NAME":"Hailey",
+    "LAST_NAME":"Barnett",
 	"CLASS_LEVEL":"Junior",
 	"ACADEMIC_FOCUS":"Computer Science",
 	"MAJOR":"Computer Science",
@@ -44,6 +74,7 @@ print("students(TRACY) added")
 #############################
 # Positions (TRACY)
 #############################
+
 from app.models.Tracy.stuposn import STUPOSN
 
 positions = [
@@ -195,12 +226,12 @@ lsfs = [
     {
     "laborStatusFormID": 2,
     "termCode": Term.get(Term.termCode == "201712"),
-    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "studentSupervisee": Student.get(Student.ID == "B00730362"),
     "primarySupervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Mathematics"),
     "jobType": "secondary",
     "WLS":"2",
-    "POSN_TITLE":"CS TA",
+    "POSN_TITLE":"CS TAs",
     "POSN_CODE":"S61419",
     "weeklyHours": 5,
     "startDate": "1/2/3",
@@ -209,7 +240,7 @@ lsfs = [
     {
     "laborStatusFormID": 3,
     "termCode": Term.get(Term.termCode == "201812"),
-    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "studentSupervisee": Student.get(Student.ID == "B00730363"),
     "primarySupervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Mathematics"),
     "jobType": "",
