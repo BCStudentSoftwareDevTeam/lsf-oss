@@ -3,6 +3,7 @@
 from flask import flash
 from app.controllers.main_routes import *
 from app.models.user import *
+from app.login_manager import *
 
 @main_bp.before_app_request
 def before_request():
@@ -12,7 +13,7 @@ def before_request():
 @main_bp.route('/index', methods=['GET', 'POST'])
 # @login_required
 def index():
-    username = load_user('heggens')
+    username = require_login()
     # flash("Welcome to Labor Status forms. Delete this if flash messaging is working")
     return render_template( 'main/index.html',
 				            title=('Home'),
