@@ -20,6 +20,11 @@ $(document).on('keyup', 'input[name=contracthours]', function () {
 function displayContractHours(obj) {
   var termcode = obj.value
   console.log(termcode)
+  var whichterm = termcode.toString().substr(-2);
+  console.log(whichterm)
+  if (whichterm != 11 && whichterm !=12) {
+    console.log("break time")
+  }
   // if (this != )
 }
 
@@ -52,14 +57,18 @@ function fill_positions(response) {
 
 function fill_jobtype(response){
   var selected_jobtype = document.getElementById("jobtype");
-  $("#jobtype").empty();
-  for (var key in response){
-    var options = document.createElement("option")
-    options.text = response[key]["job type"].toString();
-    options.value = key;
-    selected_jobtype.appendChild(options);
+  if (selected_jobtype) {
+    console.log("WORKS")
+    $("#jobtype").empty();
+    for (var key in response){
+      var options = document.createElement("option")
+      options.text = response[key]["job type"].toString();
+      options.value = key;
+      selected_jobtype.appendChild(options);
+    }
+    $(".selectpicker").selectpicker('refresh');
   }
-  $(".selectpicker").selectpicker('refresh');
+
 }
 
  function getTerm(obj){

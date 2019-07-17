@@ -53,8 +53,8 @@
             data-live-search="true"
             title="Term"
             data-width="1041px"
-            onchange = "getTerm(this)"
-            onclick="displayContractHours(this)" required>
+            onchange = "getTerm(this); displayContractHours(this)"
+             required>
     {% for term in terms %}
         <option value = "{{term.termCode}}">{{term.termName}}</option>
     {% endfor %}
@@ -135,6 +135,7 @@
     </select>
   </div>
   <br />
+
   <div class="form-group col-md-2">
     <!--selectpicker for hrs per week-->
     <select class="selectpicker"

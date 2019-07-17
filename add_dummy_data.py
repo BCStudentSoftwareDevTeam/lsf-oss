@@ -93,20 +93,20 @@ from app.models.term import Term
 terms = [
     {
     "termCode":"201612",
-    "termName" :"201612's name",
+    "termName" :"Spring",
     "termStart":"2017-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
     "termEnd":"2017-05-10",
     "termState":"open",
     },
     {
-    "termCode":"201712",
-    "termName" :"201712's name",
+    "termCode":"201711",
+    "termName" :"Fall",
     "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
     "termEnd":"2018-05-10",
     "termState":"open",
     },
     {
-    "termCode":"201812",
+    "termCode":"201813",
     "termName" :"Summer",
     "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
     "termEnd":"2018-05-10",
@@ -119,20 +119,6 @@ terms = [
     "termEnd":"2018-05-10",
     "termState":"closed",
     },
-    {
-    "termCode":"201812",
-    "termName" :"Summer 2018",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"open",
-    },
-    {
-    "termCode":"201912",
-    "termName" :"Summer 2019",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"closed",
-    }
 ]
 Term.insert_many(terms).on_conflict_replace().execute()
 
@@ -208,7 +194,7 @@ lsfs = [
     },
     {
     "laborStatusFormID": 2,
-    "termCode": Term.get(Term.termCode == "201712"),
+    "termCode": Term.get(Term.termCode == "201711"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "primarySupervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Mathematics"),
@@ -222,7 +208,7 @@ lsfs = [
     },
     {
     "laborStatusFormID": 3,
-    "termCode": Term.get(Term.termCode == "201812"),
+    "termCode": Term.get(Term.termCode == "201813"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "primarySupervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Mathematics"),
@@ -234,34 +220,6 @@ lsfs = [
     "startDate": "1/2/3",
     "endDate": "3/2/1"
     },
-    {
-    "laborStatusFormID": 2,
-    "termCode": Term.get(Term.termCode == "201712"),
-    "studentSupervisee": Student.get(Student.ID == "B00730361"),
-    "primarySupervisor": User.get(User.username == "heggens"),
-    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-    "jobType": "secondary",
-    "WLS":"2",
-    "POSN_TITLE":"CS TA",
-    "POSN_CODE":"S61419",
-    "weeklyHours": 5,
-    "startDate": "1/2/3",
-    "endDate": "3/2/1"
-    },
-    {
-    "laborStatusFormID": 3,
-    "termCode": Term.get(Term.termCode == "201812"),
-    "studentSupervisee": Student.get(Student.ID == "B00730361"),
-    "primarySupervisor": User.get(User.username == "heggens"),
-    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-    "jobType": "",
-    "WLS":"2",
-    "POSN_TITLE":"CS TA",
-    "POSN_CODE":"S61419",
-    "contractHours": 120,
-    "startDate": "1/2/3",
-    "endDate": "3/2/1"
-    }
 
 ]
 LaborStatusForm.insert_many(lsfs).on_conflict_replace().execute()
