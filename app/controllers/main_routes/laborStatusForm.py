@@ -53,3 +53,12 @@ def gethoursperweek(jobtype):
     for hour_perweek in hours_perweek:
         hours_perweek_dict[str(hour_perweek.termCode)] = {"Weekly Hours": hour_perweek.weeklyHours}
     return json.dumps(hours_perweek_dict)
+
+@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
+def getprimarysupervisor(termCode, student):
+    primary_supervisors = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.jobType == "Primary", LaborStatusForm.studentSupervisee == student)
+    primary_supervisor_dict = {}
+    for primary_supervisor in primary_supervisors:
+        primary_supervisor_dict[str(primary_supervisor.laborStatusFormID)] = {"Primary Supervisor FirstName":primary_supervisor.primarySupervisor.FIRST_NAME,
+        "Primary Supervisor LastName": primary_supervisor.primarySupervisor.LAST_NAME}
+    return json.dumps(primary_supervisor_dict)

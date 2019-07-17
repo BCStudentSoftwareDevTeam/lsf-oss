@@ -2,7 +2,6 @@ $(document).ready(function(){
     $('[data-tooltip="true"]').tooltip();
 });
 
-
  var j = jQuery.noConflict();
  j( function() {
      j( "#datetimepicker1, #datetimepicker2" ).datepicker();
@@ -15,34 +14,62 @@ $(document).on('keyup', 'input[name=contracthours]', function () {
    if(val < min)
        _this.val( min );
 });
+
 $("#ContractHours").hide();
 $("#Hours_PerWeek").hide();
 $("#JopTypes").hide();
+$("#Student").hide();
+$("#Position").hide();
+$("#primary_for_secondary").hide();
+$("#plus").hide();
+
 function show_access_level(obj){
   $("#ContractHours").hide();
   $("#Hours_PerWeek").hide();
   $("#JopTypes").hide();
+  $("#Student").hide();
+  $("#Position").hide();
+  $("#plus").hide();
+  $("#primary_for_secondary").hide();
   var termcode = obj.value
   var whichterm = termcode.toString().substr(-2);
   if (whichterm != 11 && whichterm !=12) { // Summer term or any other break period
+    $("#Student").show();
+    $("#Position").show();
     $("#ContractHours").show();
+    $("#plus").show();
   }
   else{ // normal semester like Fall or Spring
+    $("#Student").show();
+    $("#Position").show();
     $("#Hours_PerWeek").show();
     $("#JopTypes").show();
+    $("#plus").show();
+  }
+}
+
+function secondary_access(obj){
+  var jobtype = obj.value;
+  if (jobtype == "secondary"){
+    $("#primary_for_secondary").show();
+  }
+  else{
+    $("#primary_for_secondary").hide();
   }
 }
 
 function fill_positions(response) {
   var selected_positions = document.getElementById("position");
-  $("#position").empty();
-  for (var key in response) {
-    var options = document.createElement("option");
-    options.text = response[key]["position"].toString();
-    options.value = key;
-    selected_positions.appendChild(options);
+  if (selected_positions){
+    $("#position").empty();
+    for (var key in response) {
+      var options = document.createElement("option");
+      options.text = response[key]["position"].toString();
+      options.value = key;
+      selected_positions.appendChild(options);
+    }
+    $('.selectpicker').selectpicker('refresh');
   }
-  $('.selectpicker').selectpicker('refresh');
 }
 
  function getDepartment(object) {
@@ -69,7 +96,6 @@ function fill_jobtype(response){
     }
     $(".selectpicker").selectpicker('refresh');
   }
-
 }
 
  function getTerm(obj){
@@ -106,6 +132,33 @@ function getjobtype(obj){
     dataType: "json",
     success: function (response){
       fill_hoursperweek(response)
+    }
+  })
+}
+
+function fillprimarysupervisor(response){
+  var primary_supervisor = document.getElementById("primary_supervisor")
+  if (primary_supervisor){
+    $("#primary_supervisor").empty();
+    for (var key in response){
+      var options = document.createElement("option")
+      options.text = response[key]["Primary Supervisor FirstName"].toString() + " " + response[key]["Primary Supervisor LastName"].toString();
+      options.value = key;
+      primary_supervisor.appendChild(options)
+    }
+    $('.selectpicker').selectpicker('refresh')
+  }
+}
+
+function getstudent(obj){
+  var student = obj.value;
+  var term = $("#term").val();
+  var url = "/laborstatusform/getstudents/" + term +"/" +student;
+  $.ajax({
+    url: url,
+    dataType: "json",
+    success: function (response){
+      fillprimarysupervisor(response)
     }
   })
 }
