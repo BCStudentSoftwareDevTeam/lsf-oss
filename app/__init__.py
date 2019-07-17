@@ -6,16 +6,18 @@ from flask_nav.elements import *
 
 # from flask_login import LoginManager
 
+
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
 # login = LoginManager(app)  #FIXME: needs configured with our dev/prod environment handlers
-
 
 def load_config(file):
     with open(file, 'r') as ymlfile:
         cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
     return cfg
 
+cfg = load_config("app/config/secret_config.yaml")
+app.secret_key = cfg["secret_key"]
 
 # Registers blueprints (controllers). These are general routes, like /index
 from app.controllers.main_routes import main_bp as main_bp
