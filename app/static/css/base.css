@@ -1,7 +1,37 @@
-.navbar-collapse, .navbar-nav li {
-  clear:both;
+#sidebar, #sidebar .container-fluid {
+    margin-left: 0px;
+    padding-left: 2px;
+}
+.panel {
+    margin-bottom: 0px;
+}
+.panel div:hover, .panel div li:hover  {
+    background-color: #66c2cc;
 }
 
-.container-fluid {
-  margin-bottom: 350px;
+.panel-group {
+    margin-bottom: 0px;
+}
+#admindropdown {
+    list-style: none;
+    margin-left: 10px;
+    padding-left: 0px;
+}
+
+#admindropdown li {
+    margin-left: 0px;
+    padding-left: 25px;
+}
+
+.navbar-header, #portal {
+    clear:both;
+}
+
+.panel-group .panel-heading {
+    border-bottom: 1px #ddd solid;
+}
+
+#admindropdown li {
+    padding-top: 1px;
+    padding-bottom: 0px;
 }

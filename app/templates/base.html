@@ -20,9 +20,7 @@
     {% block html_attribs %} lang="en"{% endblock %}
 
 {% block navbar %}
-  <div class="col-xs-2">
-    {{nav.thenavbar.render()}}
-  </div>
+    {% include 'navbar.html' %}
 {% endblock %}
 
 {% block content %}
