@@ -15,21 +15,23 @@ $(document).on('keyup', 'input[name=contracthours]', function () {
    if(val < min)
        _this.val( min );
 });
-
-// $(#contracthours).hide()
-function displayContractHours(obj) {
+$("#ContractHours").hide();
+$("#Hours_PerWeek").hide();
+$("#JopTypes").hide();
+function show_access_level(obj){
+  $("#ContractHours").hide();
+  $("#Hours_PerWeek").hide();
+  $("#JopTypes").hide();
   var termcode = obj.value
-  console.log(termcode)
   var whichterm = termcode.toString().substr(-2);
-  console.log(whichterm)
-  if (whichterm != 11 && whichterm !=12) {
-    console.log("summer")
+  if (whichterm != 11 && whichterm !=12) { // Summer term or any other break period
+    $("#ContractHours").show();
   }
-
-  // if (this != )
+  else{ // normal semester like Fall or Spring
+    $("#Hours_PerWeek").show();
+    $("#JopTypes").show();
+  }
 }
-
-
 
 function fill_positions(response) {
   var selected_positions = document.getElementById("position");
@@ -41,7 +43,6 @@ function fill_positions(response) {
     selected_positions.appendChild(options);
   }
   $('.selectpicker').selectpicker('refresh');
-
 }
 
  function getDepartment(object) {
@@ -59,7 +60,6 @@ function fill_positions(response) {
 function fill_jobtype(response){
   var selected_jobtype = document.getElementById("jobtype");
   if (selected_jobtype) {
-    console.log("WORKS")
     $("#jobtype").empty();
     for (var key in response){
       var options = document.createElement("option")
@@ -86,14 +86,16 @@ function fill_jobtype(response){
 
 function fill_hoursperweek(response){
   var selected_hours_perweek = document.getElementById("hours_perweek");
-  $("#hours_perweek").empty();
-  for (var key in response){
-    var options = document.createElement("option");
-    options.text = response[key]["Weekly Hours"].toString();
-    options.value = key;
-    selected_hours_perweek.appendChild(options);
+  if (selected_hours_perweek){
+    $("#hours_perweek").empty();
+    for (var key in response){
+      var options = document.createElement("option");
+      options.text = response[key]["Weekly Hours"].toString();
+      options.value = key;
+      selected_hours_perweek.appendChild(options);
+    }
+    $('.selectpicker').selectpicker('refresh');
   }
-  $('.selectpicker').selectpicker('refresh');
 }
 
 function getjobtype(obj){
