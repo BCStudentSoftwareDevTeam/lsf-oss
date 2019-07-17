@@ -11,7 +11,14 @@ users = [
      "username": "heggens",
      "FIRST_NAME":"Scott",
      "LAST_NAME": "Heggen",
-     }
+     "isLaborAdmin": True
+     },
+    {
+        "username": "pearcej",
+        "FIRST_NAME":"Jan",
+        "LAST_NAME": "Pearce",
+        "isLaborAdmin": False
+    }
     ]
 User.insert_many(users).on_conflict_replace().execute()
 print("users added")
