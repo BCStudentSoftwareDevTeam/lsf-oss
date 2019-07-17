@@ -16,46 +16,95 @@
     </style>
 </head>
 
-<h1>Manage Administrators</h1>
-<p>Add or Remove admins here</p>
+<form action="/adminManagement/userInsert" method="POST">
 
-<div class="form-group col-md-4">
+  <h1>Manage Administrators</h1>
+  <p>Add or Remove admins here</p>
 
-</div>
+  <div class="form-group col-md-4">
 
-<div class="form-group col-md-8">
-
-  <div class="container">
-   <h4>Add Administrator</h4>
-   <div class="form-inline">
-       <div class = "form-group" id="addAdmin">
-             <select class = "form-control selectpicker" data-width="258px"
-             data-show-subtext="true" data-live-search="true" name="addAdmin">
-             <option value = "---" disabled selected>Select User</option>
-             {% for user in users %}     <!-- placeholder for emailTemplate table database -->
-                <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.firstname}} {{user.lastname}}, {{user.username}}</option>
-             {% endfor %}
-             </select>
-         </div>
-       <button class="btn btn-primary">Add</button>
-   </div>
   </div>
 
-  <div class="container">
-   <h4>Remove Adminitrator</h4>
-   <div class="form-inline">
-         <div class = "form-group" id="addAdmin">
-             <select class = "form-control selectpicker" data-width="258px"
-             data-show-subtext="true" data-live-search="true" name="addAdmin">
-                <option value = "---" disabled selected>Select User</option>
-             {% for user in users %}     <!-- placeholder for emailTemplate table database -->
-                <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.firstname}} {{user.lastname}}, {{user.username}}</option>
-             {% endfor %}
-             </select>
-         </div>
-       <button class="btn btn-primary">Remove</button>
-   </div>
+{# This is for adding is financial aid admins #}
+
+  <div class="form-group col-md-8">
+
+    <div class="container">
+     <h4>Add Labor Administrators</h4>
+     <div class="form-inline">
+         <div class = "form-group">
+               <select class = "form-control selectpicker" data-width="258px"
+               data-show-subtext="true" data-live-search="true" name="addAdmin" id="add">
+               <option value = "---" disabled selected>Select User</option>
+               {% for user in users %}     <!-- placeholder for emailTemplate table database -->
+                  {% if user.isLaborAdmin == False %}
+                    <option value="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}, {{user.username}}</option>
+                  {% endif %}
+               {% endfor %}
+               </select>
+           </div>
+         <button name="add" class="btn btn-primary" value="add">Add</button>
+     </div>
+    </div>
+
+    <div class="container">
+     <h4>Remove Labor Adminitrators</h4>
+     <div class="form-inline">
+           <div class = "form-group">
+               <select class = "form-control selectpicker" data-width="258px"
+               data-show-subtext="true" data-live-search="true" name="removeAdmin" id="remove">
+                  <option value = "---" disabled selected>Select User</option>
+               {% for user in users %}     <!-- placeholder for emailTemplate table database -->
+                 {% if user.isLaborAdmin == True %}
+                   <option value="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}, {{user.username}}</option>
+                 {% endif %}
+               {% endfor %}
+               </select>
+           </div>
+         <button name="remove" class="btn btn-primary" value="remove">Remove</button>
+     </div>
+    </div>
   </div>
 
-</div>
+{# This is for adding is financial aid admins #}
+
+  <div class="form-group col-md-8">
+
+    <div class="container">
+     <h4>Add Financial Aid Administrators</h4>
+     <div class="form-inline">
+         <div class = "form-group">
+               <select class = "form-control selectpicker" data-width="258px"
+               data-show-subtext="true" data-live-search="true" name="addAdmin" id="add">
+               <option value = "---" disabled selected>Select User</option>
+               {% for user in users %}     <!-- placeholder for emailTemplate table database -->
+                  {% if user.isLaborAdmin == False %}
+                    <option value="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}, {{user.username}}</option>
+                  {% endif %}
+               {% endfor %}
+               </select>
+           </div>
+         <button name="add" class="btn btn-primary" value="add">Add</button>
+     </div>
+    </div>
+
+    <div class="container">
+     <h4>Remove Financial Aid Adminitrators</h4>
+     <div class="form-inline">
+           <div class = "form-group">
+               <select class = "form-control selectpicker" data-width="258px"
+               data-show-subtext="true" data-live-search="true" name="removeAdmin" id="remove">
+                  <option value = "---" disabled selected>Select User</option>
+               {% for user in users %}     <!-- placeholder for emailTemplate table database -->
+                 {% if user.isLaborAdmin == True %}
+                   <option value="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}, {{user.username}}</option>
+                 {% endif %}
+               {% endfor %}
+               </select>
+           </div>
+         <button name="remove" class="btn btn-primary" value="remove">Remove</button>
+     </div>
+    </div>
+  </div>
+</form>
 {% endblock %}

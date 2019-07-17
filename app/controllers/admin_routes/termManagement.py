@@ -1,7 +1,7 @@
 from app.controllers.admin_routes import *
 from app.models.user import *
 from app.controllers.admin_routes import admin
-from app.models.Tracy.term import *
+from app.models.term import *
 
 
 @admin.route('/termManagement', methods=['GET', 'POST'])

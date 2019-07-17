@@ -49,10 +49,10 @@ def thenavbar():
             View('Pending Forms', "main.index"),#'main.pendingForms'),                    #FIXME this link will not work because it does not exist yet
             View('Overload Forms', 'main.index'),
             View('All past forms', "main.index"),#'main.allPastForms'),                   #FIXME this link will not work because it does not exist yet
-            View('Manage Terms', "main.index"), #'admin.term_Management'),
+            View('Manage Terms', 'admin.term_Management'),
             View('Manage Departments', 'main.index'),  #FIXME this link will not work because it does not exist yet
-            View('Manage Admins', "main.index"), #'admin.admin_management'),
-            View('Manage Email Templates', "main.index")# 'admin.email_templates')
+            View('Manage Admins', 'admin.admin_Management'),
+            View('Manage Email Templates', 'admin.email_templates')
             ),
         View('Labor Status Form', 'main.laborStatusForm'),
         View('Logout', 'main.index')
