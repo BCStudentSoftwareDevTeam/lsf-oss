@@ -43,5 +43,13 @@ def getjobtype(term):
     jobtypes = LaborStatusForm.select().where(LaborStatusForm.termCode == term)
     jobtype_dict = {}
     for jobtype in jobtypes:
-        jobtype_dict[str(jobtype.termCode)] = {"job type": jobtype.jobType}
+        jobtype_dict[jobtype.jobType] = {"job type": jobtype.jobType}
     return json.dumps(jobtype_dict)
+
+@main_bp.route("/laborstatusform/gethoursperweek/<jobtype>", methods=["GET"])
+def gethoursperweek(jobtype):
+    hours_perweek = LaborStatusForm.select().where(LaborStatusForm.jobType == jobtype)
+    hours_perweek_dict = {}
+    for hour_perweek in hours_perweek:
+        hours_perweek_dict[str(hour_perweek.termCode)] = {"Weekly Hours": hour_perweek.weeklyHours}
+    return json.dumps(hours_perweek_dict)
