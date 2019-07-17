@@ -15,7 +15,7 @@ def load_config(file):
 
 # NOT DOCKER VERSION
 def get_cfg():
-    config_abs_path = getAbsolutePath('app/config/secret_config.yaml')
+    config_abs_path = getAbsolutePath('app/config/contributors.yaml')
     cfg             = load_config(config_abs_path)
     return cfg
 
