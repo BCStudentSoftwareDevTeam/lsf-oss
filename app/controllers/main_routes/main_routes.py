@@ -1,5 +1,6 @@
-# from flask import render_template  #, flash, redirect, url_for, request, g, jsonify, current_app
+# from flask import render_template  #, redirect, url_for, request, g, jsonify, current_app
 # from flask_login import current_user, login_required
+from flask import flash
 from app.controllers.main_routes import *
 from app.models.user import *
 
@@ -12,6 +13,7 @@ def before_request():
 # @login_required
 def index():
     username = load_user('heggens')
+    # flash("Welcome to Labor Status forms. Delete this if flash messaging is working")
     return render_template( 'main/index.html',
 				            title=('Home'),
                             username = username
