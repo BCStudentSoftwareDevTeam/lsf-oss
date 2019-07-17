@@ -1,0 +1,14 @@
+
+.container {
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100vh;
+  display: flex;
+}
+.btn-holder {
+   position: relative;
+   right: 1050 px !important;
+  
+}
+
+

@@ -22,7 +22,6 @@
 {% block navbar %}
     {% include 'navbar.html' %}
 {% endblock %}
-
 {% block content %}
     <div class="container col-xs-10">
         <div id="flash_container">
@@ -39,4 +38,12 @@
             {% endblock %}
         </div>
     </div>
+
+{% block footer %}
+   <footer class="footer navbar-fixed-bottom">
+     <span><b>Issues? Contact:</b><a href="mailto:support@bereacollege.onmicrosoft.com"> Systems Support</a>
+     <b>Created & Designed by the </b><a href="/contributors" id = "contribLink">Student Software Developers Group.</a></span>
+   </footer>
 {% endblock %}
+{% endblock %}
+
