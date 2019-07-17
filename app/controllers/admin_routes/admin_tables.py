@@ -8,17 +8,17 @@ from app.controllers.errors_routes.handlers import *
 def admin_tables():
     try:
         current_user = require_login()
-        if not current_user:                        # Not logged in
+        if not current_user:                    # Not logged in
             return render_template('errors/403.html')
-        else:
-            if not current_user.isLaborAdmin:       # Not an admin
-                return render_template('errors/403.html')
-            else:
-                users = User.select()
-                return render_template( 'admin/adminTables.html',
-                                        title=('Admin'),
-                                        username=current_user.username,
-                                        users=users
-                                        )
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
+        # Logged in & Admin
+        users = User.select()
+        return render_template( 'admin/adminTables.html',
+                                title=('Admin'),
+                                username=current_user.username,
+                                users=users
+                                )
     except:
         render_template('errors/500.html')

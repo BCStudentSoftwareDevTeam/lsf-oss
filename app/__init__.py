@@ -4,8 +4,6 @@ from flask_bootstrap import Bootstrap
 from flask_nav import Nav
 from flask_nav.elements import *
 
-# from flask_login import LoginManager
-
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
@@ -53,7 +51,7 @@ def thenavbar():
             View('All past forms', "main.index"),#'main.allPastForms'),                   #FIXME this link will not work because it does not exist yet
             View('Manage Terms', "main.index"), #'admin.term_Management'),
             View('Manage Departments', 'main.index'),  #FIXME this link will not work because it does not exist yet
-            View('Manage Admins', "main.index"), #'admin.admin_management'),
+            View('Manage Admins', "admin.admin_tables"), #'admin.admin_management'),
             View('Manage Email Templates', "main.index")# 'admin.email_templates')
             ),
         View('Labor Status Form', 'main.laborStatusForm'),

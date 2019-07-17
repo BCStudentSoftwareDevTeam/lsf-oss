@@ -9,19 +9,19 @@ from app.models.term import *
 from app.models.Tracy.studata import *
 
 @main_bp.route('/laborstatusform', methods=['GET', 'POST'])
-# @login_required
 def laborStatusForm():
-    username = require_login()
-    if not username:        # Not logged in
+    current_user = require_login()
+    if not current_user:        # Not logged in
         return render_template('errors/403.html')
-    else:
-        forms = LaborStatusForm.select()
-        students = STUDATA.select()
-        terms = Term.select().where(Term.termState == "open")#changed to term state, open, closed, inactive
-        return render_template( 'main/laborstatusform.html',
-                                title=('Labor Status Form'),
-                                username = username,#Passing of variables from controller to front
-                                forms = forms,
-                                students = students,
-                                terms = terms
-                              )
+
+    # Logged in
+    forms = LaborStatusForm.select()
+    students = STUDATA.select()
+    terms = Term.select().where(Term.termState == "open")#changed to term state, open, closed, inactive
+    return render_template( 'main/laborstatusform.html',
+                            title=('Labor Status Form'),
+                            username=current_user,#Passing of variables from controller to front
+                            forms=forms,
+                            students=students,
+                            terms=terms
+                          )
