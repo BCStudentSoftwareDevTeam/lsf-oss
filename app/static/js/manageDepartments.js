@@ -19,6 +19,10 @@ function status(department) {
     success: function(response) {
       console.log(response);
       if(response["Success"]) {
+        category = "success"
+        msg = "Department compliance changed";
+        $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+        $("#flasher").delay(1000).fadeOut()
         var departmentID = "#" + department;
         //console.log(departmentID);
         if ($(departmentID).hasClass("btn-success")){
