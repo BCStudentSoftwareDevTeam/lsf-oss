@@ -5,6 +5,7 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 <div class="form">
   <h1 class="col-xs-11 text-center">Labor Status Form
     <span class="glyphicon glyphicon-bookmark"
@@ -52,7 +53,8 @@
             data-live-search="true"
             title="Term"
             data-width="1041px"
-            onchange = "getTerm(this)" required>
+            onchange = "getTerm(this)"
+            onclick="displayContractHours(this)" required>
     {% for term in terms %}
         <option value = "{{term.termCode}}">{{term.termName}}</option>
     {% endfor %}
@@ -113,9 +115,9 @@
                   name='contracthours'
                   id='contracthours'
                   title="Contract Hours"
-                  min = "10"   {# TODO ASK SCOTT #}
-                  oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0"
+                  min = "1"
 
+                  oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0"
                   required>
           </input>
   </div>

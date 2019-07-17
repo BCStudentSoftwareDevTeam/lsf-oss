@@ -8,6 +8,22 @@ $(document).ready(function(){
      j( "#datetimepicker1, #datetimepicker2" ).datepicker();
  } );
 
+$(document).on('keyup', 'input[name=contracthours]', function () {
+   var _this = $(this);
+   var min = parseInt(_this.attr('min')) || 1; // if min attribute is not defined, 1 is default
+   var val = parseInt(_this.val()) || (min - 1); // if input char is not a number the value will be (min - 1) so first condition will be true
+   if(val < min)
+       _this.val( min );
+});
+
+// $(#contracthours).hide()
+function displayContractHours(obj) {
+  var termcode = obj.value
+  console.log(termcode)
+  // if (this != )
+}
+
+
 
 function fill_positions(response) {
   var selected_positions = document.getElementById("position");
@@ -41,7 +57,6 @@ function fill_jobtype(response){
     var options = document.createElement("option")
     options.text = response[key]["job type"].toString();
     options.value = key;
-    console.log(options.value, "heeyy")
     selected_jobtype.appendChild(options);
   }
   $(".selectpicker").selectpicker('refresh');
