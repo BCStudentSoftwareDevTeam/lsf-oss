@@ -5,4 +5,4 @@ migrations/
 migrations.json
 *.swp
 old/
-
+secret_config.yaml

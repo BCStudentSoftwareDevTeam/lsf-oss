@@ -18,7 +18,3 @@ class User(baseModel):
 
     def __str__(self):
         return str(self.__dict__)
-
-# @login.user_loader
-def load_user(username):
-    return User.get(User.username == username)

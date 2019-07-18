@@ -11,6 +11,7 @@
 {% block scripts %}
 {{super()}}
     <script type=text/javascript src="{{url_for('static', filename='js/bootstrap-select.js') }}"></script>
+    <script type=text/javascript src="{{url_for('static', filename='js/base.js') }}"></script>
 {% endblock %}
 
 {% block title %}
@@ -19,23 +20,30 @@
     {% block html_attribs %} lang="en"{% endblock %}
 
 {% block navbar %}
-  <div class="col-xs-2">
-    {{nav.thenavbar.render()}}
-  </div>
+    {% include 'navbar.html' %}
 {% endblock %}
-
 {% block content %}
     <div class="container col-xs-10">
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for message in messages %}
-            <div class="alert alert-info" role="alert">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
+        <div id="flash_container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert  alert-{{category}}" role="alert" id="flasher">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
 
-        {% block app_content %}
-            {# application content needs to be provided in the app_content block #}
-        {% endblock %}
+            {% block app_content %}
+                {# application content needs to be provided in the app_content block #}
+            {% endblock %}
+        </div>
     </div>
+
+{% block footer %}
+   <footer class="footer navbar-fixed-bottom">
+     <span><b>Issues? Contact:</b><a href="mailto:support@bereacollege.onmicrosoft.com"> Systems Support</a>
+     <b>Created & Designed by the </b><a href="/contributors" id = "contribLink">Student Software Developers Group.</a></span>
+   </footer>
 {% endblock %}
+{% endblock %}
+
