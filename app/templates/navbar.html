@@ -1,0 +1,58 @@
+
+
+{% block navbar %}
+<div id="sidebar" class="col-xs-2">
+    <nav class="navbar">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <h4 class="navbar-brand" href="#" >Labor Status Forms</h4>
+            </div>
+            <div id="portal" class="panel panel-default">
+                <div class="panel-heading">
+                        <a href="/"><h4>Supervisor Portal</h4></a>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        <a href="/laborstatusform">New Labor Status Form</a>
+                    </h4>
+                </div>
+            </div>
+            <div class="panel-group" id="accordion">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4>
+                            <a data-toggle="collapse" data-parent="#accordion" href="#admin">
+                                Administration</a>
+                        </h4>
+
+                    </div>
+                    <div id="admin" class="panel-collapse collapse">
+                        <ul id="admindropdown" class="panel panel-default">
+                            <li class="panel-heading"><h4><a href="/">Status Forms</a></h4></li>
+                            <li class="panel-heading"><h4><a href="/">Overload Forms</a></h4></li>
+                            <li class="panel-heading"><h4><a href="/">Past Forms</a></h4></li>
+                            <li class="panel-heading"><h4><a href="/">Manage Terms</a></h4></li>
+                            <li class="panel-heading"><h4><a href="/">Manage Departments</a></h4></li>
+                            <li class="panel-heading"><h4><a href="/">Manage Users</a></h4></li>
+                            <li class="panel-heading"><h4><a href="/">Manage Email Templates</a></h4></li>
+                        </ul>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h4>
+                        <a>Logout</a>
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+{% endblock %}
