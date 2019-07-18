@@ -30,7 +30,6 @@ print("users added")
 from app.models.Tracy.studata import STUDATA
 
 students = [
-<<<<<<< HEAD
     {
     "PIDM":"1",
 	"ID":"B00730361",
@@ -76,23 +75,7 @@ students = [
 	"LAST_POSN":"Media Technician",
 	"LAST_SUP_PIDM":"7"
     }
-=======
-                {
-                "PIDM":"1",
-                "ID":"B00730361",
-                "FIRST_NAME":"Elaheh",
-                "LAST_NAME":"Jamali",
-                "CLASS_LEVEL":"Junior",
-                "ACADEMIC_FOCUS":"Computer Science",
-                "MAJOR":"Computer Science",
-                "PROBATION":"0",
-                "ADVISOR":"Jan Pearce",
-                "STU_EMAIL":"jamalie@berea.edu",
-                "STU_CPO":"718",
-                "LAST_POSN":"Media Technician",
-                "LAST_SUP_PIDM":"7"
-                }
->>>>>>> 7e5f7dab2e9f37fa1d2ffde8257b2d1991801312
+
 ]
 STUDATA.insert_many(students).on_conflict_replace().execute()
 print("students(TRACY) added")
@@ -245,7 +228,6 @@ from app.models.laborStatusForm import LaborStatusForm
 from app.models.student import Student
 #primary/secondary supervisors are foreign keys to user table
 lsfs = [
-<<<<<<< HEAD
     {
     "laborStatusFormID": 1,
     "termCode": Term.get(Term.termCode == "201612"),
@@ -286,52 +268,39 @@ lsfs = [
     "contractHours": 120,
     "startDate": "1/2/3",
     "endDate": "3/2/1"
-    }
+    },
+    {
+    "laborStatusFormID": 4,
+    "termCode": Term.get(Term.termCode == "201912"),
+    "studentSupervisee": Student.get(Student.ID == "B00730363"),
+    "primarySupervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+    "jobType": "",
+    "WLS":"2",
+    "POSN_TITLE":"CS TA",
+    "POSN_CODE":"S61419",
+    "contractHours": 120,
+    "startDate": "1/2/3",
+    "endDate": "3/2/1"
+    },
+    {
+    "laborStatusFormID": 5,
+    "termCode": Term.get(Term.termCode == "201712"),
+    "studentSupervisee": Student.get(Student.ID == "B00730363"),
+    "primarySupervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "jobType": "",
+    "WLS":"2",
+    "POSN_TITLE":"CS TA",
+    "POSN_CODE":"S61419",
+    "contractHours": 120,
+    "startDate": "1/2/3",
+    "endDate": "3/2/1"
+    },
+
+
 ]
-=======
-            {
-            "laborStatusFormID": 1,
-            "termCode": Term.get(Term.termCode == "201612"),
-            "studentSupervisee": Student.get(Student.ID == "B00730361"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-            "jobType": "Primary",
-            "WLS":"1",
-            "POSN_TITLE":"Dummy boi",
-            "POSN_CODE":"S12345",
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
-            {
-            "laborStatusFormID": 2,
-            "termCode": Term.get(Term.termCode == "201712"),
-            "studentSupervisee": Student.get(Student.ID == "B00730361"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-            "jobType": "secondary",
-            "WLS":"2",
-            "POSN_TITLE":"CS TA",
-            "POSN_CODE":"S61419",
-            "weeklyHours": 5,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
-            {
-            "laborStatusFormID": 3,
-            "termCode": Term.get(Term.termCode == "201812"),
-            "studentSupervisee": Student.get(Student.ID == "B00730361"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-            "jobType": "",
-            "WLS":"2",
-            "POSN_TITLE":"CS TA",
-            "POSN_CODE":"S61419",
-            "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            }
-        ]
->>>>>>> 7e5f7dab2e9f37fa1d2ffde8257b2d1991801312
+
 LaborStatusForm.insert_many(lsfs).on_conflict_replace().execute()
 print("LSF added")
 
