@@ -27,4 +27,3 @@ app.register_blueprint(admin_bp)
 # Registers error messaging
 from app.controllers.errors_routes import error as errors_bp
 app.register_blueprint(errors_bp)
-

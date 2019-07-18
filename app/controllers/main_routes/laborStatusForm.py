@@ -26,7 +26,7 @@ def laborStatusForm():
     departments = STUPOSN.select(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT).distinct() # getting deparmtent names from TRACY
     return render_template( 'main/laborStatusForm.html',
 				            title=('Labor Status Form'),
-                            username = username,
+                            username = current_user,
                             forms = forms,
                             students = students,
                             terms = terms,
