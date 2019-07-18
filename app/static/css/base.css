@@ -24,10 +24,6 @@
     border: none;
 }
 
-.panel {
-    box-shadow: none;
-    background-color: #66c2cc;
-}
 
 .panel-heading:hover {
     background-color: #66c2cc;
@@ -49,9 +45,13 @@
     padding-right: 0px;
 }
 
+
+
 .panel {
     margin-bottom: 0px;
     border-radius: 0px;
+    box-shadow: none;
+    background-color: #f5f5f5;
 }
 
 .footer {
@@ -67,8 +67,12 @@
   line-height: 70px; /* Vertically center the text there */
  }
 
-a {
-  color: ##1c78bb; 
+a{
+  color: #1c78bb;
+}
+
+a:hover {
+  color: #155788;
 }
 .table {
   width:50%;
@@ -88,3 +92,16 @@ a {
 .footerlink {
   font-weight: bold;
 }
+
+#admin{
+    background-color: #66c2cc;
+}
+
+#admin ul{
+    background-color: #f5f5f5;
+}
+
+.panel-group .panel, .panel-heading {
+    border-radius: 0px;
+}
+
