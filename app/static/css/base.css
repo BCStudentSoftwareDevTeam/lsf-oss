@@ -67,23 +67,23 @@
   line-height: 70px; /* Vertically center the text there */
  }
 
-a{
+a {
   color: #1c78bb;
 }
 
 a:hover {
   color: #155788;
 }
+
 .table {
   width:50%;
 }
+
 .btn-newcolor { /* for contributors page */
-  background-color: #1c78c0 !important;
+  background-color: #1c78c0;
   color: #ffffff;
-  padding: 7px 30px; 
-  margin-top: 100px; 
-  margin-left: 150px;
 }
+
 #wrapper {
   width: 100%;
   margin-bottom:90px !important;
@@ -93,11 +93,11 @@ a:hover {
   font-weight: bold;
 }
 
-#admin{
+#admin {
     background-color: #66c2cc;
 }
 
-#admin ul{
+#admin ul {
     background-color: #f5f5f5;
 }
 
