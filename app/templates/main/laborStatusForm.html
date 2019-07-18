@@ -89,7 +89,7 @@
             data-live-search='true'
             title="Student"
             data-width="231px"
-            onchange= "getstudent(this); getstudentname(this)"
+            onchange= "getstudent(this)"
             required>
       {% for student in students %}
           <option value="{{student.PIDM}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
