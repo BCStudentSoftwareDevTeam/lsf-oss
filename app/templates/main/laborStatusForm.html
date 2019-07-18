@@ -89,7 +89,7 @@
             data-live-search='true'
             title="Student"
             data-width="231px"
-            onchange= "getstudent(this)"
+            onchange= "getstudent(this); getstudentname(this)"
             required>
       {% for student in students %}
           <option value="{{student.PIDM}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
@@ -153,7 +153,8 @@
             data-tooltip="true"
             title="Add more students"
             data-placement = "center"
-            id="glyphicon_2">
+            id="glyphicon_2"
+            onclick="displayTable()">
     </a>
     </span>
   </div>
@@ -169,10 +170,22 @@
     </select>
   </div>
   <br />
+
+
+  <table class="table table-striped" id="mytable">
+    <tr>
+      <td>Student</td>
+      <td>Position</td>
+      <td>Job Type</td>
+      <td>Weekly Hours</td>
+    </tr>
+  </table>
+
+
   <div class="col-md-12 " id="review-button">
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SubmitModal">Review</button>
   </div>
-  <br />
+
   <!-- Modal -->
   <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
