@@ -27,6 +27,12 @@
     clear:both;
 }
 
+.navbar-header {
+
+    border-bottom: 1px lightgray solid;
+    margin-bottom: 5px;
+    height: 75px;
+}
 .panel-group .panel-heading {
     border-bottom: 1px #ddd solid;
 }
@@ -34,5 +40,9 @@
 #admindropdown li {
     padding-top: 1px;
     padding-bottom: 0px;
+}
+
+#logo {
+    opacity: .75;
 }
 
