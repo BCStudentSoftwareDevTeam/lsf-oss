@@ -53,7 +53,7 @@
             data-live-search="true"
             title="Term"
             data-width="1041px"
-            onchange = "getTerm(this); show_access_level(this)"
+            onchange = "show_access_level(this)"
             required>
     {% for term in terms %}
         <option value = "{{term.termCode}}">{{term.termName}}</option>
@@ -132,7 +132,9 @@
             data-live-search='true'
             title="Job Type"
             data-width="258px"
-            onchange="getjobtype(this); secondary_access(this)">
+            onchange="fill_hoursperweek(); secondary_access(this)">
+      <option value="Primary">Primary</option>
+      <option value="Secondary">Secondary</option>
     </select>
   </div>
   <br />
