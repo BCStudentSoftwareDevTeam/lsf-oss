@@ -33,9 +33,8 @@
             </tr>
             </thead>
             <tbody>
-              <tbody>
-                {% for user in users %}
-                  {% if {term.termCode[:3]} == 2019 %}
+                {% for term in terms %}
+                  {% if term.termCode == 201900 %}
                     <tr>
                       <td>{{term.termName}}</td>
                       <td>{{term.termStart}}</td>
@@ -45,14 +44,12 @@
                   {% endif %}
                 {% endfor %}
               </tbody>
-            </tbody>
         </table>
       </div>
       </div>
     </div>
   </div>
 </div>
-
 </body>
 </html>
 {% endblock %}
