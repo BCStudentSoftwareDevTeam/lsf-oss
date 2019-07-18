@@ -53,6 +53,29 @@
     border-radius: 0px;
 }
 
-/*#logo  {
-    right: 10px;
-}*/
+
+.footer {
+  position: fixed;
+  left: 0;
+  background-color:  #f0f3f4;
+  color:#1e2433;
+  text-align: center !important;
+  bottom: 55;
+  width: 100%;
+   /* Set the fixed height of the footer here */
+  height: 85px;
+  line-height: 100px; /* Vertically center the text there */
+ }
+
+a {
+  color: #66c2cc;
+}
+
+.btn-newcolor {
+  background-color: #66c2cc !important;
+  color: #ffffff;
+
+}
+#wrapper {
+  width: 100%;
+  margin-bottom:90px !important;
