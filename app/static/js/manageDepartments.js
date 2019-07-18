@@ -1,4 +1,12 @@
-// $.fn.dataTable.ext.type.order['compliance-status'] = function ( d ) {
+// $.fn.dataTable.ext.type.detect.unshift(
+//     function ( d ) {
+//         return d === 'In Compliance' || d === 'Not in Compliance' ?
+//             'salary-grade' :
+//             null;
+//     }
+// );
+//
+// $.fn.dataTable.ext.type.order['salary-grade-pre'] = function ( d ) {
 //     switch ( d ) {
 //         case 'In Compliance':    return 1;
 //         case 'Not in Compliance': return 2;
@@ -34,17 +42,19 @@ function status(department) {
         msg = "Department compliance changed.";
         $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
         $("#flasher").delay(3000).fadeOut()
-        var departmentID = "#" + department;
+        var departmentID = $("#" + department);
         //console.log(departmentID);
         if ($(departmentID).hasClass("btn-success")){
           $(departmentID).removeClass("btn-success");
           $(departmentID).addClass("btn-danger");
-          $(departmentID).text("Not in Compliance")
+          $(departmentID).text("Not in Compliance");
+          //$(departmentID).attr("data-order", -1);
         }
         else {
           $(departmentID).removeClass("btn-danger");
           $(departmentID).addClass("btn-success");
-          $(departmentID).text("In Compliance")
+          $(departmentID).text("In Compliance");
+          //$(departmentID).attr("data-order", 1);
         }
     }
   }

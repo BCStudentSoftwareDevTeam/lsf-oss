@@ -1,4 +1,25 @@
+.flasher{
+  margin-top: 100px;
+}
+
+#flash_container {
+  margin-top: 100px;
+  margin-right: 140px;
+  margin-left: 20px;
+}
+
 h1 {
   text-align: center;
   padding-bottom: 15px;
+}
+
+#exampleButton:hover {
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+}
+
+#exampleButton:active {
+  background-color: #5cb85c;
+  border-color: #4cae4c;
+
 }
