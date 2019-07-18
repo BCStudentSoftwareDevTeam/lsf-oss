@@ -1,6 +1,5 @@
 from flask import render_template
 from flask import Blueprint
-from app.config.loadConfig import *
 
 main_bp = Blueprint('main', __name__)
 

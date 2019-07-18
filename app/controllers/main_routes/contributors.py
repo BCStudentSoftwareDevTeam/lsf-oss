@@ -5,11 +5,12 @@ from app.models.term import *
 from flask_bootstrap import bootstrap_find_resource
 from app.models.Tracy.studata import *
 from app import *
-from app.config.loadConfig import *
 
-cfg=get_cfg()
+
+
 @app.route("/contributors", methods = ["GET"]) 
 def contributors():
+    contribs = load_config("app/config/contributors.yaml")
     return render_template("main/contributors.html", 
-           cfg=cfg
+           cfg=contribs
            )
