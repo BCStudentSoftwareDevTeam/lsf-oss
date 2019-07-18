@@ -13,7 +13,6 @@ def laborStatusForm():
     current_user = require_login()
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
-
     # Logged in
     forms = LaborStatusForm.select()
     students = STUDATA.select()

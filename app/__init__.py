@@ -1,8 +1,7 @@
 from flask import Flask
 import yaml
 from flask_bootstrap import Bootstrap
-from flask_nav import Nav
-from flask_nav.elements import *
+
 
 
 app = Flask(__name__)
@@ -29,35 +28,3 @@ app.register_blueprint(admin_bp)
 from app.controllers.errors_routes import error as errors_bp
 app.register_blueprint(errors_bp)
 
-# Configures the navigation bar
-nav = Nav()
-
-
-@nav.navigation()
-def thenavbar():
-    return Navbar(
-        'Labor Status Forms',
-        Subgroup(
-            'Supervisor Portal',
-            View('Current Labor Students',"main.index"),# 'main.currentLaborStudents'),   #FIXME this link will not work because it does not exist yet
-            View('Labor Release Form', "main.index"), #'main.laborReleaseForm'),
-            View('Past Labor Students', "main.index"),# 'main.pastLaborStudents'),         #FIXME this link will not work because it does not exist yet
-            View('All Labor Students', "main.index"),#'main.allLaborStudents')            #FIXME this link will not work because it does not exist yet
-            ),
-        Subgroup(
-            'Administration',
-            View('Pending Forms', "main.index"),#'main.pendingForms'),                    #FIXME this link will not work because it does not exist yet
-            View('Overload Forms', 'main.index'),
-            View('All past forms', "main.index"),#'main.allPastForms'),                   #FIXME this link will not work because it does not exist yet
-            View('Manage Terms', "main.index"), #'admin.term_Management'),
-            View('Manage Departments', 'main.index'),  #FIXME this link will not work because it does not exist yet
-            View('Manage Admins', "admin.admin_tables"), #'admin.admin_management'),
-            View('Manage Email Templates', "main.index")# 'admin.email_templates')
-            ),
-        View('Labor Status Form', 'main.laborStatusForm'),
-        View('Logout', 'main.index')
-            )
-
-nav.register_element('side', nav)
-
-nav.init_app(app)
