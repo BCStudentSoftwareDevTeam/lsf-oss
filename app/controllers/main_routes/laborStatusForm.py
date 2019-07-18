@@ -16,22 +16,6 @@ from flask import request
 
 @main_bp.route('/laborstatusform', methods=['GET', 'POST'])
 def laborStatusForm():
-<<<<<<< HEAD
-    username = load_user('heggens')  #FIXME FOR SCOTT Hardcoding users is bad
-    forms = LaborStatusForm.select()
-    students = STUDATA.select().order_by(STUDATA.FIRST_NAME.asc()) # getting student names from TRACY
-    terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
-    staffs = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # getting supervisors from TRACY
-    departments = STUPOSN.select(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT).distinct() # getting deparmtent names from TRACY
-    return render_template( 'main/laborStatusForm.html',
-				            title=('Labor Status Form'),
-                            username = username,
-                            forms = forms,
-                            students = students,
-                            terms = terms,
-                            staffs = staffs,
-                            departments = departments
-=======
     current_user = require_login()
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
@@ -45,7 +29,6 @@ def laborStatusForm():
                             forms=forms,
                             students=students,
                             terms=terms
->>>>>>> eec501eddd5c56555b427d8b5ad737bd0441fa82
                           )
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
