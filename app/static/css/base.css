@@ -62,18 +62,23 @@
   height: 60px;
   line-height: 70px; /* Vertically center the text there */
  }
-.footerlink {
-  font-weight: bold;
-}
-a{
+
+a {
   color: #1c78bb;
 }
 
 a:hover {
   color: #155788;
 }
+
 .table {
   width:50%;
+}
+
+
+.btn-newcolor { /* for contributors page */
+  background-color: #1c78c0;
+  color: #ffffff;
 }
 
 #wrapper {
@@ -81,11 +86,16 @@ a:hover {
   margin-bottom:90px !important;
 }
 
-#admin{
+.footerlink {
+  font-weight: bold;
+}
+
+#admin {
+
     background-color: #66c2cc;
 }
 
-#admin ul{
+#admin ul {
     background-color: #f5f5f5;
 }
 
