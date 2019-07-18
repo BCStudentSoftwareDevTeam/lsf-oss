@@ -3,6 +3,11 @@
   padding-left: 0px;
   background-color: #F9F9F9;
 }
+
+#datepicker {
+  padding-right: 0px;
+}
+
 #glyphicon{
       font-size: 29px;
       color: #337ab7;

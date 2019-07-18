@@ -33,6 +33,7 @@ def laborStatusForm():
                             staffs = staffs,
                             departments = departments)
 
+
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
 def getPositions(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)

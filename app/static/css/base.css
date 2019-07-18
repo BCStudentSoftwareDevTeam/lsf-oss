@@ -27,6 +27,12 @@
     clear:both;
 }
 
+.navbar-header {
+
+    border-bottom: 1px lightgray solid;
+    margin-bottom: 5px;
+    height: 75px;
+}
 .panel-group .panel-heading {
     border-bottom: 1px #ddd solid;
 }
@@ -36,3 +42,41 @@
     padding-bottom: 0px;
 }
 
+#logo {
+    opacity: .75;
+}
+
+.container {
+    top: -75px;
+}
+
+}
+
+.container-fluid {
+  /*margin-bottom: 350px;*/
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  background-color:  #f0f3f4;
+  color:#1e2433;
+  text-align: center !important;
+  bottom: 55;
+  width: 100%;
+   /* Set the fixed height of the footer here */
+  height: 85px;
+  line-height: 100px; /* Vertically center the text there */
+ }
+a{
+  color: #66c2cc;
+}
+
+.btn-newcolor {
+  background-color: #66c2cc !important;
+  color: #ffffff;
+
+}
+#wrapper {
+  width: 100%;
+  margin-bottom:90px !important;
