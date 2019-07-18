@@ -1,8 +1,10 @@
+from flask_login import login_required
 from app.controllers.main_routes import *
+from app.login_manager import require_login
 from app.models.user import *
 from app.models.laborStatusForm import *
 from app.models.term import *
-from flask_bootstrap import bootstrap_find_resource
+# from flask_bootstrap import bootstrap_find_resource
 from app.models.Tracy.studata import *
 from app.models.Tracy.stustaff import *
 from app.models.department import *
@@ -12,9 +14,11 @@ from flask import request
 
 
 @main_bp.route('/laborstatusform', methods=['GET', 'POST'])
-# @login_required
 def laborStatusForm():
-    username = load_user('heggens')  #FIXME FOR SCOTT Hardcoding users is bad
+    current_user = require_login()
+    if not current_user:        # Not logged in
+        return render_template('errors/403.html')
+    # Logged in
     forms = LaborStatusForm.select()
     students = STUDATA.select().order_by(STUDATA.FIRST_NAME.asc()) # getting student names from TRACY
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
@@ -27,8 +31,7 @@ def laborStatusForm():
                             students = students,
                             terms = terms,
                             staffs = staffs,
-                            departments = departments
-                          )
+                            departments = departments)
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
 def getPositions(department):
