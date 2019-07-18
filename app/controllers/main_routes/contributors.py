@@ -8,8 +8,9 @@ from app import *
 from app.config.loadConfig import *
 
 cfg=get_cfg()
-@app.route("/contributors", methods = ["GET"]) 
+
+@app.route("/contributors", methods = ["GET"])
 def contributors():
-    return render_template("main/contributors.html", 
+    return render_template("main/contributors.html",
            cfg=cfg
            )
