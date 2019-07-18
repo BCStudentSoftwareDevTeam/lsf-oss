@@ -24,7 +24,6 @@
     border: none;
 }
 
-
 .panel-heading:hover {
     background-color: #66c2cc;
 }
@@ -45,8 +44,6 @@
     padding-right: 0px;
 }
 
-
-
 .panel {
     margin-bottom: 0px;
     border-radius: 0px;
@@ -61,12 +58,13 @@
   color:#1e2433;
   text-align: center !important;
   bottom: 55;
-  width: 100%;
-   /* Set the fixed height of the footer here */
+  width: 100%; /* Set the fixed height of the footer here */
   height: 60px;
   line-height: 70px; /* Vertically center the text there */
  }
-
+.footerlink {
+  font-weight: bold;
+}
 a{
   color: #1c78bb;
 }
@@ -77,20 +75,10 @@ a:hover {
 .table {
   width:50%;
 }
-.btn-newcolor { /* for contributors page */
-  background-color: #1c78c0 !important;
-  color: #ffffff;
-  padding: 7px 30px; 
-  margin-top: 100px; 
-  margin-left: 150px;
-}
+
 #wrapper {
   width: 100%;
   margin-bottom:90px !important;
-}
-
-.footerlink {
-  font-weight: bold;
 }
 
 #admin{
@@ -105,3 +93,6 @@ a:hover {
     border-radius: 0px;
 }
 
+#bclp{
+  color: #1c78bb;
+}
