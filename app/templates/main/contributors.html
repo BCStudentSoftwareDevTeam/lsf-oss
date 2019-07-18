@@ -7,12 +7,12 @@
       <h2>Contributors </h2>
       <p> These are the students who helped to create this system and continue to maintain it.</p>
       <table class="table table-bordered" align="center">   
-        <tr class>
+        <tr class="info">
           <th>Name</th>
           <th>Graduating Year</th>
         </tr>
       {% for contrib in cfg.contributors %}
-        <tr class>
+        <tr>
           <td>{{contrib.name}}</td>
           <td>{{contrib.year}}</td>
         </tr>
@@ -22,8 +22,6 @@
         <button type='button' class='btn btn-lg btn-newcolor' onclick ="history.back()">Back</button>
       </div>
     </div>
-
-
   </div>
 </div>
 {% endblock %}
