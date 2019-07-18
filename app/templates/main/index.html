@@ -1,6 +1,20 @@
 {% extends "base.html" %}
+
+{% block scripts %}
+{{super()}}
+
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
+<script type=text/javascript src="{{url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.css"/>
+{% endblock %}
+
 {% block app_content %}
 
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <div align= "right">
 
   <script type="text/javascript" src="/static/js/index.js"></script>
@@ -10,18 +24,53 @@
       <h1>Supervisor Portal</h1>
       <h3>All Labor Students</h3>
     </div>
-  <input  type="text" id="myInput" onkeyup="searching()" placeholder="Search">
-    <div align= "right"><button class="btn">Download</button></div>
 
 
-    <div align= "center">
-      <table id="studentTable" >
+    <div align= "right"><button class="btn" data-toggle="modal" data-target="#downloadModal">Download</button></div>
+
+    <!-- start of modal -->
+       <div class="modal fade" id="downloadModal" role="dialog">
+           <div class="modal-dialog">
+
+             <div class="modal-content" align="center">
+               <div class="modal-header" align="center">
+                 <button type="button" class="close" data-dismiss="modal">&times;</button>
+                 <h4 class="modal-title">Please select what you would like to download.</h4>
+               </div>
+               <div class="modal-footer" align="center">
+                 <button type="submit" class="btn btn-success" id="modal">Download</button>
+               </div>
+             </div>
+
+           </div>
+         </div>
+
+
+
+
+
+    <div align= "center" >
+    <table id="studentList" class="table table-striped studentTable" >
+
+      <thead>
+        <tr>
+          <th> </th>
+
+        </tr>
+      </thead>
+
         {% for form in forms_by_supervisees %}
         <tr>
-          <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</a></td>
+          <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
+            {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})
+            <P></P>
+            {{form.POSN_TITLE}}
+          </a></td>
+
+
+
         </tr>
         {% endfor %}
-
       </table>
 
     </div>

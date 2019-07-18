@@ -11,24 +11,24 @@
   right: 0;
 }
 
-#studentTable {
-  border-collapse: collapse; /* Collapse borders */
-  width: 50%; /* Full-width */
-  border: 1px solid #ddd; /* Add a grey border */
+.studentTable {
+
+  width: 30%; /* Full-width */
+
   font-size: 18px; /* Increase font-size */
 }
 
-#studentTable th, #studentTable td {
+.studentTable th, .studentTable td {
   text-align: center; /* Left-align text */
   padding: 12px; /* Add padding */
 }
 
-#studentTable tr {
+.studentTable tr {
   /* Add a bottom border to all table rows */
   border-bottom: 1px solid #ddd;
 }
 
-#studentTable tr.header, #studentTable tr:hover {
+.studentTable tr.header, .studentTable tr:hover {
   /* Add a grey background color to the table header and on hover */
   background-color: #f1f1f1;
 }
