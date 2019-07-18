@@ -42,22 +42,6 @@ def getPositions(department):
         position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE}
     return json.dumps(position_dict)
 
-@main_bp.route("/laborstatusform/getjobtype/<term>", methods=["GET"])
-def getjobtype(term):
-    jobtypes = LaborStatusForm.select().where(LaborStatusForm.termCode == term)
-    jobtype_dict = {}
-    for jobtype in jobtypes:
-        jobtype_dict[jobtype.jobType] = {"job type": jobtype.jobType}
-    return json.dumps(jobtype_dict)
-
-@main_bp.route("/laborstatusform/gethoursperweek/<jobtype>", methods=["GET"])
-def gethoursperweek(jobtype):
-    hours_perweek = LaborStatusForm.select().where(LaborStatusForm.jobType == jobtype)
-    hours_perweek_dict = {}
-    for hour_perweek in hours_perweek:
-        hours_perweek_dict[str(hour_perweek.termCode)] = {"Weekly Hours": hour_perweek.weeklyHours}
-    return json.dumps(hours_perweek_dict)
-
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
 def getprimarysupervisor(termCode, student):
     primary_supervisors = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.jobType == "Primary", LaborStatusForm.studentSupervisee == student)

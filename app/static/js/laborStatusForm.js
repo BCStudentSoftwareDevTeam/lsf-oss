@@ -86,56 +86,35 @@ function fill_positions(response) {
        })
  }
 
-function fill_jobtype(response){
-  var selected_jobtype = document.getElementById("jobtype");
-  if (selected_jobtype) {
-    $("#jobtype").empty();
-    for (var key in response){
-      var options = document.createElement("option")
-      options.text = response[key]["job type"].toString();
-      options.value = key;
-      selected_jobtype.appendChild(options);
-    }
-    $(".selectpicker").selectpicker('refresh');
-  }
-}
-
- function getTerm(obj){
-   var term = obj.value;
-   var url  = "/laborstatusform/getjobtype/" + term;
-   $.ajax({
-     url: url,
-     dataType: "json",
-     success: function(response){
-       fill_jobtype(response)
-     }
-   })
- }
-
-function fill_hoursperweek(response){
+function fill_hoursperweek(){
   var selected_hours_perweek = document.getElementById("hours_perweek");
+  var jobtype = $("#jobtype").val();
+  console.log(jobtype)
   if (selected_hours_perweek){
     $("#hours_perweek").empty();
-    for (var key in response){
+    if (jobtype == "Primary"){
       var options = document.createElement("option");
-      options.text = response[key]["Weekly Hours"].toString();
-      options.value = key;
-      selected_hours_perweek.appendChild(options);
+      var dict = {
+        value1: "10",
+        value2: "15",
+        value3: "20"}
+      for (var key in dict){
+        selected_hours_perweek.options[selected_hours_perweek.options.length]=
+        new Option(dict[key], key);
+      }
+    }
+    else if (jobtype == "Secondary") {
+      var options = document.createElement("option");
+      var dict = {
+        value1: "5",
+        value2: "10"}
+      for (var key in dict){
+        selected_hours_perweek.options[selected_hours_perweek.options.length]=
+        new Option(dict[key], key);
+      }
     }
     $('.selectpicker').selectpicker('refresh');
   }
-}
-
-function getjobtype(obj){
-  var jobtype = obj.value;
-  var url = "/laborstatusform/gethoursperweek/" + jobtype;
-  $.ajax({
-    url: url,
-    dataType: "json",
-    success: function (response){
-      fill_hoursperweek(response)
-    }
-  })
 }
 
 function fillprimarysupervisor(response){
