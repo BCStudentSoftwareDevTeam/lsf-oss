@@ -24,10 +24,6 @@
     border: none;
 }
 
-.panel {
-    box-shadow: none;
-    background-color: #66c2cc;
-}
 
 .panel-heading:hover {
     background-color: #66c2cc;
@@ -49,9 +45,13 @@
     padding-right: 0px;
 }
 
+
+
 .panel {
     margin-bottom: 0px;
     border-radius: 0px;
+    box-shadow: none;
+    background-color: #f5f5f5;
 }
 
 .footer {
@@ -68,7 +68,11 @@
  }
 
 a {
-  color: #66c2cc;
+  color: #1c78bb;
+}
+
+a:hover {
+  color: #155788;
 }
 
 .btn-newcolor {
@@ -79,3 +83,16 @@ a {
 #wrapper {
   width: 100%;
   margin-bottom:90px !important;
+}
+
+#admin{
+    background-color: #66c2cc;
+}
+
+#admin ul{
+    background-color: #f5f5f5;
+}
+
+.panel-group .panel, .panel-heading {
+    border-radius: 0px;
+}
