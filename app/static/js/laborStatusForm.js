@@ -51,7 +51,7 @@ function show_access_level(obj){
 
 function secondary_access(obj){
   var jobtype = obj.value;
-  if (jobtype == "secondary"){
+  if (jobtype == "Secondary"){
     $("#primary_for_secondary").show();
   }
   else{
