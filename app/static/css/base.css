@@ -68,15 +68,23 @@
  }
 
 a {
-  color: ##1c78bb;
-  
+  color: ##1c78bb; 
 }
-
-.btn-newcolor {
+.table {
+  width:50%;
+}
+.btn-newcolor { /* for contributors page */
   background-color: #66c2cc !important;
   color: #ffffff;
-
+  padding: 7px 30px; 
+  margin-top: 100px; 
+  margin-left: 150px;
 }
 #wrapper {
   width: 100%;
   margin-bottom:90px !important;
+}
+
+.footerlink {
+  font-weight: bold;
+}
