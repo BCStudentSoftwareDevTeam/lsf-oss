@@ -26,8 +26,14 @@
     <tbody>
       {% for department in department %}
       <tr>
-        <th scope="row">{{department.DEPT_NAME}}</th>
-        <th scope="row"><button id="{{department.departmentID}}" name="deptName" class="{% if department.departmentCompliance == True %} btn btn-success {% else %} btn btn-danger {% endif %}" onclick="status({{department.departmentID}})" value="{{department.departmentID}}">{% if department.departmentCompliance == True %}In Compliance{% else %}Not in Compliance{% endif %}</button></th>
+        <td scope="row">{{department.DEPT_NAME}}</td>
+        <td id="dept_{{department.departmentID}}" scope="row" data-order="{% if department.departmentCompliance == True %}1{% else %}-1{% endif %}">
+          <button id="dept_btn_{{department.departmentID}}"
+                  name="deptName"
+                  class="{% if department.departmentCompliance == True %} btn btn-success {% else %} btn btn-danger {% endif %}"
+                  onclick="status({{department.departmentID}})"
+                  value="{{department.departmentID}}">{% if department.departmentCompliance == True %}In Compliance{% else %}Not in Compliance{% endif %}</button>
+        </td>
       </tr>
       {% endfor %}
     </tbody>
