@@ -6,8 +6,8 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
-<form>
-  <h1 class="col-xs-11 text-center">Labor Status Form
+<form class="form">
+  <h1 class="col-md-12 col-md-offset-4">Labor Status Form
     <span class="glyphicon glyphicon-bookmark"
       <a  data-toggle="tooltip" data-tooltip="true"
           title="This online labor status form is used to
@@ -17,11 +17,11 @@
     </span>
   </h1>
   <br />
-  <div class="form-group  col-md-offset-3 col-md-1">
+  <div class="form-group row col-md-12 col-md-offset-4">
     <!--selectpicker for supervisor-->
-    <label for="supervisor">Supervisor</label>
-
-        <select class="selectpicker"
+    <label for="supervisor" class="col-2 col-form-label">Supervisor</label>
+        <div class="col-10">
+        <select class="selectpicker form-control"
                 name='supervisor'
                 id='supervisor'
                 data-live-search='true'
@@ -32,11 +32,13 @@
             <option value="{{staff.PIDM}}">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
           {% endfor %}
         </select>
+       </div>
 </div>
   <br />
-  <div class="form-group  col-md-offset-8 col-md-1">
+  <div class="form-group row col-md-12 col-md-offset-4">
     <!--selectpicker for department-->
-    <label for="department">Department</label>
+    <label for="department" class="col-2 col-form-label">Department</label>
+    <div class="col-10">
       <select class="selectpicker"
               name='department'
               id='department'
@@ -48,11 +50,14 @@
           <option value="{{department.DEPT_NAME}}">{{department.DEPT_NAME}}</option>
         {% endfor %}
       </select>
+    </div>
   </div>
   <br />
-  <div class="form-group  col-md-offset-6 col-md-1 ">
+  <div class="form-group row col-md-12 col-md-offset-4">
     <!-- selectpicker for term  -->
-      <label for="term">Term</label>
+    <div class="col-10">
+      <label for="term" class="col-2 col-form-label">Term</label>
+          <div class="col-10">
             <select class="selectpicker"
                     name='term'
                     id='term'
@@ -65,13 +70,16 @@
                 <option value = "{{term.termCode}}">{{term.termName}}</option>
             {% endfor %}
           </select>
+        </div>
+      </div>
   </div>
-  <br />
-<div class="form-group col-md-offset-2 col-md-6 row">
+<br />
+
+<div class="form-group col-md-12 col-md-offset-2 row">
 <!-- DATEPICKERS -->
-          <div  class="form-group col-md-6">
+          <div  class="form-group col-md-4">
             <!--Datepicker for start date-->
-            <label for="datetimepicker1" id="datepicker">Start Date</label>
+            <label for="datetimepicker1" class="col-2 col-form-label" id="datepicker">Start Date</label>
               <div class='input-group date' >
                 <input type='text' class="form-control" id='datetimepicker1' placeholder="Start Date" data-width="320px" required/>
                 <span class="input-group-addon">
@@ -80,20 +88,18 @@
               </div>
           </div>
 
+          <div class="form-group col-md-4">
+            <!--Datepicker for End date-->
+          <label for="datetimepicker2" class="col-2 col-form-label" id="datepicker">End Date</label>
+            <div class='input-group date'>
+                <input type='text' class="form-control" id='datetimepicker2' placeholder="End Date" data-width="320px" required/>
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+          </div>
 
-      <div class="form-group col-md-6">
-        <!--Datepicker for End date-->
-      <label for="datetimepicker2" id="datepicker">End Date</label>
-        <div class='input-group date'>
-            <input type='text' class="form-control" id='datetimepicker2' placeholder="End Date" data-width="320px" required/>
-            <span class="input-group-addon">
-              <span class="glyphicon glyphicon-calendar"></span>
-            </span>
-        </div>
       </div>
-
-  </div>
-  <br />
 
 <div class ="form-group col-md-12">
 
@@ -105,6 +111,7 @@
                     id='student'
                     data-live-search='true'
                     title="Student"
+                    data-width="230px"
                     onchange= "getstudent(this)"
                     required>
               {% for student in students %}
@@ -114,21 +121,21 @@
   </div>
 
   <div class="form-group col-md-3" id="Position">
-    <!--selectpicker for position-->
+    <!--selectpicker for positio3-->
     <label for="student">Position</label>
     <select class="selectpicker"
             name='position'
             id='position'
             data-live-search='true'
             title="Position"
-            data-width="231px"
+            data-width="230px"
             required>
     </select>
   </div>
 
  <!-- Contract hours for breaks -->
   <div class="form-group col-md-5" id="ContractHours" >
-          <!--selectpicker for contract hours-->
+          <!--selectpicker for cntract hours-->
           <label for="student">Contract Hours</label>
           <input class="form-control quantity"
                   type = "number"
@@ -142,7 +149,7 @@
           </input>
   </div>
 
-  <div class="form-group col-md-3" id="JopTypes">
+  <div class="form-group col-md-2" id="JopTypes">
     <!--selectpicker for Job type-->
     <label for="student">Job Type</label>
     <select class="selectpicker"
@@ -150,7 +157,7 @@
             id='jobtype'
             data-live-search='true'
             title="Job Type"
-            data-width="258px"
+            data-width="197px"
             onchange="fill_hoursperweek(); secondary_access(this)">
       <option value="Primary">Primary</option>
       <option value="Secondary">Secondary</option>
@@ -165,12 +172,12 @@
             id='hours_perweek'
             data-live-search='true'
             title="Hours per week"
-            data-width="217px">
+            data-width="197px">
     </select>
   </div>
 
   <div class="form-group col-md-1" id="plus">
-    <label></label>
+    <label> </label>
     <span class="glyphicon glyphicon-plus"
     <a      data-toggle="tooltip"
             data-tooltip="true"
