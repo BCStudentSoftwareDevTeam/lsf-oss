@@ -169,8 +169,8 @@ function displayTable() {
   cell4.innerHTML = hours_perweekname;
   $("#hours_perweek").val('default');
   $("#hours_perweek").selectpicker("refresh");
-  $("#joptypes").val('default');
-  $("#joptypes").selectpicker("refresh");
+  $("#joptype").val('default');
+  $("#joptype").selectpicker("refresh");
   $("#student").val('default');
   $("#student").selectpicker("refresh");
   $("#position").val('default');
