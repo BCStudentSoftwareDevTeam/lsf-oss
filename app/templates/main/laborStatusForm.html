@@ -208,7 +208,7 @@
          <h4 class="modal-title">Labor Overload</h4>
        </div>
        <div class="modal-body">
-         <h4><b> Students shoud not work any hours within a secondary assignment until notification of approved Labor Overload. </b> </h4> 
+         <h4><b> Students shoud not work any hours within a secondary assignment until notification of approved Labor Overload. </b> </h4>
        </div>
        <div class="modal-footer">
          <button type="button" class="btn btn-primary" data-dismiss="modal">I accept</button>
@@ -231,7 +231,7 @@
             data-placement = "center"
             id="glyphicon_2"
             onclick="displayTable()">
-    </a
+    </a>
     </span>
   </div>
 </div>
@@ -254,13 +254,17 @@
   <br />
 
 
-  <table class="table table-striped" id="mytable">
-    <tr>
-      <td>Student</td>
-      <td>Position</td>
-      <td>Job Type</td>
-      <td>Weekly Hours</td>
-    </tr>
+  <table class="table" id="mytable">
+    <thead class="thead-dark">
+      <tr>
+        <th>Student</th>
+        <th>Position</th>
+        <th id="job_table">Job Type</th>
+        <th id="hours_table">Hours Per Week</th>
+        <th id="primary_table">Primary Supervisor</th>
+        <th id="contract_table">Contract Hours</th>
+      </tr>
+    </thead>
   </table>
 
 
