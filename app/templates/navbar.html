@@ -1,42 +1,43 @@
+<div class="container-fluid">
+    <div class=" col-xs-11 navbar-header">
+        <h2 class="">Berea College Labor Program</h2>
+    </div>
 
-
-{% block navbar %}
+    <div id="logo" class="col-xs-1 pull-right" ><img src="static/laborprogram.png" title="Labor Program Logo" /></div>
+</div>
 <div id="sidebar" class="col-xs-2">
     <nav class="navbar">
         <div class="container-fluid">
-            <div class="navbar-header">
-                <h4 class="navbar-brand" href="#" >Labor Status Forms</h4>
-            </div>
             <div id="portal" class="panel panel-default">
-                <div class="panel-heading">
-                        <a href="/"><h4>Supervisor Portal</h4></a>
-                </div>
+                <a href="/">
+                    <div class="panel-heading">
+                        <h4>Supervisor Portal</h4>
+                    </div>
+                </a>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>
-                        <a href="/laborstatusform">New Labor Status Form</a>
-                    </h4>
-                </div>
+                <a href="/laborstatusform">
+                    <div class="panel-heading">
+                        <h4>New Labor Status Form</h4>
+                    </div>
+                </a>
             </div>
             <div class="panel-group" id="accordion">
                 <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h4>
-                            <a data-toggle="collapse" data-parent="#accordion" href="#admin">
-                                Administration</a>
-                        </h4>
-
-                    </div>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#admin">
+                        <div class="panel-heading">
+                            <h4>Administration</h4>
+                        </div>
+                    </a>
                     <div id="admin" class="panel-collapse collapse">
                         <ul id="admindropdown" class="panel panel-default">
-                            <li class="panel-heading"><h4><a href="/">Status Forms</a></h4></li>
-                            <li class="panel-heading"><h4><a href="/">Overload Forms</a></h4></li>
-                            <li class="panel-heading"><h4><a href="/">Past Forms</a></h4></li>
-                            <li class="panel-heading"><h4><a href="/">Manage Terms</a></h4></li>
-                            <li class="panel-heading"><h4><a href="/">Manage Departments</a></h4></li>
-                            <li class="panel-heading"><h4><a href="/">Manage Users</a></h4></li>
-                            <li class="panel-heading"><h4><a href="/">Manage Email Templates</a></h4></li>
+                            <a href="/"><li class="panel-heading"><h4>Status Forms</h4></li></a>
+                            <a href="/"><li class="panel-heading"><h4>Overload Forms</h4></li></a>
+                            <a href="/"><li class="panel-heading"><h4>Past Forms</h4></li></a>
+                            <a href="/"><li class="panel-heading"><h4>Manage Terms</h4></li></a>
+                            <a href="/"><li class="panel-heading"><h4>Manage Departments</h4></li></a>
+                            <a href="/"><li class="panel-heading"><h4>Manage Users</h4></li></a>
+                            <a href="/"><li class="panel-heading"><h4>Manage Email Templates</h4></li></a>
                         </ul>
 
                     </div>
@@ -46,13 +47,16 @@
             </div>
 
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h4>
-                        <a>Logout</a>
-                    </h4>
-                </div>
+                <a href="/">
+                    <div class="panel-heading">
+                        <h4>
+                            Logout
+                        </h4>
+                    </div>
+                </a>
             </div>
+
         </div>
     </nav>
 </div>
-{% endblock %}
+
