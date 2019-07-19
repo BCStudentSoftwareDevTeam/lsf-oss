@@ -95,9 +95,9 @@ function fill_hoursperweek(){
     if (jobtype == "Primary"){
       var options = document.createElement("option");
       var dict = {
-        value1: "10",
-        value2: "15",
-        value3: "20"}
+        10: "10",
+        15: "15",
+        20: "20"}
       for (var key in dict){
         selected_hours_perweek.options[selected_hours_perweek.options.length]=
         new Option(dict[key], key);
@@ -106,8 +106,8 @@ function fill_hoursperweek(){
     else if (jobtype == "Secondary") {
       var options = document.createElement("option");
       var dict = {
-        value1: "5",
-        value2: "10"}
+        5: "5",
+        10: "10"}
       for (var key in dict){
         selected_hours_perweek.options[selected_hours_perweek.options.length]=
         new Option(dict[key], key);
@@ -143,25 +143,36 @@ function getstudent(obj){
     }
   })
 }
-
-function getstudentname(obj) {
-  var studentname = obj.options[obj.selectedIndex].text;
-  return studentname
-}
-
-
 // TABLE
 function displayTable() {
   $("#mytable").show();
+
   var table = document.getElementById("mytable");
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
   var cell3 = row.insertCell(2);
   var cell4 = row.insertCell(3);
-
-  cell1.innerHTML = getstudentname();
-  cell2.innerHTML = "NEW CELL2";
-  cell3.innerHTML = "NEW CELL3";
-  cell4.innerHTML = "NEW CELL4";
+  var student = document.getElementById("student");
+  var studentname = student.options[student.selectedIndex].text;
+  var position = document.getElementById("position");
+  var positionname = position.options[position.selectedIndex].text;
+  var jobtype = document.getElementById("jobtype");
+  console.log(jobtype)
+  var jobtypename = jobtype.options[jobtype.selectedIndex].text;
+  var hours_perweek = document.getElementById("hours_perweek");
+  console.log(hours_perweek)
+  var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
+  cell1.innerHTML = studentname;
+  cell2.innerHTML = positionname;
+  cell3.innerHTML = jobtypename;
+  cell4.innerHTML = hours_perweekname;
+  $("#hours_perweek").val('default');
+  $("#hours_perweek").selectpicker("refresh");
+  $("#joptype").val('default');
+  $("#joptype").selectpicker("refresh");
+  $("#student").val('default');
+  $("#student").selectpicker("refresh");
+  $("#position").val('default');
+  $("#position").selectpicker("refresh");
 }
