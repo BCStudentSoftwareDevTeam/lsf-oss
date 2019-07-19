@@ -1,7 +1,8 @@
 from flask import Flask
 import yaml
 from flask_bootstrap import Bootstrap
-
+from flask_nav import Nav
+from flask_nav.elements import *
 
 
 app = Flask(__name__)
@@ -28,10 +29,8 @@ app.register_blueprint(admin_bp)
 from app.controllers.errors_routes import error as errors_bp
 app.register_blueprint(errors_bp)
 
-<<<<<<< HEAD
 # Configures the navigation bar
 nav = Nav()
-
 
 @nav.navigation()
 def thenavbar():
@@ -51,7 +50,7 @@ def thenavbar():
             View('All past forms', "main.index"),#'main.allPastForms'),                   #FIXME this link will not work because it does not exist yet
             View('Manage Terms', 'admin.term_Management'),
             View('Manage Departments', 'main.index'),  #FIXME this link will not work because it does not exist yet
-            View('Manage Admins', 'admin.admin_Management'),
+            View('Manage Users', 'admin.admin_Management'),
             View('Manage Email Templates', 'admin.email_templates')
             ),
         View('Labor Status Form', 'main.laborStatusForm'),
@@ -61,5 +60,3 @@ def thenavbar():
 nav.register_element('side', nav)
 
 nav.init_app(app)
-=======
->>>>>>> development
