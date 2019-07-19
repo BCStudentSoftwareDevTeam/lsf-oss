@@ -145,6 +145,8 @@ function getstudent(obj){
 // TABLE
 function displayTable() {
   $("#mytable").show();
+  $("#primary_table").hide();
+  $("#contract_table").hide();
   var table = document.getElementById("mytable");
   var student = document.getElementById("student");
   var studentname = student.options[student.selectedIndex].text;
@@ -154,6 +156,9 @@ function displayTable() {
   var jobtypename = jobtype.options[jobtype.selectedIndex].text;
   var hours_perweek = document.getElementById("hours_perweek");
   var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
+  var primary_supervisor = document.getElementById("primary_supervisor");
+  var primary_supervisorname = primary_supervisor.options[primary_supervisor.selectedIndex].text;
+  var contracthoursname = document.getElementById("contracthours").value;
 
   for(const tr of table.querySelectorAll("thead tr")) {
 
@@ -161,10 +166,12 @@ function displayTable() {
     const td1 = tr.querySelector("td:nth-child(2)");
     const td2 = tr.querySelector("td:nth-child(3)");
     const td3 = tr.querySelector("td:nth-child(4)");
+    const td4 = tr.querySelector("td:nth-child(5)");
 
-    if(!td0 || !td1 || !td2 || !td3) { //If we are missing cells skip it
+    if(!td0 || !td1 || !td2 || !td3 || !td4) { //If we are missing cells skip it
       continue;
     }
+
 
     if ((td0.innerHTML == studentname) && (jobtypename == "Primary")) {
       category = "danger"
@@ -182,24 +189,52 @@ function displayTable() {
     }
   }
 
-  var row = table.insertRow(-1);
-  var cell1 = row.insertCell(0);
-  var cell2 = row.insertCell(1);
-  var cell3 = row.insertCell(2);
-  var cell4 = row.insertCell(3);
+  var termcode = $('#term').val()
+  var whichterm = termcode.toString().substr(-2);
+  if (whichterm != 11 && whichterm !=12) { // Summer term or any other break period
+    $("#contract_table").show();
+    $("#job_table").hide();
+    $("#hours_table").hide();
+    var row = table.insertRow(-1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    cell1.innerHTML = studentname;
+    cell2.innerHTML = positionname;
+    cell3.innerHTML = contracthoursname;
+    $("#contracthours").val("");
+    $("#position").val('default');
+    $("#position").selectpicker("refresh");
+    $("#student").val('default');
+    $("#student").selectpicker("refresh");
+  }
+  else{
+    var row = table.insertRow(-1);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
+    var cell4 = row.insertCell(3);
 
-  cell1.innerHTML = studentname;
-  cell2.innerHTML = positionname;
-  cell3.innerHTML = jobtypename;
-  cell4.innerHTML = hours_perweekname;
+    cell1.innerHTML = studentname;
+    cell2.innerHTML = positionname;
+    cell3.innerHTML = jobtypename;
+    cell4.innerHTML = hours_perweekname;
 
-  $("#hours_perweek").val('default');
-  $("#hours_perweek").selectpicker("refresh");
-  $("#jobtype").val('default');
-  $("#jobtype").selectpicker("refresh");
-  $("#student").val('default');
-  $("#student").selectpicker("refresh");
-  $("#position").val('default');
-  $("#position").selectpicker("refresh");
+    $("#hours_perweek").val('default');
+    $("#hours_perweek").selectpicker("refresh");
+    $("#jobtype").val('default');
+    $("#jobtype").selectpicker("refresh");
+    $("#student").val('default');
+    $("#student").selectpicker("refresh");
+    $("#position").val('default');
+    $("#position").selectpicker("refresh");
 
+    if(jobtypename == "Secondary"){
+      $("#primary_table").show();
+      var cell5 = row.insertCell(4);
+      cell5.innerHTML = primary_supervisorname;
+      $("#primary_supervisor").val('default');
+      $("#primary_supervisor").selectpicker("refresh");
+    }
+  }
 }
