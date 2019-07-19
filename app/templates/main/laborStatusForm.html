@@ -184,7 +184,7 @@
             title="Add more students"
             data-placement = "center"
             id="glyphicon_2"
-            onclick="displayTable(); highlightDuplicates()">
+            onclick="displayTable()">
     </a>
     </span>
   </div>
@@ -209,12 +209,14 @@
 
 
   <table class="table table-striped" id="mytable">
-    <tr>
-      <td>Student</td>
-      <td>Position</td>
-      <td>Job Type</td>
-      <td>Weekly Hours</td>
-    </tr>
+    <thead>
+      <tr>
+        <td>Student</td>
+        <td>Position</td>
+        <td>Job Type</td>
+        <td>Hours Per Week</td>
+      </tr>
+    </thead>
   </table>
 
 

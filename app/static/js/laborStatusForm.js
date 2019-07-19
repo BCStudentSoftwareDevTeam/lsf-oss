@@ -146,12 +146,6 @@ function getstudent(obj){
 function displayTable() {
   $("#mytable").show();
   var table = document.getElementById("mytable");
-  var row = table.insertRow(-1);
-  var cell1 = row.insertCell(0);
-  var cell2 = row.insertCell(1);
-  var cell3 = row.insertCell(2);
-  var cell4 = row.insertCell(3);
-
   var student = document.getElementById("student");
   var studentname = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");
@@ -160,6 +154,39 @@ function displayTable() {
   var jobtypename = jobtype.options[jobtype.selectedIndex].text;
   var hours_perweek = document.getElementById("hours_perweek");
   var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
+
+  for(const tr of table.querySelectorAll("thead tr")) {
+
+    const td0 = tr.querySelector("td:nth-child(1)");
+    const td1 = tr.querySelector("td:nth-child(2)");
+    const td2 = tr.querySelector("td:nth-child(3)");
+    const td3 = tr.querySelector("td:nth-child(4)");
+
+    if(!td0 || !td1 || !td2 || !td3) { //If we are missing cells skip it
+      continue;
+    }
+
+    if ((td0.innerHTML == studentname) && (jobtypename == "Primary")) {
+      category = "danger"
+      msg = `Match found for ${studentname} and Primary. Insert rejected`;
+      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+      $("#flasher").delay(4000).fadeOut()
+      return;
+    }
+    if ((td0.innerHTML == studentname) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionname)) {
+      category = "danger"
+      msg = `Match found for ${studentname} , ${positionname} and Secondary. Insert rejected`;
+      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+      $("#flasher").delay(4000).fadeOut()
+      return;
+    }
+  }
+
+  var row = table.insertRow(-1);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(2);
+  var cell4 = row.insertCell(3);
 
   cell1.innerHTML = studentname;
   cell2.innerHTML = positionname;
@@ -174,27 +201,5 @@ function displayTable() {
   $("#student").selectpicker("refresh");
   $("#position").val('default');
   $("#position").selectpicker("refresh");
-}
 
-function highlightDuplicates() {
-  console.log("i'm here")
-  var currentValues = [];
-  $('#mytable .tbody tr').find('input').each(function() {
-   // check if there is another one with the same value
-     if (currentValues.includes($(this).val())) {
-         alert("Duplicate found");
-         return false;
-     }
-
-     currentValues.push($(this).val());
-  })
 }
-// $('[name="student"]').on('input',function(){
-//   console.log("Im here")
-//   var value = $(this).val();
-//   $('[name="student"]').not(this).each(function(){
-//      if($(this).val() == value) {
-//        alert('duplicate content');
-//      }
-//   })
-// });
