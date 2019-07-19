@@ -37,63 +37,55 @@ def admin_Management():
 
 @admin.route("/adminManagement/userInsert", methods=['POST'])
 def manageLaborAdmin():
-    if request.form.get("add") == "add":
+    if request.form.get("add") == "add":   #this is taking the id in the select tag
         addLaborAdmin()
-    elif request.form.get("remove") == "remove":
-        # print("Hello Ela!!")
+    elif request.form.get("remove") == "remove":  #this is taking the id in the select tag
         removeLaborAdmin()
-    return redirect(url_for('admin.admin_Management'))
-
-def addLaborAdmin():
-    newAdmins = request.form.get('addAdmin')
-    newAdmin = User.get(User.username == newAdmins)
-    newAdmin.isLaborAdmin = 1
-    newAdmin.save()
-
-def removeLaborAdmin():
-    user = User.get(User.username == request.form.get('removeAdmin'))
-    user.isLaborAdmin = 0
-    user.save()
-
-
-
-def manageFinancialAidAdmin():
-    if request.form.get("addAid") == "addAid":
+    elif request.form.get("addAid") == "addAid":
         addFinancialAdmin()
     elif request.form.get("removeAid") == "removeAid":
-        # print("Hello Ela!!")
         removeFinancialAdmin()
-    return redirect(url_for('admin.admin_Management'))
-
-
-def addFinancialAdmin():
-    newFinAidAdmins = request.form.get('addFinancialAidAdmin')
-    newFinAidAdmin = User.get(User.username == newFinAidAdmins)
-    newFinAidAdmin.isFinancialAidAdmin = 1
-    newFinAidAdmin.save()
-
-def removeFinancialAdmin():
-    FinAiduser = FinAidUser.get(User.username == request.form.get('removeFinancialAidAdmin'))
-    FinAiduser.isFinancialAidAdmin = 0
-    FinAiduser.save()
-
-
-
-def manageSAASAdmin():
-    if request.form.get("addSAAS") == "addSAAS":
+    elif request.form.get("addSaas") == "addSaas":
         addSAASAdmin()
-    elif request.form.get("removeSAAS") == "removeSAAS":
-        # print("Hello Ela!!")
+    elif request.form.get("removeSaas") == "removeSaas":
         removeSAASAdmin()
     return redirect(url_for('admin.admin_Management'))
 
+def addLaborAdmin():
+    if request.form.get('addAdmin') != "":
+        newAdmins = request.form.get('addAdmin')   #this is taking the name in the select tag
+        newAdmin = User.get(User.username == newAdmins)
+        newAdmin.isLaborAdmin = 1
+        newAdmin.save()
+
+def removeLaborAdmin():
+    if request.form.get('removeAdmin') != "":
+        user = User.get(User.username == request.form.get('removeAdmin'))   #this is taking the name in the select tag
+        user.isLaborAdmin = 0
+        user.save()
+
+def addFinancialAdmin():
+    if request.form.get('addFinancialAidAdmin') != "":
+        newFinAidAdmins = request.form.get('addFinancialAidAdmin')
+        newFinAidAdmin = User.get(User.username == newFinAidAdmins)
+        newFinAidAdmin.isFinancialAidAdmin = 1
+        newFinAidAdmin.save()
+
+def removeFinancialAdmin():
+    if request.form.get('removeFinancialAidAdmin') != "":
+        userFinAid = User.get(User.username == request.form.get('removeFinancialAidAdmin'))
+        userFinAid.isFinancialAidAdmin = 0
+        userFinAid.save()
+
 def addSAASAdmin():
-    newSAASAdmins = request.form.get('addSAASAdmin')
-    newSAASAdmin = User.get(User.username == newSAASAdmins)
-    newSAASAdmin.isSaasAdmin = 1
-    newSAASAdmin.save()
+    if request.form.get('addSAASAdmin') != "":
+        newSaasAdmins = request.form.get('addSAASAdmin')
+        newSaasAdmin = User.get(User.username == newSaasAdmins)
+        newSaasAdmin.isSaasAdmin = 1
+        newSaasAdmin.save()
 
 def removeSAASAdmin():
-    SAASuser = SAASUser.get(User.username == request.form.get('removeSAASAdmin'))
-    SAASuser.isSaasAdmin = 0
-    SAASuser.save()
+    if request.form.get('removeSAASAdmin') != "":
+        userSaas = User.get(User.username == request.form.get('removeSAASAdmin'))
+        userSaas.isSaasAdmin = 0
+        userSaas.save()

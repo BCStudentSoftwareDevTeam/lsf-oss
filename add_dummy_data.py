@@ -11,6 +11,31 @@ users = [
      "username": "heggens",
      "FIRST_NAME":"Scott",
      "LAST_NAME": "Heggen",
+     },
+     {
+     "username": "santosr",
+     "FIRST_NAME":"Roberto",
+     "LAST_NAME": "Santos",
+     },
+     {
+     "username": "cruzg",
+     "FIRST_NAME":"Guillermo",
+     "LAST_NAME": "Cruz",
+     },
+     {
+     "username": "manalaih",
+     "FIRST_NAME":"Hila",
+     "LAST_NAME": "Manalai",
+     },
+     {
+     "username": "rieral",
+     "FIRST_NAME":"Luis",
+     "LAST_NAME": "Riera",
+     },
+     {
+     "username": "bryanta",
+     "FIRST_NAME":"Alex",
+     "LAST_NAME": "Bryant",
      }
     ]
 User.insert_many(users).on_conflict_replace().execute()
