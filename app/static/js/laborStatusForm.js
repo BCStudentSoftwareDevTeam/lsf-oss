@@ -89,7 +89,6 @@ function fill_positions(response) {
 function fill_hoursperweek(){
   var selected_hours_perweek = document.getElementById("hours_perweek");
   var jobtype = $("#jobtype").val();
-  console.log(jobtype)
   if (selected_hours_perweek){
     $("#hours_perweek").empty();
     if (jobtype == "Primary"){
@@ -146,33 +145,56 @@ function getstudent(obj){
 // TABLE
 function displayTable() {
   $("#mytable").show();
-
   var table = document.getElementById("mytable");
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
   var cell3 = row.insertCell(2);
   var cell4 = row.insertCell(3);
+
   var student = document.getElementById("student");
   var studentname = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");
   var positionname = position.options[position.selectedIndex].text;
   var jobtype = document.getElementById("jobtype");
-  console.log(jobtype)
   var jobtypename = jobtype.options[jobtype.selectedIndex].text;
   var hours_perweek = document.getElementById("hours_perweek");
-  console.log(hours_perweek)
   var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
+
   cell1.innerHTML = studentname;
   cell2.innerHTML = positionname;
   cell3.innerHTML = jobtypename;
   cell4.innerHTML = hours_perweekname;
+
   $("#hours_perweek").val('default');
   $("#hours_perweek").selectpicker("refresh");
-  $("#joptype").val('default');
-  $("#joptype").selectpicker("refresh");
+  $("#jobtype").val('default');
+  $("#jobtype").selectpicker("refresh");
   $("#student").val('default');
   $("#student").selectpicker("refresh");
   $("#position").val('default');
   $("#position").selectpicker("refresh");
 }
+
+function highlightDuplicates() {
+  console.log("i'm here")
+  var currentValues = [];
+  $('#mytable .tbody tr').find('input').each(function() {
+   // check if there is another one with the same value
+     if (currentValues.includes($(this).val())) {
+         alert("Duplicate found");
+         return false;
+     }
+
+     currentValues.push($(this).val());
+  })
+}
+// $('[name="student"]').on('input',function(){
+//   console.log("Im here")
+//   var value = $(this).val();
+//   $('[name="student"]').not(this).each(function(){
+//      if($(this).val() == value) {
+//        alert('duplicate content');
+//      }
+//   })
+// });
