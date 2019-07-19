@@ -167,24 +167,24 @@ function displayTable() {
     const td3 = tr.querySelector("td:nth-child(4)");
     const td4 = tr.querySelector("td:nth-child(5)");
 
+    if ((td0.innerHTML == studentname) && (td2.innerHTML == jobtypename)) {
+      category = "danger"
+      msg = `Match found for ${studentname} and ${jobtypename}. Insert rejected`;
+      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+      $("#flasher").delay(4000).fadeOut()
+      return;
+    }
+
+    if ((td0.innerHTML == studentname) && (td1.innerHTML == positionname) && (td2.innerHTML == jobtypename)) {
+      category = "danger"
+      msg = `Match found for ${studentname} , ${positionname} and ${jobtypename}. Insert rejected`;
+      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+      $("#flasher").delay(4000).fadeOut()
+      return;
+    }
+
     if(!td0 || !td1 || !td2 || !td3 || !td4) { //If we are missing cells skip it
       continue;
-    }
-
-
-    if ((td0.innerHTML == studentname) && (jobtypename == "Primary")) {
-      category = "danger"
-      msg = `Match found for ${studentname} and Primary. Insert rejected`;
-      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-      $("#flasher").delay(4000).fadeOut()
-      return;
-    }
-    if ((td0.innerHTML == studentname) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionname)) {
-      category = "danger"
-      msg = `Match found for ${studentname} , ${positionname} and Secondary. Insert rejected`;
-      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-      $("#flasher").delay(4000).fadeOut()
-      return;
     }
   }
 
