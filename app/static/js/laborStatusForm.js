@@ -174,6 +174,7 @@ function displayTable() {
   $("#student").selectpicker("refresh");
   $("#position").val('default');
   $("#position").selectpicker("refresh");
+
 }
 
 function highlightDuplicates() {
@@ -189,12 +190,27 @@ function highlightDuplicates() {
      currentValues.push($(this).val());
   })
 }
-// $('[name="student"]').on('input',function(){
-//   console.log("Im here")
-//   var value = $(this).val();
-//   $('[name="student"]').not(this).each(function(){
-//      if($(this).val() == value) {
-//        alert('duplicate content');
-//      }
-//   })
-// });
+
+// Pops up a modal for Seconday Postion
+$('#jobtype').change(function(){
+  //this is just getting the value that is selected
+  var jobtype = $(this).val();
+  if (jobtype == "Secondary") {
+      $('#SecondaryModal').modal('show');
+  }
+
+});
+
+// Pops up a modal for overload
+$('#hours_perweek').change(function(){
+  //this is just getting the value that is selected
+  var hour = $(this).val();
+  if (hour == "20") {
+      $('#OverloadModal').modal('show');
+  }
+
+});
+
+function Refresh() {
+        window.parent.location = window.parent.location.href;
+    }
