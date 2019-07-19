@@ -3,25 +3,36 @@
 {% block app_content %}
 <div id="wrapper">
   <div class ="container">
+<<<<<<< HEAD
     <div class="contributors" id="List of Names" align= "center" style = "margin-right: 200px">
       <h2>Contributors </h2>
       <p> These are the students who helped to create this system and continue to maintain it.</p>
       <table class="table table-bordered" style = "width:50%"  align="center">
         <tr class"info">
+=======
+    <div class="contributors" align="center">  
+      <h2>Contributors </h2>
+      <p> These are the students who helped to create this system and continue to maintain it.</p>
+      <table class="table table-bordered" align="center">   
+        <tr class="info">
+>>>>>>> 5a5ff6cc9aaf9b3b91731eea1586123bcffc9094
           <th>Name</th>
           <th>Graduating Year</th>
         </tr>
       {% for contrib in cfg.contributors %}
-        <tr class"info">
+        <tr>
           <td>{{contrib.name}}</td>
           <td>{{contrib.year}}</td>
         </tr>
       {% endfor %}
       </table>
+<<<<<<< HEAD
+=======
+      <div class= "btn-holder pull-right col-lg-6">
+        <button type='button' class='btn btn-lg btn-newcolor' onclick ="history.back()">Back</button>
+      </div>
+>>>>>>> 5a5ff6cc9aaf9b3b91731eea1586123bcffc9094
     </div>
-  </div>
-  <div class= "btn-holder">
-    <button type='button' class='btn btn-newcolor' style="padding: 7px 30px; margin-top: 5px; margin-left: 150px" onclick ="history.back()">Back</button>
   </div>
 </div>
 {% endblock %}
