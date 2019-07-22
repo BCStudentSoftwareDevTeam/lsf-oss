@@ -120,6 +120,14 @@ positions = [
                 "ORG" : "2115",
                 "ACCOUNT":"123455",
                 "DEPT_NAME":"Mathematics"
+                },
+                {
+                "POSN_CODE": "S61420",
+                "POSN_TITLE": "TA",
+                "WLS": "1 - Entry Level",
+                "ORG" : "2115",
+                "ACCOUNT":"123455",
+                "DEPT_NAME":"Biology"
                 }
 ]
 STUPOSN.insert_many(positions).on_conflict_replace().execute()
