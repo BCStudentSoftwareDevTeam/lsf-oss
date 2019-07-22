@@ -8,7 +8,7 @@ from flask import Flask, redirect, url_for
 @admin.route('/adminManagement', methods=['GET'])
 # @login_required
 def admin_Management():
-   username = load_user('heggens')
+   # username = load_user('heggens')
    users = User.select()
    FIRST_NAME = User.select()
    LAST_NAME = User.select()
@@ -21,7 +21,7 @@ def admin_Management():
    isSaasAdmin = User.select()
    return render_template( 'admin/adminManagement.html',
                             title=('Admin Management'),
-                           username = username,
+                           # username = username,
                            users = users,
                            FIRST_NAME = FIRST_NAME,
                            LAST_NAME = LAST_NAME,

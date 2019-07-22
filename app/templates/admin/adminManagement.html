@@ -3,6 +3,10 @@
 {% block app_content %}
 
 <head>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <style>
       h1 {
         text-align: center;
@@ -29,7 +33,7 @@
     <div class="col-sm-4">
       <h4>Labor Administrators</h4>
          <div class = "form-group">
-            <select class = "form-control selectpicker" title="Select User" data-width="258px"
+            <select id="addlaborAdmin" class="form-control selectpicker" title="Select User" data-width="258px"
             data-show-subtext="true" data-live-search="true" name="addAdmin">
               {% for user in users %}     <!-- placeholder for emailTemplate table database -->
                 {% if user.isLaborAdmin == False %}
@@ -37,11 +41,12 @@
                 {% endif %}
               {% endfor %}
             </select>
-              <button value="add" class="btn btn-success" data-toggle="modal" data-target="#modal" type="button">Add</button>
+            <button id="add" onclick="modal('add')" value="add" name="add" class="btn btn-success" type="button">Add</button>
+
           </div>
 
   <div class = "form-group">
-    <select class = "form-control selectpicker" title="Select User" data-width="258px"
+    <select id="removelaborAdmin" class = "form-control selectpicker" title="Select User" data-width="258px"
     data-show-subtext="true" data-live-search="true" name="removeAdmin">
       {% for user in users %}     <!-- placeholder for emailTemplate table database -->
         {% if user.isLaborAdmin == True %}
@@ -49,7 +54,7 @@
         {% endif %}
       {% endfor %}
         </select>
-          <button name="remove" class="btn btn-danger" value="remove">Remove</button>
+          <button id="remove" onclick="modal('remove')" value="remove" name="remove" class="btn btn-danger" type="button">Remove</button>
         </div>
     </div>
 
@@ -58,7 +63,7 @@
     <div class="col-sm-4">
       <h4>Financial Aid Administrators</h4>
          <div class = "form-group">
-               <select class = "form-control selectpicker" title="Select User" data-width="258px"
+               <select id="addFinAidAdmin" class="form-control selectpicker" title="Select User" data-width="258px"
                data-show-subtext="true" data-live-search="true" name="addFinancialAidAdmin">
                {% for user in users %}     <!-- placeholder for emailTemplate table database -->
                   {% if user.isFinancialAidAdmin == False %}
@@ -66,11 +71,11 @@
                   {% endif %}
                {% endfor %}
                </select>
-        <button name="addAid" class="btn btn-success" value="addAid">Add</button>
+        <button id="add1"  onclick="modal('add1')" value="addAid" name="addAid" class="btn btn-success" type="button">Add</button>
      </div>
 
      <div class = "form-group">
-         <select class = "form-control selectpicker" title="Select User" data-width="258px"
+         <select id="removeFinAidAdmin" class = "form-control selectpicker" title="Select User" data-width="258px"
          data-show-subtext="true" data-live-search="true" name="removeFinancialAidAdmin">
          {% for user in users %}     <!-- placeholder for emailTemplate table database -->
            {% if user.isFinancialAidAdmin == True %}
@@ -78,7 +83,7 @@
            {% endif %}
          {% endfor %}
          </select>
-        <button name="removeAid" class="btn btn-danger" value="removeAid">Remove</button>
+        <button id="remove1" onclick="modal('remove1')" value="removeAid" name="removeAid" class="btn btn-danger" type="button">Remove</button>
      </div>
     </div>
 
@@ -87,7 +92,7 @@
     <div class="col-sm-4">
       <h4>SAAS Administrators</h4>
         <div class = "form-group">
-              <select class = "form-control selectpicker" title="Select User" data-width="258px"
+              <select id="addSaasAdmin" class = "form-control selectpicker" title="Select User" data-width="258px"
               data-show-subtext="true" data-live-search="true" name="addSAASAdmin">
               {% for user in users %}     <!-- placeholder for emailTemplate table database -->
                  {% if user.isSaasAdmin == False %}
@@ -95,11 +100,11 @@
                  {% endif %}
               {% endfor %}
               </select>
-            <button name="addSaas" class="btn btn-success" value="addSaas">Add</button>
+            <button id="add2" onclick="modal('add2')" value="addSaas" name="addSaas" class="btn btn-success" type="button">Add</button>
     </div>
 
            <div class = "form-group">
-               <select class = "form-control selectpicker" title="Select User" data-width="258px"
+               <select id="removeSaasAdmin" class="form-control selectpicker" title="Select User" data-width="258px"
                data-show-subtext="true" data-live-search="true" name="removeSAASAdmin">
                {% for user in users %}     <!-- placeholder for emailTemplate table database -->
                  {% if user.isSaasAdmin == True %}
@@ -107,30 +112,31 @@
                  {% endif %}
                {% endfor %}
                </select>
-              <button name="removeSaas" class="btn btn-danger" value="removeSaas">Remove</button>
+              <button id="remove2" onclick="modal('remove2')" value="removeSaas" name="removeSaas" class="btn btn-danger" type="button">Remove</button>
            </div>
      </div>
   </div>
 </div>
-<div class="modal fade" id="modal" role="dialog">
-        <div class="modal-dialog">
 
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Are you sure you want to submit?</h4>
-            </div>
-            <div class="modal-body">
-              <p>Submitting this form will put the selected student up for release from their current
-              labor position pending approval from the labor office within one business day.</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-              <button class="btn btn-success" id="submitModal">Submit</button>
-            </div>
+
+ <div class="modal fade" id="modal" role="dialog">
+   <span class="close">&times;</span>
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 id="header" class="modal-title" text-align="center">Are you sure you want to add/remove?</h4>
           </div>
-
+          <div class="modal-body">
+            <p id="modalText">Are you sure you want to add/remove ________ </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button id="submitModal" class="btn btn-success">Submit</button>
+          </div>
         </div>
-    </div>
+
+      </div>
 </form>
+<script src="/static/js/adminManagement.js"></script>
+
 {% endblock %}
