@@ -7,7 +7,7 @@ $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
   });
 
-function postModifications(formID){
+function postModifications(laborStatusFormID){
   //passes form attributes into a dictionary for ajax, posts to db, redirects\
   console.log("postModifications called");
   var formModifications = {} //For passing into Ajax data field (multiple attributes to pass)
@@ -19,9 +19,10 @@ function postModifications(formID){
   formModifications["jobtype"] = document.getElementById('JobType').value;
   //Term cannot be changed
   formModifications["weeklyHours"] = document.getElementById('Hours').value; //FIX ME: WILL NOT ALWAYS BEEN WEEKLY H(OURS COULD BE CONTRACT)
-  formModifications["effective date"] = document.getElementById('datetimepicker0').value;
+  formModifications["effectiveDate"] = document.getElementById('datetimepicker0').value;
   formModifications["laborSupervisorNotes"] = document.getElementById('Notes').value;
-
+  //How to handle modifiedForm fields such as field modified, old value, and new value?
+  //What happens when muliple fields are modified??
   var url = '/saveChanges/'+getFormId();
        $.ajax({
            type: "POST",
