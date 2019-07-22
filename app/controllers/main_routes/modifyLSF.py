@@ -18,6 +18,7 @@ def modifyLSF():
     #Step 1: get form attached to the student (via labor history modal)
 
     #Step 2: get data from said form
+    #FIX ALL OF THESE
     prefillstudent = 1
     prefillsupervisor = 2
     prefilldepartment = 3
