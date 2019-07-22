@@ -32,6 +32,8 @@ function show_access_level(obj){
   $("#Position").hide();
   $("#plus").hide();
   $("#primary_for_secondary").hide();
+
+
   var termcode = obj.value
   var whichterm = termcode.toString().substr(-2);
   if (whichterm != 11 && whichterm !=12) { // Summer term or any other break period
@@ -117,6 +119,7 @@ function fill_hoursperweek(){
 }
 
 function fillprimarysupervisor(response){
+  $("#term").prop("disabled", "disabled");
   var primary_supervisor = document.getElementById("primary_supervisor")
   if (primary_supervisor){
     $("#primary_supervisor").empty();
@@ -260,7 +263,3 @@ $('#hours_perweek').change(function(){
   }
 
 });
-
-function Refresh() {
-        window.parent.location = window.parent.location.href;
-    }
