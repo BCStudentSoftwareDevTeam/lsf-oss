@@ -18,6 +18,8 @@
     padding-right: 0px;
     top:-75px;
     height: 100vh;
+    box-shadow: 3px 3px 9px 0px lightgrey
+
 }
 
 .panel-default, .panel-heading {
@@ -103,6 +105,15 @@ a:hover {
     border-radius: 0px;
 }
 
-#bclp{
-  color: #1c78bb;
+
+#logo {
+    padding: 0px;
+
 }
+
+#logo img {
+    padding-right: 5px;
+    border-radius: 75px;
+    box-shadow: -4px 4px 8px 2px lightgrey;
+}
+
