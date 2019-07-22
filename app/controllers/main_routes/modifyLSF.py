@@ -7,7 +7,6 @@ from app.login_manager import require_login
 @main_bp.route('/modifyLSF', methods=['GET', 'POST'])
 # @login_required
 def modifyLSF():
-#HIIIIIIII
     current_user = require_login()
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
@@ -15,3 +14,13 @@ def modifyLSF():
 				            title=('Modify LSF'),
                             username = current_user
                           )
+@main_bp.route('/modifyLSF/getPrefills', methods=['GET'])
+def getPrefills():
+    #Function that pulls info/data from form history that user clicked to populate modify forms
+    #Step 1: get form attached to the student
+
+    #Step 2: get data from said forms
+
+    #Step 3: send data to front to populate html
+
+    return render_template( '/modifyLSF/getPrefills',)
