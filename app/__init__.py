@@ -14,7 +14,7 @@ def load_config(file):
     return cfg
 
 cfg = load_config("app/config/secret_config.yaml")
-app.secret_key = cfg["secret_key"]
+app.secret_key = cfg["secret_key"]  
 
 # Registers blueprints (controllers). These are general routes, like /index
 from app.controllers.main_routes import main_bp as main_bp
@@ -27,4 +27,3 @@ app.register_blueprint(admin_bp)
 # Registers error messaging
 from app.controllers.errors_routes import error as errors_bp
 app.register_blueprint(errors_bp)
-

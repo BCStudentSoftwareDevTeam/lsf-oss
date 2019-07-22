@@ -74,6 +74,21 @@ students = [
 	"STU_CPO":"718",
 	"LAST_POSN":"Media Technician",
 	"LAST_SUP_PIDM":"7"
+    },
+    {
+    "PIDM":"4",
+	"ID":"B00730364",
+	"FIRST_NAME":"Riel",
+    "LAST_NAME":"Pursun",
+	"CLASS_LEVEL":"Frashman",
+	"ACADEMIC_FOCUS":"Computer Science",
+	"MAJOR":"Computer Science",
+	"PROBATION":"0",
+	"ADVISOR":"Jan Pearce",
+	"STU_EMAIL":"jamalie@berea.edu",
+	"STU_CPO":"718",
+	"LAST_POSN":"Media Technician",
+	"LAST_SUP_PIDM":"7"
     }
 
 ]
@@ -247,11 +262,11 @@ lsfs = [
     "POSN_TITLE":"Dummy boi",
     "POSN_CODE":"S12345",
     "startDate": "1/2/3",
-    "endDate": "3/2/1"
+    "endDate": "3/8/1"
     },
     {
     "laborStatusFormID": 2,
-    "termCode": Term.get(Term.termCode == "201712"),
+    "termCode": Term.get(Term.termCode == "201901"),
     "studentSupervisee": Student.get(Student.ID == "B00730362"),
     "primarySupervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Mathematics"),
@@ -261,11 +276,11 @@ lsfs = [
     "POSN_CODE":"S61419",
     "weeklyHours": 5,
     "startDate": "1/2/3",
-    "endDate": "3/2/1"
+    "endDate": "3/3/1"
     },
     {
     "laborStatusFormID": 3,
-    "termCode": Term.get(Term.termCode == "201812"),
+    "termCode": Term.get(Term.termCode == "201813"),
     "studentSupervisee": Student.get(Student.ID == "B00730363"),
     "primarySupervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Mathematics"),
@@ -289,14 +304,29 @@ lsfs = [
     "POSN_CODE":"S61419",
     "contractHours": 120,
     "startDate": "1/2/3",
-    "endDate": "3/2/1"
+    "endDate": "3/6/1"
     },
     {
     "laborStatusFormID": 5,
-    "termCode": Term.get(Term.termCode == "201712"),
+    "termCode": Term.get(Term.termCode == "201901"),
     "studentSupervisee": Student.get(Student.ID == "B00730363"),
     "primarySupervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "jobType": "",
+    "WLS":"2",
+    "POSN_TITLE":"CS TA",
+    "POSN_CODE":"S61419",
+    "contractHours": 120,
+    "startDate": "1/2/3",
+    "endDate": "3/2/1"
+    },
+    {
+    "laborStatusFormID": 6,
+    "termCode": Term.get(Term.termCode == "201901"),
+    "studentSupervisee": Student.get(Student.ID == "B00730363"),
+    "primarySupervisor": User.get(User.username == "pearcej"),
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "secondarySupervisor": User.get(User.username == "heggens"),
     "jobType": "",
     "WLS":"2",
     "POSN_TITLE":"CS TA",
@@ -336,7 +366,7 @@ modforms = [
                 "modifiedFormID":1,
                 "fieldModified":"Term",
                 "oldValue":"201612",
-                "newValue":"201712",
+                "newValue":"201901",
                 "effectiveDate":"1/2/3"
                 }
             ]

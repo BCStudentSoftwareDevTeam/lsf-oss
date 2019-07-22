@@ -4,6 +4,7 @@ from flask import flash
 from app.controllers.main_routes import *
 from app.login_manager import *
 from app.models.laborStatusForm import LaborStatusForm
+from app.models.Tracy.studata import STUDATA
 from datetime import date
 
 
@@ -21,12 +22,30 @@ def index():
 
     # Logged in
     # flash("Welcome to Labor Status forms. Delete this if flash messaging is working")
+    #forms_by_supervisees = LaborStatusForm.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user.username).distinct()
+
     forms_by_supervisees = LaborStatusForm.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user.username).distinct()
-    forms_by_POSN = LaborStatusForm.select(LaborStatusForm.POSN_TITLE).where(LaborStatusForm.primarySupervisor == current_user.username)
-    for form in forms_by_supervisees:
-        print(form)
-    for Pos in forms_by_POSN:
-        print(Pos)
+    forms = forms_by_supervisees.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user)
+    #print(form)
+        # | LaborStatusForm.secondarySupervisor == current_user.username Warning: (1292, "Truncated incorrect DOUBLE value: 'heggens'")
+        #result = self._query(query)
+    # tracy_supervisees = STUDATA.select()
+
+    #forms_by_supervisees = forms_by_supervisees.select(LaborStatusForm.studentSupervisee).distinct()
+    # inactive_supervisees = []
+    active_supervisees = []
+    for supervisee in forms_by_supervisees:
+        try:
+            tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID)
+            #print(tracy_supervisee.ID)
+            active_supervisees.append(tracy_supervisee)
+        except:
+            print("Not")
+    #for supervisee in active_supervisees:
+        #print(supervisee)
+
+
+
 
 
     today = date.today()
