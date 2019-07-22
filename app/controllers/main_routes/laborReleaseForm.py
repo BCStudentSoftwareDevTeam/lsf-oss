@@ -26,6 +26,7 @@ def laborReleaseForm():
     department = Department.select()
     users = User.select()
     forms = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == 1) #FIXEME: This ID needs to come from the modal from the supervisor portal
+    #forms = FormHistory.select().distinct().where(FormHistory.formHistoryID == 1)
 
     return render_template( 'main/laborReleaseForm.html',
 				            title=('Labor Release Form'),
