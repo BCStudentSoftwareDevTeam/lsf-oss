@@ -145,79 +145,129 @@ function getstudent(obj){
 // TABLE
 function displayTable() {
   $("#mytable").show();
+  $("#job_table").hide();
+  $("#hours_table").hide();
   $("#primary_table").hide();
   $("#contract_table").hide();
+
+  var termcode = $('#term').val();
+  var whichterm = termcode.toString().substr(-2);
+
+  if (whichterm != 11 && whichterm !=12) {
+    checkBreaks();
+  }
+  else {
+    checkDuplicate();
+  }
+
+}
+
+
+function checkDuplicate() {
+    var table = document.getElementById("mytable");
+    var student = document.getElementById("student");
+    var studentname = student.options[student.selectedIndex].text;
+    var position = document.getElementById("position");
+    var positionname = position.options[position.selectedIndex].text;
+    var jobtype = document.getElementById("jobtype");
+    var jobtypename = jobtype.options[jobtype.selectedIndex].text;
+
+    for(const tr of table.querySelectorAll("thead tr")) {
+       const td0 = tr.querySelector("td:nth-child(1)");
+       const td1 = tr.querySelector("td:nth-child(2)");
+       const td2 = tr.querySelector("td:nth-child(3)");
+       const td3 = tr.querySelector("td:nth-child(4)");
+       const td4 = tr.querySelector("td:nth-child(5)");
+
+       if ((td0.innerHTML == studentname) && (jobtypename == "Primary")) {
+         $("#job_table").show();
+         $("#hour_table").show();
+          category = "danger";
+          msg = `Match found for ${studentname} and Primary. Insert rejected`;
+          $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
+          $("#flasher").delay(4000).fadeOut();
+          return;
+          }
+       else if ((td0.innerHTML == studentname) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionname)) {
+         $("#job_table").show();
+         $("#hour_table").show();
+         $("#primary_table").show();
+          category = "danger";
+          msg = `Match found for ${studentname} , ${positionname} and Secondary. Insert rejected`;
+          $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
+          $("#flasher").delay(4000).fadeOut();
+          return;
+         }
+
+       if(!td0 || !td1 || !td2 || !td3 || !td4) { //If we are missing cells skip it
+       continue }
+  }
+    CheckAcademicYear();
+}
+
+
+function checkBreaks() {
+  $("#mytable").show();
+  $("#job_table").hide();
+  $("#hours_table").hide();
+  $("#primary_table").hide();
+  $("#contract_table").show();
+
   var table = document.getElementById("mytable");
   var student = document.getElementById("student");
+  console.log(student)
   var studentname = student.options[student.selectedIndex].text;
+  console.log(studentname);
   var position = document.getElementById("position");
   var positionname = position.options[position.selectedIndex].text;
-  var jobtype = document.getElementById("jobtype");
-  var jobtypename = jobtype.options[jobtype.selectedIndex].text;
-  var hours_perweek = document.getElementById("hours_perweek");
-  var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
-  var primary_supervisor = document.getElementById("primary_supervisor");
-  var primary_supervisorname = primary_supervisor.options[primary_supervisor.selectedIndex].text;
   var contracthoursname = document.getElementById("contracthours").value;
+  console.log(contracthoursname);
+ // Summer term or any other break period
+  var row = table.insertRow(-1);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(2);
+  cell1.innerHTML = studentname;
+  cell2.innerHTML = positionname;
+  cell3.innerHTML = contracthoursname;
+  $("#contracthours").val('');
+  $("#position").val('default');
+  $("#position").selectpicker("refresh");
+  $("#student").val('default');
+  $("#student").selectpicker("refresh");
+}
 
-  for(const tr of table.querySelectorAll("thead tr")) {
-    const td0 = tr.querySelector("td:nth-child(1)");
-    const td1 = tr.querySelector("td:nth-child(2)");
-    const td2 = tr.querySelector("td:nth-child(3)");
-    const td3 = tr.querySelector("td:nth-child(4)");
-    const td4 = tr.querySelector("td:nth-child(5)");
+function CheckAcademicYear() {
+    $("#mytable").show();
+    $("#job_table").show();
+    $("#hours_table").show();
+    $("#primary_table").hide();
+    $("#contract_table").hide();
 
-    if ((td0.innerHTML == studentname) && (td2.innerHTML == jobtypename)) {
-      category = "danger"
-      msg = `Match found for ${studentname} and ${jobtypename}. Insert rejected`;
-      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-      $("#flasher").delay(4000).fadeOut()
-      return;
-    }
+    var table = document.getElementById("mytable");
+    var student = document.getElementById("student");
+    var studentname = student.options[student.selectedIndex].text;
+    var position = document.getElementById("position");
+    var positionname = position.options[position.selectedIndex].text;
+    var jobtype = document.getElementById("jobtype");
+    var jobtypename = jobtype.options[jobtype.selectedIndex].text;
+    var hours_perweek = document.getElementById("hours_perweek");
+    var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
+    var primary_supervisor = document.getElementById("primary_supervisor");
+    var primary_supervisorname = primary_supervisor.options[primary_supervisor.selectedIndex].text;
 
-    if ((td0.innerHTML == studentname) && (td1.innerHTML == positionname) && (td2.innerHTML == jobtypename)) {
-      category = "danger"
-      msg = `Match found for ${studentname} , ${positionname} and ${jobtypename}. Insert rejected`;
-      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-      $("#flasher").delay(4000).fadeOut()
-      return;
-    }
-
-    if(!td0 || !td1 || !td2 || !td3 || !td4) { //If we are missing cells skip it
-      continue;
-    }
-  }
-
-  var termcode = $('#term').val()
-  var whichterm = termcode.toString().substr(-2);
-  if (whichterm != 11 && whichterm !=12) { // Summer term or any other break period
-    $("#contract_table").show();
-    $("#job_table").hide();
-    $("#hours_table").hide();
-    var row = table.insertRow(-1);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    cell1.innerHTML = studentname;
-    cell2.innerHTML = positionname;
-    cell3.innerHTML = contracthoursname;
-    $("#contracthours").val("");
-    $("#position").val('default');
-    $("#position").selectpicker("refresh");
-    $("#student").val('default');
-    $("#student").selectpicker("refresh");
-  }
-  else{
     var row = table.insertRow(-1);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
     var cell4 = row.insertCell(3);
+    var cell5 = row.insertCell(4);
 
     cell1.innerHTML = studentname;
     cell2.innerHTML = positionname;
     cell3.innerHTML = jobtypename;
     cell4.innerHTML = hours_perweekname;
+    cell5.innerHTML = "";
 
     $("#hours_perweek").val('default');
     $("#hours_perweek").selectpicker("refresh");
@@ -228,6 +278,7 @@ function displayTable() {
     $("#position").val('default');
     $("#position").selectpicker("refresh");
 
+ // if Secondary option is selected, show primary supervisor selecpicker
     if(jobtypename == "Secondary"){
       $("#primary_table").show();
       var cell5 = row.insertCell(4);
@@ -235,8 +286,8 @@ function displayTable() {
       $("#primary_supervisor").val('default');
       $("#primary_supervisor").selectpicker("refresh");
     }
-  }
 }
+
 
 // Pops up a modal for Seconday Postion
 $('#jobtype').change(function(){
