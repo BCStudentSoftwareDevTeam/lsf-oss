@@ -18,7 +18,8 @@ def modifyLSF():
 def getPrefills():
     #Function that pulls info/data from form history that user clicked to populate modify forms
     #Step 1: get form attached to the student
-
+    # thestudent = LaborStatusForm.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.)#query to find student associated with form
+    # theform = #query to find specific form they clicked from (from all student's forms)
     #Step 2: get data from said forms
 
     #Step 3: send data to front to populate html
