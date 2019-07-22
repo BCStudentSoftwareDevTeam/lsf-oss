@@ -47,8 +47,13 @@
     padding-right: 0px;
 }
 
+#flash_container {
+    min-height: 55px;
+}
 
-
+#flasher {
+    margin-bottom: 5px;
+}
 .panel {
     margin-bottom: 0px;
     border-radius: 0px;
@@ -77,9 +82,9 @@ a:hover {
   color: #155788;
 }
 
-.table {
+/*.table {
   width:50%;
-}
+}*/
 
 .btn-newcolor { /* for contributors page */
   background-color: #1c78c0;
