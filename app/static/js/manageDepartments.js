@@ -1,28 +1,20 @@
-// $.fn.dataTable.ext.type.detect.unshift(
-//     function ( d ) {
-//         return d === 'In Compliance' || d === 'Not in Compliance' ?
-//             'salary-grade' :
-//             null;
-//     }
-// );
-//
-// $.fn.dataTable.ext.type.order['salary-grade-pre'] = function ( d ) {
-//     switch ( d ) {
-//         case 'In Compliance':    return 1;
-//         case 'Not in Compliance': return 2;
-//     }
-//     return 0;
-// };
-
-
 $(document).ready( function(){
     x = $('#departmentsTable');
     //console.log(x);
-    x.DataTable();
+    x.DataTable({
+        pageLength: 25
+    });
 });
 
-function status(department) {
+function status(department, dept_name) {
+/*
+ POSTs the compliance status change for the department. Updates UI with correct button and feedback to user.
+ PARAMS:
+    int department: department ID
+    str dept_name: Name of the department
 
+ RETURNS: None
+*/
   $.ajax({
     method: "POST",
     url: "/admin/complianceStatus",
@@ -31,27 +23,30 @@ function status(department) {
     data: JSON.stringify({"deptName": department}),
     processData: false,
     success: function(response) {
-      console.log(response);
+//      console.log(response);
       if(response["Success"]) {
         category = "info"
-        msg = "Department compliance changed.";
-        $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-        $("#flasher").delay(3000).fadeOut()
         var departmentID = $("#dept_btn_" + department);
         //console.log(departmentID);
         if ($(departmentID).hasClass("btn-success")){
           $(departmentID).removeClass("btn-success");
           $(departmentID).addClass("btn-danger");
           $(departmentID).text("Not in Compliance");
+          msg = "The " + dept_name +" department's compliance status was changed to 'Not in compliance'.";
           $("#dept_" + department).attr("data-order", -1);
+          category = "danger";
         }
         else {
           $(departmentID).removeClass("btn-danger");
           $(departmentID).addClass("btn-success");
           $(departmentID).text("In Compliance");
+          msg = "The " + dept_name +" department's compliance status was changed to 'In compliance'.";
           $("#dept_" + department).attr("data-order", 1);
+          category = "info";
         }
-        $('#departmentsTable').DataTable().ajax.reload();
+        $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
+        $("#flasher").delay(3000).fadeOut();
+//        $('#departmentsTable').DataTable().ajax.reload();     #FIXME the table doesn't sort correctly after the ajax response.
       }
     }
   })

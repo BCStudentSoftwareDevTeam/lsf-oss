@@ -45,7 +45,6 @@ def manage_departments():
 
 
 @admin.route('/admin/complianceStatus', methods=['POST'])
-
 def complianceStatusCheck():
     """
     This function changes the compliance status in the database for labor status forms.  It works in collaboration with the ajax call in manageDepartments.js
