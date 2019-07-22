@@ -25,28 +25,28 @@
 {% block content %}
 
 
-    <div class="container col-xs-10">
-        <div id="flash_container">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert  alert-{{category}}" role="alert" id="flasher">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-        </div>
-        {% block app_content %}
-            {# application content needs to be provided in the app_content block #}
-        {% endblock %}
-
-
-        {% block footer %}
-        <div class="footer navbar-fixed-bottom">
-                <span><b>Issues? Contact:</b><a href="mailto:support@bereacollege.onmicrosoft.com" class="footerlink">Systems Support </a>
-                <b>     Created & Designed by the </b><a href="/contributors" id = "contribLink" class="footerlink">Student Software Development Team</a></span>
-        </div>
-        {% endblock %}
+<div class="container col-xs-8">
+    <div id="flash_container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert  alert-{{category}}" role="alert" id="flasher">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
     </div>
+    {% block app_content %}
+        {# application content needs to be provided in the app_content block #}
+    {% endblock %}
+
+</div>
+<div class="row bottom-buffer"></div>
+{% block footer %}
+<div class="footer navbar-fixed-bottom">
+        <span><b>Issues? Contact: </b><a href="mailto:support@bereacollege.onmicrosoft.com" class="footerlink">Systems Support </a>
+        <b>Created & Designed by the </b><a href="/contributors" id = "contribLink" class="footerlink">Student Software Development Team</a></span>
+</div>
+{% endblock %}
 
 
 {% endblock %}
