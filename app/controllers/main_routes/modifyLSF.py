@@ -5,6 +5,7 @@ from app.models.user import *
 from app.models.Tracy.studata import STUDATA
 from flask_bootstrap import bootstrap_find_resource
 from app.login_manager import require_login
+from datetime import *
 
 
 
@@ -26,7 +27,8 @@ def modifyLSF():
     prefilljobtype = 6
     prefillterm = 7
     prefillhours = 8
-    prefilldateneeded = 9
+    current_time = datetime.now()
+    prefilldateneeded = current_time.strftime('%m/%d/%Y')
     prefillnotes = 10
 
     #Step 3: send data to front to populate html

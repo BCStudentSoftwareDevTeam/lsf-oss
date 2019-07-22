@@ -32,37 +32,37 @@
        <div class="form-group">
          <label for="Student">Student:</label> <!--User CANNOT edit-->
          <div>
-           <input type="Student" class="form-control" id="Student" disabled> <!--User CANNOT edit-->
+           <input type="Student" class="form-control" id="Student" value="{{prefillstudent}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
          <label for="Supervisor">Supervisor:</label>
          <div>
-           <input type="Supervisor" class="form-control" id="Supervisor" required>
+           <input type="Supervisor" class="form-control" id="Supervisor" value="{{prefillsupervisor}}" required>
          </div>
        </div>
        <div class="form-group">
          <label for="Department">Department:</label> <!--User CANNOT edit-->
          <div>
-           <input type="Department" class="form-control" id="Department" disabled> <!--User CANNOT edit-->
+           <input type="Department" class="form-control" id="Department" value="{{prefilldepartment}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
          <label for="Position">Position:</label>
          <div>
-           <input type="Position" class="form-control" id="Position" required>
+           <input type="Position" class="form-control" id="Position" value="{{prefillposition}}" required>
          </div>
        </div>
        <div class="form-group">
          <label for="WLS">WLS:</label>
          <div>
-           <input type="WLS" class="form-control" id="WLS" required>
+           <input type="WLS" class="form-control" id="WLS" value="{{prefillwls}}"required>
          </div>
        </div>
        <div class="form-group">
          <label for="JobType">Job Type:</label>
          <div>
-           <input type="JobType" class="form-control" id="JobType" required>
+           <input type="JobType" class="form-control" id="JobType" value="{{prefilljobtype}}" required>
          </div>
        </div>
 
@@ -74,19 +74,19 @@
      <div class="form-group">
        <label for="Term">Term:</label> <!--User CANNOT edit-->
        <div >
-         <input type="Term" class="form-control" id="Term" disabled> <!--User CANNOT edit-->
+         <input type="Term" class="form-control" id="Term" value="{{prefillterm}}"disabled> <!--User CANNOT edit-->
        </div>
      </div>
      <div class="form-group">
        <label for="Hours">Hours:</label>
        <div>
-         <input type="Hours" class="form-control" id="Hours" required>
+         <input type="Hours" class="form-control" id="Hours" value="{{prefillhours}}" required>
        </div>
      </div>
     <div class="form-group" id= "dateDiv">
     <label for="datetimepicker" class="required-asterisk">Date Needed:</label>
       <div class="input-group date">
-        <input type="text" class="form-control" id="datetimepicker0" placeholder="MM/DD/YYYY">
+        <input type="text" class="form-control" id="datetimepicker0" placeholder="MM/DD/YYYY" value="{{prefilldateneeded}}"> <!--SHould this be set to today's date on load??"-->
         <span class="input-group-addon">
         <span class="glyphicon glyphicon-calendar"></span>
         </span>
@@ -95,7 +95,7 @@
      <div class="form-group" >
        <label for="Notes">Notes:</label>
        <div>
-         <textarea name="notes" rows="9" cols="73" id="Notes"></textarea>
+         <textarea name="notes" rows="9" cols="73" id="Notes">{{prefillnotes}}</textarea>
        </div>
      </div>
   </div>
