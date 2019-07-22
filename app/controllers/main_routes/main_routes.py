@@ -37,7 +37,7 @@ def index():
     for supervisee in forms_by_supervisees:
         try:
             tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID)
-            #print(tracy_supervisee.ID)
+            #print(tracy_supervisee.ID) 
             active_supervisees.append(tracy_supervisee)
         except:
             print("Not")
