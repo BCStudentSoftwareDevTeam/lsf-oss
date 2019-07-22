@@ -7,10 +7,10 @@ from app.models.Tracy.studata import *
 from app import *
 
 
-
-@app.route("/contributors", methods = ["GET"]) 
+@app.route("/contributors", methods = ["GET"])
 def contributors():
     contribs = load_config("app/config/contributors.yaml")
-    return render_template("main/contributors.html", 
+    return render_template("main/contributors.html",
            cfg=contribs
+
            )
