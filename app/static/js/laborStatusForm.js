@@ -167,22 +167,23 @@ function displayTable() {
     const td3 = tr.querySelector("td:nth-child(4)");
     const td4 = tr.querySelector("td:nth-child(5)");
 
-    if ((td0.innerHTML == studentname) && (td2.innerHTML == jobtypename)) {
-      category = "danger"
-      msg = `Match found for ${studentname} and ${jobtypename}. Insert rejected`;
-      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-      $("#flasher").delay(4000).fadeOut()
-      return;
-    }
-
-    if ((td0.innerHTML == studentname) && (td1.innerHTML == positionname) && (td2.innerHTML == jobtypename)) {
-      category = "danger"
-      msg = `Match found for ${studentname} , ${positionname} and ${jobtypename}. Insert rejected`;
-      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-      $("#flasher").delay(4000).fadeOut()
-      return;
-    }
-
+    if ((td0.innerHTML == studentname) && (jobtypename == "Primary")) {
+     category = "danger"
+     msg = `Match found for ${studentname} and Primary. Insert rejected`;
+     $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+     $("#flasher").delay(4000).fadeOut()
+     if (jobtypename == "Primary" && td2.innerHTML == "Primary"){
+       $("#primary_table").show();
+     }
+     return;
+   }
+   if ((td0.innerHTML == studentname) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionname)) {
+     category = "danger"
+     msg = `Match found for ${studentname} , ${positionname} and Secondary. Insert rejected`;
+     $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+     $("#flasher").delay(4000).fadeOut()
+     return;
+   }
     if(!td0 || !td1 || !td2 || !td3 || !td4) { //If we are missing cells skip it
       continue;
     }
@@ -213,11 +214,13 @@ function displayTable() {
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
     var cell4 = row.insertCell(3);
+    var cell5 = row.insertCell(4);
 
     cell1.innerHTML = studentname;
     cell2.innerHTML = positionname;
     cell3.innerHTML = jobtypename;
     cell4.innerHTML = hours_perweekname;
+    cell5.innerHTML = "";
 
     $("#hours_perweek").val('default');
     $("#hours_perweek").selectpicker("refresh");
