@@ -4,4 +4,5 @@ from flask import Blueprint
 admin = Blueprint('admin', __name__)
 
 from app.controllers.admin_routes import admin_tables
+from app.controllers.admin_routes import manage_departments
 from app.controllers.admin_routes import adminOverload
