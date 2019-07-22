@@ -32,7 +32,7 @@
        <div class="form-group">
          <label for="Student">Student:</label> <!--User CANNOT edit-->
          <div>
-           <input type="Student" class="form-control" id="Student" required> <!--User CANNOT edit-->
+           <input type="Student" class="form-control" id="Student" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
@@ -44,7 +44,7 @@
        <div class="form-group">
          <label for="Department">Department:</label> <!--User CANNOT edit-->
          <div>
-           <input type="Department" class="form-control" id="Department" required> <!--User CANNOT edit-->
+           <input type="Department" class="form-control" id="Department" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
@@ -74,7 +74,7 @@
      <div class="form-group">
        <label for="Term">Term:</label> <!--User CANNOT edit-->
        <div >
-         <input type="Term" class="form-control" id="Term" required> <!--User CANNOT edit-->
+         <input type="Term" class="form-control" id="Term" disabled> <!--User CANNOT edit-->
        </div>
      </div>
      <div class="form-group">
@@ -92,10 +92,10 @@
         </span>
       </div>
      </div>
-     <div class="form-group">
+     <div class="form-group" >
        <label for="Notes">Notes:</label>
        <div>
-         <textarea name="notes" rows="9" cols="73"></textarea>
+         <textarea name="notes" rows="9" cols="73" id="Notes"></textarea>
        </div>
      </div>
   </div>
@@ -113,7 +113,7 @@
 
     <!-- start of modal -->
        <div class="modal fade" id="submitModal" role="dialog">
-           <div class="modal-dialog">
+           <div class="modal-dialog modal-dialog-centered" role="document">
 
              <div class="modal-content">
                <div class="modal-header">
@@ -121,11 +121,11 @@
                  <h4 class="modal-title">Are you sure you want to submit?</h4>
                </div>
                <div class="modal-body">
-                 <p>Submitting this form will modify the student current labor position.</p>
+                 <p>Submitting this form will modify the student's current labor position.</p>
                </div>
                <div class="modal-footer">
                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                 <button type="submit" class="btn btn-success" id="modal">Submit</button>
+                 <button type="submit" class="btn btn-success" id="modal" onclick = postModifications() >Submit</button>
                </div>
              </div>
 
