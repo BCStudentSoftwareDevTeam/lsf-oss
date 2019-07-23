@@ -331,6 +331,48 @@ fh = [ {
         "reviewedBy": None,
         "status": Status.get(Status.statusName == "Approved"),
         "rejectReason": None
+       },
+    {
+        "formHistoryID": 2,
+        "formID": LaborStatusForm.get(2),
+        "historyType": "new",
+        "releaseForm": None,
+        "modifiedForm": None,
+        "overloadForm": None,
+        "createdBy": User.get(User.username == "heggens"),
+        "createdDate": datetime(2019, 5, 17),
+        "reviewedDate": None,
+        "reviewedBy": None,
+        "status": Status.get(Status.statusName == "Approved"),
+        "rejectReason": None
+       },
+    {
+        "formHistoryID": 3,
+        "formID": LaborStatusForm.get(3),
+        "historyType": "new",
+        "releaseForm": None,
+        "modifiedForm": None,
+        "overloadForm": None,
+        "createdBy": User.get(User.username == "heggens"),
+        "createdDate": datetime(2019, 5, 17),
+        "reviewedDate": None,
+        "reviewedBy": None,
+        "status": Status.get(Status.statusName == "Approved"),
+        "rejectReason": None
+       },
+    {
+        "formHistoryID": 4,
+        "formID": LaborStatusForm.get(4),
+        "historyType": "new",
+        "releaseForm": None,
+        "modifiedForm": None,
+        "overloadForm": None,
+        "createdBy": User.get(User.username == "heggens"),
+        "createdDate": datetime(2019, 5, 17),
+        "reviewedDate": None,
+        "reviewedBy": None,
+        "status": Status.get(Status.statusName == "Approved"),
+        "rejectReason": None
        }
     ]
 
