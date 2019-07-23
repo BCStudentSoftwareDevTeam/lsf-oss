@@ -33,40 +33,40 @@ def laborStatusForm():
                             staffs = staffs,
                             departments = departments)
 
-@main_bp.route('/laborstatusform/userInsert', methods=['POST'])
-def userInsert():
-    print("i'm here")
-    if request.form.get('formsubmission') == 'formsubmission':
-            form_submission(request)
-    return redirect(url_for("main.laborStatusForm"))
+# @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
+# def userInsert():
+#     print("i'm here")
+#     if request.form.get('formsubmission') == 'formsubmission':
+#             # form_submission(request)
+#     return redirect(url_for("main.laborStatusForm"))
 
-def form_submission(request):
-    print("i'm here")
-    student_form = request.form.get("student")
-    supervisor_form = request.form.get("supervisor")
-    department_form = request.form.get("department")
-    term = request.form.get("term")
-    startdate = request.form.get("startdate")
-    enddate = request.form.get("enddate")
-    position = request.form.get("position")
-    contracthours = request.form.get("contracthours")
-    jobtype = request.form.get("jobtype")
-    secondary_supervisor_form = request.form.get("primary_supervisor")
-    student = Student.get_or_create(Student.PIDM == student_form)
-    supervisor = User.get_or_create(User.username == supervisor_form)
-    secondary_supervisor = User.get_or_create(User.username == secondary_supervisor_form)
-    department = Department.get_or_create(Department.departmentID == department_form)
-    lsf = LaborStatusForm.create(termCode == term,
-                                 studentSupervisee == student,
-                                 primarySupervisor == supervisor,
-                                 department  == department,
-                                 secondarySupervisor == secondary_supervisor,
-                                 jobType == jobtype,
-                                 POSN_TITLE == position,
-                                 startDate == startdate,
-                                 endDate == enddate,
-                                 contractHours == contracthours)
-    flash("changed")
+# def form_submission(request):
+#     print("i'm here")
+#     student_form = request.form.get("student")
+#     supervisor_form = request.form.get("supervisor")
+#     department_form = request.form.get("department")
+#     term = request.form.get("term")
+#     startdate = request.form.get("startdate")
+#     enddate = request.form.get("enddate")
+#     position = request.form.get("position")
+#     contracthours = request.form.get("contracthours")
+#     jobtype = request.form.get("jobtype")
+#     secondary_supervisor_form = request.form.get("primary_supervisor")
+#     student = Student.get_or_create(Student.PIDM == student_form)
+#     supervisor = User.get_or_create(User.username == supervisor_form)
+#     secondary_supervisor = User.get_or_create(User.username == secondary_supervisor_form)
+#     department = Department.get_or_create(Department.departmentID == department_form)
+#     lsf = LaborStatusForm.create(termCode == term,
+#                                  studentSupervisee == student,
+#                                  primarySupervisor == supervisor,
+#                                  department  == department,
+#                                  secondarySupervisor == secondary_supervisor,
+#                                  jobType == jobtype,
+#                                  POSN_TITLE == position,
+#                                  startDate == startdate,
+#                                  endDate == enddate,
+#                                  contractHours == contracthours)
+#     flash("changed")
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
 def getPositions(department):
