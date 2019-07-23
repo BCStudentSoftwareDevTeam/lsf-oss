@@ -34,6 +34,7 @@
                             class="selectpicker form-control"
                             id="Supervisor"
                             data-live-search="true"
+                <p hidden  id= "{{oldSupervisor}}"> "{{oldSupervisot}}" </p>
                 <option title="{{prefillsupervisor}}" value="{{prefillsupervisor}}"</option>
            </select>
          </div>
@@ -51,10 +52,12 @@
                             class="selectpicker form-control"
                             id="Position"
                             data-live-search="true"
+                <p hidden  id= "{{oldPosition}}"> "{{oldPosition}}" </p>
                 <option title="{{prefillposition}}" value="{{prefillposition}}"</option>
            </select>
          </div>
        </div>
+       
        <div class="form-group">
          <label for="WLS">WLS:</label>
          <div>
@@ -62,6 +65,7 @@
                             class="selectpicker form-control"
                             id="WLS"
                             data-live-search="true"
+                <p hidden  id= "{{oldWLS}}"> "{{oldWLS}}" </p>
                 <option title="{{prefillwls}}" value="{{prefillwls}}"</option>
            </select>
          </div>
@@ -73,6 +77,7 @@
                             class="selectpicker form-control"
                             id="JobType"
                             data-live-search="true"
+                <p hidden  id= "{{oldJobType}}"> "{{oldJobType}}" </p>             
                 <option title="{{prefilljobtype}}" value="{{prefilljobtype}}"</option>
                 <option title="test" value="ahh"> ???</option>
                 <option title="test2" value="ahh"> !!!</option>
@@ -95,6 +100,7 @@
                           class="selectpicker form-control"
                           id="Hours"
                           data-live-search="true"
+              <p hidden  id= "{{oldHours}}"> "{{oldHours}}" </p>
               <option title="{{prefillhours}}" value="{{prefillhours}}"</option>
          </select>
        </div>
@@ -109,6 +115,7 @@
         </span>
       </div>
      </div>
+     
      <div class="form-group" >
        <label for="Notes">Notes:</label>
        <div>

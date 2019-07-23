@@ -41,12 +41,14 @@ def index():
     for supervisee in forms_by_supervisees:
         try:
             tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID)
+
             #print(LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee))
             active = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee)[0]
             active_supervisees.append(active)
             # for form in active:
             #     print(form)
             #     active_supervisees.append(active)
+
         except:
             #print(LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee))
             inactive = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee)[0]
