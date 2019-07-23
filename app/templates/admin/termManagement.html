@@ -34,14 +34,13 @@
             </thead>
             <tbody>
                 {% for term in terms %}
-                  {% if term.termCode == 201900 %}
                     <tr>
                       <td>{{term.termName}}</td>
                       <td>{{term.termStart}}</td>
                       <td>{{term.termEnd}}</td>
                       <td>{{term.termState}}</td>
+                      <td>{{term.termCode}}</td>
                     </tr>
-                  {% endif %}
                 {% endfor %}
               </tbody>
         </table>
