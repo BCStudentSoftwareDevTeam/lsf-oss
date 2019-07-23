@@ -2,8 +2,9 @@ from flask import render_template , flash, redirect, url_for, request, g, jsonif
 from flask_login import current_user, login_required
 from app.controllers.main_routes import *
 from app.models.user import *
-from app.models.laborStatusForm import LaborStatusForm
-from app.models.student import Student
+from app.models.laborStatusForm import *
+from app.models.formHistory import *
+from app.models.student import *
 from app.controllers.errors_routes.handlers import *
 from app.login_manager import require_login
 
@@ -17,7 +18,33 @@ def laborhistory(id):
 
 
         student = Student.get(Student.ID == id)
+        print("Up here")
+        print(id)
+        # print(student)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student)
+        # print("Here")
+        try:
+            for k in studentForms:
+                print(k)
+        except Exception as e:
+            print(e)
+        forms = FormHistory.select()
+        # try:
+        #     for i in forms:
+        #         print(i)
+        # except Exception as e:
+        #     print(e)
+        # print("Down here")
+        # print(studentForms)
+        # try:
+        #     for i in studentForms:
+        #         print(i.formID.studentSupervisee.FIRST_NAME)
+        # except Exception as e:
+        #     print(e)
+        # try:
+        #     print(studentForms.formID.studentSupervisee.FIRST_NAME)
+        # except Exception as e:
+        #     print(e)
 
         #for form in studentForms:
             #print(form)
@@ -25,7 +52,8 @@ def laborhistory(id):
     				            title=('Labor History'),
                                 student = student,
                                 username=current_user.username,
-                                studentForms = studentForms
+                                studentForms = studentForms,
+                                forms = forms
                               )
     except:
         render_template('errors/500.html')

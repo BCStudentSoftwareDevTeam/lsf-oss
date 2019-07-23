@@ -25,6 +25,8 @@ def index():
     #forms_by_supervisees = LaborStatusForm.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user.username).distinct()
 
     forms_by_supervisees = LaborStatusForm.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user.username).distinct()
+    # for i in forms_by_supervisees:
+    #     print(i.studentSupervisee)
     forms = forms_by_supervisees.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user)
     #print(form)
         # | LaborStatusForm.secondarySupervisor == current_user.username Warning: (1292, "Truncated incorrect DOUBLE value: 'heggens'")

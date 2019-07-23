@@ -382,7 +382,65 @@ print("modforms added")
 #############################
 # Form History
 #############################
-#insert form history cases here
+from app.models.formHistory import FormHistory
+formHis = [
+            {
+            "formHistoryID":1,
+            "formID":1,
+            "historyType":"Placeholder",
+            "createdBy":1,
+            "createdDate":"1/2/3",
+            "status":"Pending",
+            "rejectReason":"Taking a leave"
+            },
+            {
+            "formHistoryID":2,
+            "formID":2,
+            "historyType":"Placeholder",
+            "createdBy":2,
+            "createdDate":"3/4/5",
+            "status":"Pending",
+            "rejectReason":"Taking a leave"
+            },
+            {
+            "formHistoryID":3,
+            "formID":3,
+            "historyType":"Placeholder",
+            "createdBy":3,
+            "createdDate":"2/2/3",
+            "status":"Pending",
+            "rejectReason":"Taking a leave"
+            },
+            {
+            "formHistoryID":4,
+            "formID":4,
+            "historyType":"Placeholder",
+            "createdBy":4,
+            "createdDate":"5/5/6",
+            "status":"Pending",
+            "rejectReason":"Taking a leave"
+            },
+            {
+            "formHistoryID":5,
+            "formID":5,
+            "historyType":"Placeholder",
+            "createdBy":5,
+            "createdDate":"1/2/9",
+            "status":"Pending",
+            "rejectReason":"Taking a leave"
+            },
+            {
+            "formHistoryID":6,
+            "formID":6,
+            "historyType":"Placeholder",
+            "createdBy":6,
+            "createdDate":"9/2/5",
+            "status":"Pending",
+            "rejectReason":"Taking a leave"
+            },
+        ]
+FormHistory.insert_many(formHis).on_conflict_replace().execute()
+print("form history added")
 
 
 

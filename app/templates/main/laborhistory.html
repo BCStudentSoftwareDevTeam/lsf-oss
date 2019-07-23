@@ -15,7 +15,7 @@
     <table id="positionTable" >
       {% for form in studentForms %}
       <tr>
-        <td>
+        <td onclick="hello()">
           <b>{{form.termCode.termName}}</b>, {{form.jobType}}
           <br>
           {{form.POSN_TITLE}} {{form.POSN_CODE}} - {{form.department.DEPT_NAME}} Dept.
@@ -23,9 +23,30 @@
       </tr>
       {% endfor %}
     </table>
-
   </div>
 
+</div>
+
+<div class="modal fade" id="modal" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title"></h4>
+      </div>
+      <div class="modal-body">
+        Hello
+        {% for i in forms %}
+          <p>{{i.formID.studentSupervisee}}</p>
+        {% endfor %}
+        AAA
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <button type="submit" name="submit" value="submit" class="btn btn-success" id="submitModal">Submit</button>
+      </div>
+    </div>
+  </div>
 </div>
 
   <a type='button' class='btn btn-default' style= "padding: 7px 30px; margin-top: 5px; color: black" onclick="window.history.back()">Return</a>
