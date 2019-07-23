@@ -314,3 +314,38 @@ $('#hours_perweek').change(function(){
   }
 
 });
+
+function userInsert(){
+
+  var array = [];
+  var headers = ["Student", "Position", "Job Type", "Hours Per Week", "Secondary Supervisor", "Contract Hours"];
+  $('#mytable tr').has('td').each(function() {
+      supervisor = $("#supervisor").val();
+      console.log(supervisor)
+      department = $("#department").val();
+      console.log(department);
+      term = $("#term").val();
+      console.log(term);
+      startdate = $("#datetimepicker1").val();
+      console.log(startdate);
+      enddate = $("#datetimepicker2").val();
+      console.log(enddate);
+      lis = []
+      lis.push(supervisor, department, term, startdate, enddate)
+      console.log(lis)
+      var header = ["Supervisor", "Department", "Term", "Start Date", "End Date"]
+      var arrayItem = {};
+      for (i in lis) {
+        arrayItem[header[i]] = lis[i];
+      }
+
+      $('td', $(this)).each(function(index, item) {
+          arrayItem[headers[index]] = $(item).html();
+      });
+      array.shift();
+      array.push(arrayItem);
+
+  });
+  alert(JSON.stringify(array));
+// console.log(array)
+}

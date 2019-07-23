@@ -6,7 +6,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
-<form action ="/laborstatusform/userInsert" method="POST">
+<form>
   <h1 class="col-md-12 col-md-offset-4">Labor Status Form
     <span class="glyphicon glyphicon-bookmark"
       <a  data-toggle="tooltip" data-tooltip="true"
@@ -256,7 +256,7 @@
 
   <table class="table table-striped" id="mytable">
     <thead>
-      <tr>
+      <tr class="item">
         <td>Student</td>
         <td>Position</td>
         <td id="job_table">Job Type</td>
@@ -276,7 +276,7 @@
             onclick="displayTable()"
             name = "formsubmission"
             value = "formsubmission">Review</button>
-    {% include "snips/ReviewForm.html" %}
+      {% include "snips/ReviewForm.html" %}
   </div>
 </form>
 

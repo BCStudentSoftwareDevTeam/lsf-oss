@@ -35,11 +35,25 @@ def laborStatusForm():
 
 # @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 # def userInsert():
-#     print("i'm here")
-#     if request.form.get('formsubmission') == 'formsubmission':
-#             # form_submission(request)
-#     return redirect(url_for("main.laborStatusForm"))
-
+#     print("i'm here 1")
+#     try:
+#         print("im here 2")
+#         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
+#         print(rsp)
+#         print("im here 3")
+#         if rsp: ### DO STUFF
+#             #print("Getting department name", rsp['deptName'])
+#             #print(type(rsp['deptName']))
+#             department = Department.get(int(rsp['deptName']))
+#             #print(department)
+#             department.departmentCompliance = not department.departmentCompliance
+#             department.save()
+#             #print("worked")
+#             return jsonify({"Success": True})
+#     except Exception as e:
+#         print("im here last")
+#         print(e)
+#         return jsonify({"Success": False})
 # def form_submission(request):
 #     print("i'm here")
 #     student_form = request.form.get("student")
