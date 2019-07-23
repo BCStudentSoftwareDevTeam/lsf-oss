@@ -180,22 +180,24 @@ function checkDuplicate() {
        const td4 = tr.querySelector("td:nth-child(5)");
 
        if ((td0.innerHTML == studentname) && (jobtypename == "Primary")) {
-         $("#job_table").show();
-         $("#hour_table").show();
           category = "danger";
           msg = `Match found for ${studentname} and Primary. Insert rejected`;
           $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
           $("#flasher").delay(4000).fadeOut();
+          $("#job_table").show();
+          $("#hours_table").show();
+          $("#primary_table").hide();
           return;
           }
-       else if ((td0.innerHTML == studentname) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionname)) {
-         $("#job_table").show();
-         $("#hour_table").show();
-         $("#primary_table").show();
+       if ((td0.innerHTML == studentname) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionname)) {
+
           category = "danger";
           msg = `Match found for ${studentname} , ${positionname} and Secondary. Insert rejected`;
           $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
           $("#flasher").delay(4000).fadeOut();
+          $("#job_table").show();
+          $("#hours_table").show();
+          $("#primary_table").show();
           return;
          }
 
