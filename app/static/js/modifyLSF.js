@@ -36,35 +36,43 @@ function postModifications(laborStatusFormID){
        });
 }
 
-function detectModifications(){
-  //Checks fields for changes to determine what needs to be safed to modified form
-  //modifidFormID (primary key), fieldModified, oldValue, newValue, effectiveDate (from form)
-  var supervisorfield = document.getElementById("Supervisor");
-  supervisorfield.addEventListener("input", function () {
-    console.log("supervisorfield has changed!");
-    });
-  var positionfield = document.getElementById("Position");
-  positionfield.addEventListener("input", function () {
-    console.log("positionfield has changed!");
-    });
-  var wlsfield = document.getElementById("WLS");
-  wlsfield.addEventListener("input", function () {
-    console.log("wlsfield has changed!");
-    });
-  var jobtypefield = document.getElementById("JobType");
-  jobtypefield.addEventListener("input", function () {
-    console.log("jobtypefield has changed!");
-    });
-  var hoursfield = document.getElementById("Hours");
-  hoursfield.addEventListener("input", function () {
-    console.log("hoursfield has changed!");
-    });
-  var dateneededfield = document.getElementById("datetimepicker0");
-  dateneededfield.addEventListener("input", function () {
-    console.log("dateneededfield has changed!");
-    });
-  var notesfield = document.getElementById("Notes");
-  notesfield.addEventListener("input", function () {
-    console.log("notesfield has changed!");
-    });
+
+function constructFieldsModifiedDictionary(){
+//takes old values and new values and comares them; if theyre new, add it to the dictionary
+//dictionary key:field modified value: oldvalue, newvalue, effectiveDate
+  var field = "the field"
+  var oldValue = "the old value from hidden tag" ;
+  var newValue = "the new value aka whats on the page when submitted" ;
+  var bothValues = [oldValue,newValue]
+  var fieldWithValues = {} ; //for initial comparison; field: old value, new value
+  fieldWithValues["field"] : bothValues; //setting up field key with bothValues as the value
+
+  //Should there be a for loop to parse through these elements?
+  //should there be an old/new for every element through indidivual variables?
+  //aka supervisoroldvalue, notesoldvalue....
+  //put those in a list and parse them????? doin a confusion -Kat
+  //
+
+  var fieldsModifiedDictionary = {} ; //field, oldvalue, new value, effective date
+  for i in fieldWithValues{
+      if (oldValue == newValue){ //if the value has not changed
+        //pass aka do nothing aka this commented out line
+      }
+      else { //add to fieldsModifiedDictionary
+
+      }
+    }
+  }
 }
+
+
+
+// function updateFormModifiedTable(fieldsModifiedDictionary){
+//   //saves the following to modified form table:
+//   //modifidFormID (primary key, auto increment), fieldModified, oldValue, newValue, effectiveDate (from form)
+//   //parses through dictionary
+//   for (var key in fieldsModifiedDictionary){
+//     var value = dict[key];
+//   }
+//   //saving the old/new values to the appropriate field modified
+// }
