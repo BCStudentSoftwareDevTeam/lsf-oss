@@ -6,7 +6,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
-<form class="form">
+<form action ="/laborstatusform/userInsert" method="POST">
   <h1 class="col-md-12 col-md-offset-4">Labor Status Form
     <span class="glyphicon glyphicon-bookmark"
       <a  data-toggle="tooltip" data-tooltip="true"
@@ -81,7 +81,7 @@
             <!--Datepicker for start date-->
             <label for="datetimepicker1" class="col-2 col-form-label" id="datepicker">Start Date</label>
               <div class='input-group date' >
-                <input type='text' class="form-control" id='datetimepicker1' placeholder="Start Date" data-width="320px" required/>
+                <input type='text' class="form-control" id='datetimepicker1' name="startdate" placeholder="Start Date" data-width="320px" required/>
                 <span class="input-group-addon">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -92,7 +92,7 @@
             <!--Datepicker for End date-->
           <label for="datetimepicker2" class="col-2 col-form-label" id="datepicker">End Date</label>
             <div class='input-group date'>
-                <input type='text' class="form-control" id='datetimepicker2' placeholder="End Date" data-width="320px" required/>
+                <input type='text' class="form-control" id='datetimepicker2' name="enddate" placeholder="End Date" data-width="320px" required/>
                 <span class="input-group-addon">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -269,7 +269,13 @@
 
 
   <div class="col-md-12 " id="review-button">
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SubmitModal">Review</button>
+    <button type="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#SubmitModal"
+            onclick="displayTable()"
+            name = "formsubmission"
+            value = "formsubmission">Review</button>
     {% include "snips/ReviewForm.html" %}
   </div>
 </form>
