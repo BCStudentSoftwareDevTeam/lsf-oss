@@ -6,6 +6,8 @@ This file will need to be changed if the format of models changes (new fields, d
 #############################
 # USERS
 #############################
+from datetime import *
+
 from app.models.user import User
 users = [
              {
@@ -259,94 +261,148 @@ from app.models.laborStatusForm import LaborStatusForm
 from app.models.student import Student
 #primary/secondary supervisors are foreign keys to user table
 lsfs = [
-    {
-    "laborStatusFormID": 1,
-    "termCode": Term.get(Term.termCode == "201612"),
-    "studentSupervisee": Student.get(Student.ID == "B00730361"),
-    "primarySupervisor": User.get(User.username == "heggens"),
-    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-    "jobType": "Primary",
-    "WLS":"1",
-    "POSN_TITLE":"Dummy boi",
-    "POSN_CODE":"S12345",
-    "startDate": "1/2/3",
-    "endDate": "3/8/1"
-    },
-    {
-    "laborStatusFormID": 2,
-    "termCode": Term.get(Term.termCode == "201901"),
-    "studentSupervisee": Student.get(Student.ID == "B00730362"),
-    "primarySupervisor": User.get(User.username == "heggens"),
-    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-    "jobType": "secondary",
-    "WLS":"2",
-    "POSN_TITLE":"CS TAs",
-    "POSN_CODE":"S61419",
-    "weeklyHours": 5,
-    "startDate": "1/2/3",
-    "endDate": "3/3/1"
-    },
-    {
-    "laborStatusFormID": 3,
-    "termCode": Term.get(Term.termCode == "201813"),
-    "studentSupervisee": Student.get(Student.ID == "B00730363"),
-    "primarySupervisor": User.get(User.username == "heggens"),
-    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-    "jobType": "",
-    "WLS":"2",
-    "POSN_TITLE":"CS TA",
-    "POSN_CODE":"S61419",
-    "contractHours": 120,
-    "startDate": "1/2/3",
-    "endDate": "3/2/1"
-    },
-    {
-    "laborStatusFormID": 4,
-    "termCode": Term.get(Term.termCode == "201912"),
-    "studentSupervisee": Student.get(Student.ID == "B00730363"),
-    "primarySupervisor": User.get(User.username == "heggens"),
-    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-    "jobType": "",
-    "WLS":"2",
-    "POSN_TITLE":"CS TA",
-    "POSN_CODE":"S61419",
-    "contractHours": 120,
-    "startDate": "1/2/3",
-    "endDate": "3/6/1"
-    },
-    {
-    "laborStatusFormID": 5,
-    "termCode": Term.get(Term.termCode == "201901"),
-    "studentSupervisee": Student.get(Student.ID == "B00730363"),
-    "primarySupervisor": User.get(User.username == "heggens"),
-    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-    "jobType": "",
-    "WLS":"2",
-    "POSN_TITLE":"CS TA",
-    "POSN_CODE":"S61419",
-    "contractHours": 120,
-    "startDate": "1/2/3",
-    "endDate": "3/2/1"
-    },
-    {
-    "laborStatusFormID": 6,
-    "termCode": Term.get(Term.termCode == "201901"),
-    "studentSupervisee": Student.get(Student.ID == "B00730363"),
-    "primarySupervisor": User.get(User.username == "pearcej"),
-    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-    "secondarySupervisor": User.get(User.username == "heggens"),
-    "jobType": "",
-    "WLS":"2",
-    "POSN_TITLE":"CS TA",
-    "POSN_CODE":"S61419",
-    "contractHours": 120,
-    "startDate": "1/2/3",
-    "endDate": "3/2/1"
-    },
+            {
+            "laborStatusFormID": 1,
+            "termCode": Term.get(Term.termCode == "201612"),
+            "studentSupervisee": Student.get(Student.ID == "B00730361"),
+            "primarySupervisor": User.get(User.username == "heggens"),
+            "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+            "jobType": "Primary",
+            "WLS":"1",
+            "POSN_TITLE":"Dummy boi",
+            "POSN_CODE":"S12345",
+            "startDate": "1/2/3",
+            "endDate": "3/2/1"
+            },
+            {
+            "laborStatusFormID": 2,
+            "termCode": Term.get(Term.termCode == "201612"),
+            "studentSupervisee": Student.get(Student.ID == "B00730361"),
+            "primarySupervisor": User.get(User.username == "heggens"),
+            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+            "jobType": "secondary",
+            "WLS":"2",
+            "POSN_TITLE":"CS TA",
+            "POSN_CODE":"S61419",
+            "weeklyHours": 5,
+            "startDate": "1/2/3",
+            "endDate": "3/2/1"
+            },
+            {
+            "laborStatusFormID": 3,
+            "termCode": Term.get(Term.termCode == "201813"),
+            "studentSupervisee": Student.get(Student.ID == "B00730361"),
+            "primarySupervisor": User.get(User.username == "heggens"),
+            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+            "jobType": "",
+            "WLS":"2",
+            "POSN_TITLE":"CS TA",
+            "POSN_CODE":"S61419",
+            "contractHours": 120,
+            "startDate": "1/2/3",
+            "endDate": "3/2/1"
+            },
+            {
+            "laborStatusFormID": 4,
+            "termCode":"201901",    #ThanksGiving break code
+            "studentSupervisee": Student.get(Student.ID == "B00730361"),
+            "primarySupervisor": User.get(User.username == "heggens"),
+            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+            "jobType": "",
+            "WLS":"2",
+            "POSN_TITLE":"Teaching Assistant",
+            "POSN_CODE":"S61419",
+            "contractHours": 120,
+            "startDate": "1/2/3",
+            "endDate": "3/2/1"
+            },
+            {
+            "laborStatusFormID": 1,
+            "termCode": Term.get(Term.termCode == "201612"),
+            "studentSupervisee": Student.get(Student.ID == "B00730361"),
+            "primarySupervisor": User.get(User.username == "heggens"),
+            "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+            "jobType": "Primary",
+            "WLS":"1",
+            "POSN_TITLE":"Dummy boi",
+            "POSN_CODE":"S12345",
+            "startDate": "1/2/3",
+            "endDate": "3/8/1"
+            },
+            {
+            "laborStatusFormID": 2,
+            "termCode": Term.get(Term.termCode == "201901"),
+            "studentSupervisee": Student.get(Student.ID == "B00730362"),
+            "primarySupervisor": User.get(User.username == "heggens"),
+            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+            "jobType": "secondary",
+            "WLS":"2",
+            "POSN_TITLE":"CS TAs",
+            "POSN_CODE":"S61419",
+            "weeklyHours": 5,
+            "startDate": "1/2/3",
+            "endDate": "3/3/1"
+            },
+            {
+            "laborStatusFormID": 3,
+            "termCode": Term.get(Term.termCode == "201813"),
+            "studentSupervisee": Student.get(Student.ID == "B00730363"),
+            "primarySupervisor": User.get(User.username == "heggens"),
+            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+            "jobType": "",
+            "WLS":"2",
+            "POSN_TITLE":"CS TA",
+            "POSN_CODE":"S61419",
+            "contractHours": 120,
+            "startDate": "1/2/3",
+            "endDate": "3/2/1"
+            },
+            {
+            "laborStatusFormID": 4,
+            "termCode": Term.get(Term.termCode == "201912"),
+            "studentSupervisee": Student.get(Student.ID == "B00730363"),
+            "primarySupervisor": User.get(User.username == "heggens"),
+            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+            "jobType": "",
+            "WLS":"2",
+            "POSN_TITLE":"CS TA",
+            "POSN_CODE":"S61419",
+            "contractHours": 120,
+            "startDate": "1/2/3",
+            "endDate": "3/6/1"
+            },
+            {
+            "laborStatusFormID": 5,
+            "termCode": Term.get(Term.termCode == "201901"),
+            "studentSupervisee": Student.get(Student.ID == "B00730363"),
+            "primarySupervisor": User.get(User.username == "heggens"),
+            "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+            "jobType": "",
+            "WLS":"2",
+            "POSN_TITLE":"CS TA",
+            "POSN_CODE":"S61419",
+            "contractHours": 120,
+            "startDate": "1/2/3",
+            "endDate": "3/2/1"
+            },
+            {
+            "laborStatusFormID": 6,
+            "termCode": Term.get(Term.termCode == "201901"),
+            "studentSupervisee": Student.get(Student.ID == "B00730363"),
+            "primarySupervisor": User.get(User.username == "pearcej"),
+            "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+            "secondarySupervisor": User.get(User.username == "heggens"),
+            "jobType": "",
+            "WLS":"2",
+            "POSN_TITLE":"CS TA",
+            "POSN_CODE":"S61419",
+            "contractHours": 120,
+            "startDate": "1/2/3",
+            "endDate": "3/2/1"
+            },
 
 
-]
-
+        ]
 LaborStatusForm.insert_many(lsfs).on_conflict_replace().execute()
 print("LSF added")
 
@@ -391,8 +447,70 @@ print("modforms added")
 # Form History
 #############################
 #insert form history cases here
+from app.models.formHistory import FormHistory
 
 
+
+fh = [ {
+        "formHistoryID": 1,
+        "formID": LaborStatusForm.get(1),
+        "historyType": "new",
+        "releaseForm": None,
+        "modifiedForm": None,
+        "overloadForm": None,
+        "createdBy": User.get(User.username == "heggens"),
+        "createdDate": datetime(2019, 5, 17),
+        "reviewedDate": None,
+        "reviewedBy": None,
+        "status": Status.get(Status.statusName == "Approved"),
+        "rejectReason": None
+       },
+    {
+        "formHistoryID": 2,
+        "formID": LaborStatusForm.get(2),
+        "historyType": "new",
+        "releaseForm": None,
+        "modifiedForm": None,
+        "overloadForm": None,
+        "createdBy": User.get(User.username == "heggens"),
+        "createdDate": datetime(2019, 5, 17),
+        "reviewedDate": None,
+        "reviewedBy": None,
+        "status": Status.get(Status.statusName == "Approved"),
+        "rejectReason": None
+       },
+    {
+        "formHistoryID": 3,
+        "formID": LaborStatusForm.get(3),
+        "historyType": "new",
+        "releaseForm": None,
+        "modifiedForm": None,
+        "overloadForm": None,
+        "createdBy": User.get(User.username == "heggens"),
+        "createdDate": datetime(2019, 5, 17),
+        "reviewedDate": None,
+        "reviewedBy": None,
+        "status": Status.get(Status.statusName == "Approved"),
+        "rejectReason": None
+       },
+    {
+        "formHistoryID": 4,
+        "formID": LaborStatusForm.get(4),
+        "historyType": "new",
+        "releaseForm": None,
+        "modifiedForm": None,
+        "overloadForm": None,
+        "createdBy": User.get(User.username == "heggens"),
+        "createdDate": datetime(2019, 5, 17),
+        "reviewedDate": None,
+        "reviewedBy": None,
+        "status": Status.get(Status.statusName == "Approved"),
+        "rejectReason": None
+       }
+    ]
+
+FormHistory.insert_many(fh).on_conflict_replace().execute()
+print("Form history added")
 
 #############################
 #emailtemplates

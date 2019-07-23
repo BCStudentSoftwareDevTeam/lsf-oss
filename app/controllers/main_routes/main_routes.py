@@ -43,7 +43,6 @@ def index():
             tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID)
             #print(LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee))
             active = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee)[0]
-
             active_supervisees.append(active)
             # for form in active:
             #     print(form)
