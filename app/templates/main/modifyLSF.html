@@ -1,101 +1,116 @@
-
 {% extends "base.html" %}
-
 {% block app_content %}
 <head>
-<!-- These are the link to the css and js files we have in the static folder-->
+<!-- These are the link to the css, jquery version, and js files we have in the static folder-->
   <link rel="stylesheet" type="text/css" href="/static/css/modifyLSF.css" />
-
+  <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="/static/js/modifyLSF.js" />
 <!-- These are the outside links for the datepicker-->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
   <!-- These are the outside links for the effective date calendar-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
-
-
- <div align="center">
-   <h2>Modify Labor Status Form</h2>
- </div>
-
-
-
- <form  action="/index">
-
+<div align="center">
+  <h2>Modify Labor Status Form</h2>
+</div>
+ <form action="/index" id="modifyLSF">
    <div class="container">
    <div class="floatleft">
        <div class="form-group">
          <label for="Student">Student:</label> <!--User CANNOT edit-->
          <div>
-           <input type="Student" class="form-control" id="Student" required> <!--User CANNOT edit-->
+           <input type="Student" class="form-control" id="Student" value="{{prefillstudent}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
          <label for="Supervisor">Supervisor:</label>
          <div>
-           <input type="Supervisor" class="form-control" id="Supervisor" required>
+           <select required type="Supervisor"
+                            class="selectpicker form-control"
+                            id="Supervisor"
+                            data-live-search="true"
+                <option title="{{prefillsupervisor}}" value="{{prefillsupervisor}}"</option>
+           </select>
          </div>
        </div>
        <div class="form-group">
          <label for="Department">Department:</label> <!--User CANNOT edit-->
          <div>
-           <input type="Department" class="form-control" id="Department" required> <!--User CANNOT edit-->
+           <input type="Department" class="form-control" id="Department" value="{{prefilldepartment}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
          <label for="Position">Position:</label>
          <div>
-           <input type="Position" class="form-control" id="Position" required>
+           <select required type="Position"
+                            class="selectpicker form-control"
+                            id="Position"
+                            data-live-search="true"
+                <option title="{{prefillposition}}" value="{{prefillposition}}"</option>
+           </select>
          </div>
        </div>
        <div class="form-group">
          <label for="WLS">WLS:</label>
          <div>
-           <input type="WLS" class="form-control" id="WLS" required>
+           <select required type="WLS"
+                            class="selectpicker form-control"
+                            id="WLS"
+                            data-live-search="true"
+                <option title="{{prefillwls}}" value="{{prefillwls}}"</option>
+           </select>
          </div>
        </div>
        <div class="form-group">
          <label for="JobType">Job Type:</label>
          <div>
-           <input type="JobType" class="form-control" id="JobType" required>
+           <select required type="JobType"
+                            class="selectpicker form-control"
+                            id="JobType"
+                            data-live-search="true"
+                <option title="{{prefilljobtype}}" value="{{prefilljobtype}}"</option>
+           </select>
          </div>
        </div>
-
    </div>
-
-
-
   <div class= "floatright" >
      <div class="form-group">
        <label for="Term">Term:</label> <!--User CANNOT edit-->
        <div >
-         <input type="Term" class="form-control" id="Term" required> <!--User CANNOT edit-->
+         <input type="Term" class="form-control" id="Term" value="{{prefillterm}}"disabled> <!--User CANNOT edit-->
        </div>
      </div>
+
      <div class="form-group">
        <label for="Hours">Hours:</label>
        <div>
-         <input type="Hours" class="form-control" id="Hours" required>
+         <select required type="Hours"
+                          class="selectpicker form-control"
+                          id="Hours"
+                          data-live-search="true"
+              <option title="{{prefillhours}}" value="{{prefillhours}}"</option>
+         </select>
        </div>
      </div>
+
     <div class="form-group" id= "dateDiv">
     <label for="datetimepicker" class="required-asterisk">Date Needed:</label>
       <div class="input-group date">
-        <input type="text" class="form-control" id="datetimepicker0" placeholder="MM/DD/YYYY">
+        <input type="text" class="form-control" id="datetimepicker0" placeholder="MM/DD/YYYY" value="{{prefilldateneeded}}"> <!--SHould this be set to today's date on load??"-->
         <span class="input-group-addon">
         <span class="glyphicon glyphicon-calendar"></span>
         </span>
       </div>
      </div>
-     <div class="form-group">
+     <div class="form-group" >
        <label for="Notes">Notes:</label>
        <div>
-         <textarea name="notes" rows="9" cols="73"></textarea>
+         <textarea name="notes" rows="9" cols="73" id="Notes">{{prefillnotes}}</textarea>
        </div>
      </div>
   </div>
@@ -106,14 +121,14 @@
         <button type="cancel" class="btn btn-danger">Cancel</button>
       </div>
       <div class="submitbutton">
-        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal">Submit Changes</button>
+        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal" onclick = detectModifications() >Submit Changes</button>
       </div>
     </div>
 
 
     <!-- start of modal -->
        <div class="modal fade" id="submitModal" role="dialog">
-           <div class="modal-dialog">
+           <div class="modal-dialog modal-dialog-centered" role="document">
 
              <div class="modal-content">
                <div class="modal-header">
@@ -121,11 +136,11 @@
                  <h4 class="modal-title">Are you sure you want to submit?</h4>
                </div>
                <div class="modal-body">
-                 <p>Submitting this form will modify the student current labor position.</p>
+                 <p>Submitting this form will modify the student's current labor position.</p>
                </div>
                <div class="modal-footer">
                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                 <button type="submit" class="btn btn-success" id="modal">Submit</button>
+                 <button type="submit" class="btn btn-success" id="modal" onclick = postModifications() >Submit</button>
                </div>
              </div>
 
