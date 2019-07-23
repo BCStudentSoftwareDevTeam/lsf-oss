@@ -59,7 +59,7 @@
         </tr>
       </thead>
 
-        {% for form in forms_by_supervisees %}
+        {% for form in active_supervisees %}
         <tr>
           <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
             {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})
@@ -67,7 +67,15 @@
             {{form.POSN_TITLE}}
           </a></td>
 
+        </tr>
+        {% endfor %}
 
+        {% for form in inactive_supervisees %}
+        <tr>
+          <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
+            {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})
+            <P>No longer a student</P>
+          </a></td>
 
         </tr>
         {% endfor %}
