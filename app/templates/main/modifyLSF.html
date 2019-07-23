@@ -31,12 +31,14 @@
          <label for="Supervisor">Supervisor:</label>
          <div>
            <select required type="Supervisor"
-                            class="selectpicker form-control"
+                            class="selectpicker form-control newValue"
                             id="Supervisor"
                             data-live-search="true"
-                <p hidden  id= "{{oldSupervisor}}"> "{{oldSupervisot}}" </p>
-                <option title="{{prefillsupervisor}}" value="{{prefillsupervisor}}"</option>
+                <option title="{{prefillsupervisor}}" value="{{prefillsupervisor}}">{{prefillsupervisor}}</option> <!-- not showing up fam-->
+                <option title="test" value="ahh">???</option>
+                <option title="test2" value="ahh">!!!</option>
            </select>
+           <input hidden class = "oldValue"  value ={{prefillsupervisor}}> </input> <!-- stores value of original-->
          </div>
        </div>
        <div class="form-group">
@@ -49,12 +51,12 @@
          <label for="Position">Position:</label>
          <div>
            <select required type="Position"
-                            class="selectpicker form-control"
+                            class="selectpicker form-control newValue"
                             id="Position"
                             data-live-search="true"
-                <p hidden  id= "{{oldPosition}}"> "{{oldPosition}}" </p>
                 <option title="{{prefillposition}}" value="{{prefillposition}}"</option>
            </select>
+           <input hidden class = "oldValue"  id= "{{oldPosition}}"></input>
          </div>
        </div>
        
@@ -62,26 +64,26 @@
          <label for="WLS">WLS:</label>
          <div>
            <select required type="WLS"
-                            class="selectpicker form-control"
+                            class="selectpicker form-control newValue"
                             id="WLS"
                             data-live-search="true"
-                <p hidden  id= "{{oldWLS}}"> "{{oldWLS}}" </p>
                 <option title="{{prefillwls}}" value="{{prefillwls}}"</option>
            </select>
+           <input hidden class = "oldValue"  id= "{{oldWLS}}"> </input>
          </div>
        </div>
        <div class="form-group">
          <label for="JobType">Job Type:</label>
          <div>
            <select required type="JobType"
-                            class="selectpicker form-control"
+                            class="selectpicker form-control newValue"
                             id="JobType"
                             data-live-search="true"
-                <p hidden  id= "{{oldJobType}}"> "{{oldJobType}}" </p>             
-                <option title="{{prefilljobtype}}" value="{{prefilljobtype}}"</option>
+                <option title="{{prefilljobtype}}" value="{{prefilljobtype}}">{{prefilljobtype}}</option>
                 <option title="test" value="ahh"> ???</option>
                 <option title="test2" value="ahh"> !!!</option>
            </select>
+           <input hidden class = "oldValue"  id= "{{oldJobType}}"> </input>  
          </div>
        </div>
    </div>
@@ -97,12 +99,12 @@
        <label for="Hours">Hours:</label>
        <div>
          <select required type="Hours"
-                          class="selectpicker form-control"
+                          class="selectpicker form-control newValue"
                           id="Hours"
                           data-live-search="true"
-              <p hidden  id= "{{oldHours}}"> "{{oldHours}}" </p>
               <option title="{{prefillhours}}" value="{{prefillhours}}"</option>
          </select>
+         <input hidden class = "oldValue"  id= "{{oldHours}}">  </input>
        </div>
      </div>
 
@@ -119,7 +121,7 @@
      <div class="form-group" >
        <label for="Notes">Notes:</label>
        <div>
-         <textarea name="notes" rows="9" cols="73" id="Notes">{{prefillnotes}}</textarea>
+         <textarea name="notes" rows="9" cols="73" id="Notes" class = "newValue">{{prefillnotes}}</textarea>
        </div>
      </div>
   </div>

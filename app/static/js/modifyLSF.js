@@ -41,28 +41,28 @@ function constructFieldsModifiedDictionary(){
 //takes old values and new values and comares them; if theyre new, add it to the dictionary
 //dictionary key:field modified value: oldvalue, newvalue, effectiveDate
   var field = "the field"
-  var oldValue = "the old value from hidden tag" ;
-  var newValue = "the new value aka whats on the page when submitted" ;
+  var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
+  var newValue = $("#modifyLSF").find(".newValue");
   var bothValues = [oldValue,newValue]
   var fieldWithValues = {} ; //for initial comparison; field: old value, new value
-  fieldWithValues["field"] : bothValues; //setting up field key with bothValues as the value
-
-  //Should there be a for loop to parse through these elements?
-  //should there be an old/new for every element through indidivual variables?
-  //aka supervisoroldvalue, notesoldvalue....
-  //put those in a list and parse them????? doin a confusion -Kat
+  // fieldWithValues["field"] : bothValues; //setting up field key with bothValues as the value
   //
-
-  var fieldsModifiedDictionary = {} ; //field, oldvalue, new value, effective date
-  for i in fieldWithValues{
-      if (oldValue == newValue){ //if the value has not changed
-        //pass aka do nothing aka this commented out line
-      }
-      else { //add to fieldsModifiedDictionary
-
-      }
-    }
-  }
+  // //Should there be a for loop to parse through these elements?
+  // //should there be an old/new for every element through indidivual variables?
+  // //aka supervisoroldvalue, notesoldvalue....
+  // //put those in a list and parse them????? doin a confusion -Kat
+  // //
+  //
+  // var fieldsModifiedDictionary = {} ; //field, oldvalue, new value, effective date
+  // for i in fieldWithValues{
+  //     if (oldValue == newValue){ //if the value has not changed
+  //       //pass aka do nothing aka this commented out line
+  //     }
+  //     else { //add to fieldsModifiedDictionary
+  //
+  //     }
+  //   }
+  // }
 }
 
 
