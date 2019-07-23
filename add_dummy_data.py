@@ -58,22 +58,30 @@ print("students(LSF) added")
 from app.models.Tracy.stuposn import STUPOSN
 
 positions = [
-    {
-    "POSN_CODE": "S61406",
-    "POSN_TITLE": "Student Programmer",
-    "WLS": "1 - Entry Level",
-    "ORG" : "2114",
-    "ACCOUNT":"123456",
-    "DEPT_NAME":"Computer Science"
-    },
-    {
-    "POSN_CODE": "S61419",
-    "POSN_TITLE": "TA",
-    "WLS": "1 - Entry Level",
-    "ORG" : "2115",
-    "ACCOUNT":"123455",
-    "DEPT_NAME":"Mathematics"
-    }
+            {
+            "POSN_CODE": "S61406, S61407",
+            "POSN_TITLE": "Student Programmer",
+            "WLS": "1 - Entry Level",
+            "ORG" : "2114",
+            "ACCOUNT":"123456",
+            "DEPT_NAME":"Computer Science"
+            },
+            {
+            "POSN_CODE": "S61419",
+            "POSN_TITLE": "TA",
+            "WLS": "1 - Entry Level",
+            "ORG" : "2115",
+            "ACCOUNT":"123455",
+            "DEPT_NAME":"Mathematics"
+            },
+            {
+            "POSN_CODE": "S61420",
+            "POSN_TITLE": "TA",
+            "WLS": "1 - Entry Level",
+            "ORG" : "2115",
+            "ACCOUNT":"123455",
+            "DEPT_NAME":"Biology"
+            }
 ]
 STUPOSN.insert_many(positions).on_conflict_replace().execute()
 
