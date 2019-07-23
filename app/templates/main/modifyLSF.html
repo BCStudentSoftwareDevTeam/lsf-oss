@@ -35,37 +35,58 @@
            <input type="Student" class="form-control" id="Student" value="{{prefillstudent}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
+
        <div class="form-group">
          <label for="Supervisor">Supervisor:</label>
          <div>
-           <input type="Supervisor" class="form-control" id="Supervisor" value="{{prefillsupervisor}}" required>
+           <select required type="Supervisor"
+                            class="selectpicker form-control"
+                            id="Supervisor"
+                <option title="{{prefillsupervisor}}" value="{{prefillsupervisor}}"</option>
+
+           </select>
          </div>
        </div>
+
        <div class="form-group">
          <label for="Department">Department:</label> <!--User CANNOT edit-->
          <div>
            <input type="Department" class="form-control" id="Department" value="{{prefilldepartment}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
+
        <div class="form-group">
          <label for="Position">Position:</label>
          <div>
-           <input type="Position" class="form-control" id="Position" value="{{prefillposition}}" required>
-         </div>
-       </div>
-       <div class="form-group">
-         <label for="WLS">WLS:</label>
-         <div>
-           <input type="WLS" class="form-control" id="WLS" value="{{prefillwls}}"required>
-         </div>
-       </div>
-       <div class="form-group">
-         <label for="JobType">Job Type:</label>
-         <div>
-           <input type="JobType" class="form-control" id="JobType" value="{{prefilljobtype}}" required>
+           <select required type="Position"
+                            class="selectpicker form-control"
+                            id="Position"
+                <option title="{{prefillposition}}" value="{{prefillposition}}"</option>
+           </select>
          </div>
        </div>
 
+       <div class="form-group">
+         <label for="WLS">WLS:</label>
+         <div>
+           <select required type="WLS"
+                            class="selectpicker form-control"
+                            id="WLS"
+                <option title="{{prefillwls}}" value="{{prefillwls}}"</option>
+           </select>
+         </div>
+       </div>
+
+       <div class="form-group">
+         <label for="JobType">Job Type:</label>
+         <div>
+           <select required type="WLS"
+                            class="selectpicker form-control"
+                            id="JobType"
+                <option title="{{prefilljobtype}}" value="{{prefilljobtype}}"</option>
+           </select>
+         </div>
+       </div>
    </div>
 
 
@@ -77,12 +98,18 @@
          <input type="Term" class="form-control" id="Term" value="{{prefillterm}}"disabled> <!--User CANNOT edit-->
        </div>
      </div>
+
      <div class="form-group">
        <label for="Hours">Hours:</label>
        <div>
-         <input type="Hours" class="form-control" id="Hours" value="{{prefillhours}}" required>
+         <select required type="Hours"
+                          class="selectpicker form-control"
+                          id="Hours"
+              <option title="{{prefillhours}}" value="{{prefillhours}}"</option>
+         </select>
        </div>
      </div>
+     
     <div class="form-group" id= "dateDiv">
     <label for="datetimepicker" class="required-asterisk">Date Needed:</label>
       <div class="input-group date">

@@ -29,7 +29,7 @@ def modifyLSF():
     prefillhours = 8
     current_time = datetime.now()
     prefilldateneeded = current_time.strftime('%m/%d/%Y')
-    prefillnotes = 10
+    prefillnotes = "Include your notes about your modification here."
     #Step 3: send data to front to populate html
     return render_template( 'main/modifyLSF.html',
 				            title=('Modify LSF'),
