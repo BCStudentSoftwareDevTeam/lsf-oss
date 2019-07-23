@@ -27,7 +27,7 @@
                 data-live-search='true'
                 title="Supervisor"
                 data-width="320px"
-                required>
+                >
           {% for staff in staffs %}
             <option value="{{staff.PIDM}}">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
           {% endfor %}
@@ -45,7 +45,7 @@
               data-live-search='true'
               title="Department"
               onchange = "getDepartment(this)"
-              data-width="320px" required>
+              data-width="320px" >
         {% for department in departments %}
           <option value="{{department.DEPT_NAME}}">{{department.DEPT_NAME}}</option>
         {% endfor %}
@@ -65,7 +65,7 @@
                     title="Term"
                     onchange = "show_access_level(this)"
                     data-width="320px"
-                    required>
+                    >
             {% for term in terms %}
                 <option value = "{{term.termCode}}">{{term.termName}}</option>
             {% endfor %}
@@ -81,7 +81,7 @@
             <!--Datepicker for start date-->
             <label for="datetimepicker1" class="col-2 col-form-label" id="datepicker">Start Date</label>
               <div class='input-group date' >
-                <input type='text' class="form-control" id='datetimepicker1' name="startdate" placeholder="Start Date" data-width="320px" required/>
+                <input type='text' class="form-control" id='datetimepicker1' name="startdate" placeholder="Start Date" data-width="320px" />
                 <span class="input-group-addon">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -92,7 +92,7 @@
             <!--Datepicker for End date-->
           <label for="datetimepicker2" class="col-2 col-form-label" id="datepicker">End Date</label>
             <div class='input-group date'>
-                <input type='text' class="form-control" id='datetimepicker2' name="enddate" placeholder="End Date" data-width="320px" required/>
+                <input type='text' class="form-control" id='datetimepicker2' name="enddate" placeholder="End Date" data-width="320px"/>
                 <span class="input-group-addon">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -113,7 +113,7 @@
                     title="Student"
                     data-width="230px"
                     onchange= "getstudent(this)"
-                    required>
+                    >
               {% for student in students %}
                   <option value="{{student.PIDM}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
               {% endfor %}
@@ -129,7 +129,7 @@
             data-live-search='true'
             title="Position"
             data-width="230px"
-            required>
+            >
     </select>
   </div>
 
@@ -145,7 +145,7 @@
                   placeholder="Contract Hours"
                   min = "1"
                   oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0"
-                  required>
+                  >
           </input>
   </div>
 
@@ -246,7 +246,7 @@
                     id='primary_supervisor'
                     data-live-search='true'
                     title="Primary Supervisor"
-                    data-width="217px"  required>
+                    data-width="217px">
             </select>
         </div>
     </div>
@@ -296,7 +296,7 @@
 
 
 
-    {# USE LATER #}
+    {# USE LATER
         <div id="ctl00_MainContent_wls5or6" class="col-xs-10 col-xs-offset-1" hidden>
             <div class="col-xs-5 col-xs-offset-3 ">
             <p class="text-warning">  Student with WLS Level 5 or 6 must have at least a 15 hour contract. These positions require special authorization as specified at <a href="http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS" target="_blank">The Labor Program Website</a></p>
@@ -313,4 +313,4 @@
             </div>
             <br />
         </div>
-    {# USE LATER #}
+     USE LATER #}
