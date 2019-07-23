@@ -15,7 +15,7 @@
     <table id="positionTable" >
       {% for form in studentForms %}
       <tr>
-        <td onclick="hello()">
+        <td onclick="hello({{form.laborStatusFormID}})" id="{{form.laborStatusFormID}}">
           <b>{{form.termCode.termName}}</b>, {{form.jobType}}
           <br>
           {{form.POSN_TITLE}} {{form.POSN_CODE}} - {{form.department.DEPT_NAME}} Dept.
@@ -36,10 +36,7 @@
       </div>
       <div class="modal-body">
         Hello
-        {% for i in forms %}
-          <p>{{i.formID.studentSupervisee}}</p>
-        {% endfor %}
-        AAA
+          <p></p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

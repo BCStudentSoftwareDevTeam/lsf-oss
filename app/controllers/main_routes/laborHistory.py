@@ -18,17 +18,15 @@ def laborhistory(id):
 
 
         student = Student.get(Student.ID == id)
-        print("Up here")
-        print(id)
         # print(student)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student)
         # print("Here")
-        try:
-            for k in studentForms:
-                print(k)
-        except Exception as e:
-            print(e)
-        forms = FormHistory.select()
+        # try:
+        #     for k in studentForms:
+        #         print(k)
+        # except Exception as e:
+        #     print(e)
+        # forms = FormHistory.select()
         # try:
         #     for i in forms:
         #         print(i)
@@ -53,7 +51,25 @@ def laborhistory(id):
                                 student = student,
                                 username=current_user.username,
                                 studentForms = studentForms,
-                                forms = forms
+                                #forms = forms
                               )
     except:
         render_template('errors/500.html')
+
+@main_bp.route('/laborHistory/modal/<statusKey>', methods=['GET'])
+
+def populateModal(statusKey):
+    try:
+        forms = FormHistory.select().where(FormHistory.formID == statusKey)
+        modalData = {}
+        for i in forms:
+            print(i.formID.WLS)
+            print(i.formID.studentSupervisee.FIRST_NAME)
+            modalData[statusKey] = {"createdDate": i.rejectReason}
+        print(statusKey)
+        print(modalData)
+        modalData[statusKey] = {""}
+        return (jsonify({"Success": True}))
+    except Exception as e:
+        print(e)
+        return (jsonify({"Success": False}))
