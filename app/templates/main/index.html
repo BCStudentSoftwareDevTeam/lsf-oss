@@ -59,6 +59,16 @@
         </tr>
       </thead>
 
+        {% for form in active_supervisees %}
+        <tr>
+          <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
+            {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})
+            <P></P>
+            {{form.POSN_TITLE}}
+          </a></td>
+
+        </tr>
+        {% endfor %}
 
         {% for form in inactive_supervisees %}
         <tr>

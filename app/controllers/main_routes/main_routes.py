@@ -42,19 +42,19 @@ def index():
         try:
             tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID)
             #print(LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee))
-            active = forms_by_supervisees.select().where(forms_by_supervisees.studentSupervisee == supervisee.studentSupervisee)
-            for form in active:
-                print(form)
-                active_supervisees.append(active)
+            active = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee)[0]
+
+            active_supervisees.append(active)
+            # for form in active:
+            #     print(form)
+            #     active_supervisees.append(active)
         except:
             #print(LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee))
-            inactive = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee)
+            inactive = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee)[0]
 
-            for form in inactive:
-                inactive_supervisees.append(form)
+            inactive_supervisees.append(inactive)
 
-
-
+        print(inactive_supervisees)
 
 
     today = date.today()
