@@ -142,90 +142,139 @@ print("staff added")
 #############################
 from app.models.term import Term
 terms = [
-    {
-    "termCode":"201612",
-    "termName" :"Spring",
-    "termStart":"2017-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2017-05-10",
-    "termState":"open",
-    },
-    {
-    "termCode":"201711",
-    "termName" :"Fall",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"open",
-    },
-    {
-    "termCode":"201813",
-    "termName" :"Summer",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"open",
-    },
-    {
-    "termCode":"201911",
-    "termName" :"Fall 2019",
-    "termStart":"2019-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"open",
-    },
-    {
-    "termCode":"201912",
-    "termName" :"Spring 2020",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"open",
-    },
-    {
-    "termCode":"201901",
-    "termName" :"Thanksgiving 2019",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"open",
-    },
-    {
-    "termCode":"201902",
-    "termName" :"Christmas 2019",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"open",
-    },
-    {
-    "termCode":"201903",
-    "termName" :"Spring Break 2020",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"open",
-    },
-    {
-    "termCode":"201913",
-    "termName" :"Summer 2020",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"open",
-    },
-    {
-    "termCode":"201900",
-    "termName" :"AY",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"open",
-    },
-    {
-    "termCode":"201912",
-    "termName" :"Summer",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"closed",
-    },
-    {
-    "termCode":"201901",  # termcode for ThanksGiving
-    "termName" :"ThanksGiving",
-    "termStart":"2018-01-10",
-    "termEnd":"2018-05-10",
-    "termState":"open",
-    },
+   {
+   "termCode":"201700",         #academic year 2017-2018
+   "termName" :"AY 2017-2018",
+   "termStart":"2017-08-21", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2018-05-05",
+   "termState":"open",
+   },
+   {
+   "termCode":"201711",
+   "termName" :"Fall 2017",
+   "termStart":"2017-08-21", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2017-12-09",
+   "termState":"open",
+   },
+   {
+   "termCode":"201712",
+   "termName" :"Spring 2018",
+   "termStart":"2018-01-06", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2018-05-05",
+   "termState":"open",
+   },
+   {
+   "termCode":"201800",         #academic year 2018-2019
+   "termName" :"AY 2018-2019",
+   "termStart":"2018-08-21", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2019-05-05",
+   "termState":"open",
+   },
+   {
+   "termCode":"201900",     #academic year 2019-2020
+   "termName" :"AY 2019-2020",
+   "termStart":"2019-08-21", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2020-05-05",
+   "termState":"open",
+   },
+   {
+   "termCode":"201811",
+   "termName" :"Fall 2018",
+   "termStart":"2018-08-21", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2018-12-09",
+   "termState":"open",
+   },
+   {
+   "termCode":"201812",
+   "termName" :"Spring 2019",
+   "termStart":"2019-01-06", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2019-05-05",
+   "termState":"open",
+   },
+   {
+   "termCode":"201813",
+   "termName" :"Summer 2019",
+   "termStart":"2019-05-09", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2019-07-26",
+   "termState":"open",
+   },
+{
+   "termCode":"201911",
+   "termName" :"Fall 2019",
+   "termStart":"2019-08-21", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2019-12-09",
+   "termState":"open",
+   },
+   {
+   "termCode":"201912",
+   "termName" :"Spring 2020",
+   "termStart":"2020-01-06", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2020-05-05",
+   "termState":"open",
+   },
+   {
+   "termCode":"201901",
+   "termName" :"Thanksgiving 2019",
+   "termStart":"2019-11-18", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2019-11-24",
+   "termState":"open",
+   },
+   {
+   "termCode":"201902",
+   "termName" :"Christmas 2019",
+   "termStart":"2019-12-12", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2019-12-31",
+   "termState":"open",
+   },
+   {
+   "termCode":"201903",
+   "termName" :"Spring Break 2020",
+   "termStart":"2020-03-06", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2020-03-11",
+   "termState":"open",
+   },
+   {
+   "termCode":"201913",
+   "termName" :"Summer 2020",
+   "termStart":"2020-05-09", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2020-07-26",
+   "termState":"open",
+   },
+   {
+   "termCode":"201812",
+   "termName" :"Spring 2019",
+   "termStart":"2019-05-09", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2019-07-26",
+   "termState":"open",
+   },
+   {
+   "termCode":"201901",  # termcode for ThanksGiving
+   "termName" :"ThanksGiving 2019",
+   "termStart":"2019-11-18", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2019-11-24",
+   "termState":"open",
+   },
+   {
+   "termCode":"202000",     #academic year 2020-2021
+   "termName" :"AY 2020-2021",
+   "termStart":"2020-08-21", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2021-05-05",
+   "termState":"open",
+   },
+   {
+   "termCode":"202100",     #academic year 2021-2022
+   "termName" :"AY 2021-2022",
+   "termStart":"2021-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2022-05-10",
+   "termState":"open",
+   },
+   {
+   "termCode":"201900",     #academic year 2019-2020
+   "termName" :"AY 2019-2020",
+   "termStart":"2019-08-21", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
+   "termEnd":"2020-05-05",
+   "termState":"open",
+   }
 ]
 Term.insert_many(terms).on_conflict_replace().execute()
 
