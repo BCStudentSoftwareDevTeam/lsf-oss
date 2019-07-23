@@ -36,8 +36,18 @@
                 {% for term in terms %}
                     <tr>
                       <td>{{term.termName}}</td>
-                      <td>{{term.termStart}}</td>
-                      <td>{{term.termEnd}}</td>
+                      {% if term.termStart == None %}
+                        <td>This date is null</td>
+                      {% endif %}
+                      {% if term.termStart != None %}
+                        <td>{{term.termStart}}</td>
+                      {% endif %}
+                      {% if term.termStart == None %}
+                        <td>This date is null</td>
+                      {% endif %}
+                      {% if term.termEnd != None %}
+                        <td>{{term.termEnd}}</td>
+                      {% endif %}
                       <td>{{term.termState}}</td>
                       <td>{{term.termCode}}</td>
                     </tr>
