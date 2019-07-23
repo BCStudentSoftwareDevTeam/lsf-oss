@@ -22,27 +22,36 @@ def index():
 
     # Logged in
     # flash("Welcome to Labor Status forms. Delete this if flash messaging is working")
-    #forms_by_supervisees = LaborStatusForm.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user.username).distinct()
+    #forms_by_supervisees = LaborStatusForm.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user.username ).distinct()
 
-    forms_by_supervisees = LaborStatusForm.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user.username).distinct()
-    forms = forms_by_supervisees.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user)
-    #print(form)
-        # | LaborStatusForm.secondarySupervisor == current_user.username Warning: (1292, "Truncated incorrect DOUBLE value: 'heggens'")
-        #result = self._query(query)
-    # tracy_supervisees = STUDATA.select()
+    forms_by_supervisees = LaborStatusForm.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user.username or LaborStatusForm.secondarySupervisor == current_user.username).order_by(LaborStatusForm.endDate).distinct()
 
+    # print(forms_by_supervisees)
+    # my_form = forms_by_supervisees
+    # forms = my_form.select(LaborStatusForm.studentSupervisee).distinct()
+    # for form in forms:
+    #     print(form)
     #forms_by_supervisees = forms_by_supervisees.select(LaborStatusForm.studentSupervisee).distinct()
-    # inactive_supervisees = []
+    # for form in forms_by_supervisees:
+    #     print(form)
+    inactive_supervisees = []
     active_supervisees = []
+    inactive = []
+    active = []
     for supervisee in forms_by_supervisees:
         try:
             tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID)
-            #print(tracy_supervisee.ID)
-            active_supervisees.append(tracy_supervisee)
+            #print(LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee))
+            active = forms_by_supervisees.select().where(forms_by_supervisees.studentSupervisee == supervisee.studentSupervisee)
+            for form in active:
+                print(form)
+                active_supervisees.append(active)
         except:
-            print("Not")
-    #for supervisee in active_supervisees:
-        #print(supervisee)
+            #print(LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee))
+            inactive = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee)
+
+            for form in inactive:
+                inactive_supervisees.append(form)
 
 
 
@@ -53,6 +62,8 @@ def index():
     return render_template( 'main/index.html',
 				    title=('Home'),
                     forms_by_supervisees = forms_by_supervisees,
+                    active_supervisees = active_supervisees,
+                    inactive_supervisees = inactive_supervisees,
                     username = current_user
 
                           )
