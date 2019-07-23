@@ -1,8 +1,4 @@
-var j = jQuery.noConflict();
-  j( function() {
-      j( "#datetimepicker0" ).datepicker();
-  } );
-
+$("#datetimepicker0").datepicker(); //Console says this is a type error but it still works?
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
   });
@@ -38,5 +34,37 @@ function postModifications(laborStatusFormID){
                   window.location.assign("/modifyLSF/formID")
               }
        });
+}
 
+function detectModifications(){
+  //Checks fields for changes to determine what needs to be safed to modified form
+  //modifidFormID (primary key), fieldModified, oldValue, newValue, effectiveDate (from form)
+  var supervisorfield = document.getElementById("Supervisor");
+  supervisorfield.addEventListener("input", function () {
+    console.log("supervisorfield has changed!");
+    });
+  var positionfield = document.getElementById("Position");
+  positionfield.addEventListener("input", function () {
+    console.log("positionfield has changed!");
+    });
+  var wlsfield = document.getElementById("WLS");
+  wlsfield.addEventListener("input", function () {
+    console.log("wlsfield has changed!");
+    });
+  var jobtypefield = document.getElementById("JobType");
+  jobtypefield.addEventListener("input", function () {
+    console.log("jobtypefield has changed!");
+    });
+  var hoursfield = document.getElementById("Hours");
+  hoursfield.addEventListener("input", function () {
+    console.log("hoursfield has changed!");
+    });
+  var dateneededfield = document.getElementById("datetimepicker0");
+  dateneededfield.addEventListener("input", function () {
+    console.log("dateneededfield has changed!");
+    });
+  var notesfield = document.getElementById("Notes");
+  notesfield.addEventListener("input", function () {
+    console.log("notesfield has changed!");
+    });
 }
