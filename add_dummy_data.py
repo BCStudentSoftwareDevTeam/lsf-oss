@@ -271,63 +271,8 @@ lsfs = [
             "WLS":"1",
             "POSN_TITLE":"Dummy boi",
             "POSN_CODE":"S12345",
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
-            {
-            "laborStatusFormID": 2,
-            "termCode": Term.get(Term.termCode == "201612"),
-            "studentSupervisee": Student.get(Student.ID == "B00730361"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-            "jobType": "secondary",
-            "WLS":"2",
-            "POSN_TITLE":"CS TA",
-            "POSN_CODE":"S61419",
-            "weeklyHours": 5,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
-            {
-            "laborStatusFormID": 3,
-            "termCode": Term.get(Term.termCode == "201813"),
-            "studentSupervisee": Student.get(Student.ID == "B00730361"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-            "jobType": "",
-            "WLS":"2",
-            "POSN_TITLE":"CS TA",
-            "POSN_CODE":"S61419",
-            "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
-            {
-            "laborStatusFormID": 4,
-            "termCode":"201901",    #ThanksGiving break code
-            "studentSupervisee": Student.get(Student.ID == "B00730361"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-            "jobType": "",
-            "WLS":"2",
-            "POSN_TITLE":"Teaching Assistant",
-            "POSN_CODE":"S61419",
-            "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
-            {
-            "laborStatusFormID": 1,
-            "termCode": Term.get(Term.termCode == "201612"),
-            "studentSupervisee": Student.get(Student.ID == "B00730361"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-            "jobType": "Primary",
-            "WLS":"1",
-            "POSN_TITLE":"Dummy boi",
-            "POSN_CODE":"S12345",
-            "startDate": "1/2/3",
-            "endDate": "3/8/1"
+            "startDate": "1/2/2016",
+            "endDate": "3/8/2016"
             },
             {
             "laborStatusFormID": 2,
@@ -340,8 +285,8 @@ lsfs = [
             "POSN_TITLE":"CS TAs",
             "POSN_CODE":"S61419",
             "weeklyHours": 5,
-            "startDate": "1/2/3",
-            "endDate": "3/3/1"
+            "startDate": "1/2/2019",
+            "endDate": "3/3/2019"
             },
             {
             "laborStatusFormID": 3,
@@ -354,8 +299,8 @@ lsfs = [
             "POSN_TITLE":"CS TA",
             "POSN_CODE":"S61419",
             "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
+            "startDate": "1/2/2018",
+            "endDate": "3/2/2018"
             },
             {
             "laborStatusFormID": 4,
@@ -368,8 +313,8 @@ lsfs = [
             "POSN_TITLE":"CS TA",
             "POSN_CODE":"S61419",
             "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/6/1"
+            "startDate": "1/2/2019",
+            "endDate": "3/6/2019"
             },
             {
             "laborStatusFormID": 5,
@@ -382,8 +327,8 @@ lsfs = [
             "POSN_TITLE":"CS TA",
             "POSN_CODE":"S61419",
             "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
+            "startDate": "1/2/2019",
+            "endDate": "3/2/2019"
             },
             {
             "laborStatusFormID": 6,
@@ -397,8 +342,8 @@ lsfs = [
             "POSN_TITLE":"CS TA",
             "POSN_CODE":"S61419",
             "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
+            "startDate": "1/2/2019",
+            "endDate": "3/2/2019"
             },
 
 
