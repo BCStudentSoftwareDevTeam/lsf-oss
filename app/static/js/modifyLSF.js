@@ -65,18 +65,19 @@ function constructFieldsModifiedDictionary(fieldList, listOldValues, listNewValu
   var fieldsModifiedDictionary = {} ; //field, oldvalue, new value, effective date
   var bigOleList = [fieldList,listOldValues,listNewValues]
   //need to parse through list of list, map eachindex's element to each other
-  //[0]:[0],[0] [1]:[1],[1]
+  //[0]:[0],[0] [1]:[1],[1] [field]:[old][new]
+
   //fieldsModifiedDictionary.fieldList = [listOldValues,listNewValues];
   console.log(fieldsModifiedDictionary);
-  // for i in dictionary{
-  //     if (oldValue == newValue){ //if the value has not changed
-  //       //pass aka do nothing aka this commented out line
-  //     }
-  //     else { //add to fieldsModifiedDictionary
-  //
-  //     }
-  //   }
-  // }
+  for i in dictionary{
+      if (oldValue == newValue){ //if the value has not changed
+        //pass aka do nothing aka this commented out line
+      }
+      else { //add to fieldsModifiedDictionary
+
+      }
+    }
+  }
 }
 
 
