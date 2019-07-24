@@ -4,12 +4,12 @@ from app.login_manager import require_login
 from app.models.user import *
 from app.models.laborStatusForm import *
 from app.models.term import *
-# from flask_bootstrap import bootstrap_find_resource
+from app.models.student import Student
 from app.models.Tracy.studata import *
 from app.models.Tracy.stustaff import *
 from app.models.department import *
 from app.models.Tracy.stuposn import STUPOSN
-from flask import json
+from flask import json, jsonify
 from flask import request
 
 
@@ -33,53 +33,54 @@ def laborStatusForm():
                             staffs = staffs,
                             departments = departments)
 
-# @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
-# def userInsert():
-#     print("i'm here 1")
-#     try:
-#         print("im here 2")
-#         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
-#         print(rsp)
-#         print("im here 3")
-#         if rsp: ### DO STUFF
-#             #print("Getting department name", rsp['deptName'])
-#             #print(type(rsp['deptName']))
-#             department = Department.get(int(rsp['deptName']))
-#             #print(department)
-#             department.departmentCompliance = not department.departmentCompliance
-#             department.save()
-#             #print("worked")
-#             return jsonify({"Success": True})
-#     except Exception as e:
-#         print("im here last")
-#         print(e)
-#         return jsonify({"Success": False})
-# def form_submission(request):
-#     print("i'm here")
-#     student_form = request.form.get("student")
-#     supervisor_form = request.form.get("supervisor")
-#     department_form = request.form.get("department")
-#     term = request.form.get("term")
-#     startdate = request.form.get("startdate")
-#     enddate = request.form.get("enddate")
-#     position = request.form.get("position")
-#     contracthours = request.form.get("contracthours")
-#     jobtype = request.form.get("jobtype")
-#     secondary_supervisor_form = request.form.get("primary_supervisor")
-#     student = Student.get_or_create(Student.PIDM == student_form)
-#     supervisor = User.get_or_create(User.username == supervisor_form)
-#     secondary_supervisor = User.get_or_create(User.username == secondary_supervisor_form)
-#     department = Department.get_or_create(Department.departmentID == department_form)
-#     lsf = LaborStatusForm.create(termCode == term,
-#                                  studentSupervisee == student,
-#                                  primarySupervisor == supervisor,
-#                                  department  == department,
-#                                  secondarySupervisor == secondary_supervisor,
-#                                  jobType == jobtype,
-#                                  POSN_TITLE == position,
-#                                  startDate == startdate,
-#                                  endDate == enddate,
-#                                  contractHours == contracthours)
+@main_bp.route('/laborstatusform/userInsert', methods=['POST'])
+def userInsert():
+    print("i'm here 1")
+    try:
+        print("im here 2")
+        rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
+        print(rsp)
+        print("im here 3")
+        if rsp:
+            print("Success")
+            for data in rsp.values():
+                print(data)
+                bnumber_index = data['Student'].find('B0')
+                student_bnumber = data['Student'][bnumber_index:]
+                d, created = Student.get_or_create(ID = student_bnumber)
+                student = d.ID
+                d, created = User.get_or_create(username = data['Supervisor'])
+                primary_supervisor = d.username
+                username_index = data['Secondary Supervisor'].find('B0')
+                supervisor_username = data['Supervisor'][username_index:]
+                d, created = User.get_or_create(username = supervisor_username)
+                secondary_supervisor = d.username
+                d, created = Department.get_or_create(DEPT_NAME = data['Department'])
+                department = d.departmentID
+                d, created = Term.get_or_create(termCode = data['Term'])
+                term = d.termCode
+                integer_hours = int(data['Hours Per Week'])
+                lsf = LaborStatusForm.create(termCode = term,
+                                             studentSupervisee = student,
+                                             primarySupervisor = primary_supervisor ,
+                                             department  = department,
+                                             secondarySupervisor = secondary_supervisor,
+                                             jobType = data['Job Type'],
+                                             POSN_TITLE = data['Position'],
+                                             startDate = data['Start Date'],
+                                             endDate = data['End Date'],
+                                             weeklyHours   = integer_hours)
+                print("created the form")
+            return jsonify({"Success": True})
+    except Exception as e:
+        print("im here last")
+        print(e)
+        return jsonify({"Success": False})
+
+
+
+
+#
 #     flash("changed")
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
@@ -96,5 +97,5 @@ def getprimarysupervisor(termCode, student):
     primary_supervisor_dict = {}
     for primary_supervisor in primary_supervisors:
         primary_supervisor_dict[str(primary_supervisor.laborStatusFormID)] = {"Primary Supervisor FirstName":primary_supervisor.primarySupervisor.FIRST_NAME,
-        "Primary Supervisor LastName": primary_supervisor.primarySupervisor.LAST_NAME}
+        "Primary Supervisor LastName": primary_supervisor.primarySupervisor.LAST_NAME, "Primary Supervisor ID":primary_supervisor.primarySupervisor.username}
     return json.dumps(primary_supervisor_dict)

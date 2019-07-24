@@ -125,7 +125,8 @@ function fillprimarysupervisor(response){
     $("#primary_supervisor").empty();
     for (var key in response){
       var options = document.createElement("option")
-      options.text = response[key]["Primary Supervisor FirstName"].toString() + " " + response[key]["Primary Supervisor LastName"].toString();
+      options.text = response[key]["Primary Supervisor FirstName"].toString() + " " + response[key]["Primary Supervisor LastName"].toString() + " " +
+      response[key]["Primary Supervisor ID"].toString();
       options.value = key;
       primary_supervisor.appendChild(options)
     }
@@ -317,35 +318,46 @@ $('#hours_perweek').change(function(){
 
 function userInsert(){
 
-  var array = [];
-  var headers = ["Student", "Position", "Job Type", "Hours Per Week", "Secondary Supervisor", "Contract Hours"];
+  var list_dict_ajax = [];
+  var headers_data = ["Student", "Position", "Job Type", "Hours Per Week", "Secondary Supervisor", "Contract Hours"];
   $('#mytable tr').has('td').each(function() {
       supervisor = $("#supervisor").val();
-      console.log(supervisor)
       department = $("#department").val();
-      console.log(department);
       term = $("#term").val();
-      console.log(term);
       startdate = $("#datetimepicker1").val();
-      console.log(startdate);
       enddate = $("#datetimepicker2").val();
-      console.log(enddate);
-      lis = []
-      lis.push(supervisor, department, term, startdate, enddate)
-      console.log(lis)
-      var header = ["Supervisor", "Department", "Term", "Start Date", "End Date"]
-      var arrayItem = {};
-      for (i in lis) {
-        arrayItem[header[i]] = lis[i];
+      list_dict = []
+      list_dict.push(supervisor, department, term, startdate, enddate)
+      var headers_label = ["Supervisor", "Department", "Term", "Start Date", "End Date"]
+      var tabledata_dict = {};
+      for (i in list_dict) {
+        tabledata_dict[headers_label[i]] = list_dict[i];
+      }
+      $('td', $(this)).each(function(index, item) {
+        tabledata_dict[headers_data[index]] = $(item).html();
+      });
+      list_dict_ajax.shift();
+      list_dict_ajax.push(tabledata_dict);
+      test_dict = {}
+      for ( var key in list_dict_ajax){
+        test_dict[key] = list_dict_ajax[key];
       }
 
-      $('td', $(this)).each(function(index, item) {
-          arrayItem[headers[index]] = $(item).html();
-      });
-      array.shift();
-      array.push(arrayItem);
-
   });
-  alert(JSON.stringify(array));
-// console.log(array)
+  data = JSON.stringify(test_dict);
+  $.ajax({
+               method: "POST",
+               url: '/laborstatusform/userInsert',
+               data: data,
+               contentType: 'application/json',
+               success: function(response) {
+                      console.log("js success")
+                   // if (response["success"]) {
+                   //     allBtns = $("#imgSection").find(".dasButtons").removeClass("btn-info");
+                   //     $(btn).addClass("btn-info");
+                   // }
+               }
+           })
+
+
 }
