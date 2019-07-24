@@ -6,10 +6,11 @@ $('.glyphicon-calendar').click(function() {
 function buildFieldList(){
   //builds fields for matching with appropriate values
   var fieldList = ["Supervisor","Position","WLS","JobType","Hours","Notes"]
-  console.log("here's your fields");
-  console.log(fieldList);
+  // console.log("here's your fields");
+  // console.log(fieldList);
   return fieldList
 }
+
 function pullOldValues(){
   //Pull old values from hidden tags in html
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
@@ -40,26 +41,34 @@ function pullNewValues(){
    //console.log(listNewValues);
    return listNewValues
 }
-
-function constructFieldsModifiedDictionary(){
+function buildEffectiveDateList(){
+  //adds effective date to a list of 6 elements for matching up with each separate key in the final Dictionary
+  var effectiveDateList=[]
+  var jsDate = $('#datetimepicker0').datepicker('getDate');
+  if (jsDate !== null) { // if any date selected in datepicker
+      jsDate instanceof Date; // -> true
+      jsDate.getDate();
+      jsDate.getMonth();
+      jsDate.getFullYear();
+  }
+  console.log(jsDate);
+}
+function constructFieldsModifiedDictionary(fieldList, listOldValues, listNewValues){
+  ////TODO: ADD EFFECTIVE DATE/////
 //takes old values and new values and comares them; if theyre new, add it to the dictionary
 //dictionary key:field modified value: oldvalue, newvalue, effectiveDate
-  var field = "the field"
-  //fixme: pull those fields
-  // var bothValues = [oldValue,newValue];
-  // console.log("Here's both values:");
-  // console.log(bothValues[0]);
-  var fieldPairedWithValues = {} ; //for initial comparison; field: old value, new value
-  // fieldWithValues["field"] : bothValues; //setting up field key with bothValues as the value
-  //
-  // //Should there be a for loop to parse through these elements?
-  // //should there be an old/new for every element through indidivual variables?
-  // //aka supervisoroldvalue, notesoldvalue....
-  // //put those in a list and parse them????? doin a confusion -Kat
-  // //
-  //
-  // var fieldsModifiedDictionary = {} ; //field, oldvalue, new value, effective date
-  // for i in fieldWithValues{
+  //buildFieldList();
+  var fieldList = buildFieldList();
+  var listOldValues = pullOldValues();
+  var listNewValues = pullNewValues();
+
+  var fieldsModifiedDictionary = {} ; //field, oldvalue, new value, effective date
+  var bigOleList = [fieldList,listOldValues,listNewValues]
+  //need to parse through list of list, map eachindex's element to each other
+  //[0]:[0],[0] [1]:[1],[1]
+  //fieldsModifiedDictionary.fieldList = [listOldValues,listNewValues];
+  console.log(fieldsModifiedDictionary);
+  // for i in dictionary{
   //     if (oldValue == newValue){ //if the value has not changed
   //       //pass aka do nothing aka this commented out line
   //     }
