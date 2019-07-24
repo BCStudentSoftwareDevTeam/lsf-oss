@@ -19,8 +19,8 @@ class LaborStatusForm (baseModel):
     POSN_CODE                   = CharField() 
     contractHours               = IntegerField(null=True)         # total hours for break terms
     weeklyHours                 = IntegerField(null=True)         # weekly hours 10,12,15...
-    startDate                   = CharField(null=True)            # in case they start different than term start date
-    endDate                     = CharField(null=True)
+    startDate                   = DateField(null=True)            # in case they start different than term start date
+    endDate                     = DateField(null=True)
     supervisorNotes             = CharField(null=True)              # null=True allows saving of null in db, and a supervisor may not always have notes
     laborDepartmentNotes        = CharField(null=True)
 
