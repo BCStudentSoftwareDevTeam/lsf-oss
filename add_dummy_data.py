@@ -271,8 +271,8 @@ lsfs = [
             "WLS":"1",
             "POSN_TITLE":"Dummy boi",
             "POSN_CODE":"S12345",
-            "startDate": "1/2/2016",
-            "endDate": "3/8/2016"
+            "startDate": "2018-02-03",
+            "endDate": "2018-04-03"
             },
             {
             "laborStatusFormID": 2,
@@ -285,8 +285,8 @@ lsfs = [
             "POSN_TITLE":"CS TAs",
             "POSN_CODE":"S61419",
             "weeklyHours": 5,
-            "startDate": "1/2/2019",
-            "endDate": "3/3/2019"
+            "startDate": "2019-04-03",
+            "endDate": "2019-04-30"
             },
             {
             "laborStatusFormID": 3,
@@ -296,11 +296,11 @@ lsfs = [
             "department": Department.get(Department.DEPT_NAME == "Mathematics"),
             "jobType": "",
             "WLS":"2",
-            "POSN_TITLE":"CS TA",
+            "POSN_TITLE":"HIS TA",
             "POSN_CODE":"S61419",
             "contractHours": 120,
-            "startDate": "1/2/2018",
-            "endDate": "3/2/2018"
+            "startDate": "2016-04-03",
+            "endDate": "2017-04-03"
             },
             {
             "laborStatusFormID": 4,
@@ -310,11 +310,11 @@ lsfs = [
             "department": Department.get(Department.DEPT_NAME == "Mathematics"),
             "jobType": "",
             "WLS":"2",
-            "POSN_TITLE":"CS TA",
+            "POSN_TITLE":"BIO TA",
             "POSN_CODE":"S61419",
             "contractHours": 120,
-            "startDate": "1/2/2019",
-            "endDate": "3/6/2019"
+            "startDate": "2018-02-03",
+            "endDate": "2018-12-03"
             },
             {
             "laborStatusFormID": 5,
@@ -324,11 +324,11 @@ lsfs = [
             "department": Department.get(Department.DEPT_NAME == "Computer Science"),
             "jobType": "",
             "WLS":"2",
-            "POSN_TITLE":"CS TA",
+            "POSN_TITLE":"MAT TA",
             "POSN_CODE":"S61419",
             "contractHours": 120,
-            "startDate": "1/2/2019",
-            "endDate": "3/2/2019"
+            "startDate": "2018-12-03",
+            "endDate": "2019-04-03"
             },
             {
             "laborStatusFormID": 6,
@@ -339,11 +339,11 @@ lsfs = [
             "secondarySupervisor": User.get(User.username == "heggens"),
             "jobType": "",
             "WLS":"2",
-            "POSN_TITLE":"CS TA",
+            "POSN_TITLE":"CS Programmer",
             "POSN_CODE":"S61419",
             "contractHours": 120,
-            "startDate": "1/2/2019",
-            "endDate": "3/2/2019"
+            "startDate": "2016-04-20",
+            "endDate": "2017-04-03"
             },
 
 
