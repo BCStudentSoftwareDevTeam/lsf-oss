@@ -3,6 +3,13 @@ $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
   });
 
+function buildFieldList(){
+  //builds fields for matching with appropriate values
+  var fieldList = ["Supervisor","Position","WLS","JobType","Hours","Notes"]
+  console.log("here's your fields");
+  console.log(fieldList);
+  return fieldList
+}
 function pullOldValues(){
   //Pull old values from hidden tags in html
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
