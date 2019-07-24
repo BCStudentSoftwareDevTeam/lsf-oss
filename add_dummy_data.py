@@ -47,10 +47,10 @@ users = [
      "isLaborAdmin": True
      },
      {
-        "username": "pearcej",
-        "FIRST_NAME":"Jan",
-        "LAST_NAME": "Pearce",
-        "isLaborAdmin": False
+    "username": "pearcej",
+    "FIRST_NAME":"Jan",
+    "LAST_NAME": "Pearce",
+    "isLaborAdmin": False
     }
 ]
 User.insert_many(users).on_conflict_replace().execute()

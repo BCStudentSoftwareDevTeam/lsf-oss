@@ -8,6 +8,17 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <!-- link for css and js -->
+  <!-- <link rel='stylesheet' type="text/css" href='/static/css/termManagement.css'/> -->
+  <!-- These are the outside linkes for the datepicker  -->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!-- These are the outside links for the effective date calendar-->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
 <body>
 
@@ -37,7 +48,14 @@
                     <tr>
                       <td>{{term.termName}}</td>
                       {% if term.termStart == None %}
-                        <td>This date is null</td>
+                        <td>
+                          <div class='input-group date' id='datetimepicker1'>
+                              <input type='text' class="form-control" class="datepicker" id="datepicker0" placeholder="MM/DD/YYYY" />
+                              <span class="input-group-addon">
+                                  <span class="glyphicon glyphicon-calendar"></span>
+                              </span>
+                          </div>
+                        </td>
                       {% endif %}
                       {% if term.termStart != None %}
                         <td>{{term.termStart}}</td>
@@ -61,4 +79,5 @@
 </div>
 </body>
 </html>
+<script src="/static/js/termManagement.js"></script>
 {% endblock %}
