@@ -14,7 +14,7 @@ class Student(baseModel):
     ADVISOR         = CharField(null=True)
     STU_EMAIL       = CharField(null=True)
     STU_CPO         = CharField(null=True)
-    LAST_POSN   	= CharField(null=True)
+    LAST_POSN     	= CharField(null=True)
     LAST_SUP_PIDM   = CharField(null=True)
 
     def __str__(self):
