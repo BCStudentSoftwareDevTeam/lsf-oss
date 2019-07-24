@@ -3,28 +3,46 @@ $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
   });
 
+function pullOldValues(){
+  //Pull old values from hidden tags in html
+  var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
+  // console.log("Here's the old values:");
+  // console.log(oldValue[1]);
+  var listOldValues = []
+  for (var i=0; i < oldValue.length; i++) {
+    var actualOldValues = oldValue[i].value;
+    //console.log(actualOldValues);
+    listOldValues.push(actualOldValues);
+  }
+  //console.log(listOldValues);
+  return listOldValues
+}
+
+function pullNewValues(){
+  //pulls new values from newValue class in HTML
+  var newValue = $("#modifyLSF").find(".newValue");
+  var listNewValues = []
+  for (var i=1; i < newValue.length; i=i+2) {
+     actualNewValues = $(newValue[i]).children("option:selected").val();
+     //console.log(actualNewValues);
+     listNewValues.push(actualNewValues);
+   }
+   //console.log(listNewValues);
+   var newNoteValue = document.getElementById("Notes").value;
+   listNewValues.push(newNoteValue);
+   //console.log(listNewValues);
+   return listNewValues
+}
+
 function constructFieldsModifiedDictionary(){
 //takes old values and new values and comares them; if theyre new, add it to the dictionary
 //dictionary key:field modified value: oldvalue, newvalue, effectiveDate
   var field = "the field"
-  var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
-  console.log("Here's the old values:");
-  console.log(oldValue[4]);
-
-  for (var i = 0; i <oldValue.length; i++) { //loop through list?
-  //   oldValue.value = oldValue;
-  //   //oldValue = oldValue.innerHTML;
-    console.log(oldValue[i]);
-   }
-
-  // var newValue = $("#modifyLSF").find(".newValue");
-  // console.log("Here's the new values:");
-  // console.log(newValue[0]);
-  //
+  //fixme: pull those fields
   // var bothValues = [oldValue,newValue];
   // console.log("Here's both values:");
   // console.log(bothValues[0]);
-  var fieldWithValues = {} ; //for initial comparison; field: old value, new value
+  var fieldPairedWithValues = {} ; //for initial comparison; field: old value, new value
   // fieldWithValues["field"] : bothValues; //setting up field key with bothValues as the value
   //
   // //Should there be a for loop to parse through these elements?
