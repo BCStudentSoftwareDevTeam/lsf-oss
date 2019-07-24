@@ -7,16 +7,16 @@ from app.models.department import Department
 
 # All caps fields are pulled from TRACY
 class LaborStatusForm (baseModel):
-    laborStatusFormID           = IntegerField(primary_key=True)
+    laborStatusFormID           = PrimaryKeyField()
     termCode                    = ForeignKeyField(Term, on_delete="cascade")             # FK to term
     studentSupervisee           = ForeignKeyField(Student, on_delete="cascade")          # foreign key to student
     primarySupervisor           = ForeignKeyField(User, on_delete="cascade")             # foreign key to user
     department                  = ForeignKeyField(Department, on_delete="cascade")       # Foreign key to department
     secondarySupervisor         = ForeignKeyField(User, null=True, on_delete="cascade")  # student may not always have a secondary
-    jobType                     = CharField()                       # Primary or secondary
-    WLS                         = CharField()                       
-    POSN_TITLE                  = CharField()                       # eg. student programmer, customer engagement specialist, receptionist, teaching assistant
-    POSN_CODE                   = CharField() 
+    jobType                     = CharField(null=True)                       # Primary or secondary
+    WLS                         = CharField(null=True)
+    POSN_TITLE                  = CharField(null=True)                       # eg. student programmer, customer engagement specialist, receptionist, teaching assistant
+    POSN_CODE                   = CharField(null=True)
     contractHours               = IntegerField(null=True)         # total hours for break terms
     weeklyHours                 = IntegerField(null=True)         # weekly hours 10,12,15...
     startDate                   = DateField(null=True)            # in case they start different than term start date

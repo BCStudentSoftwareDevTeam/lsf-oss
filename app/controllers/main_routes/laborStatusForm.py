@@ -11,6 +11,8 @@ from app.models.department import *
 from app.models.Tracy.stuposn import STUPOSN
 from flask import json, jsonify
 from flask import request
+from datetime import datetime
+from flask import flash
 
 
 @main_bp.route('/laborstatusform', methods=['GET'])
@@ -51,8 +53,12 @@ def userInsert():
                 student = d.ID
                 d, created = User.get_or_create(username = data['Supervisor'])
                 primary_supervisor = d.username
-                username_index = data['Secondary Supervisor'].find('B0')
-                supervisor_username = data['Supervisor'][username_index:]
+                username_index = data['Secondary Supervisor'].rfind('(')
+                username_index_last = data['Secondary Supervisor'].rfind(')')
+                print(data['Secondary Supervisor'])
+                print(username_index)
+                supervisor_username = data['Secondary Supervisor'][username_index + 1:username_index_last]
+                print (supervisor_username)
                 d, created = User.get_or_create(username = supervisor_username)
                 secondary_supervisor = d.username
                 d, created = Department.get_or_create(DEPT_NAME = data['Department'])
@@ -60,6 +66,10 @@ def userInsert():
                 d, created = Term.get_or_create(termCode = data['Term'])
                 term = d.termCode
                 integer_hours = int(data['Hours Per Week'])
+                start = data['Start Date']
+                startdate = datetime.strptime(start, "%m/%d/%Y")
+                end = data['End Date']
+                enddate = datetime.strptime(end, "%m/%d/%Y")
                 lsf = LaborStatusForm.create(termCode = term,
                                              studentSupervisee = student,
                                              primarySupervisor = primary_supervisor ,
@@ -67,8 +77,8 @@ def userInsert():
                                              secondarySupervisor = secondary_supervisor,
                                              jobType = data['Job Type'],
                                              POSN_TITLE = data['Position'],
-                                             startDate = data['Start Date'],
-                                             endDate = data['End Date'],
+                                             startDate = startdate,
+                                             endDate = enddate,
                                              weeklyHours   = integer_hours)
                 print("created the form")
             return jsonify({"Success": True})

@@ -115,7 +115,7 @@
                     onchange= "getstudent(this)"
                     >
               {% for student in students %}
-                  <option value="{{student.PIDM}}">{{student.FIRST_NAME}} {{student.LAST_NAME}} {{student.ID}}</option>
+                  <option value="{{student.ID}}">{{student.FIRST_NAME}} {{student.LAST_NAME}} {{student.ID}}</option>
               {% endfor %}
             </select>
   </div>

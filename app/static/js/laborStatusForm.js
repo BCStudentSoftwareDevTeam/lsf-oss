@@ -125,8 +125,8 @@ function fillprimarysupervisor(response){
     $("#primary_supervisor").empty();
     for (var key in response){
       var options = document.createElement("option")
-      options.text = response[key]["Primary Supervisor FirstName"].toString() + " " + response[key]["Primary Supervisor LastName"].toString() + " " +
-      response[key]["Primary Supervisor ID"].toString();
+      options.text = response[key]["Primary Supervisor FirstName"].toString() + " " + response[key]["Primary Supervisor LastName"].toString() + " " + "(" +
+      response[key]["Primary Supervisor ID"].toString() + ")";
       options.value = key;
       primary_supervisor.appendChild(options)
     }

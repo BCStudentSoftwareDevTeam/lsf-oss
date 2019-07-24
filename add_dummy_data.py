@@ -235,10 +235,11 @@ from app.models.laborStatusForm import LaborStatusForm
 from app.models.student import Student
 from app.models.department import Department
 from app.models.term import Term
+import datetime
+from datetime import date
 lsfs = [
 
     {
-    "laborStatusFormID": 1,
     "termCode": Term.get(Term.termCode == "201612"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "primarySupervisor": User.get(User.username == "heggens"),
@@ -247,11 +248,10 @@ lsfs = [
     "WLS":"1",
     "POSN_TITLE":"Dummy boi",
     "POSN_CODE":"S61406",
-    "startDate": "1/2/3",
-    "endDate": "3/2/1"
+    "startDate": datetime.date(1,2,3),
+    "endDate": datetime.date(3,2,1)
     },
     {
-    "laborStatusFormID": 2,
     "termCode": Term.get(Term.termCode == "201711"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "primarySupervisor": User.get(User.username == "heggens"),
@@ -261,11 +261,10 @@ lsfs = [
     "POSN_TITLE":"CS TA",
     "POSN_CODE":"S61419",
     "weeklyHours": 5,
-    "startDate": "1/2/3",
-    "endDate": "3/2/1"
+    "startDate": datetime.date(1,2,3),
+    "endDate": datetime.date(3,2,1)
     },
     {
-    "laborStatusFormID": 3,
     "termCode": Term.get(Term.termCode == "201813"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "primarySupervisor": User.get(User.username == "heggens"),
@@ -275,11 +274,10 @@ lsfs = [
     "POSN_TITLE":"CS TA",
     "POSN_CODE":"S61419",
     "contractHours": 120,
-    "startDate": "1/2/3",
-    "endDate": "3/2/1"
+    "startDate": datetime.date(1,2,3),
+    "endDate": datetime.date(3,2,1)
     },
     {
-    "laborStatusFormID": 4,
     "termCode":"201901",    #ThanksGiving break code
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "primarySupervisor": User.get(User.username == "heggens"),
@@ -289,8 +287,8 @@ lsfs = [
     "POSN_TITLE":"Teaching Assistant",
     "POSN_CODE":"S61419",
     "contractHours": 120,
-    "startDate": "1/2/3",
-    "endDate": "3/2/1"
+    "startDate": datetime.date(1,2,3),
+    "endDate": datetime.date(3,2,1)
     },
 
 ]
@@ -354,7 +352,7 @@ print("history types added")
 #############################
 #insert form history cases here
 from app.models.formHistory import FormHistory
-
+import datetime
 
 
 fh = [ {
@@ -365,7 +363,7 @@ fh = [ {
         "modifiedForm": None,
         "overloadForm": None,
         "createdBy": User.get(User.username == "heggens"),
-        "createdDate": datetime(2019, 5, 17),
+        "createdDate": datetime.date(2019, 5, 17),
         "reviewedDate": None,
         "reviewedBy": None,
         "status": Status.get(Status.statusName == "Approved"),
@@ -379,7 +377,7 @@ fh = [ {
         "modifiedForm": None,
         "overloadForm": None,
         "createdBy": User.get(User.username == "heggens"),
-        "createdDate": datetime(2019, 5, 17),
+        "createdDate": datetime.date(2019, 5, 17),
         "reviewedDate": None,
         "reviewedBy": None,
         "status": Status.get(Status.statusName == "Approved"),
@@ -393,7 +391,7 @@ fh = [ {
         "modifiedForm": None,
         "overloadForm": None,
         "createdBy": User.get(User.username == "heggens"),
-        "createdDate": datetime(2019, 5, 17),
+        "createdDate": datetime.date(2019, 5, 17),
         "reviewedDate": None,
         "reviewedBy": None,
         "status": Status.get(Status.statusName == "Approved"),
@@ -407,7 +405,7 @@ fh = [ {
         "modifiedForm": None,
         "overloadForm": None,
         "createdBy": User.get(User.username == "heggens"),
-        "createdDate": datetime(2019, 5, 17),
+        "createdDate": datetime.date(2019, 5, 17),
         "reviewedDate": None,
         "reviewedBy": None,
         "status": Status.get(Status.statusName == "Approved"),
