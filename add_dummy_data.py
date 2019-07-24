@@ -6,6 +6,8 @@ This file will need to be changed if the format of models changes (new fields, d
 #############################
 # USERS
 #############################
+from datetime import *
+
 from app.models.user import User
 users = [
      {
@@ -355,7 +357,7 @@ lsfs = [
             },
             {
             "laborStatusFormID": 2,
-            "termCode": Term.get(Term.termCode == "201712"),
+            "termCode": Term.get(Term.termCode == "201612"),
             "studentSupervisee": Student.get(Student.ID == "B00730361"),
             "primarySupervisor": User.get(User.username == "heggens"),
             "department": Department.get(Department.DEPT_NAME == "Mathematics"),
@@ -369,7 +371,7 @@ lsfs = [
             },
             {
             "laborStatusFormID": 3,
-            "termCode": Term.get(Term.termCode == "201812"),
+            "termCode": Term.get(Term.termCode == "201813"),
             "studentSupervisee": Student.get(Student.ID == "B00730361"),
             "primarySupervisor": User.get(User.username == "heggens"),
             "department": Department.get(Department.DEPT_NAME == "Mathematics"),
@@ -440,8 +442,70 @@ print("modforms added")
 # Form History
 #############################
 #insert form history cases here
+from app.models.formHistory import FormHistory
 
 
+
+fh = [ {
+        "formHistoryID": 1,
+        "formID": LaborStatusForm.get(1),
+        "historyType": "new",
+        "releaseForm": None,
+        "modifiedForm": None,
+        "overloadForm": None,
+        "createdBy": User.get(User.username == "heggens"),
+        "createdDate": datetime(2019, 5, 17),
+        "reviewedDate": None,
+        "reviewedBy": None,
+        "status": Status.get(Status.statusName == "Approved"),
+        "rejectReason": None
+       },
+    {
+        "formHistoryID": 2,
+        "formID": LaborStatusForm.get(2),
+        "historyType": "new",
+        "releaseForm": None,
+        "modifiedForm": None,
+        "overloadForm": None,
+        "createdBy": User.get(User.username == "heggens"),
+        "createdDate": datetime(2019, 5, 17),
+        "reviewedDate": None,
+        "reviewedBy": None,
+        "status": Status.get(Status.statusName == "Approved"),
+        "rejectReason": None
+       },
+    {
+        "formHistoryID": 3,
+        "formID": LaborStatusForm.get(3),
+        "historyType": "new",
+        "releaseForm": None,
+        "modifiedForm": None,
+        "overloadForm": None,
+        "createdBy": User.get(User.username == "heggens"),
+        "createdDate": datetime(2019, 5, 17),
+        "reviewedDate": None,
+        "reviewedBy": None,
+        "status": Status.get(Status.statusName == "Approved"),
+        "rejectReason": None
+       },
+    {
+        "formHistoryID": 4,
+        "formID": LaborStatusForm.get(4),
+        "historyType": "new",
+        "releaseForm": None,
+        "modifiedForm": None,
+        "overloadForm": None,
+        "createdBy": User.get(User.username == "heggens"),
+        "createdDate": datetime(2019, 5, 17),
+        "reviewedDate": None,
+        "reviewedBy": None,
+        "status": Status.get(Status.statusName == "Approved"),
+        "rejectReason": None
+       }
+    ]
+
+FormHistory.insert_many(fh).on_conflict_replace().execute()
+print("Form history added")
 
 #############################
 #emailtemplates
