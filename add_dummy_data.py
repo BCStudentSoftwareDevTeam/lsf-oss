@@ -31,7 +31,7 @@ print("users added")
 #############################
 from app.models.Tracy.studata import STUDATA
 
-students = [
+studentsTracy = [
                 {
                 "PIDM":"1",
                 "ID":"B00730361",
@@ -48,9 +48,30 @@ students = [
                 "LAST_SUP_PIDM":"7"
                 }
 ]
-STUDATA.insert_many(students).on_conflict_replace().execute()
+STUDATA.insert_many(studentsTracy).on_conflict_replace().execute()
 print("students(TRACY) added")
+
+#############################
+# Students
+#############################
 from app.models.student import Student
+
+students = [
+                {
+                "ID":"B00730361",
+                "FIRST_NAME":"Elaheh",
+                "LAST_NAME":"Jamali",
+                "CLASS_LEVEL":"Junior",
+                "ACADEMIC_FOCUS":"Computer Science",
+                "MAJOR":"Computer Science",
+                "PROBATION":"0",
+                "ADVISOR":"Jan Pearce",
+                "STU_EMAIL":"jamalie@berea.edu",
+                "STU_CPO":"718",
+                "LAST_POSN":"Media Technician",
+                "LAST_SUP_PIDM":"7"
+                }
+]
 Student.insert_many(students).on_conflict_replace().execute()
 print("students(LSF) added")
 
@@ -309,6 +330,22 @@ print("modforms added")
 #############################
 #insert dummy overload case here
 
+#############################
+# History Type
+#############################
+from app.models.historyType import HistoryType
+types = [
+            {"historyTypeName":"Labor Status Form"
+            },
+            {"historyTypeName":"Labor Overload Form"
+            },
+            {"historyTypeName":"Labor Release Form"
+            },
+            {"historyTypeName":"Modified Labor Form"
+            }
+        ]
+HistoryType.insert_many(types).on_conflict_replace().execute()
+print("history types added")
 
 #############################
 # Form History
@@ -321,7 +358,7 @@ from app.models.formHistory import FormHistory
 fh = [ {
         "formHistoryID": 1,
         "formID": LaborStatusForm.get(1),
-        "historyType": "new",
+        "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
         "releaseForm": None,
         "modifiedForm": None,
         "overloadForm": None,
@@ -335,7 +372,7 @@ fh = [ {
     {
         "formHistoryID": 2,
         "formID": LaborStatusForm.get(2),
-        "historyType": "new",
+        "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
         "releaseForm": None,
         "modifiedForm": None,
         "overloadForm": None,
@@ -349,7 +386,7 @@ fh = [ {
     {
         "formHistoryID": 3,
         "formID": LaborStatusForm.get(3),
-        "historyType": "new",
+        "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
         "releaseForm": None,
         "modifiedForm": None,
         "overloadForm": None,
@@ -363,7 +400,7 @@ fh = [ {
     {
         "formHistoryID": 4,
         "formID": LaborStatusForm.get(4),
-        "historyType": "new",
+        "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
         "releaseForm": None,
         "modifiedForm": None,
         "overloadForm": None,

@@ -5,11 +5,12 @@ from app.models.modifiedForm import ModifiedForm
 from app.models.overloadForm import OverloadForm
 from app.models.status import Status
 from app.models.user import User
+from app.models.historyType import HistoryType
 
 class FormHistory(baseModel):
     formHistoryID       = IntegerField(primary_key=True)
     formID              = ForeignKeyField(LaborStatusForm, on_delete="cascade")               # foreign key to lsf
-    historyType         = CharField()                                                         # new, modified, released, overloaded
+    historyType         = ForeignKeyField(HistoryType)                                        # foreign key to historytype
     releaseForm         = ForeignKeyField(LaborReleaseForm, null=True, on_delete="SET NULL")  # if its a release form
     modifiedForm        = ForeignKeyField(ModifiedForm, null=True, on_delete="SET NULL")      # if its a form modification
     overloadForm        = ForeignKeyField(OverloadForm, null=True, on_delete="SET NULL")      # if its an overload application
