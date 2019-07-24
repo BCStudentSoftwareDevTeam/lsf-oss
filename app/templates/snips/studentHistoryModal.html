@@ -13,7 +13,16 @@
         {% endfor %}
         {% for form in forms %}
           {% if form.modifiedForm == None and form.releaseForm == None and form.overloadForm == None %}
-          <p>{{form.createdDate}}</p>
+            {% if form.reviewedDate == None %}
+              <p align="center">{{form.createdDate}} Place Holder Form Type Submitted</p>
+              <p align="center">{{form.createdBy.FIRST_NAME}} {{form.createdBy.LAST_NAME}} - {{form.formID.department.DEPT_NAME}} Department</p>
+              <p align="center">{{form.formID.weeklyHours}}</p>
+            {% elif form.reviewedDate != None %}
+              <p align="center">{{form.reviewedDate}} Place Holder Form type {{form.status}}</p>
+              <p align="center">{{form.createdDate}} Place Holder Form Type Submitted</p>
+              <p align="center">{{form.createdBy.FIRST_NAME}} {{form.createdBy.LAST_NAME}} - {{form.formID.department.DEPT_NAME}} Department</p>
+              <p align="center">{{form.formID.weeklyHours}}</p>
+            {% endif %}
           {% endif %}
         {% endfor %}
       </div>
