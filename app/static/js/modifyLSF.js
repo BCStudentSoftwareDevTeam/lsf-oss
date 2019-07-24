@@ -9,13 +9,21 @@ function constructFieldsModifiedDictionary(){
   var field = "the field"
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
   console.log("Here's the old values:");
-  console.log(oldValue[1]);
-  var newValue = $("#modifyLSF").find(".newValue");
-  console.log("Here's the new values:");
-  console.log(newValue[0]);
-  var bothValues = [oldValue,newValue];
-  console.log("Here's both values:");
-  console.log(bothValues[0]);
+  console.log(oldValue[4]);
+
+  for (var i = 0; i <oldValue.length; i++) { //loop through list?
+  //   oldValue.value = oldValue;
+  //   //oldValue = oldValue.innerHTML;
+    console.log(oldValue[i]);
+   }
+
+  // var newValue = $("#modifyLSF").find(".newValue");
+  // console.log("Here's the new values:");
+  // console.log(newValue[0]);
+  //
+  // var bothValues = [oldValue,newValue];
+  // console.log("Here's both values:");
+  // console.log(bothValues[0]);
   var fieldWithValues = {} ; //for initial comparison; field: old value, new value
   // fieldWithValues["field"] : bothValues; //setting up field key with bothValues as the value
   //
