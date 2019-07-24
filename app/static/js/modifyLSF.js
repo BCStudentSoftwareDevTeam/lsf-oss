@@ -9,7 +9,7 @@ function constructFieldsModifiedDictionary(){
   var field = "the field"
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
   console.log("Here's the old values:");
-  console.log(oldValue[0]);
+  console.log(oldValue[1]);
   var newValue = $("#modifyLSF").find(".newValue");
   console.log("Here's the new values:");
   console.log(newValue[0]);

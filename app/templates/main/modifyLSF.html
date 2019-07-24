@@ -33,7 +33,7 @@
            <select required type="Supervisor"
                             class="selectpicker form-control newValue"
                             id="Supervisor"
-                            data-live-search="true"
+                            data-live-search="true">
                 <option title="{{prefillsupervisor}}" value="{{prefillsupervisor}}">{{prefillsupervisor}}</option> <!-- not showing up fam-->
                 <option title="test" value="ahh">???</option>
                 <option title="test2" value="ahh">!!!</option>
@@ -53,23 +53,23 @@
            <select required type="Position"
                             class="selectpicker form-control newValue"
                             id="Position"
-                            data-live-search="true"
-                <option title="{{prefillposition}}" value="{{prefillposition}}"</option>
+                            data-live-search="true">
+                <option title="{{prefillposition}}" value="{{prefillposition}}">{{prefillposition}}</option>
            </select>
-           <input hidden class = "oldValue"  id= "{{oldPosition}}"></input>
+           <input hidden class = "oldValue"  id= "{{prefillposition}}"></input>
          </div>
        </div>
-       
+
        <div class="form-group">
          <label for="WLS">WLS:</label>
          <div>
            <select required type="WLS"
                             class="selectpicker form-control newValue"
                             id="WLS"
-                            data-live-search="true"
-                <option title="{{prefillwls}}" value="{{prefillwls}}"</option>
+                            data-live-search="true">
+                <option title="{{prefillwls}}" value="{{prefillwls}}">{{prefillwls}}</option>
            </select>
-           <input hidden class = "oldValue"  id= "{{oldWLS}}"> </input>
+           <input hidden class = "oldValue"  id= "{{prefillWLS}}"> </input>
          </div>
        </div>
        <div class="form-group">
@@ -78,12 +78,12 @@
            <select required type="JobType"
                             class="selectpicker form-control newValue"
                             id="JobType"
-                            data-live-search="true"
+                            data-live-search="true">
                 <option title="{{prefilljobtype}}" value="{{prefilljobtype}}">{{prefilljobtype}}</option>
                 <option title="test" value="ahh"> ???</option>
                 <option title="test2" value="ahh"> !!!</option>
            </select>
-           <input hidden class = "oldValue"  id= "{{oldJobType}}"> </input>  
+           <input hidden class = "oldValue"  id= "{{prefillJobType}}"> </input>
          </div>
        </div>
    </div>
@@ -101,10 +101,10 @@
          <select required type="Hours"
                           class="selectpicker form-control newValue"
                           id="Hours"
-                          data-live-search="true"
-              <option title="{{prefillhours}}" value="{{prefillhours}}"</option>
+                          data-live-search="true">
+              <option title="{{prefillhours}}" value="{{prefillhours}}">{{prefillhours}}</option>
          </select>
-         <input hidden class = "oldValue"  id= "{{oldHours}}">  </input>
+         <input hidden class = "oldValue"  id= "{{prefillHours}}">  </input>
        </div>
      </div>
 
@@ -117,7 +117,7 @@
         </span>
       </div>
      </div>
-     
+
      <div class="form-group" >
        <label for="Notes">Notes:</label>
        <div>
