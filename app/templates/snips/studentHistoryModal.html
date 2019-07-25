@@ -9,19 +9,19 @@
       </div>
       <div class="modal-body" id="modalid">
         {% for form in statusForm %}
-          <h4 align="center">{{form.termCode.termName}} - {{form.POSN_TITLE}} {{form.POSN_CODE}}, {{form.WLS}}, {{form.jobType}}</h4>
+          <h4 align="center">{{form.termCode.termName}} - {{form.POSN_TITLE}} {{form.POSN_CODE}}, WLS {{form.WLS}}, {{form.jobType}}</h4>
         {% endfor %}
         {% for form in forms %}
           {% if form.modifiedForm == None and form.releaseForm == None and form.overloadForm == None %}
             {% if form.reviewedDate == None %}
-              <p align="center">{{form.createdDate}} Place Holder Form Type Submitted</p>
-              <p align="center">{{form.createdBy.FIRST_NAME}} {{form.createdBy.LAST_NAME}} - {{form.formID.department.DEPT_NAME}} Department</p>
-              <p align="center">{{form.formID.weeklyHours}}</p>
+              <h5 align="center">{{form.createdDate}} Place Holder Form Type Submitted</h5>
+              <h6 align="center">{{form.createdBy.FIRST_NAME}} {{form.createdBy.LAST_NAME}} - {{form.formID.department.DEPT_NAME}} Department</h6>
+              <h6 align="center">{{form.formID.weeklyHours}}</h6>
             {% elif form.reviewedDate != None %}
-              <p align="center">{{form.reviewedDate}} Place Holder Form type {{form.status}}</p>
-              <p align="center">{{form.createdDate}} Place Holder Form Type Submitted</p>
-              <p align="center">{{form.createdBy.FIRST_NAME}} {{form.createdBy.LAST_NAME}} - {{form.formID.department.DEPT_NAME}} Department</p>
-              <p align="center">{{form.formID.weeklyHours}}</p>
+              <h5 align="center">{{form.reviewedDate}} Place Holder Form type {{form.status}}</h5>
+              <h5 align="center">{{form.createdDate}} Place Holder Form Type Submitted</h5>
+              <h6 align="center">{{form.createdBy.FIRST_NAME}} {{form.createdBy.LAST_NAME}} - {{form.formID.department.DEPT_NAME}} Department</h6>
+              <h6 align="center">{{form.formID.weeklyHours}}</h6>
             {% endif %}
           {% endif %}
         {% endfor %}
