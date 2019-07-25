@@ -9,11 +9,11 @@ snapshot = Snapshot()
 
 @snapshot.append
 class Department(peewee.Model):
-    departmentID = IntegerField(primary_key=True)
+    departmentID = PrimaryKeyField(primary_key=True)
     DEPT_NAME = CharField(max_length=255)
     ACCOUNT = CharField(max_length=255, null=True)
     ORG = CharField(max_length=255, null=True)
-    departmentCompliance = BooleanField()
+    departmentCompliance = BooleanField(default=True)
     class Meta:
         table_name = "department"
 
@@ -27,6 +27,45 @@ class EmailTemplate(peewee.Model):
     audience = CharField(max_length=255)
     class Meta:
         table_name = "emailtemplate"
+
+
+@snapshot.append
+class User(peewee.Model):
+    username = CharField(max_length=255, primary_key=True)
+    FIRST_NAME = CharField(max_length=255, null=True)
+    LAST_NAME = CharField(max_length=255, null=True)
+    EMAIL = CharField(max_length=255, null=True)
+    CPO = CharField(max_length=255, null=True)
+    ORG = CharField(max_length=255, null=True)
+    DEPT_NAME = CharField(max_length=255, null=True)
+    isLaborAdmin = BooleanField(null=True)
+    isFinancialAidAdmin = BooleanField(null=True)
+    isSaasAdmin = BooleanField(null=True)
+    class Meta:
+        table_name = "user"
+
+
+@snapshot.append
+class OverloadForm(peewee.Model):
+    overloadReason = CharField(max_length=255, primary_key=True)
+    financialAidApproved = BooleanField(null=True)
+    financialAidApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
+    financialAidReviewDate = DateField(null=True)
+    SAASApproved = BooleanField(null=True)
+    SAASApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
+    SAASReviewDate = DateField(null=True)
+    laborApproved = BooleanField(null=True)
+    laborApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
+    laborReviewDate = DateField(null=True)
+    class Meta:
+        table_name = "overloadform"
+
+
+@snapshot.append
+class Status(peewee.Model):
+    statusName = CharField(max_length=255, primary_key=True)
+    class Meta:
+        table_name = "status"
 
 
 @snapshot.append
@@ -46,22 +85,6 @@ class Student(peewee.Model):
     LAST_SUP_PIDM = CharField(max_length=255, null=True)
     class Meta:
         table_name = "student"
-
-
-@snapshot.append
-class User(peewee.Model):
-    username = CharField(max_length=255, primary_key=True)
-    FIRST_NAME = CharField(max_length=255, null=True)
-    LAST_NAME = CharField(max_length=255, null=True)
-    EMAIL = CharField(max_length=255, null=True)
-    CPO = CharField(max_length=255, null=True)
-    ORG = CharField(max_length=255, null=True)
-    DEPT_NAME = CharField(max_length=255, null=True)
-    isLaborAdmin = BooleanField(null=True)
-    isFinancialAidAdmin = BooleanField(null=True)
-    isSaasAdmin = BooleanField(null=True)
-    class Meta:
-        table_name = "user"
 
 
 @snapshot.append
@@ -98,10 +121,13 @@ class LaborStatusForm(peewee.Model):
 
 
 @snapshot.append
-class Status(peewee.Model):
-    statusName = CharField(max_length=255, primary_key=True)
+class LaborReleaseForm(peewee.Model):
+    laborReleaseFormID = IntegerField(primary_key=True)
+    conditionAtRelease = CharField(max_length=255)
+    releaseDate = DateField()
+    reasonForRelease = CharField(max_length=255)
     class Meta:
-        table_name = "status"
+        table_name = "laborreleaseform"
 
 
 @snapshot.append
@@ -113,32 +139,6 @@ class ModifiedForm(peewee.Model):
     effectiveDate = DateField()
     class Meta:
         table_name = "modifiedform"
-
-
-@snapshot.append
-class OverloadForm(peewee.Model):
-    overloadReason = CharField(max_length=255, primary_key=True)
-    financialAidApproved = BooleanField(null=True)
-    financialAidApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
-    financialAidReviewDate = DateField(null=True)
-    SAASApproved = BooleanField(null=True)
-    SAASApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
-    SAASReviewDate = DateField(null=True)
-    laborApproved = BooleanField(null=True)
-    laborApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
-    laborReviewDate = DateField(null=True)
-    class Meta:
-        table_name = "overloadform"
-
-
-@snapshot.append
-class LaborReleaseForm(peewee.Model):
-    laborReleaseFormID = IntegerField(primary_key=True)
-    conditionAtRelease = CharField(max_length=255)
-    releaseDate = DateField()
-    reasonForRelease = CharField(max_length=255)
-    class Meta:
-        table_name = "laborreleaseform"
 
 
 @snapshot.append
