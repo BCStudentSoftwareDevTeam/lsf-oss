@@ -80,19 +80,20 @@ def userInsert():
                                              startDate = startdate,
                                              endDate = enddate,
                                              weeklyHours   = integer_hours)
-                print("created the form")
             return jsonify({"Success": True})
     except Exception as e:
         print("im here last")
         print(e)
         return jsonify({"Success": False})
 
-
-
-
-#
-#     flash("changed")
-
+@main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])
+def getdates(termcode):
+    dates = Term.select().where(Term.termCode == termcode)
+    dates_dict = {}
+    for date in dates:
+        dates_dict[date.termCode] = {"Start Date": date.termStart , "End Date": date.termEnd}
+    return json.dumps(dates_dict)
+    
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
 def getPositions(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)

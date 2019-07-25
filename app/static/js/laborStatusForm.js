@@ -24,6 +24,26 @@ $("#primary_for_secondary").hide();
 $("#plus").hide();
 $("#mytable").hide();
 
+function fill_dates(response){
+  var datefieldstart = document.getElementById("datetimepicker1")
+  var datefieldend   = document.getElementById("datetimepicker2")
+  for (var key in response){
+    $("#datetimepicker1").val(response[key]["Start Date"]);
+    $("#datetimepicker2").val(response[key]["End Date"]);
+  }
+}
+
+function prefilleddate(obj){
+  var termcode = obj.value
+  $.ajax({
+    url: "/laborstatusform/getDate/" + termcode,
+    dataType: "json",
+    success: function (response){
+       fill_dates(response)
+    }
+  })
+}
+
 function show_access_level(obj){
   $("#ContractHours").hide();
   $("#Hours_PerWeek").hide();
@@ -352,10 +372,14 @@ function userInsert(){
                contentType: 'application/json',
                success: function(response) {
                       console.log("js success")
-                   // if (response["success"]) {
-                   //     allBtns = $("#imgSection").find(".dasButtons").removeClass("btn-info");
-                   //     $(btn).addClass("btn-info");
-                   // }
+                   if (response["Success"]) {
+                     msg = "Labor Status form has been created.";
+                     category = "info";
+                     $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
+                     $("#flasher").delay(4000).fadeOut();
+                     return;
+
+                   }
                }
            })
 
