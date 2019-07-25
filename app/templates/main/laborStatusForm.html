@@ -158,7 +158,7 @@
             data-live-search='true'
             title="Job Type"
             data-width="197px"
-            onchange="fill_hoursperweek(); secondary_access(this)">
+            onchange="fill_hoursperweek()">
       <option value="Primary">Primary</option>
       <option value="Secondary">Secondary</option>
     </select>
@@ -236,23 +236,6 @@
   </div>
 </div>
   <br />
-  <div class="form-group  col-md-offset-3 col-md-6" id="primary_for_secondary">
-    <!--selectpicker for primary supervisor-->
-    <div class="form-group row">
-      <label for="primary_supervisor" class="col-md-4 col-form-label">Primary Supervisor</label>
-        <div class ="col-md-4">
-            <select class="selectpicker"
-                    name='primary_supervisor'
-                    id='primary_supervisor'
-                    data-live-search='true'
-                    title="Primary Supervisor"
-                    data-width="217px">
-            </select>
-        </div>
-    </div>
-  </div>
-  <br />
-
 
   <table class="table table-striped" id="mytable">
     <thead>
@@ -261,7 +244,6 @@
         <td>Position</td>
         <td id="job_table">Job Type</td>
         <td id="hours_table">Hours Per Week</td>
-        <td id="primary_table">Primary Supervisor</td>
         <td id="contract_table">Contract Hours</td>
       </tr>
     </thead>

@@ -91,9 +91,11 @@ def getdates(termcode):
     dates = Term.select().where(Term.termCode == termcode)
     dates_dict = {}
     for date in dates:
-        dates_dict[date.termCode] = {"Start Date": date.termStart , "End Date": date.termEnd}
+        start = date.termStart
+        end  = date.termEnd
+        dates_dict[date.termCode] = {"Start Date":datetime.strftime(start, "%m-%d-%Y")  , "End Date": datetime.strftime(end, "%m-%d-%Y")}
     return json.dumps(dates_dict)
-    
+
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
 def getPositions(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
@@ -107,6 +109,6 @@ def getprimarysupervisor(termCode, student):
     primary_supervisors = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.jobType == "Primary", LaborStatusForm.studentSupervisee == student)
     primary_supervisor_dict = {}
     for primary_supervisor in primary_supervisors:
-        primary_supervisor_dict[str(primary_supervisor.laborStatusFormID)] = {"Primary Supervisor FirstName":primary_supervisor.primarySupervisor.FIRST_NAME,
-        "Primary Supervisor LastName": primary_supervisor.primarySupervisor.LAST_NAME, "Primary Supervisor ID":primary_supervisor.primarySupervisor.username}
+        primary_supervisor_dict[str(primary_supervisor.laborStatusFormID)] = {"Primary Supervisor FirstName":primary_supervisor.supervisor.FIRST_NAME,
+        "Primary Supervisor LastName": primary_supervisor.supervisor.LAST_NAME, "Primary Supervisor ID":primary_supervisor.supervisor.username}
     return json.dumps(primary_supervisor_dict)

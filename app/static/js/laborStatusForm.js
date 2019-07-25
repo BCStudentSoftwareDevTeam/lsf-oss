@@ -20,13 +20,10 @@ $("#Hours_PerWeek").hide();
 $("#JopTypes").hide();
 $("#Student").hide();
 $("#Position").hide();
-$("#primary_for_secondary").hide();
 $("#plus").hide();
 $("#mytable").hide();
 
 function fill_dates(response){
-  var datefieldstart = document.getElementById("datetimepicker1")
-  var datefieldend   = document.getElementById("datetimepicker2")
   for (var key in response){
     $("#datetimepicker1").val(response[key]["Start Date"]);
     $("#datetimepicker2").val(response[key]["End Date"]);
@@ -51,12 +48,12 @@ function show_access_level(obj){
   $("#Student").hide();
   $("#Position").hide();
   $("#plus").hide();
-  $("#primary_for_secondary").hide();
+
 
 
   var termcode = obj.value
   var whichterm = termcode.toString().substr(-2);
-  if (whichterm != 11 && whichterm !=12) { // Summer term or any other break period
+  if (whichterm != 11 && whichterm !=12 && whichterm !=00) { // Summer term or any other break period
     $("#Student").show();
     $("#Position").show();
     $("#ContractHours").show();
@@ -70,17 +67,6 @@ function show_access_level(obj){
     $("#plus").show();
   }
 }
-
-function secondary_access(obj){
-  var jobtype = obj.value;
-  if (jobtype == "Secondary"){
-    $("#primary_for_secondary").show();
-  }
-  else{
-    $("#primary_for_secondary").hide();
-  }
-}
-
 
 function fill_positions(response) {
   var selected_positions = document.getElementById("position");
@@ -138,20 +124,28 @@ function fill_hoursperweek(){
   }
 }
 
-function fillprimarysupervisor(response){
-  $("#term").prop("disabled", "disabled");
-  var primary_supervisor = document.getElementById("primary_supervisor")
-  if (primary_supervisor){
-    $("#primary_supervisor").empty();
-    for (var key in response){
-      var options = document.createElement("option")
-      options.text = response[key]["Primary Supervisor FirstName"].toString() + " " + response[key]["Primary Supervisor LastName"].toString() + " " + "(" +
-      response[key]["Primary Supervisor ID"].toString() + ")";
-      options.value = key;
-      primary_supervisor.appendChild(options)
+function checkprimarysupervisor(response){ //check
+  for (var key in response){
+    if (response[key]["Primary Supervisor ID"] == null){
+      // modal that they can't add cause there is no primary
+      noprimarysupervisor()
     }
-    $('.selectpicker').selectpicker('refresh')
+    else{
+      primarysupervisorexists()
+    }
   }
+}
+
+function noprimarysupervisor(){
+  $("#plus").click(function() {
+    $('#SecondaryModal').modal('show');
+  });
+}
+
+function primarysupervisorexists(){
+  $("#plus").click(function() {
+    $('#OverloadModal').modal('show');
+  });
 }
 
 function getstudent(obj){
@@ -162,7 +156,7 @@ function getstudent(obj){
     url: url,
     dataType: "json",
     success: function (response){
-      fillprimarysupervisor(response)
+      checkprimarysupervisor(response)
     }
   })
 }
@@ -176,8 +170,7 @@ function displayTable() {
 
   var termcode = $('#term').val();
   var whichterm = termcode.toString().substr(-2);
-
-  if (whichterm != 11 && whichterm !=12) {
+  if (whichterm != 11 && whichterm !=12 && whichterm !=00) {
     checkBreaks();
   }
   else {
@@ -280,21 +273,17 @@ function CheckAcademicYear() {
     var jobtypename = jobtype.options[jobtype.selectedIndex].text;
     var hours_perweek = document.getElementById("hours_perweek");
     var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
-    var primary_supervisor = document.getElementById("primary_supervisor");
-    var primary_supervisorname = primary_supervisor.options[primary_supervisor.selectedIndex].text;
 
     var row = table.insertRow(-1);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     var cell3 = row.insertCell(2);
     var cell4 = row.insertCell(3);
-    var cell5 = row.insertCell(4);
 
     cell1.innerHTML = studentname;
     cell2.innerHTML = positionname;
     cell3.innerHTML = jobtypename;
     cell4.innerHTML = hours_perweekname;
-    cell5.innerHTML = "";
 
     $("#hours_perweek").val('default');
     $("#hours_perweek").selectpicker("refresh");
@@ -305,14 +294,6 @@ function CheckAcademicYear() {
     $("#position").val('default');
     $("#position").selectpicker("refresh");
 
- // if Secondary option is selected, show primary supervisor selecpicker
-    if(jobtypename == "Secondary"){
-      $("#primary_table").show();
-      var cell5 = row.insertCell(4);
-      cell5.innerHTML = primary_supervisorname;
-      $("#primary_supervisor").val('default');
-      $("#primary_supervisor").selectpicker("refresh");
-    }
 }
 
 
