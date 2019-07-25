@@ -52,9 +52,10 @@ function buildEffectiveDateList(){
       jsDate.getFullYear();
   }
   console.log(jsDate);
+  effectiveDateList=[jsDate,jsDate,jsDate,jsDate,jsDate,jsDate]; //since the same date is effectivedate for each field
 }
 function constructFieldsModifiedDictionary(fieldList, listOldValues, listNewValues){
-  ////TODO: ADD EFFECTIVE DATE/////
+  ////TODO: ADD EFFECTIVE DATE to params, the list of lists, the dictionary...../////
 //takes old values and new values and comares them; if theyre new, add it to the dictionary
 //dictionary key:field modified value: oldvalue, newvalue, effectiveDate
   //buildFieldList();
@@ -66,17 +67,21 @@ function constructFieldsModifiedDictionary(fieldList, listOldValues, listNewValu
   var bigOleList = [fieldList,listOldValues,listNewValues]
   //need to parse through list of list, map eachindex's element to each other
   //[0]:[0],[0] [1]:[1],[1] [field]:[old][new]
+  for (var i=1; i < bigOleList.length; i=i++){
+    
+
+  }
 
   //fieldsModifiedDictionary.fieldList = [listOldValues,listNewValues];
   console.log(fieldsModifiedDictionary);
-  for i in dictionary{
-      if (oldValue == newValue){ //if the value has not changed
-        //pass aka do nothing aka this commented out line
-      }
-      else { //add to fieldsModifiedDictionary
-
-      }
-    }
+  // for i in dictionary{
+  //     if (oldValue == newValue){ //if the value has not changed
+  //       //pass aka do nothing aka this commented out line
+  //     }
+  //     else { //add to fieldsModifiedDictionary
+  //
+  //     }
+  //   }
   }
 }
 
