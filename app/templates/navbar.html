@@ -1,3 +1,5 @@
+<script type="text/javascript" src="/static/js/index.js"></script>
+
 <div class="col-xs-12">
     <div class="col-lg-11 navbar-header">
          <h2 class="bclp">Berea College Labor Program</h2>
@@ -7,13 +9,27 @@
 <div id="sidebar" class="col-sm-2">
     <nav class="navbar">
         <div class="container-fluid">
-            <div id="portal" class="panel panel-default">
-                <a href="/">
-                    <div class="panel-heading">
-                        <h4>Supervisor Portal</h4>
-                    </div>
-                </a>
-            </div>
+          <div class="panel-group" >
+              <div class="panel panel-default">
+                  <a href="/">
+                      <div class="panel-heading">
+                          <h4>Supervisor Portal</h4>
+                      </div>
+                  </a>
+
+                  <div id="supervisor" class="laborStudentChoice" style="display:none">
+                      <ul id="supervisordropdown" class="panel panel-default">
+                          <a href="#"><li class="panel-heading" id="current"><h4>Current Students</h4></li></a>
+                          <a href="#"><li class="panel-heading" id="past"><h4>Past students</h4></li></a>
+                          <a href="#"><li class="panel-heading" id="all"><h4>All students</h4></li></a>
+
+                      </ul>
+
+                  </div>
+
+              </div>
+
+          </div>
             <div class="panel panel-default">
                 <a href="/laborstatusform">
                     <div class="panel-heading">

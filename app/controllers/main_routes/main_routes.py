@@ -35,7 +35,7 @@ def index():
         try:
             tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
             for student in active_supervisees:
-                if (supervisee.studentSupervisee.PIDM) == (student.studentSupervisee.PIDM):  # Checks whether student has already been added as an active student.
+                if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
                     student_processed = True
             if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
                 active_supervisees.append(supervisee)
@@ -43,7 +43,7 @@ def index():
                 student_processed = False  # Resets state machine.
         except: # if they are inactive
             for student in inactive_supervisees:
-                if (supervisee.studentSupervisee.PIDM) == (student.studentSupervisee.PIDM):  # Checks whether student has already been added as an active student.
+                if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
                     student_processed = True
             if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
                 inactive_supervisees.append(supervisee)

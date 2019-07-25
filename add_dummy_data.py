@@ -319,7 +319,7 @@ lsfs = [
             {
             "laborStatusFormID": 5,
             "termCode": Term.get(Term.termCode == "201901"),
-            "studentSupervisee": Student.get(Student.ID == "B00730363"),
+            "studentSupervisee": Student.get(Student.ID == "B00730364"),
             "primarySupervisor": User.get(User.username == "heggens"),
             "department": Department.get(Department.DEPT_NAME == "Computer Science"),
             "jobType": "",
@@ -333,11 +333,11 @@ lsfs = [
             {
             "laborStatusFormID": 6,
             "termCode": Term.get(Term.termCode == "201901"),
-            "studentSupervisee": Student.get(Student.ID == "B00730363"),
+            "studentSupervisee": Student.get(Student.ID == "B00730364"),
             "primarySupervisor": User.get(User.username == "pearcej"),
             "department": Department.get(Department.DEPT_NAME == "Computer Science"),
             "secondarySupervisor": User.get(User.username == "heggens"),
-            "jobType": "",
+            "jobType": "secondary",
             "WLS":"2",
             "POSN_TITLE":"CS Programmer",
             "POSN_CODE":"S61419",
