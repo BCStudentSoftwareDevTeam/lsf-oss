@@ -14,7 +14,7 @@ table=$("#studentList").DataTable({
 
 // show the sub-sidebar only on this page
 $("div.laborStudentChoice").show();
-$(pastStu).hide();
+$("pastStu").hide();
 
 document.getElementById("current").addEventListener("click",function(){
   $(currentStu).show();

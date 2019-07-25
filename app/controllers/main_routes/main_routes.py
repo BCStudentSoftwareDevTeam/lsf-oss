@@ -22,7 +22,7 @@ def index():
 
 ###### This is the start of grabbing the data from the labor status form and displaying it on the Supervisor portal
     # Get all the forms from the supervisor form that has Scott as the Supervisor and order them by the endDate
-    forms_by_supervisees = LaborStatusForm.select().where(LaborStatusForm.primarySupervisor == current_user.username or LaborStatusForm.secondarySupervisor == current_user.username).order_by(LaborStatusForm.endDate.desc())
+    forms_by_supervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.username).order_by(LaborStatusForm.endDate.desc())
 
     inactive_supervisees = []
     active_supervisees = []
