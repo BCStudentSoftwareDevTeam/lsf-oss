@@ -67,9 +67,15 @@ function constructFieldsModifiedDictionary(fieldList, listOldValues, listNewValu
   var bigOleList = [fieldList,listOldValues,listNewValues]
   //need to parse through list of list, map eachindex's element to each other
   //[0]:[0],[0] [1]:[1],[1] [field]:[old][new]
-  for (var i=1; i < bigOleList.length; i=i++){
-    
 
+  var index1 = bigOleList.indexOf(listOldValues);
+  var index2 = listOldValues.indexOf("SHEGGGEENNNNN");
+  console.log(index1)
+  console.log(index2)
+
+  for (var i=0; i < bigOleList.length; i++) {
+
+      console.log(bigOleList[i]);
   }
 
   //fieldsModifiedDictionary.fieldList = [listOldValues,listNewValues];
@@ -82,7 +88,7 @@ function constructFieldsModifiedDictionary(fieldList, listOldValues, listNewValu
   //
   //     }
   //   }
-  }
+//  }
 }
 
 
@@ -97,35 +103,35 @@ function constructFieldsModifiedDictionary(fieldList, listOldValues, listNewValu
 //   //saving the old/new values to the appropriate field modified
 // }
 
-function postModifications(laborStatusFormID){
-  //passes form attributes into a dictionary for ajax, posts to db, redirects\
-  console.log("postModifications called");
-  var formModifications = {} //For passing into Ajax data field (multiple attributes to pass)
-  //student cannot be changed
-  formModifications["primarySupervisor"] = document.getElementById('Supervisor').value; //FIX ME: NOT ALWAYS A PRIMARY SUPERVISOR. ITS DEPENDENT ON JOB TYPE
-  //department cannot be changed
-  formModifications["position"] = document.getElementById('Position').value;
-  formModifications["WLS"] = document.getElementById('WLS').value;
-  formModifications["jobtype"] = document.getElementById('JobType').value;
-  //Term cannot be changed
-  formModifications["weeklyHours"] = document.getElementById('Hours').value; //FIX ME: WILL NOT ALWAYS BEEN WEEKLY H(OURS COULD BE CONTRACT)
-  formModifications["effectiveDate"] = document.getElementById('datetimepicker0').value;
-  formModifications["laborSupervisorNotes"] = document.getElementById('Notes').value;
-  //How to handle modifiedForm fields such as field modified, old value, and new value?
-  //What happens when muliple fields are modified??
-  var url = '/saveChanges/'+getFormId();
-       $.ajax({
-           type: "POST",
-              url: url,
-              data: formModifications,     //Dictionary pass
-              dataType: 'json',
-              success: function(response){
-                      window.location = "/index" //FIXME: should we go to Supervisor portal or back to that student's labor history?
-                       createTimestamp() ; //FIX ME: should add to form history bot just create a timestamp
-              },
-              error: function(error){
-                  console.log("ERROR")
-                  window.location.assign("/modifyLSF/formID")
-              }
-       });
-}
+// function postModifications(laborStatusFormID){
+//   //passes form attributes into a dictionary for ajax, posts to db, redirects\
+//   console.log("postModifications called");
+//   var formModifications = {} //For passing into Ajax data field (multiple attributes to pass)
+//   //student cannot be changed
+//   formModifications["primarySupervisor"] = document.getElementById('Supervisor').value; //FIX ME: NOT ALWAYS A PRIMARY SUPERVISOR. ITS DEPENDENT ON JOB TYPE
+//   //department cannot be changed
+//   formModifications["position"] = document.getElementById('Position').value;
+//   formModifications["WLS"] = document.getElementById('WLS').value;
+//   formModifications["jobtype"] = document.getElementById('JobType').value;
+//   //Term cannot be changed
+//   formModifications["weeklyHours"] = document.getElementById('Hours').value; //FIX ME: WILL NOT ALWAYS BEEN WEEKLY H(OURS COULD BE CONTRACT)
+//   formModifications["effectiveDate"] = document.getElementById('datetimepicker0').value;
+//   formModifications["laborSupervisorNotes"] = document.getElementById('Notes').value;
+//   //How to handle modifiedForm fields such as field modified, old value, and new value?
+//   //What happens when muliple fields are modified??
+//   var url = '/saveChanges/'+getFormId();
+//        $.ajax({
+//            type: "POST",
+//               url: url,
+//               data: formModifications,     //Dictionary pass
+//               dataType: 'json',
+//               success: function(response){
+//                       window.location = "/index" //FIXME: should we go to Supervisor portal or back to that student's labor history?
+//                        createTimestamp() ; //FIX ME: should add to form history bot just create a timestamp
+//               },
+//               error: function(error){
+//                   console.log("ERROR")
+//                   window.location.assign("/modifyLSF/formID")
+//               }
+//        });
+// }
