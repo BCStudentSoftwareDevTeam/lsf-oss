@@ -1,17 +1,17 @@
 $(function () {
-    $('#datepicker0').datepicker();
+    $('.form-control').datepicker({autoSize: true});
 });
 
 $('.glyphicon-calendar').click(function() {
-   $("#datepicker0").focus();
+   $(".form-control").focus();
  });
 
 var date = new Date();
-date.setDate(date.getDate()+1);
-$("#datepicker0").datepicker({
+date.setDate(date.getDate());
+$(".form-control").datepicker({
  minDate: date
 });
-$("#datepicker0").datepicker("setDate", "date");
+$(".form-control").datepicker("setDate", "date");
 
 // var acc = document.getElementsByClassName("accordion");
 // var i;

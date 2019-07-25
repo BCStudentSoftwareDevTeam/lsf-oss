@@ -14,24 +14,22 @@ def term_Management():
     termState = Term.select()
     termCode = Term.select()
     termName = Term.select()
+    listOfTerms = Term.select()
     for i in range(5):
         createTerms(Term, i)
-
-    orderedTerms = Term.select().order_by(Term.termCode).order_by(Term.termStart)
-    singleTerm = Term.select().where(Term.termCode >= 201900)
-    # x = 0
-    # for Term.termCode in Term.select():
-    #     print(x)
-    #     print(orderedTerms[x].termCode, orderedTerms[x].termName, orderedTerms[x].termStart, orderedTerms[x].termEnd)
-    #     x = x + 1
+    accordionTerms()
+    # orderedTerms = Term.select().order_by(Term.termCode).order_by(Term.termStart)
+    # singleTerm = Term.select().where(Term.termCode >= 201900)
     return render_template( 'admin/termManagement.html',
 				             title=('Admin Management'),
-                             terms = orderedTerms,
+                             terms = terms,
+                             # orderedTerms = orderedTerms,
                              termStart = termStart,
                              termEnd = termEnd,
                              termState = termState,
                              termCode = termCode,
-                             termName = termName
+                             termName = termName,
+                             listOfTerms = accordionTerms()
                           )
 
 def createTerms(termList, iteration):
@@ -39,10 +37,6 @@ def createTerms(termList, iteration):
     todayYear = today.year
     termYear = todayYear - 2 + iteration
     code = (todayYear - 2 + iteration) * 100
-    # try:
-    #     termList.create(termCode = 258008, termName = "Luis")
-    # except Exception as e:
-    #     print("You failed to create Luis.")
     for i in range(7):
         try:
             if i == 0:
@@ -61,3 +55,17 @@ def createTerms(termList, iteration):
                 termList.create(termCode = (code + 13), termName = ("Summer " + str(termYear + 1)))
         except Exception as e:
             print("You failed to create a term in the " + str(termYear) + " AY.")
+
+def accordionTerms():
+    listOfTerms = []
+    hoy = datetime.datetime.now()
+    hoyyear = hoy.year
+    for i in range(5):
+        termYear = (hoyyear - 2 + i)*100
+        currentTerm = Term.select().where(Term.termCode.between(termYear-1, termYear + 15))
+        print(currentTerm[0])
+        listOfTerms.append([])
+        for term in currentTerm:
+            listOfTerms[i].append(term)
+    print(listOfTerms)
+    return listOfTerms
