@@ -5,13 +5,12 @@ function hello(laborStatusKey) {
     url: '/laborHistory/modal/' + laborStatusKey,
     //data: JSON.stringify({"laborStatusFormID": laborStatusKey}),
     success: function(response) {
-      $("#holdModal").append(response);
+      $("#holdModal").empty().append(response);
       $("#modal").modal("show");
     }
   });
 
 }
-
 
 
 // function hello(laborStatusKey) {

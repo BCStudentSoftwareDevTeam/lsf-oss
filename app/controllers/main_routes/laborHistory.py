@@ -58,10 +58,13 @@ def populateModal(statusKey):
     #     print(e)
     #     return (jsonify({"Success": False}))
     try:
-        forms = FormHistory.select().where(FormHistory.formID == statusKey)
+        forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         print("here")
         print(statusKey)
+        for i in forms:
+            print(i.formID.POSN_TITLE)
+        print("Under here")
         resp = make_response(render_template('snips/studentHistoryModal.html',
                                             forms = forms,
                                             statusForm = statusForm
