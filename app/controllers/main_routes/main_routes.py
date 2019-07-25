@@ -20,42 +20,37 @@ def index():
     if not current_user:
         return render_template('errors/403.html')
 
-    # Logged in
-    # flash("Welcome to Labor Status forms. Delete this if flash messaging is working")
-    #forms_by_supervisees = LaborStatusForm.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user.username ).distinct()
+###### This is the start of grabbing the data from the labor status form and displaying it on the Supervisor portal
+    # Get all the forms from the supervisor form that has Scott as the Supervisor and order them by the endDate
+    forms_by_supervisees = LaborStatusForm.select().where(LaborStatusForm.primarySupervisor == current_user.username or LaborStatusForm.secondarySupervisor == current_user.username).order_by(LaborStatusForm.endDate.desc())
 
-    forms_by_supervisees = LaborStatusForm.select(LaborStatusForm.studentSupervisee).where(LaborStatusForm.primarySupervisor == current_user.username or LaborStatusForm.secondarySupervisor == current_user.username).order_by(LaborStatusForm.endDate).distinct()
-
-
-    # print(forms_by_supervisees)
-    # my_form = forms_by_supervisees
-    # forms = my_form.select(LaborStatusForm.studentSupervisee).distinct()
-    # for form in forms:
-    #     print(form)
-    #forms_by_supervisees = forms_by_supervisees.select(LaborStatusForm.studentSupervisee).distinct()
-    # for form in forms_by_supervisees:
-    #     print(form)
     inactive_supervisees = []
     active_supervisees = []
     inactive = []
     active = []
-    for supervisee in forms_by_supervisees:
+    student_processed = False  # This variable dictates whether a student has already been added to the supervisor's portal
+    end_date = None
+
+    for supervisee in forms_by_supervisees: # go through all the form in the forms_by_supervisees
         try:
-            tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID)
-            #print(LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee))
-            active = forms_by_supervisees.select().where(forms_by_supervisees.studentSupervisee == supervisee.studentSupervisee)
-            for form in active:
-                print(form)
-                active_supervisees.append(active)
-        except:
-            #print(LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee))
-            inactive = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == supervisee.studentSupervisee)
+            tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
+            for student in active_supervisees:
+                if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
+                    student_processed = True
+            if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
+                active_supervisees.append(supervisee)
+            else:
+                student_processed = False  # Resets state machine.
+        except: # if they are inactive
+            for student in inactive_supervisees:
+                if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
+                    student_processed = True
+            if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
+                inactive_supervisees.append(supervisee)
+            else:
+                student_processed = False  # Resets state machine.
 
-            for form in inactive:
-                inactive_supervisees.append(form)
-
-
-
+        #print(inactive_supervisees)
 
 
     today = date.today()
