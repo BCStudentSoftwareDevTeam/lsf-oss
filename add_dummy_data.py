@@ -80,34 +80,33 @@ print("students(LSF) added")
 #############################
 # Positions (TRACY)
 #############################
-
 from app.models.Tracy.stuposn import STUPOSN
 
 positions = [
-                {
-                "POSN_CODE": "S61406, S61407",
-                "POSN_TITLE": "Student Programmer",
-                "WLS": "1 - Entry Level",
-                "ORG" : "2114",
-                "ACCOUNT":"123456",
-                "DEPT_NAME":"Computer Science"
-                },
-                {
-                "POSN_CODE": "S61419",
-                "POSN_TITLE": "TA",
-                "WLS": "1 - Entry Level",
-                "ORG" : "2115",
-                "ACCOUNT":"123455",
-                "DEPT_NAME":"Mathematics"
-                },
-                {
-                "POSN_CODE": "S61420",
-                "POSN_TITLE": "TA",
-                "WLS": "1 - Entry Level",
-                "ORG" : "2115",
-                "ACCOUNT":"123455",
-                "DEPT_NAME":"Biology"
-                }
+            {
+            "POSN_CODE": "S61406, S61407",
+            "POSN_TITLE": "Student Programmer",
+            "WLS": "1 - Entry Level",
+            "ORG" : "2114",
+            "ACCOUNT":"123456",
+            "DEPT_NAME":"Computer Science"
+            },
+            {
+            "POSN_CODE": "S61419",
+            "POSN_TITLE": "TA",
+            "WLS": "1 - Entry Level",
+            "ORG" : "2115",
+            "ACCOUNT":"123455",
+            "DEPT_NAME":"Mathematics"
+            },
+            {
+            "POSN_CODE": "S61420",
+            "POSN_TITLE": "TA",
+            "WLS": "1 - Entry Level",
+            "ORG" : "2115",
+            "ACCOUNT":"123455",
+            "DEPT_NAME":"Biology"
+            }
 ]
 STUPOSN.insert_many(positions).on_conflict_replace().execute()
 
@@ -128,7 +127,31 @@ staffs = [
             "CPO":"6300",
             "ORG":"Berea College",
             "DEPT_NAME": "CS"
+            },
+
+            {
+            "PIDM":"pearcej",
+            "ID": "B12365892",
+            "FIRST_NAME":"Jan",
+            "LAST_NAME" : "Pearce",
+            "EMAIL"  :"pearcej@berea.edu",
+            "CPO":"6301",
+            "ORG":"Berea College",
+            "DEPT_NAME": "CS"
+            },
+
+            {
+            "PIDM":"nakazawam",
+            "ID": "B1236236",
+            "FIRST_NAME":"Mario",
+            "LAST_NAME" : "Nakazawa",
+            "EMAIL"  :"nakazawam@berea.edu",
+            "CPO":"6300",
+            "ORG":"Berea College",
+            "DEPT_NAME": "CS"
             }
+
+
         ]
 STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
 print("staff added")
@@ -137,42 +160,75 @@ print("staff added")
 # Terms
 #############################
 from app.models.term import Term
+import datetime
+from datetime import date
+
 terms = [
     {
-    "termCode":"201612",
-    "termName" :"Spring",
-    "termStart":"2017-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2017-05-10",
+    "termCode":"201901",  # termcode for ThanksGiving
+    "termName" :"Thanksgiving 2019",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
     "termState":"open",
     },
     {
-    "termCode":"201711",
-    "termName" :"Fall",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
+    "termCode":"201911",
+    "termName" :"Fall 2019",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+
+    {
+    "termCode":"201912",
+    "termName" :"Spring 2020",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
     "termState":"open",
     },
     {
-    "termCode":"201813",
-    "termName" :"Summer",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
+    "termCode":"201901",
+    "termName" :"Thanksgiving 2020",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"201900",
+    "termName" :"AY 2019-2020",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"201902",
+    "termName" :"Christmas 2019",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"201903",
+    "termName" :"Spring Break 2020",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
     "termState":"open",
     },
     {
     "termCode":"201912",
-    "termName" :"Summer",
-    "termStart":"2018-01-10", #YYYY-MM-DD format.#FIXME: I know this isnt right but idk what the term code above reflects. (ay, spring, etc)
-    "termEnd":"2018-05-10",
-    "termState":"closed",
-    },
-    {
-    "termCode":"201901",  # termcode for ThanksGiving
-    "termName" :"ThanksGiving",
-    "termStart":"2018-01-10",
-    "termEnd":"2018-05-10",
+    "termName" :"Spring 2020",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
     "termState":"open",
     },
+    {
+    "termCode":"201913",
+    "termName" :"Summer 2020",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    }
+
 ]
 Term.insert_many(terms).on_conflict_replace().execute()
 
@@ -193,7 +249,30 @@ staffs = [
             "CPO":"6300",
             "ORG":"Berea College",
             "DEPT_NAME": "CS"
+            },
+
+            {
+            "PIDM":"pearcej",
+            "ID": "B12365892",
+            "FIRST_NAME":"Jan",
+            "LAST_NAME" : "Pearce",
+            "EMAIL"  :"pearcej@berea.edu",
+            "CPO":"6301",
+            "ORG":"Berea College",
+            "DEPT_NAME": "CS"
+            },
+
+            {
+            "PIDM":"nakazawam",
+            "ID": "B1236236",
+            "FIRST_NAME":"Mario",
+            "LAST_NAME" : "Nakazawa",
+            "EMAIL"  :"nakazawam@berea.edu",
+            "CPO":"6300",
+            "ORG":"Berea College",
+            "DEPT_NAME": "CS"
             }
+
         ]
 STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
 
@@ -236,153 +315,68 @@ print("status added")
 #############################
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.student import Student
-#primary/secondary supervisors are foreign keys to user table
+from app.models.department import Department
+from app.models.term import Term
+import datetime
+from datetime import date
 lsfs = [
-            {
-            "laborStatusFormID": 1,
-            "termCode": Term.get(Term.termCode == "201612"),
-            "studentSupervisee": Student.get(Student.ID == "B00730361"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-            "jobType": "Primary",
-            "WLS":"1",
-            "POSN_TITLE":"Dummy boi",
-            "POSN_CODE":"S12345",
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
-            {
-            "laborStatusFormID": 2,
-            "termCode": Term.get(Term.termCode == "201612"),
-            "studentSupervisee": Student.get(Student.ID == "B00730361"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-            "jobType": "secondary",
-            "WLS":"2",
-            "POSN_TITLE":"CS TA",
-            "POSN_CODE":"S61419",
-            "weeklyHours": 5,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
-            {
-            "laborStatusFormID": 3,
-            "termCode": Term.get(Term.termCode == "201813"),
-            "studentSupervisee": Student.get(Student.ID == "B00730361"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-            "jobType": "",
-            "WLS":"2",
-            "POSN_TITLE":"CS TA",
-            "POSN_CODE":"S61419",
-            "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
-            {
-            "laborStatusFormID": 4,
-            "termCode":"201901",    #ThanksGiving break code
-            "studentSupervisee": Student.get(Student.ID == "B00730361"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-            "jobType": "",
-            "WLS":"2",
-            "POSN_TITLE":"Teaching Assistant",
-            "POSN_CODE":"S61419",
-            "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
-            {
-            "laborStatusFormID": 1,
-            "termCode": Term.get(Term.termCode == "201612"),
-            "studentSupervisee": Student.get(Student.ID == "B00730361"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-            "jobType": "Primary",
-            "WLS":"1",
-            "POSN_TITLE":"Dummy boi",
-            "POSN_CODE":"S12345",
-            "startDate": "1/2/3",
-            "endDate": "3/8/1"
-            },
-            {
-            "laborStatusFormID": 2,
-            "termCode": Term.get(Term.termCode == "201901"),
-            "studentSupervisee": Student.get(Student.ID == "B00730362"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-            "jobType": "secondary",
-            "WLS":"2",
-            "POSN_TITLE":"CS TAs",
-            "POSN_CODE":"S61419",
-            "weeklyHours": 5,
-            "startDate": "1/2/3",
-            "endDate": "3/3/1"
-            },
-            {
-            "laborStatusFormID": 3,
-            "termCode": Term.get(Term.termCode == "201813"),
-            "studentSupervisee": Student.get(Student.ID == "B00730363"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-            "jobType": "",
-            "WLS":"2",
-            "POSN_TITLE":"CS TA",
-            "POSN_CODE":"S61419",
-            "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
-            {
-            "laborStatusFormID": 4,
-            "termCode": Term.get(Term.termCode == "201912"),
-            "studentSupervisee": Student.get(Student.ID == "B00730363"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-            "jobType": "",
-            "WLS":"2",
-            "POSN_TITLE":"CS TA",
-            "POSN_CODE":"S61419",
-            "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/6/1"
-            },
-            {
-            "laborStatusFormID": 5,
-            "termCode": Term.get(Term.termCode == "201901"),
-            "studentSupervisee": Student.get(Student.ID == "B00730363"),
-            "primarySupervisor": User.get(User.username == "heggens"),
-            "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-            "jobType": "",
-            "WLS":"2",
-            "POSN_TITLE":"CS TA",
-            "POSN_CODE":"S61419",
-            "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
-            {
-            "laborStatusFormID": 6,
-            "termCode": Term.get(Term.termCode == "201901"),
-            "studentSupervisee": Student.get(Student.ID == "B00730363"),
-            "primarySupervisor": User.get(User.username == "pearcej"),
-            "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-            "secondarySupervisor": User.get(User.username == "heggens"),
-            "jobType": "",
-            "WLS":"2",
-            "POSN_TITLE":"CS TA",
-            "POSN_CODE":"S61419",
-            "contractHours": 120,
-            "startDate": "1/2/3",
-            "endDate": "3/2/1"
-            },
 
+    {
+    "termCode": Term.get(Term.termCode == "201911"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "supervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "jobType": "Primary",
+    "WLS":"1",
+    "POSN_TITLE":"Dummy boi",
+    "POSN_CODE":"S61406",
+    "startDate": datetime.date(1,2,3),
+    "endDate": datetime.date(3,2,1)
+    },
+    {
+    "termCode": Term.get(Term.termCode == "201912"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "supervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+    "jobType": "secondary",
+    "WLS":"2",
+    "POSN_TITLE":"CS TA",
+    "POSN_CODE":"S61419",
+    "weeklyHours": 5,
+    "startDate": datetime.date(1,2,3),
+    "endDate": datetime.date(3,2,1)
+    },
+    {
+    "termCode": Term.get(Term.termCode == "201913"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "supervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+    "jobType": "",
+    "WLS":"2",
+    "POSN_TITLE":"CS TA",
+    "POSN_CODE":"S61419",
+    "contractHours": 120,
+    "startDate": datetime.date(1,2,3),
+    "endDate": datetime.date(3,2,1)
+    },
+    {
+    "termCode":"201901",    #ThanksGiving break code
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
+    "supervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+    "jobType": "",
+    "WLS":"2",
+    "POSN_TITLE":"Teaching Assistant",
+    "POSN_CODE":"S61419",
+    "contractHours": 120,
+    "startDate": datetime.date(1,2,3),
+    "endDate": datetime.date(3,2,1)
+    },
 
-        ]
+]
+
 LaborStatusForm.insert_many(lsfs).on_conflict_replace().execute()
 print("LSF added")
-
 #############################
 # Labor Release Forms
 #############################
@@ -397,7 +391,6 @@ lrfs=[
 ]
 LaborReleaseForm.insert_many(lrfs).on_conflict_replace().execute()
 print("Lrf added")
-
 #############################
 # Modified Form
 #############################
@@ -407,7 +400,7 @@ modforms = [
                 "modifiedFormID":1,
                 "fieldModified":"Term",
                 "oldValue":"201612",
-                "newValue":"201901",
+                "newValue":"201712",
                 "effectiveDate":"1/2/3"
                 }
             ]
@@ -417,7 +410,7 @@ print("modforms added")
 #############################
 # Overload form
 #############################
-#insert dummy overload case here
+
 
 #############################
 # History Type
@@ -441,23 +434,24 @@ print("history types added")
 #############################
 #insert form history cases here
 from app.models.formHistory import FormHistory
+import datetime
 
 
-
-fh = [ {
-        "formHistoryID": 1,
-        "formID": LaborStatusForm.get(1),
-        "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
-        "releaseForm": None,
-        "modifiedForm": None,
-        "overloadForm": None,
-        "createdBy": User.get(User.username == "heggens"),
-        "createdDate": datetime(2019, 5, 17),
-        "reviewedDate": None,
-        "reviewedBy": None,
-        "status": Status.get(Status.statusName == "Approved"),
-        "rejectReason": None
-       },
+fh = [
+ # {
+ #        "formHistoryID": 1,
+ #        "formID": LaborStatusForm.get(1),
+ #        "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+ #        "releaseForm": None,
+ #        "modifiedForm": None,
+ #        "overloadForm": None,
+ #        "createdBy": User.get(User.username == "heggens"),
+ #        "createdDate": datetime.date(2019, 5, 17),
+ #        "reviewedDate": None,
+ #        "reviewedBy": None,
+ #        "status": Status.get(Status.statusName == "Approved"),
+ #        "rejectReason": None
+ #       },
     {
         "formHistoryID": 2,
         "formID": LaborStatusForm.get(2),
@@ -466,7 +460,7 @@ fh = [ {
         "modifiedForm": None,
         "overloadForm": None,
         "createdBy": User.get(User.username == "heggens"),
-        "createdDate": datetime(2019, 5, 17),
+        "createdDate": datetime.date(2019, 5, 17),
         "reviewedDate": None,
         "reviewedBy": None,
         "status": Status.get(Status.statusName == "Approved"),
@@ -480,7 +474,7 @@ fh = [ {
         "modifiedForm": None,
         "overloadForm": None,
         "createdBy": User.get(User.username == "heggens"),
-        "createdDate": datetime(2019, 5, 17),
+        "createdDate": datetime.date(2019, 5, 17),
         "reviewedDate": None,
         "reviewedBy": None,
         "status": Status.get(Status.statusName == "Approved"),
@@ -494,7 +488,7 @@ fh = [ {
         "modifiedForm": None,
         "overloadForm": None,
         "createdBy": User.get(User.username == "heggens"),
-        "createdDate": datetime(2019, 5, 17),
+        "createdDate": datetime.date(2019, 5, 17),
         "reviewedDate": None,
         "reviewedBy": None,
         "status": Status.get(Status.statusName == "Approved"),
@@ -520,6 +514,5 @@ emailtemps= [
             ]
 EmailTemplate.insert_many(emailtemps).on_conflict_replace().execute()
 print("emailtemplates added")
-
 
 print("Dummy data added")
