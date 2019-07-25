@@ -1,5 +1,5 @@
 function hello(laborStatusKey) {
-
+  console.log(laborStatusKey);
   $.ajax({
     type: "GET",
     url: '/laborHistory/modal/' + laborStatusKey,
