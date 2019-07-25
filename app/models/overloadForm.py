@@ -4,7 +4,8 @@ from app.models.user import User
 from app.models.status import Status
 
 class OverloadForm(baseModel):
-    overloadReason          = CharField(primary_key=True)#Not sure if primary key
+    overloadFormID          = PrimaryKeyField()
+    overloadReason          = CharField()
     financialAidApproved    = ForeignKeyField(Status, null=True, on_delete="cascade") #Foreign key to status
     financialAidApprover    = ForeignKeyField(User, null=True, on_delete="cascade")#Foreign key to USERS
     financialAidReviewDate  = DateField(null=True)

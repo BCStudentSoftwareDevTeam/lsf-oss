@@ -31,7 +31,6 @@ print("users added")
 #############################
 from app.models.Tracy.studata import STUDATA
 
-
 studentsTracy = [
                 {
                 "PIDM":"1",
@@ -48,7 +47,6 @@ studentsTracy = [
                 "LAST_POSN":"Media Technician",
                 "LAST_SUP_PIDM":"7"
                 }
-
 ]
 STUDATA.insert_many(studentsTracy).on_conflict_replace().execute()
 print("students(TRACY) added")
@@ -84,9 +82,9 @@ from app.models.Tracy.stuposn import STUPOSN
 
 positions = [
             {
-            "POSN_CODE": "S61406, S61407",
+            "POSN_CODE": "S61407",
             "POSN_TITLE": "Student Programmer",
-            "WLS": "1 - Entry Level",
+            "WLS": "1",
             "ORG" : "2114",
             "ACCOUNT":"123456",
             "DEPT_NAME":"Computer Science"
@@ -94,7 +92,7 @@ positions = [
             {
             "POSN_CODE": "S61419",
             "POSN_TITLE": "TA",
-            "WLS": "1 - Entry Level",
+            "WLS": "1",
             "ORG" : "2115",
             "ACCOUNT":"123455",
             "DEPT_NAME":"Mathematics"
@@ -102,7 +100,7 @@ positions = [
             {
             "POSN_CODE": "S61420",
             "POSN_TITLE": "TA",
-            "WLS": "1 - Entry Level",
+            "WLS": "1",
             "ORG" : "2115",
             "ACCOUNT":"123455",
             "DEPT_NAME":"Biology"
@@ -281,13 +279,13 @@ STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
 #############################
 from app.models.department import Department
 depts = [
-            {"departmentID":1,
+            {
             "DEPT_NAME":"Computer Science",
             "ACCOUNT":"1234",
             "ORG":"4321",
             "departmentCompliance":"True"
             },
-            {"departmentID":2,
+            {
             "DEPT_NAME":"Mathematics",
             "ACCOUNT":"5678",
             "ORG":"8765",
@@ -330,6 +328,8 @@ lsfs = [
     "WLS":"1",
     "POSN_TITLE":"Dummy boi",
     "POSN_CODE":"S61406",
+    "weeklyHours": 5,
+    "contractHours": None,
     "startDate": datetime.date(1,2,3),
     "endDate": datetime.date(3,2,1)
     },
@@ -343,6 +343,7 @@ lsfs = [
     "POSN_TITLE":"CS TA",
     "POSN_CODE":"S61419",
     "weeklyHours": 5,
+    "contractHours": None,
     "startDate": datetime.date(1,2,3),
     "endDate": datetime.date(3,2,1)
     },
@@ -355,6 +356,7 @@ lsfs = [
     "WLS":"2",
     "POSN_TITLE":"CS TA",
     "POSN_CODE":"S61419",
+    "weeklyHours": None,
     "contractHours": 120,
     "startDate": datetime.date(1,2,3),
     "endDate": datetime.date(3,2,1)
@@ -368,6 +370,7 @@ lsfs = [
     "WLS":"2",
     "POSN_TITLE":"Teaching Assistant",
     "POSN_CODE":"S61419",
+    "weeklyHours": None,
     "contractHours": 120,
     "startDate": datetime.date(1,2,3),
     "endDate": datetime.date(3,2,1)
@@ -376,6 +379,9 @@ lsfs = [
 ]
 
 LaborStatusForm.insert_many(lsfs).on_conflict_replace().execute()
+# ls = LaborStatusForm.get(LaborStatusForm.studentSupervisee == "B00730361")
+# ls.contractHours = 120
+# ls.save()
 print("LSF added")
 #############################
 # Labor Release Forms
@@ -383,7 +389,6 @@ print("LSF added")
 from app.models.laborReleaseForm import LaborReleaseForm
 lrfs=[
     {
-        "laborReleaseFormID":1,
         "conditionAtRelease":"Satisfactory",
         "releaseDate":"1/2/3",
         "reasonForRelease":"Taking a leave"
@@ -397,7 +402,6 @@ print("Lrf added")
 from app.models.modifiedForm import ModifiedForm
 modforms = [
                 {
-                "modifiedFormID":1,
                 "fieldModified":"Term",
                 "oldValue":"201612",
                 "newValue":"201712",
@@ -437,63 +441,59 @@ from app.models.formHistory import FormHistory
 import datetime
 
 
-fh = [
- # {
- #        "formHistoryID": 1,
- #        "formID": LaborStatusForm.get(1),
- #        "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
- #        "releaseForm": None,
- #        "modifiedForm": None,
- #        "overloadForm": None,
- #        "createdBy": User.get(User.username == "heggens"),
- #        "createdDate": datetime.date(2019, 5, 17),
- #        "reviewedDate": None,
- #        "reviewedBy": None,
- #        "status": Status.get(Status.statusName == "Approved"),
- #        "rejectReason": None
- #       },
-    {
-        "formHistoryID": 2,
-        "formID": LaborStatusForm.get(2),
-        "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
-        "releaseForm": None,
-        "modifiedForm": None,
-        "overloadForm": None,
-        "createdBy": User.get(User.username == "heggens"),
-        "createdDate": datetime.date(2019, 5, 17),
-        "reviewedDate": None,
-        "reviewedBy": None,
-        "status": Status.get(Status.statusName == "Approved"),
-        "rejectReason": None
-       },
-    {
-        "formHistoryID": 3,
-        "formID": LaborStatusForm.get(3),
-        "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
-        "releaseForm": None,
-        "modifiedForm": None,
-        "overloadForm": None,
-        "createdBy": User.get(User.username == "heggens"),
-        "createdDate": datetime.date(2019, 5, 17),
-        "reviewedDate": None,
-        "reviewedBy": None,
-        "status": Status.get(Status.statusName == "Approved"),
-        "rejectReason": None
-       },
-    {
-        "formHistoryID": 4,
-        "formID": LaborStatusForm.get(4),
-        "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
-        "releaseForm": None,
-        "modifiedForm": None,
-        "overloadForm": None,
-        "createdBy": User.get(User.username == "heggens"),
-        "createdDate": datetime.date(2019, 5, 17),
-        "reviewedDate": None,
-        "reviewedBy": None,
-        "status": Status.get(Status.statusName == "Approved"),
-        "rejectReason": None
-       }
+
+fh = [  {
+            "formID": LaborStatusForm.get(LaborStatusForm.studentSupervisee == "B00730361"),
+            "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+            "releaseForm": None,
+            "modifiedForm": None,
+            "overloadForm": None,
+            "createdBy": User.get(User.username == "heggens"),
+            "createdDate": datetime.date(2019, 5, 17),
+            "reviewedDate": None,
+            "reviewedBy": None,
+            "status": Status.get(Status.statusName == "Approved"),
+            "rejectReason": None
+        },
+        {
+            "formID": LaborStatusForm.get(LaborStatusForm.studentSupervisee == "B00730361"),
+            "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+            "releaseForm": None,
+            "modifiedForm": None,
+            "overloadForm": None,
+            "createdBy": User.get(User.username == "heggens"),
+            "createdDate": datetime.date(2019, 5, 17),
+            "reviewedDate": None,
+            "reviewedBy": None,
+            "status": Status.get(Status.statusName == "Approved"),
+            "rejectReason": None
+           },
+        {
+            "formID": LaborStatusForm.get(LaborStatusForm.studentSupervisee == "B00730361"),
+            "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+            "releaseForm": None,
+            "modifiedForm": None,
+            "overloadForm": None,
+            "createdBy": User.get(User.username == "heggens"),
+            "createdDate": datetime.date(2019, 5, 17),
+            "reviewedDate": None,
+            "reviewedBy": None,
+            "status": Status.get(Status.statusName == "Approved"),
+            "rejectReason": None
+           },
+        {
+            "formID": LaborStatusForm.get(LaborStatusForm.studentSupervisee == "B00730361"),
+            "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+            "releaseForm": None,
+            "modifiedForm": None,
+            "overloadForm": None,
+            "createdBy": User.get(User.username == "heggens"),
+            "createdDate": datetime.date(2019, 5, 17),
+            "reviewedDate": None,
+            "reviewedBy": None,
+            "status": Status.get(Status.statusName == "Approved"),
+            "rejectReason": None
+           }
     ]
 
 FormHistory.insert_many(fh).on_conflict_replace().execute()
@@ -505,7 +505,6 @@ print("Form history added")
 from app.models.emailTemplate import EmailTemplate
 emailtemps= [
                 {
-                "emailTemplateID":"1",
                 "purpose":"Labor Status Form Received",
                 "subject":"Heres a subject",
                 "body":"body yo",

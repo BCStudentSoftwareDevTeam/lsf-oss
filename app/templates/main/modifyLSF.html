@@ -106,7 +106,7 @@
                           data-live-search="true">
               <option title="{{prefillhours}}" value="{{prefillhours}}">{{prefillhours}}</option>
          </select>
-         <input hidden class = "oldValue"  id= "{{prefillhours}}" value="{{prefillhours}}">  </input>
+         <input hidden class = "oldValue"  id= "oldHours" value="{{prefillhours}}">  </input>
        </div>
      </div>
 
@@ -123,8 +123,8 @@
      <div class="form-group" >
        <label for="Notes">Notes:</label>
        <div>
-         <textarea name="notes" rows="9" cols="73" id="Notes" class = "newValue">{{prefillnotes}}</textarea>
-          <input hidden class = "oldValue"  id= "{{prefillnotes}}" value="{{prefillnotes}}">  </input>
+         <textarea name="notes" rows="9" cols="73" id="Notes" class = "newValue" value="{{prefillnotes}}">{{prefillnotes}}</textarea>
+          <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}">  </input>
        </div>
      </div>
   </div>
@@ -135,7 +135,7 @@
         <button type="cancel" class="btn btn-danger">Cancel</button>
       </div>
       <div class="submitbutton">
-        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal" onclick = constructFieldsModifiedDictionary() >Submit Changes</button>
+        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal" onclick = buttonListener() >Submit Changes</button>
       </div>
     </div>
 

@@ -2,96 +2,31 @@ $("#datetimepicker0").datepicker(); //Console says this is a type error but it s
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
   });
-
-function buildFieldList(){
-  //builds fields for matching with appropriate values
-  var fieldList = ["Supervisor","Position","WLS","JobType","Hours","Notes"]
-  // console.log("here's your fields");
-  // console.log(fieldList);
-  return fieldList
-}
-
-function pullOldValues(){
-  //Pull old values from hidden tags in html
+var finalDict = {};
+function buttonListener () {/////////YO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
-  // console.log("Here's the old values:");
-  // console.log(oldValue[1]);
-  var listOldValues = []
-  for (var i=0; i < oldValue.length; i++) {
-    var actualOldValues = oldValue[i].value;
-    //console.log(actualOldValues);
-    listOldValues.push(actualOldValues);
-  }
-  //console.log(listOldValues);
-  return listOldValues
-}
-
-function pullNewValues(){
-  //pulls new values from newValue class in HTML
   var newValue = $("#modifyLSF").find(".newValue");
-  var listNewValues = []
-  for (var i=1; i < newValue.length; i=i+2) {
-     actualNewValues = $(newValue[i]).children("option:selected").val();
-     //console.log(actualNewValues);
-     listNewValues.push(actualNewValues);
-   }
-   //console.log(listNewValues);
-   var newNoteValue = document.getElementById("Notes").value;
-   listNewValues.push(newNoteValue);
-   //console.log(listNewValues);
-   return listNewValues
-}
-function buildEffectiveDateList(){
-  //adds effective date to a list of 6 elements for matching up with each separate key in the final Dictionary
-  var effectiveDateList=[]
-  var jsDate = $('#datetimepicker0').datepicker('getDate');
-  if (jsDate !== null) { // if any date selected in datepicker
-      jsDate instanceof Date; // -> true
-      jsDate.getDate();
-      jsDate.getMonth();
-      jsDate.getFullYear();
+  for (var i=0; i < newValue.length-2; i=i+2) {
+    // console.log(i/2);
+    // console.log(oldValue[i/2].value);
+    // console.log(newValue[i+1].value);
+      newVal = $(newValue[i+1]).val();
+    // } catch(err) {
+    //   newVal = document.getElementById("Notes").value;
+    // }
+    console.log(newVal)
+    if (oldValue[i/2].value != newVal) {
+      finalDict[newValue[i+1].id] = {"oldValue": oldValue[i/2].value,
+                                     "newValue": newVal,
+                                     "date": new Date()
+                                    }
+      //   console.log(oldValue[i/2].value)
+      //   console.log(newValue[i+1])
+    }
+    // TODO: HANDLE NOTES AND DATES
+    console.log(finalDict)
   }
-  console.log(jsDate);
-  effectiveDateList=[jsDate,jsDate,jsDate,jsDate,jsDate,jsDate]; //since the same date is effectivedate for each field
 }
-function constructFieldsModifiedDictionary(fieldList, listOldValues, listNewValues){
-  ////TODO: ADD EFFECTIVE DATE to params, the list of lists, the dictionary...../////
-//takes old values and new values and comares them; if theyre new, add it to the dictionary
-//dictionary key:field modified value: oldvalue, newvalue, effectiveDate
-  //buildFieldList();
-  var fieldList = buildFieldList();
-  var listOldValues = pullOldValues();
-  var listNewValues = pullNewValues();
-
-  var fieldsModifiedDictionary = {} ; //field, oldvalue, new value, effective date
-  var bigOleList = [fieldList,listOldValues,listNewValues]
-  //need to parse through list of list, map eachindex's element to each other
-  //[0]:[0],[0] [1]:[1],[1] [field]:[old][new]
-
-  var index1 = bigOleList.indexOf(listOldValues);
-  var index2 = listOldValues.indexOf("SHEGGGEENNNNN");
-  console.log(index1)
-  console.log(index2)
-
-  for (var i=0; i < bigOleList.length; i++) {
-
-      console.log(bigOleList[i]);
-  }
-
-  //fieldsModifiedDictionary.fieldList = [listOldValues,listNewValues];
-  console.log(fieldsModifiedDictionary);
-  // for i in dictionary{
-  //     if (oldValue == newValue){ //if the value has not changed
-  //       //pass aka do nothing aka this commented out line
-  //     }
-  //     else { //add to fieldsModifiedDictionary
-  //
-  //     }
-  //   }
-//  }
-}
-
-
 
 // function updateFormModifiedTable(fieldsModifiedDictionary){
 //   //saves the following to modified form table:
