@@ -8,7 +8,7 @@ from app.models.user import User
 from app.models.historyType import HistoryType
 
 class FormHistory(baseModel):
-    formHistoryID       = IntegerField(primary_key=True)
+    formHistoryID       = PrimaryKeyField()
     formID              = ForeignKeyField(LaborStatusForm, on_delete="cascade")               # foreign key to lsf
     historyType         = ForeignKeyField(HistoryType)                                        # foreign key to historytype
     releaseForm         = ForeignKeyField(LaborReleaseForm, null=True, on_delete="SET NULL")  # if its a release form
