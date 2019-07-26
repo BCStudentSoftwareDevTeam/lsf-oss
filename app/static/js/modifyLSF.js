@@ -6,7 +6,8 @@ var finalDict = {};
 function buttonListener () {/////////YO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
   var newValue = $("#modifyLSF").find(".newValue");
-  var effectiveDate = $("#datetimepicker0").datepicker("getDate");
+  // var effectiveDate = $("#datetimepicker0").datepicker("getDate");
+  var effectiveDate = new Date()
   console.log(effectiveDate);
   for (var i=0; i < newValue.length-2; i=i+2) {
     // console.log(i/2);
@@ -17,7 +18,7 @@ function buttonListener () {/////////YO THIS IS VERY FRAGILE!!!! Notes MUST be l
     //   newVal = document.getElementById("Notes").value;
     // }
     console.log(newVal)
-    if (oldValue[i/2].value != newVal) {
+    if (oldValue[i/2].value != newVal) {     // TODO: HANDLE NOTES VALUE AND DATES
       finalDict[newValue[i+1].id] = {"oldValue": oldValue[i/2].value,
                                      "newValue": newVal,
                                      "date": effectiveDate.value
@@ -25,7 +26,6 @@ function buttonListener () {/////////YO THIS IS VERY FRAGILE!!!! Notes MUST be l
       //   console.log(oldValue[i/2].value)
       //   console.log(newValue[i+1])
     }
-    // TODO: HANDLE NOTES AND DATES
     console.log(finalDict)
   }
 }
