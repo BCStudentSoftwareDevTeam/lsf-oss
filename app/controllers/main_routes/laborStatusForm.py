@@ -13,8 +13,7 @@ from flask import json, jsonify
 from flask import request
 from datetime import datetime
 from flask import flash
-​
-​
+
 @main_bp.route('/laborstatusform', methods=['GET'])
 def laborStatusForm():
     current_user = require_login()
@@ -34,7 +33,7 @@ def laborStatusForm():
                             terms = terms,
                             staffs = staffs,
                             departments = departments)
-​
+
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
     print("i'm here 1")
@@ -76,7 +75,7 @@ def userInsert():
         print("im here last")
         print(e)
         return jsonify({"Success": False})
-​
+
 @main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])
 def getdates(termcode):
     dates = Term.select().where(Term.termCode == termcode)
@@ -86,7 +85,7 @@ def getdates(termcode):
         end  = date.termEnd
         dates_dict[date.termCode] = {"Start Date":datetime.strftime(start, "%m-%d-%Y")  , "End Date": datetime.strftime(end, "%m-%d-%Y")}
     return json.dumps(dates_dict)
-​
+
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
 def getPositions(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
@@ -94,7 +93,7 @@ def getPositions(department):
     for position in positions:
         position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE}
     return json.dumps(position_dict)
-​
+
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
 def getprimarysupervisor(termCode, student):
     primary_supervisors = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.jobType == "Primary", LaborStatusForm.studentSupervisee == student)
