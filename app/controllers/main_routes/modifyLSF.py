@@ -19,17 +19,17 @@ def modifyLSF():
 
     #Step 2: get data from said form
     #FIX ALL OF THESE
-    prefillstudent = "Briiiiiiiiiiiiiiiiiii"
-    prefillsupervisor = "SHEGGGEENNNNN"
-    prefilldepartment = "CEEEE ESSSSSS"
-    prefillposition = "NERD"
-    prefillwls = 0
+    prefillstudent = "Willy Wonka"
+    prefillsupervisor = "Scott Heggen (sheggen)"
+    prefilldepartment = "Computer Science"
+    prefillposition = "Janitor"
+    prefillwls = "WLS 1"
     prefilljobtype = "Primary"
-    prefillterm = "Forever"
-    prefillhours = "99999999"
+    prefillterm = "AY 2019-2020"
+    prefillhours = "0-5"
     current_time = datetime.now()
     prefilldateneeded = current_time.strftime('%m/%d/%Y')
-    prefillnotes = "She's a bum."
+    prefillnotes = "Kids went missing in his factory... sketchy business...but he's alright i guess"
     #Step 3: send data to front to populate html
     return render_template( 'main/modifyLSF.html',
 				            title=('Modify LSF'),

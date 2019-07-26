@@ -35,8 +35,8 @@
                             id="Supervisor"
                             data-live-search="true">
                 <option title="{{prefillsupervisor}}" value="{{prefillsupervisor}}">{{prefillsupervisor}}</option> <!-- not showing up fam-->
-                <option title="test" value="ahh">???</option>
-                <option title="test2" value="ahh2">!!!</option>
+                <option title="George Lopez" value="George Lopez">George Lopez</option>
+                <option title="Barack Obama" value="Barack Obama">Barack Obama</option>
            </select>
            <input hidden class = "oldValue"  value="{{prefillsupervisor}}" > </input> <!-- stores value of original-->
          </div>
@@ -55,8 +55,8 @@
                             id="Position"
                             data-live-search="true">
                 <option title="{{prefillposition}}" value="{{prefillposition}}">{{prefillposition}}</option>
-                <option title="test3" value="ahh3">???</option>
-                <option title="test4" value="ahh4">!!!</option>
+                <option title="Student Programmer" value="Student Programmer">Student Programmer</option>
+                <option title="Teaching Assistant" value="Teaching Assistant">Teaching Assistant</option>
            </select>
            <input hidden class = "oldValue"  id= "{{prefillposition}}" value="{{prefillposition}}"></input>
          </div>
@@ -70,6 +70,8 @@
                             id="WLS"
                             data-live-search="true">
                 <option title="{{prefillwls}}" value="{{prefillwls}}">{{prefillwls}}</option>
+                <option title="WLS 2" value="WLS 2">WLS 2</option>
+                <option title="WLS 3" value="WLS 3">WLS 3</option>
            </select>
            <input hidden class="oldValue"  id="{{prefillwls}}" value="{{prefillwls}}"></input>
          </div>
@@ -82,8 +84,7 @@
                             id="JobType"
                             data-live-search="true">
                 <option title="{{prefilljobtype}}" value="{{prefilljobtype}}">{{prefilljobtype}}</option>
-                <option title="test" value="ahh"> ???</option>
-                <option title="test2" value="ahh2"> !!!</option>
+                <option title="Secondary" value="Secondary">Secondary</option>
            </select>
            <input hidden class = "oldValue"  id= "{{prefilljobtype}}" value="{{prefilljobtype}}"> </input>
          </div>
@@ -104,7 +105,16 @@
                           class="selectpicker form-control newValue"
                           id="Hours"
                           data-live-search="true">
-              <option title="{{prefillhours}}" value="{{prefillhours}}">{{prefillhours}}</option>
+              {% if JobType == "Secondary" %} <!---Should we make this to where if its secondary, it becomes a text input? (0-5, or 140 contract hours...? talk to LSF team)
+                <option title="0-5" value="0-5">0-5</option> <!---TODOOOOO: Needs to ONLY appear when its a secondary: add if statements !-->
+                <option title="10" value="10">10</option>
+                <option title="12" value="12">12</option>
+                <option title="15" value="15">15</option> <!-- I think thats it...should there be a 20 for overload? ask ela and hila/whoever is doing LSF -->
+              {% else %}
+                <option title="10" value="10">10</option>
+                <option title="12" value="12">12</option>
+                <option title="15" value="15">15</option> <!-- I think thats it...should there be a 20 for overload? ask ela and hila/whoever is doing LSF -->
+              {% endif %}
          </select>
          <input hidden class = "oldValue"  id= "oldHours" value="{{prefillhours}}">  </input>
        </div>
@@ -113,7 +123,8 @@
     <div class="form-group" id= "dateDiv">
     <label for="datetimepicker" class="required-asterisk">Date Needed:</label>
       <div class="input-group date">
-        <input type="text" class="form-control" id="datetimepicker0" placeholder="MM/DD/YYYY" value="{{prefilldateneeded}}"> <!--SHould this be set to today's date on load??"-->
+        <input type="text" class="form-control effectiveDate" id="datetimepicker0" placeholder="MM/DD/YYYY" value="{{prefilldateneeded}}" > <!---i dont think we need this
+                                                                                    Should prefill with todays date though// effective date does not have old/new value comparison-->
         <span class="input-group-addon">
         <span class="glyphicon glyphicon-calendar"></span>
         </span>
