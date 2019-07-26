@@ -14,7 +14,7 @@ table=$("#studentList").DataTable({
 
 // show the sub-sidebar only on this page
 $("div.laborStudentChoice").show();
-$("pastStu").hide();
+
 
 document.getElementById("current").addEventListener("click",function(){
   $(currentStu).show();
@@ -29,6 +29,19 @@ document.getElementById("all").addEventListener("click",function(){
   $(pastStu).show();
 }, false);
 
+// Listen for click on toggle checkbox
+$('#select-all').click(function(event) {
+    if(this.checked) {
+        // Iterate each checkbox
+        $(':checkbox').each(function() {
+            this.checked = true;
+        });
+    } else {
+        $(':checkbox').each(function() {
+            this.checked = false;
+        });
+    }
+});
 
 $('.openBtn').on('click',function(){
     $('.modal-body').load('index.html',function(){

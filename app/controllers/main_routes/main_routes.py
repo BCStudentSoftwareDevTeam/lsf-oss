@@ -2,10 +2,11 @@
 # from flask_login import current_user, login_required
 from flask import flash
 from app.controllers.main_routes import *
+from app.controllers.main_routes.download import ExcelMaker
 from app.login_manager import *
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.Tracy.studata import STUDATA
-from datetime import date
+
 
 
 @main_bp.before_app_request
@@ -50,11 +51,9 @@ def index():
             else:
                 student_processed = False  # Resets state machine.
 
-        #print(inactive_supervisees)
 
-
-    today = date.today()
-    print("Today's date:", today)
+    
+    excel = ExcelMaker(student)
     return render_template( 'main/index.html',
 				    title=('Home'),
                     forms_by_supervisees = forms_by_supervisees,
