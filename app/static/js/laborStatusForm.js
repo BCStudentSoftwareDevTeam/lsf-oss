@@ -119,7 +119,6 @@ function fill_hoursperweek(){
 }
 
 function fillprimarysupervisor(response){
-  $("#term").prop("disabled", "disabled");
   var primary_supervisor = document.getElementById("primary_supervisor")
   if (primary_supervisor){
     $("#primary_supervisor").empty();
@@ -165,6 +164,18 @@ function displayTable() {
 
 }
 
+function loopthroughTD() {
+  // Checks if there is a secondary position in the table.
+  // if one exists, it will prevent Primary supervisor label from hiding.
+  $('#mytable tr td').each(function(){
+      var tablerows = $(this).parent();
+      var thirdTD = tablerows.children().eq(2).html();
+      if (thirdTD == "Secondary"){
+        $("#primary_table").show();
+      }
+});
+}
+
 
 function checkDuplicate() {
     var table = document.getElementById("mytable");
@@ -190,6 +201,7 @@ function checkDuplicate() {
           $("#job_table").show();
           $("#hours_table").show();
           $("#primary_table").hide();
+          loopthroughTD();
           return;
           }
        if ((td0.innerHTML == studentname) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionname)) {
@@ -314,3 +326,7 @@ $('#hours_perweek').change(function(){
   }
 
 });
+
+function disableTerm() {
+  $("#term").prop("disabled", "disabled");
+}

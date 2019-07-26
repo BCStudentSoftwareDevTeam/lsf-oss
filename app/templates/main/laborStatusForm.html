@@ -6,7 +6,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
-<form action ="/laborstatusform/userInsert" method="POST">
+<form class="form">
   <h1 class="col-md-12 col-md-offset-4">Labor Status Form
     <span class="glyphicon glyphicon-bookmark"
       <a  data-toggle="tooltip" data-tooltip="true"
@@ -27,7 +27,7 @@
                 data-live-search='true'
                 title="Supervisor"
                 data-width="320px"
-                >
+                required>
           {% for staff in staffs %}
             <option value="{{staff.PIDM}}">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
           {% endfor %}
@@ -45,7 +45,7 @@
               data-live-search='true'
               title="Department"
               onchange = "getDepartment(this)"
-              data-width="320px" >
+              data-width="320px" required>
         {% for department in departments %}
           <option value="{{department.DEPT_NAME}}">{{department.DEPT_NAME}}</option>
         {% endfor %}
@@ -65,7 +65,7 @@
                     title="Term"
                     onchange = "show_access_level(this)"
                     data-width="320px"
-                    >
+                    required>
             {% for term in terms %}
                 <option value = "{{term.termCode}}">{{term.termName}}</option>
             {% endfor %}
@@ -81,7 +81,7 @@
             <!--Datepicker for start date-->
             <label for="datetimepicker1" class="col-2 col-form-label" id="datepicker">Start Date</label>
               <div class='input-group date' >
-                <input type='text' class="form-control" id='datetimepicker1' name="startdate" placeholder="Start Date" data-width="320px" />
+                <input type='text' class="form-control" id='datetimepicker1' placeholder="Start Date" data-width="320px" required/>
                 <span class="input-group-addon">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -92,7 +92,7 @@
             <!--Datepicker for End date-->
           <label for="datetimepicker2" class="col-2 col-form-label" id="datepicker">End Date</label>
             <div class='input-group date'>
-                <input type='text' class="form-control" id='datetimepicker2' name="enddate" placeholder="End Date" data-width="320px"/>
+                <input type='text' class="form-control" id='datetimepicker2' placeholder="End Date" data-width="320px" required/>
                 <span class="input-group-addon">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -112,10 +112,10 @@
                     data-live-search='true'
                     title="Student"
                     data-width="230px"
-                    onchange= "getstudent(this)"
-                    >
+                    onchange= "getstudent(this); disableTerm()"
+                    required>
               {% for student in students %}
-                  <option value="{{student.PIDM}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
+                  <option value="{{student.PIDM}}">{{student.FIRST_NAME}} {{student.LAST_NAME}} </option>
               {% endfor %}
             </select>
   </div>
@@ -129,7 +129,7 @@
             data-live-search='true'
             title="Position"
             data-width="230px"
-            >
+            required>
     </select>
   </div>
 
@@ -145,7 +145,7 @@
                   placeholder="Contract Hours"
                   min = "1"
                   oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0"
-                  >
+                  required>
           </input>
   </div>
 
@@ -208,7 +208,15 @@
          <h4 class="modal-title">Labor Overload</h4>
        </div>
        <div class="modal-body">
-         <h4><b> Students shoud not work any hours within a secondary assignment until notification of approved Labor Overload. </b> </h4>
+           <p>A labor overload is defined as more than 15 hours of labor per week during the regular academic year and may not be approved retroactively. All approvals are subject to periodic review. Guidlines for Approval:</p>
+
+            <li> Sophomore, junior or senior classification.</li>
+            <li> Not on any form of probation.</li>
+            <li> Enrolled in less than 5 course credits with less than 8 preparations.</li>
+            <li> Have a 2.50 GPA, both cumulative and for the previous full term.</li>
+            <li> The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term.</li>
+            <br />
+          <p>Students shoud not work any hours within a secondary assignment until notification of approved Labor Overload.</p>
        </div>
        <div class="modal-footer">
          <button type="button" class="btn btn-primary" data-dismiss="modal">I accept</button>
@@ -246,7 +254,7 @@
                     id='primary_supervisor'
                     data-live-search='true'
                     title="Primary Supervisor"
-                    data-width="217px">
+                    data-width="217px"  required>
             </select>
         </div>
     </div>
@@ -256,7 +264,7 @@
 
   <table class="table table-striped" id="mytable">
     <thead>
-      <tr>
+      <tr id="myRow">
         <td>Student</td>
         <td>Position</td>
         <td id="job_table">Job Type</td>
@@ -269,13 +277,7 @@
 
 
   <div class="col-md-12 " id="review-button">
-    <button type="button"
-            class="btn btn-primary"
-            data-toggle="modal"
-            data-target="#SubmitModal"
-            onclick="displayTable()"
-            name = "formsubmission"
-            value = "formsubmission">Review</button>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#SubmitModal">Review</button>
     {% include "snips/ReviewForm.html" %}
   </div>
 </form>
@@ -296,7 +298,7 @@
 
 
 
-    {# USE LATER
+    {# USE LATER #}
         <div id="ctl00_MainContent_wls5or6" class="col-xs-10 col-xs-offset-1" hidden>
             <div class="col-xs-5 col-xs-offset-3 ">
             <p class="text-warning">  Student with WLS Level 5 or 6 must have at least a 15 hour contract. These positions require special authorization as specified at <a href="http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS" target="_blank">The Labor Program Website</a></p>
@@ -313,4 +315,4 @@
             </div>
             <br />
         </div>
-     USE LATER #}
+    {# USE LATER #}
