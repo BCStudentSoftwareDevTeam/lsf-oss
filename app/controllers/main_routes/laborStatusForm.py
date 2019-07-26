@@ -20,6 +20,8 @@ def laborStatusForm():
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
     # Logged in
+    wls = STUPOSN.select(STUPOSN.WLS).distinct()
+    posn_code = STUPOSN.select(STUPOSN.POSN_CODE).distinct()
     forms = LaborStatusForm.select()
     students = STUDATA.select().order_by(STUDATA.FIRST_NAME.asc()) # getting student names from TRACY
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
@@ -91,7 +93,7 @@ def getPositions(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
     position_dict = {}
     for position in positions:
-        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE}
+        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE, "Position Code": position.POSN_CODE, "WLS":position.WLS}
     return json.dumps(position_dict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])

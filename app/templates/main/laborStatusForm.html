@@ -6,7 +6,7 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 ​
-<form>
+<form id="laborStatusForm">
   <h1 class="col-md-12 col-md-offset-4">Labor Status Form
     <span class="glyphicon glyphicon-bookmark"
       <a  data-toggle="tooltip" data-tooltip="true"
@@ -128,9 +128,9 @@
             id='position'
             data-live-search='true'
             title="Position"
-            data-width="230px"
-            >
+            data-width="230px">
     </select>
+    <input hidden class = "hiddenVal" id ="hiddenVal" value= "" ></input>
   </div>
 ​
  <!-- Contract hours for breaks -->

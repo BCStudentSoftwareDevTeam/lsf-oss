@@ -65,7 +65,17 @@ function show_access_level(obj){
   }
 }
 
+function get_hidden_values() {
+  var hiddenValue = $("#laborStatusForm").find(".hiddenVal");
+  console.log(hiddenValue[0].value)
+  for (var i=0; i < hiddenValue.length-2; i=i+2) {
+       console.log(oldValue[i/2].value);
+
+}
+}
+
 function fill_positions(response) {
+  console.log(response)
   var selected_positions = document.getElementById("position");
   if (selected_positions){
     $("#position").empty();
@@ -74,6 +84,9 @@ function fill_positions(response) {
       options.text = response[key]["position"].toString();
       options.value = key;
       selected_positions.appendChild(options);
+      var wls = document.getElementById("hiddenVal").value;
+      wls = response[key]["WLS"].toString();
+      console.log(wls)
     }
     $('.selectpicker').selectpicker('refresh');
   }
