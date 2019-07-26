@@ -9,6 +9,8 @@ from app.controllers.errors_routes.handlers import *
 from app.login_manager import require_login
 from flask import json
 from flask import make_response
+import datetime
+from datetime import date
 
 @main_bp.route('/laborHistory/<id>', methods=['GET', 'POST'])
 # @login_required
@@ -60,14 +62,61 @@ def populateModal(statusKey):
     try:
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
-        print("here")
-        print(statusKey)
-        for i in forms:
-            print(i.formID.POSN_TITLE)
-        print("Under here")
+        currentDate = datetime.date.today()
+        # print(currentDate)
+        # print("here")
+        # print(statusKey)
+        buttonState = None
+        # for i in forms:
+        #     #if i.status.statusName == "Approved":
+        #     print(i.historyType.historyTypeName)
+        for form in forms:
+            print("Start here")
+            if form.releaseForm != None:
+                if form.status.statusName == "Approved":
+                    print("Enter here")
+                    print("End here")
+                    buttonState = 0 #Only rehire button
+                    break
+            print("Then here")
+            if form.overloadForm != None:
+                if form.status.statusName == "Pending":
+                    buttonState = 1 #Only withdraw button
+                    break
+            print("Now here")
+            if form.historyType.historyTypeName == "Labor Status Form":
+                print("Made it here")
+                if form.status.statusName == "Pending":
+                    print("I'm pending")
+                    buttonState = 2 #Withdraw and modify buttons
+                    break
+                elif form.status.statusName == "Denied":
+                    print("I'm denied")
+                    buttonState = 0 #Rehire button
+                    break
+                elif form.status.statusName == "Approved":
+                    print("I'm approved")
+                    if form.reviewedDate != None:
+                        print(form.reviewedDate)
+                        print(form.formID.termCode.termEnd)
+                        print(currentDate)
+                        buttonState = 3 #Release, modify, and rehire buttons
+                        break
+                    elif form.reviewedDate == None:
+                        print(form.reviewedDate)
+                        print(form.formID.termCode.termEnd)
+                        print(currentDate)
+                        buttonState = 2 #Only rehire button
+                        break
+        print(buttonState)
+        # Will use later:
+        #if form.formID.termCode.termEnd >= currentDate:
+        #elif form.formID.termCode.termEnd < currentDate:
         resp = make_response(render_template('snips/studentHistoryModal.html',
                                             forms = forms,
-                                            statusForm = statusForm
+                                            statusForm = statusForm,
+                                            currentDate = currentDate,
+                                            buttonState = buttonState
                                             ))
         return (resp)
     except Exception as e:

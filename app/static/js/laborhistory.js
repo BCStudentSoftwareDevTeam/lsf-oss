@@ -5,6 +5,7 @@ function hello(laborStatusKey) {
     url: '/laborHistory/modal/' + laborStatusKey,
     //data: JSON.stringify({"laborStatusFormID": laborStatusKey}),
     success: function(response) {
+      console.log(response);
       $("#holdModal").empty().append(response);
       $("#modal").modal("show");
     }
