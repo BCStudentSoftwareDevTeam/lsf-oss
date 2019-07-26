@@ -1,12 +1,12 @@
 $(document).ready(function(){
     $('[data-tooltip="true"]').tooltip();
 });
-
+​
  var j = jQuery.noConflict();
  j( function() {
      j( "#datetimepicker1, #datetimepicker2" ).datepicker();
  } );
-
+​
 $(document).on('keyup', 'input[name=contracthours]', function () {
    var _this = $(this);
    var min = parseInt(_this.attr('min')) || 1; // if min attribute is not defined, 1 is default
@@ -14,16 +14,33 @@ $(document).on('keyup', 'input[name=contracthours]', function () {
    if(val < min)
        _this.val( min );
 });
-
+​
 $("#ContractHours").hide();
 $("#Hours_PerWeek").hide();
 $("#JopTypes").hide();
 $("#Student").hide();
 $("#Position").hide();
-$("#primary_for_secondary").hide();
 $("#plus").hide();
 $("#mytable").hide();
-
+​
+function fill_dates(response){
+  for (var key in response){
+    $("#datetimepicker1").val(response[key]["Start Date"]);
+    $("#datetimepicker2").val(response[key]["End Date"]);
+  }
+}
+​
+function prefilleddate(obj){
+  var termcode = obj.value
+  $.ajax({
+    url: "/laborstatusform/getDate/" + termcode,
+    dataType: "json",
+    success: function (response){
+       fill_dates(response)
+    }
+  })
+}
+​
 function show_access_level(obj){
   $("#ContractHours").hide();
   $("#Hours_PerWeek").hide();
@@ -31,12 +48,12 @@ function show_access_level(obj){
   $("#Student").hide();
   $("#Position").hide();
   $("#plus").hide();
-  $("#primary_for_secondary").hide();
-
-
+​
+​
+​
   var termcode = obj.value
   var whichterm = termcode.toString().substr(-2);
-  if (whichterm != 11 && whichterm !=12) { // Summer term or any other break period
+  if (whichterm != 11 && whichterm !=12 && whichterm !=00) { // Summer term or any other break period
     $("#Student").show();
     $("#Position").show();
     $("#ContractHours").show();
@@ -50,18 +67,7 @@ function show_access_level(obj){
     $("#plus").show();
   }
 }
-
-function secondary_access(obj){
-  var jobtype = obj.value;
-  if (jobtype == "Secondary"){
-    $("#primary_for_secondary").show();
-  }
-  else{
-    $("#primary_for_secondary").hide();
-  }
-}
-
-
+​
 function fill_positions(response) {
   var selected_positions = document.getElementById("position");
   if (selected_positions){
@@ -75,7 +81,7 @@ function fill_positions(response) {
     $('.selectpicker').selectpicker('refresh');
   }
 }
-
+​
  function getDepartment(object) {
    var department = object.value;
    var url = "/laborstatusform/getPositions/" + department;
@@ -87,7 +93,7 @@ function fill_positions(response) {
          }
        })
  }
-
+​
 function fill_hoursperweek(){
   var selected_hours_perweek = document.getElementById("hours_perweek");
   var jobtype = $("#jobtype").val();
@@ -117,33 +123,45 @@ function fill_hoursperweek(){
     $('.selectpicker').selectpicker('refresh');
   }
 }
-
-function fillprimarysupervisor(response){
-  var primary_supervisor = document.getElementById("primary_supervisor")
-  if (primary_supervisor){
-    $("#primary_supervisor").empty();
-    for (var key in response){
-      var options = document.createElement("option")
-      options.text = response[key]["Primary Supervisor FirstName"].toString() + " " + response[key]["Primary Supervisor LastName"].toString();
-      options.value = key;
-      primary_supervisor.appendChild(options)
-    }
-    $('.selectpicker').selectpicker('refresh')
-  }
-}
-
-function getstudent(obj){
-  var student = obj.value;
-  var term = $("#term").val();
-  var url = "/laborstatusform/getstudents/" + term +"/" +student;
-  $.ajax({
-    url: url,
-    dataType: "json",
-    success: function (response){
-      fillprimarysupervisor(response)
-    }
-  })
-}
+​
+// function checkprimarysupervisor(response){ //check
+//   console.log(response)
+//   console.log("Im here1")
+//   var result = $.isEmptyObject(response);
+//   if (result){
+//     // modal that they can't add cause there is no primary
+//     console.log("Im here2")
+//     noprimarysupervisor()
+//   }
+//   else{
+//     console.log("Im here3")
+//     primarysupervisorexists()
+//   }
+// }
+​
+// function noprimarysupervisor(){
+//   console.log("Im here41")
+//       var jobtype = $("#jobtype").val();
+//       console.log(jobtype)
+//       if ( jobtype == "Secondary"){
+//         $("#plus").click(function() {
+//         $('#NoPrimaryModal').modal('show');
+//     });
+//   }
+// }
+​
+// function primarysupervisorexists(){
+//     console.log("Im here5")
+//     var jobtype = $("#jobtype").val();
+//     console.log(jobtype)
+//     if ( jobtype == "Secondary"){
+//       $("#plus").click(function() {
+//       $('#PrimaryModal').modal('show');
+//     });
+//   }
+// }
+​
+​
 // TABLE
 function displayTable() {
   $("#mytable").show();
@@ -151,32 +169,19 @@ function displayTable() {
   $("#hours_table").hide();
   $("#primary_table").hide();
   $("#contract_table").hide();
-
+​
   var termcode = $('#term').val();
   var whichterm = termcode.toString().substr(-2);
-
-  if (whichterm != 11 && whichterm !=12) {
+  if (whichterm != 11 && whichterm !=12 && whichterm !=00) {
     checkBreaks();
   }
   else {
     checkDuplicate();
   }
-
+​
 }
-
-function loopthroughTD() {
-  // Checks if there is a secondary position in the table.
-  // if one exists, it will prevent Primary supervisor label from hiding.
-  $('#mytable tr td').each(function(){
-      var tablerows = $(this).parent();
-      var thirdTD = tablerows.children().eq(2).html();
-      if (thirdTD == "Secondary"){
-        $("#primary_table").show();
-      }
-});
-}
-
-
+​
+​
 function checkDuplicate() {
     var table = document.getElementById("mytable");
     var student = document.getElementById("student");
@@ -185,14 +190,14 @@ function checkDuplicate() {
     var positionname = position.options[position.selectedIndex].text;
     var jobtype = document.getElementById("jobtype");
     var jobtypename = jobtype.options[jobtype.selectedIndex].text;
-
+​
     for(const tr of table.querySelectorAll("thead tr")) {
        const td0 = tr.querySelector("td:nth-child(1)");
        const td1 = tr.querySelector("td:nth-child(2)");
        const td2 = tr.querySelector("td:nth-child(3)");
        const td3 = tr.querySelector("td:nth-child(4)");
        const td4 = tr.querySelector("td:nth-child(5)");
-
+​
        if ((td0.innerHTML == studentname) && (jobtypename == "Primary")) {
           category = "danger";
           msg = `Match found for ${studentname} and Primary. Insert rejected`;
@@ -200,36 +205,33 @@ function checkDuplicate() {
           $("#flasher").delay(4000).fadeOut();
           $("#job_table").show();
           $("#hours_table").show();
-          $("#primary_table").hide();
-          loopthroughTD();
           return;
           }
        if ((td0.innerHTML == studentname) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionname)) {
-
+​
           category = "danger";
           msg = `Match found for ${studentname} , ${positionname} and Secondary. Insert rejected`;
           $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
           $("#flasher").delay(4000).fadeOut();
           $("#job_table").show();
           $("#hours_table").show();
-          $("#primary_table").show();
           return;
          }
-
+​
        if(!td0 || !td1 || !td2 || !td3 || !td4) { //If we are missing cells skip it
        continue }
   }
     CheckAcademicYear();
 }
-
-
+​
+​
 function checkBreaks() {
   $("#mytable").show();
   $("#job_table").hide();
   $("#hours_table").hide();
   $("#primary_table").hide();
   $("#contract_table").show();
-
+​
   var table = document.getElementById("mytable");
   var student = document.getElementById("student");
   console.log(student)
@@ -253,60 +255,81 @@ function checkBreaks() {
   $("#student").val('default');
   $("#student").selectpicker("refresh");
 }
-
-
+​
+function getprimarysupervisor(){
+  var student = $("#student").val();
+  console.log(student)
+  var term = $("#term").val();
+  var url = "/laborstatusform/getstudents/" + term +"/" +student;
+  $.ajax({
+    url: url,
+    dataType: "json",
+    success: function (response){
+      $("#job_table").show();
+      $("#hours_table").show();
+      var result = $.isEmptyObject(response);
+      if (result) {
+        console.log("No Primary")
+        $('#NoPrimaryModal').modal('show');
+      }
+      else {
+        console.log("Primary Exists")
+          $('#PrimaryModal').modal('show');
+          create_and_fill_table()
+      }
+    }
+  })
+}
+​
+function create_and_fill_table() {
+  var table = document.getElementById("mytable");
+  var student = document.getElementById("student");
+  var studentname = student.options[student.selectedIndex].text;
+  var position = document.getElementById("position");
+  var positionname = position.options[position.selectedIndex].text;
+  var jobtype = document.getElementById("jobtype");
+  var jobtypename = jobtype.options[jobtype.selectedIndex].text;
+  var hours_perweek = document.getElementById("hours_perweek");
+  var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
+​
+  $("#mytable").show();
+  $("#job_table").show();
+  $("#hours_table").show();
+  $("#primary_table").hide();
+  $("#contract_table").hide();
+  var row = table.insertRow(-1);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(2);
+  var cell4 = row.insertCell(3);
+​
+  cell1.innerHTML = studentname;
+  cell2.innerHTML = positionname;
+  cell3.innerHTML = jobtypename;
+  cell4.innerHTML = hours_perweekname;
+​
+  $("#hours_perweek").val('default');
+  $("#hours_perweek").selectpicker("refresh");
+  $("#jobtype").val('default');
+  $("#jobtype").selectpicker("refresh");
+  $("#student").val('default');
+  $("#student").selectpicker("refresh");
+  $("#position").val('default');
+  $("#position").selectpicker("refresh");
+}
+​
 function CheckAcademicYear() {
-    $("#mytable").show();
-    $("#job_table").show();
-    $("#hours_table").show();
-    $("#primary_table").hide();
-    $("#contract_table").hide();
-
-    var table = document.getElementById("mytable");
-    var student = document.getElementById("student");
-    var studentname = student.options[student.selectedIndex].text;
-    var position = document.getElementById("position");
-    var positionname = position.options[position.selectedIndex].text;
     var jobtype = document.getElementById("jobtype");
     var jobtypename = jobtype.options[jobtype.selectedIndex].text;
-    var hours_perweek = document.getElementById("hours_perweek");
-    var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
-    var primary_supervisor = document.getElementById("primary_supervisor");
-    var primary_supervisorname = primary_supervisor.options[primary_supervisor.selectedIndex].text;
-
-    var row = table.insertRow(-1);
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-    var cell4 = row.insertCell(3);
-    var cell5 = row.insertCell(4);
-
-    cell1.innerHTML = studentname;
-    cell2.innerHTML = positionname;
-    cell3.innerHTML = jobtypename;
-    cell4.innerHTML = hours_perweekname;
-    cell5.innerHTML = "";
-
-    $("#hours_perweek").val('default');
-    $("#hours_perweek").selectpicker("refresh");
-    $("#jobtype").val('default');
-    $("#jobtype").selectpicker("refresh");
-    $("#student").val('default');
-    $("#student").selectpicker("refresh");
-    $("#position").val('default');
-    $("#position").selectpicker("refresh");
-
- // if Secondary option is selected, show primary supervisor selecpicker
-    if(jobtypename == "Secondary"){
-      $("#primary_table").show();
-      var cell5 = row.insertCell(4);
-      cell5.innerHTML = primary_supervisorname;
-      $("#primary_supervisor").val('default');
-      $("#primary_supervisor").selectpicker("refresh");
+    if (jobtypename == "Secondary") {
+      getprimarysupervisor()
+    }
+    else{
+      create_and_fill_table()
     }
 }
-
-
+​
+​
 // Pops up a modal for Seconday Postion
 $('#jobtype').change(function(){
   //this is just getting the value that is selected
@@ -314,9 +337,9 @@ $('#jobtype').change(function(){
   if (jobtype == "Secondary") {
       $('#SecondaryModal').modal('show');
   }
-
+​
 });
-
+​
 // Pops up a modal for overload
 $('#hours_perweek').change(function(){
   //this is just getting the value that is selected
@@ -324,9 +347,58 @@ $('#hours_perweek').change(function(){
   if (hour == "20") {
       $('#OverloadModal').modal('show');
   }
-
+​
 });
 
 function disableTerm() {
   $("#term").prop("disabled", "disabled");
+
+​
+function userInsert(){​
+  var list_dict_ajax = [];
+  var headers_data = ["Student", "Position", "Job Type", "Hours Per Week", "Secondary Supervisor", "Contract Hours"];
+  $('#mytable tr').has('td').each(function() {
+      supervisor = $("#supervisor").val();
+      department = $("#department").val();
+      term = $("#term").val();
+      startdate = $("#datetimepicker1").val();
+      enddate = $("#datetimepicker2").val();
+      list_dict = []
+      list_dict.push(supervisor, department, term, startdate, enddate)
+      var headers_label = ["Supervisor", "Department", "Term", "Start Date", "End Date"]
+      var tabledata_dict = {};
+      for (i in list_dict) {
+        tabledata_dict[headers_label[i]] = list_dict[i];
+      }
+      $('td', $(this)).each(function(index, item) {
+        tabledata_dict[headers_data[index]] = $(item).html();
+      });
+      list_dict_ajax.shift();
+      list_dict_ajax.push(tabledata_dict);
+      test_dict = {}
+      for ( var key in list_dict_ajax){
+        test_dict[key] = list_dict_ajax[key];
+      }
+​
+  });
+  data = JSON.stringify(test_dict);
+  $.ajax({
+               method: "POST",
+               url: '/laborstatusform/userInsert',
+               data: data,
+               contentType: 'application/json',
+               success: function(response) {
+                      console.log("js success")
+                   if (response["Success"]) {
+                     msg = "Labor Status form has been created.";
+                     category = "info";
+                     $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
+                     $("#flasher").delay(4000).fadeOut();
+                     return;
+​
+                   }
+               }
+           })
+​
+​
 }

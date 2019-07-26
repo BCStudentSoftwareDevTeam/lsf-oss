@@ -20,11 +20,12 @@ pem add app.models.laborReleaseForm.LaborReleaseForm
 pem add app.models.term.Term
 pem add app.models.department.Department
 pem add app.models.emailTemplate.EmailTemplate
-# pem add app.models.formHistory.FormHistory
+pem add app.models.formHistory.FormHistory
 pem add app.models.modifiedForm.ModifiedForm
 pem add app.models.overloadForm.OverloadForm
 pem add app.models.status.Status
 pem add app.models.student.Student
+pem add app.models.historyType.HistoryType
 
 pem watch
 pem migrate
