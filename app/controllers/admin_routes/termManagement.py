@@ -63,7 +63,6 @@ def accordionTerms():
     for i in range(5):
         termYear = (hoyyear - 2 + i)*100
         currentTerm = Term.select().where(Term.termCode.between(termYear-1, termYear + 15))
-        print(currentTerm[0])
         listOfTerms.append([])
         for term in currentTerm:
             listOfTerms[i].append(term)

@@ -27,3 +27,7 @@
 div.ui-datepicker {
   font-size: 10px;
 }
+
+#termname {
+  text-align: center;
+}

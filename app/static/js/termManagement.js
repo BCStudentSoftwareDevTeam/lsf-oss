@@ -1,6 +1,8 @@
-$(function () {
-    $('.form-control').datepicker({autoSize: true});
-});
+$('.form-control').datepicker()
+   .on('change', function(e) {
+     console.log($(this).data('id'));
+     alert($(this).data('id'));
+   });
 
 $('.glyphicon-calendar').click(function() {
    $(".form-control").focus();
@@ -9,10 +11,15 @@ $('.glyphicon-calendar').click(function() {
 var date = new Date();
 date.setDate(date.getDate());
 $(".form-control").datepicker({
- minDate: date
 });
-$(".form-control").datepicker("setDate", "date");
 
+
+
+
+// $.ajax({
+//   type: "POST"
+//   url:"/termManagement" +
+// })
 // var acc = document.getElementsByClassName("accordion");
 // var i;
 //
