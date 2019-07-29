@@ -2,7 +2,10 @@ from flask_login import login_required
 from app.controllers.main_routes import *
 from app.login_manager import require_login
 from app.models.user import *
+from app.models.status import *
 from app.models.laborStatusForm import *
+from app.models.formHistory import *
+from app.models.historyType import *
 from app.models.term import *
 from app.models.student import Student
 from app.models.Tracy.studata import *
@@ -11,8 +14,9 @@ from app.models.department import *
 from app.models.Tracy.stuposn import STUPOSN
 from flask import json, jsonify
 from flask import request
-from datetime import datetime
+from datetime import datetime, date
 from flask import flash
+from app import cfg
 
 @main_bp.route('/laborstatusform', methods=['GET'])
 def laborStatusForm():
@@ -81,6 +85,14 @@ def userInsert():
                                              startDate = startdate,
                                              endDate = enddate
                                              )
+                historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
+                status = Status.get(Status.statusName == "Pending")
+                formhistroy = FormHistory.create( formID = lsf.laborStatusFormID,
+                                                  historyType = historytype.historyTypeName,
+                                                  createdBy   = cfg['user']['debug'],
+                                                  createdDate = date.today(),
+                                                  status      = status.statusName
+                )
             return jsonify({"Success": True})
     except Exception as e:
         print("im here last")
