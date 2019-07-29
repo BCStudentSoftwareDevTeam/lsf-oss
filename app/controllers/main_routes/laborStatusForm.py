@@ -42,20 +42,13 @@ def laborStatusForm():
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
-    print("i'm here 1")
     try:
-        print("im here 2")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
-        print(rsp)
-        print("im here 3")
         if rsp:
-            print("Success")
             for data in rsp.values():
-                print(data)
                 wls_index_start = data['Position'].find('(')
                 wls_index_end = data['Position'].find(')')
                 wls = data['Position'][wls_index_start + 1 : wls_index_end]
-                print(wls)
                 bnumber_index = data['Student'].find('B0')
                 student_bnumber = data['Student'][bnumber_index:]
                 d, created = Student.get_or_create(ID = student_bnumber)
@@ -66,8 +59,6 @@ def userInsert():
                 department = d.departmentID
                 d, created = Term.get_or_create(termCode = data['Term'])
                 term = d.termCode
-                # integer_hours = int()
-                # print(integer_hours)
                 start = data['Start Date']
                 startdate = datetime.strptime(start, "%m-%d-%Y")
                 end = data['End Date']
@@ -95,7 +86,6 @@ def userInsert():
                 )
             return jsonify({"Success": True})
     except Exception as e:
-        print("im here last")
         print(e)
         return jsonify({"Success": False})
 

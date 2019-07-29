@@ -65,17 +65,7 @@ function show_access_level(obj){
   }
 }
 
-function get_hidden_values() {
-  var hiddenValue = $("#laborStatusForm").find(".hiddenVal");
-  console.log(hiddenValue[0].value)
-  for (var i=0; i < hiddenValue.length-2; i=i+2) {
-       console.log(oldValue[i/2].value);
-
-}
-}
-
 function fill_positions(response) {
-  console.log(response)
   var selected_positions = document.getElementById("position");
   if (selected_positions){
     $("#position").empty();
@@ -198,14 +188,11 @@ function checkBreaks() {
   $("#contract_table").show();
   var table = document.getElementById("mytable");
   var student = document.getElementById("student");
-  console.log(student)
   var studentname = student.options[student.selectedIndex].text;
-  console.log(studentname);
   var position = document.getElementById("position");
   var positionname = position.options[position.selectedIndex].text;
   var posn_code = $("#position").val()
   var contracthoursname = document.getElementById("contracthours").value;
-  console.log(contracthoursname);
  // Summer term or any other break period
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
@@ -226,7 +213,6 @@ function checkBreaks() {
 
 function getprimarysupervisor(){
   var student = $("#student").val();
-  console.log(student)
   var term = $("#term").val();
   var url = "/laborstatusform/getstudents/" + term +"/" +student;
   $.ajax({
@@ -237,11 +223,9 @@ function getprimarysupervisor(){
       $("#hours_table").show();
       var result = $.isEmptyObject(response);
       if (result) {
-        console.log("No Primary")
         $('#NoPrimaryModal').modal('show');
       }
       else {
-        console.log("Primary Exists")
           $('#PrimaryModal').modal('show');
           create_and_fill_table()
       }
@@ -334,7 +318,6 @@ function userInsert(){
       startdate = $("#datetimepicker1").val();
       enddate = $("#datetimepicker2").val();
       var posn_code = $("#position_code").attr("data-posn");
-      console.log(posn_code)
       list_dict = []
       list_dict.push(supervisor, department, term, startdate, enddate, posn_code)
       var headers_label = ["Supervisor", "Department", "Term", "Start Date", "End Date", "Position Code"]
@@ -375,7 +358,6 @@ function userInsert(){
          data: data,
          contentType: 'application/json',
          success: function(response) {
-                console.log("js success")
              if (response["Success"]) {
                msg = "Labor Status form has been created.";
                category = "info";
