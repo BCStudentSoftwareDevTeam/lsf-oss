@@ -17,9 +17,8 @@ def modifyLSF():
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
 
-    #Step 2: get data from said form
-    #FIX ALL OF THESE
-    prefillstudent = "Willy Wonka"
+    #Step 2: get data from said form ###FIXME ALL OF THESE: query to students previous lsf form to pull specific fields.
+    prefillstudent = "Willy Wonka" 
     prefillsupervisor = "Scott Heggen (sheggen)"
     prefilldepartment = "Computer Science"
     prefillposition = "Janitor"

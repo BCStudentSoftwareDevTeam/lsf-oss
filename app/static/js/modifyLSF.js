@@ -1,7 +1,8 @@
-$("#datetimepicker0").datepicker(); //Console says this is a type error but it still works?
+$("#datetimepicker0").datepicker(); 
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
-  });
+});
+
 var finalDict = {};
 function buttonListener () {/////////YO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
