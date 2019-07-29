@@ -3,12 +3,12 @@ $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
 var effectiveDate = $("#datetimepicker0").datepicker('getDate'); //if i put any 'getDate' etc in here, the calendar doesnt show up anymore and effectivaDate is null. cannot read value of null.....
+
 var finalDict = {};
 function buttonListener () {//YO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
   var newValue = $("#modifyLSF").find(".newValue");
-  // var effectiveDate = $("#datetimepicker0").datepicker();
-  //effectiveDate = effectiveDate('getDate');
+  var effectiveDate = document.getElementById("datetimepicker0").value; //this doesnt work since value is prefilldateneeded and..thats nothing
   console.log(effectiveDate);
   for (var i=0; i < newValue.length-2; i=i+2) {
     // console.log(i/2);
@@ -22,7 +22,7 @@ function buttonListener () {//YO THIS IS VERY FRAGILE!!!! Notes MUST be last or 
     if (oldValue[i/2].value != newVal) {     // TODO: HANDLE NOTES VALUE AND DATES
       finalDict[newValue[i+1].id] = {"oldValue": oldValue[i/2].value,
                                      "newValue": newVal,
-                                     "date": effectiveDate.value
+                                     "date": effectiveDate
                                     }
       //   console.log(oldValue[i/2].value)
       //   console.log(newValue[i+1])
