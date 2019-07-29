@@ -91,8 +91,7 @@ def userInsert():
                                                   historyType = historytype.historyTypeName,
                                                   createdBy   = cfg['user']['debug'],
                                                   createdDate = date.today(),
-                                                  status      = status.statusName
-                )
+                                                  status      = status.statusName)
             return jsonify({"Success": True})
     except Exception as e:
         print("im here last")

@@ -141,7 +141,7 @@ function displayTable() {
   var termcode = $('#term').val();
   var whichterm = termcode.toString().substr(-2);
   if (whichterm != 11 && whichterm !=12 && whichterm !=00) {
-    checkBreaks();
+    checkDuplicate_breaks();
   }
   else {
     checkDuplicate();
@@ -190,7 +190,35 @@ function checkDuplicate() {
     CheckAcademicYear();
 }
 
-function checkBreaks() {
+
+function checkDuplicate_breaks() {
+      var table = document.getElementById("mytable");
+      var student = document.getElementById("student");
+      var studentname = student.options[student.selectedIndex].text;
+      var position = document.getElementById("position");
+      var positionname = position.options[position.selectedIndex].text;
+
+      for(const tr of table.querySelectorAll("thead tr")) {
+         const td0 = tr.querySelector("td:nth-child(1)");
+         const td1 = tr.querySelector("td:nth-child(2)");
+         const td2 = tr.querySelector("td:nth-child(3)");
+
+         if ((td0.innerHTML == studentname) && (td1.innerHTML==positionname)) {
+            category = "danger";
+            msg = `Match found for ${studentname} and ${positionname}. Insert rejected`;
+            $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
+            $("#flasher").delay(4000).fadeOut();
+            $("#job_table").hide();
+            $("#hours_table").hide();
+            $("#contract_table").show();
+            return;
+            }
+          }
+          create_and_fill_table_for_breaks()
+        }
+
+
+function create_and_fill_table_for_breaks() {
   $("#mytable").show();
   $("#job_table").hide();
   $("#hours_table").hide();
