@@ -1,14 +1,14 @@
-$("#datetimepicker0").datepicker();
+$("#datetimepicker0").datepicker(); //if i put any 'getDate' etc in here, the calendar doesnt show up anymore and effectivaDate is null. cannot read value of null.....
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
-
+var effectiveDate = $("#datetimepicker0").datepicker("getDate"); //if i put any 'getDate' etc in here, the calendar doesnt show up anymore and effectivaDate is null. cannot read value of null.....
 var finalDict = {};
-function buttonListener () {/////////YO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
+function buttonListener () {//YO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
   var newValue = $("#modifyLSF").find(".newValue");
-  var effectiveDate = $("#datetimepicker0").datepicker();
-  //var effectiveDate = new Date()
+  // var effectiveDate = $("#datetimepicker0").datepicker();
+  //effectiveDate = effectiveDate('getDate');
   console.log(effectiveDate);
   for (var i=0; i < newValue.length-2; i=i+2) {
     // console.log(i/2);

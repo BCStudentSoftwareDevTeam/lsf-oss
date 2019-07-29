@@ -79,7 +79,7 @@
            <select required type="JobType"
                             class="selectpicker form-control newValue"
                             id="JobType"
-                            data-live-search="true">
+                            data-live-search="true"> <!---FIXME: ADD if statements; if term is a break, job type should become uneditable. i think wls should too...? --->
                 <option title="{{prefilljobtype}}" value="{{prefilljobtype}}">{{prefilljobtype}}</option>
                 <option title="Secondary" value="Secondary">Secondary</option>
            </select>
@@ -102,7 +102,7 @@
                           class="selectpicker form-control newValue"
                           id="Hours"
                           data-live-search="true">
-              {% if JobType == "Secondary" %} <!---Should we make this to where if its secondary, it becomes a text input? (0-5, or 140 contract hours...? talk to LSF team)
+              {% if JobType == "Secondary" %} <!---Should we make this to where if its secondary, it becomes a text input? (0-5, or 140 contract hours...? talk to LSF team)--->
                 <option title="0-5" value="0-5">0-5</option> <!---TODOOOOO: Needs to ONLY appear when its a secondary: add if statements !-->
                 <option title="10" value="10">10</option>
                 <option title="12" value="12">12</option>
