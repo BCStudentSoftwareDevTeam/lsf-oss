@@ -1,3 +1,22 @@
 #currentData {
   border-style: solid;
 }
+
+#modalid {
+  overflow: auto;
+}
+
+h4 {
+  overflow: auto;
+}
+
+textarea {
+  align: left;
+  padding-left: 0;
+  resize: none;
+  border: none;
+}
+
+.form-group {
+  overflow: auto;
+}

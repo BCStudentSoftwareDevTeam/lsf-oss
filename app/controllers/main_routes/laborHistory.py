@@ -106,7 +106,7 @@ def populateModal(statusKey):
                         print(form.reviewedDate)
                         print(form.formID.termCode.termEnd)
                         print(currentDate)
-                        buttonState = 2 #Only rehire button
+                        buttonState = 2 #Only withdraw and modify
                         break
         print(buttonState)
         # Will use later:
