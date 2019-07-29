@@ -130,7 +130,6 @@
             title="Position"
             data-width="230px">
     </select>
-    <input hidden class = "hiddenVal" id ="hiddenVal" value= "" ></input>
   </div>
 ​
  <!-- Contract hours for breaks -->
@@ -274,7 +273,7 @@
             title="Add more students"
             data-placement = "center"
             id="glyphicon_2"
-            onclick="displayTable()">
+            onclick="displayTable(); ">
     </a>
     </span>
   </div>
@@ -285,7 +284,7 @@
     <thead>
       <tr class="item">
         <td>Student</td>
-        <td>Position</td>
+        <td id = "position" data-value = "">Position</td>
         <td id="job_table">Job Type</td>
         <td id="hours_table">Hours Per Week</td>
         <td id="contract_table">Contract Hours</td>
@@ -299,7 +298,6 @@
             class="btn btn-primary"
             data-toggle="modal"
             data-target="#SubmitModal"
-            onclick="displayTable()"
             name = "formsubmission"
             value = "formsubmission">Review</button>
       {% include "snips/ReviewForm.html" %}

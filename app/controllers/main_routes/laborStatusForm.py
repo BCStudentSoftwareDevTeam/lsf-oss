@@ -48,6 +48,10 @@ def userInsert():
             print("Success")
             for data in rsp.values():
                 print(data)
+                wls_index_start = data['Position'].find('(')
+                wls_index_end = data['Position'].find(')')
+                wls = data['Position'][wls_index_start + 1 : wls_index_end]
+                print(wls)
                 bnumber_index = data['Student'].find('B0')
                 student_bnumber = data['Student'][bnumber_index:]
                 d, created = Student.get_or_create(ID = student_bnumber)
@@ -58,20 +62,25 @@ def userInsert():
                 department = d.departmentID
                 d, created = Term.get_or_create(termCode = data['Term'])
                 term = d.termCode
-                integer_hours = int(data['Hours Per Week'])
+                # integer_hours = int()
+                # print(integer_hours)
                 start = data['Start Date']
                 startdate = datetime.strptime(start, "%m-%d-%Y")
                 end = data['End Date']
                 enddate = datetime.strptime(end, "%m-%d-%Y")
                 lsf = LaborStatusForm.create(termCode = term,
                                              studentSupervisee = student,
-                                             supervisor = primary_supervisor ,
+                                             supervisor = primary_supervisor,
                                              department  = department,
                                              jobType = data['Job Type'],
+                                             WLS = wls,
                                              POSN_TITLE = data['Position'],
+                                             POSN_CODE = data['Position Code'],
+                                             contractHours = data.get('Contract Hours', None),
+                                             weeklyHours   = data.get('Hours Per Week', None),
                                              startDate = startdate,
-                                             endDate = enddate,
-                                             weeklyHours   = integer_hours)
+                                             endDate = enddate
+                                             )
             return jsonify({"Success": True})
     except Exception as e:
         print("im here last")
@@ -93,7 +102,7 @@ def getPositions(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
     position_dict = {}
     for position in positions:
-        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE, "Position Code": position.POSN_CODE, "WLS":position.WLS}
+        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
     return json.dumps(position_dict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])

@@ -81,12 +81,9 @@ function fill_positions(response) {
     $("#position").empty();
     for (var key in response) {
       var options = document.createElement("option");
-      options.text = response[key]["position"].toString();
+      options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
       options.value = key;
       selected_positions.appendChild(options);
-      var wls = document.getElementById("hiddenVal").value;
-      wls = response[key]["WLS"].toString();
-      console.log(wls)
     }
     $('.selectpicker').selectpicker('refresh');
   }
@@ -206,13 +203,17 @@ function checkBreaks() {
   console.log(studentname);
   var position = document.getElementById("position");
   var positionname = position.options[position.selectedIndex].text;
+  var posn_code = $("#position").val()
   var contracthoursname = document.getElementById("contracthours").value;
   console.log(contracthoursname);
  // Summer term or any other break period
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
+  $(cell2).attr("data-posn", posn_code);
+  cell2.id="position_code";
   var cell3 = row.insertCell(2);
+
   cell1.innerHTML = studentname;
   cell2.innerHTML = positionname;
   cell3.innerHTML = contracthoursname;
@@ -254,6 +255,7 @@ function create_and_fill_table() {
   var studentname = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");
   var positionname = position.options[position.selectedIndex].text;
+  var posn_code = $("#position").val()
   var jobtype = document.getElementById("jobtype");
   var jobtypename = jobtype.options[jobtype.selectedIndex].text;
   var hours_perweek = document.getElementById("hours_perweek");
@@ -272,6 +274,8 @@ function create_and_fill_table() {
 
   cell1.innerHTML = studentname;
   cell2.innerHTML = positionname;
+  $(cell2).attr("data-posn", posn_code);
+  cell2.id="position_code";
   cell3.innerHTML = jobtypename;
   cell4.innerHTML = hours_perweekname;
 
@@ -319,29 +323,49 @@ function disableTerm() {
 }
 
 function userInsert(){
+
   var list_dict_ajax = [];
-  var headers_data = ["Student", "Position", "Job Type", "Hours Per Week", "Secondary Supervisor", "Contract Hours"];
   $('#mytable tr').has('td').each(function() {
+
       supervisor = $("#supervisor").val();
       department = $("#department").val();
       term = $("#term").val();
+      var whichterm = term.toString().substr(-2);
       startdate = $("#datetimepicker1").val();
       enddate = $("#datetimepicker2").val();
+      var posn_code = $("#position_code").attr("data-posn");
+      console.log(posn_code)
       list_dict = []
-      list_dict.push(supervisor, department, term, startdate, enddate)
-      var headers_label = ["Supervisor", "Department", "Term", "Start Date", "End Date"]
+      list_dict.push(supervisor, department, term, startdate, enddate, posn_code)
+      var headers_label = ["Supervisor", "Department", "Term", "Start Date", "End Date", "Position Code"]
       var tabledata_dict = {};
       for (i in list_dict) {
         tabledata_dict[headers_label[i]] = list_dict[i];
       }
-      $('td', $(this)).each(function(index, item) {
-        tabledata_dict[headers_data[index]] = $(item).html();
-      });
-      list_dict_ajax.shift();
-      list_dict_ajax.push(tabledata_dict);
-      test_dict = {}
-      for ( var key in list_dict_ajax){
-        test_dict[key] = list_dict_ajax[key];
+      if (whichterm != 11 && whichterm !=12 && whichterm !=00) {
+        tabledata_dict["Job Type"] = "Secondary";
+        var headers_2_data = ["Student", "Position", "Contract Hours"];
+        $('td', $(this)).each(function(index, item) {
+          tabledata_dict[headers_2_data[index]] = $(item).html();
+        });
+        list_dict_ajax.shift();
+        list_dict_ajax.push(tabledata_dict);
+        test_dict = {}
+        for ( var key in list_dict_ajax){
+          test_dict[key] = list_dict_ajax[key];
+        }
+      }
+      else {
+          var headers_data = ["Student", "Position", "Job Type", "Hours Per Week"];
+          $('td', $(this)).each(function(index, item) {
+            tabledata_dict[headers_data[index]] = $(item).html();
+          });
+          list_dict_ajax.shift();
+          list_dict_ajax.push(tabledata_dict);
+          test_dict = {}
+          for ( var key in list_dict_ajax){
+            test_dict[key] = list_dict_ajax[key];
+          }
       }
     });
   data = JSON.stringify(test_dict);
