@@ -61,7 +61,7 @@
                       {% if term.termStart != None %}
                       <td>
                         <div class='input-group date'>
-                          <input id={{term.termCode}} value={{term.termStart}} type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" data-startEnd="end"/>
+                          <input id={{term.termCode}} value={{term.termStart}} onclick="getDate(this)" type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" data-startEnd="end"/>
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>

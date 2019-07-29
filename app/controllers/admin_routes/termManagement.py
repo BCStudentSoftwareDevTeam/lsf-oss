@@ -3,6 +3,8 @@ from app.models.user import *
 from app.controllers.admin_routes import admin
 from app.models.term import *
 import datetime
+from app.models.term import *
+from flask import json, jsonify
 
 
 @admin.route('/termManagement', methods=['GET', 'POST'])
@@ -66,5 +68,16 @@ def accordionTerms():
         listOfTerms.append([])
         for term in currentTerm:
             listOfTerms[i].append(term)
-    print(listOfTerms)
     return listOfTerms
+
+@admin.route("/termMangement/getDate/<termStart>", methods=['GET'])
+def ourDate(termStart):
+    print("hello world!")
+    termDate = Term.select().where(Term.termStart == termStart)
+    print("hi")
+    termDate_dict = {}
+    print("hola")
+    for date in termDate:
+        start = date.termStart
+        termDate_dict[date.termCode] = {"Start Date": start}
+    return json.dumps(termDate_dict)

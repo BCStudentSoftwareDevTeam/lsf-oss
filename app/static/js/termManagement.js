@@ -1,7 +1,7 @@
 $('.form-control').datepicker()
    .on('change', function(e) {
-     console.log($(this).data('id'));
-     alert($(this).data('id'));
+     console.log($(this).data('startEnd'));
+     alert($(this).data('startEnd'));
    });
 
 $('.glyphicon-calendar').click(function() {
@@ -13,7 +13,24 @@ date.setDate(date.getDate());
 $(".form-control").datepicker({
 });
 
+function update_startDate(response){
+  console.log(response)
+}
 
+function getDate(obj) {
+  var termStart = obj.value;
+  console.log(obj)
+  console.log(termStart)
+  console.log("hi")
+  var url ="/termMangement/getDate/" + termStart;
+    $.ajax({
+      url: url,
+      datatype: "json",
+      success: function(response){
+        update_startDate(response)
+      }
+    })
+}
 
 
 // $.ajax({
