@@ -1,4 +1,4 @@
-$("#datetimepicker0").datepicker(); 
+$("#datetimepicker0").datepicker();
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
@@ -7,8 +7,8 @@ var finalDict = {};
 function buttonListener () {/////////YO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
   var newValue = $("#modifyLSF").find(".newValue");
-  // var effectiveDate = $("#datetimepicker0").datepicker("getDate");
-  var effectiveDate = new Date()
+  var effectiveDate = $("#datetimepicker0").datepicker();
+  //var effectiveDate = new Date()
   console.log(effectiveDate);
   for (var i=0; i < newValue.length-2; i=i+2) {
     // console.log(i/2);
