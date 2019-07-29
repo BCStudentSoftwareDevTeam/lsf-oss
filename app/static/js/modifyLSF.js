@@ -3,7 +3,7 @@ $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');
-var finalDict = {};
+var finalDict = {}; //This is for buttonListener /modified fields to be saved to modform table
 function buttonListener () {
   //YOOOO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
@@ -31,11 +31,11 @@ function buttonListener () {
   }
 }
 
-// function updateFormModifiedTable(fieldsModifiedDictionary){
+// function updateFormModifiedTable(finalDict){
 //   //saves the following to modified form table:
 //   //modifidFormID (primary key, auto increment), fieldModified, oldValue, newValue, effectiveDate (from form)
 //   //parses through dictionary
-//   for (var key in fieldsModifiedDictionary){
+//   for (var key in finalDict){
 //     var value = dict[key];
 //   }
 //   //saving the old/new values to the appropriate field modified
