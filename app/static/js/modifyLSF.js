@@ -1,25 +1,25 @@
-$("#datetimepicker0").datepicker(); //if i put any 'getDate' etc in here, the calendar doesnt show up anymore and effectivaDate is null. cannot read value of null.....
+$("#datetimepicker0").datepicker();
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
-var effectiveDate = $("#datetimepicker0").datepicker('getDate'); //if i put any 'getDate' etc in here, the calendar doesnt show up anymore and effectivaDate is null. cannot read value of null.....
-
+var effectiveDate = $("#datetimepicker0").datepicker('getDate');
 var finalDict = {};
-function buttonListener () {//YO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
+function buttonListener () {
+  //YOOOO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
   var newValue = $("#modifyLSF").find(".newValue");
   var effectiveDate = document.getElementById("datetimepicker0").value; //this doesnt work since value is prefilldateneeded and..thats nothing
   console.log(effectiveDate);
-  for (var i=0; i < newValue.length-2; i=i+2) {
+  for (var i=0; i < newValue.length-2; i=i+2) { //since newValue class is put on the div AND the select.. we skipped the div objects
     // console.log(i/2);
     // console.log(oldValue[i/2].value);
     // console.log(newValue[i+1].value);
       newVal = $(newValue[i+1]).val();
     // } catch(err) {
-    //   newVal = document.getElementById("Notes").value; //TODO: fix this
+    //   newVal = document.getElementById("Notes").value; //TODO: fix this lmao
     // }
     console.log(newVal)
-    if (oldValue[i/2].value != newVal) {     // TODO: HANDLE NOTES VALUE AND DATES
+    if (oldValue[i/2].value != newVal) {     //If the oldValue differs from the newValue, add it to the dictionary
       finalDict[newValue[i+1].id] = {"oldValue": oldValue[i/2].value,
                                      "newValue": newVal,
                                      "date": effectiveDate
@@ -46,7 +46,7 @@ function buttonListener () {//YO THIS IS VERY FRAGILE!!!! Notes MUST be last or 
 //   console.log("postModifications called");
 //   var formModifications = {} //For passing into Ajax data field (multiple attributes to pass)
 //   //student cannot be changed
-//   formModifications["primarySupervisor"] = document.getElementById('Supervisor').value; //FIX ME: NOT ALWAYS A PRIMARY SUPERVISOR. ITS DEPENDENT ON JOB TYPE
+//   formModifications["supervisor"] = document.getElementById('Supervisor').value;
 //   //department cannot be changed
 //   formModifications["position"] = document.getElementById('Position').value;
 //   formModifications["WLS"] = document.getElementById('WLS').value;

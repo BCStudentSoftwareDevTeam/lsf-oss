@@ -73,10 +73,11 @@
            <input hidden class="oldValue"  id="{{prefillwls}}" value="{{prefillwls}}"></input>
          </div>
        </div>
+       <!-- FIXME: Add conditional that renders jobtype select disabled if term is for a break since jobtype cant be changed-->
        <div class="form-group">
          <label for="JobType">Job Type:</label>
          <div>
-           <select required type="JobType"
+           <select type="JobType"
                             class="selectpicker form-control newValue"
                             id="JobType"
                             data-live-search="true"> <!---FIXME: ADD if statements; if term is a break, job type should become uneditable. i think wls should too...? --->
