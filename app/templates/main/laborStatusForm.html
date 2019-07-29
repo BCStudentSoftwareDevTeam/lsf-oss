@@ -5,8 +5,8 @@
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-
-<form>
+​
+<form id="laborStatusForm">
   <h1 class="col-md-12 col-md-offset-4">Labor Status Form
     <span class="glyphicon glyphicon-bookmark"
       <a  data-toggle="tooltip" data-tooltip="true"
@@ -74,7 +74,7 @@
       </div>
   </div>
 <br />
-
+​
 <div class="form-group col-md-12 col-md-offset-2 row">
 <!-- DATEPICKERS -->
           <div  class="form-group col-md-4">
@@ -87,7 +87,7 @@
                 </span>
               </div>
           </div>
-
+​
           <div class="form-group col-md-4">
             <!--Datepicker for End date-->
           <label for="datetimepicker2" class="col-2 col-form-label" id="datepicker">End Date</label>
@@ -98,11 +98,11 @@
                 </span>
             </div>
           </div>
-
+​
       </div>
-
+​
 <div class ="form-group col-md-12">
-
+​
   <div class="form-group col-md-3" id="Student">
     <!-- selectpicker for student  -->
       <label for="student">Student</label>
@@ -111,15 +111,15 @@
                     id='student'
                     data-live-search='true'
                     title="Student"
+                    onchange= "disableTerm()"
                     data-width="230px"
-                    onchange= "getstudent(this)"
                     >
               {% for student in students %}
                   <option value="{{student.ID}}">{{student.FIRST_NAME}} {{student.LAST_NAME}} {{student.ID}}</option>
               {% endfor %}
             </select>
   </div>
-
+​
   <div class="form-group col-md-3" id="Position">
     <!--selectpicker for positio3-->
     <label for="student">Position</label>
@@ -128,11 +128,11 @@
             id='position'
             data-live-search='true'
             title="Position"
-            data-width="230px"
-            >
+            data-width="230px">
     </select>
+    <input hidden class = "hiddenVal" id ="hiddenVal" value= "" ></input>
   </div>
-
+​
  <!-- Contract hours for breaks -->
   <div class="form-group col-md-5" id="ContractHours" >
           <!--selectpicker for cntract hours-->
@@ -148,7 +148,7 @@
                   >
           </input>
   </div>
-
+​
   <div class="form-group col-md-2" id="JopTypes">
     <!--selectpicker for Job type-->
     <label for="student">Job Type</label>
@@ -181,11 +181,55 @@
     </div>
 </div>
 </div>
-
+​
 <!-- END OF THE MODAL -->
-
+​
+<!-- START OF MODAL For when Student does not have a Primary Position-->
+<div class="modal fade" id="NoPrimaryModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
+<div class="modal-dialog" role="document">
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+     </button>
+     <h4 class="modal-title">Unable to Add a Secondary Position</h4>
+   </div>
+   <div class="modal-body">
+     The selected student does not have a primary position.
+   </div>
+   <div class="modal-footer">
+     <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
+   </div>
+ </div>
+</div>
+</div>
+​
+<!-- END OF THE MODAL -->
+​
+<!-- START OF MODAL For when Student has a primary position-->
+<div class="modal fade" id="PrimaryModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
+<div class="modal-dialog" role="document">
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+     </button>
+     <h4 class="modal-title">Title</h4>
+   </div>
+   <div class="modal-body">
+     Secondary position has been added. Student's primary superviosr {} will be notified.
+   </div>
+   <div class="modal-footer">
+     <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
+   </div>
+ </div>
+</div>
+</div>
+​
+<!-- END OF THE MODAL -->
+​
   </div>
-
+​
   <div class="form-group col-md-2" id="Hours_PerWeek">
     <!--selectpicker for hrs per week-->
     <label for="student">Hours Per Week</label>
@@ -196,7 +240,7 @@
             title="Hours per week"
             data-width="197px">
     </select>
-
+​
     <!-- START OF MODAL For Overload-->
     <div class="modal fade" id="OverloadModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
    <div class="modal-dialog" role="document">
@@ -216,12 +260,12 @@
      </div>
  </div>
  </div>
-
+​
  <!-- END OF THE MODAL -->
-
-
+​
+​
   </div>
-
+​
   <div class="form-group col-md-1" id="plus">
     <label> </label>
     <span class="glyphicon glyphicon-plus"
@@ -236,7 +280,7 @@
   </div>
 </div>
   <br />
-
+​
   <table class="table table-striped" id="mytable">
     <thead>
       <tr class="item">
@@ -248,8 +292,8 @@
       </tr>
     </thead>
   </table>
-
-
+​
+​
   <div class="col-md-12 " id="review-button">
     <button type="button"
             class="btn btn-primary"
@@ -261,23 +305,23 @@
       {% include "snips/ReviewForm.html" %}
   </div>
 </form>
-
+​
  <!-- css and javascript files -->
 <script src="/static/js/laborStatusForm.js"></script>
 <link rel="stylesheet" href="/static/css/laborStatusForm.css" type="text/css"/>
 {% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
     {# USE LATER
         <div id="ctl00_MainContent_wls5or6" class="col-xs-10 col-xs-offset-1" hidden>
             <div class="col-xs-5 col-xs-offset-3 ">
@@ -285,13 +329,13 @@
             </div>
             <br />
         </div>
-
+​
         <div id="ctl00_MainContent_twentyhrs" class="col-xs-10 col-xs-offset-1" hidden>
             <div class="col-xs-5 col-xs-offset-3">
                 <p class="text-warning">
                     Students working more than 15 hours must fill out a <a href="http://www.berea.edu/labor-program-office/files/2013/07/20130705-Labor-Overload-Application.pdf" target="_blank">labor overload application.</a>
                 </p>
-
+​
             </div>
             <br />
         </div>

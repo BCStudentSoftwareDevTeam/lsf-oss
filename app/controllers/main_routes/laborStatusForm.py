@@ -14,13 +14,14 @@ from flask import request
 from datetime import datetime
 from flask import flash
 
-
 @main_bp.route('/laborstatusform', methods=['GET'])
 def laborStatusForm():
     current_user = require_login()
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
     # Logged in
+    wls = STUPOSN.select(STUPOSN.WLS).distinct()
+    posn_code = STUPOSN.select(STUPOSN.POSN_CODE).distinct()
     forms = LaborStatusForm.select()
     students = STUDATA.select().order_by(STUDATA.FIRST_NAME.asc()) # getting student names from TRACY
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
@@ -53,28 +54,19 @@ def userInsert():
                 student = d.ID
                 d, created = User.get_or_create(username = data['Supervisor'])
                 primary_supervisor = d.username
-                username_index = data['Secondary Supervisor'].rfind('(')
-                username_index_last = data['Secondary Supervisor'].rfind(')')
-                print(data['Secondary Supervisor'])
-                print(username_index)
-                supervisor_username = data['Secondary Supervisor'][username_index + 1:username_index_last]
-                print (supervisor_username)
-                d, created = User.get_or_create(username = supervisor_username)
-                secondary_supervisor = d.username
                 d, created = Department.get_or_create(DEPT_NAME = data['Department'])
                 department = d.departmentID
                 d, created = Term.get_or_create(termCode = data['Term'])
                 term = d.termCode
                 integer_hours = int(data['Hours Per Week'])
                 start = data['Start Date']
-                startdate = datetime.strptime(start, "%m/%d/%Y")
+                startdate = datetime.strptime(start, "%m-%d-%Y")
                 end = data['End Date']
-                enddate = datetime.strptime(end, "%m/%d/%Y")
+                enddate = datetime.strptime(end, "%m-%d-%Y")
                 lsf = LaborStatusForm.create(termCode = term,
                                              studentSupervisee = student,
-                                             primarySupervisor = primary_supervisor ,
+                                             supervisor = primary_supervisor ,
                                              department  = department,
-                                             secondarySupervisor = secondary_supervisor,
                                              jobType = data['Job Type'],
                                              POSN_TITLE = data['Position'],
                                              startDate = startdate,
@@ -101,7 +93,7 @@ def getPositions(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
     position_dict = {}
     for position in positions:
-        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE}
+        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE, "Position Code": position.POSN_CODE, "WLS":position.WLS}
     return json.dumps(position_dict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
@@ -111,4 +103,5 @@ def getprimarysupervisor(termCode, student):
     for primary_supervisor in primary_supervisors:
         primary_supervisor_dict[str(primary_supervisor.laborStatusFormID)] = {"Primary Supervisor FirstName":primary_supervisor.supervisor.FIRST_NAME,
         "Primary Supervisor LastName": primary_supervisor.supervisor.LAST_NAME, "Primary Supervisor ID":primary_supervisor.supervisor.username}
+    print(primary_supervisor_dict)
     return json.dumps(primary_supervisor_dict)
