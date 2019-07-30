@@ -32,8 +32,9 @@
                             id="Supervisor"
                             data-live-search="true">
                 <option title="{{prefillsupervisor}}" value="{{prefillsupervisor}}">{{prefillsupervisor}}</option> <!-- not showing up fam-->
-                <option title="George Lopez" value="George Lopez">George Lopez (lopezg)</option>
-                <option title="Barack Obama" value="Barack Obama">Barack Obama (obamab)</option>
+                {% for staff in supervisors %}
+                  <option value="{{staff.PIDM}}">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
+                {% endfor %}
            </select>
            <input hidden class = "oldValue"  value="{{prefillsupervisor}}" > </input> <!-- stores value of original-->
          </div>
@@ -52,8 +53,9 @@
                             id="Position"
                             data-live-search="true">
                 <option title="{{prefillposition}}" value="{{prefillposition}}">{{prefillposition}}</option>
-                <option title="Student Programmer" value="Student Programmer">Student Programmer</option>
-                <option title="Teaching Assistant" value="Teaching Assistant">Teaching Assistant</option>
+                {% for posn in positions %}
+                  <option value="{{posn.POSN_CODE}}">{{posn.POSN_TITLE}}</option>
+                {% endfor %}
            </select>
            <input hidden class = "oldValue"  id= "{{prefillposition}}" value="{{prefillposition}}"></input>
          </div>
@@ -67,8 +69,9 @@
                             id="WLS"
                             data-live-search="true">
                 <option title="{{prefillwls}}" value="{{prefillwls}}">{{prefillwls}}</option>
-                <option title="WLS 2" value="WLS 2">WLS 2</option>
-                <option title="WLS 3" value="WLS 3">WLS 3</option>
+                {% for w in wls %} <!---FIXME: not pulling anything rn -->
+                  <option value="{{WLS}}">{{WLS}}</option>
+                {% endfor %}
            </select>
            <input hidden class="oldValue"  id="{{prefillwls}}" value="{{prefillwls}}"></input>
          </div>

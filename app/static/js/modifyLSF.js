@@ -22,10 +22,11 @@ function buttonListener () {
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
   var newValue = $("#modifyLSF").find(".newValue");
   var effectiveDate = document.getElementById("datetimepicker0").value;
+  //Do we need to pull the notes FIELD (ID) separate as well? (its the key for the outer dict..)
   var notesOld = document.getElementById("oldNotes").value; //TODO: add this to oldValue
   var notesNew = document.getElementById("Notes").value;//TODO: add this to newValue
-  //console.log("notesOld"+notesOld);
-  //console.log("notesNew"+notesNew);
+  console.log("notesOld"+notesOld);
+  console.log("notesNew"+notesNew);
   for (var i=0; i < newValue.length-2; i=i+2) { //since newValue class is put on the div AND the select.. we skipped the div objects
     // console.log(i/2);
     // console.log(oldValue[i/2].value);
@@ -37,11 +38,20 @@ function buttonListener () {
                                      "newValue": newVal,
                                      "date": effectiveDate
                                     }
+      }
+
+    // else if (notesOld != notesNew) { //FIXME: trying to add notes to dictionary...
+    //   finalDict[newValue[i+1].id] = {"oldValue": notesOld,
+    //                                  "newValue": notesNew,
+    //                                  "date": effectiveDate
+    //                                 }
+
       //   console.log(oldValue[i/2].value)
       //   console.log(newValue[i+1])
-    }
-    console.log(finalDict)
+    // }
+
   }
+  console.log(finalDict)
 }
 //////////Saving to modifiedForm table/////////
 // function updateFormModifiedTable(finalDict){

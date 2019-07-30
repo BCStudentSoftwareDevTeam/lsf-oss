@@ -2,7 +2,9 @@ from app.controllers.main_routes import *
 from app.controllers.main_routes.main_routes import *
 from app.controllers.main_routes.laborHistory import *
 from app.models.user import *
-from app.models.Tracy.studata import STUDATA
+from app.models.Tracy.studata import *
+from app.models.Tracy.stustaff import *
+from app.models.Tracy.stuposn import *
 from flask_bootstrap import bootstrap_find_resource
 from app.login_manager import require_login
 from datetime import *
@@ -27,6 +29,10 @@ def modifyLSF():
     prefillterm = "AY 2019-2020" #form.termCode
     prefillhours = "0-5" #form.weeklyHours ##FIXME  Its not always weekly. sometimes its contract.
     prefillnotes = "Kids went missing in his factory... sketchy business...but he's alright i guess" #form.supervisorNotes
+    #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
+    supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
+    positions = STUPOSN.select(STUPOSN.POSN_CODE).distinct() #FIX ME: needs to be specific to that department
+    wls = STUPOSN.select(STUPOSN.WLS).distinct() #Shouldnt wls be tied to position...?? why are there 2 separate fields for it on our page then..?
     #Step 3: send data to front to populate html
     return render_template( 'main/modifyLSF.html',
 				            title=('Modify LSF'),
@@ -39,7 +45,10 @@ def modifyLSF():
                             prefilljobtype = prefilljobtype,
                             prefillterm = prefillterm,
                             prefillhours = prefillhours,
-                            prefillnotes = prefillnotes
+                            prefillnotes = prefillnotes,
+                            supervisors = supervisors,
+                            positions = positions,
+                            wls = wls
                           )
 
 @main_bp.route("/saveChanges/<laborStatusFormID>", methods=["POST"]) #Should this be the reroute or should it be in JS?
