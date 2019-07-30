@@ -14,14 +14,15 @@ $(".form-control").datepicker({
 });
 
 function getStartDate(obj, termCode) {
-  var identification = document.getElementsByTagName("input")[1].id
+  var identification = document.getElementsByClassName('start');
+  var element = identification.item(1);
   console.log(identification)
+  console.log(element)
   var termStart = obj.value; // This is the start date
   console.log(termStart)
   console.log(termCode)
   var list_dict_ajax = []
   var list_dict = []
-  console.log($('#start').val())
   list_dict.push(termStart, termCode)
   var headers_label = ["start date", "termCode"]
   var tabledata_dict = {};
