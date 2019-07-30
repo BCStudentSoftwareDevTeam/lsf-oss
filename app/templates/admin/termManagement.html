@@ -50,8 +50,8 @@
                       <td>{{term.termName}}</td>
                       {% if term.termStart == None %}
                         <td>
-                          <div id=datepicker#1 class='input-group date'>
-                            <input id={{term.termCode}} type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" datastartEnd="start"/>
+                          <div id="datepicker#1" class='input-group date'>
+                            <input id=start{{term.termCode}} type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" datastartEnd="start"/>
                               <span class="input-group-addon">
                                   <span class="glyphicon glyphicon-calendar"></span>
                               </span>
@@ -60,8 +60,9 @@
                       {% endif %}
                       {% if term.termStart != None %}
                       <td>
-                        <div class='input-group date'>
-                          <input id={{term.termCode}} value={{term.termStart}} onclick="getDate(this)" type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" data-startEnd="end"/>
+                        <div id="datepicker#2" class='input-group date'>
+                          <input id=start{{term.termCode}} value={{term.termStart}} onchange="getDate(this, {{term.termCode}})" type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" datastartEnd="start1"/>
+                          <input id=start type='hidden' value={{term.termCode}} />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -70,8 +71,8 @@
                       {% endif %}
                       {% if term.termEnd == None %}
                         <td>
-                          <div class='input-group date'>
-                              <input id={{term.termCode}} type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" />
+                          <div id="datepicker#3" class='input-group date'>
+                              <input id=end{{term.termCode}} type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" />
                               <span class="input-group-addon">
                                   <span class="glyphicon glyphicon-calendar"></span>
                               </span>
@@ -80,8 +81,8 @@
                       {% endif %}
                       {% if term.termEnd != None %}
                       <td>
-                        <div class='input-group date'>
-                            <input id={{term.termCode}} value={{term.termEnd}} type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" />
+                        <div id="datepicker#4" class='input-group date'>
+                            <input id=end{{term.termCode}} value={{term.termEnd}} type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>

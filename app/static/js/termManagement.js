@@ -1,11 +1,11 @@
-$('.form-control').datepicker()
-   .on('change', function(e) {
-     console.log($(this).data('startEnd'));
+$('.datepicker').datepicker()
+   .on('changeDate', function(e) {
      alert($(this).data('startEnd'));
+     console.log($(this).data('startEnd'));
    });
 
 $('.glyphicon-calendar').click(function() {
-   $(".form-control").focus();
+   $(".datepicker").focus();
  });
 
 var date = new Date();
@@ -13,28 +13,58 @@ date.setDate(date.getDate());
 $(".form-control").datepicker({
 });
 
-function update_startDate(response){
+function update_startDate(response, obj){
   console.log(response)
+  console.log(obj)
+  var selected_termStart = obj.value;
+  document.getElementById(obj.id).value = selected_termStart
+  console.log(selected_termStart)
 }
 
-function getDate(obj) {
-  var termStart = obj.value;
-  console.log(obj)
+function getDate(obj, termCode) {
+  var termStart = obj.value; // This is the start date
   console.log(termStart)
-  console.log("hi")
-  var url ="/termMangement/getDate/" + termStart;
+  console.log(termCode)
+  var list_dict_ajax = []
+  var list_dict = []
+  console.log($('#start').val())
+  list_dict.push(termStart, termCode)
+  var headers_label = ["start date", "termCode"]
+  var tabledata_dict = {};
+  for (i in list_dict) {
+    tabledata_dict[headers_label[i]] = list_dict[i]
+  }
+  list_dict_ajax.shift();
+  list_dict_ajax.push(tabledata_dict)
+  test_dict = {}
+  for (var key in list_dict_ajax){
+    test_dict[key] = list_dict_ajax[key];
+  }
+  console.log(test_dict)
+  data = JSON.stringify(test_dict);
+  console.log(termCode)
+  // $('#start').each(function() {
+  //   startDate = $('#start').val()
+  // })
+  // console.log(termCode)
+  // console.log(obj)           // This is the whole object that contains the id, value, etc.
+  // console.log(termStart)
+  // console.log("hi")
     $.ajax({
-      url: url,
+      type: "POST",
+      url: "/termManagement/getDate/",
       datatype: "json",
+      data: data,
+      contentType: 'application/json',
       success: function(response){
-        update_startDate(response)
+        console.log("js success")
       }
-    })
+    });
 }
 
 
 // $.ajax({
-//   type: "POST"
+//   type: "POST",
 //   url:"/termManagement" +
 // })
 // var acc = document.getElementsByClassName("accordion");

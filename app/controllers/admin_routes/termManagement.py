@@ -5,7 +5,7 @@ from app.models.term import *
 import datetime
 from app.models.term import *
 from flask import json, jsonify
-
+from flask import request
 
 @admin.route('/termManagement', methods=['GET', 'POST'])
 # @login_required
@@ -70,14 +70,23 @@ def accordionTerms():
             listOfTerms[i].append(term)
     return listOfTerms
 
-@admin.route("/termMangement/getDate/<termStart>", methods=['GET'])
-def ourDate(termStart):
-    print("hello world!")
-    termDate = Term.select().where(Term.termStart == termStart)
-    print("hi")
-    termDate_dict = {}
-    print("hola")
-    for date in termDate:
-        start = date.termStart
-        termDate_dict[date.termCode] = {"Start Date": start}
-    return json.dumps(termDate_dict)
+@admin.route("/termManagement/getDate/", methods=['POST'])
+def ourDate():
+    try:
+        print("Hi")
+        rsp = eval(request.data.decode("utf-8"))
+        print(rsp)
+        print("Hi World")
+        if rsp:
+            print("success")
+            for data in rsp.values():
+                print(data)
+                date_index = data['start date']
+                code_index = data['termCode']
+                print(date_index)
+                print(code_index)
+                return jsonify({"Success": True})
+
+    except Exception as e:
+        print("You failed to create a term in the AY.")
+        return jsonify({"Success": False})
