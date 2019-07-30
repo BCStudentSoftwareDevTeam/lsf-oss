@@ -13,15 +13,15 @@ $('.glyphicon-calendar').click(function() {
 // }
 
 
-
+//////////Modified form check and dictionary creation////////////
+//Structure: {[field]:{[oldValue],[newValue],[effective date]}}
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');
 var finalDict = {}; //This is for buttonListener /modified fields to be saved to modform table
 function buttonListener () {
   //YOOOO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
   var newValue = $("#modifyLSF").find(".newValue");
-  var effectiveDate = document.getElementById("datetimepicker0").value; //this doesnt work since value is prefilldateneeded and..thats nothing
-  console.log(effectiveDate);
+  var effectiveDate = document.getElementById("datetimepicker0").value;
   for (var i=0; i < newValue.length-2; i=i+2) { //since newValue class is put on the div AND the select.. we skipped the div objects
     // console.log(i/2);
     // console.log(oldValue[i/2].value);
