@@ -15,8 +15,14 @@ textarea {
   padding-left: 0;
   resize: none;
   border: none;
+  margin-bottom: 0px;
 }
 
 .form-group {
   overflow: auto;
+}
+
+div h5 {
+  margin-bottom: 0px;
+  margin-top: 0px;
 }
