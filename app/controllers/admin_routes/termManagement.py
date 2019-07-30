@@ -6,6 +6,8 @@ import datetime
 from app.models.term import *
 from flask import json, jsonify
 from flask import request
+from datetime import datetime, date
+import datetime
 
 @admin.route('/termManagement', methods=['GET', 'POST'])
 # @login_required
@@ -23,7 +25,7 @@ def term_Management():
     # orderedTerms = Term.select().order_by(Term.termCode).order_by(Term.termStart)
     # singleTerm = Term.select().where(Term.termCode >= 201900)
     return render_template( 'admin/termManagement.html',
-				             title=('Admin Management'),
+                             title=('Admin Management'),
                              terms = terms,
                              # orderedTerms = orderedTerms,
                              termStart = termStart,
@@ -33,7 +35,6 @@ def term_Management():
                              termName = termName,
                              listOfTerms = accordionTerms()
                           )
-
 def createTerms(termList, iteration):
     today = datetime.datetime.now()
     todayYear = today.year
@@ -70,7 +71,7 @@ def accordionTerms():
             listOfTerms[i].append(term)
     return listOfTerms
 
-@admin.route("/termManagement/getDate/", methods=['POST'])
+@admin.route("/termManagement/getStartDate/", methods=['POST'])
 def ourDate():
     try:
         print("Hi")
@@ -80,13 +81,38 @@ def ourDate():
         if rsp:
             print("success")
             for data in rsp.values():
-                print(data)
-                date_index = data['start date']
                 code_index = data['termCode']
-                print(date_index)
-                print(code_index)
+                date_index = data['start date']
+                startDate = datetime.datetime.strptime(date_index, '%m/%d/%Y').strftime('%Y-%m-%d')
+                print("startDate")
+                termToChange = Term.get(Term.termCode == code_index)
+                (termToChange).termStart = startDate
+                termToChange.save()
+                print("You got it!")
                 return jsonify({"Success": True})
-
     except Exception as e:
-        print("You failed to create a term in the AY.")
+        print("You have failed to update the date.")
+        return jsonify({"Success": False})
+
+@admin.route("/termManagement/getEndDate/", methods=['POST'])
+def nuestroDate():
+    try:
+        print("Hi")
+        rsp = eval(request.data.decode("utf-8"))
+        print(rsp)
+        print("Hi World")
+        if rsp:
+            print("success")
+            for data in rsp.values():
+                code_index = data['termCode']
+                date_index = data['end date']
+                endDate = datetime.datetime.strptime(date_index, '%m/%d/%Y').strftime('%Y-%m-%d')
+                print("startDate")
+                termToChange = Term.get(Term.termCode == code_index)
+                (termToChange).termEnd = endDate
+                termToChange.save()
+                print("You got it!")
+                return jsonify({"Success": True})
+    except Exception as e:
+        print("You have failed to update the date.")
         return jsonify({"Success": False})

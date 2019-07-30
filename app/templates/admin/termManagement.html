@@ -51,7 +51,7 @@
                       {% if term.termStart == None %}
                         <td>
                           <div id="datepicker#1" class='input-group date'>
-                            <input id=start{{term.termCode}} type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" datastartEnd="start"/>
+                            <input id=start{{term.termCode}} type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" data-startEnd="start"/>
                               <span class="input-group-addon">
                                   <span class="glyphicon glyphicon-calendar"></span>
                               </span>
@@ -61,8 +61,7 @@
                       {% if term.termStart != None %}
                       <td>
                         <div id="datepicker#2" class='input-group date'>
-                          <input id=start{{term.termCode}} value={{term.termStart}} onchange="getDate(this, {{term.termCode}})" type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" datastartEnd="start1"/>
-                          <input id=start type='hidden' value={{term.termCode}} />
+                          <input id=start{{term.termCode}} onchange="getStartDate(this, {{term.termCode}})" type='text' class="form-control" class="datepicker" data-startEnd="start1" value={{term.termStart.strftime('%m/%d/%Y')}} />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
@@ -82,7 +81,7 @@
                       {% if term.termEnd != None %}
                       <td>
                         <div id="datepicker#4" class='input-group date'>
-                            <input id=end{{term.termCode}} value={{term.termEnd}} type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" />
+                            <input id=end{{term.termCode}} onchange="getStartDate(this, {{term.termCode}})" type='text' class="form-control" class="datepicker" value={{term.termEnd.strftime('%m/%d/%Y')}} />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>

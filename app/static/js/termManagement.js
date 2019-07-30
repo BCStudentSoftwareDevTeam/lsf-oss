@@ -13,15 +13,9 @@ date.setDate(date.getDate());
 $(".form-control").datepicker({
 });
 
-function update_startDate(response, obj){
-  console.log(response)
-  console.log(obj)
-  var selected_termStart = obj.value;
-  document.getElementById(obj.id).value = selected_termStart
-  console.log(selected_termStart)
-}
-
-function getDate(obj, termCode) {
+function getStartDate(obj, termCode) {
+  var identification = document.getElementsByTagName("input")[1].id
+  console.log(identification)
   var termStart = obj.value; // This is the start date
   console.log(termStart)
   console.log(termCode)
@@ -43,16 +37,9 @@ function getDate(obj, termCode) {
   console.log(test_dict)
   data = JSON.stringify(test_dict);
   console.log(termCode)
-  // $('#start').each(function() {
-  //   startDate = $('#start').val()
-  // })
-  // console.log(termCode)
-  // console.log(obj)           // This is the whole object that contains the id, value, etc.
-  // console.log(termStart)
-  // console.log("hi")
     $.ajax({
       type: "POST",
-      url: "/termManagement/getDate/",
+      url: "/termManagement/getStartDate/",
       datatype: "json",
       data: data,
       contentType: 'application/json',
@@ -62,11 +49,6 @@ function getDate(obj, termCode) {
     });
 }
 
-
-// $.ajax({
-//   type: "POST",
-//   url:"/termManagement" +
-// })
 // var acc = document.getElementsByClassName("accordion");
 // var i;
 //
