@@ -140,16 +140,16 @@
       <div class="modal-footer" id="modalFooter">
 
         {% if buttonState == 0 %}
-        <button type="submit" id="rehire" name="submit" value="submit" class="btn btn-success" id="submitModal">Rehire</button>
+        <a id="rehire" href=""><button type="submit" name="submit" value="submit" class="btn btn-success">Rehire</button></a>
         {% elif buttonState == 1 %}
-        <button type="button" id="withdraw" class="btn btn-danger" data-dismiss="modal">Withdraw</button>
+        <a id="withdraw" href="#>"<button type="button" class="btn btn-danger" data-dismiss="modal">Withdraw</button></a>
         {% elif buttonState == 2 %}
-        <button type="button" id="withdraw" class="btn btn-danger" data-dismiss="modal">Withdraw</button>
-        <button type="button" id="modify" class="btn btn-info" data-dismiss="modal">Modify</button>
+        <a id="pending" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Withdraw</button></a>
+        <a id="pending" href="#"><button type="button" class="btn btn-info" data-dismiss="modal">Modify</button></a>
         {% elif buttonState == 3 %}
-        <button type="button" id="release" class="btn btn-danger" data-dismiss="modal">Release</button>
-        <button type="button" id="modify" class="btn btn-info" data-dismiss="modal">Modify</button>
-        <button type="submit" id="rehire" name="submit" value="submit" class="btn btn-success" id="submitModal">Rehire</button>
+        <a id="release" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Release</button></a>
+        <a id="modify" href="#"><button type="button" class="btn btn-info" data-dismiss="modal">Modify</button></a>
+        <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success">Rehire</button></a>
         {% endif %}
       </div>
     </div>
