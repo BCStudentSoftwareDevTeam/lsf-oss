@@ -22,7 +22,6 @@ $("#Student").hide();
 $("#Position").hide();
 $("#plus").hide();
 $("#mytable").hide();
-$("#note").hide();
 
 function fill_dates(response){
   for (var key in response){
@@ -49,7 +48,6 @@ function show_access_level(obj){
   $("#Student").hide();
   $("#Position").hide();
   $("#plus").hide();
-  $("#note").hide();
   var termcode = obj.value;
   var whichterm = termcode.toString().substr(-2);
   if (whichterm != 11 && whichterm !=12 && whichterm !=00) { // Summer term or any other break period
@@ -57,7 +55,6 @@ function show_access_level(obj){
     $("#Position").show();
     $("#ContractHours").show();
     $("#plus").show();
-    $("#note").hide();
   }
   else{ // normal semester like Fall or Spring
     $("#Student").show();
@@ -65,7 +62,6 @@ function show_access_level(obj){
     $("#Hours_PerWeek").show();
     $("#JopTypes").show();
     $("#plus").show();
-    $("#note").hide();
   }
 }
 
@@ -128,7 +124,6 @@ function getDepartment(object) {
 // TABLE
 function displayTable() {
   $("#mytable").show();
-  $("#note").hide();
   $("#job_table").hide();
   $("#hours_table").hide();
   $("#contract_table").hide();
@@ -217,7 +212,6 @@ function create_and_fill_table_for_breaks() {
   $("#job_table").hide();
   $("#hours_table").hide();
   $("#primary_table").hide();
-  $("#note").hide();
   $("#contract_table").show();
   var table = document.getElementById("mytable");
   var student = document.getElementById("student");
@@ -226,6 +220,7 @@ function create_and_fill_table_for_breaks() {
   var positionname = position.options[position.selectedIndex].text;
   var posn_code = $("#position").val()
   var contracthoursname = document.getElementById("contracthours").value;
+  var notesGlyphicon = "<a data-toggle='modal' data-target='#noteModal' id='glyphicon_note'><span class='glyphicon glyphicon-edit'></span></a>"
  // Summer term or any other break period
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
@@ -238,8 +233,6 @@ function create_and_fill_table_for_breaks() {
   cell1.innerHTML = studentname;
   cell2.innerHTML = positionname;
   cell3.innerHTML = contracthoursname;
-  //cell4.innerHTML = $("#note").show();
-  var notesGlyphicon =   "<div class='form-group col-md-1' id='note'><span class='glyphicon glyphicon-edit'<a data-toggle='tooltip' data-tooltip='true' title='Add a note' data-placement = 'center' id='glyphicon_note'></a></span></div>"
   cell4.innerHTML = notesGlyphicon;
 
   $("#contracthours").val('');
@@ -271,6 +264,26 @@ function getprimarysupervisor(){
   });
 }
 
+var noteDict = {};
+function show_modal(name){
+  if (!(name in noteDict)){
+    noteDict[name] = "";
+  }
+  document.getElementById("modal_text").value=noteDict[name];
+  document.getElementById("saveButton").setAttribute('onclick',"saveNotes('" + name +"')")
+  $("#noteModal").modal("show");
+}
+
+function saveNotes(name){
+  // noteDict[name] = document.getElementById("modal_text").value;
+  var notes = document.getElementById("modal_text").value;
+  noteDict[name] = notes
+  console.log(noteDict)
+  var hidden_cell = document.getElementById("mytable").rows[1].cells[5].innerHTML
+  hidden_cell = notes
+  console.log(hidden_cell)
+}
+
 function create_and_fill_table() {
   var table = document.getElementById("mytable");
   var student = document.getElementById("student");
@@ -282,22 +295,21 @@ function create_and_fill_table() {
   var jobtypename = jobtype.options[jobtype.selectedIndex].text;
   var hours_perweek = document.getElementById("hours_perweek");
   var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
-  var notesGlyphicon =   "<span class='glyphicon glyphicon-edit'<a data-toggle='tooltip' data-tooltip='true' title='Add a note' data-placement='center' id='glyphicon_note'></a></span>"
-
+  var notesGlyphicon = "<a data-toggle='modal' onclick='show_modal(\"" + String(studentname) + String(jobtypename) + String(positionname) + "\")' id='glyphicon_note'><span class='glyphicon glyphicon-edit'</span></a>";
+  // noteDict[String(studentname) + String(jobtypename) + String(positionname)] = "";
 
   $("#mytable").show();
-  // $("#note").show();
   $("#job_table").show();
   $("#hours_table").show();
   $("#primary_table").hide();
   $("#contract_table").hide();
-  $("#note").hide();
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
   var cell3 = row.insertCell(2);
   var cell4 = row.insertCell(3);
   var cell5 = row.insertCell(4);
+  var cell6 = row.insertCell(5);
 
   cell1.innerHTML = studentname;
   cell2.innerHTML = positionname;
@@ -305,9 +317,8 @@ function create_and_fill_table() {
   cell2.id="position_code";
   cell3.innerHTML = jobtypename;
   cell4.innerHTML = hours_perweekname;
-  //cell5.innerHTML = $("#note").show();
   cell5.innerHTML = notesGlyphicon;
-
+  cell6.innerHTML = saveNotes(String(studentname) + String(jobtypename) + String(positionname));
 
   $("#hours_perweek").val('default');
   $("#hours_perweek").selectpicker("refresh");
@@ -353,10 +364,8 @@ function disableTerm() {
 }
 
 function userInsert(){
-
   var list_dict_ajax = [];
   $('#mytable tr').has('td').each(function() {
-
       supervisor = $("#supervisor").val();
       department = $("#department").val();
       term = $("#term").val();

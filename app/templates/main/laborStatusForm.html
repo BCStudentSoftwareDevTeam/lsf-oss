@@ -289,12 +289,23 @@
           <td id="hours_table">Hours Per Week</td>
           <td id="contract_table">Contract Hours</td>
           <td> Notes </td>
+          <td id= "hidden_notes"> Hide </td> 
         </tr>
       </thead>
     </table>
   </div>
 
-  <div class="form-group col-md-1" id="note">
+  <div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <textarea> Text here </textarea>
+  </div>
+
+</div>
+
+  {# <div class="form-group col-md-1" id="notess" onclick="show_modal()">
     <a      data-toggle="modal"
             data-target="#noteModal"
             id="glyphicon_note">
@@ -302,8 +313,8 @@
             </span>
     </a>
 
-  </div>
-​  <!-- START OF MODAL adding notes-->
+  </div> #}
+  <!-- START OF MODAL adding notes-->
   <div class="modal fade" id="noteModal" role="dialog" style="margin-top: 14%">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -311,11 +322,11 @@
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">Notes</h4>
           </div>
-          <div class="modal-body">
-            <textarea rows="5" cols="77" name="comment" style="resize: none;"></textarea>
+          <div class="modal-body" id = "body_of_modal">
+            <textarea id="modal_text" rows="5" cols="77" style="resize: none;"></textarea>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-info" data-dismiss="modal">Save</button>
+            <button type="button" class="btn btn-info" data-dismiss="modal" id="saveButton">Save</button>
           </div>
         </div>
       </div>
