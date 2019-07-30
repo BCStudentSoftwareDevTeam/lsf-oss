@@ -110,7 +110,6 @@
                      <option title="10" value="10">10</option>
                      <option title="12" value="12">12</option>
                      <option title="15" value="15">15</option> <!-- I think thats it...should there be a 20 for overload? ask ela and hila/whoever is doing LSF -->
-
               </select>
               <input hidden class = "oldValue"  id= "oldHours" value="{{prefillhours}}">  </input>
             </div>
@@ -126,11 +125,10 @@
         </span>
       </div>
      </div>
-
      <div class="form-group" >
        <label for="Notes">Notes:</label>
        <div>
-         <textarea name="notes" rows="9" cols="73" id="Notes" class = "newValue" value="{{prefillnotes}}">{{prefillnotes}}</textarea>
+         <textarea name="notes" rows="9" cols="73" id="Notes" class = "newValue" >{{prefillnotes}}</textarea>
           <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}">  </input>
        </div>
      </div>

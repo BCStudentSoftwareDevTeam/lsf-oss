@@ -31,6 +31,10 @@ function buttonListener () {
     //   newVal = document.getElementById("Notes").value; //TODO: fix this lmao
     // }
     console.log(newVal)
+    var notesOld = document.getElementById("oldNotes").value;
+    var notesNew = document.getElementById("Notes").value;
+    console.log("notesOld"+notesOld);
+    console.log("notesNew"+notesNew);
     if (oldValue[i/2].value != newVal) {     //If the oldValue differs from the newValue, add it to the dictionary
       finalDict[newValue[i+1].id] = {"oldValue": oldValue[i/2].value,
                                      "newValue": newVal,
