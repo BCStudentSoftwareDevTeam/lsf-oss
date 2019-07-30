@@ -1,0 +1,19 @@
+.container{
+  background-color: #F9F9F9;
+}
+#glyphicon{
+      font-size: 29px;
+      color: #337ab7;
+}
+
+#glyphicon_2{
+  font-size: 29px;
+  color: #337ab7;
+  padding-right: 0px;
+  padding-left: 38px;
+}
+
+#review-button {
+    text-align: center;
+    padding-bottom: 10px;
+}
