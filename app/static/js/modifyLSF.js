@@ -1,4 +1,6 @@
 $("#datetimepicker0").datepicker();
+$("#datetimepicker0").datepicker("setDate", new Date()); //Sets datepicker to todays date by default
+//FIXME: add a contstraint that does not allow user to set date before today's date
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
@@ -22,20 +24,17 @@ function buttonListener () {
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
   var newValue = $("#modifyLSF").find(".newValue");
   var effectiveDate = document.getElementById("datetimepicker0").value;
+  var notesOld = document.getElementById("oldNotes").value; //TODO: add this to oldValue
+  var notesNew = document.getElementById("Notes").value;//TODO: add this to newValue
+  console.log("notesOld"+notesOld);
+  console.log("notesNew"+notesNew);
   for (var i=0; i < newValue.length-2; i=i+2) { //since newValue class is put on the div AND the select.. we skipped the div objects
     // console.log(i/2);
     // console.log(oldValue[i/2].value);
     // console.log(newValue[i+1].value);
       newVal = $(newValue[i+1]).val();
-    // } catch(err) {
-    //   newVal = document.getElementById("Notes").value; //TODO: fix this lmao
-    // }
     console.log(newVal)
-    var notesOld = document.getElementById("oldNotes").value;
-    var notesNew = document.getElementById("Notes").value;
-    console.log("notesOld"+notesOld);
-    console.log("notesNew"+notesNew);
-    if (oldValue[i/2].value != newVal) {     //If the oldValue differs from the newValue, add it to the dictionary
+    if (oldValue[i/2].value != newVal) { //If the oldValue differs from the newValue, add it to the dictionary
       finalDict[newValue[i+1].id] = {"oldValue": oldValue[i/2].value,
                                      "newValue": newVal,
                                      "date": effectiveDate
@@ -46,7 +45,7 @@ function buttonListener () {
     console.log(finalDict)
   }
 }
-
+//////////Saving to modifiedForm table/////////
 // function updateFormModifiedTable(finalDict){
 //   //saves the following to modified form table:
 //   //modifidFormID (primary key, auto increment), fieldModified, oldValue, newValue, effectiveDate (from form)
@@ -57,6 +56,8 @@ function buttonListener () {
 //   //saving the old/new values to the appropriate field modified
 // }
 
+
+///////////Saving to LSF table////////////
 // function postModifications(laborStatusFormID){
 //   //passes form attributes into a dictionary for ajax, posts to db, redirects\
 //   console.log("postModifications called");
@@ -71,8 +72,6 @@ function buttonListener () {
 //   formModifications["weeklyHours"] = document.getElementById('Hours').value; //FIX ME: WILL NOT ALWAYS BEEN WEEKLY H(OURS COULD BE CONTRACT)
 //   formModifications["effectiveDate"] = document.getElementById('datetimepicker0').value;
 //   formModifications["laborSupervisorNotes"] = document.getElementById('Notes').value;
-//   //How to handle modifiedForm fields such as field modified, old value, and new value?
-//   //What happens when muliple fields are modified??
 //   var url = '/saveChanges/'+getFormId();
 //        $.ajax({
 //            type: "POST",
