@@ -273,7 +273,7 @@
             title="Add more students"
             data-placement = "center"
             id="glyphicon_2"
-            onclick="displayTable(); ">
+            onclick="displayTable()">
     </a>
     </span>
   </div>
@@ -329,7 +329,8 @@
             data-toggle="modal"
             data-target="#SubmitModal"
             name = "formsubmission"
-            value = "formsubmission">Review</button>
+            value = "formsubmission"
+            onclick="displayTable()">Review</button>
       {% include "snips/ReviewForm.html" %}
   </div>
 </form>
