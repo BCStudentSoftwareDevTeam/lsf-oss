@@ -22,6 +22,7 @@ $("#Student").hide();
 $("#Position").hide();
 $("#plus").hide();
 $("#mytable").hide();
+$("#note").hide();
 
 function fill_dates(response){
   for (var key in response){
@@ -124,6 +125,7 @@ function getDepartment(object) {
 // TABLE
 function displayTable() {
   $("#mytable").show();
+  $("#note").show();
   $("#job_table").hide();
   $("#hours_table").hide();
   $("#primary_table").hide();
@@ -182,6 +184,7 @@ function checkDuplicate() {
 
 function checkBreaks() {
   $("#mytable").show();
+  $("#note").show();
   $("#job_table").hide();
   $("#hours_table").hide();
   $("#primary_table").hide();
@@ -246,6 +249,7 @@ function create_and_fill_table() {
   var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
 
   $("#mytable").show();
+  $("#note").show();
   $("#job_table").show();
   $("#hours_table").show();
   $("#primary_table").hide();

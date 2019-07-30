@@ -27,6 +27,13 @@
   padding-left: 26px;
 }
 
+#glyphicon_note{
+  font-size: 29px;
+  color: #337ab7;
+  padding-right: 0px;
+  padding-left: 26px;
+}
+
 #review-button {
     text-align: center;
     padding-bottom: 10px;
