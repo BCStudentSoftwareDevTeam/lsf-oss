@@ -11,18 +11,16 @@ from flask import json
 from flask import make_response
 import datetime
 from datetime import date
+from app import cfg
 
 @main_bp.route('/laborHistory/<id>', methods=['GET', 'POST'])
-# @login_required
 def laborhistory(id):
     try:
         current_user = require_login()
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
 
-
         student = Student.get(Student.ID == id)
-        # print(student)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student)
         return render_template( 'main/laborhistory.html',
     				            title=('Labor History'),
@@ -34,85 +32,39 @@ def laborhistory(id):
         render_template('errors/500.html')
 
 @main_bp.route('/laborHistory/modal/<statusKey>', methods=['GET'])
-
 def populateModal(statusKey):
-    print(statusKey)
-    # try:
-    #     forms = FormHistory.select().where(FormHistory.formID == statusKey)
-    #     print(statusKey)
-    #     for k in forms:
-    #         print(k.modifiedForm)
-    #     modalData = {}
-    #     for i in forms:
-    #         modalData.update({"createdDate": i.createdDate,
-    #                         "createdBy": i.createdBy.FIRST_NAME + " " + i.createdBy.LAST_NAME,
-    #                         "jobType": i.formID.jobType,
-    #                         "WLS": i.formID.WLS,
-    #                         "contractHours": i.formID.contractHours,
-    #                         "weeklyHours": i.formID.weeklyHours,
-    #                         "supervisorNotes": i.formID.supervisorNotes,
-    #                         "term": i.formID.termCode.termName,
-    #                         "positionTitle": i.formID.POSN_TITLE,
-    #                         "positionCode": i.formID.POSN_CODE,
-    #                         "studentName": i.formID.studentSupervisee.FIRST_NAME + " " + i.formID.studentSupervisee.LAST_NAME
-    #                         })
-    #     return json.dumps(modalData)
-    # except Exception as e:
-    #     print(e)
-    #     return (jsonify({"Success": False}))
     try:
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         currentDate = datetime.date.today()
-        # print(currentDate)
-        # print("here")
-        # print(statusKey)
         buttonState = None
-        # for i in forms:
-        #     #if i.status.statusName == "Approved":
-        #     print(i.historyType.historyTypeName)
+        current_user = cfg['user']['debug']
         for form in forms:
-            print("Start here")
-            if form.releaseForm != None:
-                if form.status.statusName == "Approved":
-                    print("Enter here")
-                    print("End here")
-                    buttonState = 0 #Only rehire button
-                    break
-            print("Then here")
-            if form.overloadForm != None:
-                if form.status.statusName == "Pending":
-                    buttonState = 1 #Only withdraw button
-                    break
-            print("Now here")
-            if form.historyType.historyTypeName == "Labor Status Form":
-                print("Made it here")
-                if form.status.statusName == "Pending":
-                    print("I'm pending")
-                    buttonState = 2 #Withdraw and modify buttons
-                    break
-                elif form.status.statusName == "Denied":
-                    print("I'm denied")
-                    buttonState = 0 #Rehire button
-                    break
-                elif form.status.statusName == "Approved":
-                    print("I'm approved")
-                    if form.reviewedDate != None:
-                        print(form.reviewedDate)
-                        print(form.formID.termCode.termEnd)
-                        print(currentDate)
-                        buttonState = 3 #Release, modify, and rehire buttons
+            if current_user != (form.createdBy.username or form.formID.supervisor.username):
+                break
+            else:
+                if form.releaseForm != None:
+                    if form.status.statusName == "Approved":
+                        buttonState = 0 #Only rehire button
                         break
-                    elif form.reviewedDate == None:
-                        print(form.reviewedDate)
-                        print(form.formID.termCode.termEnd)
-                        print(currentDate)
-                        buttonState = 2 #Only withdraw and modify
+                if form.overloadForm != None:
+                    if form.status.statusName == "Pending":
+                        buttonState = 1 #Only withdraw button
                         break
-        print(buttonState)
-        # Will use later:
-        #if form.formID.termCode.termEnd >= currentDate:
-        #elif form.formID.termCode.termEnd < currentDate:
+                if form.historyType.historyTypeName == "Labor Status Form":
+                    if form.status.statusName == "Pending":
+                        buttonState = 2 #Withdraw and modify buttons
+                        break
+                    elif form.status.statusName == "Denied":
+                        buttonState = 0 #Rehire button
+                        break
+                    elif form.status.statusName == "Approved":
+                        if currentDate <= form.formID.termCode.termEnd:
+                            buttonState = 3 #Release, modify, and rehire buttons
+                            break
+                        elif currentDate > form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire
+                            break
         resp = make_response(render_template('snips/studentHistoryModal.html',
                                             forms = forms,
                                             statusForm = statusForm,

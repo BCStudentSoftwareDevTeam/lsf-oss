@@ -20,11 +20,7 @@
           {% endif %}
         {% endfor %}
         </div>
-
-
         {% for form in forms %}
-
-
           {% if form.modifiedForm == None and form.releaseForm == None and form.overloadForm == None %}
             {% if form.reviewedDate == None %}
               <h4>
@@ -64,20 +60,20 @@
                 <div class="col-sm-3">Submitted</div>
               </h4>
             {% endif %}
-            <div class="form-group">
-              <h5 class="control-label col-sm-6" align="right">Condition at Release:</h5>
+            <div class="row">
+              <div class="control-label col-sm-6" align="right">Condition at Release:</div>
             <div class="col-sm-6">
-              <h5>{{form.releaseForm.conditionAtRelease}}</h5>
+              <div>{{form.releaseForm.conditionAtRelease}}</div>
             </div>
             </div>
-            <div class="form-group">
-              <h5 class="control-label col-sm-3 col-sm-offset-3" align="left">Release Date:</h5>
+            <div class="row">
+              <div class="control-label col-sm-3 col-sm-offset-3" align="left">Release Date:</div>
             <div class="col-sm-6">
-              <h5>{{form.releaseForm.releaseDate.strftime('%m-%d-%Y')}}</h5>
+              <div>{{form.releaseForm.releaseDate.strftime('%m-%d-%Y')}}</div>
             </div>
             </div>
-            <div class="form-group">
-              <h5 class="control-label col-sm-6" align="right">Reseason for release:</h5>
+            <div class="row">
+              <div class="control-label col-sm-6" align="right">Reason for release:</div>
             <div class="col-sm-6">
               <textarea  rows="3" cols="25" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
             </div>
@@ -102,11 +98,8 @@
               <div class="col-sm-3">Submitted</div>
             </h4>
           {% endif %}
-            <div class="form-group">
-              <h5 class="control-label col-sm-6" align="right">{{form.modifiedForm.fieldModified}} changed from</h5>
-            <div class="col-sm-6">
-              <h5>{{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</h5>
-            </div>
+            <div class="row">
+              <div class="control-label col-sm-12" align="center">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</div>
             </div>
 
 
@@ -140,16 +133,30 @@
       <div class="modal-footer" id="modalFooter">
 
         {% if buttonState == 0 %}
-        <a id="rehire" href=""><button type="submit" name="submit" value="submit" class="btn btn-success">Rehire</button></a>
-        {% elif buttonState == 1 %}
-        <a id="withdraw" href="#>"<button type="button" class="btn btn-danger" data-dismiss="modal">Withdraw</button></a>
-        {% elif buttonState == 2 %}
-        <a id="pending" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Withdraw</button></a>
-        <a id="pending" href="#"><button type="button" class="btn btn-info" data-dismiss="modal">Modify</button></a>
-        {% elif buttonState == 3 %}
-        <a id="release" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Release</button></a>
-        <a id="modify" href="#"><button type="button" class="btn btn-info" data-dismiss="modal">Modify</button></a>
+        <div class = "col-sm-12">
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success">Rehire</button></a>
+        </div>
+        {% elif buttonState == 1 %}
+        <div class = "col-sm-12">
+        <a id="withdraw" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Withdraw</button></a>
+        </div>
+        {% elif buttonState == 2 %}
+        <div class = "col-sm-6">
+        <a id="pending" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Withdraw</button></a>
+        </div>
+        <div class = "col-sm-6">
+        <a id="pending" href="#"><button type="button" class="btn btn-info" data-dismiss="modal">Modify</button></a>
+        </div>
+        {% elif buttonState == 3 %}
+        <div class = "col-sm-4" style="text-align: right">
+        <a id="release" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Release</button></a>
+        </div>
+        <div class = "col-sm-4">
+        <a id="modify" href="#"><button type="button" class="btn btn-info" data-dismiss="modal">Modify</button></a>
+        </div>
+        <div class = "col-sm-4" style="text-align:left">
+        <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success">Rehire</button></a>
+        </div>
         {% endif %}
       </div>
     </div>

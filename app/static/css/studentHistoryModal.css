@@ -26,3 +26,16 @@ div h5 {
   margin-bottom: 0px;
   margin-top: 0px;
 }
+
+.modal-body {
+  height:350px;
+  overflow:auto;
+}
+
+.row{
+  font-size: 15px;
+}
+
+.modal-footer{
+  text-align: center;
+}
