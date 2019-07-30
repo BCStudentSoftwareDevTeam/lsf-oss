@@ -1,0 +1,372 @@
+{% extends "base.html" %}
+{% block app_content %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+​
+<form id="laborStatusForm">
+  <h1 class="col-md-12 col-md-offset-4">Labor Status Form
+    <span class="glyphicon glyphicon-bookmark"
+      <a  data-toggle="tooltip" data-tooltip="true"
+          title="This online labor status form is used to
+          establish a student's work status in the Labor Program."
+          data-placement = "right" id="glyphicon">
+      </a>
+    </span>
+  </h1>
+  <br />
+  <div class="form-group row col-md-12 col-md-offset-4">
+    <!--selectpicker for supervisor-->
+    <label for="supervisor" class="col-2 col-form-label">Supervisor</label>
+        <div class="col-10">
+        <select class="selectpicker form-control"
+                name='supervisor'
+                id='supervisor'
+                data-live-search='true'
+                title="Supervisor"
+                data-width="320px"
+                >
+          {% for staff in staffs %}
+            <option value="{{staff.PIDM}}">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
+          {% endfor %}
+        </select>
+       </div>
+</div>
+  <br />
+  <div class="form-group row col-md-12 col-md-offset-4">
+    <!--selectpicker for department-->
+    <label for="department" class="col-2 col-form-label">Department</label>
+    <div class="col-10">
+      <select class="selectpicker"
+              name='department'
+              id='department'
+              data-live-search='true'
+              title="Department"
+              onchange = "getDepartment(this)"
+              data-width="320px" >
+        {% for department in departments %}
+          <option value="{{department.DEPT_NAME}}">{{department.DEPT_NAME}}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <br />
+  <div class="form-group row col-md-12 col-md-offset-4">
+    <!-- selectpicker for term  -->
+    <div class="col-10">
+      <label for="term" class="col-2 col-form-label">Term</label>
+          <div class="col-10">
+            <select class="selectpicker"
+                    name='term'
+                    id='term'
+                    data-live-search="true"
+                    title="Term"
+                    onchange = "show_access_level(this); prefilleddate(this)"
+                    data-width="320px"
+                    >
+            {% for term in terms %}
+                <option value = "{{term.termCode}}">{{term.termName}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+  </div>
+<br />
+​
+<div class="form-group col-md-12 col-md-offset-2 row">
+<!-- DATEPICKERS -->
+          <div  class="form-group col-md-4">
+            <!--Datepicker for start date-->
+            <label for="datetimepicker1" class="col-2 col-form-label" id="datepicker">Start Date</label>
+              <div class='input-group date' >
+                <input type='text' class="form-control" id='datetimepicker1' name="startdate" placeholder="Start Date" data-width="320px" />
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+              </div>
+          </div>
+​
+          <div class="form-group col-md-4">
+            <!--Datepicker for End date-->
+          <label for="datetimepicker2" class="col-2 col-form-label" id="datepicker">End Date</label>
+            <div class='input-group date'>
+                <input type='text' class="form-control" id='datetimepicker2' name="enddate" placeholder="End Date" data-width="320px"/>
+                <span class="input-group-addon">
+                  <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
+          </div>
+​
+      </div>
+​
+<div class ="form-group col-md-12">
+​
+  <div class="form-group col-md-3" id="Student">
+    <!-- selectpicker for student  -->
+      <label for="student">Student</label>
+            <select class="selectpicker"
+                    name='student'
+                    id='student'
+                    data-live-search='true'
+                    title="Student"
+                    onchange= "disableTerm()"
+                    data-width="230px"
+                    >
+              {% for student in students %}
+                  <option value="{{student.ID}}">{{student.FIRST_NAME}} {{student.LAST_NAME}} {{student.ID}}</option>
+              {% endfor %}
+            </select>
+  </div>
+​
+  <div class="form-group col-md-3" id="Position">
+    <!--selectpicker for positio3-->
+    <label for="student">Position</label>
+    <select class="selectpicker"
+            name='position'
+            id='position'
+            data-live-search='true'
+            title="Position"
+            data-width="230px">
+    </select>
+  </div>
+​
+ <!-- Contract hours for breaks -->
+  <div class="form-group col-md-5" id="ContractHours" >
+          <!--selectpicker for cntract hours-->
+          <label for="student">Contract Hours</label>
+          <input class="form-control quantity"
+                  type = "number"
+                  name='contracthours'
+                  id='contracthours'
+                  title="Contract Hours"
+                  placeholder="Contract Hours"
+                  min = "1"
+                  oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0"
+                  >
+          </input>
+  </div>
+​
+  <div class="form-group col-md-2" id="JopTypes">
+    <!--selectpicker for Job type-->
+    <label for="student">Job Type</label>
+    <select class="selectpicker"
+            name='jobtype'
+            id='jobtype'
+            data-live-search='true'
+            title="Job Type"
+            data-width="197px"
+            onchange="fill_hoursperweek()">
+      <option value="Primary">Primary</option>
+      <option value="Secondary">Secondary</option>
+    </select>
+   <!-- START OF MODAL For Secondary-->
+   <div class="modal fade" id="SecondaryModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Secondary Postion</h4>
+      </div>
+      <div class="modal-body">
+        The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">I agree</button>
+      </div>
+    </div>
+</div>
+</div>
+​
+<!-- END OF THE MODAL -->
+​
+<!-- START OF MODAL For when Student does not have a Primary Position-->
+<div class="modal fade" id="NoPrimaryModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
+<div class="modal-dialog" role="document">
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+     </button>
+     <h4 class="modal-title">Unable to Add a Secondary Position</h4>
+   </div>
+   <div class="modal-body">
+     The selected student does not have a primary position.
+   </div>
+   <div class="modal-footer">
+     <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
+   </div>
+ </div>
+</div>
+</div>
+​
+<!-- END OF THE MODAL -->
+​
+<!-- START OF MODAL For when Student has a primary position-->
+<div class="modal fade" id="PrimaryModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
+<div class="modal-dialog" role="document">
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+     </button>
+     <h4 class="modal-title">Title</h4>
+   </div>
+   <div class="modal-body">
+     Secondary position has been added. Student's primary superviosr {} will be notified.
+   </div>
+   <div class="modal-footer">
+     <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
+   </div>
+ </div>
+</div>
+</div>
+​
+<!-- END OF THE MODAL -->
+​
+  </div>
+​
+  <div class="form-group col-md-2" id="Hours_PerWeek">
+    <!--selectpicker for hrs per week-->
+    <label for="student">Hours Per Week</label>
+    <select class="selectpicker"
+            name='hours_perweek'
+            id='hours_perweek'
+            data-live-search='true'
+            title="Hours per week"
+            data-width="197px">
+    </select>
+​
+    <!-- START OF MODAL For Overload-->
+    <div class="modal fade" id="OverloadModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
+   <div class="modal-dialog" role="document">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+         <h4 class="modal-title">Labor Overload</h4>
+       </div>
+       <div class="modal-body">
+         <h4><b> Students shoud not work any hours within a secondary assignment until notification of approved Labor Overload. </b> </h4>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-primary" data-dismiss="modal">I accept</button>
+       </div>
+     </div>
+ </div>
+ </div>
+​
+ <!-- END OF THE MODAL -->
+​
+​
+  </div>
+​
+  <div class="form-group col-md-1" id="plus">
+    <label> </label>
+    <span class="glyphicon glyphicon-plus"
+    <a      data-toggle="tooltip"
+            data-tooltip="true"
+            title="Add more students"
+            data-placement = "center"
+            id="glyphicon_2"
+            onclick="displayTable()">
+    </a>
+    </span>
+  </div>
+</div>
+  <br />
+​  <div class = "col-md-10">
+    <table class="table table-striped " id="mytable">
+      <thead>
+        <tr class="item">
+          <td>Student</td>
+          <td id = "position" data-value = "">Position</td>
+          <td id="job_table">Job Type</td>
+          <td id="hours_table">Hours Per Week</td>
+          <td id="contract_table">Contract Hours</td>
+          <td> Notes </td>
+        </tr>
+      </thead>
+    </table>
+  </div>
+
+  <div class="form-group col-md-1" id="note">
+    <a      data-toggle="modal"
+            data-target="#noteModal"
+            id="glyphicon_note">
+            <span class="glyphicon glyphicon-edit">
+            </span>
+    </a>
+
+  </div>
+​  <!-- START OF MODAL adding notes-->
+  <div class="modal fade" id="noteModal" role="dialog" style="margin-top: 14%">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Notes</h4>
+          </div>
+          <div class="modal-body">
+            <textarea rows="5" cols="77" name="comment" style="resize: none;"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-info" data-dismiss="modal">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- END OF MODAL -->
+
+  <div class="col-md-12 " id="review-button">
+    <button type="button"
+            class="btn btn-primary"
+            data-toggle="modal"
+            data-target="#SubmitModal"
+            name = "formsubmission"
+            value = "formsubmission"
+            onclick="displayTable()">Review</button>
+      {% include "snips/ReviewForm.html" %}
+  </div>
+</form>
+
+
+​
+ <!-- css and javascript files -->
+<script src="/static/js/laborStatusForm.js"></script>
+<link rel="stylesheet" href="/static/css/laborStatusForm.css" type="text/css"/>
+{% endblock %}
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+​
+    {# USE LATER
+        <div id="ctl00_MainContent_wls5or6" class="col-xs-10 col-xs-offset-1" hidden>
+            <div class="col-xs-5 col-xs-offset-3 ">
+            <p class="text-warning">  Student with WLS Level 5 or 6 must have at least a 15 hour contract. These positions require special authorization as specified at <a href="http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS" target="_blank">The Labor Program Website</a></p>
+            </div>
+            <br />
+        </div>
+​
+        <div id="ctl00_MainContent_twentyhrs" class="col-xs-10 col-xs-offset-1" hidden>
+            <div class="col-xs-5 col-xs-offset-3">
+                <p class="text-warning">
+                    Students working more than 15 hours must fill out a <a href="http://www.berea.edu/labor-program-office/files/2013/07/20130705-Labor-Overload-Application.pdf" target="_blank">labor overload application.</a>
+                </p>
+​
+            </div>
+            <br />
+        </div>
+     USE LATER #}

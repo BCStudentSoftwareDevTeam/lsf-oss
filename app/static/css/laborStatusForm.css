@@ -1,0 +1,40 @@
+.container{
+  padding-right: 15px;
+  padding-left: 0px;
+  background-color: #F9F9F9;
+}
+
+/* .col-centered{
+    margin: 0 auto;
+    float: none;
+} */
+.col-md-1 {
+  width: 5.333333%;
+}
+#datepicker {
+  padding-right: 0px;
+}
+
+#glyphicon{
+      font-size: 29px;
+      color: #337ab7;
+}
+
+#glyphicon_2{
+  font-size: 29px;
+  color: #337ab7;
+  padding-right: 0px;
+  padding-left: 26px;
+}
+
+#glyphicon_note{
+  font-size: 29px;
+  color: #337ab7;
+  padding-right: 0px;
+  padding-left: 26px;
+}
+
+#review-button {
+    text-align: center;
+    padding-bottom: 10px;
+}
