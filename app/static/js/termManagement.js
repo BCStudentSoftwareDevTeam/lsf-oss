@@ -18,6 +18,13 @@ function getStartDate(obj, termCode) {
   var element = identification.item(1);
   console.log(identification)
   console.log(element)
+
+  var endTerm = document.getElementsByClassName('end');
+  var specificEnd = endTerm.item(1);
+  console.log(endTerm)
+  console.log(specificEnd)
+
+
   var termStart = obj.value; // This is the start date
   console.log(termStart)
   console.log(termCode)
