@@ -15,7 +15,7 @@
     <table id="positionTable" >
       {% for form in studentForms %}
       <tr>
-        <td onclick="hello({{form.laborStatusFormID}})" id="{{form.laborStatusFormID}}">
+        <td onclick="openModal({{form.laborStatusFormID}})" id="{{form.laborStatusFormID}}">
           <b>{{form.termCode.termName}}</b>, {{form.jobType}}
           <br>
           {{form.POSN_TITLE}} {{form.POSN_CODE}} - {{form.department.DEPT_NAME}} Dept.

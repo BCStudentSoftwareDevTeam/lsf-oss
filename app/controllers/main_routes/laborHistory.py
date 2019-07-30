@@ -36,6 +36,7 @@ def laborhistory(id):
 @main_bp.route('/laborHistory/modal/<statusKey>', methods=['GET'])
 
 def populateModal(statusKey):
+    print(statusKey)
     # try:
     #     forms = FormHistory.select().where(FormHistory.formID == statusKey)
     #     print(statusKey)

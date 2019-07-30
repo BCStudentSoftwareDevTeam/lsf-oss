@@ -1,4 +1,4 @@
-function hello(laborStatusKey) {
+function openModal(laborStatusKey) {
   console.log(laborStatusKey);
   $.ajax({
     type: "GET",
@@ -8,12 +8,32 @@ function hello(laborStatusKey) {
       console.log(response);
       $("#holdModal").empty().append(response);
       $("#modal").modal("show");
+      console.log(laborStatusKey)
+      $("#rehire").href="/laborstatusform/" + laborStatusKey;
     }
   });
 
 }
 
+function redirectLaborStatusForm() {
+  window.location.href = "/laborstatusform"
+}
 
+function redirectModifiedLaborForm() {
+  window.location.href = "/"
+}
+
+function redirectLaborReleaseForm() {
+
+}
+
+function redirectModifiedPendingForm() {
+
+}
+
+function withdrawOverloadForm() {
+
+}
 
 // function hello(laborStatusKey) {
 //
