@@ -49,6 +49,7 @@ function show_access_level(obj){
   $("#Student").hide();
   $("#Position").hide();
   $("#plus").hide();
+  $("#note").hide();
   var termcode = obj.value;
   var whichterm = termcode.toString().substr(-2);
   if (whichterm != 11 && whichterm !=12 && whichterm !=00) { // Summer term or any other break period
@@ -56,6 +57,7 @@ function show_access_level(obj){
     $("#Position").show();
     $("#ContractHours").show();
     $("#plus").show();
+    $("#note").hide();
   }
   else{ // normal semester like Fall or Spring
     $("#Student").show();
@@ -63,6 +65,7 @@ function show_access_level(obj){
     $("#Hours_PerWeek").show();
     $("#JopTypes").show();
     $("#plus").show();
+    $("#note").hide();
   }
 }
 
@@ -125,10 +128,9 @@ function getDepartment(object) {
 // TABLE
 function displayTable() {
   $("#mytable").show();
-  $("#note").show();
+  $("#note").hide();
   $("#job_table").hide();
   $("#hours_table").hide();
-  $("#primary_table").hide();
   $("#contract_table").hide();
   var termcode = $('#term').val();
   var whichterm = termcode.toString().substr(-2);
@@ -212,10 +214,10 @@ function checkDuplicate_breaks() {
 
 function create_and_fill_table_for_breaks() {
   $("#mytable").show();
-  $("#note").show();
   $("#job_table").hide();
   $("#hours_table").hide();
   $("#primary_table").hide();
+  $("#note").hide();
   $("#contract_table").show();
   var table = document.getElementById("mytable");
   var student = document.getElementById("student");
@@ -231,10 +233,12 @@ function create_and_fill_table_for_breaks() {
   $(cell2).attr("data-posn", posn_code);
   cell2.id="position_code";
   var cell3 = row.insertCell(2);
+  var cell4 = row.insertCell(3);
 
   cell1.innerHTML = studentname;
   cell2.innerHTML = positionname;
   cell3.innerHTML = contracthoursname;
+  cell4.innerHTML = $("#note").show();
   $("#contracthours").val('');
   $("#position").val('default');
   $("#position").selectpicker("refresh");
@@ -277,16 +281,18 @@ function create_and_fill_table() {
   var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
 
   $("#mytable").show();
-  $("#note").show();
+  // $("#note").show();
   $("#job_table").show();
   $("#hours_table").show();
   $("#primary_table").hide();
   $("#contract_table").hide();
+  $("#note").hide();
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
   var cell3 = row.insertCell(2);
   var cell4 = row.insertCell(3);
+  var cell5 = row.insertCell(4);
 
   cell1.innerHTML = studentname;
   cell2.innerHTML = positionname;
@@ -294,6 +300,7 @@ function create_and_fill_table() {
   cell2.id="position_code";
   cell3.innerHTML = jobtypename;
   cell4.innerHTML = hours_perweekname;
+  cell5.innerHTML = $("#note").show();
 
   $("#hours_perweek").val('default');
   $("#hours_perweek").selectpicker("refresh");

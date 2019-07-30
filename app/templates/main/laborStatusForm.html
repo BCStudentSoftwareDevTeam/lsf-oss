@@ -288,30 +288,31 @@
           <td id="job_table">Job Type</td>
           <td id="hours_table">Hours Per Week</td>
           <td id="contract_table">Contract Hours</td>
+          <td> Notes </td>
         </tr>
       </thead>
     </table>
   </div>
+
   <div class="form-group col-md-1" id="note">
-    <span class="glyphicon glyphicon-edit"
-    <a      data-toggle="tooltip"
-            data-tooltip="true"
-            title="Add a note"
-            data-placement = "center"
+    <a      data-toggle="modal"
+            data-target="#noteModal"
             id="glyphicon_note">
+            <span class="glyphicon glyphicon-edit">
+            </span>
     </a>
-    </span>
+
   </div>
 ​  <!-- START OF MODAL adding notes-->
-  <div class="modal fade" id="infoModal" role="dialog" style="margin-top: 14%">
-      <div class="modal-dialog modal-sm">
+  <div class="modal fade" id="noteModal" role="dialog" style="margin-top: 14%">
+      <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">Notes</h4>
           </div>
           <div class="modal-body">
-            <textarea rows="4" cols="70" name="comment" style="resize: none;"></textarea>
+            <textarea rows="5" cols="77" name="comment" style="resize: none;"></textarea>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-info" data-dismiss="modal">Save</button>
@@ -320,8 +321,6 @@
       </div>
     </div>
   <!-- END OF MODAL -->
-
-
 
   <div class="col-md-12 " id="review-button">
     <button type="button"
