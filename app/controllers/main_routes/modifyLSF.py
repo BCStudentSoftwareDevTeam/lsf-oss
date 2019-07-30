@@ -8,7 +8,7 @@ from app.login_manager import require_login
 from datetime import *
 
 
-@main_bp.route('/modifyLSF', methods=['GET', 'POST']) #FIXME: ADD FORM ID TO URL
+@main_bp.route('/modifyLSF', methods=['GET', 'POST']) #FIXME: ADD FORM ID TO URL(PASSED FROM LABOR HISTORY)
 # @login_required
 def modifyLSF():
     current_user = require_login()
@@ -16,19 +16,17 @@ def modifyLSF():
         return render_template('errors/403.html')
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
-
+    #form = query to attach form to form id
     #Step 2: get data from said form ###FIXME ALL OF THESE: query to students previous lsf form to pull specific fields.
-    prefillstudent = "Willy Wonka" 
-    prefillsupervisor = "Scott Heggen (sheggen)"
-    prefilldepartment = "Computer Science"
-    prefillposition = "Janitor"
-    prefillwls = "WLS 1"
-    prefilljobtype = "Primary"
-    prefillterm = "AY 2019-2020"
-    prefillhours = "0-5"
-    current_time = datetime.now()
-    prefilldateneeded = current_time.strftime('%m/%d/%Y')
-    prefillnotes = "Kids went missing in his factory... sketchy business...but he's alright i guess"
+    prefillstudent = "Willy Wonka" #form.studentSupervisee
+    prefillsupervisor = "Scott Heggen (sheggen)" #form.supervisor
+    prefilldepartment = "Computer Science" #form.department
+    prefillposition = "Janitor" #form.POSN_TITLE
+    prefillwls = "WLS 1" #form.WLS
+    prefilljobtype = "Primary" #form.jobType
+    prefillterm = "AY 2019-2020" #form.termCode
+    prefillhours = "0-5" #form.weeklyHours ##FIXME  Its not always weekly. sometimes its contract.
+    prefillnotes = "Kids went missing in his factory... sketchy business...but he's alright i guess" #form.supervisorNotes
     #Step 3: send data to front to populate html
     return render_template( 'main/modifyLSF.html',
 				            title=('Modify LSF'),
@@ -41,25 +39,26 @@ def modifyLSF():
                             prefilljobtype = prefilljobtype,
                             prefillterm = prefillterm,
                             prefillhours = prefillhours,
-                            prefilldateneeded = prefilldateneeded,
                             prefillnotes = prefillnotes
                           )
 
-@main_bp.route("/saveChanges/<laborStatusFormID>", methods=["POST"])
+@main_bp.route("/saveChanges/<laborStatusFormID>", methods=["POST"]) #Should this be the reroute or should it be in JS?
 def saveChanges(laborStatusFormID):
     #Takes dictionary from ajax and dumps to db
     try:
         laborstatusform = laborStatusForm.get(laborStatusForm.laborStatusFormID==laborStatusFormID)
         data = request.form
-        laborstatusform.primarySupervisor = (data['primarySupervisor']) #FIXME: not always primarySupervisor
-        laborstatusform.position = (data['position'])
+        laborstatusform.supervisor = (data['supervisor'])
+        laborstatusform.POSN_TITLE = (data['position'])
         laborstatusform.WLS = (data['WLS'])
         laborstatusform.jobType = (data['jobType'])
-        laborstatusform.weeklyHours = (data['weeklyHours']) #FIXME: not always weekly hours (if secondary)
-        ####Effective date should go to formhistory/modified form...
+        laborstatusform.weeklyHours = (data['weeklyHours']) #FIXME: not always weekly hours (if secondary/break).
         laborstatusform.laborSupervisorNotes = (data['laborSupervisorNotes'])
-        #modifiedForm
+        #modifiedForm #Not sure if this will work...
         modifiedform = modifiedForm.get(modifiedForm.modifiedFormID==modifiedFormID)
+        modifiedform.fieldModified = (data['fieldModified'])
+        modifiedform.oldValue = (data['oldValue'])
+        modifiedform.oldValue = (data['newValue'])
         modifiedform.effectiveDate = (data['effectiveDate'])
         #FIXME: dunno what's goin on with these rn....
         #field modified

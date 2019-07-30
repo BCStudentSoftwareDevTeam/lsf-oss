@@ -13,8 +13,6 @@ $('.glyphicon-calendar').click(function() {
 //     console.log("0-5 should be disabled...");
 //   }
 // }
-
-
 //////////Modified form check and dictionary creation////////////
 //Structure: {[field]:{[oldValue],[newValue],[effective date]}}
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');
@@ -26,8 +24,8 @@ function buttonListener () {
   var effectiveDate = document.getElementById("datetimepicker0").value;
   var notesOld = document.getElementById("oldNotes").value; //TODO: add this to oldValue
   var notesNew = document.getElementById("Notes").value;//TODO: add this to newValue
-  console.log("notesOld"+notesOld);
-  console.log("notesNew"+notesNew);
+  //console.log("notesOld"+notesOld);
+  //console.log("notesNew"+notesNew);
   for (var i=0; i < newValue.length-2; i=i+2) { //since newValue class is put on the div AND the select.. we skipped the div objects
     // console.log(i/2);
     // console.log(oldValue[i/2].value);
