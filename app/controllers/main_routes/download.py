@@ -6,11 +6,18 @@ from app.controllers.main_routes.main_routes import *
 
 class ExcelMaker:
     def __init__(self, student):
-        self.student = student
+        student = student
         self.ID = self
+        self.makeList(student)
     def makeList(self, student):
+        print("i")
         print(student)
         with open('app/static/LaborStudent.csv', 'w') as csvfile:
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='|', quoting=csv.QUOTE_MINIMAL)
-            filewriter.writerow(['Name', 'B#','Date',student])
+            #print(student)
+            filewriter.writerow(['Name', 'B#','Date',student, 'apple'])
+
+
+def main():
+    ExcelMaker()

@@ -1,16 +1,22 @@
+// function myfunction(apple){
+//   console.log(apple)
+// }
 
-table=$("#studentList").DataTable({
-  "drawCallback": function( settings ) {
-    $("#studentList thead").remove(); } ,
+$(document).ready( function(){
+  table=$("#studentList").DataTable({
+    "drawCallback": function( settings ) {
+      $("#studentList thead").remove(); } ,
 
 
-     "order": [[0, "desc"]], //display order on column
-     "pagingType": "simple_numbers",
-     "ordering": false,
-     "info": false,
-     "lengthChange": false,
+       "order": [[0, "desc"]], //display order on column
+       "pagingType": "simple_numbers",
+       "ordering": false,
+       "info": false,
+       "lengthChange": false,
 
-})
+  })
+});
+
 
 // show the sub-sidebar only on this page
 $("div.laborStudentChoice").show();
@@ -48,3 +54,31 @@ $('.openBtn').on('click',function(){
         $('#downloadModal').modal({show:true});
     });
 });
+
+// function downloadHistory(val){
+//   console.log(val);
+//   window.location.href = '/excel/'+val;
+// }
+
+// $(document).ready(function(){
+//        $('input[type="checkbox"]').click(function(){
+//            if($(this).prop("checked") == true){
+//                value = $('.S').val();
+//                console.log(value);
+//            }
+//            else if($(this).prop("checked") == false){
+//                console.log(value);
+//            }
+//        });
+// });
+//
+//
+// function laborStudent(obj){
+//   var value = obj.value
+//   console.log(value)
+//   $.ajax({
+//     type: "GET"
+//     url: "/index/getStudent/" + value,
+//     dataType: "jason",
+//   })
+// }

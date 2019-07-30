@@ -1,10 +1,11 @@
 {% extends "base.html" %}
-
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://code.jquery.com/ui/3.3.1/jquery-ui.js"></script>
 {% block scripts %}
 {{super()}}
-
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
-<script type=text/javascript src="{{url_for('static', filename='js/index.js') }}"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/index.js') }}"></script>
 {% endblock %}
 
 {% block styles %}
@@ -14,11 +15,12 @@
 
 {% block app_content %}
 
-<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/static/css/index.css" />
+
 <div align= "right">
 
-  <script type="text/javascript" src="/static/js/index.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/index.css" />
+
 
     <div align="center">
       <h1>Supervisor Portal</h1>
@@ -28,7 +30,8 @@
     <div align= "right"><button class="btn" data-toggle="modal" data-target="#downloadModal">Download</button></div>
 
 <!-- start of modal -->
-     <div class="modal fade" id="downloadModal" role="dialog">
+<form method="POST" action="static/LaborStudent.csv">
+     <div class="modal fade" id="downloadModal" role="dialog" >
          <div class="modal-dialog">
 
            <div class="modal-content" align="center">
@@ -38,32 +41,45 @@
              </div>
 
              <div  class="modal-body">
-                <input type="checkbox" name="select-all" id="select-all" > <b>Select all</b>
+                <input type="checkbox" name="student" id="select-all"> <b>Select all</b>
+
                {% for form in active_supervisees %}
                <label class="container" id="currentStu">
-                  <input type="checkbox" name="student" checked="checked" value="student">
-                  <span class="checkmark"></span>
+                  <input type="checkbox" id ={{form.studentSupervisee.ID}} name={{form.studentSupervisee.ID}} value={{form.studentSupervisee.ID}}>
                   {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}
                 </label>
                 {% endfor %}
              {% for form in inactive_supervisees %}
                <label class="container" id="pastStu" style="display:none">
-                  <input type="checkbox" name=student value={{form.studentSupervisee.ID}}>
+                  <input type="checkbox" id= {{form.studentSupervisee.ID}} name={{form.studentSupervisee.ID}} value={{form.studentSupervisee.ID}}>
                   <span class="checkmark"></span>
                   {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}
                 </label>
                 {% endfor %}
+      <!-- <span  data-tooltip="true" id='form' data-live-search="true" title="Form" onclick = "myfunction(this)"></span>
+
+ {% for form in active_supervisees %}
+     <input type="checkbox" id= "Q" name="student" value={{form.studentSupervisee.ID}}>
+     <span class="checkmark"></span>
+     {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}
+
+ {% endfor %} -->
              </div>
+
              <div class="modal-footer" align="center">
-               <a href="static/LaborStudent.csv" download="Form.csv">
-                 <button type="submit" value="Submit" class="btn btn-success" id="modal">Download</button>
-               </a>
+                 <button type="submit" value="Submit" class="btn btn-success" id="modal" download="LaborStudent.csv"  >Download</button>
+
              </div>
            </div>
 
          </div>
        </div>
+</form>
 <!-- end of modal-->
+
+
+
+
 
     <div align= "center" >
     <table id="studentList" class="table table-striped studentTable" >
@@ -95,5 +111,6 @@
 
     </div>
 </div>
+<iframe name="frame"></iframe>
 
 {% endblock %}

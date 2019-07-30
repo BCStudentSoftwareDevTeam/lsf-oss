@@ -50,15 +50,21 @@ def index():
                 inactive_supervisees.append(supervisee)
             else:
                 student_processed = False  # Resets state machine.
+    print('here')
+    value =[]
+    for form in active_supervisees:
+        if request.form.get(form.studentSupervisee.ID):
+            value.append( request.form.get(form.studentSupervisee.ID))
+            print(value)
 
+    ExcelMaker(value)
 
-    
-    excel = ExcelMaker(student)
     return render_template( 'main/index.html',
 				    title=('Home'),
                     forms_by_supervisees = forms_by_supervisees,
                     active_supervisees = active_supervisees,
                     inactive_supervisees = inactive_supervisees,
+                    
                     username = current_user
 
                           )
