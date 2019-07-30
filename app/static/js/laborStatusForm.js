@@ -238,7 +238,10 @@ function create_and_fill_table_for_breaks() {
   cell1.innerHTML = studentname;
   cell2.innerHTML = positionname;
   cell3.innerHTML = contracthoursname;
-  cell4.innerHTML = $("#note").show();
+  //cell4.innerHTML = $("#note").show();
+  var notesGlyphicon =   "<div class='form-group col-md-1' id='note'><span class='glyphicon glyphicon-edit'<a data-toggle='tooltip' data-tooltip='true' title='Add a note' data-placement = 'center' id='glyphicon_note'></a></span></div>"
+  cell4.innerHTML = notesGlyphicon;
+
   $("#contracthours").val('');
   $("#position").val('default');
   $("#position").selectpicker("refresh");
@@ -279,6 +282,8 @@ function create_and_fill_table() {
   var jobtypename = jobtype.options[jobtype.selectedIndex].text;
   var hours_perweek = document.getElementById("hours_perweek");
   var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
+  var notesGlyphicon =   "<span class='glyphicon glyphicon-edit'<a data-toggle='tooltip' data-tooltip='true' title='Add a note' data-placement='center' id='glyphicon_note'></a></span>"
+
 
   $("#mytable").show();
   // $("#note").show();
@@ -300,7 +305,9 @@ function create_and_fill_table() {
   cell2.id="position_code";
   cell3.innerHTML = jobtypename;
   cell4.innerHTML = hours_perweekname;
-  cell5.innerHTML = $("#note").show();
+  //cell5.innerHTML = $("#note").show();
+  cell5.innerHTML = notesGlyphicon;
+
 
   $("#hours_perweek").val('default');
   $("#hours_perweek").selectpicker("refresh");
