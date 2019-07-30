@@ -57,14 +57,15 @@ def index():
             value.append( request.form.get(form.studentSupervisee.ID))
             print(value)
 
-    ExcelMaker(value)
+    excel = ExcelMaker()
+    completePath = excel.makeList(value)
 
     return render_template( 'main/index.html',
 				    title=('Home'),
                     forms_by_supervisees = forms_by_supervisees,
                     active_supervisees = active_supervisees,
                     inactive_supervisees = inactive_supervisees,
-                    
+
                     username = current_user
 
                           )

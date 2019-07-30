@@ -30,7 +30,7 @@
     <div align= "right"><button class="btn" data-toggle="modal" data-target="#downloadModal">Download</button></div>
 
 <!-- start of modal -->
-<form method="POST" action="static/LaborStudent.csv">
+<form target="frame" method="POST">
      <div class="modal fade" id="downloadModal" role="dialog" >
          <div class="modal-dialog">
 
@@ -45,13 +45,13 @@
 
                {% for form in active_supervisees %}
                <label class="container" id="currentStu">
-                  <input type="checkbox" id ={{form.studentSupervisee.ID}} name={{form.studentSupervisee.ID}} value={{form.studentSupervisee.ID}}>
+                  <input type="checkbox" id ='{{form.laborStatusFormID}}' name='{{form.studentSupervisee.ID}}' value='{{form.laborStatusFormID}}'>
                   {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}
                 </label>
                 {% endfor %}
              {% for form in inactive_supervisees %}
                <label class="container" id="pastStu" style="display:none">
-                  <input type="checkbox" id= {{form.studentSupervisee.ID}} name={{form.studentSupervisee.ID}} value={{form.studentSupervisee.ID}}>
+                  <input type="checkbox" id= '{{form.studentSupervisee.ID}}' name='{{form.studentSupervisee.ID}}' value='{{form.studentSupervisee.ID}}'>
                   <span class="checkmark"></span>
                   {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}
                 </label>
@@ -67,7 +67,7 @@
              </div>
 
              <div class="modal-footer" align="center">
-                 <button type="submit" value="Submit" class="btn btn-success" id="modal" download="LaborStudent.csv"  >Download</button>
+                 <button type="submit" value="Submit" class="btn btn-success" id="modal" onclick="downloadHistory()" download="LaborStatus.csv">Download</button>
 
              </div>
            </div>

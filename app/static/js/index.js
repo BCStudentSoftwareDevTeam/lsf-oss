@@ -55,10 +55,11 @@ $('.openBtn').on('click',function(){
     });
 });
 
-// function downloadHistory(val){
-//   console.log(val);
-//   window.location.href = '/excel/'+val;
-// }
+function downloadHistory(){
+  console.log();
+  window.location.href = '/static/LaborStudent.csv';//'/excel/';
+  console.log("ok");
+}
 
 // $(document).ready(function(){
 //        $('input[type="checkbox"]').click(function(){

@@ -7,9 +7,16 @@
 # import os
 #
 # @main_bp.route('/', methods=['GET'])
-# @main_bp.route('/excel/<sid>', methods=['GET'])
+# @main_bp.route('/excel/', methods=['GET'])
 # def makeExcel(sid):
-#     print('hi')
+#     print('here')
+#     value =[]
+#     for form in active_supervisees:
+#         if request.form.get(form.studentSupervisee.ID):
+#             value.append( request.form.get(form.studentSupervisee.ID))
+#             print(value)
+#
+#     ExcelMaker(value)
 #     # for student in sid:
 #     #     form= LaborStatusForm.select(LaborStatusForm.studentSupervisee == student)
 #     # # excel = ExcelMaker(1)
