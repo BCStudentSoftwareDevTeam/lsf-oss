@@ -485,7 +485,7 @@ fh = [  {
         {
             "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 3),
             "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Release Form"),
-            "releaseForm": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 1),
+            "releaseForm": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 2),
             "modifiedForm": None,
             "overloadForm": None,
             "createdBy": User.get(User.username == "heggens"),
