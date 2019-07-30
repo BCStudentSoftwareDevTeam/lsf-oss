@@ -80,8 +80,10 @@
            <select type="JobType"
                             class="selectpicker form-control newValue"
                             id="JobType"
-                            data-live-search="true"> <!---FIXME: ADD if statements; if term is a break, job type should become uneditable. i think wls should too...? --->
-                <option title="{{prefilljobtype}}" value="{{prefilljobtype}}">{{prefilljobtype}}</option>
+                            data-live-search="true"
+                            onchange = hideFiveHourOption()
+                            value = {{prefilljobtype}}> {{prefilljobtype}}<!---FIXME: ADD if statements; if term is a break, job type should become uneditable-->
+                <option title="Primary" value="Primary">Primary</option>
                 <option title="Secondary" value="Secondary">Secondary</option>
            </select>
            <input hidden class = "oldValue"  id= "{{prefilljobtype}}" value="{{prefilljobtype}}"> </input>
@@ -97,26 +99,22 @@
      </div>
 
      <div class="form-group">
-       <label for="Hours">Hours:</label>
-       <div>
-         <select required type="Hours"
-                          class="selectpicker form-control newValue"
-                          id="Hours"
-                          data-live-search="true">
-              {% if JobType == "Secondary" %} <!---Should we make this to where if its secondary, it becomes a text input? (0-5, or 140 contract hours...? talk to LSF team)--->
-                <option title="0-5" value="0-5">0-5</option> <!---TODOOOOO: Needs to ONLY appear when its a secondary: add if statements !-->
-                <option title="10" value="10">10</option>
-                <option title="12" value="12">12</option>
-                <option title="15" value="15">15</option> <!-- I think thats it...should there be a 20 for overload? ask ela and hila/whoever is doing LSF -->
-              {% else %}
-                <option title="10" value="10">10</option>
-                <option title="12" value="12">12</option>
-                <option title="15" value="15">15</option> <!-- I think thats it...should there be a 20 for overload? ask ela and hila/whoever is doing LSF -->
-              {% endif %}
-         </select>
-         <input hidden class = "oldValue"  id= "oldHours" value="{{prefillhours}}">  </input>
-       </div>
-     </div>
+            <label for="Hours">Hours:</label>
+            <div>
+              <select required type="Hours"
+                               class="selectpicker form-control newValue"
+                               id="Hours"
+                               data-live-search="true">{{prefillhours}}
+                    <!---Should we make this to where if its secondary, it becomes a text input? (0-5, or 140 contract hours...? talk to LSF team)--->
+                     <option title="0-5" value="0-5">0-5</option> <!---TODOOOOO: Needs to ONLY appear when its a secondary: add if statements !-->
+                     <option title="10" value="10">10</option>
+                     <option title="12" value="12">12</option>
+                     <option title="15" value="15">15</option> <!-- I think thats it...should there be a 20 for overload? ask ela and hila/whoever is doing LSF -->
+
+              </select>
+              <input hidden class = "oldValue"  id= "oldHours" value="{{prefillhours}}">  </input>
+            </div>
+          </div>
 
     <div class="form-group" id= "dateDiv">
     <label for="datetimepicker" class="required-asterisk">Date Needed:</label>

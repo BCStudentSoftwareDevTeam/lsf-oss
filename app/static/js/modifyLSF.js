@@ -2,6 +2,18 @@ $("#datetimepicker0").datepicker();
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
+// function hideFiveHourOption(){
+// // This is for hiding the 0-5 option of primary is selected for job Type
+//   var jobType = document.getElementById("JobType");
+//   var hours = document.getElementById("Hours");
+//   if (jobType.value == "Primary"){
+//     hours.options[0].disabled;
+//     console.log("0-5 should be disabled...");
+//   }
+// }
+
+
+
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');
 var finalDict = {}; //This is for buttonListener /modified fields to be saved to modform table
 function buttonListener () {
