@@ -71,7 +71,7 @@ def accordionTerms():
             listOfTerms[i].append(term)
     return listOfTerms
 
-@admin.route("/termManagement/getStartDate/", methods=['POST'])
+@admin.route("/termManagement/setDate/", methods=['POST'])
 def ourDate():
     try:
         print("Hi")
@@ -80,18 +80,24 @@ def ourDate():
         print("Hi World")
         if rsp:
             print("success")
-            for data in rsp.values():
-                code_index = data['termCode']
-                date_index = data['start date']
-                startDate = datetime.datetime.strptime(date_index, '%m/%d/%Y').strftime('%Y-%m-%d')
-                print("startDate")
-                termToChange = Term.get(Term.termCode == code_index)
-                (termToChange).termStart = startDate
-                termToChange.save()
-                print("You got it!")
-                return jsonify({"Success": True})
+            termCode = rsp['termCode']
+            termToChange = Term.get(Term.termCode == termCode)
+            date_value = rsp.get("start", rsp.get("end", None))
+            print(date_value)
+            if rsp.get('start', None):
+                startDate = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
+                termToChange.termStart = startDate
+                print("startDate saved")
+            if rsp.get('end', None):
+                endDate = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
+                termToChange.termEnd = endDate
+                print("endDate saved")
+            print("startDate")
+            termToChange.save()
+            print("You got it!")
+            return jsonify({"Success": True})
     except Exception as e:
-        print("You have failed to update the date.")
+        print("You have failed to update the date.", e)
         return jsonify({"Success": False})
 
 @admin.route("/termManagement/getEndDate/", methods=['POST'])

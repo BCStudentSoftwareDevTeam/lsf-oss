@@ -47,41 +47,43 @@
             <tbody>
               {% for term in terms %}
                     <tr>
-                      <td>{{term.termName}}</td>
+                      <td>{{term.termName}}</td> {# checks to see if the start date is empty #}
                       {% if term.termStart == None %}
                         <td>
                           <div id="datepicker#1" class='input-group date'>
-                            <input id=start{{term.termCode}} type='text' class="form-control" class="datepicker" class="start" placeholder="MM/DD/YYYY" data-startEnd="start"/>
+                            <input id=start_{{term.termCode}} onchange="getDate(this, {{term.termCode}})" type='text' class="form-control" class="datepicker" class="start" placeholder="MM/DD/YYYY" data-startEnd="start"/>
                               <span class="input-group-addon">
                                   <span class="glyphicon glyphicon-calendar"></span>
                               </span>
                           </div>
                         </td>
                       {% endif %}
-                      {% if term.termStart != None %}
+                      {% if term.termStart != None %} {# checks to see if the start date is not empty #}
                       <td>
                         <div id="datepicker#2" class='input-group date'>
-                          <input id=start{{term.termCode}} onchange="getStartDate(this, {{term.termCode}})" type='text' class="form-control datepicker start" data-startEnd="start1" value={{term.termStart.strftime('%m/%d/%Y')}} />
+                          <input id=start_{{term.termCode}} onchange="getDate(this, {{term.termCode}})" type='text' class="form-control datepicker start" data-startEnd="start1" value={{term.termStart.strftime('%m/%d/%Y')}} />
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
                         </div>
                       </td>
                       {% endif %}
-                      {% if term.termEnd == None %}
+                      {% if term.termEnd == None %} {# checks to see if the end date is empty #}
                         <td>
                           <div id="datepicker#3" class='input-group date'>
-                              <input id=end{{term.termCode}} type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" />
+                              <input id=end_{{term.termCode}} onchange="getDate(this, {{term.termCode}})" type='text' class="form-control" class="datepicker" placeholder="MM/DD/YYYY" />
                               <span class="input-group-addon">
                                   <span class="glyphicon glyphicon-calendar"></span>
                               </span>
                           </div>
                         </td>
                       {% endif %}
-                      {% if term.termEnd != None %}
+                      {% if term.termEnd != None %} {# checks to see if the end date is not empty #}
                       <td>
                         <div id="datepicker#4" class='input-group date'>
-                            <input id=end{{term.termCode}} onchange="getStartDate(this, {{term.termCode}})" type='text' class="form-control datepicker end"  value={{term.termEnd.strftime('%m/%d/%Y')}} />
+
+                            <input id=end_{{term.termCode}} onchange="getDate(this, {{term.termCode}})" type='text' class="form-control" class="datepicker" value={{term.termEnd.strftime('%m/%d/%Y')}} />
+
                             <span class="input-group-addon">
                                 <span class="glyphicon glyphicon-calendar"></span>
                             </span>
