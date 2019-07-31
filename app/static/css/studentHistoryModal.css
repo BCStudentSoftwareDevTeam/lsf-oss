@@ -6,8 +6,6 @@
   overflow: auto;
 }
 
-
-
 textarea {
   align: left;
   padding-left: 0;
@@ -20,17 +18,15 @@ textarea {
   overflow: auto;
 }
 
-
-
 .modal-body {
   height:350px;
   overflow:auto;
 }
 
-.row{
-  font-size: 15px;
-}
-
 .modal-footer{
   text-align: center;
 }
+
+p {
+   margin:0
+  }

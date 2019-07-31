@@ -14,7 +14,7 @@
           <div class= "h4" align="center">
           {{form.jobType}} | {{form.POSN_TITLE}} | {{form.POSN_CODE}} | WLS {{form.WLS}} |
           {% if form.weeklyHours == None %}
-          {{form.contractHours}} Hours
+          {{form.contractHours}} Hours</div>
           {% else %}
           {{form.weeklyHours}} Hours Per Week</div>
           {% endif %}
@@ -60,25 +60,24 @@
                 <div class="col-sm-3">Submitted</div>
               </div>
             {% endif %}
-            <div class="row">
-              <div class="control-label col-sm-6" align="right">Condition at Release:</div>
-            <div class="col-sm-6">
-              <div>{{form.releaseForm.conditionAtRelease}}</div>
-            </div>
-            </div>
-            <div class="row">
-              <div class="control-label col-sm-3 col-sm-offset-3" align="left">Release Date:</div>
-            <div class="col-sm-6">
-              <div>{{form.releaseForm.releaseDate.strftime('%m-%d-%Y')}}</div>
-            </div>
-            </div>
-            <div class="row">
-              <div class="control-label col-sm-6" align="right">Reason for release:</div>
-            <div class="col-sm-6">
-              <textarea  rows="3" cols="25" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
-            </div>
-            </div>
-
+              <div class="row" style="padding-top:5px">
+                <p class="control-label col-sm-6" align="right">Condition at Release:</p>
+              <div class="col-sm-6">
+                <p>{{form.releaseForm.conditionAtRelease}}</p>
+              </div>
+              </div>
+              <div class="row">
+                <p class="control-label col-sm-3 col-sm-offset-3" align="left">Release Date:</p>
+              <div class="col-sm-6">
+                <p>{{form.releaseForm.releaseDate.strftime('%m-%d-%Y')}}</p>
+              </div>
+              </div>
+              <div class="row">
+                <p class="control-label col-sm-6" align="right">Reason for release:</p>
+              <div class="col-sm-6">
+                <textarea  rows="3" cols="25" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
+              </div>
+              </div>
           {% elif form.modifiedForm != None %}
           {% if form.reviewedDate == None %}
             <div class="h4">
@@ -98,8 +97,8 @@
               <div class="col-sm-3">Submitted</div>
             </div>
           {% endif %}
-            <div class="row">
-              <div class="control-label col-sm-12" align="center">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</div>
+            <div class="row" style="padding-top:5px">
+              <p class="control-label col-sm-12" align="center">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</p>
             </div>
 
 
@@ -137,9 +136,11 @@
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success">Rehire</button></a>
         </div>
         {% elif buttonState == 1 %}
-        <div class = "col-sm-12">
-        <a id="withdraw" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Withdraw</button></a>
-        </div>
+        {% for form in statusForm %}
+          <div class = "col-sm-12">
+          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form.laborStatusFormID}})">Withdraw</button>
+          </div>
+        {% endfor %}
         {% elif buttonState == 2 %}
         <div class = "col-sm-6">
         <a id="pending" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Withdraw</button></a>

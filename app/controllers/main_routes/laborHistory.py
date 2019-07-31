@@ -36,6 +36,7 @@ def populateModal(statusKey):
     try:
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
+        print(statusForm)
         currentDate = datetime.date.today()
         buttonState = None
         current_user = cfg['user']['debug']
@@ -76,3 +77,14 @@ def populateModal(statusKey):
         print(e)
         render_template('errors/500.html')
         return (jsonify({"Success": False}))
+
+@main_bp.route('/laborHistory/modal/updatestatus', methods=['POST'])
+def updatestatus_post():
+    try:
+        print("im here")
+        rsp = eval(request.data.decode("utf-8"))
+        print(type(rsp))
+        return jsonify({"Success": True})
+    except Exception as e:
+        print(e)
+        return jsonify({"Success": False})
