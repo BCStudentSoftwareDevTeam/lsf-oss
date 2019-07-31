@@ -1,10 +1,8 @@
 function openModal(laborStatusKey) {
-  console.log(laborStatusKey);
   $.ajax({
     type: "GET",
     url: '/laborHistory/modal/' + laborStatusKey,
     success: function(response) {
-      console.log(response);
       $("#holdModal").empty().append(response);
       $("#modal").modal("show");
       $("#modify").attr("href", "/modifyLSF/" + laborStatusKey); // will go to the modifyLSF controller

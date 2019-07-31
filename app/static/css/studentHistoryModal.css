@@ -6,9 +6,7 @@
   overflow: auto;
 }
 
-h4 {
-  overflow: auto;
-}
+
 
 textarea {
   align: left;
@@ -22,10 +20,7 @@ textarea {
   overflow: auto;
 }
 
-div h5 {
-  margin-bottom: 0px;
-  margin-top: 0px;
-}
+
 
 .modal-body {
   height:350px;

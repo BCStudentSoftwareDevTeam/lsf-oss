@@ -4,61 +4,61 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         {% for form in statusForm %}
-        <h2 class="modal-title" align="center">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}</h2>
+        <div class="modal-title h2" align="center">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}</div>
         {% endfor %}
       </div>
       <div class="modal-body" id="modalid">
         {% for form in statusForm %}
         <div id="currentData">
-          <h4 align="center">{{form.termCode.termName}} | {{form.department.DEPT_NAME}} Dept. | {{form.supervisor.FIRST_NAME}} {{form.supervisor.LAST_NAME}} </h4>
-          <h4 align="center">
+          <div class= "h4" align="center">{{form.termCode.termName}} | {{form.department.DEPT_NAME}} Dept. | {{form.supervisor.FIRST_NAME}} {{form.supervisor.LAST_NAME}} </div>
+          <div class= "h4" align="center">
           {{form.jobType}} | {{form.POSN_TITLE}} | {{form.POSN_CODE}} | WLS {{form.WLS}} |
           {% if form.weeklyHours == None %}
           {{form.contractHours}} Hours
           {% else %}
-          {{form.weeklyHours}} Hours Per Week</h4>
+          {{form.weeklyHours}} Hours Per Week</div>
           {% endif %}
         {% endfor %}
         </div>
         {% for form in forms %}
           {% if form.modifiedForm == None and form.releaseForm == None and form.overloadForm == None %}
             {% if form.reviewedDate == None %}
-              <h4>
+              <div class= "h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">Submitted</div>
-              </h4>
+              </div>
             {% elif form.reviewedDate != None %}
-              <h4>
+              <div class= "h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">{{form.status}}</div>
-              </h4>
-              <h4>
+              </div>
+              <div class= "h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">Submitted</div>
-              </h4>
+              </div>
             {% endif %}
 
           {% elif form.releaseForm != None %}
             {% if form.reviewedDate == None %}
-              <h4>
+              <div class= "h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">Submitted</div>
-              </h4>
+              </div>
             {% elif form.reviewedDate != None %}
-              <h4>
+              <div class= "h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">{{form.status}}</div>
-              </h4>
-              <h4>
+              </div>
+              <div class= "h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">Submitted</div>
-              </h4>
+              </div>
             {% endif %}
             <div class="row">
               <div class="control-label col-sm-6" align="right">Condition at Release:</div>
@@ -81,22 +81,22 @@
 
           {% elif form.modifiedForm != None %}
           {% if form.reviewedDate == None %}
-            <h4>
+            <div class="h4">
               <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
               <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
               <div class="col-sm-3">Submitted</div>
-            </h4>
+            </div>
           {% elif form.reviewedDate != None %}
-            <h4>
+            <div class="h4">
               <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
               <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
               <div class="col-sm-3">{{form.status}}</div>
-            </h4>
-            <h4>
+            </div>
+            <div class="h4">
               <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
               <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
               <div class="col-sm-3">Submitted</div>
-            </h4>
+            </div>
           {% endif %}
             <div class="row">
               <div class="control-label col-sm-12" align="center">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</div>
@@ -105,22 +105,22 @@
 
           {% elif form.overloadForm != None %}
             {% if form.reviewedDate == None %}
-              <h4>
+              <div class="h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">Submitted</div>
-              </h4>
+              </div>
             {% elif form.reviewedDate != None %}
-              <h4>
+              <div class="h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">{{form.status}}</div>
-              </h4>
-              <h4>
+              </div>
+              <div class="h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">Submitted</div>
-              </h4>
+              </div>
             {% endif %}
 
           {% endif %}
