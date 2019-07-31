@@ -25,13 +25,20 @@ def modifyLSF(laborStatusKey):
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_TITLE #FIXME: add WLS to this; they should be connected
     prefilljobtype = form.jobType
+    print ("JobType",prefilljobtype)
     prefillterm = form.termCode.termName
-    prefillhours = "0-5" #form.weeklyHours      ##FIXME  Its not always weekly. sometimes its contract hours.
+    if form.weeklyHours != None:
+        prefillhours = form.weeklyHours   ##FIXME  This isnt prefilling correctly. :c
+        print ("WeeklyHours",prefillhours)
+    else:
+        prefillhours = form.contractHours
+        print ("ContractHours",prefillhours)
     prefillnotes = form.supervisorNotes
     #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
     supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
-    positions = STUPOSN.select(STUPOSN.POSN_CODE).distinct() #FIX ME: needs to be specific to that department
-    wls = STUPOSN.select(STUPOSN.WLS).distinct() #Shouldnt wls be tied to position...?? why are there 2 separate fields for it on our page then..?
+    positions = STUPOSN.select(STUPOSN.POSN_CODE).distinct() #FIX ME: 1) needs to be specific to that department
+                                                            # 2) have WLS displayed with it since they are connected (like LSF interface)
+    wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
     return render_template( 'main/modifyLSF.html',
 				            title=('Modify LSF'),

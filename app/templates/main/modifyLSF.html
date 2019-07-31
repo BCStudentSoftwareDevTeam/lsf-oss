@@ -62,14 +62,15 @@
        </div>
        <!-- FIXME: Add conditional that renders jobtype select disabled if term is for a break since jobtype cant be changed-->
        <div class="form-group">
-         <label for="JobType">Job Type:</label>
+         <label for="JobType">Job Type:FIXME</label>
          <div>
            <select type="JobType"
                             class="selectpicker form-control newValue"
                             id="JobType"
                             data-live-search="true"
                             onchange = hideFiveHourOption()
-                            value = {{prefilljobtype}}> {{prefilljobtype}}<!---FIXME: ADD if statements; if term is a break, job type should become uneditable-->
+                            value = {{prefilljobtype}}
+                            title = {{prefilljobtype}}> <!---FIXME(1): ADD if statements; if term is a break, job type should become uneditable -->
                 <option title="Primary" value="Primary">Primary</option>
                 <option title="Secondary" value="Secondary">Secondary</option>
            </select>
@@ -86,14 +87,18 @@
      </div>
 
      <div class="form-group">
-            <label for="Hours">Hours:</label>
+            <label for="Hours">Hours:FIXME</label>
             <div>
               <select required type="Hours"
                                class="selectpicker form-control newValue"
                                id="Hours"
-                               data-live-search="true">{{prefillhours}}
-                    <!---Should we make this to where if its secondary, it becomes a text input? (0-5, or 140 contract hours...? talk to LSF team)--->
-                     <option title="0-5" value="0-5">0-5</option> <!---TODOOOOO: Needs to ONLY appear when its a secondary: add if statements !-->
+                               data-live-search="true"
+                               title = {{prefillhours}}
+                               value = {{prefillhours}}>
+
+                    <!---FIXME: Should we make this to where if its secondary, it becomes a text input? (0-5, or 140 contract hours...? talk to LSF team)--->
+                    <!---FIXME: 0-5 Needs to ONLY appear when its a secondary: add if statements !-->
+                     <option title="5" value="5">5</option>
                      <option title="10" value="10">10</option>
                      <option title="12" value="12">12</option>
                      <option title="15" value="15">15</option> <!-- I think thats it...should there be a 20 for overload? ask ela and hila/whoever is doing LSF -->
