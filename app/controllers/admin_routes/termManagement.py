@@ -60,7 +60,7 @@ def createTerms(termList, iteration):
             print("You failed to create a term in the " + str(termYear) + " AY.")
 
 def accordionTerms():
-    listOfTerms = []
+    listOfTerms = {}
     hoy = datetime.datetime.now()
     hoyyear = hoy.year
     for i in range(5):
@@ -69,6 +69,7 @@ def accordionTerms():
         listOfTerms.append([])
         for term in currentTerm:
             listOfTerms[i].append(term)
+    print(listOfTerms)
     return listOfTerms
 
 @admin.route("/termManagement/setDate/", methods=['POST'])
@@ -98,27 +99,4 @@ def ourDate():
             return jsonify({"Success": True})
     except Exception as e:
         print("You have failed to update the date.", e)
-        return jsonify({"Success": False})
-
-@admin.route("/termManagement/getEndDate/", methods=['POST'])
-def nuestroDate():
-    try:
-        print("Hi")
-        rsp = eval(request.data.decode("utf-8"))
-        print(rsp)
-        print("Hi World")
-        if rsp:
-            print("success")
-            for data in rsp.values():
-                code_index = data['termCode']
-                date_index = data['end date']
-                endDate = datetime.datetime.strptime(date_index, '%m/%d/%Y').strftime('%Y-%m-%d')
-                print("startDate")
-                termToChange = Term.get(Term.termCode == code_index)
-                (termToChange).termEnd = endDate
-                termToChange.save()
-                print("You got it!")
-                return jsonify({"Success": True})
-    except Exception as e:
-        print("You have failed to update the date.")
         return jsonify({"Success": False})
