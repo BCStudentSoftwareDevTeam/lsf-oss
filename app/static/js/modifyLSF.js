@@ -39,16 +39,12 @@ function buttonListener () {
                                      "date": effectiveDate
                                     }
       }
-
-    // else if (notesOld != notesNew) { //FIXME: trying to add notes to dictionary...
-    //   finalDict[newValue[i+1].id] = {"oldValue": notesOld,
-    //                                  "newValue": notesNew,
-    //                                  "date": effectiveDate
-    //                                 }
-
-      //   console.log(oldValue[i/2].value)
-      //   console.log(newValue[i+1])
-    // }
+  }
+  if (notesOld != notesNew) { //Adds notes to dictionary if theyre different
+    finalDict["Notes"] = {"oldValue": notesOld,
+                                   "newValue": notesNew,
+                                   "date": effectiveDate
+                                  }
 
   }
   console.log(finalDict)

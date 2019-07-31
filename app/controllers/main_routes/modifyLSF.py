@@ -25,10 +25,9 @@ def modifyLSF(laborStatusKey):
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_TITLE #FIXME: add WLS to this; they should be connected
     prefilljobtype = form.jobType
-    print ("JobType",prefilljobtype)
     prefillterm = form.termCode.termName
     if form.weeklyHours != None:
-        prefillhours = form.weeklyHours   ##FIXME  This isnt prefilling correctly. :c
+        prefillhours = form.weeklyHours
         print ("WeeklyHours",prefillhours)
     else:
         prefillhours = form.contractHours
@@ -74,10 +73,10 @@ def saveChanges(laborStatusFormID):
         modifiedform.oldValue = (data['oldValue'])
         modifiedform.oldValue = (data['newValue'])
         modifiedform.effectiveDate = (data['effectiveDate'])
-        #FIXME: dunno what's goin on with these rn....
-        #field modified
+        #FIXME: I think this well be a separate save since its a separate dictionary for a separate table
         #old value
         #new value
+        #date
     except:
         flash("An error has occurred, your changes were NOT saved. Please try again.","error")
         return json.dumps({"error":0})

@@ -60,7 +60,7 @@
            <input hidden class = "oldValue"  id= "{{prefillposition}}" value="{{prefillposition}}"></input>
          </div>
        </div>
-       <!-- FIXME: Add conditional that renders jobtype select disabled if term is for a break since jobtype cant be changed-->
+       <!-- FIXME: Add conditional that renders jobtype select disabled if term is for a break, since jobtype is always Secondary-->
        <div class="form-group">
          <label for="JobType">Job Type</label>
          <div>
@@ -70,7 +70,7 @@
                             data-live-search="true"
                             onchange = hideFiveHourOption()
                             value = {{prefilljobtype}}
-                            title = {{prefilljobtype}}> <!---FIXME(1): ADD if statements; if term is a break, job type should become uneditable -->
+                            title = {{prefilljobtype}}>
                 <option title="Primary" value="Primary">Primary</option>
                 <option title="Secondary" value="Secondary">Secondary</option>
            </select>
