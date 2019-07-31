@@ -21,7 +21,7 @@ def modifyLSF(laborStatusKey):
     form = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"###FIXME (ALL OF THESE): query to students previous lsf form to pull specific fields.
-    prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME+" ("+form.supervisor.username+")"
+    prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_TITLE #FIXME: add WLS to this; they should be connected
     prefilljobtype = form.jobType
