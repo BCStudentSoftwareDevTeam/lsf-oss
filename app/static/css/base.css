@@ -1,48 +1,120 @@
-#sidebar, #sidebar .container-fluid {
-    margin-left: 0px;
-    padding-left: 2px;
+.navbar-header {
+    border-bottom: 1px lightgray solid;
+    margin-bottom: 5px;
+    height: 79px;
+    z-index: 99;
 }
-.panel {
-    margin-bottom: 0px;
+
+.navbar {
+    background-color: #f5f5f5;
 }
-.panel div:hover, .panel div li:hover  {
+
+#sidebar {
+    background-color: #f5f5f5;
+    padding-right: 0px;
+    height: 100vh;
+    box-shadow: 3px 3px 9px 0px lightgrey
+}
+
+.panel-default, .panel-heading {
+    border: none;
+}
+
+.panel-heading:hover {
     background-color: #66c2cc;
 }
 
 .panel-group {
     margin-bottom: 0px;
 }
+
 #admindropdown {
     list-style: none;
     margin-left: 10px;
     padding-left: 0px;
 }
 
-#admindropdown li {
+#sidebar, #sidebar .container-fluid {
     margin-left: 0px;
-    padding-left: 25px;
+    padding-left: 2px;
+    padding-right: 0px;
 }
 
-.navbar-header, #portal {
-    clear:both;
+#flash_container {
+    min-height: 55px;
 }
 
-.navbar-header {
-
-    border-bottom: 1px lightgray solid;
+#flasher {
     margin-bottom: 5px;
-    height: 75px;
-}
-.panel-group .panel-heading {
-    border-bottom: 1px #ddd solid;
 }
 
-#admindropdown li {
-    padding-top: 1px;
-    padding-bottom: 0px;
+.panel {
+    margin-bottom: 0px;
+    border-radius: 0px;
+    box-shadow: none;
+    background-color: #f5f5f5;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  background-color: #f5f5f5;
+  color:#1e2433;
+  text-align: center !important;
+  width: 100%; /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+}
+
+a {
+  color: #1c78bb;
+}
+
+a:hover {
+  color: #155788;
+}
+
+.btn-newcolor { /* for contributors page */
+  background-color: #1c78c0;
+  color: #ffffff;
+}
+
+#wrapper {
+  width: 100%;
+  margin-bottom:90px !important;
+}
+
+.footerlink {
+  font-weight: bold;
+}
+
+#admin {
+    background-color: #66c2cc;
+}
+
+#admin ul {
+    background-color: #f5f5f5;
+}
+
+.panel-group .panel, .panel-heading {
+    border-radius: 0px;
 }
 
 #logo {
-    opacity: .75;
+    padding: 0px;
+    top: 3px;
+    position: absolute;
+    right: 3px;
+    background-color: white;
+    z-index: 100;
 }
 
+#logo img {
+    padding-right: 5px;
+    border-radius: 75px;
+    box-shadow: -4px 4px 8px 2px lightgrey;
+}
+
+.bottom-buffer {
+    margin-bottom: 60px;
+}

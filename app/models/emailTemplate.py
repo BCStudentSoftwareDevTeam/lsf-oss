@@ -2,7 +2,7 @@ from app.models import *
 
 
 class EmailTemplate (baseModel):
-    emailTemplateID                 = IntegerField(primary_key=True)
+    emailTemplateID                 = PrimaryKeyField()
     purpose                         = CharField()
     subject                         = CharField()
     body                            = CharField()
