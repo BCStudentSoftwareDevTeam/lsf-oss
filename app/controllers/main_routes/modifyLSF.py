@@ -54,6 +54,15 @@ def modifyLSF(laborStatusKey):
                             positions = positions,
                             wls = wls
                           )
+@main_bp.route("/modifyLSF/getPositions/<department>", methods=['GET'])
+#I Stole this from LSF.py
+def getPositions(department):
+    positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
+    position_dict = {}
+    for position in positions:
+        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
+    return json.dumps(position_dict)
+
 
 @main_bp.route("/saveChanges/<laborStatusFormID>", methods=["POST"]) #Should this be the reroute or should it be in JS?
 def saveChanges(laborStatusFormID):

@@ -4,19 +4,45 @@ $("#datetimepicker0").datepicker("setDate", new Date()); //Sets datepicker to to
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
-// function hideFiveHourOption(){
-// // This is for hiding the 0-5 option of primary is selected for job Type
-//   var jobType = document.getElementById("JobType");
-//   var hours = document.getElementById("Hours");
-//   if (jobType.value == "Primary"){
-//     hours.options[0].disabled;
-//     console.log("0-5 should be disabled...");
-//   }
-// }
+///////////Putting position with WLS- I whole yanked this from laborStatusForm.js//////////
+function fill_positions(response) {
+  var selected_positions = document.getElementById("Position");
+  if (selected_positions){
+    $("#Position").empty();
+    for (var key in response) {
+      var options = document.createElement("option");
+      options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
+      options.value = key;
+      selected_positions.appendChild(options);
+    }
+    $('.selectpicker').selectpicker('refresh');
+  }
+}
+function getDepartment(object) {
+   var department = object.value;
+   var url = "/laborstatusform/getPositions/" + department;
+       $.ajax({
+         url: url,
+         dataType: "json",
+         success: function (response){
+            fill_positions(response)
+         }
+       })
+ }
+ ///////////////Hiding 5 hour option if jobtype == Primary/////////////////////
+function disableFiveHourOption(){
+// This is for hiding the 0-5 option of primary is selected for job Type
+  var jobType = document.getElementById("JobType");
+  var hours = document.getElementById("Hours");
+  if (jobType.value == "Primary"){
+    hours.options[0].disabled;
+    console.log("0-5 should be disabled...");
+  }
+}
 //////////Modified form check and dictionary creation////////////
 //Structure: {[field]:{[oldValue],[newValue],[effective date]}}
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');
-var finalDict = {}; //This is for buttonListener /modified fields to be saved to modform table
+var finalDict = {};
 function buttonListener () {
   //YOOOO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
