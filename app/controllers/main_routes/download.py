@@ -39,7 +39,8 @@ class ExcelMaker:
                                     i.weeklyHours,
                                     i.termCode.termName,
                                     i.jobType,
-                                    i.supervisorNotes])
+                                    i.supervisorNotes,
+                                    i.laborDepartmentNotes])
 
 
 
