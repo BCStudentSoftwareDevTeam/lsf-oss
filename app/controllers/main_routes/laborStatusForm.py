@@ -74,8 +74,10 @@ def userInsert():
                                              contractHours = data.get('Contract Hours', None),
                                              weeklyHours   = data.get('Hours Per Week', None),
                                              startDate = startdate,
-                                             endDate = enddate
+                                             endDate = enddate,
+                                             supervisorNotes = data['Supervisor Notes'],
                                              )
+                print(lsf)
                 historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
                 status = Status.get(Status.statusName == "Pending")
                 formhistroy = FormHistory.create( formID = lsf.laborStatusFormID,

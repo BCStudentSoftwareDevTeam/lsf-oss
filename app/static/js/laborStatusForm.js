@@ -220,8 +220,10 @@ function create_and_fill_table_for_breaks() {
   var positionname = position.options[position.selectedIndex].text;
   var posn_code = $("#position").val()
   var contracthoursname = document.getElementById("contracthours").value;
-  var notesGlyphicon = "<a data-toggle='modal' data-target='#noteModal' id='glyphicon_note'><span class='glyphicon glyphicon-edit'></span></a>"
+  var notesGlyphicon = "<a data-toggle='modal' class= 'notes' data-target='#noteModal' id='glyphicon_note'><span class='glyphicon glyphicon-edit'></span></a>"
  // Summer term or any other break period
+
+
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
@@ -242,7 +244,7 @@ function create_and_fill_table_for_breaks() {
   $("#student").selectpicker("refresh");
 }
 
-function getprimarysupervisor(){
+function getprimarysupervisor(){ //FIXME Rename, since it longer shows primary supervisor, but pops up two modals
   var student = $("#student").val();
   var term = $("#term").val();
   var url = "/laborstatusform/getstudents/" + term +"/" +student;
@@ -264,24 +266,15 @@ function getprimarysupervisor(){
   });
 }
 
-var noteDict = {};
-function show_modal(name){
-  if (!(name in noteDict)){
-    noteDict[name] = "";
-  }
-  document.getElementById("modal_text").value=noteDict[name];
-  document.getElementById("saveButton").setAttribute('onclick',"saveNotes('" + name +"')")
+function show_notes_modal(obj){
+  document.getElementById("modal_text").value=document.getElementById(obj).getAttribute("data-note");
+  document.getElementById("saveButton").setAttribute('onclick',"saveNotes('" + obj +"')");
   $("#noteModal").modal("show");
 }
 
-function saveNotes(name){
-  // noteDict[name] = document.getElementById("modal_text").value;
+function saveNotes(obj){
   var notes = document.getElementById("modal_text").value;
-  noteDict[name] = notes
-  console.log(noteDict)
-  var hidden_cell = document.getElementById("mytable").rows[1].cells[5].innerHTML
-  hidden_cell = notes
-  console.log(hidden_cell)
+  document.getElementById(obj).setAttribute("data-note", notes);
 }
 
 function create_and_fill_table() {
@@ -295,8 +288,8 @@ function create_and_fill_table() {
   var jobtypename = jobtype.options[jobtype.selectedIndex].text;
   var hours_perweek = document.getElementById("hours_perweek");
   var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
-  var notesGlyphicon = "<a data-toggle='modal' onclick='show_modal(\"" + String(studentname) + String(jobtypename) + String(positionname) + "\")' id='glyphicon_note'><span class='glyphicon glyphicon-edit'</span></a>";
-  // noteDict[String(studentname) + String(jobtypename) + String(positionname)] = "";
+  var notesGlyphicon = "<a data-toggle='modal' onclick = 'show_notes_modal(\""+String(studentname) + String(jobtypename) + String(positionname)+"\")' id= '"+String(studentname) + String(jobtypename) + String(positionname)+"' ><span class='glyphicon glyphicon-edit'></span></a>";
+
 
   $("#mytable").show();
   $("#job_table").show();
@@ -309,7 +302,6 @@ function create_and_fill_table() {
   var cell3 = row.insertCell(2);
   var cell4 = row.insertCell(3);
   var cell5 = row.insertCell(4);
-  var cell6 = row.insertCell(5);
 
   cell1.innerHTML = studentname;
   cell2.innerHTML = positionname;
@@ -318,7 +310,7 @@ function create_and_fill_table() {
   cell3.innerHTML = jobtypename;
   cell4.innerHTML = hours_perweekname;
   cell5.innerHTML = notesGlyphicon;
-  cell6.innerHTML = saveNotes(String(studentname) + String(jobtypename) + String(positionname));
+
 
   $("#hours_perweek").val('default');
   $("#hours_perweek").selectpicker("refresh");
@@ -366,6 +358,7 @@ function disableTerm() {
 function userInsert(){
   var list_dict_ajax = [];
   $('#mytable tr').has('td').each(function() {
+    /* Get the input box values first */
       supervisor = $("#supervisor").val();
       department = $("#department").val();
       term = $("#term").val();
@@ -380,6 +373,8 @@ function userInsert(){
       for (i in list_dict) {
         tabledata_dict[headers_label[i]] = list_dict[i];
       }
+
+      /* If it's a break, get table values */
       if (whichterm != 11 && whichterm !=12 && whichterm !=00) {
         tabledata_dict["Job Type"] = "Secondary";
         var headers_2_data = ["Student", "Position", "Contract Hours"];
@@ -393,11 +388,16 @@ function userInsert(){
           test_dict[key] = list_dict_ajax[key];
         }
       }
+      /* If it's academic year, get the table values */
       else {
           var headers_data = ["Student", "Position", "Job Type", "Hours Per Week"];
           $('td', $(this)).each(function(index, item) {
             tabledata_dict[headers_data[index]] = $(item).html();
+            var a_tag = $.parseHTML($(item).html());
+            var notes = $(a_tag).data('note');
+            tabledata_dict["Supervisor Notes"] = notes;
           });
+
           list_dict_ajax.shift();
           list_dict_ajax.push(tabledata_dict);
           test_dict = {}
