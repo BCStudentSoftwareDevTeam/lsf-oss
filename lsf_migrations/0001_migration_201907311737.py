@@ -30,6 +30,41 @@ class EmailTemplate(peewee.Model):
 
 
 @snapshot.append
+class ModifiedForm(peewee.Model):
+    modifiedFormID = PrimaryKeyField(primary_key=True)
+    fieldModified = CharField(max_length=255)
+    oldValue = CharField(max_length=255)
+    newValue = CharField(max_length=255)
+    effectiveDate = DateField()
+    class Meta:
+        table_name = "modifiedform"
+
+
+@snapshot.append
+class LaborReleaseForm(peewee.Model):
+    laborReleaseFormID = PrimaryKeyField(primary_key=True)
+    conditionAtRelease = CharField(max_length=255)
+    releaseDate = DateField()
+    reasonForRelease = CharField(max_length=255)
+    class Meta:
+        table_name = "laborreleaseform"
+
+
+@snapshot.append
+class HistoryType(peewee.Model):
+    historyTypeName = CharField(max_length=255, primary_key=True)
+    class Meta:
+        table_name = "historytype"
+
+
+@snapshot.append
+class Status(peewee.Model):
+    statusName = CharField(max_length=255, primary_key=True)
+    class Meta:
+        table_name = "status"
+
+
+@snapshot.append
 class User(peewee.Model):
     username = CharField(max_length=255, primary_key=True)
     FIRST_NAME = CharField(max_length=255, null=True)
@@ -43,40 +78,6 @@ class User(peewee.Model):
     isSaasAdmin = BooleanField(null=True)
     class Meta:
         table_name = "user"
-
-
-@snapshot.append
-class Status(peewee.Model):
-    statusName = CharField(max_length=255, primary_key=True)
-    class Meta:
-        table_name = "status"
-
-
-@snapshot.append
-class OverloadForm(peewee.Model):
-    overloadFormID = PrimaryKeyField(primary_key=True)
-    overloadReason = CharField(max_length=255)
-    financialAidApproved = snapshot.ForeignKeyField(index=True, model='status', null=True, on_delete='cascade')
-    financialAidApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
-    financialAidReviewDate = DateField(null=True)
-    SAASApproved = snapshot.ForeignKeyField(index=True, model='status', null=True, on_delete='cascade')
-    SAASApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
-    SAASReviewDate = DateField(null=True)
-    laborApproved = snapshot.ForeignKeyField(index=True, model='status', null=True, on_delete='cascade')
-    laborApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
-    laborReviewDate = DateField(null=True)
-    class Meta:
-        table_name = "overloadform"
-
-
-@snapshot.append
-class LaborReleaseForm(peewee.Model):
-    laborReleaseFormID = PrimaryKeyField(primary_key=True)
-    conditionAtRelease = CharField(max_length=255)
-    releaseDate = DateField()
-    reasonForRelease = CharField(max_length=255)
-    class Meta:
-        table_name = "laborreleaseform"
 
 
 @snapshot.append
@@ -130,21 +131,20 @@ class LaborStatusForm(peewee.Model):
 
 
 @snapshot.append
-class HistoryType(peewee.Model):
-    historyTypeName = CharField(max_length=255, primary_key=True)
+class OverloadForm(peewee.Model):
+    overloadFormID = PrimaryKeyField(primary_key=True)
+    overloadReason = CharField(max_length=255)
+    financialAidApproved = snapshot.ForeignKeyField(index=True, model='status', null=True, on_delete='cascade')
+    financialAidApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
+    financialAidReviewDate = DateField(null=True)
+    SAASApproved = snapshot.ForeignKeyField(index=True, model='status', null=True, on_delete='cascade')
+    SAASApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
+    SAASReviewDate = DateField(null=True)
+    laborApproved = snapshot.ForeignKeyField(index=True, model='status', null=True, on_delete='cascade')
+    laborApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
+    laborReviewDate = DateField(null=True)
     class Meta:
-        table_name = "historytype"
-
-
-@snapshot.append
-class ModifiedForm(peewee.Model):
-    modifiedFormID = PrimaryKeyField(primary_key=True)
-    fieldModified = CharField(max_length=255)
-    oldValue = CharField(max_length=255)
-    newValue = CharField(max_length=255)
-    effectiveDate = DateField()
-    class Meta:
-        table_name = "modifiedform"
+        table_name = "overloadform"
 
 
 @snapshot.append

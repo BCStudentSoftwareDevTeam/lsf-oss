@@ -15,13 +15,10 @@
 
 {% block app_content %}
 
-
 <link rel="stylesheet" type="text/css" href="/static/css/index.css" />
-
 <div align= "right">
 
-
-
+<!-- header -->
     <div align="center">
       <h1>Supervisor Portal</h1>
       <h3 id="portalTitle" >Current Students</h3>
@@ -73,7 +70,7 @@
 
 
 
-
+<!-- Start of data-table that will display the supervisee -->
     <div align= "center" >
     <table id="studentList" class="table table-striped studentTable" >
       <thead>
@@ -82,7 +79,8 @@
         </tr>
       </thead>
 
-      {% if variable is defined %}
+  <!-- Display all the current students by going through active_supervisees list from main_route.py -->
+
         {% for form in active_supervisees %}
         <tr id="currentStu" name="currentStu">
           <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
@@ -92,13 +90,13 @@
           </a></td>
         </tr>
         {% endfor %}
-      {% else %}
-          <tr id="currentStu">
-            <td>No Labor Students</td>
-      {% endif %}
+        <tr id="currentStu" >
+          <td style="display:none"></td>
 
 
-      {% if variable is defined %}
+
+  <!-- Display all the current students by going through active_supervisees list from main_route.py -->
+
         {% for form in inactive_supervisees %}
           <tr id="pastStu" style="display:none">
             <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
@@ -107,15 +105,17 @@
             </a></td>
           </tr>
         {% endfor %}
-      {% else %}
-        <tr id="pasttStu">
-        <td></td>
-      {% endif %}
+        <tr id="pastStu">
+        <td style="display:none"></td>
+
 
       </table>
 
     </div>
 </div>
+<!-- End of data-table that will display the supervisee -->
+
+<!-- Keeps modal form closing when submit( Download ) button is pressed -->
 <iframe name="frame"></iframe>
 
 {% endblock %}

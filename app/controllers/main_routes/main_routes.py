@@ -21,8 +21,8 @@ def index():
     if not current_user:
         return render_template('errors/403.html')
 
-###### This is the start of grabbing the data from the labor status form and displaying it on the Supervisor portal
-    # Get all the forms from the supervisor form that has Scott as the Supervisor and order them by the endDate
+###### This is the start of grabbing the data from the labor status form and displaying it on the Supervisor portal ######
+    # Get all the forms from the supervisor form that has Scott as the Supervisor and order them by the endDate  #
     forms_by_supervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.username).order_by(LaborStatusForm.endDate.desc())
 
     inactive_supervisees = []
@@ -50,7 +50,9 @@ def index():
                 inactive_supervisees.append(supervisee)
             else:
                 student_processed = False  # Resets state machine
-                
+
+
+ ### Get the checkbox data from the HTML and send it to the download.py file through calling the excel.makeList function ###
     if request.method== 'POST':
         value =[]
         for form in active_supervisees:
@@ -65,9 +67,9 @@ def index():
         completePath = excel.makeList(value)
         filename = completePath.split('/').pop()
 
-
-
+    ## return the file path so the button will download the file ##
         return send_file(completePath,as_attachment=True, attachment_filename=filename)
+
 
     return render_template( 'main/index.html',
 				    title=('Home'),
@@ -78,9 +80,3 @@ def index():
                     username = current_user
 
                           )
-# def makeExcel():
-
-    # filename = completePath.split('/').pop()
-    #
-    #
-    # return send_file(completePath,as_attachment=True, attachment_filename=filename)

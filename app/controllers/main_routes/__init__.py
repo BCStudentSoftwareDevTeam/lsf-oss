@@ -11,4 +11,3 @@ from app.controllers.main_routes import modifyPending
 from app.controllers.main_routes import studentOverloadApp
 from app.controllers.main_routes import contributors
 from app.controllers.main_routes import download
-from app.controllers.main_routes import excelDownload
