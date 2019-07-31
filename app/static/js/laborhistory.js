@@ -19,8 +19,7 @@ function openModal(laborStatusKey) {
 function withdrawform(formID){
   console.log(formID)
   formid_dict={}
-  formid_dict["FormID"] = formID
-  console.log(formid_dict)
+  formid_dict[formID] = {"formID": formID}
   data = JSON.stringify(formid_dict);
   $.ajax({
          method: "POST",
@@ -28,8 +27,9 @@ function withdrawform(formID){
          data: data,
          contentType: 'application/json',
          success: function(response) {
-             if (response["Success"]) {
-               msg = "Withdraw Happened";
+             console.log(response["Success"])
+             if (response["Success"] == true) {
+               msg = "Overload form has been withdrawn.";
                category = "danger";
                $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
                $("#flasher").delay(4000).fadeOut();

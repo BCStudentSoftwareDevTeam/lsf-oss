@@ -4,6 +4,7 @@ from app.controllers.main_routes import *
 from app.models.user import *
 from app.models.laborStatusForm import *
 from app.models.formHistory import *
+from app.models.overloadForm import *
 from app.models.student import *
 from app.controllers.errors_routes.handlers import *
 from app.login_manager import require_login
@@ -35,6 +36,7 @@ def laborhistory(id):
 def populateModal(statusKey):
     try:
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
+        print(forms)
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         print(statusForm)
         currentDate = datetime.date.today()
@@ -83,7 +85,10 @@ def updatestatus_post():
     try:
         print("im here")
         rsp = eval(request.data.decode("utf-8"))
-        print(type(rsp))
+        for key in rsp:
+            overloadkey = FormHistory.get(FormHistory.formID == rsp[key]["formID"] and FormHistory.historyType == "Labor Overload Form")
+            deleting_overload    = OverloadForm.get(OverloadForm.overloadFormID == overloadkey.overloadForm).delete_instance()
+            deleting_formhisotry = FormHistory.get(FormHistory.formID == rsp[key]["formID"] and FormHistory.historyType == "Labor Overload Form").delete_instance()
         return jsonify({"Success": True})
     except Exception as e:
         print(e)

@@ -485,7 +485,7 @@ fh = [  {
         {
             "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 3),
             "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Release Form"),
-            "releaseForm": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 2),
+            "releaseForm": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 1),
             "modifiedForm": None,
             "overloadForm": None,
             "createdBy": User.get(User.username == "heggens"),
@@ -506,6 +506,19 @@ fh = [  {
             "reviewedDate": None,
             "reviewedBy": None,
             "status": Status.get(Status.statusName == "Pending"),
+            "rejectReason": None
+           },
+        {
+            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 4),
+            "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+            "releaseForm": None,
+            "modifiedForm": None,
+            "overloadForm": None,
+            "createdBy": User.get(User.username == "heggens"),
+            "createdDate": datetime.date(2019, 6, 17),
+            "reviewedDate": None,
+            "reviewedBy": None,
+            "status": Status.get(Status.statusName == "Approved"),
             "rejectReason": None
            }
 

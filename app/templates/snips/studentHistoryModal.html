@@ -3,20 +3,20 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        {% for form in statusForm %}
-        <div class="modal-title h2" align="center">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}</div>
+        {% for form1 in statusForm %}
+        <div class="modal-title h2" align="center">{{form1.studentSupervisee.FIRST_NAME}} {{form1.studentSupervisee.LAST_NAME}}</div>
         {% endfor %}
       </div>
       <div class="modal-body" id="modalid">
-        {% for form in statusForm %}
+        {% for form1 in statusForm %}
         <div id="currentData">
-          <div class= "h4" align="center">{{form.termCode.termName}} | {{form.department.DEPT_NAME}} Dept. | {{form.supervisor.FIRST_NAME}} {{form.supervisor.LAST_NAME}} </div>
+          <div class= "h4" align="center">{{form1.termCode.termName}} | {{form1.department.DEPT_NAME}} Dept. | {{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}} </div>
           <div class= "h4" align="center">
-          {{form.jobType}} | {{form.POSN_TITLE}} | {{form.POSN_CODE}} | WLS {{form.WLS}} |
-          {% if form.weeklyHours == None %}
-          {{form.contractHours}} Hours</div>
+          {{form1.jobType}} | {{form1.POSN_TITLE}} | {{form1.POSN_CODE}} | WLS {{form1.WLS}} |
+          {% if form1.weeklyHours == None %}
+          {{form1.contractHours}} Hours</div>
           {% else %}
-          {{form.weeklyHours}} Hours Per Week</div>
+          {{form1.weeklyHours}} Hours Per Week</div>
           {% endif %}
         {% endfor %}
         </div>
@@ -136,9 +136,9 @@
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success">Rehire</button></a>
         </div>
         {% elif buttonState == 1 %}
-        {% for form in statusForm %}
+        {% for form1 in statusForm %}
           <div class = "col-sm-12">
-          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form.laborStatusFormID}})">Withdraw</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form1.laborStatusFormID}})">Withdraw</button>
           </div>
         {% endfor %}
         {% elif buttonState == 2 %}
