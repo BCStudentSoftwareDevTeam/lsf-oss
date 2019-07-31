@@ -24,13 +24,13 @@
       <div class="form-group">
         <label>Student:</label>
         <div>
-          <input type="text" class="form-control" id="student" placeholder="{{forms.studentSupervisee.FIRST_NAME}} {{forms.studentSupervisee.LAST_NAME}}" readonly>
+          <input type="text" class="form-control" id="student" placeholder="{{forms.studentSupervisee.FIRST_NAME}} {{forms.studentSupervisee.LAST_NAME}}" readonly></input>
         </div>
       </div>
       <div class="form-group">
       <label>Supervisor:</label>
         <div>
-          <input type="text" class="form-control" id="supervisor" placeholder="{{forms.primarySupervisor.FIRST_NAME}} {{forms.primarySupervisor.LAST_NAME}}" readonly>
+          <input type="text" class="form-control" id="supervisor" placeholder="{{forms.supervisor.FIRST_NAME}} {{forms.supervisor.LAST_NAME}}" readonly>
         </div>
       </div>
       <div class="form-group">
@@ -59,9 +59,9 @@
         </div>
       </div>
       <div class="form-group" id= "dateDiv">
-        <label for="datepicker" class="required-asterisk">Date Needed:</label>
+        <label for="datepicker" class="required-asterisk">Release Date:</label>
         <div class="input-group date">
-          <input type="text" class="form-control" class="datepicker" id="datepicker0" placeholder="MM/DD/YYYY">
+          <input type="text" class="form-control" class="datepicker" id="datepicker0" name="date">
           <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
           </span>
@@ -70,7 +70,7 @@
       <div class="form-group">
         <label for="Notes">Reason for Release:</label>
         <div>
-          <textarea name="notes" rows="6" cols="73" id="reason"></textarea>
+          <textarea name="notes" rows="6" cols="73" id="reason" onchange="getReason(this)"></textarea>
         </div>
       </div>
     </div>
@@ -92,7 +92,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            <button type="submit" name="submit" value="submit" class="btn btn-success" id="submitModal">Submit</button>
+            <button type="submit" name="submit" value="submit" class="btn btn-success" id="submitModal" ">Submit</button>
           </div>
         </div>
       </div>
