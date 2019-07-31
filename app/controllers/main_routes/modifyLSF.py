@@ -10,25 +10,24 @@ from app.login_manager import require_login
 from datetime import *
 
 
-@main_bp.route('/modifyLSF', methods=['GET', 'POST']) #FIXME: ADD FORM ID TO URL(PASSED FROM LABOR HISTORY)
+@main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET', 'POST']) #History modal called it laborStatusKey
 # @login_required
-def modifyLSF():
+def modifyLSF(laborStatusKey):
     current_user = require_login()
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
-    #form = query to attach form to form id
-    #Step 2: get data from said form ###FIXME ALL OF THESE: query to students previous lsf form to pull specific fields.
-    prefillstudent = "Willy Wonka" #form.studentSupervisee
-    prefillsupervisor = "Scott Heggen (sheggen)" #form.supervisor
-    prefilldepartment = "Computer Science" #form.department
-    prefillposition = "Janitor" #form.POSN_TITLE
-    prefillwls = "WLS 1" #form.WLS
-    prefilljobtype = "Primary" #form.jobType
-    prefillterm = "AY 2019-2020" #form.termCode
-    prefillhours = "0-5" #form.weeklyHours ##FIXME  Its not always weekly. sometimes its contract.
-    prefillnotes = "Kids went missing in his factory... sketchy business...but he's alright i guess" #form.supervisorNotes
+    form = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+    #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
+    prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"###FIXME (ALL OF THESE): query to students previous lsf form to pull specific fields.
+    prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME+" ("+form.supervisor.username+")"
+    prefilldepartment = form.department.DEPT_NAME
+    prefillposition = form.POSN_TITLE #FIXME: add WLS to this; they should be connected
+    prefilljobtype = form.jobType
+    prefillterm = form.termCode.termName
+    prefillhours = "0-5" #form.weeklyHours      ##FIXME  Its not always weekly. sometimes its contract hours.
+    prefillnotes = form.supervisorNotes
     #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
     supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
     positions = STUPOSN.select(STUPOSN.POSN_CODE).distinct() #FIX ME: needs to be specific to that department
@@ -41,7 +40,6 @@ def modifyLSF():
                             prefillsupervisor = prefillsupervisor,
                             prefilldepartment = prefilldepartment,
                             prefillposition = prefillposition,
-                            prefillwls = prefillwls,
                             prefilljobtype = prefilljobtype,
                             prefillterm = prefillterm,
                             prefillhours = prefillhours,
