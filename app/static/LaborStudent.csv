@@ -1,2 +1,3 @@
-Name,B#,Title,Supervisor,Department,WLS,Hours,Term,Position,Supervisor Notes,Admin Notes
-Ela Jam,B00730361,Dummy boi,Scott Heggen,Computer Science,1,5,Fall 2019,Primary,Doing good,Notes stuff
+Name,B#,Labor Position Title,Labor Position Code,Supervisor,Department,WLS,Weekly Hours,Contract Hours,Term,Start Date,End Date,Position,Supervisor Notes
+May Jue,B00730362,Teaching Assistant,S61419,Scott Heggen,Mathematics,2,,120,Thanksgiving 2020,0002-05-01,0003-07-05,,
+Ela Jam,B00730361,Dummy boi,S61406,Scott Heggen,Computer Science,1,5,,Fall 2019,0001-02-03,0003-02-01,Primary,

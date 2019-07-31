@@ -27,23 +27,39 @@ class ExcelMaker:
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='|', quoting=csv.QUOTE_MINIMAL)
             #print(student)
-            filewriter.writerow(['Name', 'B#', 'Title', 'Supervisor', 'Department', 'WLS', 'Hours', 'Term', 'Position', 'Supervisor Notes', 'Admin Notes'])
+            filewriter.writerow(['Name',
+                                'B#',
+                                'Labor Position Title',
+                                'Labor Position Code',
+                                'Supervisor',
+                                'Department',
+                                'WLS',
+                                'Weekly Hours',
+                                'Contract Hours',
+                                'Term',
+                                'Start Date',
+                                'End Date',
+                                'Position',
+                                'Supervisor Notes'])
             for i in a:
-
+                print(i.jobType)
                 filewriter.writerow([i.studentSupervisee.FIRST_NAME + " " + i.studentSupervisee.LAST_NAME,
                                     i.studentSupervisee.ID,
                                     i.POSN_TITLE,
+                                    i.POSN_CODE,
                                     i.supervisor.FIRST_NAME + " " + i.supervisor.LAST_NAME,
                                     i.department.DEPT_NAME,
                                     i.WLS,
                                     i.weeklyHours,
+                                    i.contractHours,
                                     i.termCode.termName,
+                                    i.startDate,
+                                    i.endDate,
                                     i.jobType,
-                                    i.supervisorNotes,
-                                    i.laborDepartmentNotes])
+                                    i.supervisorNotes])
 
 
-
+        return 'static/LaborStudent.csv';
 
 
 def main():

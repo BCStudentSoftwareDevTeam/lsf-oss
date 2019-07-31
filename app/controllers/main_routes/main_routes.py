@@ -1,6 +1,6 @@
 # from flask import render_template  #, redirect, url_for, request, g, jsonify, current_app
 # from flask_login import current_user, login_required
-from flask import flash
+from flask import flash, send_file
 from app.controllers.main_routes import *
 from app.controllers.main_routes.download import ExcelMaker
 from app.login_manager import *
@@ -49,16 +49,25 @@ def index():
             if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
                 inactive_supervisees.append(supervisee)
             else:
-                student_processed = False  # Resets state machine.
-    print('here')
-    value =[]
-    for form in active_supervisees:
-        if request.form.get(form.studentSupervisee.ID):
-            value.append( request.form.get(form.studentSupervisee.ID))
-            print(value)
+                student_processed = False  # Resets state machine
+                
+    if request.method== 'POST':
+        value =[]
+        for form in active_supervisees:
+            if request.form.get(form.studentSupervisee.ID):
+                value.append( request.form.get(form.studentSupervisee.ID))
 
-    excel = ExcelMaker()
-    completePath = excel.makeList(value)
+        for form in inactive_supervisees:
+            if request.form.get(form.studentSupervisee.ID):
+                value.append( request.form.get(form.studentSupervisee.ID))
+
+        excel = ExcelMaker()
+        completePath = excel.makeList(value)
+        filename = completePath.split('/').pop()
+
+
+
+        return send_file(completePath,as_attachment=True, attachment_filename=filename)
 
     return render_template( 'main/index.html',
 				    title=('Home'),
@@ -69,3 +78,9 @@ def index():
                     username = current_user
 
                           )
+# def makeExcel():
+
+    # filename = completePath.split('/').pop()
+    #
+    #
+    # return send_file(completePath,as_attachment=True, attachment_filename=filename)

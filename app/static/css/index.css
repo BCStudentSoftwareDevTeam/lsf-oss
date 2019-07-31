@@ -35,3 +35,7 @@
 iframe{
   display: none;
 }
+
+#closeButton {
+  margin-right: 405px
+}
