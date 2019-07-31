@@ -75,7 +75,7 @@ def userInsert():
                                              weeklyHours   = data.get('Hours Per Week', None),
                                              startDate = startdate,
                                              endDate = enddate,
-                                             supervisorNotes = data['Supervisor Notes'],
+                                             supervisorNotes = data.get('Supervisor Notes', None)
                                              )
                 print(lsf)
                 historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")

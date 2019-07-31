@@ -122,7 +122,7 @@ function getDepartment(object) {
 }
 
 // TABLE
-function displayTable() {
+function displayTable() { // displays table when plus glyphicon is clicked
   $("#mytable").show();
   $("#job_table").hide();
   $("#hours_table").hide();
@@ -137,7 +137,7 @@ function displayTable() {
   }
 }
 
-function checkDuplicate() {
+function checkDuplicate() {// checks for duplicates for the form filled out for Academic Year
     var table = document.getElementById("mytable");
     var student = document.getElementById("student");
     var studentname = student.options[student.selectedIndex].text;
@@ -179,8 +179,103 @@ function checkDuplicate() {
     CheckAcademicYear();
 }
 
+function CheckAcademicYear() { // Fills table for academic year and shows modals
+    var jobtype = document.getElementById("jobtype");
+    var jobtypename = jobtype.options[jobtype.selectedIndex].text;
+    if (jobtypename == "Secondary") {
+      check_for_primary_position()
+    }
+    else{
+      create_and_fill_table()
+    }
+}
 
-function checkDuplicate_breaks() {
+function check_for_primary_position(){ // checks if student have a primary. For both scenarios a modal pops up.
+  var student = $("#student").val();
+  var term = $("#term").val();
+  var url = "/laborstatusform/getstudents/" + term +"/" +student;
+  $.ajax({
+    url: url,
+    dataType: "json",
+    success: function (response){
+      $("#job_table").show();
+      $("#hours_table").show();
+      var result = $.isEmptyObject(response);
+      if (result) {
+        $('#NoPrimaryModal').modal('show');
+      }
+      else {
+          $('#PrimaryModal').modal('show');
+          create_and_fill_table()
+      }
+    }
+  });
+}
+
+function show_notes_modal(obj){// pops up Note Modal when notes glyphicon is clicked
+  document.getElementById("modal_text").value=document.getElementById(obj).getAttribute("data-note");
+  document.getElementById("saveButton").setAttribute('onclick',"saveNotes('" + obj +"')");
+  $("#noteModal").modal("show");
+}
+
+function saveNotes(obj){ // saves notes written in textarea when save button of modal is clicked
+  var notes = document.getElementById("modal_text").value;
+  document.getElementById(obj).setAttribute("data-note", notes);
+}
+
+function delete_row(row) { // Deletes Row when remove glyphicon is clicked.
+  var i = row.parentNode.parentNode.rowIndex;
+  document.getElementById('mytable').deleteRow(i);
+}
+
+function create_and_fill_table() { // fills the table for Academic Year.
+  var table = document.getElementById("mytable");
+  var student = document.getElementById("student");
+  var studentname = student.options[student.selectedIndex].text;
+  var position = document.getElementById("position");
+  var positionname = position.options[position.selectedIndex].text;
+  var posn_code = $("#position").val()
+  var jobtype = document.getElementById("jobtype");
+  var jobtypename = jobtype.options[jobtype.selectedIndex].text;
+  var hours_perweek = document.getElementById("hours_perweek");
+  var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
+  var notesGlyphicon = "<a data-toggle='modal' onclick = 'show_notes_modal(\""+String(studentname) + String(jobtypename) + String(positionname)+"\")' id= '"+String(studentname) + String(jobtypename) + String(positionname)+"' ><span class='glyphicon glyphicon-edit'></span></a>";
+  var remove_icon = "<a onclick = 'delete_row(this)' class='remove'><span class='glyphicon glyphicon-remove'></span></a>";
+
+  $("#mytable").show();
+  $("#job_table").show();
+  $("#hours_table").show();
+  $("#primary_table").hide();
+  $("#contract_table").hide();
+  var row = table.insertRow(-1);
+  var cell1 = row.insertCell(0);
+  var cell2 = row.insertCell(1);
+  var cell3 = row.insertCell(2);
+  var cell4 = row.insertCell(3);
+  var cell5 = row.insertCell(4);
+  var cell6 = row.insertCell(5);
+
+  cell1.innerHTML = studentname;
+  cell2.innerHTML = positionname;
+  $(cell2).attr("data-posn", posn_code);
+  cell2.id="position_code";
+  cell3.innerHTML = jobtypename;
+  cell4.innerHTML = hours_perweekname;
+  cell5.innerHTML = notesGlyphicon;
+  cell6.innerHTML = remove_icon;
+
+
+  $("#hours_perweek").val('default');
+  $("#hours_perweek").selectpicker("refresh");
+  $("#jobtype").val('default');
+  $("#jobtype").selectpicker("refresh");
+  $("#student").val('default');
+  $("#student").selectpicker("refresh");
+  $("#position").val('default');
+  $("#position").selectpicker("refresh");
+}
+
+function checkDuplicate_breaks() { // checks for duplicates in table. For summer or any other break.
       var table = document.getElementById("mytable");
       var student = document.getElementById("student");
       var studentname = student.options[student.selectedIndex].text;
@@ -206,8 +301,7 @@ function checkDuplicate_breaks() {
           create_and_fill_table_for_breaks()
         }
 
-
-function create_and_fill_table_for_breaks() {
+function create_and_fill_table_for_breaks() {// Fills the table. For Summer term or any other break period
   $("#mytable").show();
   $("#job_table").hide();
   $("#hours_table").hide();
@@ -220,8 +314,8 @@ function create_and_fill_table_for_breaks() {
   var positionname = position.options[position.selectedIndex].text;
   var posn_code = $("#position").val()
   var contracthoursname = document.getElementById("contracthours").value;
-  var notesGlyphicon = "<a data-toggle='modal' class= 'notes' data-target='#noteModal' id='glyphicon_note'><span class='glyphicon glyphicon-edit'></span></a>"
- // Summer term or any other break period
+  var notesGlyphicon = "<a data-toggle='modal' onclick = 'show_notes_modal(\""+String(studentname) + String(positionname)+"\")' id= '"+String(studentname) + String(positionname)+"' ><span class='glyphicon glyphicon-edit'></span></a>";
+  var remove_icon = "<a onclick = 'delete_row(this)' class='remove'><span class='glyphicon glyphicon-remove'></span></a>";
 
 
   var row = table.insertRow(-1);
@@ -231,11 +325,13 @@ function create_and_fill_table_for_breaks() {
   cell2.id="position_code";
   var cell3 = row.insertCell(2);
   var cell4 = row.insertCell(3);
+  var cell5 = row.insertCell(4);
 
   cell1.innerHTML = studentname;
   cell2.innerHTML = positionname;
   cell3.innerHTML = contracthoursname;
   cell4.innerHTML = notesGlyphicon;
+  cell5.innerHTML = remove_icon;
 
   $("#contracthours").val('');
   $("#position").val('default');
@@ -244,94 +340,7 @@ function create_and_fill_table_for_breaks() {
   $("#student").selectpicker("refresh");
 }
 
-function getprimarysupervisor(){ //FIXME Rename, since it longer shows primary supervisor, but pops up two modals
-  var student = $("#student").val();
-  var term = $("#term").val();
-  var url = "/laborstatusform/getstudents/" + term +"/" +student;
-  $.ajax({
-    url: url,
-    dataType: "json",
-    success: function (response){
-      $("#job_table").show();
-      $("#hours_table").show();
-      var result = $.isEmptyObject(response);
-      if (result) {
-        $('#NoPrimaryModal').modal('show');
-      }
-      else {
-          $('#PrimaryModal').modal('show');
-          create_and_fill_table()
-      }
-    }
-  });
-}
 
-function show_notes_modal(obj){
-  document.getElementById("modal_text").value=document.getElementById(obj).getAttribute("data-note");
-  document.getElementById("saveButton").setAttribute('onclick',"saveNotes('" + obj +"')");
-  $("#noteModal").modal("show");
-}
-
-function saveNotes(obj){
-  var notes = document.getElementById("modal_text").value;
-  document.getElementById(obj).setAttribute("data-note", notes);
-}
-
-function create_and_fill_table() {
-  var table = document.getElementById("mytable");
-  var student = document.getElementById("student");
-  var studentname = student.options[student.selectedIndex].text;
-  var position = document.getElementById("position");
-  var positionname = position.options[position.selectedIndex].text;
-  var posn_code = $("#position").val()
-  var jobtype = document.getElementById("jobtype");
-  var jobtypename = jobtype.options[jobtype.selectedIndex].text;
-  var hours_perweek = document.getElementById("hours_perweek");
-  var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
-  var notesGlyphicon = "<a data-toggle='modal' onclick = 'show_notes_modal(\""+String(studentname) + String(jobtypename) + String(positionname)+"\")' id= '"+String(studentname) + String(jobtypename) + String(positionname)+"' ><span class='glyphicon glyphicon-edit'></span></a>";
-
-
-  $("#mytable").show();
-  $("#job_table").show();
-  $("#hours_table").show();
-  $("#primary_table").hide();
-  $("#contract_table").hide();
-  var row = table.insertRow(-1);
-  var cell1 = row.insertCell(0);
-  var cell2 = row.insertCell(1);
-  var cell3 = row.insertCell(2);
-  var cell4 = row.insertCell(3);
-  var cell5 = row.insertCell(4);
-
-  cell1.innerHTML = studentname;
-  cell2.innerHTML = positionname;
-  $(cell2).attr("data-posn", posn_code);
-  cell2.id="position_code";
-  cell3.innerHTML = jobtypename;
-  cell4.innerHTML = hours_perweekname;
-  cell5.innerHTML = notesGlyphicon;
-
-
-  $("#hours_perweek").val('default');
-  $("#hours_perweek").selectpicker("refresh");
-  $("#jobtype").val('default');
-  $("#jobtype").selectpicker("refresh");
-  $("#student").val('default');
-  $("#student").selectpicker("refresh");
-  $("#position").val('default');
-  $("#position").selectpicker("refresh");
-}
-
-function CheckAcademicYear() {
-    var jobtype = document.getElementById("jobtype");
-    var jobtypename = jobtype.options[jobtype.selectedIndex].text;
-    if (jobtypename == "Secondary") {
-      getprimarysupervisor()
-    }
-    else{
-      create_and_fill_table()
-    }
-}
 
 // Pops up a modal for Seconday Postion
 $('#jobtype').change(function(){
@@ -352,6 +361,7 @@ $('#hours_perweek').change(function(){
 });
 
 function disableTerm() {
+  // disables term select picker when student is selected
   $("#term").prop("disabled", "disabled");
 }
 
@@ -379,9 +389,11 @@ function userInsert(){
         tabledata_dict["Job Type"] = "Secondary";
         var headers_2_data = ["Student", "Position", "Contract Hours"];
         $('td', $(this)).each(function(index, item) {
+          var a_tag = $.parseHTML($(item).html());
+          var notes = $(a_tag).data('note');
+          tabledata_dict["Supervisor Notes"] = notes;
           tabledata_dict[headers_2_data[index]] = $(item).html();
         });
-        list_dict_ajax.shift();
         list_dict_ajax.push(tabledata_dict);
         test_dict = {}
         for ( var key in list_dict_ajax){
@@ -392,20 +404,27 @@ function userInsert(){
       else {
           var headers_data = ["Student", "Position", "Job Type", "Hours Per Week"];
           $('td', $(this)).each(function(index, item) {
-            tabledata_dict[headers_data[index]] = $(item).html();
             var a_tag = $.parseHTML($(item).html());
-            var notes = $(a_tag).data('note');
-            tabledata_dict["Supervisor Notes"] = notes;
+            console.log(a_tag)
+            if (!$(a_tag).hasClass('remove')) {
+              var notes = $(a_tag).data('note');
+              console.log(notes)
+              tabledata_dict["Supervisor Notes"] = notes;
+              tabledata_dict[headers_data[index]] = $(item).html();
+
+            }
           });
 
-          list_dict_ajax.shift();
           list_dict_ajax.push(tabledata_dict);
-          test_dict = {}
+          test_dict = {} // FIXME rename to something else
           for ( var key in list_dict_ajax){
             test_dict[key] = list_dict_ajax[key];
           }
       }
-    });
+     });
+
+  delete test_dict["0"] // gets rid of the first dictionary that contains table labels
+  // alert(JSON.stringify(test_dict))
   data = JSON.stringify(test_dict);
   $.ajax({
          method: "POST",
