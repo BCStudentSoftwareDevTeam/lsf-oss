@@ -24,7 +24,7 @@
 
     <div align="center">
       <h1>Supervisor Portal</h1>
-      <h3>All Labor Students</h3>
+      <h3 id="portalTitle" >Current Students</h3>
     </div>
 
     <div align= "right"><button class="btn" data-toggle="modal" data-target="#downloadModal">Download</button></div>
@@ -82,8 +82,9 @@
         </tr>
       </thead>
 
+      {% if variable is defined %}
         {% for form in active_supervisees %}
-        <tr id="currentStu">
+        <tr id="currentStu" name="currentStu">
           <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
             {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})
             <P></P>
@@ -91,15 +92,26 @@
           </a></td>
         </tr>
         {% endfor %}
+      {% else %}
+          <tr id="currentStu">
+            <td>No Labor Students</td>
+      {% endif %}
 
+
+      {% if variable is defined %}
         {% for form in inactive_supervisees %}
-        <tr id="pastStu" style="display:none">
-          <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
-            {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})
-            <P>No longer a student</P>
-          </a></td>
-        </tr>
+          <tr id="pastStu" style="display:none">
+            <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
+              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})
+              <P>No longer a student</P>
+            </a></td>
+          </tr>
         {% endfor %}
+      {% else %}
+        <tr id="pasttStu">
+        <td></td>
+      {% endif %}
+
       </table>
 
     </div>

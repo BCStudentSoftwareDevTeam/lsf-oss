@@ -8,12 +8,11 @@ $(document).ready( function(){
       $("#studentList thead").remove(); } ,
 
 
-       "order": [[0, "desc"]], //display order on column
-       "pagingType": "simple_numbers",
-       "ordering": false,
-       "info": false,
-       "lengthChange": false,
-
+     "order": [[0, "desc"]], //display order on column
+     "pagingType": "simple_numbers",
+     "ordering": false,
+     "info": false,
+     "lengthChange": false,
   })
 });
 
@@ -23,22 +22,29 @@ $("div.laborStudentChoice").show();
 
 
 document.getElementById("current").addEventListener("click",function(){
-  $(currentStu).show();
-  $(pastStu).hide();
-  $(".pastStu").attr("disabled", true)
-  $(".actStu").removeAttr("disabled")
+
+    $(currentStu).show();
+    $(pastStu).hide();
+
+    $(".pastStu").attr("disabled", true)
+    $(".actStu").removeAttr("disabled")
+    $('#portalTitle').text("Current Students")
+
+
 }, false);
 document.getElementById("past").addEventListener("click",function(){
   $(currentStu).hide();
   $(pastStu).show();
   $(".actStu").attr("disabled", true)
   $(".pastStu").removeAttr("disabled")
+  $('#portalTitle').text("Past Students")
 }, false);
 document.getElementById("all").addEventListener("click",function(){
   $(currentStu).show();
   $(pastStu).show();
   $(".pastStu").removeAttr("disabled")
   $(".actStu").removeAttr("disabled")
+  $('#portalTitle').text("All Students")
 }, false);
 
 // Listen for click on toggle checkbox
@@ -66,26 +72,3 @@ function downloadHistory(){
   $('input[type="checkbox"]:checked').prop('checked',false);
 
 }
-
-// $(document).ready(function(){
-//        $('input[type="checkbox"]').click(function(){
-//            if($(this).prop("checked") == true){
-//                value = $('.S').val();
-//                console.log(value);
-//            }
-//            else if($(this).prop("checked") == false){
-//                console.log(value);
-//            }
-//        });
-// });
-//
-//
-// function laborStudent(obj){
-//   var value = obj.value
-//   console.log(value)
-//   $.ajax({
-//     type: "GET"
-//     url: "/index/getStudent/" + value,
-//     dataType: "jason",
-//   })
-// }

@@ -30,17 +30,6 @@ class EmailTemplate(peewee.Model):
 
 
 @snapshot.append
-class Term(peewee.Model):
-    termCode = IntegerField(primary_key=True)
-    termName = CharField(max_length=255)
-    termStart = DateField(default='null', null=True)
-    termEnd = DateField(default='null', null=True)
-    termState = CharField(default='Inactive', max_length=255)
-    class Meta:
-        table_name = "term"
-
-
-@snapshot.append
 class User(peewee.Model):
     username = CharField(max_length=255, primary_key=True)
     FIRST_NAME = CharField(max_length=255, null=True)
@@ -54,55 +43,6 @@ class User(peewee.Model):
     isSaasAdmin = BooleanField(null=True)
     class Meta:
         table_name = "user"
-
-
-@snapshot.append
-class Student(peewee.Model):
-    ID = CharField(max_length=255, primary_key=True)
-    FIRST_NAME = CharField(max_length=255, null=True)
-    LAST_NAME = CharField(max_length=255, null=True)
-    CLASS_LEVEL = CharField(max_length=255, null=True)
-    ACADEMIC_FOCUS = CharField(max_length=255, null=True)
-    MAJOR = CharField(max_length=255, null=True)
-    PROBATION = CharField(max_length=255, null=True)
-    ADVISOR = CharField(max_length=255, null=True)
-    STU_EMAIL = CharField(max_length=255, null=True)
-    STU_CPO = CharField(max_length=255, null=True)
-    LAST_POSN = CharField(max_length=255, null=True)
-    LAST_SUP_PIDM = CharField(max_length=255, null=True)
-    class Meta:
-        table_name = "student"
-
-
-@snapshot.append
-class LaborStatusForm(peewee.Model):
-    laborStatusFormID = PrimaryKeyField(primary_key=True)
-    termCode = snapshot.ForeignKeyField(index=True, model='term', on_delete='cascade')
-    studentSupervisee = snapshot.ForeignKeyField(index=True, model='student', on_delete='cascade')
-    supervisor = snapshot.ForeignKeyField(index=True, model='user', on_delete='cascade')
-    department = snapshot.ForeignKeyField(index=True, model='department', on_delete='cascade')
-    jobType = CharField(max_length=255)
-    WLS = CharField(max_length=255)
-    POSN_TITLE = CharField(max_length=255)
-    POSN_CODE = CharField(max_length=255)
-    contractHours = IntegerField(null=True)
-    weeklyHours = IntegerField(null=True)
-    startDate = DateField(null=True)
-    endDate = DateField(null=True)
-    supervisorNotes = CharField(max_length=255, null=True)
-    laborDepartmentNotes = CharField(max_length=255, null=True)
-    class Meta:
-        table_name = "laborstatusform"
-
-
-@snapshot.append
-class LaborReleaseForm(peewee.Model):
-    laborReleaseFormID = PrimaryKeyField(primary_key=True)
-    conditionAtRelease = CharField(max_length=255)
-    releaseDate = DateField()
-    reasonForRelease = CharField(max_length=255)
-    class Meta:
-        table_name = "laborreleaseform"
 
 
 @snapshot.append
@@ -130,6 +70,73 @@ class OverloadForm(peewee.Model):
 
 
 @snapshot.append
+class LaborReleaseForm(peewee.Model):
+    laborReleaseFormID = PrimaryKeyField(primary_key=True)
+    conditionAtRelease = CharField(max_length=255)
+    releaseDate = DateField()
+    reasonForRelease = CharField(max_length=255)
+    class Meta:
+        table_name = "laborreleaseform"
+
+
+@snapshot.append
+class Student(peewee.Model):
+    ID = CharField(max_length=255, primary_key=True)
+    FIRST_NAME = CharField(max_length=255, null=True)
+    LAST_NAME = CharField(max_length=255, null=True)
+    CLASS_LEVEL = CharField(max_length=255, null=True)
+    ACADEMIC_FOCUS = CharField(max_length=255, null=True)
+    MAJOR = CharField(max_length=255, null=True)
+    PROBATION = CharField(max_length=255, null=True)
+    ADVISOR = CharField(max_length=255, null=True)
+    STU_EMAIL = CharField(max_length=255, null=True)
+    STU_CPO = CharField(max_length=255, null=True)
+    LAST_POSN = CharField(max_length=255, null=True)
+    LAST_SUP_PIDM = CharField(max_length=255, null=True)
+    class Meta:
+        table_name = "student"
+
+
+@snapshot.append
+class Term(peewee.Model):
+    termCode = IntegerField(primary_key=True)
+    termName = CharField(max_length=255)
+    termStart = DateField(default='null', null=True)
+    termEnd = DateField(default='null', null=True)
+    termState = CharField(default='Inactive', max_length=255)
+    class Meta:
+        table_name = "term"
+
+
+@snapshot.append
+class LaborStatusForm(peewee.Model):
+    laborStatusFormID = PrimaryKeyField(primary_key=True)
+    termCode = snapshot.ForeignKeyField(index=True, model='term', on_delete='cascade')
+    studentSupervisee = snapshot.ForeignKeyField(index=True, model='student', on_delete='cascade')
+    supervisor = snapshot.ForeignKeyField(index=True, model='user', on_delete='cascade')
+    department = snapshot.ForeignKeyField(index=True, model='department', on_delete='cascade')
+    jobType = CharField(max_length=255)
+    WLS = CharField(max_length=255)
+    POSN_TITLE = CharField(max_length=255)
+    POSN_CODE = CharField(max_length=255)
+    contractHours = IntegerField(null=True)
+    weeklyHours = IntegerField(null=True)
+    startDate = DateField(null=True)
+    endDate = DateField(null=True)
+    supervisorNotes = CharField(max_length=255, null=True)
+    laborDepartmentNotes = CharField(max_length=255, null=True)
+    class Meta:
+        table_name = "laborstatusform"
+
+
+@snapshot.append
+class HistoryType(peewee.Model):
+    historyTypeName = CharField(max_length=255, primary_key=True)
+    class Meta:
+        table_name = "historytype"
+
+
+@snapshot.append
 class ModifiedForm(peewee.Model):
     modifiedFormID = PrimaryKeyField(primary_key=True)
     fieldModified = CharField(max_length=255)
@@ -138,13 +145,6 @@ class ModifiedForm(peewee.Model):
     effectiveDate = DateField()
     class Meta:
         table_name = "modifiedform"
-
-
-@snapshot.append
-class HistoryType(peewee.Model):
-    historyTypeName = CharField(max_length=255, primary_key=True)
-    class Meta:
-        table_name = "historytype"
 
 
 @snapshot.append
