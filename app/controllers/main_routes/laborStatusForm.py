@@ -109,7 +109,7 @@ def getPositions(department):
     return json.dumps(position_dict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
-def getprimarysupervisor(termCode, student):
+def check_for_primary_position(termCode, student):
     primary_supervisors = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.jobType == "Primary", LaborStatusForm.studentSupervisee == student)
     primary_supervisor_dict = {}
     for primary_supervisor in primary_supervisors:
@@ -117,3 +117,13 @@ def getprimarysupervisor(termCode, student):
         "Primary Supervisor LastName": primary_supervisor.supervisor.LAST_NAME, "Primary Supervisor ID":primary_supervisor.supervisor.username}
     print(primary_supervisor_dict)
     return json.dumps(primary_supervisor_dict)
+
+@main_bp.route("/laborstatusform/gethours/<termCode>/<student>", methods=["GET"])
+def check_for_total_hours(termCode, student):
+    hours = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    total = 0
+    hours_dict = {}
+    for hour in hours:
+        total += hour.weeklyHours
+    hours_dict["weeklyHours"] = {"Total Weekly Hours": total}
+    return json.dumps(hours_dict)

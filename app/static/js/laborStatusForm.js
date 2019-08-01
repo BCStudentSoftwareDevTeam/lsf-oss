@@ -121,6 +121,47 @@ function getDepartment(object) {
   }
 }
 
+function checks_totalHours_table() {//Checks if the student has enough hours to require an overload form
+  var table = document.getElementById("mytable");
+  var student = document.getElementById("student");
+  var studentname = student.options[student.selectedIndex].text;
+  var totalHours = 0
+  var hours_perweek = document.getElementById("hours_perweek");
+  var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
+  for(const tr of table.querySelectorAll("thead tr")) {
+     const td0 = tr.querySelector("td:nth-child(1)");
+     const td2 = tr.querySelector("td:nth-child(4)");
+     if ((td0.innerHTML == studentname)) {
+       //console.log("adding hours");
+       //console.log("Total hours before adding: " + totalHours);
+       totalHours = totalHours + parseInt(td2.innerHTML);
+       //console.log("Total hours after adding: " + totalHours);
+        }
+      }
+  totalHours = totalHours + parseInt(hours_perweekname);
+  console.log(totalHours);
+  if (totalHours > 15){
+    $('#OverloadModal').modal('show');
+  }
+}
+
+
+function check_for_total_hours_database() {
+  var student = $("#student").val();
+  var term = $("#term").val();
+  var url = "/laborstatusform/gethours/" + term +"/" +student;
+  $.ajax({
+    url: url,
+    dataType: "json",
+    success: function (response){
+      var result = response["weeklyHours"]["Total Weekly Hours"]
+      console.log(result)
+      }
+  });
+}
+
+
+
 // TABLE
 function displayTable() { // displays table when plus glyphicon is clicked
   $("#mytable").show();
@@ -134,10 +175,11 @@ function displayTable() { // displays table when plus glyphicon is clicked
   }
   else {
     checkDuplicate();
+    // calculate_hours_for_overload()
   }
 }
 
-function checkDuplicate() {// checks for duplicates for the form filled out for Academic Year
+function checkDuplicate() {// checks for duplicates in the table. This is for Academic Year
     var table = document.getElementById("mytable");
     var student = document.getElementById("student");
     var studentname = student.options[student.selectedIndex].text;
@@ -145,6 +187,8 @@ function checkDuplicate() {// checks for duplicates for the form filled out for 
     var positionname = position.options[position.selectedIndex].text;
     var jobtype = document.getElementById("jobtype");
     var jobtypename = jobtype.options[jobtype.selectedIndex].text;
+    var hours_perweek = document.getElementById("hours_perweek");
+    var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
 
     for(const tr of table.querySelectorAll("thead tr")) {
        const td0 = tr.querySelector("td:nth-child(1)");
@@ -153,7 +197,10 @@ function checkDuplicate() {// checks for duplicates for the form filled out for 
        const td3 = tr.querySelector("td:nth-child(4)");
        const td4 = tr.querySelector("td:nth-child(5)");
 
-       if ((td0.innerHTML == studentname) && (jobtypename == "Primary")) {
+       if(!td0 || !td1 || !td2 || !td3 || !td4) { //If we are missing cells skip it
+       continue }
+
+       if ((td0.innerHTML == studentname) && (jobtypename == "Primary") &&(td2.innerHTML == "Primary")) {
           category = "danger";
           msg = `Match found for ${studentname} and Primary. Insert rejected`;
           $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
@@ -162,7 +209,8 @@ function checkDuplicate() {// checks for duplicates for the form filled out for 
           $("#hours_table").show();
           return;
           }
-       if ((td0.innerHTML == studentname) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionname)) {
+
+       if ((td0.innerHTML == studentname) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionname) && (jobtypename == "Secondary")) {
 
           category = "danger";
           msg = `Match found for ${studentname} , ${positionname} and Secondary. Insert rejected`;
@@ -172,9 +220,6 @@ function checkDuplicate() {// checks for duplicates for the form filled out for 
           $("#hours_table").show();
           return;
          }
-
-       if(!td0 || !td1 || !td2 || !td3 || !td4) { //If we are missing cells skip it
-       continue }
   }
     CheckAcademicYear();
 }
@@ -206,6 +251,7 @@ function check_for_primary_position(){ // checks if student have a primary. For 
       }
       else {
           $('#PrimaryModal').modal('show');
+          check_for_total_hours_database();
           create_and_fill_table()
       }
     }
