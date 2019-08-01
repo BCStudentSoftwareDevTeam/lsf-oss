@@ -13,7 +13,9 @@ date.setDate(date.getDate());
 $(".form-control").datepicker({
 });
 
+
 function getDate(obj, termCode) {
+
   var termStart = obj.value; // This is the start date
   var termID = obj.id.split("_")[1] //
   var dateType = obj.id.split("_")[0]

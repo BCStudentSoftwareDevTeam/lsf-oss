@@ -162,13 +162,116 @@ import datetime
 from datetime import date
 
 terms = [
+
+    ##############################
+    #        2021-2022
+    #############################
     {
-    "termCode":"201901",  # termcode for ThanksGiving
-    "termName" :"Thanksgiving 2019",
+    "termCode":"202101",
+    "termName" :"Thanksgiving Break 2021",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"202102",
+    "termName" :"Christmas Break 2021",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"202103",
+    "termName" :"Spring Break 2022",
     "termStart":datetime.date(2018, 1, 10),
     "termEnd": datetime.date(2018, 5, 10),
     "termState":"open",
     },
+    {
+    "termCode":"202113",
+    "termName" :"Summer 2022",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode": "202111",
+    "termName" :"Fall 2021",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"202112",
+    "termName" :"Spring 2022",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"202100",
+    "termName" :"AY 2021-2022",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+    ##############################
+    #        2020-2021
+    #############################
+
+    {
+    "termCode":"202001",
+    "termName" :"Thanksgiving Break 2020",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"202002",
+    "termName" :"Christmas Break 2020",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"202003",
+    "termName" :"Spring Break 2021",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"202013",
+    "termName" :"Summer 2021",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode": "202011",
+    "termName" :"Fall 2020",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"202012",
+    "termName" :"Spring 2021",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"202000",
+    "termName" :"AY 2020-2021",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+        ##############################
+        #        2019-2020
+        #############################
+
     {
     "termCode":"201911",
     "termName" :"Fall 2019",
@@ -186,18 +289,12 @@ terms = [
     },
     {
     "termCode":"201901",
-    "termName" :"Thanksgiving 2020",
+    "termName" :"Thanksgiving 2019",
     "termStart":datetime.date(2018, 1, 10),
     "termEnd": datetime.date(2018, 5, 10),
     "termState":"open",
     },
-    {
-    "termCode":"201900",
-    "termName" :"AY 2019-2020",
-    "termStart":datetime.date(2018, 1, 10),
-    "termEnd": datetime.date(2018, 5, 10),
-    "termState":"open",
-    },
+
     {
     "termCode":"201902",
     "termName" :"Christmas 2019",
@@ -212,13 +309,7 @@ terms = [
     "termEnd": datetime.date(2018, 5, 10),
     "termState":"open",
     },
-    {
-    "termCode":"201912",
-    "termName" :"Spring 2020",
-    "termStart":datetime.date(2018, 1, 10),
-    "termEnd": datetime.date(2018, 5, 10),
-    "termState":"open",
-    },
+
     {
     "termCode":"201913",
     "termName" :"Summer 2020",
@@ -226,6 +317,69 @@ terms = [
     "termEnd": datetime.date(2018, 5, 10),
     "termState":"open",
     },
+
+    {
+    "termCode":"201900",
+    "termName" :"AY 2019-2020",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+    ##############################
+    #        2018-2019
+    #############################
+    {
+    "termCode":"201801",
+    "termName" :"Thanksgiving Break 2018",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"201802",
+    "termName" :"Christmas Break 2018",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"201803",
+    "termName" :"Spring Break 2019",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"201813",
+    "termName" :"Summer 2019",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode": "201811",
+    "termName" :"Fall 2018",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"201812",
+    "termName" :"Spring 2019",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"open",
+    },
+    {
+    "termCode":"201800",
+    "termName" :"AY 2018-2019",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"open",
+    },
+    ##############################
+    #        2017-2018
+    #############################
     {
     "termCode":"201701",
     "termName" :"Thanksgiving Break 2017",
@@ -249,7 +403,7 @@ terms = [
     },
     {
     "termCode":"201713",
-    "termName" :"Summer 2017",
+    "termName" :"Summer 2018",
     "termStart":datetime.date(2018, 1, 10),
     "termEnd": datetime.date(2018, 5, 10),
     "termState":"open",
@@ -263,7 +417,7 @@ terms = [
     },
     {
     "termCode":"201712",
-    "termName" :"Spring 2017",
+    "termName" :"Spring 2018",
     "termStart":datetime.date(2017, 1, 10),
     "termEnd": datetime.date(2017, 5, 10),
     "termState":"open",
