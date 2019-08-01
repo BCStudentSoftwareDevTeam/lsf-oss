@@ -4,7 +4,7 @@ $("#datetimepicker0").datepicker("setDate", new Date()); //Sets datepicker to to
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
-///////////Putting position with WLS- I whole yanked this from laborStatusForm.js//////////
+///////////Putting position with WLS- I whole yanked this from laborStatusForm.js-kat//////////
 function fill_positions(response) {
   var selected_positions = document.getElementById("Position");
   if (selected_positions){
@@ -30,7 +30,7 @@ function getDepartment(object) {
        })
  }
  ///////////////Hiding 5 hour option if jobtype == Primary/////////////////////
-function disableFiveHourOption(){
+function disableFiveHourOption(){ //FIXME: This currently doesnt work :()
 // This is for hiding the 0-5 option of primary is selected for job Type
   var jobType = document.getElementById("JobType");
   var hours = document.getElementById("Hours");

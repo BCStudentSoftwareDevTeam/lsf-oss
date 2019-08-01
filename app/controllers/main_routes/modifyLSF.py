@@ -8,11 +8,15 @@ from app.models.Tracy.stuposn import *
 from flask_bootstrap import bootstrap_find_resource
 from app.login_manager import require_login
 from datetime import *
+from flask import json, jsonify
+from flask import request
+from flask import flash
 
 
 @main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET', 'POST']) #History modal called it laborStatusKey
 # @login_required
 def modifyLSF(laborStatusKey):
+    ''' This function gets all the form's data and populates the front end with it'''
     current_user = require_login()
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
@@ -20,7 +24,7 @@ def modifyLSF(laborStatusKey):
     #Step 1: get form attached to the student (via labor history modal)
     form = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
-    prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"###FIXME (ALL OF THESE): query to students previous lsf form to pull specific fields.
+    prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_TITLE #FIXME: add WLS to this; they should be connected
