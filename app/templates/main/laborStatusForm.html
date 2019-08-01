@@ -213,10 +213,9 @@
      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
        <span aria-hidden="true">&times;</span>
      </button>
-     <h4 class="modal-title">Title</h4>
+     <h4 class="modal-title">Notifying Primary Supervisor</h4>
    </div>
-   <div class="modal-body">
-     Secondary position has been added. Student's primary superviosr {} will be notified.
+   <div id ="PrimaryModalText" class="modal-body">
    </div>
    <div class="modal-footer">
      <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
@@ -254,7 +253,7 @@
          <h4><b> Students shoud not work any hours within a secondary assignment until notification of approved Labor Overload. </b> </h4>
        </div>
        <div class="modal-footer">
-         <button type="button" class="btn btn-primary" data-dismiss="modal">I accept</button>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#PrimaryModal" data-dismiss="modal">I Accept</button>
        </div>
      </div>
  </div>
@@ -336,11 +335,7 @@
   <div class="col-md-12 " id="review-button">
     <button type="button"
             class="btn btn-primary"
-            data-toggle="modal"
-            data-target="#SubmitModal"
-            name = "formsubmission"
-            value = "formsubmission"
-            onclick="displayTable()">Review</button>
+            onclick="displayTable(); create_modal_content()">Review</button>
       {% include "snips/ReviewForm.html" %}
   </div>
 </form>
