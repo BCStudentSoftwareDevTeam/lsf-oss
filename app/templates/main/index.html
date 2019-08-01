@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block app_content %}
+{% include "/messages.html" %}
     <h1>Hi, {{username.FIRST_NAME}}!</h1>
     <p>This page will be the new supervisor portal!</p>
+
+<link rel='stylesheet' type="text/css" href='/static/css/index.css' />
 {% endblock %}

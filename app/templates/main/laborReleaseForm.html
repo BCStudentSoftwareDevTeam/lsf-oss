@@ -15,34 +15,34 @@
 
 <h1 align="center"> Labor Release Form <span title="This is just some placeholder text." id="glyphicon" class="glyphicon glyphicon-bookmark"></span></h1>
 
-<form action="/index/second" method="POST">
+<form  method="POST">
 
  <div class="container">
 
     <div class="floatleft">
-      {% for forms in forms %}
+      {% for form in forms %}
       <div class="form-group">
         <label>Student:</label>
         <div>
-          <input type="text" class="form-control" id="student" placeholder="{{forms.studentSupervisee.FIRST_NAME}} {{forms.studentSupervisee.LAST_NAME}}" readonly></input>
+          <input type="text" class="form-control" id="student" placeholder="{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}" readonly></input>
         </div>
       </div>
       <div class="form-group">
       <label>Supervisor:</label>
         <div>
-          <input type="text" class="form-control" id="supervisor" placeholder="{{forms.supervisor.FIRST_NAME}} {{forms.supervisor.LAST_NAME}}" readonly>
+          <input type="text" class="form-control" id="supervisor" placeholder="{{form.supervisor.FIRST_NAME}} {{form.supervisor.LAST_NAME}}" readonly>
         </div>
       </div>
       <div class="form-group">
       <label>Department:</label>
         <div>
-          <input type="text" class="form-control" id="department" placeholder="{{forms.department.DEPT_NAME}}" readonly>
+          <input type="text" class="form-control" id="department" placeholder="{{form.department.DEPT_NAME}}" readonly>
         </div>
       </div>
       <div class="form-group">
         <label>Realsed from Primary or Secondary:</label>
         <div>
-          <input type="text" class="form-control" id="jobType" placeholder="{{forms.jobType}}" readonly>
+          <input type="text" class="form-control" id="jobType" placeholder="{{form.jobType}}" readonly>
         </div>
       </div>
       {% endfor %}
