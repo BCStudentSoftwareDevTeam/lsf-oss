@@ -30,14 +30,38 @@ class EmailTemplate(peewee.Model):
 
 
 @snapshot.append
-class Term(peewee.Model):
-    termCode = IntegerField(primary_key=True)
-    termName = CharField(max_length=255)
-    termStart = DateField(default='null', null=True)
-    termEnd = DateField(default='null', null=True)
-    termState = CharField(default='Inactive', max_length=255)
+class ModifiedForm(peewee.Model):
+    modifiedFormID = PrimaryKeyField(primary_key=True)
+    fieldModified = CharField(max_length=255)
+    oldValue = CharField(max_length=255)
+    newValue = CharField(max_length=255)
+    effectiveDate = DateField()
     class Meta:
-        table_name = "term"
+        table_name = "modifiedform"
+
+
+@snapshot.append
+class LaborReleaseForm(peewee.Model):
+    laborReleaseFormID = PrimaryKeyField(primary_key=True)
+    conditionAtRelease = CharField(max_length=255)
+    releaseDate = DateField()
+    reasonForRelease = CharField(max_length=255)
+    class Meta:
+        table_name = "laborreleaseform"
+
+
+@snapshot.append
+class HistoryType(peewee.Model):
+    historyTypeName = CharField(max_length=255, primary_key=True)
+    class Meta:
+        table_name = "historytype"
+
+
+@snapshot.append
+class Status(peewee.Model):
+    statusName = CharField(max_length=255, primary_key=True)
+    class Meta:
+        table_name = "status"
 
 
 @snapshot.append
@@ -75,6 +99,17 @@ class Student(peewee.Model):
 
 
 @snapshot.append
+class Term(peewee.Model):
+    termCode = IntegerField(primary_key=True)
+    termName = CharField(max_length=255)
+    termStart = DateField(default='null', null=True)
+    termEnd = DateField(default='null', null=True)
+    termState = CharField(default='Inactive', max_length=255)
+    class Meta:
+        table_name = "term"
+
+
+@snapshot.append
 class LaborStatusForm(peewee.Model):
     laborStatusFormID = PrimaryKeyField(primary_key=True)
     termCode = snapshot.ForeignKeyField(index=True, model='term', on_delete='cascade')
@@ -96,23 +131,6 @@ class LaborStatusForm(peewee.Model):
 
 
 @snapshot.append
-class LaborReleaseForm(peewee.Model):
-    laborReleaseFormID = PrimaryKeyField(primary_key=True)
-    conditionAtRelease = CharField(max_length=255)
-    releaseDate = DateField()
-    reasonForRelease = CharField(max_length=255)
-    class Meta:
-        table_name = "laborreleaseform"
-
-
-@snapshot.append
-class Status(peewee.Model):
-    statusName = CharField(max_length=255, primary_key=True)
-    class Meta:
-        table_name = "status"
-
-
-@snapshot.append
 class OverloadForm(peewee.Model):
     overloadFormID = PrimaryKeyField(primary_key=True)
     overloadReason = CharField(max_length=255)
@@ -127,24 +145,6 @@ class OverloadForm(peewee.Model):
     laborReviewDate = DateField(null=True)
     class Meta:
         table_name = "overloadform"
-
-
-@snapshot.append
-class ModifiedForm(peewee.Model):
-    modifiedFormID = PrimaryKeyField(primary_key=True)
-    fieldModified = CharField(max_length=255)
-    oldValue = CharField(max_length=255)
-    newValue = CharField(max_length=255)
-    effectiveDate = DateField()
-    class Meta:
-        table_name = "modifiedform"
-
-
-@snapshot.append
-class HistoryType(peewee.Model):
-    historyTypeName = CharField(max_length=255, primary_key=True)
-    class Meta:
-        table_name = "historytype"
 
 
 @snapshot.append
