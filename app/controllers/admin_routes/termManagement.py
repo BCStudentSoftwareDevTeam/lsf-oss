@@ -7,6 +7,7 @@ from app.models.term import *
 from flask import json, jsonify
 from flask import request
 from datetime import datetime, date
+from datetime import datetime
 import datetime
 
 @admin.route('/termManagement', methods=['GET', 'POST'])
@@ -35,6 +36,7 @@ def term_Management():
                              termName = termName,
                              listOfTerms = accordionTerms()
                           )
+
 def createTerms(termList, iteration):
     today = datetime.datetime.now()
     todayYear = today.year
@@ -69,6 +71,7 @@ def accordionTerms():
         listOfTerms.append([])
         for term in currentTerm:
             listOfTerms[i].append(term)
+    print(listOfTerms)
     return listOfTerms
 
 @admin.route("/termManagement/setDate/", methods=['POST'])
@@ -100,25 +103,29 @@ def ourDate():
         print("You have failed to update the date.", e)
         return jsonify({"Success": False})
 
-@admin.route("/termManagement/getEndDate/", methods=['POST'])
-def nuestroDate():
+
+@admin.route('/termManagement/manageStatus', methods=['POST'])
+def termStatusCheck():
+    #print("Starting compliance changer")
     try:
-        print("Hi")
-        rsp = eval(request.data.decode("utf-8"))
+    #print("Get request")
+        rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         print(rsp)
-        print("Hi World")
         if rsp:
-            print("success")
-            for data in rsp.values():
-                code_index = data['termCode']
-                date_index = data['end date']
-                endDate = datetime.datetime.strptime(date_index, '%m/%d/%Y').strftime('%Y-%m-%d')
-                print("startDate")
-                termToChange = Term.get(Term.termCode == code_index)
-                (termToChange).termEnd = endDate
-                termToChange.save()
-                print("You got it!")
-                return jsonify({"Success": True})
+            #print("Getting department name", rsp['deptName'])
+            #print(type(rsp['deptName']))
+            term = Term.get(rsp['termBtn'])
+            print("this is the term " + str(term))
+            # print("this is the termStart before " + str(term.termState))
+            print("this is the not termStart " + str(not term.termState))
+            if term.termState == 'True':
+                term.termState = 'False'
+            elif term.termState == 'False':
+                term.termState = 'True'
+            print("this is the termState after " + str(term.termState))
+            term.save()
+            print("worked")
+            return jsonify({"Success": True})
     except Exception as e:
-        print("You have failed to update the date.")
+        print(e)
         return jsonify({"Success": False})

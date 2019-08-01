@@ -30,20 +30,19 @@ class EmailTemplate(peewee.Model):
 
 
 @snapshot.append
-class LaborReleaseForm(peewee.Model):
-    laborReleaseFormID = PrimaryKeyField(primary_key=True)
-    conditionAtRelease = CharField(max_length=255)
-    releaseDate = DateField()
-    reasonForRelease = CharField(max_length=255)
+class User(peewee.Model):
+    username = CharField(max_length=255, primary_key=True)
+    FIRST_NAME = CharField(max_length=255, null=True)
+    LAST_NAME = CharField(max_length=255, null=True)
+    EMAIL = CharField(max_length=255, null=True)
+    CPO = CharField(max_length=255, null=True)
+    ORG = CharField(max_length=255, null=True)
+    DEPT_NAME = CharField(max_length=255, null=True)
+    isLaborAdmin = BooleanField(null=True)
+    isFinancialAidAdmin = BooleanField(null=True)
+    isSaasAdmin = BooleanField(null=True)
     class Meta:
-        table_name = "laborreleaseform"
-
-
-@snapshot.append
-class HistoryType(peewee.Model):
-    historyTypeName = CharField(max_length=255, primary_key=True)
-    class Meta:
-        table_name = "historytype"
+        table_name = "user"
 
 
 @snapshot.append
@@ -62,22 +61,6 @@ class Student(peewee.Model):
     LAST_SUP_PIDM = CharField(max_length=255, null=True)
     class Meta:
         table_name = "student"
-
-
-@snapshot.append
-class User(peewee.Model):
-    username = CharField(max_length=255, primary_key=True)
-    FIRST_NAME = CharField(max_length=255, null=True)
-    LAST_NAME = CharField(max_length=255, null=True)
-    EMAIL = CharField(max_length=255, null=True)
-    CPO = CharField(max_length=255, null=True)
-    ORG = CharField(max_length=255, null=True)
-    DEPT_NAME = CharField(max_length=255, null=True)
-    isLaborAdmin = BooleanField(null=True)
-    isFinancialAidAdmin = BooleanField(null=True)
-    isSaasAdmin = BooleanField(null=True)
-    class Meta:
-        table_name = "user"
 
 
 @snapshot.append
@@ -124,6 +107,13 @@ class ModifiedForm(peewee.Model):
 
 
 @snapshot.append
+class HistoryType(peewee.Model):
+    historyTypeName = CharField(max_length=255, primary_key=True)
+    class Meta:
+        table_name = "historytype"
+
+
+@snapshot.append
 class Status(peewee.Model):
     statusName = CharField(max_length=255, primary_key=True)
     class Meta:
@@ -145,6 +135,16 @@ class OverloadForm(peewee.Model):
     laborReviewDate = DateField(null=True)
     class Meta:
         table_name = "overloadform"
+
+
+@snapshot.append
+class LaborReleaseForm(peewee.Model):
+    laborReleaseFormID = PrimaryKeyField(primary_key=True)
+    conditionAtRelease = CharField(max_length=255)
+    releaseDate = DateField()
+    reasonForRelease = CharField(max_length=255)
+    class Meta:
+        table_name = "laborreleaseform"
 
 
 @snapshot.append
