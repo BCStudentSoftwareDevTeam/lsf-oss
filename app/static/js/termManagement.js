@@ -33,3 +33,36 @@ function getDate(obj, termCode) {
       }
     });
 }
+
+function termStatus(term) {
+  console.log(term)
+    $.ajax({
+      method: "POST",
+      url: "/termManagement/manageStatus ",
+      dataType: "json",
+      contentType: "application/json",
+      data: JSON.stringify({"termBtn": term}),
+      processData: false,
+      success: function(response) {
+      console.log(response);
+      if(response["Success"]) {
+        //category = "info"
+        console.log("Hello, this works")
+        var termBtnID = $("#term_btn_" + term);
+        console.log(termBtnID);
+         if ($(termBtnID).hasClass("btn-success")) {
+            $(termBtnID).removeClass("btn-success");
+            $(termBtnID).addClass("btn-danger");
+            $(termBtnID).text("Open");
+            //category = "danger";
+            }
+          else {
+            $(termBtnID).removeClass("btn-danger");
+            $(termBtnID).addClass("btn-success");
+            $(termBtnID).text("Closed");
+          //  category = "info";
+            }
+       }
+     }
+  })
+};

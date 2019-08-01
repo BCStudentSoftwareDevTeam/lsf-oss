@@ -87,7 +87,17 @@
                     </div>
                   </td>
                   {% endif %}
-                  <td>{{term.termState}}</td>
+
+                  {% if term.termStart != None and term.termEnd != None %}  {# checks to see if there are dates in the term #}
+                  <td>
+                    <button
+                      id="term_btn_{{term.termCode}}"
+                      name="termBtn"
+                      class="{% if term.termState == 'True' %} btn btn-success {% else %} btn btn-danger {% endif %}"
+                      onclick="termStatus({{term.termCode}})"
+                      value="{{term.termState}}">{% if term.termState == 'True' %} Open {% elif term.termState == 'False' %} Closed {% endif %}</button>
+                  </td>
+                  {% endif %}
                 </tr>
 
               {% endfor %}

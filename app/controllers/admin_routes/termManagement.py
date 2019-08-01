@@ -20,7 +20,6 @@ def term_Management():
     termCode = Term.select()
     termName = Term.select()
     listOfTerms = Term.select()
-    # dictOfTerms = Term.select()
     for i in range(5):
         createTerms(Term, i)
     accordionTerms()
@@ -36,7 +35,6 @@ def term_Management():
                              termCode = termCode,
                              termName = termName,
                              listOfTerms = accordionTerms()
-                             # dictOfTerms = dict_of_terms()
                           )
 
 def createTerms(termList, iteration):
@@ -76,16 +74,6 @@ def accordionTerms():
     print(listOfTerms)
     return listOfTerms
 
-# def dict_of_terms():
-#     terms = Term.select()
-#     dict = {}
-#     for term in terms:
-#         start = term.termStart
-#         end = term.termEnd
-#         state = term.termState
-#         dict[term.termCode] = {"startDate":datetime.datetime.strptime(str(start), '%Y-%m-%d').strftime('%m/%d/%Y'), "endDate":datetime.datetime.strptime(str(end), '%Y-%m-%d').strftime('%m/%d/%Y'), "state": state, "id": "date" + str"term.termCode"}
-#     print(dict)
-
 @admin.route("/termManagement/setDate/", methods=['POST'])
 def ourDate():
     try:
@@ -113,4 +101,31 @@ def ourDate():
             return jsonify({"Success": True})
     except Exception as e:
         print("You have failed to update the date.", e)
+        return jsonify({"Success": False})
+
+
+@admin.route('/termManagement/manageStatus', methods=['POST'])
+def termStatusCheck():
+    #print("Starting compliance changer")
+    try:
+    #print("Get request")
+        rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
+        print(rsp)
+        if rsp:
+            #print("Getting department name", rsp['deptName'])
+            #print(type(rsp['deptName']))
+            term = Term.get(rsp['termBtn'])
+            print("this is the term " + str(term))
+            # print("this is the termStart before " + str(term.termState))
+            print("this is the not termStart " + str(not term.termState))
+            if term.termState == 'True':
+                term.termState = 'False'
+            elif term.termState == 'False':
+                term.termState = 'True'
+            print("this is the termState after " + str(term.termState))
+            term.save()
+            print("worked")
+            return jsonify({"Success": True})
+    except Exception as e:
+        print(e)
         return jsonify({"Success": False})
