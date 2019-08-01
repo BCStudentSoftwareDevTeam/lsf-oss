@@ -16,54 +16,6 @@ function openModal(laborStatusKey) {
   });
 }
 
-document.getElementById("current").addEventListener("click",function(){
-  console.log("Here")
-  $(currentStu).show();
-  $(pastStu).hide();
-  $(".pastStu").attr("disabled", true)
-  $(".actStu").removeAttr("disabled")
-}, false);
-document.getElementById("past").addEventListener("click",function(){
-  console.log("Here")
-  $(currentStu).hide();
-  $(pastStu).show();
-  $(".actStu").attr("disabled", true)
-  $(".pastStu").removeAttr("disabled")
-}, false);
-document.getElementById("all").addEventListener("click",function(){
-  console.log("Here")
-  $(currentStu).show();
-  $(pastStu).show();
-  $(".pastStu").removeAttr("disabled")
-  $(".actStu").removeAttr("disabled")
-}, false);
-
-$('.openBtn').on('click',function(){
-    $('.modal-body').load('index.html',function(){
-        $('#laborHistoryDownloadModal').modal({show:true});
-    });
-
-});
-
-$('#select-all').click(function(event) {
-  console.log("Here")
-    if(this.checked) {
-        // Iterate each checkbox
-        $(':checkbox').not("[disabled]").each(function() {
-            this.checked = true;
-        });
-    } else {
-        $(':checkbox').not("[disabled]").each(function() {
-            this.checked = false;
-        });
-    }
-});
-
-function downloadHistory(){
-  $('input[type="checkbox"]:checked').prop('checked',false);
-
-}
-
 function withdrawform(formID){
   console.log(formID)
   formid_dict={}

@@ -1,4 +1,4 @@
-from flask import render_template , flash, redirect, url_for, request, g, jsonify, current_app
+from flask import render_template , flash, redirect, url_for, request, g, jsonify, current_app, send_file
 from flask_login import current_user, login_required
 from app.controllers.main_routes import *
 from app.models.user import *
@@ -13,6 +13,7 @@ from flask import make_response
 import datetime
 from datetime import date
 from app import cfg
+from app.controllers.main_routes.download import ExcelMaker
 
 @main_bp.route('/laborHistory/<id>', methods=['GET', 'POST'])
 def laborhistory(id):
@@ -31,6 +32,19 @@ def laborhistory(id):
                               )
     except:
         render_template('errors/500.html')
+    if request.method== 'POST':
+        value =[]
+
+        for form in studentForms:
+            forms = FormHistory.select().where(FormHistory.formID == form.laborStatusFormID)
+            for history in forms:
+                if request.form.get(history.formID.studentSupervisee.ID):
+                    value.append(request.form.get(history.formID))
+        print(value)
+        excel = ExcelMaker()
+        completePath = excel.makeExcel_studenthistory(value)
+        filename = completePath.split('/').pop()
+        return send_file(completePath,as_attachment=True, attachment_filename=filename)
 
 @main_bp.route('/laborHistory/modal/<statusKey>', methods=['GET'])
 def populateModal(statusKey):

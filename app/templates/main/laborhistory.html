@@ -6,56 +6,22 @@
   <link rel="stylesheet" type="text/css" href="/static/css/laborhistory.css" />
   <h1>Labor History</h1>
     <h3>{{student.FIRST_NAME}} {{student.LAST_NAME}}</h3>
-
-  <div align= "right"><button class="btn" data-toggle="modal" data-target="#laborHistoryDownloadModal">Download</button></div>
-  <!-- Modal Starts -->
   <form target="frame" method="POST">
-       <div class="modal fade" id="laborHistoryDownloadModal" role="dialog" >
-           <div class="modal-dialog">
-
-             <div class="modal-content" align="center">
-               <div class="modal-header" align="center">
-
-                 <h4 class="modal-title">Please select what you would like to download.</h4>
-               </div>
-
-               <div  class="modal-body">
-                  <input type="checkbox" name="student" id="select-all"> <b>Select all</b>
-
-                 {% for form in studentForms %}
-                 <label class="container" id="currentStu">
-                    <input class='actStu' type="checkbox" id ='{{form.laborStatusFormID}}' name='{{form.studentSupervisee.ID}}' value='{{form.laborStatusFormID}}'>
-                    {{form.termCode.termName}}
-                  </label>
-                  {% endfor %}
-               </div>
-
-               <div class="modal-footer" align="center">
-                   <button  class="btn btn-danger" id="closeButton" onclick="downloadHistory()" data-dismiss="modal">Close</button>
-                   <button type="submit" value="Submit" class="btn btn-success" id="modal">Download</button>
-               </div>
-
-             </div>
-
-           </div>
-         </div>
+    <div align= "right"><button  type="submit" value="Submit" class="btn btn-success" >Download</button></div>
+    <div align= "center">
+      <table id="positionTable" >
+        {% for form in studentForms %}
+        <tr>
+          <td onclick="openModal({{form.laborStatusFormID}})" id="{{form.laborStatusFormID}}">
+            <b>{{form.termCode.termName}}</b>, {{form.jobType}}
+            <br>
+            {{form.POSN_TITLE}} {{form.POSN_CODE}} - {{form.department.DEPT_NAME}} Dept.
+          </td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
   </form>
-<!-- Modal Ends -->
-
-
-  <div align= "center">
-    <table id="positionTable" >
-      {% for form in studentForms %}
-      <tr>
-        <td onclick="openModal({{form.laborStatusFormID}})" id="{{form.laborStatusFormID}}">
-          <b>{{form.termCode.termName}}</b>, {{form.jobType}}
-          <br>
-          {{form.POSN_TITLE}} {{form.POSN_CODE}} - {{form.department.DEPT_NAME}} Dept.
-        </td>
-      </tr>
-      {% endfor %}
-    </table>
-  </div>
 
 </div>
 
