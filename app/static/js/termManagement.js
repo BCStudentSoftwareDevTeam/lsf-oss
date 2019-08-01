@@ -13,9 +13,7 @@ date.setDate(date.getDate());
 $(".form-control").datepicker({
 });
 
-
 function getDate(obj, termCode) {
-
   var termStart = obj.value; // This is the start date
   var termID = obj.id.split("_")[1] //
   var dateType = obj.id.split("_")[0]
@@ -52,15 +50,15 @@ function termStatus(term) {
         console.log("Hello, this works")
         var termBtnID = $("#term_btn_" + term);
         console.log(termBtnID);
-         if ($(termBtnID).hasClass("btn-success")) {
-            $(termBtnID).removeClass("btn-success");
-            $(termBtnID).addClass("btn-danger");
+         if ($(termBtnID).hasClass("btn-opencolor")) {
+            $(termBtnID).removeClass("btn-opencolor");
+            $(termBtnID).addClass("btn-closecolor");
             $(termBtnID).text("Open");
             //category = "danger";
             }
           else {
-            $(termBtnID).removeClass("btn-danger");
-            $(termBtnID).addClass("btn-success");
+            $(termBtnID).removeClass("btn-closecolor");
+            $(termBtnID).addClass("btn-opencolor");
             $(termBtnID).text("Closed");
           //  category = "info";
             }

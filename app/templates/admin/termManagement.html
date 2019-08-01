@@ -30,7 +30,6 @@
           </a>
         </h4>
       </div>
-
       <div id={{terms[0]}} class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
     <table class="table table-condensed"  id="myTable">
       <thead>
@@ -102,7 +101,7 @@
                     <button
                       id="term_btn_{{term.termCode}}"
                       name="termBtn"
-                      class="{% if term.termState == 'True' %} btn btn-success {% else %} btn btn-danger {% endif %}"
+                      class="{% if term.termState == 'True' %} btn btn-opencolor {% else %} btn btn-closecolor {% endif %}"
                       onclick="termStatus({{term.termCode}})"
                       value="{{term.termState}}">{% if term.termState == 'True' %} Open {% elif term.termState == 'False' %} Closed {% endif %}</button>
                   </td>
@@ -112,7 +111,6 @@
               {% endfor %}
           </tbody>
     </table>
-
       </div>
     </div>
     {% endfor %}

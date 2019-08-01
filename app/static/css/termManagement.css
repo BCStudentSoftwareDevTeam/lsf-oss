@@ -32,7 +32,7 @@ div.ui-datepicker {
   text-align: center;
 }
 
-.glyphicon {
+#glyphicon {
   visibility: hidden;
   width: 120px;
   background-color: black;
