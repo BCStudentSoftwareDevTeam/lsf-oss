@@ -7,6 +7,7 @@ from app.models.term import *
 from flask import json, jsonify
 from flask import request
 from datetime import datetime, date
+from datetime import datetime
 import datetime
 
 @admin.route('/termManagement', methods=['GET', 'POST'])
@@ -19,6 +20,7 @@ def term_Management():
     termCode = Term.select()
     termName = Term.select()
     listOfTerms = Term.select()
+    # dictOfTerms = Term.select()
     for i in range(5):
         createTerms(Term, i)
     accordionTerms()
@@ -34,7 +36,9 @@ def term_Management():
                              termCode = termCode,
                              termName = termName,
                              listOfTerms = accordionTerms()
+                             # dictOfTerms = dict_of_terms()
                           )
+
 def createTerms(termList, iteration):
     today = datetime.datetime.now()
     todayYear = today.year
@@ -60,7 +64,7 @@ def createTerms(termList, iteration):
             print("You failed to create a term in the " + str(termYear) + " AY.")
 
 def accordionTerms():
-    listOfTerms = {}
+    listOfTerms = []
     hoy = datetime.datetime.now()
     hoyyear = hoy.year
     for i in range(5):
@@ -71,6 +75,16 @@ def accordionTerms():
             listOfTerms[i].append(term)
     print(listOfTerms)
     return listOfTerms
+
+# def dict_of_terms():
+#     terms = Term.select()
+#     dict = {}
+#     for term in terms:
+#         start = term.termStart
+#         end = term.termEnd
+#         state = term.termState
+#         dict[term.termCode] = {"startDate":datetime.datetime.strptime(str(start), '%Y-%m-%d').strftime('%m/%d/%Y'), "endDate":datetime.datetime.strptime(str(end), '%Y-%m-%d').strftime('%m/%d/%Y'), "state": state, "id": "date" + str"term.termCode"}
+#     print(dict)
 
 @admin.route("/termManagement/setDate/", methods=['POST'])
 def ourDate():
