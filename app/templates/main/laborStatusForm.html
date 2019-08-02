@@ -335,7 +335,9 @@
   <div class="col-md-12 " id="review-button">
     <button type="button"
             class="btn btn-primary"
-            onclick="displayTable(); create_modal_content()">Review</button>
+            name = "formsubmission"
+            value = "formsubmission"
+            onclick="create_modal_content(); displayTable()">Review</button>
       {% include "snips/ReviewForm.html" %}
   </div>
 </form>

@@ -424,7 +424,7 @@ function disableTerm() {
   $("#term").prop("disabled", "disabled");
 }
 
-function create_tabledata_dictionary() {
+function create_tabledata_dictionary() { // puts all of the forms into dictionaries
   var list_dict_ajax = [];
   $('#mytable tr').has('td').each(function() {
     /* Get the input box values first */
@@ -475,7 +475,7 @@ function create_tabledata_dictionary() {
           });
 
           list_dict_ajax.push(tabledata_dict);
-          test_dict = {} // FIXME rename to something else
+          test_dict = {} // FIXME rename to something else, this is the dictionary that contains all the forms
           for ( var key in list_dict_ajax){
             test_dict[key] = list_dict_ajax[key];
           }
@@ -483,27 +483,21 @@ function create_tabledata_dictionary() {
      });
 
   delete test_dict["0"] // gets rid of the first dictionary that contains table labels
-  alert(JSON.stringify(test_dict))
   return test_dict
 }
 
 function create_modal_content() {
-  $('#SubmitModal').modal('show')
   var test_dict = create_tabledata_dictionary();
-  modal_list = []
+  modal_list = [];
   for (var key in test_dict) {
-    var student = test_dict[key]["Student"]
-    var position = test_dict[key]["Position"]
-    var jobtype = test_dict[key]["Job Type"]
-    var hours = test_dict[key]["Hours Per Week"]
-    var big_string = student + ', ' + position + ', ' + jobtype + ', ' + hours
-    alert(big_string)
+    var student = test_dict[key]["Student"];
+    var position = test_dict[key]["Position"];
+    var jobtype = test_dict[key]["Job Type"];
+    var hours = test_dict[key]["Hours Per Week"];
+    var big_string = student + ', ' + position + ', ' + jobtype + ', ' + hours;
     modal_list.push(big_string)
   }
-  alert(modal_list)
-  for (var i in modal_list) {
-    document.getElementById("SubmitModalText").innerHTML = modal_list[i]
-  }
+  document.getElementById("SubmitModalText").innerHTML = "The labor status form was submitted for:\r\n" + modal_list.toString() + "\r\nThe labor status form will be eligible for approval in one business day."
   $('#SubmitModal').modal('show')
 }
 
