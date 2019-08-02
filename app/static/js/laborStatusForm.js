@@ -232,8 +232,7 @@ function check_for_total_hours_database() {
       else{
         $('#PrimaryModal').modal('show');
       }
-
-      }
+    }
   });
 }
 
@@ -272,9 +271,9 @@ function check_for_primary_position(jobtypename){ // checks if student have a pr
       }
       else {
       /* If student has a primary position check the total hours for overload and add to table  */
-          checks_totalHours_table()
+          checks_totalHours_table();
           check_for_total_hours_database();
-          create_and_fill_table()
+          create_and_fill_table();
       }
     }
   });
@@ -493,6 +492,20 @@ function create_tabledata_dictionary() { // puts all of the forms into dictionar
   delete test_dict["0"] // gets rid of the first dictionary that contains table labels
   return test_dict
 }
+
+function reviewButtonFunctionality() {
+  if( !$('#student').val() ) {
+    var rowlength = document.getElementById("mytable").rows.length;
+    if (rowlength > 1) {
+       create_modal_content();
+    }
+  }
+  else{
+    displayTable();
+    create_modal_content();
+  }
+}
+
 
 function create_modal_content() {
   var test_dict = create_tabledata_dictionary();
