@@ -46,6 +46,35 @@ studentsTracy = [
                 "STU_CPO":"718",
                 "LAST_POSN":"Media Technician",
                 "LAST_SUP_PIDM":"7"
+                },
+                "PIDM":"2",
+                "ID":"B00841417",
+                "FIRST_NAME":"Alex",
+                "LAST_NAME":"Bryant",
+                "CLASS_LEVEL":"Senior",
+                "ACADEMIC_FOCUS":"Computer Science",
+                "MAJOR":"Computer Science",
+                "PROBATION":"0",
+                "ADVISOR":"Scott Heggen",
+                "STU_EMAIL":"bryantal@berea.edu",
+                "STU_CPO":"212",
+                "LAST_POSN":"Student Manager",
+                "LAST_SUP_PIDM":"7"
+                },
+                {
+                "PIDM":"3",
+                "ID":"B00734292",
+                "FIRST_NAME":"Guillermo",
+                "LAST_NAME":"Cruz",
+                "CLASS_LEVEL":"Junior",
+                "ACADEMIC_FOCUS":"Computer Science",
+                "MAJOR":"Computer Science",
+                "PROBATION":"0",
+                "ADVISOR":"Jan Pearce",
+                "STU_EMAIL":"cruzg@berea.edu",
+                "STU_CPO":"300",
+                "LAST_POSN":"TA",
+                "LAST_SUP_PIDM":"7"
                 }
 ]
 STUDATA.insert_many(studentsTracy).on_conflict_replace().execute()
@@ -69,6 +98,34 @@ students = [
                 "STU_EMAIL":"jamalie@berea.edu",
                 "STU_CPO":"718",
                 "LAST_POSN":"Media Technician",
+                "LAST_SUP_PIDM":"7"
+                },
+                {
+                "ID":"B00841417",
+                "FIRST_NAME":"Alex",
+                "LAST_NAME":"Bryant",
+                "CLASS_LEVEL":"Senior",
+                "ACADEMIC_FOCUS":"Computer Science",
+                "MAJOR":"Computer Science",
+                "PROBATION":"0",
+                "ADVISOR":"Scott Heggen",
+                "STU_EMAIL":"bryantal@berea.edu",
+                "STU_CPO":"212",
+                "LAST_POSN":"Student Manager",
+                "LAST_SUP_PIDM":"7"
+                },
+                {
+                "ID":"B00734292",
+                "FIRST_NAME":"Guillermo",
+                "LAST_NAME":"Cruz",
+                "CLASS_LEVEL":"Junior",
+                "ACADEMIC_FOCUS":"Computer Science",
+                "MAJOR":"Computer Science",
+                "PROBATION":"0",
+                "ADVISOR":"Jan Pearce",
+                "STU_EMAIL":"cruzg@berea.edu",
+                "STU_CPO":"300",
+                "LAST_POSN":"TA",
                 "LAST_SUP_PIDM":"7"
                 }
 ]
@@ -165,65 +222,65 @@ terms = [
     {
     "termCode":"201901",  # termcode for ThanksGiving
     "termName" :"Thanksgiving 2019",
-    "termStart":datetime.date(2018, 1, 10),
-    "termEnd": datetime.date(2018, 5, 10),
+    "termStart":datetime.date(2019, 11, 27),
+    "termEnd": datetime.date(2019, 12, 1),
     "termState":"open",
     },
     {
     "termCode":"201911",
     "termName" :"Fall 2019",
-    "termStart":datetime.date(2018, 1, 10),
-    "termEnd": datetime.date(2018, 5, 10),
+    "termStart":datetime.date(2019, 8, 20),
+    "termEnd": datetime.date(2019, 12, 15),
     "termState":"open",
     },
 
     {
     "termCode":"201912",
     "termName" :"Spring 2020",
-    "termStart":datetime.date(2018, 1, 10),
-    "termEnd": datetime.date(2018, 5, 10),
+    "termStart":datetime.date(2020, 1, 5),
+    "termEnd": datetime.date(2020, 5, 4),
     "termState":"open",
     },
     {
     "termCode":"201901",
     "termName" :"Thanksgiving 2020",
-    "termStart":datetime.date(2018, 1, 10),
-    "termEnd": datetime.date(2018, 5, 10),
+    "termStart":datetime.date(2020, 11, 25),
+    "termEnd": datetime.date(2020, 11, 30),
     "termState":"open",
     },
     {
     "termCode":"201900",
     "termName" :"AY 2019-2020",
-    "termStart":datetime.date(2018, 1, 10),
-    "termEnd": datetime.date(2018, 5, 10),
+    "termStart":datetime.date(2019, 8, 20),
+    "termEnd": datetime.date(2020, 5, 4),
     "termState":"open",
     },
     {
     "termCode":"201902",
     "termName" :"Christmas 2019",
-    "termStart":datetime.date(2018, 1, 10),
-    "termEnd": datetime.date(2018, 5, 10),
+    "termStart":datetime.date(2019, 12, 16),
+    "termEnd": datetime.date(2020, 1, 3),
     "termState":"open",
     },
     {
     "termCode":"201903",
     "termName" :"Spring Break 2020",
-    "termStart":datetime.date(2018, 1, 10),
-    "termEnd": datetime.date(2018, 5, 10),
+    "termStart":datetime.date(2020, 3, 7),
+    "termEnd": datetime.date(2020, 3, 14),
     "termState":"open",
     },
     {
     "termCode":"201912",
     "termName" :"Spring 2020",
-    "termStart":datetime.date(2018, 1, 10),
-    "termEnd": datetime.date(2018, 5, 10),
+    "termStart":datetime.date(2020, 1, 4),
+    "termEnd": datetime.date(2020, 5, 5),
     "termState":"open",
     },
     {
     "termCode":"201913",
     "termName" :"Summer 2020",
-    "termStart":datetime.date(2018, 1, 10),
-    "termEnd": datetime.date(2018, 5, 10),
+    "termStart":datetime.date(2020, 5, 4),
+    "termEnd": datetime.date(2020, 8, 9),
     "termState":"open",
     }
 
@@ -290,6 +347,12 @@ depts = [
             "ACCOUNT":"5678",
             "ORG":"8765",
             "departmentCompliance":"True"
+            },
+            {
+            "DEPT_NAME":"Biology",
+            "ACCOUNT":"9101",
+            "ORG":"1019",
+            "departmentCompliance":"True"
             }
         ]
 Department.insert_many(depts).on_conflict_replace().execute()
@@ -305,6 +368,8 @@ stats = [
             {"statusName":"Approved"
             },
             {"statusName":"Denied"
+            },
+            {"statusName":"Approved Reluctantly"
             }
         ]
 Status.insert_many(stats).on_conflict_replace().execute()
@@ -328,56 +393,55 @@ lsfs = [
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Primary",
     "WLS":"1",
-    "POSN_TITLE":"Dummy boi",
-    "POSN_CODE":"S61406",
-    "weeklyHours": 5,
+    "POSN_TITLE":"Student Programmer",
+    "POSN_CODE":"S61407",
+    "weeklyHours": 10,
     "contractHours": None,
-    "startDate": datetime.date(1,2,3),
-    "endDate": datetime.date(3,2,1)
+    "startDate": datetime.date(2019,8,20),
+    "endDate": datetime.date(2019,12,15)
     },
     {
     "termCode": Term.get(Term.termCode == "201912"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.username == "heggens"),
-    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Secondary",
-    "WLS":"2",
-    "POSN_TITLE":"CS TA",
-    "POSN_CODE":"S61419",
+    "WLS":"1",
+    "POSN_TITLE":"Student Programmer",
+    "POSN_CODE":"S61407",
     "weeklyHours": 5,
     "contractHours": None,
-    "startDate": datetime.date(1,2,3),
-    "endDate": datetime.date(3,2,1)
+    "startDate": datetime.date(2020,1,5),
+    "endDate": datetime.date(2020,5,4)
     },
     {
     "termCode": Term.get(Term.termCode == "201913"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.username == "heggens"),
-    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-    "jobType": "",
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "jobType": "Secondary",
     "WLS":"2",
-    "POSN_TITLE":"CS TA",
-    "POSN_CODE":"S61419",
+    "POSN_TITLE":"Student Programmer",
+    "POSN_CODE":"S1407",
     "weeklyHours": None,
     "contractHours": 120,
-    "startDate": datetime.date(1,2,3),
-    "endDate": datetime.date(3,2,1)
+    "startDate": datetime.date(2020,5,4),
+    "endDate": datetime.date(2020,8,9)
     },
     {
-    "termCode":"201901",    #ThanksGiving break code
+    "termCode": Term.get(Term.termCode == "201901"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.username == "heggens"),
-    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-    "jobType": "",
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "jobType": "Secondary",
     "WLS":"2",
-    "POSN_TITLE":"Teaching Assistant",
-    "POSN_CODE":"S61419",
+    "POSN_TITLE":"Student Programmer",
+    "POSN_CODE":"S1407",
     "weeklyHours": None,
-    "contractHours": 120,
-    "startDate": datetime.date(1,2,3),
-    "endDate": datetime.date(3,2,1)
-    },
-
+    "contractHours": 30,
+    "startDate": datetime.date(2020,11,25),
+    "endDate": datetime.date(2020,11,30)
+    }
 ]
 
 LaborStatusForm.insert_many(lsfs).on_conflict_replace().execute()
@@ -392,8 +456,8 @@ from app.models.laborReleaseForm import LaborReleaseForm
 lrfs=[
     {
         "conditionAtRelease":"Satisfactory",
-        "releaseDate":"1/2/3",
-        "reasonForRelease":"Taking a leave"
+        "releaseDate":"6/5/2020",
+        "reasonForRelease":"It is just not working really, I wish I could keep her, but I cannot because my family needs me in my life and I need them."
     }
 ]
 LaborReleaseForm.insert_many(lrfs).on_conflict_replace().execute()
@@ -407,13 +471,7 @@ modforms = [
                 "fieldModified":"Hours",
                 "oldValue":"5",
                 "newValue":"10",
-                "effectiveDate":"1/2/3"
-                },
-                {
-                "fieldModified":"WLS",
-                "oldValue":"1",
-                "newValue":"5",
-                "effectiveDate":"1/2/3"
+                "effectiveDate":"6/8/2020"
                 }
             ]
 ModifiedForm.insert_many(modforms).on_conflict_replace().execute()
@@ -424,7 +482,7 @@ print("modforms added")
 #############################
 from app.models.overloadForm import OverloadForm
 over = [
-        {"overloadReason":"Needed a break"}
+        {"overloadReason":"Getting a second position."}
         ]
 OverloadForm.insert_many(over).on_conflict_replace().execute()
 print("Added modified")
@@ -463,49 +521,62 @@ fh = [  {
             "modifiedForm": None,
             "overloadForm": None,
             "createdBy": User.get(User.username == "heggens"),
-            "createdDate": datetime.date(2019, 1, 17),
-            "reviewedDate": datetime.date(2019, 1, 20),
+            "createdDate": datetime.date(2019, 8, 20),
+            "reviewedDate": None,
             "reviewedBy": None,
-            "status": Status.get(Status.statusName == "Approved"),
+            "status": Status.get(Status.statusName == "Pending"),
             "rejectReason": None
         },
         {
             "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 2),
-            "historyType": HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form"),
+            "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
             "releaseForm": None,
-            "modifiedForm": ModifiedForm.get(ModifiedForm.modifiedFormID == 1),
+            "modifiedForm": None,
             "overloadForm": None,
             "createdBy": User.get(User.username == "heggens"),
-            "createdDate": datetime.date(2019, 2, 3),
-            "reviewedDate": datetime.date(2019, 2, 15),
+            "createdDate": datetime.date(2020, 1, 5),
+            "reviewedDate": datetime.date(2020, 5, 4),
             "reviewedBy": None,
             "status": Status.get(Status.statusName == "Approved"),
             "rejectReason": None
            },
         {
+            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 2),
+            "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form"),
+            "releaseForm": None,
+            "modifiedForm": None,
+            "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 1),
+            "createdBy": User.get(User.username == "heggens"),
+            "createdDate": datetime.date(2020, 1, 5),
+            "reviewedDate": datetime.date(2020, 5, 4),
+            "reviewedBy": None,
+            "status": Status.get(Status.statusName == "Approved"),
+            "rejectReason": None
+           },
+           {
+            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 3),
+            "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+            "releaseForm": None,
+            "modifiedForm": None,
+            "overloadForm": None,
+            "createdBy": User.get(User.username == "heggens"),
+            "createdDate": datetime.date(2020, 5, 4),
+            "reviewedDate": datetime.date(2020, 5, 7),
+            "reviewedBy": None,
+            "status": Status.get(Status.statusName == "Approved"),
+            "rejectReason": None
+           },
+           {
             "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 3),
             "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Release Form"),
             "releaseForm": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 1),
             "modifiedForm": None,
             "overloadForm": None,
             "createdBy": User.get(User.username == "heggens"),
-            "createdDate": datetime.date(2020, 3, 10),
-            "reviewedDate": datetime.date(2020, 3, 21),
+            "createdDate": datetime.date(2020, 6, 5),
+            "reviewedDate": datetime.date(2020, 6, 8),
             "reviewedBy": None,
-            "status": Status.get(Status.statusName == "Denied"),
-            "rejectReason": None
-           },
-        {
-            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 4),
-            "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form"),
-            "releaseForm": None,
-            "modifiedForm": None,
-            "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 1),
-            "createdBy": User.get(User.username == "heggens"),
-            "createdDate": datetime.date(2019, 6, 17),
-            "reviewedDate": None,
-            "reviewedBy": None,
-            "status": Status.get(Status.statusName == "Pending"),
+            "status": Status.get(Status.statusName == "Approved"),
             "rejectReason": None
            },
            {
@@ -515,14 +586,25 @@ fh = [  {
             "modifiedForm": None,
             "overloadForm": None,
             "createdBy": User.get(User.username == "heggens"),
-            "createdDate": datetime.date(2019, 6, 17),
-            "reviewedDate": None,
+            "createdDate": datetime.date(2020, 6, 5),
+            "reviewedDate": datetime.date(2020, 6, 8),
             "reviewedBy": None,
             "status": Status.get(Status.statusName == "Approved"),
             "rejectReason": None
-           }
-
-
+           },
+           {
+            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 4),
+            "historyType": HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form"),
+            "releaseForm": None,
+            "modifiedForm": ModifiedForm.get(ModifiedForm.modifiedFormID == 1),
+            "overloadForm": None,
+            "createdBy": User.get(User.username == "heggens"),
+            "createdDate": datetime.date(2020, 6, 5),
+            "reviewedDate": datetime.date(2020, 6, 8),
+            "reviewedBy": None,
+            "status": Status.get(Status.statusName == "Approved"),
+            "rejectReason": None
+           },
     ]
 
 FormHistory.insert_many(fh).on_conflict_replace().execute()
