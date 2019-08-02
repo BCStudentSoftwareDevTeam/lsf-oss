@@ -246,14 +246,22 @@ function check_for_primary_position(jobtypename){ // checks if student have a pr
     dataType: "json",
     success: function (response){
       /* Language for Primary Modal that shows up when student has a primary position and a secondary position is being submitted */
-      var primary_supervisor = response["PrimarySupervisor"]["Primary Supervisor FirstName"] + " " + response["PrimarySupervisor"]["Primary Supervisor LastName"]
-      document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Student's primary superviosr " + primary_supervisor + " will be notified."
+      console.log(response);
+      try {
+        var primary_supervisor = response["PrimarySupervisor"]["Primary Supervisor FirstName"] + " " + response["PrimarySupervisor"]["Primary Supervisor LastName"]
+        document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Student's primary superviosr " + primary_supervisor + " will be notified."
+      } catch (e) {
+        if(jobtypename == "Primary"){
+          create_and_fill_table();
+        }
+      }
+
 
       $("#job_table").show();
       $("#hours_table").show();
       /* if student does not have a primary position show modal */
       var result = $.isEmptyObject(response);
-      if (result) {
+      if (jobtypename == "Secondary" && result) {
         $('#NoPrimaryModal').modal('show');
       }
       else if (jobtypename == "Primary" && !result) {
