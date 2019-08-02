@@ -7,7 +7,7 @@ j( function() {
    j( "#datetimepicker1, #datetimepicker2" ).datepicker();
 } );
 
-$(document).on('keyup', 'input[name=contracthours]', function () {
+$(document).on('keyup', 'input[name=contracthours]', function () { // sets contract hours minimum value
    var _this = $(this);
    var min = parseInt(_this.attr('min')) || 1; // if min attribute is not defined, 1 is default
    var val = parseInt(_this.val()) || (min - 1); // if input char is not a number the value will be (min - 1) so first condition will be true
@@ -15,22 +15,30 @@ $(document).on('keyup', 'input[name=contracthours]', function () {
        _this.val( min );
 });
 
-$("#ContractHours").hide();
-$("#Hours_PerWeek").hide();
-$("#JopTypes").hide();
-$("#Student").hide();
-$("#Position").hide();
-$("#plus").hide();
-$("#mytable").hide();
-
-function fill_dates(response){
-  for (var key in response){
-    $("#datetimepicker1").val(response[key]["Start Date"]);
-    $("#datetimepicker2").val(response[key]["End Date"]);
+// Pops up a modal for Seconday Postion
+$('#jobtype').change(function(){
+  //this is just getting the value that is selected
+  var jobtype = $(this).val();
+  if (jobtype == "Secondary") {
+      $('#SecondaryModal').modal('show');
   }
+});
+
+// Pops up a modal for overload
+$('#hours_perweek').change(function(){
+  //this is just getting the value that is selected
+  var hour = $(this).val();
+  if (hour == "20") {
+      $('#OverloadModal').modal('show');
+    }
+});
+
+function disableTerm() {
+  // disables term select picker when student is selected
+  $("#term").prop("disabled", "disabled");
 }
 
-function prefilleddate(obj){
+function prefilleddate(obj){ // get term start date and end date
   var termcode = obj.value
   $.ajax({
     url: "/laborstatusform/getDate/" + termcode,
@@ -41,45 +49,14 @@ function prefilleddate(obj){
   })
 }
 
-function show_access_level(obj){
-  $("#ContractHours").hide();
-  $("#Hours_PerWeek").hide();
-  $("#JopTypes").hide();
-  $("#Student").hide();
-  $("#Position").hide();
-  $("#plus").hide();
-  var termcode = obj.value;
-  var whichterm = termcode.toString().substr(-2);
-  if (whichterm != 11 && whichterm !=12 && whichterm !=00) { // Summer term or any other break period
-    $("#Student").show();
-    $("#Position").show();
-    $("#ContractHours").show();
-    $("#plus").show();
-  }
-  else{ // normal semester like Fall or Spring
-    $("#Student").show();
-    $("#Position").show();
-    $("#Hours_PerWeek").show();
-    $("#JopTypes").show();
-    $("#plus").show();
+function fill_dates(response){ // prefill term start and term end
+  for (var key in response){
+    $("#datetimepicker1").val(response[key]["Start Date"]);
+    $("#datetimepicker2").val(response[key]["End Date"]);
   }
 }
 
-function fill_positions(response) {
-  var selected_positions = document.getElementById("position");
-  if (selected_positions){
-    $("#position").empty();
-    for (var key in response) {
-      var options = document.createElement("option");
-      options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
-      options.value = key;
-      selected_positions.appendChild(options);
-    }
-    $('.selectpicker').selectpicker('refresh');
-  }
-}
-
-function getDepartment(object) {
+function getDepartment(object) { // get department from select picker
    var department = object.value;
    var url = "/laborstatusform/getPositions/" + department;
        $.ajax({
@@ -91,7 +68,22 @@ function getDepartment(object) {
        })
  }
 
- function fill_hoursperweek(){
+ function fill_positions(response) { // prefill Position select picker with the positions of the selected department
+   var selected_positions = document.getElementById("position");
+   if (selected_positions){
+     $("#position").empty();
+     for (var key in response) {
+       var options = document.createElement("option");
+       options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
+       options.value = key;
+       selected_positions.appendChild(options);
+     }
+     $('.selectpicker').selectpicker('refresh');
+   }
+ }
+
+
+ function fill_hoursperweek(){ // prefill hours per week select picker
   var selected_hours_perweek = document.getElementById("hours_perweek");
   var jobtype = $("#jobtype").val();
   if (selected_hours_perweek){
@@ -120,6 +112,58 @@ function getDepartment(object) {
     $('.selectpicker').selectpicker('refresh');
   }
 }
+
+// TABLE LABELS
+$("#ContractHours").hide();
+$("#Hours_PerWeek").hide();
+$("#JopTypes").hide();
+$("#Student").hide();
+$("#Position").hide();
+$("#plus").hide();
+$("#mytable").hide();
+
+function show_access_level(obj){ // Make Table labels appear
+  $("#ContractHours").hide();
+  $("#Hours_PerWeek").hide();
+  $("#JopTypes").hide();
+  $("#Student").hide();
+  $("#Position").hide();
+  $("#plus").hide();
+  var termcode = obj.value;
+  var whichterm = termcode.toString().substr(-2);
+  if (whichterm != 11 && whichterm !=12 && whichterm !=00) { // Summer term or any other break period table labels
+    $("#Student").show();
+    $("#Position").show();
+    $("#ContractHours").show();
+    $("#plus").show();
+  }
+  else{ // normal semester like Fall or Spring table labels
+    $("#Student").show();
+    $("#Position").show();
+    $("#Hours_PerWeek").show();
+    $("#JopTypes").show();
+    $("#plus").show();
+  }
+}
+// TABLE LABELS
+
+// Table glyphicons
+function show_notes_modal(obj){// pops up Note Modal when notes glyphicon is clicked
+  document.getElementById("modal_text").value=document.getElementById(obj).getAttribute("data-note");
+  document.getElementById("saveButton").setAttribute('onclick',"saveNotes('" + obj +"')");
+  $("#noteModal").modal("show");
+}
+
+function saveNotes(obj){ // saves notes written in textarea when save button of modal is clicked
+  var notes = document.getElementById("modal_text").value;
+  document.getElementById(obj).setAttribute("data-note", notes);
+}
+
+function delete_row(row) { // Deletes Row when remove glyphicon is clicked.
+  var i = row.parentNode.parentNode.rowIndex;
+  document.getElementById('mytable').deleteRow(i);
+}
+//END of glyphicons
 
 // TABLE
 function displayTable() { // displays table when plus glyphicon is clicked
@@ -163,6 +207,7 @@ function checkDuplicate() {// checks for duplicates in the table. This is for Ac
        continue }
 
        if ((td0.innerHTML == studentname) && (jobtypename == "Primary") &&(td2.innerHTML == "Primary")) {
+         // FIXME, get rid of the flash and add a modal instead
           category = "danger";
           msg = `Match found for ${studentname} and Primary. Insert rejected`;
           $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
@@ -173,7 +218,7 @@ function checkDuplicate() {// checks for duplicates in the table. This is for Ac
           }
 
        if ((td0.innerHTML == studentname) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionname) && (jobtypename == "Secondary")) {
-
+         // FIXME, get rid of the flash and add a modal instead
           category = "danger";
           msg = `Match found for ${studentname} , ${positionname} and Secondary. Insert rejected`;
           $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
@@ -183,60 +228,12 @@ function checkDuplicate() {// checks for duplicates in the table. This is for Ac
           return;
          }
   }
-    CheckAcademicYear();
+    checkForPrimaryPosition();
 }
 
-function CheckAcademicYear() { // Fills table for academic year and shows modals
-    var jobtype = document.getElementById("jobtype");
-    var jobtypename = jobtype.options[jobtype.selectedIndex].text;
-    check_for_primary_position(jobtypename)
-}
-
-var total_hour_dict = {}
-function checks_totalHours_table() {//Checks if the student has enough hours to require an overload form
-  var table = document.getElementById("mytable");
-  var student = document.getElementById("student");
-  var studentname = student.options[student.selectedIndex].text;
-  var totalHours = 0
-  var hours_perweek = document.getElementById("hours_perweek");
-  var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
-  for(const tr of table.querySelectorAll("thead tr")) {
-     const td0 = tr.querySelector("td:nth-child(1)");
-     const td2 = tr.querySelector("td:nth-child(4)");
-     if ((td0.innerHTML == studentname)) {
-       totalHours = totalHours + parseInt(td2.innerHTML);
-        }
-      }
-  totalHours = totalHours + parseInt(hours_perweekname);
-  total_hour_dict["total"] = {totalHours}
-}
-
-
-function check_for_total_hours_database() {
-  var student = $("#student").val();
-  var term = $("#term").val();
-  var url = "/laborstatusform/gethours/" + term +"/" +student;
-  $.ajax({
-    url: url,
-    dataType: "json",
-    success: function (response){
-      var total_weeklyhours_from_database = response["weeklyHours"]["Total Weekly Hours"]
-      var total_weeklyhours_from_table = total_hour_dict["total"]["totalHours"]
-      var total = total_weeklyhours_from_database + total_weeklyhours_from_table
-      if (total > 15){
-        $('#OverloadModal').modal('show');
-        $('#OverloadModal').on('hidden.bs.modal', function() {
-          $('#PrimaryModal').modal('show')
-        })
-      }
-      else{
-        $('#PrimaryModal').modal('show');
-      }
-    }
-  });
-}
-
-function check_for_primary_position(jobtypename){ // checks if student have a primary. For both scenarios a modal pops up.
+function checkForPrimaryPosition(){ // does several stuff read the comments down below
+  var jobtype = document.getElementById("jobtype");
+  var jobtypename = jobtype.options[jobtype.selectedIndex].text;
   var student = $("#student").val();
   var term = $("#term").val();
   var url = "/laborstatusform/getstudents/" + term +"/" +student;
@@ -244,7 +241,7 @@ function check_for_primary_position(jobtypename){ // checks if student have a pr
     url: url,
     dataType: "json",
     success: function (response){
-      /* Language for Primary Modal that shows up when student has a primary position and a secondary position is being submitted */
+      /* 1. Language for Primary Modal that shows up when student has a primary position and a secondary position is being submitted */
       console.log(response);
       try {
         var primary_supervisor = response["PrimarySupervisor"]["Primary Supervisor FirstName"] + " " + response["PrimarySupervisor"]["Primary Supervisor LastName"]
@@ -254,45 +251,30 @@ function check_for_primary_position(jobtypename){ // checks if student have a pr
           create_and_fill_table();
         }
       }
-
-
       $("#job_table").show();
       $("#hours_table").show();
-      /* if student does not have a primary position show modal */
+
+
+      /* 2. if student does not have a primary position show modal */
       var result = $.isEmptyObject(response);
       if (jobtypename == "Secondary" && result) {
         $('#NoPrimaryModal').modal('show');
       }
-      else if (jobtypename == "Primary" && !result) {
+      else if (jobtypename == "Primary" && !result) { // 3. If a student already has a primary position, do not add to the table.
+        // FIXME, get rid of the flash and add a modal instead
         category = "danger";
         msg = `Student already has a primary position. Insert rejected`;
         $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
         $("#flasher").delay(4000).fadeOut();
       }
       else {
-      /* If student has a primary position check the total hours for overload and add to table  */
+      /* 4. If student has a primary position check the total hours for overload and add to table  */
           checks_totalHours_table();
           check_for_total_hours_database();
           create_and_fill_table();
       }
     }
   });
-}
-
-function show_notes_modal(obj){// pops up Note Modal when notes glyphicon is clicked
-  document.getElementById("modal_text").value=document.getElementById(obj).getAttribute("data-note");
-  document.getElementById("saveButton").setAttribute('onclick',"saveNotes('" + obj +"')");
-  $("#noteModal").modal("show");
-}
-
-function saveNotes(obj){ // saves notes written in textarea when save button of modal is clicked
-  var notes = document.getElementById("modal_text").value;
-  document.getElementById(obj).setAttribute("data-note", notes);
-}
-
-function delete_row(row) { // Deletes Row when remove glyphicon is clicked.
-  var i = row.parentNode.parentNode.rowIndex;
-  document.getElementById('mytable').deleteRow(i);
 }
 
 function create_and_fill_table() { // fills the table for Academic Year.
@@ -342,6 +324,54 @@ function create_and_fill_table() { // fills the table for Academic Year.
   $("#position").selectpicker("refresh");
 }
 
+
+var total_hour_dict = {}
+function checks_totalHours_table() {//Checks if the student has enough hours to require an overload form
+  var table = document.getElementById("mytable");
+  var student = document.getElementById("student");
+  var studentname = student.options[student.selectedIndex].text;
+  var totalHours = 0
+  var hours_perweek = document.getElementById("hours_perweek");
+  var hours_perweekname = hours_perweek.options[hours_perweek.selectedIndex].text;
+  for(const tr of table.querySelectorAll("thead tr")) {
+     const td0 = tr.querySelector("td:nth-child(1)");
+     const td2 = tr.querySelector("td:nth-child(4)");
+     if ((td0.innerHTML == studentname)) {
+       totalHours = totalHours + parseInt(td2.innerHTML);
+        }
+      }
+  totalHours = totalHours + parseInt(hours_perweekname);
+  total_hour_dict["total"] = {totalHours}
+}
+
+
+function check_for_total_hours_database() {// gets sum of the total weekly hours from the database and add it to the ones in the table.
+  var student = $("#student").val();
+  var term = $("#term").val();
+  var url = "/laborstatusform/gethours/" + term +"/" +student;
+  $.ajax({
+    url: url,
+    dataType: "json",
+    success: function (response){
+      var total_weeklyhours_from_database = response["weeklyHours"]["Total Weekly Hours"]
+      var total_weeklyhours_from_table = total_hour_dict["total"]["totalHours"]
+      var total = total_weeklyhours_from_database + total_weeklyhours_from_table
+      if (total > 15){ // if hours exceed 15 pop overload modal
+        $('#OverloadModal').modal('show');
+        $('#OverloadModal').on('hidden.bs.modal', function() {
+          $('#PrimaryModal').modal('show') // modal saying primary superviosr will be notified
+        })
+      }
+      else{
+        $('#PrimaryModal').modal('show'); // modal saying primary superviosr will be notified
+      }
+      create_modal_content()
+    }
+  });
+}
+
+
+// THIS IS FOR BREAKSSSS
 function checkDuplicate_breaks() { // checks for duplicates in table. For summer or any other break.
       var table = document.getElementById("mytable");
       var student = document.getElementById("student");
@@ -406,30 +436,37 @@ function create_and_fill_table_for_breaks() {// Fills the table. For Summer term
   $("#student").val('default');
   $("#student").selectpicker("refresh");
 }
+// END OF (THIS IS FOR BREAKSSSS)
 
 
-// Pops up a modal for Seconday Postion
-$('#jobtype').change(function(){
-  //this is just getting the value that is selected
-  var jobtype = $(this).val();
-  if (jobtype == "Secondary") {
-      $('#SecondaryModal').modal('show');
-  }
-});
-
-// Pops up a modal for overload
-$('#hours_perweek').change(function(){
-  //this is just getting the value that is selected
-  var hour = $(this).val();
-  if (hour == "20") {
-      $('#OverloadModal').modal('show');
+function reviewButtonFunctionality() { // Triggred when Review button is clicked
+  if( !$('#student').val() ) {
+    var rowlength = document.getElementById("mytable").rows.length;
+    if (rowlength > 1) {
+       create_modal_content();
     }
-});
-
-function disableTerm() {
-  // disables term select picker when student is selected
-  $("#term").prop("disabled", "disabled");
+  }
+  else{
+    displayTable();
+    create_modal_content();
+  }
 }
+
+function create_modal_content() { // Populates Submit Modal with Student information from the table
+  var test_dict = create_tabledata_dictionary();
+  modal_list = [];
+  for (var key in test_dict) {
+    var student = test_dict[key]["Student"];
+    var position = test_dict[key]["Position"];
+    var jobtype = test_dict[key]["Job Type"];
+    var hours = test_dict[key]["Hours Per Week"];
+    var big_string = student + ', ' + position + ', ' + jobtype + ', ' + hours;
+    modal_list.push(big_string)
+  }
+  document.getElementById("SubmitModalText").innerHTML = "The labor status form was submitted for:\r\n" + modal_list.toString() + "\r\nThe labor status form will be eligible for approval in one business day."
+  $('#SubmitModal').modal('show')
+}
+
 
 function create_tabledata_dictionary() { // puts all of the forms into dictionaries
   var list_dict_ajax = [];
@@ -493,35 +530,7 @@ function create_tabledata_dictionary() { // puts all of the forms into dictionar
   return test_dict
 }
 
-function reviewButtonFunctionality() {
-  if( !$('#student').val() ) {
-    var rowlength = document.getElementById("mytable").rows.length;
-    if (rowlength > 1) {
-       create_modal_content();
-    }
-  }
-  else{
-    displayTable();
-    create_modal_content();
-  }
-}
-
-
-function create_modal_content() {
-  var test_dict = create_tabledata_dictionary();
-  modal_list = [];
-  for (var key in test_dict) {
-    var student = test_dict[key]["Student"];
-    var position = test_dict[key]["Position"];
-    var jobtype = test_dict[key]["Job Type"];
-    var hours = test_dict[key]["Hours Per Week"];
-    var big_string = student + ', ' + position + ', ' + jobtype + ', ' + hours;
-    modal_list.push(big_string)
-  }
-  document.getElementById("SubmitModalText").innerHTML = "The labor status form was submitted for:\r\n" + modal_list.toString() + "\r\nThe labor status form will be eligible for approval in one business day."
-  $('#SubmitModal').modal('show')
-}
-
+// SEND DATA TO THE DATABASE
 function userInsert(){
   var test_dict = create_tabledata_dictionary()
   data = JSON.stringify(test_dict);
@@ -529,15 +538,6 @@ function userInsert(){
          method: "POST",
          url: '/laborstatusform/userInsert',
          data: data,
-         contentType: 'application/json',
-         success: function(response) {
-             if (response["Success"]) {
-               msg = "Labor Status form has been created.";
-               category = "info";
-               $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
-               $("#flasher").delay(4000).fadeOut();
-               return;
-             }
-           }
+         contentType: 'application/json'
          });
        }
