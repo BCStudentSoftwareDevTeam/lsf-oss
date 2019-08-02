@@ -1,29 +1,30 @@
 #submit {
-  margin-left: 500px;
+  float: right;
 }
 
 #student {
-  background-color: #660CE8;
+  background-color: #dcdee4;
 }
 
 #supervisor {
-  background-color: #660CE8;
+  background-color: #dcdee4;
 }
 
 #department {
-  background-color: #660CE8;
+  background-color: #dcdee4;
 }
 
 #jobType {
-  background-color: #660CE8;
+  background-color: #dcdee4;
 }
 
 #glyphicon {
   color: #337ab7;
 }
- #submitModal {
-   margin-left: 431px;
- }
+
+#submitModal {
+ margin-left: 431px;
+}
 
 .floatleft {
 float: left;
@@ -33,3 +34,15 @@ width: 47%;
 float: right;
 width: 47%;
 }
+
+textarea {
+  width: 100%;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+/* .container {
+  margin-left: 100px;
+  align: center;
+} */

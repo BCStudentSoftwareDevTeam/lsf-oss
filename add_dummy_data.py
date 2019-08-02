@@ -443,7 +443,7 @@ import datetime
 
 
 fh = [  {
-            "formID": LaborStatusForm.get(LaborStatusForm.studentSupervisee == "B00730361"),
+            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 1),
             "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
             "releaseForm": None,
             "modifiedForm": None,
@@ -456,7 +456,7 @@ fh = [  {
             "rejectReason": None
         },
         {
-            "formID": LaborStatusForm.get(LaborStatusForm.studentSupervisee == "B00730361"),
+            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 2),
             "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
             "releaseForm": None,
             "modifiedForm": None,
@@ -469,7 +469,7 @@ fh = [  {
             "rejectReason": None
            },
         {
-            "formID": LaborStatusForm.get(LaborStatusForm.studentSupervisee == "B00730361"),
+            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 3),
             "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
             "releaseForm": None,
             "modifiedForm": None,
@@ -482,7 +482,7 @@ fh = [  {
             "rejectReason": None
            },
         {
-            "formID": LaborStatusForm.get(LaborStatusForm.studentSupervisee == "B00730361"),
+            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 4),
             "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
             "releaseForm": None,
             "modifiedForm": None,
