@@ -65,6 +65,7 @@
 
                     </td>
                   {% endif %}
+
                   {% if term.termStart != None %} {# checks to see if the start date is not empty #}
                   <td>
                     <div id="datepicker#2" class='input-group date'>
@@ -75,6 +76,7 @@
                     </div>
                   </td>
                   {% endif %}
+
                   {% if term.termEnd == None %} {# checks to see if the end date is empty #}
                     <td>
                       <div id="datepicker#3" class='input-group date'>
@@ -85,6 +87,7 @@
                       </div>
                     </td>
                   {% endif %}
+
                   {% if term.termEnd != None %} {# checks to see if the end date is not empty #}
                   <td>
                     <div id="datepicker#4" class='input-group date'>
@@ -106,6 +109,16 @@
                       value="{{term.termState}}">{% if term.termState == 'True' %} Open {% elif term.termState == 'False' %} Closed {% endif %}</button>
                   </td>
                   {% endif %}
+
+                  {% if term.termStart == None or term.termEnd == None %}  {# checks to see if the there is a datepicker that is empty, if there is have an inactive button #}
+                  <td>
+                    <button
+                    id="inactive_btn_{{term.termCode}}"
+                    name="inactiveBtn" type="button"
+                    class="btn btn-warning">Inactive</button>
+                  </td>
+                  {% endif %}
+
                 </tr>
 
               {% endfor %}
