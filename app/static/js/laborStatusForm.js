@@ -166,9 +166,8 @@ function delete_row(row) { // Deletes Row when remove glyphicon is clicked.
 //END of glyphicons
 
 // TABLE
-function displayTable() { // displays table when plus glyphicon is clicked
+function displayTable(test = "") { // displays table when plus glyphicon is clicked
   $("#mytable").show();
-
   // FIXME hides labels when plus sign is clicked
   $("#job_table").hide();
   $("#hours_table").hide();
@@ -178,14 +177,14 @@ function displayTable() { // displays table when plus glyphicon is clicked
   var termcode = $('#term').val();
   var whichterm = termcode.toString().substr(-2);
   if (whichterm != 11 && whichterm !=12 && whichterm !=00) {
-    checkDuplicate_breaks();
+    checkDuplicate_breaks(test);
   }
   else {
-    checkDuplicate();
+    checkDuplicate(test);
   }
 }
 
-function checkDuplicate() {// checks for duplicates in the table. This is for Academic Year
+function checkDuplicate(test = "") {// checks for duplicates in the table. This is for Academic Year
     var table = document.getElementById("mytable");
     var student = document.getElementById("student");
     var studentname = student.options[student.selectedIndex].text;
@@ -228,10 +227,10 @@ function checkDuplicate() {// checks for duplicates in the table. This is for Ac
           return;
          }
   }
-    checkForPrimaryPosition();
+    checkForPrimaryPosition(test);
 }
 
-function checkForPrimaryPosition(){ // does several stuff read the comments down below
+function checkForPrimaryPosition(test = ""){ // does several stuff read the comments down below
   var jobtype = document.getElementById("jobtype");
   var jobtypename = jobtype.options[jobtype.selectedIndex].text;
   var student = $("#student").val();
@@ -246,9 +245,18 @@ function checkForPrimaryPosition(){ // does several stuff read the comments down
       try {
         var primary_supervisor = response["PrimarySupervisor"]["Primary Supervisor FirstName"] + " " + response["PrimarySupervisor"]["Primary Supervisor LastName"]
         document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Student's primary superviosr " + primary_supervisor + " will be notified."
+        document.getElementById("OverloadModalText").innerHTML = "A labor overload is defined as more than 15 hours of labor per week during regular academic year and may not be approved retroactively."+
+                                                                 " All approvals are subject to periodic review. Guidlines for Approval:" +
+                                                                "  - Sophomore, junior, or senior classification"+
+                                                                "  - Not on any form of probation "+
+                                                                "  - Enrolled in less than 5 course credits with less than 8 preparations "+
+                                                                "  - Have a 2.50 GPA, both cumulative and for the previous full term "+
+                                                                "  - The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term. "+
+                                                                "Students shoud not work any hours within a secondary assignment until notification of approved Labor Overload.\n"
+
       } catch (e) {
         if(jobtypename == "Primary"){
-          create_and_fill_table();
+          create_and_fill_table(test);
         }
       }
       $("#job_table").show();
@@ -270,7 +278,7 @@ function checkForPrimaryPosition(){ // does several stuff read the comments down
       else {
       /* 4. If student has a primary position check the total hours for overload and add to table  */
           checks_totalHours_table();
-          check_for_total_hours_database();
+          check_for_total_hours_database(test);
           create_and_fill_table();
       }
     }
@@ -322,6 +330,7 @@ function create_and_fill_table() { // fills the table for Academic Year.
   $("#student").selectpicker("refresh");
   $("#position").val('default');
   $("#position").selectpicker("refresh");
+
 }
 
 
@@ -345,7 +354,7 @@ function checks_totalHours_table() {//Checks if the student has enough hours to 
 }
 
 
-function check_for_total_hours_database() {// gets sum of the total weekly hours from the database and add it to the ones in the table.
+function check_for_total_hours_database(test = "") {// gets sum of the total weekly hours from the database and add it to the ones in the table.
   var student = $("#student").val();
   var term = $("#term").val();
   var url = "/laborstatusform/gethours/" + term +"/" +student;
@@ -359,20 +368,28 @@ function check_for_total_hours_database() {// gets sum of the total weekly hours
       if (total > 15){ // if hours exceed 15 pop overload modal
         $('#OverloadModal').modal('show');
         $('#OverloadModal').on('hidden.bs.modal', function() {
-          $('#PrimaryModal').modal('show') // modal saying primary superviosr will be notified
-        })
+          $('#PrimaryModal').on('hidden.bs.modal', function() {
+          if (test == 'test') {
+            create_modal_content()
+            }
+          });
+        });
       }
       else{
         $('#PrimaryModal').modal('show'); // modal saying primary superviosr will be notified
+        $('#PrimaryModal').on('hidden.bs.modal', function() {
+          if (test == 'test') {
+            create_modal_content()
+          }
+        });
       }
-      create_modal_content()
     }
   });
 }
 
 
 // THIS IS FOR BREAKSSSS
-function checkDuplicate_breaks() { // checks for duplicates in table. For summer or any other break.
+function checkDuplicate_breaks(test = "") { // checks for duplicates in table. For summer or any other break.
       var table = document.getElementById("mytable");
       var student = document.getElementById("student");
       var studentname = student.options[student.selectedIndex].text;
@@ -439,7 +456,7 @@ function create_and_fill_table_for_breaks() {// Fills the table. For Summer term
 // END OF (THIS IS FOR BREAKSSSS)
 
 
-function reviewButtonFunctionality() { // Triggred when Review button is clicked
+function reviewButtonFunctionality(test) { // Triggred when Review button is clicked
   if( !$('#student').val() ) {
     var rowlength = document.getElementById("mytable").rows.length;
     if (rowlength > 1) {
@@ -447,8 +464,7 @@ function reviewButtonFunctionality() { // Triggred when Review button is clicked
     }
   }
   else{
-    displayTable();
-    create_modal_content();
+    displayTable(test);
   }
 }
 
