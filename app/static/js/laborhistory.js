@@ -18,10 +18,9 @@ function openModal(laborStatusKey) {
 
 function withdrawform(formID){
   console.log(formID)
-  formid_dict={}
-  formid_dict["FormID"] = formID
-  console.log(formid_dict)
-  data = JSON.stringify(formid_dict);
+  formIdDict={}
+  formIdDict["FormID"] = formID
+  data = JSON.stringify(formIdDict);
   $.ajax({
          method: "POST",
          url: '/laborHistory/modal/updatestatus',
@@ -29,10 +28,11 @@ function withdrawform(formID){
          contentType: 'application/json',
          success: function(response) {
              if (response["Success"]) {
-               msg = "Withdraw Happened";
+               msg = "Selected overload form has been withdrawn.";
                category = "danger";
                $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
                $("#flasher").delay(4000).fadeOut();
+               setTimeout(location.reload.bind(location), 1000);
                return;
              }
            }

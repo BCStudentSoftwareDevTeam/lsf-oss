@@ -15,7 +15,7 @@ from datetime import date
 from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
 
-@main_bp.route('/laborHistory/<id>', methods=['GET', 'POST'])
+@main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
     try:
         current_user = require_login()
@@ -24,35 +24,37 @@ def laborhistory(id):
 
         student = Student.get(Student.ID == id)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student)
+        formHistoryList = ""
+        for form in studentForms:
+            formHistoryList = formHistoryList + str(form.laborStatusFormID) + ","
+        formHistoryList = formHistoryList[0:-1]
         return render_template( 'main/laborhistory.html',
     				            title=('Labor History'),
                                 student = student,
                                 username=current_user.username,
                                 studentForms = studentForms,
+                                formHistoryList = formHistoryList
                               )
     except:
-        render_template('errors/500.html')
-    if request.method== 'POST':
-        value =[]
+        return render_template('errors/500.html')
 
-        for form in studentForms:
-            forms = FormHistory.select().where(FormHistory.formID == form.laborStatusFormID)
-            for history in forms:
-                if request.form.get(history.formID.studentSupervisee.ID):
-                    value.append(request.form.get(history.formID))
-        print(value)
+@main_bp.route("/laborHistory/download" , methods=['POST'])
+def downloadFormHistory():
+    try:
+        data = request.form
+        historyList = data["listOfForms"].split(',')
         excel = ExcelMaker()
-        completePath = excel.makeExcel_studenthistory(value)
+        completePath = excel.makeExcelStudentHistory(historyList)
         filename = completePath.split('/').pop()
-        return send_file(completePath,as_attachment=True, attachment_filename=filename)
+        return send_file(completePath, mimetype='text/csv', as_attachment=True, attachment_filename=filename)
+    except:
+        return render_template('errors/500.html')
 
 @main_bp.route('/laborHistory/modal/<statusKey>', methods=['GET'])
 def populateModal(statusKey):
     try:
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
-        print(forms)
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
-        print(statusForm)
         currentDate = datetime.date.today()
         buttonState = None
         current_user = cfg['user']['debug']
@@ -91,18 +93,18 @@ def populateModal(statusKey):
         return (resp)
     except Exception as e:
         print(e)
-        render_template('errors/500.html')
+        return render_template('errors/500.html')
         return (jsonify({"Success": False}))
 
 @main_bp.route('/laborHistory/modal/updatestatus', methods=['POST'])
 def updatestatus_post():
     try:
-        print("im here")
         rsp = eval(request.data.decode("utf-8"))
-        for key in rsp:
-            overloadkey = FormHistory.get(FormHistory.formID == rsp[key]["formID"] and FormHistory.historyType == "Labor Overload Form")
-            deleting_overload    = OverloadForm.get(OverloadForm.overloadFormID == overloadkey.overloadForm).delete_instance()
-            deleting_formhisotry = FormHistory.get(FormHistory.formID == rsp[key]["formID"] and FormHistory.historyType == "Labor Overload Form").delete_instance()
+        overloadkey = FormHistory.get(FormHistory.formID == rsp["FormID"])
+        deleteOverloadForm    = OverloadForm.get(OverloadForm.overloadFormID == overloadkey.overloadForm).delete_instance()
+        deleteFormHistoryOverload = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Overload Form").delete_instance()
+        deleteFormHistoryStatus = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Status Form").delete_instance()
+        deleteLaborStatusForm        = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == rsp["FormID"]).delete_instance()
         return jsonify({"Success": True})
     except Exception as e:
         print(e)

@@ -1,13 +1,14 @@
 {% extends "base.html" %}
-
 {% block app_content %}
 <div align= "center">
   <script type="text/javascript" src="/static/js/laborhistory.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/laborhistory.css" />
   <h1>Labor History</h1>
     <h3>{{student.FIRST_NAME}} {{student.LAST_NAME}}</h3>
-  <form target="frame" method="POST">
-    <div align= "right"><button  type="submit" value="Submit" class="btn btn-success" >Download</button></div>
+    <form method="POST" action="/laborHistory/download">
+      <input hidden name="listOfForms" value="{{formHistoryList}}" />
+      <div align= "right"><button  type="submit" value="Submit" class="btn btn-success">Download</button></div>
+    </form>
     <div align= "center">
       <table id="positionTable" >
         {% for form in studentForms %}
@@ -21,13 +22,8 @@
         {% endfor %}
       </table>
     </div>
-  </form>
-
 </div>
-
 <div id="holdModal">
-
 </div>
-
   <a type='button' class='btn btn-default' style= "padding: 7px 30px; margin-top: 5px; color: black" onclick="window.history.back()">Return</a>
 {% endblock %}

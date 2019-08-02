@@ -1,5 +1,6 @@
 from flask import flash
 from app.models.laborStatusForm import LaborStatusForm
+from app.models.formHistory import *
 from app.models.Tracy.studata import STUDATA
 import csv
 from app.controllers.main_routes.main_routes import *
@@ -14,16 +15,60 @@ class ExcelMaker:
         studentForm = []
 
     ## get all the labor status forms with the form id passed in from python controller ##
+    def makeExcelStudentHistory(self, formid):
+        downloadForms = []
+        for id in formid:
+            studentForms = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == id)
+            for studentForm in studentForms:
+                downloadForms.append(studentForm)
+
+        with open('app/static/files/LaborStudent.csv', 'w') as csvfile:
+            filewriter = csv.writer(csvfile, delimiter=',',
+                                    quotechar='|', quoting=csv.QUOTE_MINIMAL)
+
+        ## Create heading on csv ##
+            filewriter.writerow(['Name',
+                                'B#',
+                                'Term',
+                                'Department',
+                                'Supervisor',
+                                'Position',
+                                'Labor Position Title',
+                                'Labor Position Code',
+                                'WLS',
+                                'Weekly Hours',
+                                'Contract Hours',
+                                'Start Date',
+                                'End Date',
+                                'Supervisor Notes'])
+        ## fill infomations ##
+            for form in downloadForms:
+                filewriter.writerow([form.studentSupervisee.FIRST_NAME + " " + form.studentSupervisee.LAST_NAME,
+                                    form.studentSupervisee.ID,
+                                    form.termCode.termName,
+                                    form.department.DEPT_NAME,
+                                    form.supervisor.FIRST_NAME + " " + form.supervisor.LAST_NAME,
+                                    form.jobType,
+                                    form.POSN_TITLE,
+                                    form.POSN_CODE,
+                                    form.WLS,
+                                    form.weeklyHours,
+                                    form.contractHours,
+                                    form.startDate,
+                                    form.endDate,
+                                    form.supervisorNotes])
+        return 'static/files/LaborStudent.csv';
+
     def makeList(self, student):
         downloadForms = []
         for id in student:
             studentForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == id)
             for studentF in studentForm:
                 downloadForms.append(studentF)
-            print(id)
 
 
-        with open('app/static/LaborStudent.csv', 'w') as csvfile:
+
+        with open('app/static/files/LaborStudent.csv', 'w') as csvfile:
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
@@ -61,59 +106,8 @@ class ExcelMaker:
                                     form.supervisorNotes])
 
 
-        return 'static/LaborStudent.csv';
-
-def makeExcel_studenthistory(self, studentid):
-    downloadForms = []
-    studentForm = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee.ID == studentid)
-    for terms in studentForm:
-        downloadForms.append(terms)
+        return 'static/files/LaborStudent.csv';
 
 
-    with open('app/static/LaborStudent.csv', 'w') as csvfile:
-        filewriter = csv.writer(csvfile, delimiter=',',
-                                quotechar='|', quoting=csv.QUOTE_MINIMAL)
-
-    ## Create heading on csv ##
-        filewriter.writerow(['Name',
-                            'B#',
-                            'Term',
-                            'Department',
-                            'Supervisor',
-                            'Position',
-                            'Labor Position Title',
-                            'Labor Position Code',
-                            'WLS',
-                            'Weekly Hours',
-                            'Contract Hours',
-                            'Start Date',
-                            'End Date',
-                            'Supervisor Notes',
-                            'History Type',
-                            'status',
-                            'created Date',
-                            'Reviewed Date'])
-    ## fill infomations ##
-        for form in downloadForms:
-            filewriter.writerow([form.formID.studentSupervisee.FIRST_NAME + " " + form.studentSupervisee.LAST_NAME,
-                                form.formID.studentSupervisee.ID,
-                                form.formID.termCode.termName,
-                                form.formID.department.DEPT_NAME,
-                                form.formID.supervisor.FIRST_NAME + " " + form.supervisor.LAST_NAME,
-                                form.formID.jobType,
-                                form.formID.POSN_TITLE,
-                                form.formID.POSN_CODE,
-                                form.formID.WLS,
-                                form.formID.weeklyHours,
-                                form.formID.contractHours,
-                                form.formID.startDate,
-                                form.formID.endDate,
-                                form.formID.supervisorNotes,
-                                form.historyType,
-                                form.status,
-                                form.createdDate,
-                                form.createdBy])
-    return 'static/LaborStudent.csv';
-    
 def main():
     ExcelMaker()

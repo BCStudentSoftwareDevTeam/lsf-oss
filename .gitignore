@@ -6,3 +6,4 @@ migrations.json
 *.swp
 old/
 secret_config.yaml
+app/static/files/*.*

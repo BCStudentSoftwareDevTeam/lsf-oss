@@ -46,21 +46,6 @@ studentsTracy = [
                 "STU_CPO":"718",
                 "LAST_POSN":"Media Technician",
                 "LAST_SUP_PIDM":"7"
-                },
-                {
-                "PIDM":"2",
-            	"ID":"B00730362",
-            	"FIRST_NAME":"May",
-                "LAST_NAME":"Jue",
-            	"CLASS_LEVEL":"Junior",
-            	"ACADEMIC_FOCUS":"Computer Science",
-            	"MAJOR":"Computer Science",
-            	"PROBATION":"0",
-            	"ADVISOR":"Jan Pearce",
-            	"STU_EMAIL":"jamalie@berea.edu",
-            	"STU_CPO":"718",
-            	"LAST_POSN":"Media Technician",
-            	"LAST_SUP_PIDM":"7"
                 }
 ]
 STUDATA.insert_many(studentsTracy).on_conflict_replace().execute()
@@ -72,65 +57,21 @@ print("students(TRACY) added")
 from app.models.student import Student
 
 students = [
-    {
-	"ID":"B00730361",
-	"FIRST_NAME":"Ela",
-    "LAST_NAME":"Jam",
-	"CLASS_LEVEL":"Junior",
-	"ACADEMIC_FOCUS":"Computer Science",
-	"MAJOR":"Computer Science",
-	"PROBATION":"0",
-	"ADVISOR":"Jan Pearce",
-	"STU_EMAIL":"jamalie@berea.edu",
-	"STU_CPO":"718",
-	"LAST_POSN":"Media Technician",
-	"LAST_SUP_PIDM":"7"
-    },
-    {
-	"ID":"B00730362",
-	"FIRST_NAME":"May",
-    "LAST_NAME":"Jue",
-	"CLASS_LEVEL":"Junior",
-	"ACADEMIC_FOCUS":"Computer Science",
-	"MAJOR":"Computer Science",
-	"PROBATION":"0",
-	"ADVISOR":"Jan Pearce",
-	"STU_EMAIL":"jamalie@berea.edu",
-	"STU_CPO":"718",
-	"LAST_POSN":"Media Technician",
-	"LAST_SUP_PIDM":"7"
-    },
-    {
-	"ID":"B00730363",
-	"FIRST_NAME":"Hailey",
-    "LAST_NAME":"Barnett",
-	"CLASS_LEVEL":"Junior",
-	"ACADEMIC_FOCUS":"Computer Science",
-	"MAJOR":"Computer Science",
-	"PROBATION":"0",
-	"ADVISOR":"Jan Pearce",
-	"STU_EMAIL":"jamalie@berea.edu",
-	"STU_CPO":"718",
-	"LAST_POSN":"Media Technician",
-	"LAST_SUP_PIDM":"7"
-    },
-    {
-	"ID":"B00730364",
-	"FIRST_NAME":"Riel",
-    "LAST_NAME":"Pursun",
-	"CLASS_LEVEL":"Frashman",
-	"ACADEMIC_FOCUS":"Computer Science",
-	"MAJOR":"Computer Science",
-	"PROBATION":"0",
-	"ADVISOR":"Jan Pearce",
-	"STU_EMAIL":"jamalie@berea.edu",
-	"STU_CPO":"718",
-	"LAST_POSN":"Media Technician",
-	"LAST_SUP_PIDM":"7"
-    }
-
+                {
+                "ID":"B00730361",
+                "FIRST_NAME":"Elaheh",
+                "LAST_NAME":"Jamali",
+                "CLASS_LEVEL":"Junior",
+                "ACADEMIC_FOCUS":"Computer Science",
+                "MAJOR":"Computer Science",
+                "PROBATION":"0",
+                "ADVISOR":"Jan Pearce",
+                "STU_EMAIL":"jamalie@berea.edu",
+                "STU_CPO":"718",
+                "LAST_POSN":"Media Technician",
+                "LAST_SUP_PIDM":"7"
+                }
 ]
-
 Student.insert_many(students).on_conflict_replace().execute()
 print("students(LSF) added")
 
@@ -396,7 +337,7 @@ lsfs = [
     },
     {
     "termCode": Term.get(Term.termCode == "201912"),
-    "studentSupervisee": Student.get(Student.ID == "B00730362"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Mathematics"),
     "jobType": "Secondary",
@@ -410,7 +351,7 @@ lsfs = [
     },
     {
     "termCode": Term.get(Term.termCode == "201913"),
-    "studentSupervisee": Student.get(Student.ID == "B00730363"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Mathematics"),
     "jobType": "",
@@ -424,7 +365,7 @@ lsfs = [
     },
     {
     "termCode":"201901",    #ThanksGiving break code
-    "studentSupervisee": Student.get(Student.ID == "B00730364"),
+    "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Mathematics"),
     "jobType": "",
@@ -436,34 +377,7 @@ lsfs = [
     "startDate": datetime.date(1,2,3),
     "endDate": datetime.date(3,2,1)
     },
-    {
-    "termCode":"201901",    #ThanksGiving break code
-    "studentSupervisee": Student.get(Student.ID == "B00730362"),
-    "supervisor": User.get(User.username == "heggens"),
-    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-    "jobType": "",
-    "WLS":"2",
-    "POSN_TITLE":"Teaching Assistant",
-    "POSN_CODE":"S61419",
-    "weeklyHours": None,
-    "contractHours": 120,
-    "startDate": datetime.date(1,5,1),
-    "endDate": datetime.date(3,2,5)
-    },
-    {
-    "termCode":"201901",    #ThanksGiving break code
-    "studentSupervisee": Student.get(Student.ID == "B00730362"),
-    "supervisor": User.get(User.username == "heggens"),
-    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
-    "jobType": "",
-    "WLS":"2",
-    "POSN_TITLE":"Teaching Assistant",
-    "POSN_CODE":"S61419",
-    "weeklyHours": None,
-    "contractHours": 120,
-    "startDate": datetime.date(2,5,1),
-    "endDate": datetime.date(3,7,5)
-    },
+
 ]
 
 LaborStatusForm.insert_many(lsfs).on_conflict_replace().execute()
@@ -594,7 +508,7 @@ fh = [  {
             "status": Status.get(Status.statusName == "Pending"),
             "rejectReason": None
            },
-        {
+           {
             "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 4),
             "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
             "releaseForm": None,
@@ -607,6 +521,7 @@ fh = [  {
             "status": Status.get(Status.statusName == "Approved"),
             "rejectReason": None
            }
+
 
     ]
 
