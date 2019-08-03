@@ -15,7 +15,7 @@ from app.models.Tracy.stuposn import STUPOSN
 from flask import json, jsonify
 from flask import request
 from datetime import datetime, date
-from flask import flash
+from flask import Flask, redirect, url_for, flash
 from app import cfg
 
 @main_bp.route('/laborstatusform', methods=['GET'])
@@ -31,6 +31,7 @@ def laborStatusForm():
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
     staffs = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # getting supervisors from TRACY
     departments = STUPOSN.select(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT).distinct() # getting deparmtent names from TRACY
+
     return render_template( 'main/laborStatusForm.html',
 				            title=('Labor Status Form'),
                             username = current_user,
@@ -77,7 +78,7 @@ def userInsert():
                                              endDate = enddate,
                                              supervisorNotes = data.get('Supervisor Notes', None)
                                              )
-                print(lsf)
+
                 historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
                 status = Status.get(Status.statusName == "Pending")
                 formhistroy = FormHistory.create( formID = lsf.laborStatusFormID,
@@ -85,6 +86,7 @@ def userInsert():
                                                   createdBy   = cfg['user']['debug'],
                                                   createdDate = date.today(),
                                                   status      = status.statusName)
+
             return jsonify({"Success": True})
     except Exception as e:
         print(e)
