@@ -269,7 +269,7 @@ function checkForPrimaryPosition(test = ""){ // does several stuff read the comm
         document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Upon submission of the form, student's primary superviosr " + primary_supervisor + " will be notified."
       }
       catch (e) {
-        if(jobtypename == "Primary"){
+        if(jobTypeName == "Primary"){
 
           createAndFillTable(test);
         }
