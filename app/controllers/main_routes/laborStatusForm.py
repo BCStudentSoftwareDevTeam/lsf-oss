@@ -86,12 +86,10 @@ def userInsert():
                                                   createdBy   = cfg['user']['debug'],
                                                   createdDate = date.today(),
                                                   status      = status.statusName)
-            # flash("Labor Status Form(s) has been created.", "success")
-            # return redirect(url_for("main.laborStatusForm"))
+            flash("Labor Status Form(s) has been created.", "success")
             return jsonify({"Success": True})
     except Exception as e:
-        print(e)
-        # flash("An error occured.", "danger")
+        flash("An error occured.", "danger")
         return jsonify({"Success": False})
 
 @main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])

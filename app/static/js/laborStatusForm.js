@@ -586,7 +586,6 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
      });
 
   delete test_dict["0"] // gets rid of the first dictionary that contains table labels
-  alert(JSON.stringify(test_dict))
   return test_dict
 }
 
@@ -594,7 +593,6 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
 function userInsert(){
   var test_dict = createTabledataDictionary()
   data = JSON.stringify(test_dict);
-  alert(data)
   $('#laborStatusForm').on('submit', function(e) {
     e.preventDefault();
   });
