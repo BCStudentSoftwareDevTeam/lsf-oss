@@ -302,6 +302,8 @@ from app.models.status import Status
 stats = [
             {"statusName":"Pending"
             },
+            {"statusName":"Denied"
+            },
             {"statusName":"Approved"
             }
         ]

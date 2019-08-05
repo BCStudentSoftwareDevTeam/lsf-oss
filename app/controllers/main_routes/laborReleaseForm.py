@@ -36,7 +36,7 @@ def laborReleaseForm(laborStatusKey):
             historyForms = FormHistory.select().where((FormHistory.formID == laborStatusKey) & (FormHistory.releaseForm != None))
             if historyForms:
                 for form in historyForms:
-                    if form.status != "Dennied":
+                    if form.status.statusName != "Denied":
                         flash("An error has occurred. Student already has a 'Pending' labor release form.", "danger")
                         return redirect(url_for("main.index"))
             datepickerDate = request.form.get("date")
