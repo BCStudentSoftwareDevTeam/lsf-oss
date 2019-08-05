@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block app_content %}
+<!-- These are the outside links for the datepicker-->
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+ <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<!-- These are the outside links for the effective date calendar-->
+ <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+ <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+ <div align="center">
+ <h1 > Labor Release Form </h1>
+
+<div class= "padding">
+   <p>Fill out all fields in this form and click 'Submit' if you wish to release the selected
+     student from their current labor position.</p>
+     <p>Note: This form should only be submited if the selected student will no longer be be working in your department. Changes within the department
+       (supervisor, position, hours, etc.) should be completed by submitting a labor modify form.</p>
+</div>
+ </div>
+<div >
+<form  method="POST" id="form">
+
+ <div class="container">
+
+    <div class="floatleft">
+      {% for form in forms %}
+      <div class="form-group">
+        <label>Student:</label>
+        <div>
+          <input type="text" class="form-control" id="student" value="{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}" readonly></input>
+        </div>
+      </div>
+      <div class="form-group">
+      <label>Supervisor:</label>
+        <div>
+          <input type="text" class="form-control" id="supervisor" value="{{form.supervisor.FIRST_NAME}} {{form.supervisor.LAST_NAME}}" readonly>
+        </div>
+      </div>
+      <div class="form-group">
+      <label>Department:</label>
+        <div>
+          <input type="text" class="form-control" id="department" value="{{form.department.DEPT_NAME}}" readonly>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Released from Primary or Secondary:</label>
+        <div>
+          <input type="text" class="form-control" id="jobType" value="{{form.jobType}}" readonly>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class= "floatright" >
+      <div class="form-group">
+        <label>Condition at Release:</label>
+        <div>
+          <select class="selectpicker" name="condition" id="condition" title="Condition at release" data-width="100%">
+            <option value="Satisfactory">Satisfactory</option>
+            <option value="Unsatisfactory">Unsatisfactory</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" id= "dateDiv">
+        <label for="datepicker" class="required-asterisk">Release Date:</label>
+        <div class="input-group date">
+          <input type="text" class="form-control" class="datepicker" id="datepicker0" name="date">
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+          </span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Notes">Reason for Release:</label>
+        <div>
+          <textarea name="notes" rows="6" cols="73" id="reason"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <button id="cancel" type="button" class="btn btn-danger" onclick="window.history.back()">Cancel</button>
+    <button id="submit" type="button" class="btn btn-success">Submit</button>
+    <div class="modal fade" id="modal" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Are you sure you want to submit?</h4>
+          </div>
+          <div class="modal-body">
+            <p>Submitting this form will put the selected student up for release from their current
+            labor position pending approval from the labor office within one business day.</p>
+            <p>The student will be notified about the submission of the form via email. Both you
+              and the student will be notified within one business day about the form's status.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            <button type="submit" name="submit" value="submit" class="btn btn-success" id="submitModal" ">Submit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>
+</div>
+<link rel='stylesheet' type="text/css" href='/static/css/laborReleaseForm.css' />
+<script src="/static/js/laborReleaseForm.js"></script>
+{% endblock %}
