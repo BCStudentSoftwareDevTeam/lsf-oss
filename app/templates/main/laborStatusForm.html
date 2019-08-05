@@ -44,12 +44,13 @@
               id='department'
               data-live-search='true'
               title="Department"
-              onchange = "getDepartment(this)"
+              onchange = "checkCompliance(this); getDepartment(this)"
               data-width="320px" >
         {% for department in departments %}
           <option value="{{department.DEPT_NAME}}">{{department.DEPT_NAME}}</option>
         {% endfor %}
       </select>
+      {% include "snips/ReviewForm.html" %}
     </div>
   </div>
   <br />
@@ -333,7 +334,7 @@
           <div class="modal-body" id = "warningModalText">
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>

@@ -86,10 +86,12 @@ def userInsert():
                                                   createdBy   = cfg['user']['debug'],
                                                   createdDate = date.today(),
                                                   status      = status.statusName)
-
+            # flash("Labor Status Form(s) has been created.", "success")
+            # return redirect(url_for("main.laborStatusForm"))
             return jsonify({"Success": True})
     except Exception as e:
         print(e)
+        # flash("An error occured.", "danger")
         return jsonify({"Success": False})
 
 @main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])
@@ -129,3 +131,11 @@ def check_for_total_hours(termCode, student):
         total += hour.weeklyHours
     hours_dict["weeklyHours"] = {"Total Weekly Hours": total}
     return json.dumps(hours_dict)
+
+@main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
+def checkCompliance(department):
+    depts = Department.select().where(Department.DEPT_NAME == department)
+    dept_dict = {}
+    for dept in depts:
+        dept_dict['Department'] = {'Department Compliance': dept.departmentCompliance}
+    return json.dumps(dept_dict)
