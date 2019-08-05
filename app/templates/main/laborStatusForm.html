@@ -162,71 +162,7 @@
       <option value="Primary">Primary</option>
       <option value="Secondary">Secondary</option>
     </select>
-   <!-- START OF MODAL For Secondary-->
-   <div class="modal fade" id="SecondaryModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-        <h4 class="modal-title">Secondary Postion</h4>
-      </div>
-      <div class="modal-body">
-        The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-dismiss="modal">I agree</button>
-      </div>
-    </div>
-</div>
-</div>
-​
-<!-- END OF THE MODAL -->
-​
-<!-- START OF MODAL For when Student does not have a Primary Position-->
-<div class="modal fade" id="NoPrimaryModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
-<div class="modal-dialog" role="document">
- <div class="modal-content">
-   <div class="modal-header">
-     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-       <span aria-hidden="true">&times;</span>
-     </button>
-     <h4 class="modal-title">Unable to Add a Secondary Position</h4>
-   </div>
-   <div class="modal-body">
-     The selected student does not have a primary position.
-   </div>
-   <div class="modal-footer">
-     <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
-   </div>
- </div>
-</div>
-</div>
-​
-<!-- END OF THE MODAL -->
-​
-<!-- START OF MODAL For when Student has a primary position-->
-<div class="modal fade" id="PrimaryModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
-<div class="modal-dialog" role="document">
- <div class="modal-content">
-   <div class="modal-header">
-     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-       <span aria-hidden="true">&times;</span>
-     </button>
-     <h4 class="modal-title">Notifying Primary Supervisor</h4>
-   </div>
-   <div id ="PrimaryModalText" class="modal-body">
-   </div>
-   <div class="modal-footer">
-     <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
-   </div>
- </div>
-</div>
-</div>
-​
-<!-- END OF THE MODAL -->
-​
+    {% include "snips/ReviewForm.html" %}
   </div>
 ​
   <div class="form-group col-md-2" id="Hours_PerWeek">
@@ -238,30 +174,7 @@
             data-live-search='true'
             title="Hours per week"
             data-width="197px">
-    </select>
-​
-    <!-- START OF MODAL For Overload-->
-    <div class="modal fade" id="OverloadModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
-   <div class="modal-dialog" role="document">
-     <div class="modal-content">
-       <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-           <span aria-hidden="true">&times;</span>
-         </button>
-         <h4 class="modal-title">Labor Overload</h4>
-       </div>
-       <div id="OverloadModalText"class="modal-body">
-       </div>
-       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#PrimaryModal" data-dismiss="modal">I Accept</button>
-       </div>
-     </div>
- </div>
- </div>
-​
- <!-- END OF THE MODAL -->
-​
-​
+    </select>​
   </div>
 ​
   <div class="form-group col-md-1" id="plus">
@@ -275,6 +188,7 @@
             onclick="displayTable()"
     </a>
     </span>
+    {% include "snips/ReviewForm.html" %}
   </div>
 </div>
   <br />
@@ -293,54 +207,6 @@
       </thead>
     </table>
   </div>
-
-  <div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <textarea> Text here </textarea>
-  </div>
-
-</div>
-
-  <!-- START OF MODAL adding notes-->
-  <div class="modal fade" id="noteModal" role="dialog" style="margin-top: 14%">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Notes</h4>
-          </div>
-          <div class="modal-body" id = "body_of_modal">
-            <textarea id="modal_text" rows="5" cols="77" style="resize: none;"></textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-info" data-dismiss="modal" id="saveButton" onclick="saveNotes()">Save</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  <!-- END OF MODAL -->
-
-  <!-- START OF MODAL FOR WARNINGS-->
-  <div class="modal fade" id="warningModal" role="dialog" style="margin-top: 14%">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Insert Rejected</h4>
-          </div>
-          <div class="modal-body" id = "warningModalText">
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  <!-- END OF MODAL -->
-
   <div class="col-md-12 " id="review-button">
     <button type="button"
             class="btn btn-primary"
@@ -350,7 +216,6 @@
       {% include "snips/ReviewForm.html" %}
   </div>
 </form>
-
 
 ​
  <!-- css and javascript files -->
@@ -369,21 +234,11 @@
 ​
 ​
 ​
-    {# USE LATER
-        <div id="ctl00_MainContent_wls5or6" class="col-xs-10 col-xs-offset-1" hidden>
-            <div class="col-xs-5 col-xs-offset-3 ">
-            <p class="text-warning">  Student with WLS Level 5 or 6 must have at least a 15 hour contract. These positions require special authorization as specified at <a href="http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS" target="_blank">The Labor Program Website</a></p>
-            </div>
-            <br />
-        </div>
-​
-        <div id="ctl00_MainContent_twentyhrs" class="col-xs-10 col-xs-offset-1" hidden>
-            <div class="col-xs-5 col-xs-offset-3">
-                <p class="text-warning">
-                    Students working more than 15 hours must fill out a <a href="http://www.berea.edu/labor-program-office/files/2013/07/20130705-Labor-Overload-Application.pdf" target="_blank">labor overload application.</a>
-                </p>
-​
-            </div>
-            <br />
-        </div>
-     USE LATER #}
+{# USE LATER
+  <div id="ctl00_MainContent_wls5or6" class="col-xs-10 col-xs-offset-1" hidden>
+      <div class="col-xs-5 col-xs-offset-3 ">
+      <p class="text-warning">  Student with WLS Level 5 or 6 must have at least a 15 hour contract. These positions require special authorization as specified at <a href="http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS" target="_blank">The Labor Program Website</a></p>
+      </div>
+      <br />
+  </div>
+USE LATER #}

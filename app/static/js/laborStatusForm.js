@@ -30,6 +30,7 @@ $('#hours_perweek').change(function(){
   var hour = $(this).val();
   if (hour == "20") {
       $('#OverloadModal').modal('show');
+      $('#overloadModalButton').attr('data-target', '') // preventa Primary Modal from showing up
     }
 });
 
@@ -268,17 +269,8 @@ function checkForPrimaryPosition(test = ""){ // does several stuff read the comm
       try {
         var primary_supervisor = response["PrimarySupervisor"]["Primary Supervisor FirstName"] + " " + response["PrimarySupervisor"]["Primary Supervisor LastName"]
         document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Upon submission of the form, student's primary superviosr " + primary_supervisor + " will be notified."
-        document.getElementById("OverloadModalText").innerHTML = "A labor overload is defined as more than 15 hours of labor per week during regular "+
-                                                                "academic year and may not be approved retroactively. All approvals are subject to periodic review.<br><br>"+
-                                                                "Guidlines for Approval:<br>" +
-                                                                "<li>Sophomore, junior, or senior classification</li>"+
-                                                                "<li>Not on any form of probation</li>"+
-                                                                "<li>Enrolled in less than 5 course credits with less than 8 preparations</li>"+
-                                                                "<li>Have a 2.50 GPA, both cumulative and for the previous full term</li>"+
-                                                                "<li>The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term.</li><br>"+
-                                                                "Students shoud not work any hours within a secondary assignment until notification of approved Labor Overload.\n"
-
-      } catch (e) {
+      }
+      catch (e) {
         if(jobtypename == "Primary"){
           createAndFillTable(test);
         }
@@ -389,7 +381,9 @@ function checkForTotalHoursDatabase(test = "") {// gets sum of the total weekly 
       var total = total_weeklyhours_from_database + total_weeklyhours_from_table
       if (total > 15){ // if hours exceed 15 pop up overload modal
         $('#OverloadModal').modal('show');
+        $('#overloadModalButton').attr('data-target', '#PrimaryModal')
         $('#OverloadModal').on('hidden.bs.modal', function() {
+          $('#PrimaryModal').modal('show');
           $('#PrimaryModal').on('hidden.bs.modal', function() {
           if (test == 'test') {
             createModalContent()

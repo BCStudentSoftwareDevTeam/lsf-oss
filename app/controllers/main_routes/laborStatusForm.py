@@ -20,12 +20,12 @@ from app import cfg
 
 @main_bp.route('/laborstatusform', methods=['GET'])
 def laborStatusForm():
-    current_user = require_login()
-    if not current_user:        # Not logged in
+    currentUser = require_login()
+    if not currentUser:        # Not logged in
         return render_template('errors/403.html')
     # Logged in
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
-    posn_code = STUPOSN.select(STUPOSN.POSN_CODE).distinct()
+    posnCode = STUPOSN.select(STUPOSN.POSN_CODE).distinct()
     forms = LaborStatusForm.select()
     students = STUDATA.select().order_by(STUDATA.FIRST_NAME.asc()) # getting student names from TRACY
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
@@ -34,7 +34,7 @@ def laborStatusForm():
 
     return render_template( 'main/laborStatusForm.html',
 				            title=('Labor Status Form'),
-                            username = current_user,
+                            username = currentUser,
                             forms = forms,
                             students = students,
                             terms = terms,
@@ -47,26 +47,26 @@ def userInsert():
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         if rsp:
             for data in rsp.values():
-                wls_index_start = data['Position'].find('(')
-                wls_index_end = data['Position'].find(')')
-                wls = data['Position'][wls_index_start + 1 : wls_index_end]
-                bnumber_index = data['Student'].find('B0')
-                student_bnumber = data['Student'][bnumber_index:]
-                d, created = Student.get_or_create(ID = student_bnumber)
+                wlsIndexStart = data['Position'].find('(')
+                wlsIndexEnd = data['Position'].find(')')
+                wls = data['Position'][wlsIndexStart + 1 : wlsIndexEnd]
+                bnumberIndex = data['Student'].find('B0')
+                studentBnumber = data['Student'][bnumberIndex:]
+                d, created = Student.get_or_create(ID = studentBnumber)
                 student = d.ID
                 d, created = User.get_or_create(username = data['Supervisor'])
-                primary_supervisor = d.username
+                primarySupervisor = d.username
                 d, created = Department.get_or_create(DEPT_NAME = data['Department'])
                 department = d.departmentID
                 d, created = Term.get_or_create(termCode = data['Term'])
                 term = d.termCode
                 start = data['Start Date']
-                startdate = datetime.strptime(start, "%m-%d-%Y")
+                startDate = datetime.strptime(start, "%m-%d-%Y")
                 end = data['End Date']
-                enddate = datetime.strptime(end, "%m-%d-%Y")
+                endDate = datetime.strptime(end, "%m-%d-%Y")
                 lsf = LaborStatusForm.create(termCode = term,
                                              studentSupervisee = student,
-                                             supervisor = primary_supervisor,
+                                             supervisor = primarySupervisor,
                                              department  = department,
                                              jobType = data['Job Type'],
                                              WLS = wls,
@@ -74,15 +74,15 @@ def userInsert():
                                              POSN_CODE = data['Position Code'],
                                              contractHours = data.get('Contract Hours', None),
                                              weeklyHours   = data.get('Hours Per Week', None),
-                                             startDate = startdate,
-                                             endDate = enddate,
+                                             startDate = startDate,
+                                             endDate = endDate,
                                              supervisorNotes = data.get('Supervisor Notes', None)
                                              )
 
-                historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
+                historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
                 status = Status.get(Status.statusName == "Pending")
-                formhistroy = FormHistory.create( formID = lsf.laborStatusFormID,
-                                                  historyType = historytype.historyTypeName,
+                formHistroy = FormHistory.create( formID = lsf.laborStatusFormID,
+                                                  historyType = historyType.historyTypeName,
                                                   createdBy   = cfg['user']['debug'],
                                                   createdDate = date.today(),
                                                   status      = status.statusName)
@@ -93,47 +93,46 @@ def userInsert():
         return jsonify({"Success": False})
 
 @main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])
-def getdates(termcode):
+def getDates(termcode):
     dates = Term.select().where(Term.termCode == termcode)
-    dates_dict = {}
+    datesDict = {}
     for date in dates:
         start = date.termStart
         end  = date.termEnd
-        dates_dict[date.termCode] = {"Start Date":datetime.strftime(start, "%m-%d-%Y")  , "End Date": datetime.strftime(end, "%m-%d-%Y")}
-    return json.dumps(dates_dict)
+        datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m-%d-%Y")  , "End Date": datetime.strftime(end, "%m-%d-%Y")}
+    return json.dumps(datesDict)
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
 def getPositions(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
-    position_dict = {}
+    positionDict = {}
     for position in positions:
-        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
-    return json.dumps(position_dict)
+        positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
+    return json.dumps(positionDict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
-def check_for_primary_position(termCode, student):
-    primary_positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.jobType == "Primary", LaborStatusForm.studentSupervisee == student)
-    primary_positions_dict = {}
-    for primary_position in primary_positions:
-        primary_positions_dict["PrimarySupervisor"] = {"Primary Supervisor FirstName":primary_position.supervisor.FIRST_NAME,
+def checkForPrimaryPosition(termCode, student):
+    primaryPositions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.jobType == "Primary", LaborStatusForm.studentSupervisee == student)
+    primaryPositionsDict = {}
+    for primary_position in primaryPositions:
+        primaryPositionsDict["PrimarySupervisor"] = {"Primary Supervisor FirstName":primary_position.supervisor.FIRST_NAME,
         "Primary Supervisor LastName": primary_position.supervisor.LAST_NAME, "Primary Supervisor ID":primary_position.supervisor.username}
-    print(primary_positions_dict)
-    return json.dumps(primary_positions_dict)
+    return json.dumps(primaryPositionsDict)
 
 @main_bp.route("/laborstatusform/gethours/<termCode>/<student>", methods=["GET"])
-def check_for_total_hours(termCode, student):
+def checkForTotalHours(termCode, student):
     hours = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
     total = 0
-    hours_dict = {}
+    hoursDict = {}
     for hour in hours:
         total += hour.weeklyHours
-    hours_dict["weeklyHours"] = {"Total Weekly Hours": total}
-    return json.dumps(hours_dict)
+    hoursDict["weeklyHours"] = {"Total Weekly Hours": total}
+    return json.dumps(hoursDict)
 
 @main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
 def checkCompliance(department):
     depts = Department.select().where(Department.DEPT_NAME == department)
-    dept_dict = {}
+    deptDict = {}
     for dept in depts:
-        dept_dict['Department'] = {'Department Compliance': dept.departmentCompliance}
-    return json.dumps(dept_dict)
+        deptDict['Department'] = {'Department Compliance': dept.departmentCompliance}
+    return json.dumps(deptDict)
