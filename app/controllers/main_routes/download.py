@@ -23,7 +23,7 @@ class ExcelMaker:
             print(id)
 
 
-        with open('app/static/LaborStudent.csv', 'w') as csvfile:
+        with open('app/static/csvfiles/LaborStudent.csv', 'w') as csvfile:
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='|', quoting=csv.QUOTE_MINIMAL)
 
@@ -61,7 +61,7 @@ class ExcelMaker:
                                     form.supervisorNotes])
 
 
-        return 'static/LaborStudent.csv';
+        return 'static/csvfiles/LaborStudent.csv';
 
 
 def main():
