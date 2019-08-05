@@ -66,8 +66,6 @@ class ExcelMaker:
             for studentF in studentForm:
                 downloadForms.append(studentF)
 
-
-
         with open('app/static/files/LaborStudent.csv', 'w') as csvfile:
             filewriter = csv.writer(csvfile, delimiter=',',
                                     quotechar='|', quoting=csv.QUOTE_MINIMAL)

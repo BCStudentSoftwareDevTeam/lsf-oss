@@ -1,6 +1,5 @@
 {% extends "base.html" %}
-<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-<script src="https://code.jquery.com/ui/3.3.1/jquery-ui.js"></script>
+
 {% block scripts %}
 {{super()}}
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
@@ -24,7 +23,8 @@
       <h3 id="portalTitle" >Current Students</h3>
     </div>
 
-    <div align= "right"><button class="btn" data-toggle="modal" data-target="#downloadModal">Download</button></div>
+    <div align= "right"><button class="btn btn-success" data-toggle="modal" data-target="#downloadModal">Download</button></div>
+    <br/>
 
 <!-- start of modal -->
 <form target="frame" method="POST">
