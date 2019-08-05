@@ -66,9 +66,16 @@ def populateModal(statusKey):
                     if form.status.statusName == "Approved":
                         buttonState = 0 #Only rehire button
                         break
+                    elif form.status.statusName == "Pending":
+                        buttonState = None # no buttons
+                        break
                 if form.overloadForm != None:
                     if form.status.statusName == "Pending":
                         buttonState = 1 #Only withdraw button
+                        break
+                if form.modifiedForm != None:
+                    if form.status.statusName == "Pending":
+                        buttonState = None # no buttons
                         break
                 if form.historyType.historyTypeName == "Labor Status Form":
                     if form.status.statusName == "Pending":
@@ -78,6 +85,7 @@ def populateModal(statusKey):
                         buttonState = 0 #Rehire button
                         break
                     elif form.status.statusName == "Approved":
+
                         if currentDate <= form.formID.termCode.termEnd:
                             buttonState = 3 #Release, modify, and rehire buttons
                             break
@@ -100,12 +108,18 @@ def populateModal(statusKey):
 def updatestatus_post():
     try:
         rsp = eval(request.data.decode("utf-8"))
-        overloadkey = FormHistory.get(FormHistory.formID == rsp["FormID"])
-        deleteOverloadForm    = OverloadForm.get(OverloadForm.overloadFormID == overloadkey.overloadForm).delete_instance()
+        overloadkey = FormHistory.select().where(FormHistory.formID == rsp["FormID"])
+        student = LaborStatusForm.get(rsp["FormID"]).studentSupervisee.ID
+        print(overloadkey)
+        for key in overloadkey:
+            sth = FormHistory.select().where(FormHistory.formHistoryID == key)
+        for i in sth:
+            deleteOverloadForm    = OverloadForm.get(OverloadForm.overloadFormID == i.overloadForm).delete_instance()
         deleteFormHistoryOverload = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Overload Form").delete_instance()
         deleteFormHistoryStatus = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Status Form").delete_instance()
         deleteLaborStatusForm        = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == rsp["FormID"]).delete_instance()
-        return jsonify({"Success": True})
+        flash("Your selected form has been withdrawn.", "success")
+        return jsonify({"Success":True, "url":"/laborHistory/" + student})
     except Exception as e:
         print(e)
         return jsonify({"Success": False})

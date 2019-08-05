@@ -47,7 +47,7 @@ studentsTracy = [
                 "LAST_POSN":"Media Technician",
                 "LAST_SUP_PIDM":"7"
                 },
-                "PIDM":"2",
+                {"PIDM":"2",
                 "ID":"B00841417",
                 "FIRST_NAME":"Alex",
                 "LAST_NAME":"Bryant",
@@ -217,78 +217,270 @@ print("staff added")
 from app.models.term import Term
 import datetime
 from datetime import date
-
 terms = [
+    ##############################
+    #        2021-2022
+    #############################
     {
-    "termCode":"201901",  # termcode for ThanksGiving
-    "termName" :"Thanksgiving 2019",
-    "termStart":datetime.date(2019, 11, 27),
-    "termEnd": datetime.date(2019, 12, 1),
-    "termState":"open",
+    "termCode":"202101",
+    "termName" :"Thanksgiving Break 2021",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"True",
     },
+    {
+    "termCode":"202102",
+    "termName" :"Christmas Break 2021",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"202103",
+    "termName" :"Spring Break 2022",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"202113",
+    "termName" :"Summer 2022",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode": "202111",
+    "termName" :"Fall 2021",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"202112",
+    "termName" :"Spring 2022",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"202100",
+    "termName" :"AY 2021-2022",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"True",
+    },
+    ##############################
+    #        2020-2021
+    #############################
+    {
+    "termCode":"202001",
+    "termName" :"Thanksgiving Break 2020",
+    "termStart":datetime.date(2020, 11, 25),
+    "termEnd": datetime.date(2020, 11, 30),
+    "termState":"True",
+    },
+    {
+    "termCode":"202002",
+    "termName" :"Christmas Break 2020",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"202003",
+    "termName" :"Spring Break 2021",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"202013",
+    "termName" :"Summer 2021",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode": "202011",
+    "termName" :"Fall 2020",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"202012",
+    "termName" :"Spring 2021",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"202000",
+    "termName" :"AY 2020-2021",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"True",
+    },
+        ##############################
+        #        2019-2020
+        #############################
     {
     "termCode":"201911",
     "termName" :"Fall 2019",
     "termStart":datetime.date(2019, 8, 20),
     "termEnd": datetime.date(2019, 12, 15),
-    "termState":"open",
-    },
-
-    {
-    "termCode":"201912",
-    "termName" :"Spring 2020",
-    "termStart":datetime.date(2020, 1, 5),
-    "termEnd": datetime.date(2020, 5, 4),
-    "termState":"open",
-    },
-    {
-    "termCode":"201901",
-    "termName" :"Thanksgiving 2020",
-    "termStart":datetime.date(2020, 11, 25),
-    "termEnd": datetime.date(2020, 11, 30),
-    "termState":"open",
-    },
-    {
-    "termCode":"201900",
-    "termName" :"AY 2019-2020",
-    "termStart":datetime.date(2019, 8, 20),
-    "termEnd": datetime.date(2020, 5, 4),
-    "termState":"open",
-    },
-    {
-    "termCode":"201902",
-    "termName" :"Christmas 2019",
-    "termStart":datetime.date(2019, 12, 16),
-    "termEnd": datetime.date(2020, 1, 3),
-    "termState":"open",
-    },
-    {
-    "termCode":"201903",
-    "termName" :"Spring Break 2020",
-    "termStart":datetime.date(2020, 3, 7),
-    "termEnd": datetime.date(2020, 3, 14),
-    "termState":"open",
+    "termState":"True",
     },
     {
     "termCode":"201912",
     "termName" :"Spring 2020",
     "termStart":datetime.date(2020, 1, 4),
     "termEnd": datetime.date(2020, 5, 5),
-    "termState":"open",
+    "termState":"True",
+    },
+    {
+    "termCode":"201901",
+    "termName" :"Thanksgiving 2019",
+    "termStart":datetime.date(2019, 11, 27),
+    "termEnd": datetime.date(2019, 12, 1),
+    "termState":"True",
+    },
+    {
+    "termCode":"201902",
+    "termName" :"Christmas 2019",
+    "termStart":datetime.date(2019, 12, 16),
+    "termEnd": datetime.date(2020, 1, 3),
+    "termState":"True",
+    },
+    {
+    "termCode":"201903",
+    "termName" :"Spring Break 2020",
+    "termStart":datetime.date(2020, 3, 7),
+    "termEnd": datetime.date(2020, 3, 14),
+    "termState":"True",
     },
     {
     "termCode":"201913",
     "termName" :"Summer 2020",
     "termStart":datetime.date(2020, 5, 4),
     "termEnd": datetime.date(2020, 8, 9),
-    "termState":"open",
+    "termState":"True",
+    },
+    {
+    "termCode":"201900",
+    "termName" :"AY 2019-2020",
+    "termStart":datetime.date(2019, 8, 20),
+    "termEnd": datetime.date(2020, 5, 4),
+    "termState":"True",
+    },
+    ##############################
+    #        2018-2019
+    #############################
+    {
+    "termCode":"201801",
+    "termName" :"Thanksgiving Break 2018",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"201802",
+    "termName" :"Christmas Break 2018",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"201803",
+    "termName" :"Spring Break 2019",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"201813",
+    "termName" :"Summer 2019",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode": "201811",
+    "termName" :"Fall 2018",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"201812",
+    "termName" :"Spring 2019",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"True",
+    },
+    {
+    "termCode":"201800",
+    "termName" :"AY 2018-2019",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":"True",
+    },
+    ##############################
+    #        2017-2018
+    #############################
+    {
+    "termCode":"201701",
+    "termName" :"Thanksgiving Break 2017",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"0"
+    },
+    {
+    "termCode":"201702",
+    "termName" :"Christmas Break 2017",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":False,
+    },
+    {
+    "termCode":"201703",
+    "termName" :"Spring Break 2018",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":False,
+    },
+    {
+    "termCode":"201713",
+    "termName" :"Summer 2018",
+    "termStart":datetime.date(2018, 1, 10),
+    "termEnd": datetime.date(2018, 5, 10),
+    "termState":0,
+    },
+    {
+    "termCode": "201711",
+    "termName" :"Fall 2017",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":"False",
+    },
+    {
+    "termCode":"201712",
+    "termName" :"Spring 2018",
+    "termStart":datetime.date(2017, 1, 10),
+    "termEnd": datetime.date(2017, 5, 10),
+    "termState":0,
+    },
+    {
+    "termCode":"201700",
+    "termName" :"AY 2017-2018",
+    "termStart": None,
+    "termEnd": None,
+    "termState": ""
     }
-
 ]
 Term.insert_many(terms).on_conflict_replace().execute()
-
 print("terms added")
-
 #############################
 # Staff
 #############################
@@ -552,7 +744,7 @@ lsfs = [
     "weeklyHours": None,
     "contractHours": 20,
     "startDate": datetime.date(2020,11,25),
-    "endDate": datetime.date(2020,11,31)
+    "endDate": datetime.date(2020,11,29)
     }
 ]
 
@@ -568,17 +760,17 @@ from app.models.laborReleaseForm import LaborReleaseForm
 lrfs=[
     {
         "conditionAtRelease":"Satisfactory",
-        "releaseDate":"6/5/2020",
+        "releaseDate":"2020/6/5",
         "reasonForRelease":"It is just not working really, I wish I could keep her, but I cannot because my family needs me in my life and I need them."
     },
     {
         "conditionAtRelease":"Satisfactory",
-        "releaseDate":"6/5/2020",
+        "releaseDate":"2020/6/5",
         "reasonForRelease":"They just need to be released."
     },
     {
         "conditionAtRelease":"Satisfactory",
-        "releaseDate":"6/5/2020",
+        "releaseDate":"2020/6/5",
         "reasonForRelease":"He wants to see his family."
     }
 ]
@@ -593,25 +785,25 @@ modforms = [
                 "fieldModified":"Hours",
                 "oldValue":"5",
                 "newValue":"10",
-                "effectiveDate":"6/8/2020"
+                "effectiveDate":"2020/6/8"
                 },
                 {
                 "fieldModified":"Hours",
                 "oldValue":"5",
                 "newValue":"10",
-                "effectiveDate":"6/8/2020"
+                "effectiveDate":"2020/6/8"
                 },
                 {
                 "fieldModified":"Hours",
                 "oldValue":"30",
                 "newValue":"25",
-                "effectiveDate":"6/8/2020"
+                "effectiveDate":"2020/6/8"
                 },
                 {
                 "fieldModified":"Hours",
                 "oldValue":"20",
                 "newValue":"25",
-                "effectiveDate":"6/8/2020"
+                "effectiveDate":"2020/6/8"
                 }
             ]
 ModifiedForm.insert_many(modforms).on_conflict_replace().execute()
@@ -793,8 +985,8 @@ fh = [  {
                 "modifiedForm": None,
                 "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 2),
                 "createdBy": User.get(User.username == "heggens"),
-                "createdDate": datetime.date(2020, 1, 5),
-                "reviewedDate": datetime.date(2020, 5, 4),
+                "createdDate": datetime.date(2020, 5, 10),
+                "reviewedDate": datetime.date(2020, 5, 15),
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Pending"),
                 "rejectReason": None
@@ -879,7 +1071,7 @@ fh = [  {
                 },
                 {
                  "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 10),
-                 "historyType": None,
+                 "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form"),
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 3),
@@ -892,7 +1084,7 @@ fh = [  {
                 },
                 {
                  "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 11),
-                 "historyType": None,
+                 "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": None,
@@ -905,7 +1097,7 @@ fh = [  {
                 },
                 {
                  "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 11),
-                 "historyType": None,
+                 "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Release Form"),
                  "releaseForm": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 3),
                  "modifiedForm": None,
                  "overloadForm": None,
@@ -918,7 +1110,7 @@ fh = [  {
                 },
                 {
                  "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 12),
-                 "historyType": None,
+                 "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": None,
@@ -931,7 +1123,7 @@ fh = [  {
                 },
                 {
                  "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 12),
-                 "historyType": None,
+                 "historyType": HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form"),
                  "releaseForm": None,
                  "modifiedForm": ModifiedForm.get(ModifiedForm.modifiedFormID == 4),
                  "overloadForm": None,

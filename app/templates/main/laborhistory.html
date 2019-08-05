@@ -14,9 +14,8 @@
         {% for form in studentForms %}
         <tr>
           <td onclick="openModal({{form.laborStatusFormID}})" id="{{form.laborStatusFormID}}">
-            <b>{{form.termCode.termName}}</b>, {{form.jobType}}
-            <br>
-            {{form.POSN_TITLE}} {{form.POSN_CODE}} - {{form.department.DEPT_NAME}} Dept.
+            <p class = "lead"><strong>{{form.termCode.termName}} - {{form.department.DEPT_NAME}} Dept.</strong></p>
+            <p id= "second-line">{{form.jobType}} - {{form.POSN_TITLE}} ({{form.POSN_CODE}})</p>
           </td>
         </tr>
         {% endfor %}
@@ -25,5 +24,5 @@
 </div>
 <div id="holdModal">
 </div>
-  <a type='button' class='btn btn-default' style= "padding: 7px 30px; margin-top: 5px; color: black" onclick="window.history.back()">Return</a>
+  <div align= "left"><a type='button' class='btn btn-danger' id="returnbutton" onclick="window.history.back()">Return</a></div>
 {% endblock %}

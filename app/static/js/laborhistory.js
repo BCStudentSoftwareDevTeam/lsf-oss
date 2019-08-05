@@ -28,12 +28,7 @@ function withdrawform(formID){
          contentType: 'application/json',
          success: function(response) {
              if (response["Success"]) {
-               msg = "Selected overload form has been withdrawn.";
-               category = "danger";
-               $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
-               $("#flasher").delay(4000).fadeOut();
-               setTimeout(location.reload.bind(location), 1000);
-               return;
+               window.location.href = response["url"]
              }
            }
          });
