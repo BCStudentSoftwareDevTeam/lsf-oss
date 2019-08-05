@@ -26,15 +26,15 @@
 
     {% for terms in listOfTerms %}
     <div class="panel panel-default">
-      <div class="panel-heading" role="tab" id="headingOne">
+      <div class="panel-heading" role="tab" id=heading_{{terms[0]}}>
         <h4 class="panel-title">
-          <a id="academicYear"role="button" data-toggle="collapse" data-parent="#accordion" href=#{{terms[0]}} aria-expanded="false" aria-controls={{terms[0]}}>
+          <a id="academicYear" role="button" data-toggle="collapse" data-parent="#accordion" href=#{{terms[0]}} aria-expanded="true" aria-controls={{terms[0]}}>
             Academic Year: {{(terms[0]|string)[:4]}}-{{(((terms[0]|string)[:4])|int)+1}}        <!-- this was the only way to get the Academic year to show properly... sorry -->
           </a>
         </h4>
       </div>
-      <div id={{terms[0]}} class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-    <table class="table table-condensed"  id="myTable">
+      <div id={{terms[0]}} class="panel-collapse collapse" role="tabpanel" aria-labelledby=heading_{{terms[0]}}>
+    <table class="table table-condensed" class="panel-body"  id="myTable">
       <thead>
         <tr>
             <th id="rowHeaders">Term Name</th>
@@ -129,7 +129,7 @@
 
               {% endfor %}
           </tbody>
-    </table>
+        </table>
       </div>
     </div>
     {% endfor %}

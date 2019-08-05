@@ -16,7 +16,9 @@ $(".form-control").datepicker({
 function getDate(obj, termCode) {
   var termStart = obj.value; // This is the start date
   var termID = obj.id.split("_")[1] //
+  console.log(termID)
   var dateType = obj.id.split("_")[0]
+  console.log(dateType)
   var tabledata_dict = {};
   tabledata_dict[dateType] = obj.value;
   tabledata_dict["termCode"] = termID;
@@ -34,20 +36,10 @@ function getDate(obj, termCode) {
     });
 }
 
-// function disableBtn(start, end, button) {
-//
-// }
-
 function termStatus(term) {
   var startID = $("#start_" +term);
   var endID = $("#end_" +term);
   var termBtnID = $("#term_btn_" + term);
-
-  // if( $(startID).val().length !=0 || $(endID).val().length !=0 ){
-  //   $(termBtnID).disabled = true;
-  // }else{
-  //   $(termBtnID).disabled = false;
-  // }
 
   console.log(term)
     $.ajax({

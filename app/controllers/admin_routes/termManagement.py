@@ -118,7 +118,6 @@ def termStatusCheck():
             print("this is the term " + str(term))
             print("Before:")
             print(term.termState)
-            # term.termState = not term.termState
             if term.termState == True:
                 term.termState = False
             elif term.termState == False:
