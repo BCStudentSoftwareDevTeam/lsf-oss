@@ -34,7 +34,21 @@ function getDate(obj, termCode) {
     });
 }
 
+// function disableBtn(start, end, button) {
+//
+// }
+
 function termStatus(term) {
+  var startID = $("#start_" +term);
+  var endID = $("#end_" +term);
+  var termBtnID = $("#term_btn_" + term);
+
+  // if( $(startID).val().length !=0 || $(endID).val().length !=0 ){
+  //   $(termBtnID).disabled = true;
+  // }else{
+  //   $(termBtnID).disabled = false;
+  // }
+
   console.log(term)
     $.ajax({
       method: "POST",
@@ -48,18 +62,18 @@ function termStatus(term) {
       if(response["Success"]) {
         //category = "info"
         console.log("Hello, this works")
-        var termBtnID = $("#term_btn_" + term);
+
         console.log(termBtnID);
-         if ($(termBtnID).hasClass("btn-opencolor")) {
-            $(termBtnID).removeClass("btn-opencolor");
-            $(termBtnID).addClass("btn-closecolor");
-            $(termBtnID).text("Open");
+         if ($(termBtnID).hasClass("btn-success")) {
+            $(termBtnID).removeClass("btn-success");
+            $(termBtnID).addClass("btn-danger");
+            $(termBtnID).text("Closed");
             //category = "danger";
             }
           else {
-            $(termBtnID).removeClass("btn-closecolor");
-            $(termBtnID).addClass("btn-opencolor");
-            $(termBtnID).text("Closed");
+            $(termBtnID).removeClass("btn-danger");
+            $(termBtnID).addClass("btn-success");
+            $(termBtnID).text("Open");
           //  category = "info";
             }
        }

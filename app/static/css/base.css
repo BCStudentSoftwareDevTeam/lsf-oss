@@ -79,18 +79,8 @@ a:hover {
   color: #ffffff;
 }
 
-.btn-opencolor { /* for contributors page */
- background-color: #46db91;
- color: #000000;
-}
-
-.btn-closecolor { /* for contributors page */
- background-color: #ff6363;
- color: #000000;
-}
-
 .btn-inactivecolor { /* for contributors page */
- background-color: #ff6345;
+ background-color: #f0ad4e;
  color: #000000;
 }
 

@@ -385,49 +385,49 @@ terms = [
     "termName" :"Thanksgiving Break 2017",
     "termStart":datetime.date(2017, 1, 10),
     "termEnd": datetime.date(2017, 5, 10),
-    "termState":"True",
+    "termState":"0"
     },
     {
     "termCode":"201702",
     "termName" :"Christmas Break 2017",
     "termStart":datetime.date(2017, 1, 10),
     "termEnd": datetime.date(2017, 5, 10),
-    "termState":"True",
+    "termState":False,
     },
     {
     "termCode":"201703",
     "termName" :"Spring Break 2018",
     "termStart":datetime.date(2018, 1, 10),
     "termEnd": datetime.date(2018, 5, 10),
-    "termState":"True",
+    "termState":False,
     },
     {
     "termCode":"201713",
     "termName" :"Summer 2018",
     "termStart":datetime.date(2018, 1, 10),
     "termEnd": datetime.date(2018, 5, 10),
-    "termState":"True",
+    "termState":0,
     },
     {
     "termCode": "201711",
     "termName" :"Fall 2017",
     "termStart":datetime.date(2017, 1, 10),
     "termEnd": datetime.date(2017, 5, 10),
-    "termState":"True",
+    "termState":"False",
     },
     {
     "termCode":"201712",
     "termName" :"Spring 2018",
     "termStart":datetime.date(2017, 1, 10),
     "termEnd": datetime.date(2017, 5, 10),
-    "termState":"True",
+    "termState":0,
     },
     {
     "termCode":"201700",
     "termName" :"AY 2017-2018",
-    "termStart":datetime.date(2018, 1, 10),
-    "termEnd": datetime.date(2018, 5, 10),
-    "termState":"True",
+    "termStart": None,
+    "termEnd": None,
+    "termState": ""
     }
 
 ]

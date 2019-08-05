@@ -6,4 +6,4 @@ class Term(baseModel):
     termName            = CharField(null=False)                                 # Spring 2020 only, Summer, Chsirtmas Break, AY 2020-2021
     termStart           = DateField(null=True, default="null")                    # start date
     termEnd             = DateField(null=True, default="null")                    # end date
-    termState           = CharField(null=False, default="Inactive")             #open, closed, inactive
+    termState           = BooleanField(default=False)             #open, closed, inactive
