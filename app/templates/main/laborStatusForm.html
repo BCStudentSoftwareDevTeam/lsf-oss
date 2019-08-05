@@ -76,12 +76,12 @@
 <br />
 ​
 <div class="form-group col-md-12 col-md-offset-2 row">
-<!-- DATEPICKERS -->
+<!-- datePickerS -->
           <div  class="form-group col-md-4">
-            <!--Datepicker for start date-->
-            <label for="datetimepicker1" class="col-2 col-form-label" id="datepicker">Start Date</label>
+            <!--datePicker for start date-->
+            <label for="dateTimePicker1" class="col-2 col-form-label" id="datePicker">Start Date</label>
               <div class='input-group date' >
-                <input type='text' class="form-control" id='datetimepicker1' name="startdate" placeholder="Start Date" data-width="320px" />
+                <input type='text' class="form-control" id='dateTimePicker1' name="startDate" placeholder="Start Date" data-width="320px" />
                 <span class="input-group-addon">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -89,10 +89,10 @@
           </div>
 ​
           <div class="form-group col-md-4">
-            <!--Datepicker for End date-->
-          <label for="datetimepicker2" class="col-2 col-form-label" id="datepicker">End Date</label>
+            <!--datePicker for End date-->
+          <label for="dateTimePicker2" class="col-2 col-form-label" id="datePicker">End Date</label>
             <div class='input-group date'>
-                <input type='text' class="form-control" id='datetimepicker2' name="enddate" placeholder="End Date" data-width="320px"/>
+                <input type='text' class="form-control" id='dateTimePicker2' name="endDate" placeholder="End Date" data-width="320px"/>
                 <span class="input-group-addon">
                   <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -133,13 +133,13 @@
   </div>
 ​
  <!-- Contract hours for breaks -->
-  <div class="form-group col-md-5" id="ContractHours" >
+  <div class="form-group col-md-5" id="contractHours" >
           <!--selectpicker for cntract hours-->
           <label for="student">Contract Hours</label>
           <input class="form-control quantity"
                   type = "number"
-                  name='contracthours'
-                  id='contracthours'
+                  name='contractHours'
+                  id='contractHours'
                   title="Contract Hours"
                   placeholder="Contract Hours"
                   min = "1"
@@ -152,8 +152,8 @@
     <!--selectpicker for Job type-->
     <label for="student">Job Type</label>
     <select class="selectpicker"
-            name='jobtype'
-            id='jobtype'
+            name='jobType'
+            id='jobType'
             data-live-search='true'
             title="Job Type"
             data-width="197px"
@@ -228,12 +228,12 @@
 ​
   </div>
 ​
-  <div class="form-group col-md-2" id="Hours_PerWeek">
+  <div class="form-group col-md-2" id="hoursPerWeek">
     <!--selectpicker for hrs per week-->
     <label for="student">Hours Per Week</label>
     <select class="selectpicker"
-            name='hours_perweek'
-            id='hours_perweek'
+            name='selectedHoursPerWeek'
+            id='selectedHoursPerWeek'
             data-live-search='true'
             title="Hours per week"
             data-width="197px">
@@ -283,9 +283,9 @@
         <tr class="item">
           <td>Student</td>
           <td id = "position" data-value = "">Position</td>
-          <td id="job_table">Job Type</td>
-          <td id="hours_table">Hours Per Week</td>
-          <td id="contract_table">Contract Hours</td>
+          <td id="jobTable">Job Type</td>
+          <td id="hoursTable">Hours Per Week</td>
+          <td id="contractTable">Contract Hours</td>
           <td id ="notes"> Notes </td>
           <td> Remove </td>
         </tr>
@@ -343,8 +343,8 @@
   <div class="col-md-12 " id="review-button">
     <button type="button"
             class="btn btn-primary"
-            name = "formsubmission"
-            value = "formsubmission"
+            name = "formSubmission"
+            value = "formSubmission"
             onclick="reviewButtonFunctionality('test')">Review</button>
       {% include "snips/ReviewForm.html" %}
   </div>
