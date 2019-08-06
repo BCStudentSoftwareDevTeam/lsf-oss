@@ -87,27 +87,43 @@
           <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
             <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span></a>
               <br />
-            <span class="pushLeft h6">{{form.POSN_TITLE}} - {{form.department.DEPT_NAME}}</span>
+            <span class="pushLeft h6"> {{form.termCode.termName}} - {{form.POSN_TITLE}} - {{form.department.DEPT_NAME}}</span>
           </td>
         </tr>
         {% endfor %}
         <tr id="currentStu" >
           <td style="display:none"></td>
+        </tr>
 
 
 
   <!-- Display all the current students by going through active_supervisees list from main_route.py -->
 
         {% for form in inactive_supervisees %}
-          <tr id="pastStu" style="display:none">
-            <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
-              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})
-              <P>No longer a student</P>
-            </a></td>
-          </tr>
+        <tr id="pastStu" style="display:none">
+          <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
+            <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span></a>
+              <br />
+            <span class="pushLeft h6"> No longer a student.</span>
+          </td>
+        </tr>
         {% endfor %}
         <tr id="pastStu">
         <td style="display:none"></td>
+        </tr>
+
+        {% for student in departmentStudents %}
+        <tr id="departmentStudents" style="display:none">
+          <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
+            <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span></a>
+              <br />
+            <span class="pushLeft h6"> No longer a student.</span>
+          </td>
+        </tr>
+        {% endfor %}
+        <tr id="departmentStudents">
+        <td style="display:none"></td>
+        </tr>
 
 
       </table>

@@ -6,6 +6,7 @@ from app.controllers.main_routes.download import ExcelMaker
 from app.login_manager import *
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.Tracy.studata import STUDATA
+from app.models.department import Department
 
 
 
@@ -24,6 +25,15 @@ def index():
 ###### This is the start of grabbing the data from the labor status form and displaying it on the Supervisor portal ######
     # Get all the forms from the supervisor form that has Scott as the Supervisor and order them by the endDate  #
     forms_by_supervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.username).order_by(LaborStatusForm.endDate.desc())
+    # departmentStudents = LaborStatusForm.select().where(LaborStatusForm.department.DEPT_NAME == "Computer Science")
+    departmentID = Department.select().where(Department.DEPT_NAME == current_user.DEPT_NAME)[0]
+    departmentStudents = LaborStatusForm.select().where(LaborStatusForm.department == departmentID)
+
+    try:
+     for i in departmentStudents:
+         print(i.department.DEPT_NAME)
+    except Exception as e:
+        print(e)
 
     inactive_supervisees = []
     active_supervisees = []
@@ -76,7 +86,6 @@ def index():
                     forms_by_supervisees = forms_by_supervisees,
                     active_supervisees = active_supervisees,
                     inactive_supervisees = inactive_supervisees,
-
-                    username = current_user
-
+                    username = current_user,
+                    departmentStudents = departmentStudents
                           )
