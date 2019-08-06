@@ -3,7 +3,7 @@ from app.models.user import *
 from app.controllers.admin_routes import admin
 from app.login_manager import require_login
 
-@admin.route('/adminOverload', methods=['GET', 'POST'])
+@admin.route('/admin/adminOverload', methods=['GET', 'POST'])
 # @login_required
 def adminOverload():
     current_user = require_login()
