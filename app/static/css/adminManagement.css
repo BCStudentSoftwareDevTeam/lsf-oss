@@ -1,0 +1,51 @@
+h1, label{
+  text-align: center;
+}
+h4 {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+select {
+  position: relative;
+  margin-bottom: 50px;
+}
+
+#borders{
+  border-style: solid;
+  border-width: thin;
+  border-radius: 15px;
+  position: relative;
+  right: 50px;
+  padding-bottom: 50px;
+  padding-top: 20px;
+}
+
+#borders1 {
+  border-style: solid;
+  border-width: thin;
+  border-radius: 15px;
+  padding-bottom: 50px;
+  padding-top: 20px;
+}
+
+#borders2 {
+  border-style: solid;
+  border-width: thin;
+  border-radius: 15px;
+  position: relative;
+  left: 50px;
+  padding-bottom: 50px;
+  padding-top: 20px;
+}
+
+#header {
+  margin-bottom: 30px
+}
+
+.form-group {
+  margin-bottom: 30px;
+}
+ p {
+   font-size: large;
+ }
