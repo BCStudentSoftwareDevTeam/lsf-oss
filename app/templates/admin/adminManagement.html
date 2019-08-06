@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+<head>
+<link href="static/css/adminManagement.css" rel="stylesheet" type="text/css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<form action="/adminManagement/userInsert" method="POST">
+
+  <h1>Manage Administrators</h1>
+  <h4>Add or Remove admins here</h4>
+
+{# This is for adding is labor admins #}
+
+
+<div class="container">
+  <div class="row">
+    <div id="borders" class="col-sm-4">
+      <h3 id="header">Labor Administrators</h3>
+        <div class = "form-group">
+          <select id="addlaborAdmin" class="form-control selectpicker" title="Select User" data-width="258px"
+          data-show-subtext="true" data-live-search="true" name="addAdmin">
+            {% for user in users %}
+              {% if user.isLaborAdmin == False %}
+                <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+              {% endif %}
+            {% endfor %}
+          </select>
+          <button id="add" onclick="modal('add')" value="add" name="add" class="btn btn-success" type="button">Add</button>
+        </div>
+
+<div class = "form-group">
+  <select id="removelaborAdmin" class = "form-control selectpicker" title="Current Labor Admins" data-width="258px"
+    data-show-subtext="true" data-live-search="true" name="removeAdmin">
+      {% for user in users %}
+        {% if user.isLaborAdmin == True %}
+          <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+        {% endif %}
+      {% endfor %}
+        </select>
+          <button id="remove" onclick="modal('remove')" value="remove" name="remove" class="btn btn-danger" type="button">Remove</button>
+        </div>
+      </div>
+
+{# Financial Aid Admins #}
+
+<div id="borders1" class="col-sm-4">
+  <h3 id="header">Financial Aid Administrators</h3>
+    <div class = "form-group">
+      <select id="addFinAidAdmin" class="form-control selectpicker" title="Select User" data-width="258px"
+      data-show-subtext="true" data-live-search="true" name="addFinancialAidAdmin">
+        {% for user in users %}
+          {% if user.isFinancialAidAdmin == False %}
+          <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <button id="add1"  onclick="modal('add1')" value="addAid" name="addAid" class="btn btn-success" type="button">Add</button>
+    </div>
+
+ <div class = "form-group">
+  <select id="removeFinAidAdmin" class = "form-control selectpicker" title="Current Financial Aid Admin" data-width="258px"
+   data-show-subtext="true" data-live-search="true" name="removeFinancialAidAdmin">
+    {% for user in users %}     <!-- placeholder for emailTemplate table database -->
+      {% if user.isFinancialAidAdmin == True %}
+        <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+      {% endif %}
+    {% endfor %}
+    </select>
+  <button id="remove1" onclick="modal('remove1')" value="removeAid" name="removeAid" class="btn btn-danger" type="button">Remove</button>
+ </div>
+</div>
+
+{# SAAS admins #}
+
+<div id="borders2" class="col-sm-4">
+  <h3 id="header">SAAS Administrators</h3>
+    <div class = "form-group">
+      <select id="addSaasAdmin" class = "form-control selectpicker" title="Select User" data-width="258px"
+      data-show-subtext="true" data-live-search="true" name="addSAASAdmin">
+      {% for user in users %}     <!-- placeholder for emailTemplate table database -->
+        {% if user.isSaasAdmin == False %}
+        <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+        {% endif %}
+      {% endfor %}
+      </select>
+    <button id="add2" onclick="modal('add2')" value="addSaas" name="addSaas" class="btn btn-success" type="button">Add</button>
+</div>
+
+       <div class = "form-group">
+           <select id="removeSaasAdmin" class="form-control selectpicker" title="Current SAAS Admin" data-width="258px"
+           data-show-subtext="true" data-live-search="true" name="removeSAASAdmin">
+           {% for user in users %}     <!-- placeholder for emailTemplate table database -->
+             {% if user.isSaasAdmin == True %}
+               <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+             {% endif %}
+           {% endfor %}
+           </select>
+          <button id="remove2" onclick="modal('remove2')" value="removeSaas" name="removeSaas" class="btn btn-danger" type="button">Remove</button>
+       </div>
+     </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modal" role="dialog">
+  <div class="modal-dialog" role="document">
+       <div class="modal-content">
+         <div class="modal-header">
+           <button type="button" class="close" data-dismiss="modal">&times;</button>
+           <h2 id="header" class="modal-title" text-align="center">Users</h2>
+         </div>
+         <div class="modal-body">
+           <p id="modalText">placeholder text </p>
+         </div>
+         <div class="modal-footer">
+           <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+           <button id="submitModal" class="btn btn-success">Yes</button>
+         </div>
+       </div>
+       </div>
+     </div>
+</form>
+<script src="/static/js/adminManagement.js"></script>
+
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+<head>
+  <link rel="stylesheet" href="emailTemplates.css">
+    <style>
+      h1 {
+        text-align: center;
+      }
+      p {
+        text-align: center;
+      }
+    </style>
+    <meta charset="utf-8">
+    <title>CKEditor</title>
+    <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
+</head>
+
+<h1>Email Templates</h1>
+<p>Do email templates here</p>
+
+<div class="form-group col-md-4">    <!-- This is a blank div so our select pickers would move to the right -->
+
+</div>
+
+<div class="form-group col-md-3" margin-left="500px">
+  <div class="form-group col-md-12">
+    <label for="Recipient">Recipient</label>
+      <select class="selectpicker"
+        name='recipient'
+        id='recipient'
+        data-live-search='true'
+        title="Recipient"
+        data-width="258px">
+        {% for user in users %}     <!-- placeholder for emailTemplate table database -->
+           <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.username}} {{user.firstname}}</option>
+        {% endfor %}
+     </select>
+  </div>
+
+  <div class="form-group col-md-12">
+  <label for="Purpose">Purpose</label>
+    <select class="selectpicker"
+      name='purpose'
+      id='purpose'
+      data-live-search='true'
+      title="Purpose"
+      data-width="258px">
+      {% for user in users %}     <!-- placeholder for emailTemplate table database -->
+         <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.username}} {{user.firstname}}</option>
+      {% endfor %}
+   </select>
+  </div>
+
+  <div class="form-group col-md-12">
+  <label for="Subject">Subject</label>
+    <select class="selectpicker"
+      name='subject'
+      id='subject'
+      data-live-search='true'
+      title="Subject"
+      data-width="258px">
+      {% for user in users %}     <!-- placeholder for emailTemplate table database -->
+         <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.username}} {{user.firstname}}</option>
+      {% endfor %}
+   </select>
+  </div>
+
+  <div class="form-group col-md-12">
+  <label for="Body">Body</label>
+  <textarea name="editor1"></textarea>
+              <script>
+                      CKEDITOR.replace( 'editor1' );
+              </script>
+  </div>
+
+  <div style="text-align:right;">
+    <input type="submit" value="Save Changes" align="right">
+  </div>
+</div>
+
+
+{% endblock %}
