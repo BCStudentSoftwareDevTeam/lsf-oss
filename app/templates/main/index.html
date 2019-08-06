@@ -71,7 +71,8 @@
 
 
 <!-- Start of data-table that will display the supervisee -->
-    <div align= "center" >
+    <div class="col-md-3"></div>
+    <div class="col-md-6" align="center" >
     <table id="studentList" class="table table-striped studentTable" >
       <thead>
         <tr>
@@ -84,10 +85,10 @@
         {% for form in active_supervisees %}
         <tr id="currentStu" name="currentStu">
           <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
-            <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span>
+            <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span></a>
               <br />
-            <span>{{form.POSN_TITLE}}</span>
-          </a></td>
+            <span class="pushLeft h6">{{form.POSN_TITLE}} - {{form.department.DEPT_NAME}}</span>
+          </td>
         </tr>
         {% endfor %}
         <tr id="currentStu" >
@@ -112,6 +113,7 @@
       </table>
 
     </div>
+    <div class="col-md-3">
 </div>
 <!-- End of data-table that will display the supervisee -->
 

@@ -11,15 +11,12 @@
   right: 0;
 }
 
-.studentTable {
-
-  width: 30%; /* Full-width */
-
-  font-size: 18px; /* Increase font-size */
+.pushLeft {
+    padding-left: 10px;
 }
 
 .studentTable th, .studentTable td {
-  text-align: center; /* Left-align text */
+  text-align: left; /* Left-align text */
   padding: 12px; /* Add padding */
 }
 
