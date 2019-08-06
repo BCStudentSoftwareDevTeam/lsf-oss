@@ -19,7 +19,8 @@ from flask import Flask, redirect, url_for, flash
 from app import cfg
 
 @main_bp.route('/laborstatusform', methods=['GET'])
-def laborStatusForm():
+@main_bp.route('/laborstatusform/<formID>', methods=['GET'])
+def laborStatusForm(formID = None):
     currentUser = require_login()
     if not currentUser:        # Not logged in
         return render_template('errors/403.html')

@@ -10,28 +10,10 @@ from flask import Flask, redirect, url_for
 def admin_Management():
    # username = load_user('heggens')
    users = User.select()
-   FIRST_NAME = User.select()
-   LAST_NAME = User.select()
-   EMAIL = User.select()
-   CPO = User.select()
-   ORG = User.select()
-   DEPT_NAME = User.select()
-   isLaborAdmin = User.select()
-   isFinancialAidAdmin = User.select()
-   isSaasAdmin = User.select()
    return render_template( 'admin/adminManagement.html',
                             title=('Admin Management'),
                            # username = username,
-                           users = users,
-                           FIRST_NAME = FIRST_NAME,
-                           LAST_NAME = LAST_NAME,
-                           EMAIL = EMAIL,
-                           CPO = CPO,
-                           ORG = ORG,
-                           DEPT_NAME = DEPT_NAME,
-                           isLaborAdmin = isLaborAdmin,
-                           isFinancialAidAdmin = isFinancialAidAdmin,
-                           isSaasAdmin = isSaasAdmin
+                           users = users
                          )
 
 

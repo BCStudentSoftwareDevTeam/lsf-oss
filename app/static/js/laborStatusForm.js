@@ -439,6 +439,7 @@ function createAndFillTableForBreaks(test = '') {// Fills the table. For Summer 
   var positionName = position.options[position.selectedIndex].text;
   var positionCode = $("#position").val()
   var contractHoursName = document.getElementById("contractHours").value;
+  console.log(contractHoursName)
   var notesGlyphicon = "<a data-toggle='modal' onclick = 'showNotesModal(\""+String(studentName) + String(positionName)+"\")' id= '"+String(studentName) +
                                                           String(positionName)+"' ><span class='glyphicon glyphicon-edit'></span></a>";
   var removeIcon = "<a onclick = 'deleteRow(this)' class='remove'><span class='glyphicon glyphicon-remove'></span></a>";
