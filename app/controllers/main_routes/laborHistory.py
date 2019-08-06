@@ -23,7 +23,7 @@ def laborhistory(id):
             return render_template('errors/403.html')
 
         student = Student.get(Student.ID == id)
-        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student)
+        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(-LaborStatusForm.startDate).order_by(-LaborStatusForm.termCode)
         formHistoryList = ""
         for form in studentForms:
             formHistoryList = formHistoryList + str(form.laborStatusFormID) + ","
@@ -57,7 +57,7 @@ def populateModal(statusKey):
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         currentDate = datetime.date.today()
         buttonState = None
-        current_user = cfg['user']['debug']
+        current_user = cfg['user']['debug']     # FIXME: Debugging only!
         for form in forms:
             if current_user != (form.createdBy.username or form.formID.supervisor.username):
                 break
