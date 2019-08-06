@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 var j = jQuery.noConflict();
 j( function() {
-   j( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
+   j( "#dateTimePicker1, #dateTimePicker2" ).datepicker()
 } );
 
 $(document).on('keyup', 'input[name=contractHours]', function () { // sets contract hours minimum value
@@ -52,8 +52,20 @@ function preFilledDate(obj){ // get term start date and end date
 
 function fillDates(response){ // prefill term start and term end
   for (var key in response){
-    $("#dateTimePicker1").val(response[key]["Start Date"]);
-    $("#dateTimePicker2").val(response[key]["End Date"]);
+    var start = response[key]['Start Date'];
+    var end = response[key]["End Date"];
+
+    var startd = new Date(start)
+    var day = startd.getDay();
+    var month = startd.getMonth();
+    var year = startd.getFullYear();
+    console.log(typeof(day))
+    console.log(year);
+    $('#dateTimePicker1').datepicker({minDate: new Date(year, month-1, day)});
+    $('#dateTimePicker2').datepicker({minDate: 0});
+
+    $("#dateTimePicker1").val(start);
+    $("#dateTimePicker2").val(end);
   }
 }
 
@@ -146,6 +158,18 @@ function checkCompliance(obj) {
 }
 
 
+//refresh select pickers
+function refreshSelectPickers() {
+  $("#selectedContractHours").val('');
+  $("#selectedHoursPerWeek").val('default');
+  $("#selectedHoursPerWeek").selectpicker("refresh");
+  $("#jobType").val('default');
+  $("#jobType").selectpicker("refresh");
+  $("#student").val('default');
+  $("#student").selectpicker("refresh");
+  $("#position").val('default');
+  $("#position").selectpicker("refresh");
+}
 
 // TABLE LABELS
 $("#contractHours").hide();
@@ -201,7 +225,6 @@ function deleteRow(row) { // Deletes Row when remove glyphicon is clicked.
 
 // TABLE
 function displayTable(test = "") { // displays table when plus glyphicon is clicked
-  $("#mytable").show();
   var termCode = $('#term').val();
   var whichTerm = termCode.toString().substr(-2);
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
@@ -238,6 +261,7 @@ function checkDuplicate(test = "") {// checks for duplicates in the table. This 
          $("#warningModal").modal('show')
          $("#jobTable").show();
          $("#hoursTable").show();
+         refreshSelectPickers()
           return;
           }
 
@@ -246,6 +270,7 @@ function checkDuplicate(test = "") {// checks for duplicates in the table. This 
          $("#warningModal").modal('show')
          $("#jobTable").show();
          $("#hoursTable").show();
+         refreshSelectPickers()
           return;
          }
   }
@@ -253,6 +278,8 @@ function checkDuplicate(test = "") {// checks for duplicates in the table. This 
 }
 
 function checkForPrimaryPosition(test = ""){ // does several stuff read the comments down below
+  var student = document.getElementById("student");
+  var studentName = student.options[student.selectedIndex].text;
   var jobType = document.getElementById("jobType");
   var jobTypeName = jobType.options[jobType.selectedIndex].text;
   var student = $("#student").val();
@@ -281,11 +308,14 @@ function checkForPrimaryPosition(test = ""){ // does several stuff read the comm
       /* 2. if student does not have a primary position show modal */
       var result = $.isEmptyObject(response);
       if (jobTypeName == "Secondary" && result) {
+        document.getElementById('NoPrimaryModalText').innerHTML = "<span class='glyphicon glyphicon-exclamation-sign' style='color:red; font-size:20px;'></span>"+ " The selected student " + studentName +" does not have a primary position."
         $('#NoPrimaryModal').modal('show');
+        refreshSelectPickers();
       }
       else if (jobTypeName == "Primary" && !result) { // 3. If a student already has a primary position, do not add to the table.
-        document.getElementById("warningModalText").innerHTML = "Student already has a primary position."
+        document.getElementById("warningModalText").innerHTML =  studentName + " already has a primary position."
         $("#warningModal").modal('show')
+        refreshSelectPickers();
       }
       else {
       /* 4. If student has a primary position check the total hours for overload and add to table  */
@@ -333,17 +363,7 @@ function createAndFillTable() { // fills the table for Academic Year.
   cell4.innerHTML = hoursPerWeekName;
   cell5.innerHTML = notesGlyphicon;
   cell6.innerHTML = removeIcon;
-
-
-  $("#selectedHoursPerWeek").val('default');
-  $("#selectedHoursPerWeek").selectpicker("refresh");
-  $("#jobType").val('default');
-  $("#jobType").selectpicker("refresh");
-  $("#student").val('default');
-  $("#student").selectpicker("refresh");
-  $("#position").val('default');
-  $("#position").selectpicker("refresh");
-
+  refreshSelectPickers();
 }
 
 
@@ -420,6 +440,7 @@ function checkDuplicateBreaks(test = "") { // checks for duplicates in table. Fo
            document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and " + positionName
            $("#warningModal").modal('show')
             $("#contractTable").show();
+            refreshSelectPickers();
             return;
             }
           }
@@ -459,11 +480,7 @@ function createAndFillTableForBreaks(test = '') {// Fills the table. For Summer 
   cell4.innerHTML = notesGlyphicon;
   cell5.innerHTML = removeIcon;
 
-  $("#selectedContractHours").val('');
-  $("#position").val('default');
-  $("#position").selectpicker("refresh");
-  $("#student").val('default');
-  $("#student").selectpicker("refresh");
+  refreshSelectPickers();
 
   if (test == 'test'){
     createModalContent()

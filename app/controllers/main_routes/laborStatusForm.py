@@ -61,9 +61,9 @@ def userInsert():
                 d, created = Term.get_or_create(termCode = data['Term'])
                 term = d.termCode
                 start = data['Start Date']
-                startDate = datetime.strptime(start, "%m-%d-%Y")
+                startDate = datetime.strptime(start, "%m/%d/%Y").strftime('%Y-%m-%d')
                 end = data['End Date']
-                endDate = datetime.strptime(end, "%m-%d-%Y")
+                endDate = datetime.strptime(end, "%m/%d/%Y").strftime('%Y-%m-%d')
                 lsf = LaborStatusForm.create(termCode = term,
                                              studentSupervisee = student,
                                              supervisor = primarySupervisor,
@@ -99,7 +99,7 @@ def getDates(termcode):
     for date in dates:
         start = date.termStart
         end  = date.termEnd
-        datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m-%d-%Y")  , "End Date": datetime.strftime(end, "%m-%d-%Y")}
+        datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
     return json.dumps(datesDict)
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
