@@ -43,6 +43,11 @@ select {
   margin-bottom: 30px
 }
 
+#titleBlock {
+  position: relative;
+  left: 130px;
+}
+
 .form-group {
   margin-bottom: 30px;
 }
