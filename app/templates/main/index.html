@@ -1,6 +1,121 @@
 {% extends "base.html" %}
 
+{% block scripts %}
+{{super()}}
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
+<script type="text/javascript" src="{{url_for('static', filename='js/index.js') }}"></script>
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.css"/>
+{% endblock %}
+
 {% block app_content %}
-    <h1>Hi, {{username.FIRST_NAME}}!</h1>
-    <p>This page will be the new supervisor portal!</p>
+
+<link rel="stylesheet" type="text/css" href="/static/css/index.css" />
+<div align= "right">
+
+<!-- header -->
+    <div align="center">
+      <h1>Supervisor Portal</h1>
+      <h3 id="portalTitle" >Current Students</h3>
+    </div>
+
+    <div align= "right"><button class="btn btn-success" data-toggle="modal" data-target="#downloadModal">Download</button></div>
+    <br/>
+
+<!-- start of modal -->
+<form target="frame" method="POST">
+     <div class="modal fade" id="downloadModal" role="dialog" >
+         <div class="modal-dialog">
+
+           <div class="modal-content" align="center">
+             <div class="modal-header" align="center">
+
+               <h4 class="modal-title">Please select what you would like to download.</h4>
+             </div>
+
+             <div  class="modal-body">
+                <input type="checkbox" name="student" id="select-all"> <b>Select all</b>
+
+               {% for form in active_supervisees %}
+               <label class="container" id="currentStu">
+                  <input class='actStu' type="checkbox" id ='{{form.laborStatusFormID}}' name='{{form.studentSupervisee.ID}}' value='{{form.laborStatusFormID}}'>
+                  {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}
+                </label>
+                {% endfor %}
+             {% for form in inactive_supervisees %}
+               <label class="container" id="pastStu" style="display:none">
+                  <input class='pastStu' type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.studentSupervisee.ID}}' value='{{form.laborStatusFormID}}' disabled>
+                  {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}
+                </label>
+                {% endfor %}
+
+             </div>
+
+             <div class="modal-footer" align="center">
+                 <button  class="btn btn-danger" id="closeButton" onclick="downloadHistory()" data-dismiss="modal">Close</button>
+                 <button type="submit" value="Submit" class="btn btn-success" id="modal">Download</button>
+             </div>
+
+           </div>
+
+         </div>
+       </div>
+</form>
+<!-- end of modal-->
+
+
+
+
+<!-- Start of data-table that will display the supervisee -->
+    <div align= "center" >
+    <table id="studentList" class="table table-striped studentTable" >
+      <thead>
+        <tr>
+          <th> </th>
+        </tr>
+      </thead>
+
+  <!-- Display all the current students by going through active_supervisees list from main_route.py -->
+
+        {% for form in active_supervisees %}
+        <tr id="currentStu" name="currentStu">
+          <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
+            <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span>
+              <br />
+            <span>{{form.POSN_TITLE}}</span>
+          </a></td>
+        </tr>
+        {% endfor %}
+        <tr id="currentStu" >
+          <td style="display:none"></td>
+
+
+
+  <!-- Display all the current students by going through active_supervisees list from main_route.py -->
+
+        {% for form in inactive_supervisees %}
+          <tr id="pastStu" style="display:none">
+            <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
+              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})
+              <P>No longer a student</P>
+            </a></td>
+          </tr>
+        {% endfor %}
+        <tr id="pastStu">
+        <td style="display:none"></td>
+
+
+      </table>
+
+    </div>
+</div>
+<!-- End of data-table that will display the supervisee -->
+
+<!-- Keeps modal form closing when submit( Download ) button is pressed -->
+<iframe name="frame"></iframe>
+
 {% endblock %}

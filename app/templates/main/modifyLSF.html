@@ -1,0 +1,138 @@
+
+{% extends "base.html" %}
+
+{% block app_content %}
+<head>
+<!-- These are the link to the css and js files we have in the static folder-->
+  <link rel="stylesheet" type="text/css" href="/static/css/modifyLSF.css" />
+
+<!-- These are the outside links for the datepicker-->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <!-- These are the outside links for the effective date calendar-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+
+ <div align="center">
+   <h2>Modify Labor Status Form</h2>
+ </div>
+
+
+
+ <form  action="/index">
+
+   <div class="container">
+   <div class="floatleft">
+       <div class="form-group">
+         <label for="Student">Student:</label>
+         <div>
+           <input type="Student" class="form-control" id="Student" required>
+         </div>
+       </div>
+       <div class="form-group">
+         <label for="Supervisor">Supervisor:</label>
+         <div>
+           <input type="Supervisor" class="form-control" id="Supervisor" required>
+         </div>
+       </div>
+       <div class="form-group">
+         <label for="Department">Department:</label>
+         <div>
+           <input type="Department" class="form-control" id="Department" required>
+         </div>
+       </div>
+       <div class="form-group">
+         <label for="Position">Position:</label>
+         <div>
+           <input type="Position" class="form-control" id="Position" required>
+         </div>
+       </div>
+       <div class="form-group">
+         <label for="WLS">WLS:</label>
+         <div>
+           <input type="WLS" class="form-control" id="WLS" required>
+         </div>
+       </div>
+       <div class="form-group">
+         <label for="JobType">Job Type:</label>
+         <div>
+           <input type="JobType" class="form-control" id="JobType" required>
+         </div>
+       </div>
+
+   </div>
+
+
+
+  <div class= "floatright" >
+     <div class="form-group">
+       <label for="Term">Term:</label>
+       <div >
+         <input type="Term" class="form-control" id="Term" required>
+       </div>
+     </div>
+     <div class="form-group">
+       <label for="Hours">Hours:</label>
+       <div>
+         <input type="Hours" class="form-control" id="Hours" required>
+       </div>
+     </div>
+    <div class="form-group" id= "dateDiv">
+    <label for="datetimepicker" class="required-asterisk">Date Needed:</label>
+      <div class="input-group date">
+        <input type="text" class="form-control" id="datetimepicker0" placeholder="MM/DD/YYYY">
+        <span class="input-group-addon">
+        <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+      </div>
+     </div>
+     <div class="form-group">
+       <label for="Notes">Notes:</label>
+       <div>
+         <textarea name="notes" rows="9" cols="73"></textarea>
+       </div>
+     </div>
+  </div>
+  </div>
+
+    <div class="container">
+      <div class="floatleft">
+        <button type="cancel" class="btn btn-danger">Cancel</button>
+      </div>
+      <div class="submitbutton">
+        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal">Submit Changes</button>
+      </div>
+    </div>
+
+
+    <!-- start of modal -->
+       <div class="modal fade" id="submitModal" role="dialog">
+           <div class="modal-dialog">
+
+             <div class="modal-content">
+               <div class="modal-header">
+                 <button type="button" class="close" data-dismiss="modal">&times;</button>
+                 <h4 class="modal-title">Are you sure you want to submit?</h4>
+               </div>
+               <div class="modal-body">
+                 <p>Submitting this form will modify the student current labor position.</p>
+               </div>
+               <div class="modal-footer">
+                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                 <button type="submit" class="btn btn-success" id="modal">Submit</button>
+               </div>
+             </div>
+
+           </div>
+         </div>
+
+ </form>
+
+<script language="JavaScript" type="text/javascript" src="/static/js/modifyLSF.js"></script>
+{% endblock %}

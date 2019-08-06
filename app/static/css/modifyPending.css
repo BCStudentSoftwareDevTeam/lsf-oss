@@ -1,0 +1,14 @@
+.floatleft {
+  float: left;
+  width: 47%;
+
+}
+
+.floatright {
+  float: right;
+  width: 47%;
+
+}
+.submitbutton {
+  float: right;
+}

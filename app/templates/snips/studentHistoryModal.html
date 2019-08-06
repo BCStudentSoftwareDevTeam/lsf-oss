@@ -1,0 +1,167 @@
+<div class="modal fade" id="modal" role="dialog">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        {% for form1 in statusForm %}
+        <div class="modal-title h2" align="center">{{form1.studentSupervisee.FIRST_NAME}} {{form1.studentSupervisee.LAST_NAME}}</div>
+        {% endfor %}
+      </div>
+      <div class="modal-body" id="modalid">
+        {% for form1 in statusForm %}
+        <div id="currentData">
+          <div class= "h4" align="center">{{form1.termCode.termName}} | {{form1.department.DEPT_NAME}} Dept. | {{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}} </div>
+          <div class= "h4" align="center">
+          {{form1.jobType}} | {{form1.POSN_TITLE}} | {{form1.POSN_CODE}} | WLS {{form1.WLS}} |
+          {% if form1.weeklyHours == None %}
+          {{form1.contractHours}} Hours</div>
+          {% else %}
+          {{form1.weeklyHours}} Hours Per Week</div>
+          {% endif %}
+        {% endfor %}
+        </div>
+        {% for form in forms %}
+          {% if form.modifiedForm == None and form.releaseForm == None and form.overloadForm == None %}
+            {% if form.reviewedDate == None %}
+              <div class= "h4">
+                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
+                <div class="col-sm-3">Submitted</div>
+              </div>
+            {% elif form.reviewedDate != None %}
+              <div class= "h4">
+                <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
+                <div class="col-sm-3">{{form.status}}</div>
+              </div>
+              <div class= "h4">
+                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
+                <div class="col-sm-3">Submitted</div>
+              </div>
+            {% endif %}
+
+          {% elif form.releaseForm != None %}
+            {% if form.reviewedDate == None %}
+              <div class= "h4">
+                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red"></span> {{form.historyType}}</div>
+                <div class="col-sm-3">Submitted</div>
+              </div>
+            {% elif form.reviewedDate != None %}
+              <div class= "h4">
+                <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red"></span> {{form.historyType}}</div>
+                <div class="col-sm-3">{{form.status}}</div>
+              </div>
+              <div class= "h4">
+                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red"></span> {{form.historyType}}</div>
+                <div class="col-sm-3">Submitted</div>
+              </div>
+            {% endif %}
+              <div class="row" style="padding-top:5px">
+                <p class="control-label col-sm-6" align="right">Condition at Release:</p>
+              <div class="col-sm-6">
+                <p>{{form.releaseForm.conditionAtRelease}}</p>
+              </div>
+              </div>
+              <div class="row">
+                <p class="control-label col-sm-3 col-sm-offset-3" align="left">Release Date:</p>
+              <div class="col-sm-6">
+                <p>{{form.releaseForm.releaseDate.strftime('%m-%d-%Y')}}</p>
+              </div>
+              </div>
+              <div class="row">
+                <p class="control-label col-sm-6" align="right">Reason for release:</p>
+              <div class="col-sm-6">
+                <textarea  rows="3" cols="25" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
+              </div>
+              </div>
+          {% elif form.modifiedForm != None %}
+          {% if form.reviewedDate == None %}
+            <div class="h4">
+              <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
+              <div class="col-sm-3">Submitted</div>
+            </div>
+          {% elif form.reviewedDate != None %}
+            <div class="h4">
+              <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
+              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
+              <div class="col-sm-3">{{form.status}}</div>
+            </div>
+            <div class="h4">
+              <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
+              <div class="col-sm-3">Submitted</div>
+            </div>
+          {% endif %}
+            <div class="row" style="padding-top:5px">
+              <p class="control-label col-sm-12" align="center">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</p>
+            </div>
+
+
+          {% elif form.overloadForm != None %}
+            {% if form.reviewedDate == None %}
+              <div class="h4">
+                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
+                <div class="col-sm-3">Submitted</div>
+              </div>
+            {% elif form.reviewedDate != None %}
+              <div class="h4">
+                <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
+                <div class="col-sm-3">{{form.status}}</div>
+              </div>
+              <div class="h4">
+                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
+                <div class="col-sm-3">Submitted</div>
+              </div>
+            {% endif %}
+
+          {% endif %}
+
+        {% endfor %}
+
+
+      </div>
+
+      <div class="modal-footer" id="modalFooter">
+
+        {% if buttonState == 0 %}
+        <div class = "col-sm-12">
+        <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success">Rehire</button></a>
+        </div>
+        {% elif buttonState == 1 %}
+        {% for form1 in statusForm %}
+          <div class = "col-sm-12">
+          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form1.laborStatusFormID}})">Withdraw</button>
+          </div>
+        {% endfor %}
+        {% elif buttonState == 2 %}
+        <div class = "col-sm-6">
+        <a id="pending" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Withdraw</button></a>
+        </div>
+        <div class = "col-sm-6">
+        <a id="pending" href="#"><button type="button" class="btn btn-info" data-dismiss="modal">Modify</button></a>
+        </div>
+        {% elif buttonState == 3 %}
+        <div class = "col-sm-4" style="text-align: right">
+        <a id="release" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Release</button></a>
+        </div>
+        <div class = "col-sm-4">
+        <a id="modify" href="#"><button type="button" class="btn btn-info" data-dismiss="modal">Modify</button></a>
+        </div>
+        <div class = "col-sm-4" style="text-align:left">
+        <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success">Rehire</button></a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<link rel="stylesheet" type="text/css" href="/static/css/studentHistoryModal.css"/>

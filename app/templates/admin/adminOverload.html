@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+<div align="center">
+  <h1>Labor Overload Applications</h1>
+</div>
+
+<input  type="text" id="myInput" onkeyup="searching()" placeholder="Search">
+  <div align= "right"><button class="btn">Download</button></div>
+
+
+  <div align= "center">
+    <table id="studentTable" >
+      <tr>
+        <td>Kat Adams</td>
+      </tr>
+      <tr>
+        <td>Hailey Barnett</td>
+      </tr>
+      <tr>
+        <td>Evan Johnson</td>
+      </tr>
+      <tr>
+        <td>May Jue</td>
+      </tr>
+
+    </table>
+
+{% endblock %}

@@ -18,6 +18,7 @@ def getUsernameFromEnv():
 
 def require_login():
     username = getUsernameFromEnv()
+    print(username)
 
     try:
         user = User.get(User.username == username)

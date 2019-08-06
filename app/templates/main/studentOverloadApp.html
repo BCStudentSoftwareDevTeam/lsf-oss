@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% block app_content %}
+<link rel="stylesheet" type="text/css" href="/static/css/studentOverloadApp.css" />
+
+
+  <div align="center" >
+    <h1>Labor Overload Application</h1>
+
+    <div class="padding">
+      <h5>A labor overload is defined as more than 15 hours of labor per week during the regular academic year and may not be approved retroactively.All approvals are subject to periodic review.
+         Approval may be revoked if primary labor hours, labor performance, or academic performance become less than satisfactory.
+      </h5>
+    </div>
+
+  </div>
+<div class="container">
+  <div class="floatleft">
+    <ul class="small">
+      <h6><b>Guidelines for Approval: </b></h6>
+      <li>Sophomore, junior, or senior classification</li>
+      <li>Not on any form of probation</li>
+      <li>Enrolled in less than 5 course credits with less than 8 preparations</li>
+      <li>Have a 2.50 GPA, both cumulative and for the previous full term</li>
+      <li>The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term</li>
+    </ul>
+
+  </div>
+
+
+
+<div class="floatleft">
+  <ul class="small">
+    <h6><b>Requests for over 20 hours* are subject to the following additional guidelines:  </b></h6>
+    <li>Junior or senior classification. 3.00 GPA in the major, overall, and for the previous term</li>
+    <li>Submission of a letter outlining the reason for requesting more than 20 hours</li>
+    <li>Approval of the Dean of Labor and the Student Admissions and Academic Standing Committee</li>
+  </ul>
+
+</div>
+
+</div>
+
+<div class="container">
+  <form action="https://www.berea.edu/">
+    <div align="center">
+      <h3>Current Job Information</h3>
+    </div>
+
+    <!-- current job information on the left side -->
+    <div class="floatleft">
+      <div class="form-group">
+        <label for="Name">Name:</label>
+        <div>
+          <input type="Name" class="form-control" id="Name" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="BNum">B#:</label>
+        <div>
+          <input type="BNum" class="form-control" id="BNum" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="CPO">CPO:</label>
+        <div>
+          <input type="CPO" class="form-control" id="CPO" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Classification">Classification:</label>
+        <div>
+          <input type="Classification" class="form-control" id="Classification" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Term">Term:</label>
+        <div>
+          <input type="Term" class="form-control" id="Term" required>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- current job information on the right side -->
+    <div class="floatright">
+      <div class="form-group">
+        <label for="Primary">Current Primary Position:</label>
+        <div>
+          <input type="Primary" class="form-control" id="Primary" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="PHours">Hours Per Week:</label>
+        <div>
+          <input type="PHours" class="form-control" id="PHours" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Secondary">Current Secondary Position:</label>
+        <div>
+          <input type="Secondary" class="form-control" id="Secondary" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="SHours">Hours Per Week:</label>
+        <div>
+          <input type="SHours" class="form-control" id="SHours" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="TPSHours">Total Primary and Secondary Hours:</label>
+        <div>
+          <input type="TPSHours" class="form-control" id="TPSHours" required>
+        </div>
+      </div>
+
+
+    </div>
+
+    <div align="center" class="spacing">
+      <h3>Overload Assignment Request</h3>
+    </div>
+
+    <!-- overload request information on the left side -->
+    <div class="floatleft">
+      <div class="form-group">
+        <label for="Dept">Department:</label>
+        <div>
+          <input type="Dept" class="form-control" id="Dept" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Overload">Position:</label>
+        <div>
+          <input type="OverloadOverload" class="form-control" id="Overload" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="OHours">Hours Per Week:</label>
+        <div>
+          <input type="OHours" class="form-control" id="OHours" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="Total">Total Hours Per Week:</label>
+        <div>
+          <input type="Total" class="form-control" id="Total" required>
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- overload request information on the right side -->
+    <div class="floatright">
+
+      <div class="form-group">
+        <label for="Reason">Reason For Overload Request:</label>
+        <div>
+          <textarea name="notes" rows="12" cols="73"></textarea>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+<div align="center">
+  <h5><b>Student should not work any hours in this assignment until notification of approved labor overload.</b></h5>
+</div>
+
+
+<div class="container">
+  <div align="center">
+    <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal">Submit Changes</button>
+  </div>
+</div>
+
+
+<!-- start of modal -->
+   <div class="modal fade" id="submitModal" role="dialog">
+       <div class="modal-dialog">
+
+         <div class="modal-content">
+           <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <h4 class="modal-title">Are you sure you want to submit?</h4>
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+             <button type="submit" class="btn btn-success" id="modal">Submit</button>
+           </div>
+         </div>
+
+       </div>
+     </div>
+
+</form>
+
+
+<script language="JavaScript" type="text/javascript" src="/static/js/studentOverloadApp.js"></script>
+{% endblock %}
