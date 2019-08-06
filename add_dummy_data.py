@@ -298,29 +298,47 @@ terms = [
     #        2018-2019
     #############################
     {
-    "termCode":"201902",
-    "termName" :"Christmas 2019",
-    "termStart":datetime.date(2019, 12, 16),
-    "termEnd": datetime.date(2020, 1, 3)
-    },
+        "termCode":"201801",
+        "termName" :"Thanksgiving Break 2018",
+        "termStart":datetime.date(2018, 11, 27),
+        "termEnd": datetime.date(2018, 12, 1)
+        },
     {
-    "termCode":"201903",
-    "termName" :"Spring Break 2020",
-    "termStart":datetime.date(2020, 3, 7),
-    "termEnd": datetime.date(2020, 3, 14)
-    },
+        "termCode":"201802",
+        "termName" :"Christmas Break 2018",
+        "termStart":datetime.date(2018, 12, 16),
+        "termEnd": datetime.date(2019, 1, 3)
+        },
     {
-    "termCode":"201913",
-    "termName" :"Summer 2020",
-    "termStart":datetime.date(2020, 5, 4),
-    "termEnd": datetime.date(2020, 8, 9)
-    },
+        "termCode":"201803",
+        "termName" :"Spring Break 2019",
+        "termStart":datetime.date(2019, 3, 7),
+        "termEnd": datetime.date(2019, 3, 14)
+        },
     {
-    "termCode":"201900",
-    "termName" :"AY 2019-2020",
-    "termStart":datetime.date(2019, 8, 20),
-    "termEnd": datetime.date(2020, 5, 4)
-    },
+        "termCode":"201813",
+        "termName" :"Summer 2019",
+        "termStart":datetime.date(2019, 5, 4),
+        "termEnd": datetime.date(2019, 8, 9)
+        },
+    {
+        "termCode": "201811",
+        "termName" :"Fall 2018",
+        "termStart":datetime.date(2018, 8, 20),
+        "termEnd": datetime.date(2018, 12, 15)
+        },
+    {
+        "termCode":"201812",
+        "termName" :"Spring 2019",
+        "termStart":datetime.date(2019, 1, 4),
+        "termEnd": datetime.date(2019, 5, 5)
+        },
+    {
+        "termCode":"201800",
+        "termName" :"AY 2018-2019",
+        "termStart":datetime.date(2018, 8, 20),
+        "termEnd": datetime.date(2019, 5, 4)
+        },
     ##############################
     #        2017-2018
     #############################
