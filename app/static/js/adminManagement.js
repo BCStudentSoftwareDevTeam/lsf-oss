@@ -1,7 +1,7 @@
 $(document).ready(function() { console.log("Howdy") });
 function modal(button) {
   if(button == "add" && $("#addlaborAdmin").val() != "") {
-    $("p").html("Are you sure you want to add " + $("#addlaborAdmin").val() + " as an admin?");
+    $("p").html("Are you sure you want to add " + $("#addlaborAdmin option:selected").text() + " as an admin?");
     document.getElementById("submitModal").setAttribute("name", "add");
     document.getElementById("submitModal").setAttribute("value", "add");
     $("#modal").modal("show");

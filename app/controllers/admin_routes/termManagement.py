@@ -10,7 +10,7 @@ from datetime import datetime, date
 from datetime import datetime
 import datetime
 
-@admin.route('/termManagement', methods=['GET', 'POST'])
+@admin.route('/admin/termManagement', methods=['GET', 'POST'])
 # @login_required
 def term_Management():
     terms = Term.select()

@@ -30,11 +30,11 @@
   font-weight: 550;
 }
 
-#container {
+/*#container {
   position: relative;
   left: 105px;
   top: 20px;
-}
+}*/
 
 #datepicker {
   width: 79%;

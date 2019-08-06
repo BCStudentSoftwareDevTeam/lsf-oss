@@ -5,7 +5,7 @@ from app.controllers.admin_routes import admin
 from flask import request
 from flask import Flask, redirect, url_for
 
-@admin.route('/adminManagement', methods=['GET'])
+@admin.route('/admin/adminManagement', methods=['GET'])
 # @login_required
 def admin_Management():
    # username = load_user('heggens')
