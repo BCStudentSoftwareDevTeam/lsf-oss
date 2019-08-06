@@ -1,16 +1,17 @@
-.container{
+/*.container{
   padding-right: 15px;
   padding-left: 0px;
   background-color: #F9F9F9;
-}
+}*/
 
 /* .col-centered{
     margin: 0 auto;
     float: none;
 } */
-.col-md-1 {
+/*.col-md-1 {
   width: 5.333333%;
-}
+}*/
+
 #datepicker {
   padding-right: 0px;
 }
