@@ -111,7 +111,6 @@
                     id='student'
                     data-live-search='true'
                     title="Student"
-                    onchange= "disableTerm()"
                     data-width="230px"
                     >
               {% for student in students %}
@@ -133,13 +132,13 @@
   </div>
 ​
  <!-- Contract hours for breaks -->
-  <div class="form-group col-md-5" id="contractHoursDiv" >
+  <div class="form-group col-md-5" id="contractHours" >
           <!--selectpicker for cntract hours-->
           <label for="student">Contract Hours</label>
           <input class="form-control quantity"
                   type = "number"
                   name='contractHours'
-                  id='contractHours'
+                  id='selectedContractHours'
                   title="Contract Hours"
                   placeholder="Contract Hours"
                   min = "1"
@@ -184,7 +183,7 @@
             title="Add more students"
             data-placement = "center"
             id="glyphicon_2"
-            onclick="displayTable()"
+            onclick="displayTable(); disableTerm()"
     </a>
     </span>
     {% include "snips/ReviewForm.html" %}

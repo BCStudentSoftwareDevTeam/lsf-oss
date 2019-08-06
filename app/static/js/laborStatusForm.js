@@ -129,7 +129,7 @@ function checkCompliance(obj) {
             $('#position').attr('disabled', true);
             $('#jobType').attr('disabled', true);
             $('#hoursPerWeek').attr('disabled', true);
-            $('#contractHours').attr('disabled', true);
+            $('#selectedContractHours').attr('disabled', true);
           }
           else{
             $('#term').attr('disabled', false);
@@ -139,7 +139,7 @@ function checkCompliance(obj) {
             $('#position').attr('disabled', false);
             $('#jobType').attr('disabled', false);
             $('#hoursPerWeek').attr('disabled', false);
-            $('#contractHours').attr('disabled', false);
+            $('#selectedContractHours').attr('disabled', false);
           }
         }
       });
@@ -438,7 +438,7 @@ function createAndFillTableForBreaks(test = '') {// Fills the table. For Summer 
   var position = document.getElementById("position");
   var positionName = position.options[position.selectedIndex].text;
   var positionCode = $("#position").val()
-  var contractHoursName = document.getElementById("contractHours").value;
+  var selectedContractHoursName = document.getElementById("selectedContractHours").value;
   var notesGlyphicon = "<a data-toggle='modal' onclick = 'showNotesModal(\""+String(studentName) + String(positionName)+"\")' id= '"+String(studentName) +
                                                           String(positionName)+"' ><span class='glyphicon glyphicon-edit'></span></a>";
   var removeIcon = "<a onclick = 'deleteRow(this)' class='remove'><span class='glyphicon glyphicon-remove'></span></a>";
@@ -455,11 +455,11 @@ function createAndFillTableForBreaks(test = '') {// Fills the table. For Summer 
 
   cell1.innerHTML = studentName;
   cell2.innerHTML = positionName;
-  cell3.innerHTML = contractHoursName;
+  cell3.innerHTML = selectedContractHoursName;
   cell4.innerHTML = notesGlyphicon;
   cell5.innerHTML = removeIcon;
 
-  $("#contractHours").val('');
+  $("#selectedContractHours").val('');
   $("#position").val('default');
   $("#position").selectpicker("refresh");
   $("#student").val('default');
@@ -494,8 +494,8 @@ function createModalContent() { // Populates Submit Modal with Student informati
     for (var key in testDict) {
       var student = testDict[key]["Student"];
       var position = testDict[key]["Position"];
-      var contractHours = testDict[key]["Contract Hours"];
-      var bigString = "<li>" + student + ' | ' + position + ' | ' + contractHours;
+      var selectedContractHours = testDict[key]["Contract Hours"];
+      var bigString = "<li>" + student + ' | ' + position + ' | ' + selectedContractHours;
       modalList.push(bigString)
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
@@ -602,11 +602,11 @@ function userInsert(){
              for (var key in testDict) {
                var student = testDict[key]["Student"];
                var position = testDict[key]["Position"];
-               var contractHours = testDict[key]["Contract Hours"];
+               var selectedContractHours = testDict[key]["Contract Hours"];
                var jobType = testDict[key]["Job Type"];
                var hours = testDict[key]["Hours Per Week"];
                if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-                 var bigString = "<li>" +"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + contractHours;
+                 var bigString = "<li>" +"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + selectedContractHours;
                }
                else {
                  var bigString = "<li>"+"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
@@ -619,11 +619,11 @@ function userInsert(){
             for (var key in testDict) {
                var student = testDict[key]["Student"];
                var position = testDict[key]["Position"];
-               var contractHours = testDict[key]["Contract Hours"];
+               var selectedContractHours = testDict[key]["Contract Hours"];
                var hours = testDict[key]["Hours Per Week"];
 
               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-               var bigString = "<li>" +"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + contractHours;
+               var bigString = "<li>" +"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + selectedContractHours;
               }
               else {
                 var bigString = "<li>"+"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
