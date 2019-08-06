@@ -75,7 +75,7 @@
               <div class="row">
                 <p class="control-label col-sm-6" align="right">Reason for release:</p>
               <div class="col-sm-6">
-                <textarea  rows="3" cols="25" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
+                <textarea class="releaseReasonTextArea" rows="3" cols="25" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
               </div>
               </div>
           {% elif form.modifiedForm != None %}
@@ -150,7 +150,7 @@
         </div>
         {% elif buttonState == 3 %}
         <div class = "col-sm-4" style="text-align: right">
-        <a id="release" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Release</button></a>
+        <a id="release" href="#"><button type="button" class="btn btn-danger">Release</button></a>
         </div>
         <div class = "col-sm-4">
         <a id="modify" href="#"><button type="button" class="btn btn-info" data-dismiss="modal">Modify</button></a>

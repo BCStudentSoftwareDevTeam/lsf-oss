@@ -30,3 +30,8 @@ textarea {
 p {
    margin:0
   }
+
+.releaseReasonTextArea {
+    overflow: -moz-scrollbars-vertical;
+    overflow-y: scroll;
+    }
