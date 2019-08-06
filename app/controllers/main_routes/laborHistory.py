@@ -28,7 +28,7 @@ def laborhistory(id):
         for form in studentForms:
             formHistoryList = formHistoryList + str(form.laborStatusFormID) + ","
         formHistoryList = formHistoryList[0:-1]
-        return render_template( 'main/laborhistory.html',
+        return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,
                                 username=current_user.username,
