@@ -142,9 +142,11 @@
           </div>
         {% endfor %}
         {% elif buttonState == 2 %}
+        {% for form1 in statusForm %}
         <div class = "col-sm-6">
-        <a id="pending" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Withdraw</button></a>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form1.laborStatusFormID}})">Withdraw</button>
         </div>
+        {% endfor %}
         <div class = "col-sm-6">
         <a id="pending" href="#"><button type="button" class="btn btn-info" data-dismiss="modal">Modify</button></a>
         </div>
