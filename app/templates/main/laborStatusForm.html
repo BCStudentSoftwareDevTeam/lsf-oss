@@ -28,8 +28,6 @@
 
 
 
-
-
   <div class="form-group row col-md-12 col-md-offset-4">
     <!--selectpicker for supervisor-->
     <label for="supervisor" class="col-2 col-form-label">Supervisor</label>
@@ -41,11 +39,14 @@
                 title="Supervisor"
                 data-width="320px">
           {% for staff in staffs %}
-            <option value="{{staff.PIDM}}">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
+            <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.username == staff.PIDM %} selected {% endif %}{% endif %}>{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
           {% endfor %}
         </select>
        </div>
 </div>
+
+
+
   <br />
   <div class="form-group row col-md-12 col-md-offset-4">
     <!--selectpicker for department-->
@@ -59,7 +60,7 @@
               onchange = "checkCompliance(this); getDepartment(this)"
               data-width="320px" >
         {% for department in departments %}
-          <option value="{{department.DEPT_NAME}}">{{department.DEPT_NAME}}</option>
+          <option value="{{department.DEPT_NAME}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %}>{{department.DEPT_NAME}}</option>
         {% endfor %}
       </select>
       {% include "snips/ReviewForm.html" %}
@@ -77,8 +78,7 @@
                     data-live-search="true"
                     title="Term"
                     onchange = "showAccessLevel(this); preFilledDate(this)"
-                    data-width="320px"
-                    >
+                    data-width="320px">
             {% for term in terms %}
                 <option value = "{{term.termCode}}">{{term.termName}}</option>
             {% endfor %}
@@ -124,10 +124,9 @@
                     id='student'
                     data-live-search='true'
                     title="Student"
-                    data-width="230px"
-                    >
+                    data-width="230px">
               {% for student in students %}
-                  <option value="{{student.ID}}">{{student.FIRST_NAME}} {{student.LAST_NAME}} {{student.ID}}</option>
+                  <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %}>{{student.FIRST_NAME}} {{student.LAST_NAME}} {{student.ID}}</option>
               {% endfor %}
             </select>
   </div>

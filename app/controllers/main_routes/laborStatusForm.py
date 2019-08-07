@@ -21,18 +21,27 @@ from app import cfg
 @main_bp.route('/laborstatusform', methods=['GET'])
 @main_bp.route('/laborstatusform/<formID>', methods=['GET'])
 def laborStatusForm(formID = None):
+    # print("YEET!!!")
+    # print(formID)
+    # if formID != None:
+    #     rehireForm = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == formID)
+    #     print(rehireForm)
     currentUser = require_login()
     if not currentUser:        # Not logged in
         return render_template('errors/403.html')
     # Logged in
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
     posnCode = STUPOSN.select(STUPOSN.POSN_CODE).distinct()
-    forms = LaborStatusForm.select()
+    # forms = LaborStatusForm.select()
     students = STUDATA.select().order_by(STUDATA.FIRST_NAME.asc()) # getting student names from TRACY
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
     staffs = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # getting supervisors from TRACY
     departments = STUPOSN.select(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT).distinct() # getting deparmtent names from TRACY
-
+    if formID != None:
+        forms = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formID)
+        print(forms)
+    else:
+        forms = None
     return render_template( 'main/laborStatusForm.html',
 				            title=('Labor Status Form'),
                             username = currentUser,
@@ -94,18 +103,21 @@ def userInsert():
         return jsonify({"Success": False})
 
 
-@main_bp.route('/laborReleaseForm/<laborStatusKey>', methods=['GET', 'POST'])
-def prePopulateLSF(laborStatusKey):
-    print(laborStatusKey)
-    rehireForm = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == laborStatusKey)
-    print(rehireForm)
-    return render_template('main/laborStatusForm.html',
-                            title=('Labor Status Form'),
-                            students = students,
-                            departments = departments,
-                            users = users,
-                            forms = rehireForm
-        )
+# @main_bp.route('/laborstatusform/<laborStatusKey>', methods=['GET'])
+# def prePopulateLSF(laborStatusKey):
+#     print("YEAH BUOY!!!")
+#     print(laborStatusKey)
+#
+#     rehireForm = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == laborStatusKey)
+#     print(rehireForm)
+#     return render_template( 'main/laborStatusForm.html',
+# 				            title=('Labor Status Form'),
+#                             username = currentUser,
+#                             forms = rehireForm,
+#                             students = students,
+#                             terms = terms,
+#                             staffs = staffs,
+#                             departments = departments)
 
 @main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])
 def getDates(termcode):
