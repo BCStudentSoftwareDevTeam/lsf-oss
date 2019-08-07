@@ -1,11 +1,7 @@
 $(document).ready(function(){
     $('[data-tooltip="true"]').tooltip();
+    $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
 });
-
-var j = jQuery.noConflict();
-j( function() {
-   j( "#dateTimePicker1, #dateTimePicker2" ).datepicker()
-} );
 
 $(document).on('keyup', 'input[name=contractHours]', function () { // sets contract hours minimum value
    var _this = $(this);
@@ -54,18 +50,29 @@ function fillDates(response){ // prefill term start and term end
   for (var key in response){
     var start = response[key]['Start Date'];
     var end = response[key]["End Date"];
-
+    // Start Date
     var startd = new Date(start)
-    var day = startd.getDay();
-    var month = startd.getMonth();
-    var year = startd.getFullYear();
-    console.log(typeof(day))
-    console.log(year);
-    $('#dateTimePicker1').datepicker({minDate: new Date(year, month-1, day)});
-    $('#dateTimePicker2').datepicker({minDate: 0});
-
+    var dayStart = startd.getDate();
+    var monthStart = startd.getMonth();
+    var yearStart = startd.getFullYear();
+    // End Date
+    var endd = new Date(end)
+    var dayEnd = endd.getDate();
+    var monthEnd = endd.getMonth();
+    var yearEnd = endd.getFullYear();
+    // Pre-populate values
     $("#dateTimePicker1").val(start);
     $("#dateTimePicker2").val(end);
+    // set the minimum and maximum Date for Term Start Date
+    $('#dateTimePicker1').datepicker({minDate: new Date(yearStart, monthStart, dayStart)});
+    $('#dateTimePicker1').datepicker({maxDate: new Date(yearEnd, monthEnd, dayEnd)});
+    $( "#dateTimePicker1" ).datepicker( "option", "minDate", new Date(yearStart, monthStart, dayStart) );
+    $( "#dateTimePicker1" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd, dayEnd));
+    // set the minimum and maximum Date for Term End Date
+    $('#dateTimePicker2').datepicker({maxDate: new Date(yearEnd, monthEnd, dayEnd)});
+    $('#dateTimePicker2').datepicker({minDate: new Date(yearStart, monthStart, dayStart)});
+    $( "#dateTimePicker2" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd, dayEnd));
+    $( "#dateTimePicker2" ).datepicker( "option", "minDate", new Date(yearStart, monthStart, dayStart) );
   }
 }
 
@@ -87,13 +94,28 @@ function getDepartment(object) { // get department from select picker
      $("#position").empty();
      for (var key in response) {
        var options = document.createElement("option");
-       options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
+       options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")";
+       options.id = response[key]['WLS'];
        options.value = key;
        selectedPositions.appendChild(options);
      }
      $('.selectpicker').selectpicker('refresh');
    }
  }
+
+ // Pops up a modal for WLS 5, 6 or more
+ $('#position').change(function(){
+   //this is just getting the value that is selected
+   var wls = $('#position').find('option:selected').attr('id');
+   console.log(wls)
+   if (wls >= 5) {
+     document.getElementById('WLSModalTitle').innerHTML = "Work-Learning-Service Levels (WLS)"
+     document.getElementById('WLSModalText').innerHTML = "Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
+                                                        "These positions require special authorization as specified at " +
+                                                        "<a href='http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS' target='_blank'>The Labor Program Website.</a>";
+     $('#WLSModal').modal('show');
+     }
+ });
 
 
  function fillHoursPerWeek(){ // prefill hours per week select picker
@@ -134,29 +156,14 @@ function checkCompliance(obj) {
         success: function (response){
           if(response['Department']['Department Compliance'] == false){
             $('#OutofComplianceModal').modal('show');
-            $('#term').attr('disabled', true);
-            $('#dateTimePicker1').attr('disabled', true);
-            $('#dateTimePicker2').attr('disabled', true);
-            $('#student').attr('disabled', true);
-            $('#position').attr('disabled', true);
-            $('#jobType').attr('disabled', true);
-            $('#hoursPerWeek').attr('disabled', true);
-            $('#selectedContractHours').attr('disabled', true);
+            $('.disable').prop('disabled', true);
           }
           else{
-            $('#term').attr('disabled', false);
-            $('#dateTimePicker1').attr('disabled', false);
-            $('#dateTimePicker2').attr('disabled', false);
-            $('#student').attr('disabled', false);
-            $('#position').attr('disabled', false);
-            $('#jobType').attr('disabled', false);
-            $('#hoursPerWeek').attr('disabled', false);
-            $('#selectedContractHours').attr('disabled', false);
+            $('.disable').prop('disabled', false);
           }
         }
       });
 }
-
 
 //refresh select pickers
 function refreshSelectPickers() {
@@ -293,7 +300,8 @@ function checkForPrimaryPosition(test = ""){ // does several stuff read the comm
       console.log(response);
       try {
         var primary_supervisor = response["PrimarySupervisor"]["Primary Supervisor FirstName"] + " " + response["PrimarySupervisor"]["Primary Supervisor LastName"]
-        document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Upon submission of the form, student's primary superviosr " + primary_supervisor + " will be notified."
+        document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Upon submission of the form, student's primary supervisor " +
+                                                                primary_supervisor + " will be notified."
       }
       catch (e) {
         if(jobTypeName == "Primary"){
@@ -308,7 +316,8 @@ function checkForPrimaryPosition(test = ""){ // does several stuff read the comm
       /* 2. if student does not have a primary position show modal */
       var result = $.isEmptyObject(response);
       if (jobTypeName == "Secondary" && result) {
-        document.getElementById('NoPrimaryModalText').innerHTML = "<span class='glyphicon glyphicon-exclamation-sign' style='color:red; font-size:20px;'></span>"+ " The selected student " + studentName +" does not have a primary position."
+        document.getElementById('NoPrimaryModalText').innerHTML = "<span class='glyphicon glyphicon-exclamation-sign' style='color:red; font-size:20px;'></span>"+
+                                                                  " The selected student " + studentName +" does not have a primary position."
         $('#NoPrimaryModal').modal('show');
         refreshSelectPickers();
       }
@@ -411,7 +420,7 @@ function checkForTotalHoursDatabase(test = "") {// gets sum of the total weekly 
         });
       }
       else{
-        $('#PrimaryModal').modal('show'); // modal saying primary superviosr will be notified
+        $('#PrimaryModal').modal('show'); // modal saying primary supervisor will be notified
         $('#PrimaryModal').on('hidden.bs.modal', function() {
           if (test == 'test') {
             createModalContent()
