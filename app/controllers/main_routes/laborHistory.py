@@ -69,6 +69,9 @@ def populateModal(statusKey):
                     elif form.status.statusName == "Pending":
                         buttonState = None # no buttons
                         break
+                    elif form.status.statusName == "Denied":
+                        buttonState = 3   #Release, modify, and rehire buttons
+                        break
                 if form.overloadForm != None:
                     if form.status.statusName == "Pending":
                         buttonState = 1 #Only withdraw button
@@ -115,6 +118,12 @@ def updatestatus_post():
         for key in overloadkey:
             count += 1
         print(count)
+        if count == 1: #means they have only have pending labor status form
+            pass
+        elif count == 2: # means they have a pending labor status form and overload form
+            pass
+        elif count == 3: # means they have 3 pending forms (modified form, lsf, labor overload form)
+            pass
         #     selectedFormHistory = FormHistory.select().where(FormHistory.formHistoryID == key)
         # if selectedFormHistory.status == "Pending" and selectedFormHistory.overloadForm == None: #The selected form history's status is pending
         #     deleteFormHistoryStatus = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Status Form").delete_instance() #delete the form history for the LSF
