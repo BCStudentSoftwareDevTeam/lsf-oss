@@ -31,6 +31,18 @@ function getDate(obj, termCode) {
       data: data,
       contentType: 'application/json',
       success: function(response){
+        console.log(response)
+        if(response)
+        stateBtnValue = $("#term_btn_" + termCode).val();
+        console.log("Here is the state button Value " + stateBtnValue)
+        start = $("#start_" + termCode).val();
+        console.log(start)
+        end = $("#end_" +termCode).val();
+        console.log(end)
+        if (start != "" && end != "") {
+          $('#term_btn_' + termCode).prop('disabled', false)
+          console.log("It worked!!")
+        }
         console.log("js success")
       }
     });
@@ -40,6 +52,7 @@ function termStatus(term) {
   var startID = $("#start_" +term);
   var endID = $("#end_" +term);
   var termBtnID = $("#term_btn_" + term);
+  var inactiveBtnID = $("#inactive_btn_" + term);
 
   console.log(term)
     $.ajax({

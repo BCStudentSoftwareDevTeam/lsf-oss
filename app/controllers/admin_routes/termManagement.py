@@ -23,8 +23,6 @@ def term_Management():
     for i in range(5):
         createTerms(Term, i)
     accordionTerms()
-    # orderedTerms = Term.select().order_by(Term.termCode).order_by(Term.termStart)
-    # singleTerm = Term.select().where(Term.termCode >= 201900)
     return render_template( 'admin/termManagement.html',
                              title=('Admin Management'),
                              terms = terms,
@@ -38,6 +36,9 @@ def term_Management():
                           )
 
 def createTerms(termList, iteration):
+    """ This function creates the current Academic Year, two Academic years in the past and two Academic
+    Years in the future. If any of the terms that are in the Academic Years are already created it will
+    pass """
     today = datetime.datetime.now()
     todayYear = today.year
     termYear = todayYear - 2 + iteration
@@ -62,6 +63,8 @@ def createTerms(termList, iteration):
             print("You failed to create a term in the " + str(termYear) + " AY.")
 
 def accordionTerms():
+    """
+    """
     listOfTerms = []
     hoy = datetime.datetime.now()
     hoyyear = hoy.year
