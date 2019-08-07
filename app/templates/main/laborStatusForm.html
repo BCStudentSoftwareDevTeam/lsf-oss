@@ -155,8 +155,8 @@
             title="Job Type"
             data-width="197px"
             onchange="fillHoursPerWeek()">
-      <option value="Primary">Primary</option>
-      <option value="Secondary">Secondary</option>
+      <option value="Primary" {% if forms %}{% if forms.jobType == "Primary" %} selected {% endif %}{% endif %}>Primary</option>
+      <option value="Secondary" {% if forms %}{% if forms.jobType == "Secondary" %} selected {% endif %}{% endif %}>Secondary</option>
     </select>
     {% include "snips/ReviewForm.html" %}
   </div>
