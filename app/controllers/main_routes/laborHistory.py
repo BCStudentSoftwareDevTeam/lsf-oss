@@ -113,7 +113,6 @@ def updatestatus_post():
         rsp = eval(request.data.decode("utf-8"))
         overloadkey = FormHistory.select().where(FormHistory.formID == rsp["FormID"])
         student = LaborStatusForm.get(rsp["FormID"]).studentSupervisee.ID
-        print(overloadkey)
         count = 0
         for key in overloadkey:
             count += 1
@@ -122,9 +121,20 @@ def updatestatus_post():
              deleteFormHistoryStatus = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Status Form").delete_instance() #delete the form history for the LSF
              deleteLaborStatusForm   = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == rsp["FormID"]).delete_instance() #delete the status form as well
         elif count == 2: # means they have a pending labor status form and overload form
-            pass
+            overloadformid            = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Overload Form")
+            deleteOverloadForm        = OverloadForm.get(OverloadForm.overloadFormID == overloadformid.overloadForm).delete_instance()
+            deleteFormHistoryOverload = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Overload Form").delete_instance()
+            deleteFormHistoryStatus   = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Status Form").delete_instance()
+            deleteLaborStatusForm     = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == rsp["FormID"]).delete_instance()
         elif count == 3: # means they have 3 pending forms (modified form, lsf, labor overload form)
-            pass
+            modifiedformid            = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Modified Labor Form")
+            deletemodifiedForm        = ModifiedForm.get(ModifiedForm.modifiedFormID == modifiedformid.modifiedForm).delete_instance()
+            deleteFormHistoryModified = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Modified Labor Form").delete_instance()
+            overloadformid            = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Overload Form")
+            deleteOverloadForm        = OverloadForm.get(OverloadForm.overloadFormID == overloadformid.overloadForm).delete_instance()
+            deleteFormHistoryOverload = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Overload Form").delete_instance()
+
+
         #     selectedFormHistory = FormHistory.select().where(FormHistory.formHistoryID == key)
         # if selectedFormHistory.status == "Pending" and selectedFormHistory.overloadForm == None: #The selected form history's status is pending
         #     deleteFormHistoryStatus = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Status Form").delete_instance() #delete the form history for the LSF
@@ -136,7 +146,7 @@ def updatestatus_post():
     #     deleteFormHistoryOverload = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Overload Form").delete_instance()
     #     deleteFormHistoryStatus = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Status Form").delete_instance()
     #     deleteLaborStatusForm        = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == rsp["FormID"]).delete_instance()
-    #     flash("Your selected form has been withdrawn.", "success")
+        flash("Your selected form has been withdrawn.", "success")
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
     except Exception as e:
         print(e)
