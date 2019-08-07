@@ -1,20 +1,27 @@
 // function myfunction(apple){
 //   console.log(apple)
 // }
-
-$(document).ready( function(){
-  table=$("#studentList").DataTable({
-    "drawCallback": function( settings ) {
-      $("#studentList thead").remove(); } ,
-
-
-     "order": [[0, "desc"]], //display order on column
-     "pagingType": "simple_numbers",
-     "ordering": false,
-     "info": false,
-     "lengthChange": false,
-  })
+$(document).ready(function() {
+  table
+    .columns( 1 )
+    .search("Current Students")
+    .draw();
 });
+
+var table = $("#studentList").DataTable({
+  "drawCallback": function( settings ) {
+    $("#studentList thead").remove(); } ,
+
+
+   "order": [[0, "desc"]], //display order on column
+   "pagingType": "simple_numbers",
+   "ordering": false,
+   "info": false,
+   "lengthChange": false,
+   buttons: ['excel']
+
+})
+
 
 
 // show the sub-sidebar only on this page
@@ -22,29 +29,60 @@ $("div.laborStudentChoice").show();
 
 
 document.getElementById("current").addEventListener("click",function(){
+    $(".currentStu").show();
+    $(".departmentStudents").hide();
+    $(".pastStu").hide();
 
-    $(currentStu).show();
-    $(pastStu).hide();
+    table
+      .columns( 1 )
+      .search("Current Students")
+      .draw();
 
-    $(".pastStu").attr("disabled", true)
-    $(".actStu").removeAttr("disabled")
+    $(".pastStudentModal").attr("disabled", true)
+    $(".currentStudentModal").removeAttr("disabled")
     $('#portalTitle').text("Current Students")
-
-
 }, false);
 document.getElementById("past").addEventListener("click",function(){
-  $(currentStu).hide();
-  $(pastStu).show();
-  $(".actStu").attr("disabled", true)
-  $(".pastStu").removeAttr("disabled")
+  $(".currentStu").hide();
+  $(".departmentStudents").hide();
+  $(".pastStu").show();
+
+  table
+    .columns( 1 )
+    .search("Past Students")
+    .draw();
+
+  $(".currentStudentModal").attr("disabled", true)
+  $(".pastStudentModal").removeAttr("disabled")
   $('#portalTitle').text("Past Students")
 }, false);
 document.getElementById("all").addEventListener("click",function(){
-  $(currentStu).show();
-  $(pastStu).show();
-  $(".pastStu").removeAttr("disabled")
-  $(".actStu").removeAttr("disabled")
+  $(".currentStu").show();
+  $(".departmentStudents").hide();
+  $(".pastStu").show();
+
+  table
+    .columns( 1 )
+    .search("Current Students|Past Students", true, false, true)
+    .draw();
+
+  $(".pastStudentModal").removeAttr("disabled")
+  $(".currentStudentModal").removeAttr("disabled")
   $('#portalTitle').text("All Students")
+}, false);
+document.getElementById("department").addEventListener("click",function(){
+  $(".departmentStudents").show();
+  $(".currentStu").hide();
+  $(".pastStu").hide();
+
+  table
+    .columns( 1 )
+    .search("Department Students")
+    .draw();
+
+  $(".currentStudentModal").attr("disabled", true)
+  $(".pastStudentModal").attr("disabled", true)
+  $('#portalTitle').text("Department Students")
 }, false);
 
 // Listen for click on toggle checkbox

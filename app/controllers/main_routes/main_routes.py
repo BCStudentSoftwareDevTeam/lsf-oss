@@ -7,7 +7,8 @@ from app.login_manager import *
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.Tracy.studata import STUDATA
 from app.models.department import Department
-
+from app.models.term import Term
+from datetime import datetime, date
 
 
 @main_bp.before_app_request
@@ -24,16 +25,23 @@ def index():
 
 ###### This is the start of grabbing the data from the labor status form and displaying it on the Supervisor portal ######
     # Get all the forms from the supervisor form that has Scott as the Supervisor and order them by the endDate  #
-    forms_by_supervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.username).order_by(LaborStatusForm.endDate.desc())
-    # departmentStudents = LaborStatusForm.select().where(LaborStatusForm.department.DEPT_NAME == "Computer Science")
-    departmentID = Department.select().where(Department.DEPT_NAME == current_user.DEPT_NAME)[0]
-    departmentStudents = LaborStatusForm.select().where(LaborStatusForm.department == departmentID)
+    todayDate = date.today()
+    print(todayDate)
 
-    try:
-     for i in departmentStudents:
-         print(i.department.DEPT_NAME)
-    except Exception as e:
-        print(e)
+    forms_by_supervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.username).order_by(LaborStatusForm.endDate.desc())
+    # departmentID = Department.get(Department.DEPT_NAME == current_user.DEPT_NAME)
+    # departmentStudents = LaborStatusForm.select().join(Term).where(LaborStatusForm.termCode.termEnd >= todayDate).where(LaborStatusForm.department == departmentID)
+
+    # pastDepartmentStudents = LaborStatusForm.select().join(Term).where(LaborStatusForm.termCode.termEnd >= todayDate).where(LaborStatusForm.department == departmentID)
+    currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Term).join_from(LaborStatusForm, Department).where(LaborStatusForm.termCode.termEnd >= todayDate).where(LaborStatusForm.department.DEPT_NAME == current_user.DEPT_NAME)
+
+    pastDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == current_user.DEPT_NAME)
+
+    # try:
+    #  for i in departmentStudents:
+    #      print(i)
+    # except Exception as e:
+    #     print(e)
 
     inactive_supervisees = []
     active_supervisees = []
@@ -87,5 +95,6 @@ def index():
                     active_supervisees = active_supervisees,
                     inactive_supervisees = inactive_supervisees,
                     username = current_user,
-                    departmentStudents = departmentStudents
+                    currentDepartmentStudents = currentDepartmentStudents,
+                    pastDepartmentStudents = pastDepartmentStudents
                           )
