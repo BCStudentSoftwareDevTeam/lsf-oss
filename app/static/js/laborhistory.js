@@ -6,6 +6,7 @@ function openModal(laborStatusKey) {
       $("#holdModal").empty().append(response);
       $("#modal").modal("show");
       $("#modify").attr("href", "/modifyLSF/" + laborStatusKey); // will go to the modifyLSF controller
+      console.log(laborStatusKey);
       $("#rehire").attr("href", "/laborstatusform/" + laborStatusKey); // will go to the lsf controller
 
       // $("#pending").attr("href", "//" + );  // IMPORTANT: This page (Modified Pendign form) has not been created yet

@@ -22,6 +22,14 @@
     </span>
   </h1>
   <br />
+
+
+
+
+
+
+
+
   <div class="form-group row col-md-12 col-md-offset-4">
     <!--selectpicker for supervisor-->
     <label for="supervisor" class="col-2 col-form-label">Supervisor</label>
@@ -136,21 +144,7 @@
     </select>
   </div>
 ​
- <!-- Contract hours for breaks -->
-  <div class="form-group col-md-5" id="contractHours" >
-          <!--selectpicker for cntract hours-->
-          <label for="student">Contract Hours</label>
-          <input class="form-control quantity disable"
-                  type = "number"
-                  name='contractHours'
-                  id='selectedContractHours'
-                  title="Contract Hours"
-                  placeholder="Contract Hours"
-                  min = "1"
-                  oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0"
-                  >
-          </input>
-  </div>
+
 ​
   <div class="form-group col-md-2" id="JopTypes">
     <!--selectpicker for Job type-->
@@ -179,6 +173,36 @@
             data-width="197px">
     </select>​
   </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <!-- Contract hours for breaks -->
+   <div class="form-group col-md-5" id="contractHours" >
+           <!--selectpicker for cntract hours-->
+           <label for="student">Contract Hours</label>
+           <input class="form-control quantity disable"
+                   type = "number"
+                   name='contractHours'
+                   id='selectedContractHours'
+                   title="Contract Hours"
+                   placeholder="Contract Hours"
+                   min = "1"
+                   oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0"
+                   >
+           </input>
+   </div>
 ​
   <div class="form-group col-md-1" id="plus">
     <label> </label>
