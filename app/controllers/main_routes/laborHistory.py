@@ -119,7 +119,8 @@ def updatestatus_post():
             count += 1
         print(count)
         if count == 1: #means they have only have pending labor status form
-            pass
+             deleteFormHistoryStatus = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Status Form").delete_instance() #delete the form history for the LSF
+             deleteLaborStatusForm   = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == rsp["FormID"]).delete_instance() #delete the status form as well
         elif count == 2: # means they have a pending labor status form and overload form
             pass
         elif count == 3: # means they have 3 pending forms (modified form, lsf, labor overload form)
