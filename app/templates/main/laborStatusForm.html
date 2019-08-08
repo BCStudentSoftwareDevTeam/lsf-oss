@@ -22,12 +22,6 @@
     </span>
   </h1>
   <br />
-
-
-
-
-
-
   <div class="form-group row col-md-12 col-md-offset-4">
     <!--selectpicker for supervisor-->
     <label for="supervisor" class="col-2 col-form-label">Supervisor</label>
@@ -44,9 +38,6 @@
         </select>
        </div>
 </div>
-
-
-
   <br />
   <div class="form-group row col-md-12 col-md-offset-4">
     <!--selectpicker for department-->
@@ -140,12 +131,9 @@
             data-live-search='true'
             title="Position"
             data-width="230px">
-            <option id="1" value="{{forms.POSN_TITLE}}"{% if forms %} selected {% endif %}>{{forms.POSN_TITLE}}</option>
+            <option id="{{forms.POSN_CODE}}" value="{{forms.POSN_TITLE, forms.WLS}}"{% if forms %} selected {% endif %}>{{forms.POSN_TITLE}} ({{forms.WLS}})</option>
     </select>
   </div>
-​
-
-​
   <div class="form-group col-md-2" id="JopTypes">
     <!--selectpicker for Job type-->
     <label for="student">Job Type</label>
@@ -174,21 +162,6 @@
     <option value="{{forms.weeklyHours}}"{% if forms %} selected {% endif %}>{{forms.weeklyHours}}</option>
     </select>​
   </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <!-- Contract hours for breaks -->
    <div class="form-group col-md-5" id="contractHours" >
            <!--selectpicker for cntract hours-->
@@ -204,7 +177,6 @@
                    >
            </input>
    </div>
-​
   <div class="form-group col-md-1" id="plus">
     <label> </label>
     <span class="glyphicon glyphicon-plus disable"

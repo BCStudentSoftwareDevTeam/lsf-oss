@@ -19,8 +19,8 @@ from flask import Flask, redirect, url_for, flash
 from app import cfg
 
 @main_bp.route('/laborstatusform', methods=['GET'])
-@main_bp.route('/laborstatusform/<formID>', methods=['GET'])
-def laborStatusForm(formID = None):
+@main_bp.route('/laborstatusform/<laborStatusKey>', methods=['GET'])
+def laborStatusForm(laborStatusKey = None):
     currentUser = require_login()
     if not currentUser:        # Not logged in
         return render_template('errors/403.html')
@@ -32,8 +32,8 @@ def laborStatusForm(formID = None):
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
     staffs = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # getting supervisors from TRACY
     departments = STUPOSN.select(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT).distinct() # getting deparmtent names from TRACY
-    if formID != None:
-        forms = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formID)
+    if laborStatusKey != None:
+        forms = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
     else:
         forms = None
     return render_template( 'main/laborStatusForm.html',
@@ -60,7 +60,6 @@ def userInsert():
                 student = d.ID
                 d, created = User.get_or_create(username = data['Supervisor'])
                 primarySupervisor = d.username
-                print("d.username: " + d.username)
                 d, created = Department.get_or_create(DEPT_NAME = data['Department'])
                 department = d.departmentID
                 d, created = Term.get_or_create(termCode = data['Term'])
@@ -69,7 +68,6 @@ def userInsert():
                 startDate = datetime.strptime(start, "%m/%d/%Y").strftime('%Y-%m-%d')
                 end = data['End Date']
                 endDate = datetime.strptime(end, "%m/%d/%Y").strftime('%Y-%m-%d')
-                print("Primary Supervisor: " + primarySupervisor)
                 lsf = LaborStatusForm.create(termCode = term,
                                              studentSupervisee = student,
                                              supervisor = primarySupervisor,

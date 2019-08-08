@@ -1,9 +1,3 @@
-if(document.getElementById('selectedDepartment').value){
-  getDepartment(document.getElementById('selectedDepartment'), "formPassedDept")
-  // fillHoursPerWeek("formPassedHours")
-}
-
-document.getElementById('selectedDepartment')
 $(document).ready(function(){
     $('[data-tooltip="true"]').tooltip();
     $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
@@ -82,7 +76,7 @@ function fillDates(response){ // prefill term start and term end
   }
 }
 
-function getDepartment(object, formPassedDept = None) { // get department from select picker
+function getDepartment(object, formPassedDept = "") { // get department from select picker
    var department = object.value;
    var url = "/laborstatusform/getPositions/" + department;
        $.ajax({
@@ -94,20 +88,18 @@ function getDepartment(object, formPassedDept = None) { // get department from s
        })
  }
 
- function fillPositions(response, formPassedDept = None) { // prefill Position select picker with the positions of the selected department
+ function fillPositions(response) { // prefill Position select picker with the positions of the selected department
    var selectedPositions = document.getElementById("position");
    if (selectedPositions){
      $("#position").empty();
      for (var key in response) {
        var options = document.createElement("option");
        options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")";
-       options.id = response[key]['WLS'];
-       options.value = key;
+       options.id = key;
+       options.value = response[key]['WLS'];
        selectedPositions.appendChild(options);
      }
-     if(formPassedDept == None){
        $('.selectpicker').selectpicker('refresh');
-     }
    }
  }
 
@@ -125,7 +117,7 @@ function getDepartment(object, formPassedDept = None) { // get department from s
  });
 
 
- function fillHoursPerWeek(formPassedHours = None){ // prefill hours per week select picker
+ function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker
   var selectedHoursPerWeek = document.getElementById("selectedHoursPerWeek");
   var jobType = $("#jobType").val();
   if (selectedHoursPerWeek){
@@ -149,10 +141,16 @@ function getDepartment(object, formPassedDept = None) { // get department from s
         selectedHoursPerWeek.options[selectedHoursPerWeek.options.length]= new Option(dict[key], key);
       }
     }
-    if(formPassedHours == None){
+    if (fillhours == ""){
       $('.selectpicker').selectpicker('refresh');
     }
   }
+}
+
+if(document.getElementById('jobType').value){// fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
+  var value = $('#selectedHoursPerWeek').val();
+  $('#selectedHoursPerWeek').val(value);
+  fillHoursPerWeek("fillhours");
 }
 
 // Check if department is in compliance.
@@ -306,7 +304,6 @@ function checkForPrimaryPosition(test = ""){ // does several stuff read the comm
     dataType: "json",
     success: function (response){
       /* 1. Language for Primary Modal that shows up when student has a primary position and a secondary position is being submitted */
-      console.log(response);
       try {
         var primary_supervisor = response["PrimarySupervisor"]["Primary Supervisor FirstName"] + " " + response["PrimarySupervisor"]["Primary Supervisor LastName"]
         document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Upon submission of the form, student's primary supervisor " +
@@ -350,12 +347,8 @@ function createAndFillTable() { // fills the table for Academic Year.
   var student = document.getElementById("student");
   var studentName = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");
-  console.log("Logs");
-  console.log(position);
   var positionName = position.options[position.selectedIndex].text;
-  console.log("Logs");
-  console.log(positionName);
-  var positionCode = $("#position").val()
+  var positionCode = $("#position").find('option:selected').attr('id');
   var jobType = document.getElementById("jobType");
   var jobTypeName = jobType.options[jobType.selectedIndex].text;
   var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
@@ -478,7 +471,7 @@ function createAndFillTableForBreaks(test = '') {// Fills the table. For Summer 
   var studentName = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");
   var positionName = position.options[position.selectedIndex].text;
-  var positionCode = $("#position").val()
+  var positionCode = $("#position").find('option:selected').attr('id');
   var selectedContractHoursName = document.getElementById("selectedContractHours").value;
   var notesGlyphicon = "<a data-toggle='modal' onclick = 'showNotesModal(\""+String(studentName) + String(positionName)+"\")' id= '"+String(studentName) +
                                                           String(positionName)+"' ><span class='glyphicon glyphicon-edit'></span></a>";
@@ -564,7 +557,6 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
   $('#mytable tr').has('td').each(function() {
     /* Get the input box values first */
       supervisor = $("#selectedSupervisor").val();
-      console.log("Supervisor: " + selectedSupervisor);
       department = $("#selectedDepartment").val();
       term = $("#selectedTerm").val();
       var whichTerm = term.toString().substr(-2);
