@@ -11,7 +11,6 @@ function openModal(laborStatusKey) {
       // $("#pending").attr("href", "//" + );  // IMPORTANT: This page (Modified Pendign form) has not been created yet
                                               // so make sure to have the redirect URL for it here.
       $("#release").attr("href", "/laborReleaseForm/" + laborStatusKey); // will go to labor release form controller
-      // TODO: ON "Withdraw" button add a flash that the form has been deleted.
     }
   });
 }

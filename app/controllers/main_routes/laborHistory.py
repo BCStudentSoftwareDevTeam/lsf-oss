@@ -64,21 +64,33 @@ def populateModal(statusKey):
             else:
                 if form.releaseForm != None:
                     if form.status.statusName == "Approved":
-                        buttonState = 0 #Only rehire button
-                        break
+                        if currentDate <= form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire button
+                            break
+                        elif currentDate > form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire
+                            break
                     elif form.status.statusName == "Pending":
                         buttonState = None # no buttons
                         break
                     elif form.status.statusName == "Denied":
-                        buttonState = 3   #Release, modify, and rehire buttons
-                        break
+                        if currentDate <= form.formID.termCode.termEnd:
+                            buttonState = 3   #Release, modify, and rehire buttons
+                            break
+                        elif currentDate > form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire
+                            break
                 if form.overloadForm != None:
                     if form.status.statusName == "Pending":
                         buttonState = 1 #Only withdraw button
                         break
                     if form.status.statusName == "Denied":
-                        buttonState = 0 #Only rehire button
-                        break
+                        if currentDate <= form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire button
+                            break
+                        elif currentDate > form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire
+                            break
                 if form.modifiedForm != None:
                     if form.status.statusName == "Pending":
                         buttonState = None # no buttons
@@ -88,8 +100,12 @@ def populateModal(statusKey):
                         buttonState = 2 #Withdraw and modify buttons
                         break
                     elif form.status.statusName == "Denied":
-                        buttonState = 0 #Rehire button
-                        break
+                        if currentDate <= form.formID.termCode.termEnd:
+                            buttonState = 0 #Rehire button
+                            break
+                        elif currentDate > form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire
+                            break
                     elif form.status.statusName == "Approved":
 
                         if currentDate <= form.formID.termCode.termEnd:

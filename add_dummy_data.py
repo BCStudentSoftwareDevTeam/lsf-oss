@@ -251,6 +251,24 @@ terms = [
         #        2019-2020
         #############################
     {
+    "termCode":"202111",
+    "termName" :"Fall 2021",
+    "termStart":datetime.date(2021, 8, 20),
+    "termEnd": datetime.date(2021, 12, 15)
+    },
+    {
+    "termCode":"202011",
+    "termName" :"Fall 2020",
+    "termStart":datetime.date(2020, 8, 20),
+    "termEnd": datetime.date(2020, 12, 15)
+    },
+    {
+    "termCode":"202012",
+    "termName" :"Spring 2021",
+    "termStart":datetime.date(2021, 1, 4),
+    "termEnd": datetime.date(2021, 5, 5)
+    },
+    {
     "termCode":"201911",
     "termName" :"Fall 2019",
     "termStart":datetime.date(2019, 8, 20),
@@ -681,7 +699,7 @@ lsfs = [
     # "endDate": datetime.date(2019,12,15)
     # },
     {
-    "termCode": Term.get(Term.termCode == "201811"),
+    "termCode": Term.get(Term.termCode == "202011"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -695,7 +713,7 @@ lsfs = [
     "endDate": datetime.date(2020,5,4)
     },
     {
-    "termCode": Term.get(Term.termCode == "201811"),
+    "termCode": Term.get(Term.termCode == "202011"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -709,7 +727,7 @@ lsfs = [
     "endDate": datetime.date(2020,5,4)
     },
     {
-    "termCode": Term.get(Term.termCode == "201711"),
+    "termCode": Term.get(Term.termCode == "202012"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -719,11 +737,11 @@ lsfs = [
     "POSN_CODE":"S61419",
     "weeklyHours": 10,
     "contractHours": None,
-    "startDate": datetime.date(2020,2,10),
-    "endDate": datetime.date(2020,5,20)
+    "startDate": datetime.date(2021,2,10),
+    "endDate": datetime.date(2021,5,20)
     },
     {
-    "termCode": Term.get(Term.termCode == "201711"),
+    "termCode": Term.get(Term.termCode == "202012"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -733,11 +751,11 @@ lsfs = [
     "POSN_CODE":"S61419",
     "weeklyHours": 5,
     "contractHours": None,
-    "startDate": datetime.date(2020,2,25),
-    "endDate": datetime.date(2020,5,22)
+    "startDate": datetime.date(2021,2,25),
+    "endDate": datetime.date(2021,5,22)
     },
     {
-    "termCode": Term.get(Term.termCode == "201812"),
+    "termCode": Term.get(Term.termCode == "202111"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -747,11 +765,11 @@ lsfs = [
     "POSN_CODE":"S61419",
     "weeklyHours": 10,
     "contractHours": None,
-    "startDate": datetime.date(2019,1,5),
-    "endDate": datetime.date(2019,5,5)
+    "startDate": datetime.date(2021,1,5),
+    "endDate": datetime.date(2021,5,5)
     },
     {
-    "termCode": Term.get(Term.termCode == "201812"),
+    "termCode": Term.get(Term.termCode == "202111"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.username == "heggens"),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -761,8 +779,8 @@ lsfs = [
     "POSN_CODE":"S61419",
     "weeklyHours": 10,
     "contractHours": None,
-    "startDate": datetime.date(2019,1,12),
-    "endDate": datetime.date(2019,5,5)
+    "startDate": datetime.date(2021,1,12),
+    "endDate": datetime.date(2021,5,5)
     }
 ]
 
@@ -1168,8 +1186,8 @@ fh = [  {
                 "modifiedForm": None,
                 "overloadForm": None,
                 "createdBy": User.get(User.username == "heggens"),
-                "createdDate": datetime.date(2018, 8, 20),
-                "reviewedDate": datetime.date(2018, 12, 14),
+                "createdDate": datetime.date(2020, 8, 20),
+                "reviewedDate": datetime.date(2020, 12, 14),
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Approved"),
                 "rejectReason": None
@@ -1181,8 +1199,8 @@ fh = [  {
                 "modifiedForm": None,
                 "overloadForm": None,
                 "createdBy": User.get(User.username == "heggens"),
-                "createdDate": datetime.date(2018, 8, 20),
-                "reviewedDate": datetime.date(2018, 8, 25),
+                "createdDate": datetime.date(2020, 8, 20),
+                "reviewedDate": datetime.date(2020, 8, 25),
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Pending"),
                 "rejectReason": None
@@ -1194,8 +1212,8 @@ fh = [  {
                 "modifiedForm": None,
                 "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 4),
                 "createdBy": User.get(User.username == "heggens"),
-                "createdDate": datetime.date(2018, 9, 20),
-                "reviewedDate": datetime.date(2018, 9, 25),
+                "createdDate": datetime.date(2020, 9, 20),
+                "reviewedDate": datetime.date(2020, 9, 25),
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Pending"),
                 "rejectReason": None
@@ -1207,8 +1225,8 @@ fh = [  {
                 "modifiedForm": None,
                 "overloadForm": None,
                 "createdBy": User.get(User.username == "heggens"),
-                "createdDate": datetime.date(2017, 2, 20),
-                "reviewedDate": datetime.date(2017, 5, 14),
+                "createdDate": datetime.date(2021, 2, 20),
+                "reviewedDate": datetime.date(2021, 5, 14),
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Approved"),
                 "rejectReason": None
@@ -1220,8 +1238,8 @@ fh = [  {
                 "modifiedForm": None,
                 "overloadForm": None,
                 "createdBy": User.get(User.username == "heggens"),
-                "createdDate": datetime.date(2017, 1, 20),
-                "reviewedDate": datetime.date(2017, 5, 15),
+                "createdDate": datetime.date(2021, 1, 20),
+                "reviewedDate": datetime.date(2021, 5, 15),
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Approved"),
                 "rejectReason": None
@@ -1233,8 +1251,8 @@ fh = [  {
                 "modifiedForm": ModifiedForm.get(ModifiedForm.modifiedFormID == 5),
                 "overloadForm": None,
                 "createdBy": User.get(User.username == "heggens"),
-                "createdDate": datetime.date(2017, 2, 18),
-                "reviewedDate": datetime.date(2017, 5, 16),
+                "createdDate": datetime.date(2021, 2, 18),
+                "reviewedDate": datetime.date(2021, 5, 16),
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Pending"),
                 "rejectReason": None
@@ -1246,8 +1264,8 @@ fh = [  {
                 "modifiedForm": None,
                 "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 5),
                 "createdBy": User.get(User.username == "heggens"),
-                "createdDate": datetime.date(2017, 2, 19),
-                "reviewedDate": datetime.date(2017, 5, 17),
+                "createdDate": datetime.date(2021, 2, 19),
+                "reviewedDate": datetime.date(2021, 5, 17),
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Pending"),
                 "rejectReason": None
@@ -1259,7 +1277,7 @@ fh = [  {
                 "modifiedForm": None,
                 "overloadForm": None,
                 "createdBy": User.get(User.username == "heggens"),
-                "createdDate": datetime.date(2019, 1, 5),
+                "createdDate": datetime.date(2021, 1, 5),
                 "reviewedDate": None,
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Pending"),
@@ -1272,7 +1290,7 @@ fh = [  {
                  "modifiedForm": None,
                  "overloadForm": None,
                  "createdBy": User.get(User.username == "heggens"),
-                 "createdDate": datetime.date(2019, 1, 10),
+                 "createdDate": datetime.date(2021, 1, 10),
                  "reviewedDate": None,
                  "reviewedBy": None,
                  "status": Status.get(Status.statusName == "Pending"),
@@ -1285,8 +1303,8 @@ fh = [  {
                   "modifiedForm": None,
                   "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 6),
                   "createdBy": User.get(User.username == "heggens"),
-                  "createdDate": datetime.date(2019, 2, 19),
-                  "reviewedDate": datetime.date(2019, 5, 17),
+                  "createdDate": datetime.date(2021, 2, 19),
+                  "reviewedDate": datetime.date(2021, 5, 17),
                   "reviewedBy": None,
                   "status": Status.get(Status.statusName == "Denied"),
                   "rejectReason": None
