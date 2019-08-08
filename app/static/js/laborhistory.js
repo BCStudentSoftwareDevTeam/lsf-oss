@@ -16,7 +16,6 @@ function openModal(laborStatusKey) {
 }
 
 function withdrawform(formID){
-  console.log(formID)
   formIdDict={}
   formIdDict["FormID"] = formID
   data = JSON.stringify(formIdDict);
