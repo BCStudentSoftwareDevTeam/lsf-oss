@@ -66,6 +66,7 @@ def userInsert():
                 student = d.ID
                 d, created = User.get_or_create(username = data['Supervisor'])
                 primarySupervisor = d.username
+                print("d.username: " + d.username)
                 d, created = Department.get_or_create(DEPT_NAME = data['Department'])
                 department = d.departmentID
                 d, created = Term.get_or_create(termCode = data['Term'])
@@ -74,6 +75,7 @@ def userInsert():
                 startDate = datetime.strptime(start, "%m/%d/%Y").strftime('%Y-%m-%d')
                 end = data['End Date']
                 endDate = datetime.strptime(end, "%m/%d/%Y").strftime('%Y-%m-%d')
+                print("Primary Supervisor: " + primarySupervisor)
                 lsf = LaborStatusForm.create(termCode = term,
                                              studentSupervisee = student,
                                              supervisor = primarySupervisor,

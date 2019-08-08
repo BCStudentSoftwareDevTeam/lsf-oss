@@ -34,7 +34,7 @@
         <div class="col-10">
         <select class="selectpicker form-control"
                 name='supervisor'
-                id='supervisor'
+                id='selectedSupervisor'
                 data-live-search='true'
                 title="Supervisor"
                 data-width="320px">
@@ -54,7 +54,7 @@
     <div class="col-10">
       <select class="selectpicker"
               name='department'
-              id='department'
+              id='selectedDepartment'
               data-live-search='true'
               title="Department"
               onchange = "checkCompliance(this); getDepartment(this)"
@@ -74,7 +74,7 @@
           <div class="col-10">
             <select class="selectpicker disable"
                     name='term'
-                    id='term'
+                    id='selectedTerm'
                     data-live-search="true"
                     title="Term"
                     onchange = "showAccessLevel(this); preFilledDate(this)"
@@ -140,6 +140,7 @@
             data-live-search='true'
             title="Position"
             data-width="230px">
+            <option value="{{forms.POSN_TITLE}}"{% if forms %} selected {% endif %}>{{forms.POSN_TITLE}}</option>
     </select>
   </div>
 ​
@@ -155,8 +156,8 @@
             title="Job Type"
             data-width="197px"
             onchange="fillHoursPerWeek()">
-      <option value="Primary">Primary</option>
-      <option value="Secondary">Secondary</option>
+      <option value="Primary"{% if forms %}{% if forms.jobType == "Primary" %} selected {% endif %}{% endif %}>Primary</option>
+      <option value="Secondary"{% if forms %}{% if forms.jobType == "Secondary" %} selected {% endif %}{% endif %}>Secondary</option>
     </select>
     {% include "snips/ReviewForm.html" %}
   </div>
@@ -170,6 +171,7 @@
             data-live-search='true'
             title="Hours per week"
             data-width="197px">
+    <option value="{{forms.weeklyHours}}"{% if forms %} selected {% endif %}>{{forms.weeklyHours}}</option>
     </select>​
   </div>
 

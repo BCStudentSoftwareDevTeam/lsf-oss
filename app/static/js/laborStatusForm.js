@@ -1,3 +1,8 @@
+// if(document.getElementById('selectedDepartment').value){
+//   getDepartment(document.getElementById('selectedDepartment'))
+// }
+
+document.getElementById('selectedDepartment')
 $(document).ready(function(){
     $('[data-tooltip="true"]').tooltip();
     $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
@@ -26,13 +31,13 @@ $('#selectedHoursPerWeek').change(function(){
   var hour = $(this).val();
   if (hour == "20") {
       $('#OverloadModal').modal('show');
-      $('#overloadModalButton').attr('data-target', '') // preventa Primary Modal from showing up
+      $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
     }
 });
 
 function disableTerm() {
   // disables term select picker when student is selected
-  $("#term").prop("disabled", "disabled");
+  $("#selectedTerm").prop("disabled", "disabled");
 }
 
 function preFilledDate(obj){ // get term start date and end date
@@ -107,7 +112,6 @@ function getDepartment(object) { // get department from select picker
  $('#position').change(function(){
    //this is just getting the value that is selected
    var wls = $('#position').find('option:selected').attr('id');
-   console.log(wls)
    if (wls >= 5) {
      document.getElementById('WLSModalTitle').innerHTML = "Work-Learning-Service Levels (WLS)"
      document.getElementById('WLSModalText').innerHTML = "Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
@@ -232,7 +236,7 @@ function deleteRow(row) { // Deletes Row when remove glyphicon is clicked.
 
 // TABLE
 function displayTable(test = "") { // displays table when plus glyphicon is clicked
-  var termCode = $('#term').val();
+  var termCode = $('#selectedTerm').val();
   var whichTerm = termCode.toString().substr(-2);
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
     checkDuplicateBreaks(test);
@@ -290,7 +294,7 @@ function checkForPrimaryPosition(test = ""){ // does several stuff read the comm
   var jobType = document.getElementById("jobType");
   var jobTypeName = jobType.options[jobType.selectedIndex].text;
   var student = $("#student").val();
-  var term = $("#term").val();
+  var term = $("#selectedTerm").val();
   var url = "/laborstatusform/getstudents/" + term +"/" +student;
   $.ajax({
     url: url,
@@ -398,7 +402,7 @@ function checkTotalhoursTable() {//Checks if the student has enough hours to req
 
 function checkForTotalHoursDatabase(test = "") {// gets sum of the total weekly hours from the database and add it to the ones in the table.
   var student = $("#student").val();
-  var term = $("#term").val();
+  var term = $("#selectedTerm").val();
   var url = "/laborstatusform/gethours/" + term +"/" +student;
   $.ajax({
     url: url,
@@ -411,21 +415,19 @@ function checkForTotalHoursDatabase(test = "") {// gets sum of the total weekly 
         $('#OverloadModal').modal('show');
         $('#overloadModalButton').attr('data-target', '#PrimaryModal')
         $('#OverloadModal').on('hidden.bs.modal', function() {
-          $('#PrimaryModal').modal('show');
-          $('#PrimaryModal').on('hidden.bs.modal', function() {
-          if (test == 'test') {
-            createModalContent()
-            }
+        $('#PrimaryModal').modal('show');
+        $('#PrimaryModal').on('hidden.bs.modal', function() {
           });
         });
       }
       else{
         $('#PrimaryModal').modal('show'); // modal saying primary supervisor will be notified
         $('#PrimaryModal').on('hidden.bs.modal', function() {
-          if (test == 'test') {
-            createModalContent()
-          }
+
         });
+      }
+      if (test == 'test') {
+        createModalContent()
       }
     }
   });
@@ -512,7 +514,7 @@ function reviewButtonFunctionality(test) { // Triggred when Review button is cli
 
 function createModalContent() { // Populates Submit Modal with Student information from the table
   var testDict = createTabledataDictionary();
-  term = $("#term").val();
+  term = $("#selectedTerm").val();
   var whichTerm = term.toString().substr(-2);
   modalList = [];
 
@@ -552,9 +554,10 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
   var listDictAJAX = [];
   $('#mytable tr').has('td').each(function() {
     /* Get the input box values first */
-      supervisor = $("#supervisor").val();
-      department = $("#department").val();
-      term = $("#term").val();
+      supervisor = $("#selectedSupervisor").val();
+      console.log("Supervisor: " + selectedSupervisor);
+      department = $("#selectedDepartment").val();
+      term = $("#selectedTerm").val();
       var whichTerm = term.toString().substr(-2);
       startDate = $("#dateTimePicker1").val();
       endDate = $("#dateTimePicker2").val();
@@ -621,7 +624,7 @@ function userInsert(){
          data: data,
          contentType: 'application/json',
          success: function(response) {
-           term = $("#term").val();
+           term = $("#selectedTerm").val();
            var whichTerm = term.toString().substr(-2);
            modalList = [];
            if (response){
