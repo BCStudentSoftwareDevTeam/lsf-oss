@@ -1,4 +1,8 @@
 function openModal(laborStatusKey) {
+  /*
+    This function gets a response from the controller function: populateModal() in laborHistory.py.  The response is the data for the modal that pops up
+    when the position is clicked.
+  */
   $.ajax({
     type: "GET",
     url: '/laborHistory/modal/' + laborStatusKey,
@@ -16,6 +20,10 @@ function openModal(laborStatusKey) {
 }
 
 function withdrawform(formID){
+  /*
+  This funciton gets a response from the controller function: updatestatus_post() in laborHistory.py.  It reloads the page when the forms from the
+  database are deleted by the controller function.
+  */
   formIdDict={}
   formIdDict["FormID"] = formID
   data = JSON.stringify(formIdDict);

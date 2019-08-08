@@ -40,6 +40,10 @@ def laborhistory(id):
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
 def downloadFormHistory():
+    """
+    This function is called when the download button is pressed.  It runs a function for writing to an excel sheet that is in download.py.
+    This function downloads the created excel sheet of the history from the page.
+    """
     try:
         data = request.form
         historyList = data["listOfForms"].split(',')
@@ -52,6 +56,11 @@ def downloadFormHistory():
 
 @main_bp.route('/laborHistory/modal/<statusKey>', methods=['GET'])
 def populateModal(statusKey):
+    """
+    This function creates the modal and populates it with the history of a selected position.  It works with the openModal() function in laborhistory.js
+    to create the modal, and append all of the data gathered here form the database to the modal.  It also sets a button state which decides which buttons
+    to put on the modal depending on what form is in the history.
+    """
     try:
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
@@ -128,6 +137,9 @@ def populateModal(statusKey):
 
 @main_bp.route('/laborHistory/modal/updatestatus', methods=['POST'])
 def updatestatus_post():
+    """
+    This function deletes forms from the database when they are pending and the "withdraw" button is clicked.
+    """
     try:
         rsp = eval(request.data.decode("utf-8"))
         student = LaborStatusForm.get(rsp["FormID"]).studentSupervisee.ID
