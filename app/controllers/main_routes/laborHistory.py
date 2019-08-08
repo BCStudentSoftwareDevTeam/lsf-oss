@@ -23,11 +23,12 @@ def laborhistory(id):
             return render_template('errors/403.html')
 
         student = Student.get(Student.ID == id)
-        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student)
+        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         formHistoryList = ""
         for form in studentForms:
             formHistoryList = formHistoryList + str(form.laborStatusFormID) + ","
         formHistoryList = formHistoryList[0:-1]
+        print(formHistoryList)
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,
