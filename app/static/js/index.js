@@ -1,88 +1,213 @@
-// function myfunction(apple){
-//   console.log(apple)
-// }
 $(document).ready(function() {
+  // When the page first loads, this function will make sure the data table is
+  // only showing the correct buttons and data
   table
     .columns( 1 )
-    .search("Current Students")
+    .search("My Current Students")
     .draw();
+
+  $("#currentDepartmentStudents").hide()
+  $("#allDepartmentStudents").hide()
+
+  $(".currentStu").show();
+  $(".allDeptStu").hide();
+  $(".currentDeptStu").hide();
+  $(".pastStu").hide();
+  $(".pastStudentModal").attr("disabled", true);
+  $(".allDepartmentModal").attr("disabled", true);
+  $(".currentDepartmentModal").attr("disabled", true);
+  $(".currentStudentModal").removeAttr("disabled");
+  $('#portalTitle').text("Current Students");
+
 });
 
 var table = $("#studentList").DataTable({
   "drawCallback": function( settings ) {
-    $("#studentList thead").remove(); } ,
-
-
+    $("#studentList thead").remove(); } , // Used to hide the data table header
    "order": [[0, "desc"]], //display order on column
    "pagingType": "simple_numbers",
    "ordering": false,
    "info": false,
    "lengthChange": false,
-   buttons: ['excel']
+   dom: 'Bfrtip',
+   // Used to created the buttons rendered by the data table
+   buttons: [
+      {
+        text: 'Current',
+        action: function ( e, dt, node, config ) {
+          // Used to enable and disable the correct checkboxes inside the modal
+          // depending on the button pressed
+          $(".currentStu").show();
+          $(".allDeptStu").hide();
+          $(".currentDeptStu").hide();
+          $(".pastStu").hide();
+          $(".pastStudentModal").attr("disabled", true);
+          $(".allDepartmentModal").attr("disabled", true);
+          $(".currentDepartmentModal").attr("disabled", true);
+          $(".currentStudentModal").removeAttr("disabled");
+          $('#portalTitle').text("Current Students");
+          // Used to filter the datatable by the hidden column made in the HTML
+          table
+            .columns( 1 )
+            .search("My Current Students")
+            .draw();
+         },
+        attr: { id: "myCurrentStudents"}
+      },
+      {
+        text: 'Past',
+        action: function ( e, dt, node, config ) {
+          // Used to enable and disable the correct checkboxes inside the modal
+          // depending on the button pressed
+          $(".currentStu").hide();
+          $(".allDeptStu").hide();
+          $(".currentDeptStu").hide();
+          $(".pastStu").show();
+          $(".currentStudentModal").attr("disabled", true);
+          $(".allDepartmentModal").attr("disabled", true);
+          $(".currentDepartmentModal").attr("disabled", true);
+          $(".pastStudentModal").removeAttr("disabled");
+          $('#portalTitle').text("Past Students");
+          // Used to filter the datatable by the hidden column made in the HTML
+          table
+            .columns( 1 )
+            .search("My Past Students")
+            .draw();
+         },
+        attr: { id: "myPastStudents"}
+      },
+      {
+        text: 'All',
+        action: function ( e, dt, node, config ) {
+          // Used to enable and disable the correct checkboxes inside the modal
+          // depending on the button pressed
+          $(".currentStu").show();
+          $(".allDeptStu").hide();
+          $(".currentDeptStu").hide();
+          $(".pastStu").show();
+          $(".pastStudentModal").removeAttr("disabled");
+          $(".allDepartmentModal").attr("disabled", true);
+          $(".currentDepartmentModal").attr("disabled", true);
+          $(".currentStudentModal").removeAttr("disabled");
+          $('#portalTitle').text("All Students");
+          // Used to filter the datatable by the hidden column made in the HTML
+          table
+            .columns( 1 )
+            .search("My Current Students|My Past Students", true, false, true)
+            .draw();
+         },
+        attr: { id: "allMyStudents"}
+      },
+      {
+        text: 'Current',
+        action: function ( e, dt, node, config ) {
+          // Used to enable and disable the correct checkboxes inside the modal
+          // depending on the button pressed
+          $(".currentStu").hide();
+          $(".allDeptStu").hide();
+          $(".currentDeptStu").show();
+          $(".pastStu").hide();
+          $(".currentStudentModal").attr("disabled", true);
+          $(".allDepartmentModal").attr("disabled", true);
+          $(".currentDepartmentModal").removeAttr("disabled");
+          $(".pastStudentModal").attr("disabled", true);
+          $('#portalTitle').text("Current Department Students");
+          // Used to filter the datatable by the hidden column made in the HTML
+          table
+            .columns( 1 )
+            .search("Current Department Students")
+            .draw();
+         },
+        attr: { id: "currentDepartmentStudents"}
+      },
+      {
+        text: 'All',
+        action: function ( e, dt, node, config ) {
+          // Used to enable and disable the correct checkboxes inside the modal
+          // depending on the button pressed
+          $(".currentStu").hide();
+          $(".allDeptStu").show();
+          $(".currentDeptStu").hide();
+          $(".pastStu").hide();
+          $(".currentStudentModal").attr("disabled", true);
+          $(".allDepartmentModal").removeAttr("disabled");
+          $(".currentDepartmentModal").attr("disabled", true);
+          $(".pastStudentModal").attr("disabled", true);
+          $('#portalTitle').text("All Department Students");
+          // Used to filter the datatable by the hidden column made in the HTML
+          table
+            .columns( 1 )
+            .search("All Department Students")
+            .draw();
+         },
+        attr: { id: "allDepartmentStudents"}
+      }
+    ],
+  initComplete: function () {
+    // Function used to remove the default class given to datatable buttons, and
+    // give buttons bootstrap classes instead
+    var btns = $('.dt-button');
+    btns.addClass('btn btn-primary');
+    btns.removeClass('dt-button');
+
+    }
 
 })
-
-
 
 // show the sub-sidebar only on this page
 $("div.laborStudentChoice").show();
 
-
-document.getElementById("current").addEventListener("click",function(){
-    $(".currentStu").show();
-    $(".departmentStudents").hide();
-    $(".pastStu").hide();
-
-    table
-      .columns( 1 )
-      .search("Current Students")
-      .draw();
-
-    $(".pastStudentModal").attr("disabled", true)
-    $(".currentStudentModal").removeAttr("disabled")
-    $('#portalTitle').text("Current Students")
-}, false);
-document.getElementById("past").addEventListener("click",function(){
-  $(".currentStu").hide();
-  $(".departmentStudents").hide();
-  $(".pastStu").show();
+document.getElementById("myStudents").addEventListener("click",function(){
+  // When the 'My Students' tab in the sidebar is clicked, this Function
+  // hides and shows the correct buttons for that page, filter the datatable,
+  // and shows the correct checkboxes that should show in the modal
+  $("#currentDepartmentStudents").hide()
+  $("#allDepartmentStudents").hide()
+  $("#myCurrentStudents").show()
+  $("#myPastStudents").show()
+  $("#allMyStudents").show()
+  $('#portalTitle').text("Current Students");
 
   table
     .columns( 1 )
-    .search("Past Students")
+    .search("My Current Students")
     .draw();
 
-  $(".currentStudentModal").attr("disabled", true)
-  $(".pastStudentModal").removeAttr("disabled")
-  $('#portalTitle').text("Past Students")
-}, false);
-document.getElementById("all").addEventListener("click",function(){
   $(".currentStu").show();
-  $(".departmentStudents").hide();
-  $(".pastStu").show();
-
-  table
-    .columns( 1 )
-    .search("Current Students|Past Students", true, false, true)
-    .draw();
-
-  $(".pastStudentModal").removeAttr("disabled")
-  $(".currentStudentModal").removeAttr("disabled")
-  $('#portalTitle').text("All Students")
-}, false);
-document.getElementById("department").addEventListener("click",function(){
-  $(".departmentStudents").show();
-  $(".currentStu").hide();
+  $(".allDeptStu").hide();
+  $(".currentDeptStu").hide();
   $(".pastStu").hide();
+  $(".pastStudentModal").attr("disabled", true);
+  $(".allDepartmentModal").attr("disabled", true);
+  $(".currentDepartmentModal").attr("disabled", true);
+  $(".currentStudentModal").removeAttr("disabled");
+  $('#portalTitle').text("Current Students");
+}, false);
+
+document.getElementById("department").addEventListener("click",function(){
+  // When the 'My Department' tab in the sidebar is clicked, this Function
+  // hides and shows the correct buttons for that page, filter the datatable,
+  // and shows the correct checkboxes that should show in the modal
+  $(".currentStu").hide();
+  $(".allDeptStu").hide();
+  $(".currentDeptStu").show();
+  $(".pastStu").hide();
+  $(".currentStudentModal").attr("disabled", true);
+  $(".allDepartmentModal").attr("disabled", true);
+  $(".currentDepartmentModal").removeAttr("disabled");
+  $(".pastStudentModal").attr("disabled", true);
+  $('#portalTitle').text("Current Department Students");
 
   table
     .columns( 1 )
-    .search("Department Students")
+    .search("Current Department Students")
     .draw();
 
-  $(".currentStudentModal").attr("disabled", true)
-  $(".pastStudentModal").attr("disabled", true)
-  $('#portalTitle').text("Department Students")
+  $("#currentDepartmentStudents").show()
+  $("#allDepartmentStudents").show()
+  $("#myCurrentStudents").hide()
+  $("#myPastStudents").hide()
+  $("#allMyStudents").hide()
 }, false);
 
 // Listen for click on toggle checkbox
@@ -99,6 +224,7 @@ $('#select-all').click(function(event) {
     }
 });
 
+// Shows the modal
 $('.openBtn').on('click',function(){
     $('.modal-body').load('index.html',function(){
         $('#downloadModal').modal({show:true});
@@ -108,5 +234,4 @@ $('.openBtn').on('click',function(){
 
 function downloadHistory(){
   $('input[type="checkbox"]:checked').prop('checked',false);
-
 }
