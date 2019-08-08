@@ -69,17 +69,12 @@
   font-weight: 550;
 }
 
-.btn-link {
-  width: 1140px;
-  text-align: left;
+.active, button:focus {
+  background-color: #66c2cc;
 }
 
-.btn-link:focus {
-  background-color: #1c78c0;
-}
-
-.btn-link:hover {
-  background-color: #1c78c0;
+.active, button:hover {
+  background-color: #66c2cc;
 }
 
 /* .btn-link button:not(.collapsed) {
