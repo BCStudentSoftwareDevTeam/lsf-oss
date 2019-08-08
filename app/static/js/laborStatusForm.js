@@ -418,18 +418,15 @@ function checkForTotalHoursDatabase(test = "") {// gets sum of the total weekly 
         $('#overloadModalButton').attr('data-target', '#PrimaryModal')
         $('#OverloadModal').on('hidden.bs.modal', function() {
         $('#PrimaryModal').modal('show');
-        $('#PrimaryModal').on('hidden.bs.modal', function() {
-          });
         });
       }
       else{
         $('#PrimaryModal').modal('show'); // modal saying primary supervisor will be notified
-        $('#PrimaryModal').on('hidden.bs.modal', function() {
-
-        });
       }
       if (test == 'test') {
-        createModalContent()
+        $('#PrimaryModal').on('hidden.bs.modal', function() {
+          createModalContent();
+        });
       }
     }
   });
