@@ -749,6 +749,20 @@ lsfs = [
     "contractHours": None,
     "startDate": datetime.date(2019,1,5),
     "endDate": datetime.date(2019,5,5)
+    },
+    {
+    "termCode": Term.get(Term.termCode == "201812"),
+    "studentSupervisee": Student.get(Student.ID == "B00841417"),
+    "supervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "jobType": "Secondary",
+    "WLS":"2",
+    "POSN_TITLE":"TA",
+    "POSN_CODE":"S61419",
+    "weeklyHours": 10,
+    "contractHours": None,
+    "startDate": datetime.date(2019,1,12),
+    "endDate": datetime.date(2019,5,5)
     }
 ]
 
@@ -828,7 +842,8 @@ over = [
         {"overloadReason":"Needs to have overload. He is good overload."},
         {"overloadReason":"We didn't want to, but we are doing it anyway."},
         {"overloadReason":"Another 10 hour form."},
-        {"overloadReason":"Modifying 5 hour form to 10 hour form."}
+        {"overloadReason":"Modifying 5 hour form to 10 hour form."},
+        {"overloadReason":"We want to deny this."}
         ]
 OverloadForm.insert_many(over).on_conflict_replace().execute()
 print("Added modified")
@@ -1249,7 +1264,33 @@ fh = [  {
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Pending"),
                 "rejectReason": None
-                 }
+                 },
+                 {
+                 "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 18),
+                 "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+                 "releaseForm": None,
+                 "modifiedForm": None,
+                 "overloadForm": None,
+                 "createdBy": User.get(User.username == "heggens"),
+                 "createdDate": datetime.date(2019, 1, 10),
+                 "reviewedDate": None,
+                 "reviewedBy": None,
+                 "status": Status.get(Status.statusName == "Pending"),
+                 "rejectReason": None
+                  },
+                  {
+                  "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 18),
+                  "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form"),
+                  "releaseForm": None,
+                  "modifiedForm": None,
+                  "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 6),
+                  "createdBy": User.get(User.username == "heggens"),
+                  "createdDate": datetime.date(2019, 2, 19),
+                  "reviewedDate": datetime.date(2019, 5, 17),
+                  "reviewedBy": None,
+                  "status": Status.get(Status.statusName == "Denied"),
+                  "rejectReason": None
+                   }
     ]
 
 FormHistory.insert_many(fh).on_conflict_replace().execute()
