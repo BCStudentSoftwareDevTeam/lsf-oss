@@ -1,6 +1,7 @@
-// if(document.getElementById('selectedDepartment').value){
-//   getDepartment(document.getElementById('selectedDepartment'))
-// }
+if(document.getElementById('selectedDepartment').value){
+  getDepartment(document.getElementById('selectedDepartment'), "formPassedDept")
+  // fillHoursPerWeek("formPassedHours")
+}
 
 document.getElementById('selectedDepartment')
 $(document).ready(function(){
@@ -81,19 +82,19 @@ function fillDates(response){ // prefill term start and term end
   }
 }
 
-function getDepartment(object) { // get department from select picker
+function getDepartment(object, formPassedDept = None) { // get department from select picker
    var department = object.value;
    var url = "/laborstatusform/getPositions/" + department;
        $.ajax({
          url: url,
          dataType: "json",
          success: function (response){
-            fillPositions(response)
+            fillPositions(response, formPassedDept)
          }
        })
  }
 
- function fillPositions(response) { // prefill Position select picker with the positions of the selected department
+ function fillPositions(response, formPassedDept = None) { // prefill Position select picker with the positions of the selected department
    var selectedPositions = document.getElementById("position");
    if (selectedPositions){
      $("#position").empty();
@@ -104,7 +105,9 @@ function getDepartment(object) { // get department from select picker
        options.value = key;
        selectedPositions.appendChild(options);
      }
-     $('.selectpicker').selectpicker('refresh');
+     if(formPassedDept == None){
+       $('.selectpicker').selectpicker('refresh');
+     }
    }
  }
 
@@ -122,7 +125,7 @@ function getDepartment(object) { // get department from select picker
  });
 
 
- function fillHoursPerWeek(){ // prefill hours per week select picker
+ function fillHoursPerWeek(formPassedHours = None){ // prefill hours per week select picker
   var selectedHoursPerWeek = document.getElementById("selectedHoursPerWeek");
   var jobType = $("#jobType").val();
   if (selectedHoursPerWeek){
@@ -146,7 +149,9 @@ function getDepartment(object) { // get department from select picker
         selectedHoursPerWeek.options[selectedHoursPerWeek.options.length]= new Option(dict[key], key);
       }
     }
-    $('.selectpicker').selectpicker('refresh');
+    if(formPassedHours == None){
+      $('.selectpicker').selectpicker('refresh');
+    }
   }
 }
 
@@ -345,7 +350,11 @@ function createAndFillTable() { // fills the table for Academic Year.
   var student = document.getElementById("student");
   var studentName = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");
+  console.log("Logs");
+  console.log(position);
   var positionName = position.options[position.selectedIndex].text;
+  console.log("Logs");
+  console.log(positionName);
   var positionCode = $("#position").val()
   var jobType = document.getElementById("jobType");
   var jobTypeName = jobType.options[jobType.selectedIndex].text;
