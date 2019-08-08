@@ -28,7 +28,6 @@ def laborhistory(id):
         for form in studentForms:
             formHistoryList = formHistoryList + str(form.laborStatusFormID) + ","
         formHistoryList = formHistoryList[0:-1]
-        print(formHistoryList)
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,
@@ -123,7 +122,7 @@ def populateModal(statusKey):
                                             ))
         return (resp)
     except Exception as e:
-        print(e)
+        # print(e)
         return render_template('errors/500.html')
         return (jsonify({"Success": False}))
 
@@ -132,36 +131,27 @@ def updatestatus_post():
     try:
         rsp = eval(request.data.decode("utf-8"))
         student = LaborStatusForm.get(rsp["FormID"]).studentSupervisee.ID
-        print(student)
-        selectedpendingforms = FormHistory.select().join(Status).where(FormHistory.formID == rsp["FormID"]).where(FormHistory.status.statusName == "Pending").order_by(FormHistory.historyType.asc())
-        print(rsp["FormID"])
-        for form in selectedpendingforms:
-            print(form.formID, form.historyType)
+        selectedPendingForms = FormHistory.select().join(Status).where(FormHistory.formID == rsp["FormID"]).where(FormHistory.status.statusName == "Pending").order_by(FormHistory.historyType.asc())
+        for form in selectedPendingForms:
             try:
                 OverloadForm.get(OverloadForm.overloadFormID == form.overloadForm.overloadFormID).delete_instance()
-                print(rsp["FormID"])
                 form.delete_instance()
-                print("success overload delete")
             except:
-                print("im here1")
                 pass
             try:
                 ModifiedForm.get(ModifiedForm.modifiedFormID == form.modifiedForm.modifiedFormID).delete_instance()
                 form.delete_instance()
-                print("success modify delete")
             except:
-                print("im here 2")
                 pass
             try:
                 if form.historyType.historyTypeName == "Labor Status Form":
                     formID = form.formID.laborStatusFormID
                     form.delete_instance()
                     LaborStatusForm.get(formID).delete_instance()
-                    print("deleted")
             except:
                 pass
         flash("Your selected form has been withdrawn.", "success")
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
     except Exception as e:
-        print(e)
+        # print(e)
         return jsonify({"Success": False})
