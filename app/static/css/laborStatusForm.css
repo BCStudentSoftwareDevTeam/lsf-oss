@@ -3,18 +3,14 @@ selectpicker, label {
 }
 .tableContent {
   float:left;
+  padding-right: 5px;
+  width: 225px;
+  height: 59px;
 }
-
-td {
-  display: block;
-}
-
-/* #Student {
-  padding-left: 20px;
-} */
 
 #plus {
   margin-top: 18px;
+  width: 0px;
 }
 
 #datepicker {
