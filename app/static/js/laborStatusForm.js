@@ -238,18 +238,18 @@ function deleteRow(row) { // Deletes Row when remove glyphicon is clicked.
 //END of glyphicons
 
 // TABLE
-function displayTable(test = "") { // displays table when plus glyphicon is clicked
+function displayTable(preventPlusFromSubmitting = "") { // displays table when plus glyphicon is clicked
   var termCode = $('#selectedTerm').val();
   var whichTerm = termCode.toString().substr(-2);
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-    checkDuplicateBreaks(test);
+    checkDuplicateBreaks(preventPlusFromSubmitting);
   }
   else {
-    checkDuplicate(test);
+    checkDuplicate(preventPlusFromSubmitting);
   }
 }
 
-function checkDuplicate(test = "") {// checks for duplicates in the table. This is for Academic Year
+function checkDuplicate(preventPlusFromSubmitting = "") {// checks for duplicates in the table. This is for Academic Year
     var table = document.getElementById("mytable");
     var student = document.getElementById("student");
     var studentName = student.options[student.selectedIndex].text;
@@ -288,10 +288,10 @@ function checkDuplicate(test = "") {// checks for duplicates in the table. This 
           return;
          }
   }
-    checkForPrimaryPosition(test);
+    checkForPrimaryPosition(preventPlusFromSubmitting);
 }
 
-function checkForPrimaryPosition(test = ""){ // does several stuff read the comments down below
+function checkForPrimaryPosition(preventPlusFromSubmitting = ""){ // does several stuff read the comments down below
   var student = document.getElementById("student");
   var studentName = student.options[student.selectedIndex].text;
   var jobType = document.getElementById("jobType");
@@ -312,7 +312,7 @@ function checkForPrimaryPosition(test = ""){ // does several stuff read the comm
       catch (e) {
         if(jobTypeName == "Primary"){
 
-          createAndFillTable(test);
+          createAndFillTable(preventPlusFromSubmitting);
         }
       }
       $("#jobTable").show();
@@ -335,7 +335,7 @@ function checkForPrimaryPosition(test = ""){ // does several stuff read the comm
       else {
       /* 4. If student has a primary position check the total hours for overload and add to table  */
           checkTotalhoursTable();
-          checkForTotalHoursDatabase(test);
+          checkForTotalHoursDatabase(preventPlusFromSubmitting);
           createAndFillTable();
       }
     }
@@ -402,7 +402,7 @@ function checkTotalhoursTable() {//Checks if the student has enough hours to req
 }
 
 
-function checkForTotalHoursDatabase(test = "") {// gets sum of the total weekly hours from the database and add it to the ones in the table.
+function checkForTotalHoursDatabase(preventPlusFromSubmitting = "") {// gets sum of the total weekly hours from the database and add it to the ones in the table.
   var student = $("#student").val();
   var term = $("#selectedTerm").val();
   var url = "/laborstatusform/gethours/" + term +"/" +student;
@@ -423,7 +423,7 @@ function checkForTotalHoursDatabase(test = "") {// gets sum of the total weekly 
       else{
         $('#PrimaryModal').modal('show'); // modal saying primary supervisor will be notified
       }
-      if (test == 'test') {
+      if (preventPlusFromSubmitting == 'preventPlusFromSubmitting') {
         $('#PrimaryModal').on('hidden.bs.modal', function() {
           createModalContent();
         });
@@ -434,7 +434,7 @@ function checkForTotalHoursDatabase(test = "") {// gets sum of the total weekly 
 
 
 // THIS IS FOR BREAKSSSS
-function checkDuplicateBreaks(test = "") { // checks for duplicates in table. For summer or any other break.
+function checkDuplicateBreaks(preventPlusFromSubmitting = "") { // checks for duplicates in table. For summer or any other break.
       var table = document.getElementById("mytable");
       var student = document.getElementById("student");
       var studentName = student.options[student.selectedIndex].text;
@@ -454,10 +454,10 @@ function checkDuplicateBreaks(test = "") { // checks for duplicates in table. Fo
             return;
             }
           }
-          createAndFillTableForBreaks(test)
+          createAndFillTableForBreaks(preventPlusFromSubmitting)
         }
 
-function createAndFillTableForBreaks(test = '') {// Fills the table. For Summer term or any other break period
+function createAndFillTableForBreaks(preventPlusFromSubmitting = '') {// Fills the table. For Summer term or any other break period
   $("#mytable").show();
   $("#jobTable").hide();
   $("#hoursTable").hide();
@@ -492,14 +492,14 @@ function createAndFillTableForBreaks(test = '') {// Fills the table. For Summer 
 
   refreshSelectPickers();
 
-  if (test == 'test'){
+  if (preventPlusFromSubmitting == 'preventPlusFromSubmitting'){
     createModalContent()
   }
 }
 // END OF (THIS IS FOR BREAKSSSS)
 
 
-function reviewButtonFunctionality(test) { // Triggred when Review button is clicked
+function reviewButtonFunctionality(preventPlusFromSubmitting) { // Triggred when Review button is clicked
   if( !$('#student').val() ) {
     var rowLength = document.getElementById("mytable").rows.length;
     if (rowLength > 1) {
@@ -507,21 +507,21 @@ function reviewButtonFunctionality(test) { // Triggred when Review button is cli
     }
   }
   else{
-    displayTable(test); // the passed argument is used to prevent plus glyphicon from submitting the form.
+    displayTable(preventPlusFromSubmitting); // the passed argument is used to prevent plus glyphicon from submitting the form.
   }
 }
 
 function createModalContent() { // Populates Submit Modal with Student information from the table
-  var testDict = createTabledataDictionary();
+  var allTableDataDict = createTabledataDictionary();
   term = $("#selectedTerm").val();
   var whichTerm = term.toString().substr(-2);
   modalList = [];
 
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-    for (var key in testDict) {
-      var student = testDict[key]["Student"];
-      var position = testDict[key]["Position"];
-      var selectedContractHours = testDict[key]["Contract Hours"];
+    for (var key in allTableDataDict) {
+      var student = allTableDataDict[key]["Student"];
+      var position = allTableDataDict[key]["Position"];
+      var selectedContractHours = allTableDataDict[key]["Contract Hours"];
       var bigString = "<li>" + student + ' | ' + position + ' | ' + selectedContractHours;
       modalList.push(bigString)
     }
@@ -532,11 +532,11 @@ function createModalContent() { // Populates Submit Modal with Student informati
     $('#SubmitModal').modal('show')
   }
   else {
-    for (var key in testDict) {
-      var student = testDict[key]["Student"];
-      var position = testDict[key]["Position"];
-      var jobType = testDict[key]["Job Type"];
-      var hours = testDict[key]["Hours Per Week"];
+    for (var key in allTableDataDict) {
+      var student = allTableDataDict[key]["Student"];
+      var position = allTableDataDict[key]["Position"];
+      var jobType = allTableDataDict[key]["Job Type"];
+      var hours = allTableDataDict[key]["Hours Per Week"];
       var bigString = "<li>" + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
       modalList.push(bigString)
     }
@@ -581,9 +581,9 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
           }
         });
         listDictAJAX.push(tableDataDict);
-        testDict = {}
+        allTableDataDict = {}
         for ( var key in listDictAJAX){
-          testDict[key] = listDictAJAX[key];
+          allTableDataDict[key] = listDictAJAX[key];
         }
       }
       /* If it's academic year, get the table values */
@@ -598,21 +598,21 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
             }
           });
           listDictAJAX.push(tableDataDict);
-          testDict = {} // FIXME rename to something else, this is the dictionary that contains all the forms
+          allTableDataDict = {} // this is the dictionary that contains all the forms
           for ( var key in listDictAJAX){
-            testDict[key] = listDictAJAX[key];
+            allTableDataDict[key] = listDictAJAX[key];
           }
       }
      });
 
-  delete testDict["0"] // gets rid of the first dictionary that contains table labels
-  return testDict
+  delete allTableDataDict["0"] // gets rid of the first dictionary that contains table labels
+  return allTableDataDict
 }
 
 // SEND DATA TO THE DATABASE
 function userInsert(){
-  var testDict = createTabledataDictionary()
-  data = JSON.stringify(testDict);
+  var allTableDataDict = createTabledataDictionary()
+  data = JSON.stringify(allTableDataDict);
   $('#laborStatusForm').on('submit', function(e) {
     e.preventDefault();
   });
@@ -626,12 +626,12 @@ function userInsert(){
            var whichTerm = term.toString().substr(-2);
            modalList = [];
            if (response){
-             for (var key in testDict) {
-               var student = testDict[key]["Student"];
-               var position = testDict[key]["Position"];
-               var selectedContractHours = testDict[key]["Contract Hours"];
-               var jobType = testDict[key]["Job Type"];
-               var hours = testDict[key]["Hours Per Week"];
+             for (var key in allTableDataDict) {
+               var student = allTableDataDict[key]["Student"];
+               var position = allTableDataDict[key]["Position"];
+               var selectedContractHours = allTableDataDict[key]["Contract Hours"];
+               var jobType = allTableDataDict[key]["Job Type"];
+               var hours = allTableDataDict[key]["Hours Per Week"];
                if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
                  var bigString = "<li>" +"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + selectedContractHours;
                }
@@ -643,11 +643,11 @@ function userInsert(){
           }
 
           else {
-            for (var key in testDict) {
-               var student = testDict[key]["Student"];
-               var position = testDict[key]["Position"];
-               var selectedContractHours = testDict[key]["Contract Hours"];
-               var hours = testDict[key]["Hours Per Week"];
+            for (var key in allTableDataDict) {
+               var student = allTableDataDict[key]["Student"];
+               var position = allTableDataDict[key]["Position"];
+               var selectedContractHours = allTableDataDict[key]["Contract Hours"];
+               var hours = allTableDataDict[key]["Hours Per Week"];
 
               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
                var bigString = "<li>" +"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + selectedContractHours;
