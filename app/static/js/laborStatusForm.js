@@ -81,6 +81,24 @@ function fillDates(response){ // prefill term start and term end
   }
 }
 
+function updateStart(obj){
+  var newEnd = new Date(obj.value)
+  var dayNewEnd = newEnd.getDate() - 1;
+  var monthNewEnd = newEnd.getMonth();
+  var yearNewEnd = newEnd.getFullYear();
+  $('#dateTimePicker1').datepicker({maxDate: new Date(yearNewEnd, monthNewEnd, dayNewEnd)});
+  $( "#dateTimePicker1" ).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
+}
+
+function updateEnd(obj){
+  var newStart = new Date(obj.value)
+  var dayNewStart = newStart.getDate() + 1;
+  var monthNewStart = newStart.getMonth();
+  var yearNewStart = newStart.getFullYear();
+  $('#dateTimePicker2').datepicker({minDate: new Date(yearNewStart, monthNewStart, dayNewStart)});
+  $( "#dateTimePicker2" ).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
+}
+
 function getDepartment(object) { // get department from select picker
    var department = object.value;
    var url = "/laborstatusform/getPositions/" + department;
