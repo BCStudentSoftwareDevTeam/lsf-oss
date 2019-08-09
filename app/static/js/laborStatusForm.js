@@ -1,3 +1,8 @@
+$( "laborStatusForm" ).submit(function( event ) {
+  alert( "Handler for .submit() called." );
+  event.preventDefault();
+});
+
 $(document).ready(function(){
     $('[data-tooltip="true"]').tooltip();
     $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
@@ -76,14 +81,14 @@ function fillDates(response){ // prefill term start and term end
   }
 }
 
-function getDepartment(object, formPassedDept = "") { // get department from select picker
+function getDepartment(object) { // get department from select picker
    var department = object.value;
    var url = "/laborstatusform/getPositions/" + department;
        $.ajax({
          url: url,
          dataType: "json",
          success: function (response){
-            fillPositions(response, formPassedDept)
+            fillPositions(response)
          }
        })
  }

@@ -69,7 +69,9 @@
                     data-live-search="true"
                     title="Term"
                     onchange = "showAccessLevel(this); preFilledDate(this)"
-                    data-width="320px" required>
+                    data-width="320px"
+                    required
+                    {% if forms %} data-style="btn-danger" {% endif %}>
             {% for term in terms %}
                 <option value = "{{term.termCode}}">{{term.termName}}</option>
             {% endfor %}
