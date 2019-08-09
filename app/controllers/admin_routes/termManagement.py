@@ -39,7 +39,7 @@ def createTerms(termList, iteration):
             elif i == 1:
                 termList.create(termCode = (code + 11), termName = ("Fall " + str(termYear)))
             elif i == 2:
-                termList.create(termCode = (code + 1), termName = ("ThanksGiving Break " + str(termYear)))
+                termList.create(termCode = (code + 1), termName = ("Thanksgiving Break " + str(termYear)))
             elif i == 3:
                 termList.create(termCode = (code + 2), termName = ("Christmas Break " + str(termYear)))
             elif i == 4:
