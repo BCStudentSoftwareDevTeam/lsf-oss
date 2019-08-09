@@ -1,3 +1,22 @@
+selectpicker, label {
+  display: block;
+}
+.tableContent {
+  float:left;
+}
+
+td {
+  display: block;
+}
+
+/* #Student {
+  padding-left: 20px;
+} */
+
+#plus {
+  margin-top: 18px;
+}
+
 #datepicker {
   padding-right: 0px;
 }

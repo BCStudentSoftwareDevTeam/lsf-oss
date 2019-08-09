@@ -11,6 +11,11 @@ $(document).on('keyup', 'input[name=contractHours]', function () { // sets contr
        _this.val( min );
 });
 
+// // make fields required.
+// $(".require").prop('required',true);
+// $(".disable").prop('required',true);
+
+
 // Pops up a modal for Seconday Postion
 $('#jobType').change(function(){
   //this is just getting the value that is selected
@@ -76,14 +81,14 @@ function fillDates(response){ // prefill term start and term end
   }
 }
 
-function getDepartment(object, formPassedDept = "") { // get department from select picker
+function getDepartment(object) { // get department from select picker
    var department = object.value;
    var url = "/laborstatusform/getPositions/" + department;
        $.ajax({
          url: url,
          dataType: "json",
          success: function (response){
-            fillPositions(response, formPassedDept)
+            fillPositions(response)
          }
        })
  }
