@@ -1,3 +1,8 @@
+$( "laborStatusForm" ).submit(function( event ) {
+  alert( "Handler for .submit() called." );
+  event.preventDefault();
+});
+
 $(document).ready(function(){
     $('[data-tooltip="true"]').tooltip();
     $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
@@ -79,6 +84,24 @@ function fillDates(response){ // prefill term start and term end
     $( "#dateTimePicker2" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd, dayEnd));
     $( "#dateTimePicker2" ).datepicker( "option", "minDate", new Date(yearStart, monthStart, dayStart) );
   }
+}
+
+function updateStart(obj){ // updates the max date of the start datepicker to not be after what the end datePicker picked
+  var newEnd = new Date(obj.value)
+  var dayNewEnd = newEnd.getDate() - 1;
+  var monthNewEnd = newEnd.getMonth();
+  var yearNewEnd = newEnd.getFullYear();
+  $('#dateTimePicker1').datepicker({maxDate: new Date(yearNewEnd, monthNewEnd, dayNewEnd)});
+  $( "#dateTimePicker1" ).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
+}
+
+function updateEnd(obj){ // updates the max date of the end datepicker to not be before what the start datePicker picked
+  var newStart = new Date(obj.value)
+  var dayNewStart = newStart.getDate() + 1;
+  var monthNewStart = newStart.getMonth();
+  var yearNewStart = newStart.getFullYear();
+  $('#dateTimePicker2').datepicker({minDate: new Date(yearNewStart, monthNewStart, dayNewStart)});
+  $( "#dateTimePicker2" ).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
 }
 
 function getDepartment(object) { // get department from select picker
@@ -531,7 +554,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
       modalList.push(bigString)
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                            "<ul style='display: inline-block;text-align:left;'>" +
+                                                            "<ul style='list-style-type:none; display:inline-block;text-align:left;'>" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day."
     $('#SubmitModal').modal('show')
@@ -546,7 +569,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
       modalList.push(bigString)
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                            "<ul style='display: inline-block;text-align:left;'>" +
+                                                            "<ul style='list-style-type:none;display: inline-block;text-align:left;'>" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day."
     $('#SubmitModal').modal('show')
@@ -664,7 +687,7 @@ function userInsert(){
             }
            }
          document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                                 "<ul style='display: inline-block;text-align:left;'>" +
+                                                                 "<ul style='list-style-type:none; display: inline-block;text-align:left;'>" +
                                                                  modalList.join("</li>")+"</ul>"+
                                                                  "<br><br>The labor status form will be eligible for approval in one business day."
          $('#SubmitModal').modal('show')
@@ -674,5 +697,5 @@ function userInsert(){
      $('#SubmitModal').modal({backdrop: true, keyboard: false, show: true});
      $('#SubmitModal').data('bs.modal').options.backdrop = 'static';
      document.getElementById('submitmodalid').innerHTML = "Done";
-     document.getElementById('submitmodalid').onclick = function() { window.location.reload();}
+     document.getElementById('submitmodalid').onclick = function() { window.location.replace("/laborstatusform");}
 }
