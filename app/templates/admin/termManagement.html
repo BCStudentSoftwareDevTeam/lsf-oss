@@ -21,7 +21,7 @@
   {% for terms in listOfTerms %}   <!-- This loop creates the panels for the accordion, they contain "Academic Year: year-year" -->
     <div class="card">
       <div class="card-header" id="heading_{{terms[0]}}">
-        <a class="btn btn-link"
+        <button class="btn btn-link"
           type="button"
           id="academicYear_{{terms[0]}}"
           data-toggle="collapse"
@@ -31,7 +31,7 @@
           <h4 class="mb-0">
           Academic Year: {{(terms[0]|string)[:4]}}-{{(((terms[0]|string)[:4])|int)+1}}        <!-- this was the only way to get the Academic year to show properly... sorry -->
           </h4>
-        </a>
+        </button>
       </div>
       <div id="{{terms[0]}}"
             class="collapse"

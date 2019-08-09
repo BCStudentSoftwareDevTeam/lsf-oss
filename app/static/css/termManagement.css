@@ -25,6 +25,11 @@
   top: 20px;
 }
 
+.btn-link {
+  width: 100%;
+  text-align: left;
+}
+
 .input-group {
   width: 79%;
 }
@@ -53,7 +58,7 @@
   font-weight: 550;
 }
 
-.active, .card-header:focus {
+.active, .btn-link:focus {
   background-color: #66c2cc;
 }
 
