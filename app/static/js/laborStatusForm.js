@@ -549,7 +549,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
       modalList.push(bigString)
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                            "<ul style='display: inline-block;text-align:left;'>" +
+                                                            "<ul style='list-style-type:none; display:inline-block;text-align:left;'>" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day."
     $('#SubmitModal').modal('show')
@@ -564,7 +564,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
       modalList.push(bigString)
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                            "<ul style='display: inline-block;text-align:left;'>" +
+                                                            "<ul style='list-style-type:none;display: inline-block;text-align:left;'>" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day."
     $('#SubmitModal').modal('show')
@@ -682,7 +682,7 @@ function userInsert(){
             }
            }
          document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                                 "<ul style='display: inline-block;text-align:left;'>" +
+                                                                 "<ul style='list-style-type:none; display: inline-block;text-align:left;'>" +
                                                                  modalList.join("</li>")+"</ul>"+
                                                                  "<br><br>The labor status form will be eligible for approval in one business day."
          $('#SubmitModal').modal('show')
