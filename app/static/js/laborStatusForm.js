@@ -81,7 +81,7 @@ function fillDates(response){ // prefill term start and term end
   }
 }
 
-function updateStart(obj){
+function updateStart(obj){ // updates the max date of the start datepicker to not be after what the end datePicker picked
   var newEnd = new Date(obj.value)
   var dayNewEnd = newEnd.getDate() - 1;
   var monthNewEnd = newEnd.getMonth();
@@ -90,7 +90,7 @@ function updateStart(obj){
   $( "#dateTimePicker1" ).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
 }
 
-function updateEnd(obj){
+function updateEnd(obj){ // updates the max date of the end datepicker to not be before what the start datePicker picked
   var newStart = new Date(obj.value)
   var dayNewStart = newStart.getDate() + 1;
   var monthNewStart = newStart.getMonth();
@@ -692,5 +692,5 @@ function userInsert(){
      $('#SubmitModal').modal({backdrop: true, keyboard: false, show: true});
      $('#SubmitModal').data('bs.modal').options.backdrop = 'static';
      document.getElementById('submitmodalid').innerHTML = "Done";
-     document.getElementById('submitmodalid').onclick = function() { window.location.reload();}
+     document.getElementById('submitmodalid').onclick = function() { window.location.replace("/laborstatusform");}
 }
