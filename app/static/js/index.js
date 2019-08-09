@@ -18,6 +18,8 @@ $(document).ready(function() {
   $(".currentDepartmentModal").attr("disabled", true);
   $(".currentStudentModal").removeAttr("disabled");
   $('#portalTitle').text("Current Students");
+  $("#myCurrentStudents").removeClass("btn-primary");
+  $("#myCurrentStudents").addClass("btn-light");
 
 });
 
@@ -33,10 +35,11 @@ var table = $("#studentList").DataTable({
    // Used to created the buttons rendered by the data table
    buttons: [
       {
-        text: 'Current',
+        text: 'Current Only',
         action: function ( e, dt, node, config ) {
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
+          changeButtonColor("#myCurrentStudents")
           $(".currentStu").show();
           $(".allDeptStu").hide();
           $(".currentDeptStu").hide();
@@ -46,6 +49,8 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".currentStudentModal").removeAttr("disabled");
           $('#portalTitle').text("Current Students");
+          $("#myCurrentStudents").removeClass("btn-primary");
+          $("#myCurrentStudents").addClass("btn-light");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -55,10 +60,11 @@ var table = $("#studentList").DataTable({
         attr: { id: "myCurrentStudents"}
       },
       {
-        text: 'Past',
+        text: 'Past Only',
         action: function ( e, dt, node, config ) {
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
+          changeButtonColor("#myPastStudents")
           $(".currentStu").hide();
           $(".allDeptStu").hide();
           $(".currentDeptStu").hide();
@@ -68,6 +74,8 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".pastStudentModal").removeAttr("disabled");
           $('#portalTitle').text("Past Students");
+          $("#myPastStudents").removeClass("btn-primary");
+          $("#myPastStudents").addClass("btn-light");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -81,6 +89,7 @@ var table = $("#studentList").DataTable({
         action: function ( e, dt, node, config ) {
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
+          changeButtonColor("#allMyStudents")
           $(".currentStu").show();
           $(".allDeptStu").hide();
           $(".currentDeptStu").hide();
@@ -90,6 +99,8 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".currentStudentModal").removeAttr("disabled");
           $('#portalTitle').text("All Students");
+          $("#allMyStudents").removeClass("btn-primary");
+          $("#allMyStudents").addClass("btn-light");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -99,10 +110,11 @@ var table = $("#studentList").DataTable({
         attr: { id: "allMyStudents"}
       },
       {
-        text: 'Current',
+        text: 'Current Only',
         action: function ( e, dt, node, config ) {
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
+          changeButtonColor("#currentDepartmentStudents")
           $(".currentStu").hide();
           $(".allDeptStu").hide();
           $(".currentDeptStu").show();
@@ -112,6 +124,8 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").removeAttr("disabled");
           $(".pastStudentModal").attr("disabled", true);
           $('#portalTitle').text("Current Department Students");
+          $("#currentDepartmentStudents").removeClass("btn-primary");
+          $("#currentDepartmentStudents").addClass("btn-light");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -125,6 +139,7 @@ var table = $("#studentList").DataTable({
         action: function ( e, dt, node, config ) {
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
+          changeButtonColor("#allDepartmentStudents")
           $(".currentStu").hide();
           $(".allDeptStu").show();
           $(".currentDeptStu").hide();
@@ -134,6 +149,8 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".pastStudentModal").attr("disabled", true);
           $('#portalTitle').text("All Department Students");
+          $("#allDepartmentStudents").removeClass("btn-primary");
+          $("#allDepartmentStudents").addClass("btn-light");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -154,6 +171,34 @@ var table = $("#studentList").DataTable({
 
 })
 
+function changeButtonColor(ID) {
+  var buttonID = ID
+  if ($("#myPastStudents").hasClass("btn btn-light")){
+    $("#myPastStudents").removeClass("btn btn-light");
+    $("#myPastStudents").addClass("btn btn-primary");
+  }
+  if ($("#myCurrentStudents").hasClass("btn btn-light")){
+    $("#myCurrentStudents").removeClass("btn btn-light");
+    $("#myCurrentStudents").addClass("btn btn-primary");
+  }
+  if ($("#allMyStudents").hasClass("btn btn-light")){
+    $("#allMyStudents").removeClass("btn btn-light");
+    $("#allMyStudents").addClass("btn btn-primary");
+  }
+  if ($("#currentDepartmentStudents").hasClass("btn btn-light")){
+    $("#currentDepartmentStudents").removeClass("btn btn-light");
+    $("#currentDepartmentStudents").addClass("btn btn-primary");
+  }
+  if ($("#allDepartmentStudents").hasClass("btn btn-light")){
+    $("#allDepartmentStudents").removeClass("btn btn-light");
+    $("#allDepartmentStudents").addClass("btn btn-primary");
+  }
+  if ($(buttonID).hasClass("btn btn-light")){
+    $(buttonID).addClass('btn btn-primary');
+    $(buttonID).removeClass('btn btn-light');
+  }
+}
+
 // show the sub-sidebar only on this page
 $("div.laborStudentChoice").show();
 
@@ -167,6 +212,8 @@ document.getElementById("myStudents").addEventListener("click",function(){
   $("#myPastStudents").show()
   $("#allMyStudents").show()
   $('#portalTitle').text("Current Students");
+  $("#myCurrentStudents").removeClass("btn-primary");
+  $("#myCurrentStudents").addClass("btn-light");
 
   table
     .columns( 1 )
@@ -197,6 +244,8 @@ document.getElementById("department").addEventListener("click",function(){
   $(".currentDepartmentModal").removeAttr("disabled");
   $(".pastStudentModal").attr("disabled", true);
   $('#portalTitle').text("Current Department Students");
+  $("#currentDepartmentStudents").removeClass("btn-primary");
+  $("#currentDepartmentStudents").addClass("btn-light");
 
   table
     .columns( 1 )
