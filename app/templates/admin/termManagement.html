@@ -18,10 +18,10 @@
   <p id="subHeader">Click on the collapsible panel to open and close it.</p>
 
   <div class="accordion" id="accordionExample">
-  {% for terms in listOfTerms %}
+  {% for terms in listOfTerms %}   <!-- This loop creates the panels for the accordion, they contain "Academic Year: year-year" -->
     <div class="card">
       <div class="card-header" id="heading_{{terms[0]}}">
-        <button class="btn btn-link"
+        <a class="btn btn-link"
           type="button"
           id="academicYear_{{terms[0]}}"
           data-toggle="collapse"
@@ -31,13 +31,13 @@
           <h4 class="mb-0">
           Academic Year: {{(terms[0]|string)[:4]}}-{{(((terms[0]|string)[:4])|int)+1}}        <!-- this was the only way to get the Academic year to show properly... sorry -->
           </h4>
-        </button>
+        </a>
       </div>
       <div id="{{terms[0]}}"
             class="collapse"
             aria-labelledby="heading_{{terms[0]}}"
             data-parent="#accordionExample">
-    <table class="table table-condensed" class="card-body" id="myTable">
+    <table class="table table-condensed" class="card-body" id="myTable">  <!-- This is the start of the table -->
       <thead>
         <tr id="tableHeaders">
             <th>Term Name</th>
@@ -58,15 +58,15 @@
         </thead>
         <tbody>
 
-          {% for term in terms %}
+          {% for term in terms %}   <!-- This loop is what brings in the terms for each Academic year in the table that is in the accordion panel -->
                 <tr>
-                  <td id="sizeTermName">{{term.termName}}</td> {# checks to see if the start date is empty #}
-                  {% if term.termStart == None %}
+                  <td id="sizeTermName">{{term.termName}}</td>
+                  {% if term.termStart == None %} <!-- checks to see if the start date is empty -->
                     <td>
 
                       <div class="input-group date">
                         <input id="start_{{term.termCode}}"
-                            onchange="getDate(this, {{term.termCode}});"
+                            onchange="getDate(this, {{term.termCode}}); updateStart(this, {{term.termCode}}); updateEnd(this, {{term.termCode}});"
                             type="text"
                             class="form-control"
                             class="datepicker"
@@ -81,12 +81,12 @@
                     </td>
                   {% endif %}
 
-                  {% if term.termStart != None %} {# checks to see if the start date is not empty #}
+                  {% if term.termStart != None %} <!-- checks to see if the start date is not empty -->
                   <td>
                     <div class="input-group date">
                       <input
                           id="start_{{term.termCode}}"
-                          onchange="getDate(this, {{term.termCode}});"
+                          onchange="getDate(this, {{term.termCode}}); updateStart(this, {{term.termCode}}); updateEnd(this, {{term.termCode}});"
                           type="text"
                           class="form-control"
                           class="datepicker"
@@ -100,11 +100,11 @@
                   </td>
                   {% endif %}
 
-                  {% if term.termEnd == None %} {# checks to see if the end date is empty #}
+                  {% if term.termEnd == None %} <!-- checks to see if the end date is empty -->
                     <td>
                       <div class="input-group date">
                           <input id="end_{{term.termCode}}"
-                              onchange="getDate(this, {{term.termCode}});"
+                              onchange="getDate(this, {{term.termCode}}); updateStart(this, {{term.termCode}}); updateEnd(this, {{term.termCode}});"
                               type="text"
                               class="form-control"
                               class="datepicker"
@@ -117,11 +117,11 @@
                     </td>
                   {% endif %}
 
-                  {% if term.termEnd != None %} {# checks to see if the end date is not empty #}
+                  {% if term.termEnd != None %} <!-- checks to see if the start date is not empty -->
                   <td>
                     <div class="input-group date">
                         <input id="end_{{term.termCode}}"
-                        onchange="getDate(this, {{term.termCode}});"
+                        onchange="getDate(this, {{term.termCode}}); updateStart(this, {{term.termCode}}); updateEnd(this, {{term.termCode}});"
                         type="text"
                         class="form-control"
                         class="datepicker"
@@ -134,7 +134,7 @@
                   </td>
                   {% endif %}
 
-                  {% if term.termStart != None and term.termEnd != None and term.termState != None %}  {# checks to see if there are dates in the term #}
+                  {% if term.termStart != None and term.termEnd != None and term.termState != None %}  <!-- checks to see if there are dates in the term -->
                   <td>
                     <button
                       id="term_btn_{{term.termCode}}"
@@ -144,7 +144,7 @@
                       onclick="termStatus({{term.termCode}})"
                       value="{{term.termState}}">{% if term.termState == True %} Open {% elif term.termState == False %} Closed {% endif %}</button>
                   </td>
-                    {% elif term.termStart == None or term.termEnd == None or term.termState == None %}  {# checks to see if the there is a datepicker that is empty, if there is have an inactive button #}
+                    {% elif term.termStart == None or term.termEnd == None or term.termState == None %}  <!-- checks to see if the there is a datepicker that is empty, if there is have an inactive button -->
                      <td>
                        <button disabled
                          id="term_btn_{{term.termCode}}"

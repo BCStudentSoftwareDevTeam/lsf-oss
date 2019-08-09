@@ -14,11 +14,6 @@ import datetime
 # @login_required
 def term_Management():
     terms = Term.select()
-    termStart = Term.select()
-    termEnd = Term.select()
-    termState = Term.select()
-    termCode = Term.select()
-    termName = Term.select()
     listOfTerms = Term.select()
     for i in range(5):
         createTerms(Term, i)
@@ -26,19 +21,13 @@ def term_Management():
     return render_template( 'admin/termManagement.html',
                              title=('Admin Management'),
                              terms = terms,
-                             # orderedTerms = orderedTerms,
-                             termStart = termStart,
-                             termEnd = termEnd,
-                             termState = termState,
-                             termCode = termCode,
-                             termName = termName,
                              listOfTerms = accordionTerms()
                           )
 
 def createTerms(termList, iteration):
     """ This function creates the current Academic Year, two Academic years in the past and two Academic
     Years in the future. If any of the terms that are in the Academic Years are already created it will
-    pass """
+    get an exception message. """
     today = datetime.datetime.now()
     todayYear = today.year
     termYear = todayYear - 2 + iteration
@@ -63,7 +52,7 @@ def createTerms(termList, iteration):
             print("You failed to create a term in the " + str(termYear) + " AY.")
 
 def accordionTerms():
-    """
+    """ This function populates all the Academic Years with the correct terms.
     """
     listOfTerms = []
     hoy = datetime.datetime.now()
@@ -79,28 +68,27 @@ def accordionTerms():
 
 @admin.route("/termManagement/setDate/", methods=['POST'])
 def ourDate():
+    """ This function updates the dates so that they are correctly formatted to be inserted into the
+    database.
+    """
     try:
-        print("Hi")
         rsp = eval(request.data.decode("utf-8"))
-        print(rsp)
-        print("Hi World")
+        # print(rsp)
         if rsp:
             print("success")
             termCode = rsp['termCode']
             termToChange = Term.get(Term.termCode == termCode)
             date_value = rsp.get("start", rsp.get("end", None))
-            print(date_value)
+            # print(date_value)
             if rsp.get('start', None):
                 startDate = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.termStart = startDate
-                print("startDate saved")
+                # print("startDate saved")
             if rsp.get('end', None):
                 endDate = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.termEnd = endDate
-                print("endDate saved")
-            print("startDate")
+                # print("endDate saved")
             termToChange.save()
-            print("You got it!")
             return jsonify({"Success": True})
     except Exception as e:
         print("You have failed to update the date.", e)
@@ -109,26 +97,23 @@ def ourDate():
 
 @admin.route('/termManagement/manageStatus', methods=['POST'])
 def termStatusCheck():
-    #print("Starting compliance changer")
+    """ This function updates the state of the term
+    """
     try:
     #print("Get request")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         print(rsp)
         if rsp:
-            #print("Getting department name", rsp['deptName'])
-            #print(type(rsp['deptName']))
             term = Term.get(rsp['termBtn'])
-            print("this is the term " + str(term))
-            print("Before:")
-            print(term.termState)
+            # print("this is the term " + str(term))
+            # print(term.termState)
             if term.termState == True:
                 term.termState = False
             elif term.termState == False:
                 term.termState = True
-            print("After:")
-            print(term.termState)
+            # print(term.termState)
             term.save()
-            print("worked")
+            # print("worked")
             return jsonify({"Success": True})
     except Exception as e:
         print(e)
