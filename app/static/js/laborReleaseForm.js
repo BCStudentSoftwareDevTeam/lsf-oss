@@ -5,10 +5,15 @@ j( function() {
     });
 } );
 
+// This function creates the map glyphicon
+// on the select-picker
 $('.glyphicon-calendar').click(function() {
    $("#datepicker0").focus();
  });
 
+// This sets the min date you can choose on the
+// date picker as tomorrows date, and also
+// pre-populate the date picker with tomorrows date
 var date = new Date();
 date.setDate(date.getDate()+1);
 $("#datepicker0").datepicker({
@@ -16,25 +21,9 @@ $("#datepicker0").datepicker({
 });
 $("#datepicker0").datepicker("setDate", "date");
 
-// var newDate
-// function getDate(obj){
-//   newDate = obj.value
-//   console.log(newDate);
-// }
-//
-// var releaseCondition
-// function getCondition(obj){
-//   releaseCondition = obj.value
-//   console.log(releaseCondition);
-// }
-//
-// var releaseReason
-// function getReason(obj){
-//   releaseReason = obj.value
-//   console.log(releaseReason);
-// }
-
-
+// This function checks to see if all the fields have been filled before
+// rendering the submit modal. If the submit button is clicked before all
+// fields are filled, then the user gets a message
 $(function() {
    $("#submit").click(function() {
     if($("#condition").val() == "" || $("#datepicker0").val() == "" || $("#reason").val() == "") {
@@ -48,31 +37,3 @@ $(function() {
     }
    });
 });
-
-
-// function createReleaseForm() {
-//   console.log("I started here");
-//   $.ajax({
-//     method: "POST",
-//     url: "/index/second",
-//     dataType: "json",
-//     contentType: "application/json",
-//     data: JSON.stringify({"deptName": releaseCondition}),
-//     processData: false,
-//     success: function(response) {
-//   //      console.log(response);
-//       if(response["Success"]) {
-//         category = "info"
-//         var departmentID = $("#dept_btn_" + department);
-//         //console.log(departmentID);
-//         if ($(departmentID).hasClass("btn-success")){
-//
-//         }
-//         else {
-//           console.log("I was not succesful");
-//         }
-//
-//       }
-//     }
-//   })
-// }
