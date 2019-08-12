@@ -33,7 +33,7 @@
               title="Supervisor"
               data-width="320px" >
         {% for staff in staffs %}
-          <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.username == staff.PIDM %} selected {% endif %}{% endif %}>{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
+          <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.username == staff.PIDM %} selected {% endif %}{% endif %}>{{staff.FIRST_NAME}} {{staff.LAST_NAME}} ({{staff.ID}})</option>
         {% endfor %}
       </select>
    </div>
@@ -106,7 +106,7 @@
 </div>
 <br />
  <!-- Table that contains select pickers -->
-<div  class="table-responsive">
+<div>
 <table>
   <thead>
     <tr>
@@ -119,7 +119,7 @@
                     data-live-search='true'
                     title="Student">
               {% for student in students %}
-                  <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %}>{{student.FIRST_NAME}} {{student.LAST_NAME}} {{student.ID}}</option>
+                  <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %}>{{student.FIRST_NAME}} {{student.LAST_NAME}} ({{student.ID}})</option>
               {% endfor %}
             </select>
       </th>

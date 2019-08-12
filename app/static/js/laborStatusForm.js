@@ -134,7 +134,7 @@ function getDepartment(object) { // get department from select picker
  // Pops up a modal for WLS 5, 6 or more
  $('#position').change(function(){
    //this is just getting the value that is selected
-   var wls = $('#position').find('option:selected').attr('id');
+   var wls = $('#position').find('option:selected').attr('value');
    if (wls >= 5) {
      document.getElementById('WLSModalTitle').innerHTML = "Work-Learning-Service Levels (WLS)"
      document.getElementById('WLSModalText').innerHTML = "Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
@@ -548,9 +548,10 @@ function createModalContent() { // Populates Submit Modal with Student informati
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
     for (var key in allTableDataDict) {
       var student = allTableDataDict[key]["Student"];
+      var studentName = student.substring(0, student.indexOf('B0'));
       var position = allTableDataDict[key]["Position"];
       var selectedContractHours = allTableDataDict[key]["Contract Hours"];
-      var bigString = "<li>" + student + ' | ' + position + ' | ' + selectedContractHours;
+      var bigString = "<li>" + studentName + ' | ' + position + ' | ' + selectedContractHours + ' Hours';
       modalList.push(bigString)
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
@@ -562,10 +563,11 @@ function createModalContent() { // Populates Submit Modal with Student informati
   else {
     for (var key in allTableDataDict) {
       var student = allTableDataDict[key]["Student"];
+      var studentName = student.substring(0, student.indexOf('B0'));
       var position = allTableDataDict[key]["Position"];
       var jobType = allTableDataDict[key]["Job Type"];
       var hours = allTableDataDict[key]["Hours Per Week"];
-      var bigString = "<li>" + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
+      var bigString = "<li>" + studentName + ' | ' + position + ' | ' + jobType + ' | ' + hours + ' Hours';
       modalList.push(bigString)
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
