@@ -1,3 +1,17 @@
+@media(min-width:970px) and (max-width:2500px) {
+  .container {
+    width: 83%;
+    }
+}
+.removePadding{
+  padding-left: 0px;
+  width: 100%;
+}
+
+#title{
+  margin-left: 300px;
+}
+
 selectpicker, label {
   display: block;
 }
@@ -38,5 +52,6 @@ selectpicker, label {
 
 #review-button {
     text-align: center;
+    padding-top: 30px;
     padding-bottom: 10px;
 }

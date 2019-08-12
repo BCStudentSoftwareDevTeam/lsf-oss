@@ -547,7 +547,7 @@ function createAndFillTableForBreaks(preventPlusFromSubmitting = '') {// Fills t
 // END OF (THIS IS FOR BREAKSSSS)
 
 
-function reviewButtonFunctionality(preventPlusFromSubmitting) { // Triggred when Review button is clicked and checks if fields are filled out. 
+function reviewButtonFunctionality(preventPlusFromSubmitting) { // Triggred when Review button is clicked and checks if fields are filled out.
   if ($('#selectedSupervisor').val()=="" || $('#selectedDepartment').val()=="" || $('#selectedTerm').val()=="" || $("#dateTimePicker1").val()=="" || $("#dateTimePicker2").val()=="") {
     category = "danger"
     msg = "Please fill out all fields before submitting.";
@@ -586,11 +586,11 @@ function createModalContent() { // Populates Submit Modal with Student informati
       var studentName = student.substring(0, student.indexOf('(B0'));
       var position = allTableDataDict[key]["Position"];
       var selectedContractHours = allTableDataDict[key]["Contract Hours"];
-      var bigString = "<li>" + studentName + ' | ' + position + ' | ' + selectedContractHours + ' Hours';
+      var bigString = "<li>" + studentName + ' | ' + position + ' | ' + selectedContractHours + ' hours';
       modalList.push(bigString)
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                            "<ul style='list-style-type:none; display:inline-block;text-align:left;'>" +
+                                                            "<ul style='display:inline-block;text-align:left;'>" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day."
     $('#SubmitModal').modal('show')
@@ -602,11 +602,11 @@ function createModalContent() { // Populates Submit Modal with Student informati
       var position = allTableDataDict[key]["Position"];
       var jobType = allTableDataDict[key]["Job Type"];
       var hours = allTableDataDict[key]["Hours Per Week"];
-      var bigString = "<li>" + studentName + ' | ' + position + ' | ' + jobType + ' | ' + hours + ' Hours';
+      var bigString = "<li>" + studentName + ' | ' + position + ' | ' + jobType + ' | ' + hours + ' hours';
       modalList.push(bigString)
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                            "<ul style='list-style-type:none;display: inline-block;text-align:left;'>" +
+                                                            "<ul style='display: inline-block;text-align:left;'>" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day."
     $('#SubmitModal').modal('show')
@@ -699,10 +699,10 @@ function userInsert(){
                var jobType = allTableDataDict[key]["Job Type"];
                var hours = allTableDataDict[key]["Hours Per Week"];
                if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-                 var bigString = "<li>" +"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + studentName + ' | ' + position + ' | ' + selectedContractHours;
+                 var bigString = "<li>" +"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + studentName + ' | ' + position + ' | ' + selectedContractHours + ' hours';
                }
                else {
-                 var bigString = "<li>"+"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + studentName + ' | ' + position + ' | ' + jobType + ' | ' + hours;
+                 var bigString = "<li>"+"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + studentName + ' | ' + position + ' | ' + jobType + ' | ' + hours + ' hours';
               }
               modalList.push(bigString)
             }
@@ -717,10 +717,10 @@ function userInsert(){
                var hours = allTableDataDict[key]["Hours Per Week"];
 
               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-               var bigString = "<li>" +"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + studentName + ' | ' + position + ' | ' + selectedContractHours;
+               var bigString = "<li>" +"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + studentName + ' | ' + position + ' | ' + selectedContractHours + ' hours';
               }
               else {
-                var bigString = "<li>"+"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + studentName + ' | ' + position + ' | ' + jobType + ' | ' + hours;
+                var bigString = "<li>"+"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + studentName + ' | ' + position + ' | ' + jobType + ' | ' + hours + ' hours';
               }
               modalList.push(bigString)
             }

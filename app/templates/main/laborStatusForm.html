@@ -12,7 +12,8 @@
 
 {% block app_content %}
 <form id="laborStatusForm">
-  <h1 class="col-md-12 col-md-offset-4">Labor Status Form
+  <div class="container">
+  <h1 class="col-md-12 col-md-offset-4 removePadding" id ="title">Labor Status Form
     <span class="glyphicon glyphicon-bookmark"
       <a  data-toggle="tooltip" data-tooltip="true"
           title="This online labor status form is used to
@@ -22,7 +23,7 @@
     </span>
   </h1>
   <br />
-<div class="form-group row col-md-12 col-md-offset-4">
+<div class="form-group row col-md-12 col-md-offset-4 removePadding">
   <!--selectpicker for supervisor-->
   <label for="supervisor" class="col-2 col-form-label">Supervisor</label>
     <div class="col-10">
@@ -39,7 +40,7 @@
    </div>
 </div>
   <br />
-  <div class="form-group row col-md-12 col-md-offset-4">
+  <div class="form-group row col-md-12 col-md-offset-4 removePadding">
     <!--selectpicker for department-->
     <label for="department" class="col-2 col-form-label">Department</label>
       <div class="col-10">
@@ -58,7 +59,7 @@
       </div>
   </div>
   <br />
-  <div class="form-group row col-md-12 col-md-offset-4">
+  <div class="form-group row col-md-12 col-md-offset-4 removePadding">
     <!-- selectpicker for term  -->
     <div class="col-10 {% if forms %} has-error {% endif %}">
       <label for="term" class="col-2 col-form-label">Term</label>
@@ -213,5 +214,6 @@
             onclick="reviewButtonFunctionality('preventPlusFromSubmitting')">Review</button>
       {% include "snips/ReviewForm.html" %}
   </div>
+</div>
 </form>
 {% endblock %}
