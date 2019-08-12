@@ -287,8 +287,12 @@ function displayTable(preventPlusFromSubmitting = "") { // displays table when p
        }
       }
     else {
-      console.log('4');
-      if ($('#student').val()=="" || $('#position').val()=="" || $('#jobType').val()=="" || $('#selectedHoursPerWeek').val()=="") {
+      // console.log('4');
+      // console.log('student: ', $('#student').val());
+      // console.log('position: ', $('#position').val());
+      // console.log('jobType: ', $('#jobType').val());
+      // console.log('selectedHoursPerWeek: ', $('#selectedHoursPerWeek').val());
+      if ($('#student').val()==null || $('#position').val()==null || $('#jobType').val()==null || $('#selectedHoursPerWeek').val()==null) {
         console.log('student: ', $('#student').val());
         console.log('position: ', $('#position').val());
         console.log('jobType: ', $('#jobType').val());
