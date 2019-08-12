@@ -31,7 +31,7 @@
               id='selectedSupervisor'
               data-live-search='true'
               title="Supervisor"
-              data-width="320px" >
+              data-width="320px" required>
         {% for staff in staffs %}
           <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.username == staff.PIDM %} selected {% endif %}{% endif %}>{{staff.FIRST_NAME}} {{staff.LAST_NAME}} ({{staff.ID}})</option>
         {% endfor %}
@@ -49,7 +49,7 @@
                 data-live-search='true'
                 title="Department"
                 onchange = "checkCompliance(this); getDepartment(this)"
-                data-width="320px" >
+                data-width="320px" required>
           {% for department in departments %}
             <option value="{{department.DEPT_NAME}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %}>{{department.DEPT_NAME}}</option>
           {% endfor %}
@@ -63,7 +63,7 @@
     <div class="col-10 {% if forms %} has-error {% endif %}">
       <label for="term" class="col-2 col-form-label">Term</label>
           <div class="col-10">
-            <select class="selectpicker disable"
+            <select class="selectpicker disable require"
                     name='term'
                     id='selectedTerm'
                     data-live-search="true"
@@ -85,7 +85,7 @@
       <!--datePicker for start date-->
       <label for="dateTimePicker1" class="col-2 col-form-label" id="datePicker">Start Date</label>
         <div class='input-group date'>
-          <input type='text' class="form-control disable" id='dateTimePicker1' name="startDate" placeholder="Start Date" data-width="320px" onchange="updateEnd(this)" required/>
+          <input type='text' class="form-control disable require" id='dateTimePicker1' name="startDate" placeholder="Start Date" data-width="320px" onchange="updateEnd(this)" required/>
           <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
           </span>
@@ -96,7 +96,7 @@
       <!--datePicker for End date-->
     <label for="dateTimePicker2" class="col-2 col-form-label" id="datePicker">End Date</label>
       <div class='input-group date'>
-          <input type='text' class="form-control disable" id='dateTimePicker2' name="endDate" placeholder="End Date" data-width="320px" onchange="updateStart(this)" required/>
+          <input type='text' class="form-control disable require" id='dateTimePicker2' name="endDate" placeholder="End Date" data-width="320px" onchange="updateStart(this)" required/>
           <span class="input-group-addon">
             <span class="glyphicon glyphicon-calendar"></span>
           </span>
@@ -112,11 +112,11 @@
       <th id="Student" class= "tableContent">
           <!-- selectpicker for student  -->
           <label for="student">Student</label>
-            <select class="selectpicker disable"
+            <select class="selectpicker disable require"
                     name='student'
                     id='student'
                     data-live-search='true'
-                    title="Student">
+                    title="Student" required>
               {% for student in students %}
                   <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %}>{{student.FIRST_NAME}} {{student.LAST_NAME}} ({{student.ID}})</option>
               {% endfor %}
@@ -125,23 +125,23 @@
       <th id="Position" class= "tableContent">
           <!--selectpicker for positio3-->
           <label for="student">Position</label>
-            <select class="selectpicker disable"
+            <select class="selectpicker disable require"
                     name='position'
                     id='position'
                     data-live-search='true'
-                    title="Position">
+                    title="Position" required>
                     <option id="{{forms.POSN_CODE}}" value="{{forms.POSN_TITLE, forms.WLS}}"{% if forms %} selected {% endif %}>{{forms.POSN_TITLE}}</option>
             </select>
         </th>
         <th id="JopTypes" class= "tableContent">
             <!--selectpicker for Job type-->
             <label for="student">Job Type</label>
-              <select class="selectpicker disable"
+              <select class="selectpicker disable makeRequired"
                       name='jobType'
                       id='jobType'
                       data-live-search='true'
                       title="Job Type"
-                      onchange="fillHoursPerWeek()">
+                      onchange="fillHoursPerWeek()" required>
                 <option value="Primary"{% if forms %}{% if forms.jobType == "Primary" %} selected {% endif %}{% endif %}>Primary</option>
                 <option value="Secondary"{% if forms %}{% if forms.jobType == "Secondary" %} selected {% endif %}{% endif %}>Secondary</option>
               </select>
@@ -150,25 +150,25 @@
         <th id="hoursPerWeek" class= "tableContent">
             <!--selectpicker for hrs per week-->
             <label for="student">Hours Per Week</label>
-              <select class="selectpicker disable"
+              <select class="selectpicker disable makeRequired"
                       name='selectedHoursPerWeek'
                       id='selectedHoursPerWeek'
                       data-live-search='true'
-                      title="Hours per week">
+                      title="Hours per week" required>
               <option value="{{forms.weeklyHours}}"{% if forms %} selected {% endif %}>{{forms.weeklyHours}}</option>
               </select>​
         </th>
         <th id="contractHours" class= "tableContent">
         <!-- Contract hours for breaks -->
            <label for="student">Contract Hours</label>
-             <input class="form-control quantity disable"
+             <input class="form-control quantity disable contractHour"
                      type = "number"
                      name='contractHours'
                      id='selectedContractHours'
                      title="Contract Hours"
                      placeholder="Contract Hours"
                      min = "1"
-                     oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0">
+                     oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0" required>
              </input>
         </th>
         <th id="plus" class= "tableContent">
@@ -208,6 +208,7 @@
     <button type="button"
             class="btn btn-primary"
             name = "formSubmission"
+            id="reviewButton"
             value = "formSubmission"
             onclick="reviewButtonFunctionality('preventPlusFromSubmitting')">Review</button>
       {% include "snips/ReviewForm.html" %}

@@ -16,11 +16,6 @@ $(document).on('keyup', 'input[name=contractHours]', function () { // sets contr
        _this.val( min );
 });
 
-// // make fields required.
-// $(".require").prop('required',true);
-// $(".disable").prop('required',true);
-
-
 // Pops up a modal for Seconday Postion
 $('#jobType').change(function(){
   //this is just getting the value that is selected
@@ -270,10 +265,37 @@ function displayTable(preventPlusFromSubmitting = "") { // displays table when p
   var termCode = $('#selectedTerm').val();
   var whichTerm = termCode.toString().substr(-2);
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+    $(".require").prop('required',true);
     checkDuplicateBreaks(preventPlusFromSubmitting);
   }
   else {
-    checkDuplicate(preventPlusFromSubmitting);
+    $(".require").prop('required',true);
+    $('.makeRequired').prop('required',true);
+    $('#selectedContractHours').prop('required',false);
+    if (makeFieldsRequired() == false) {
+      checkDuplicate(preventPlusFromSubmitting);
+    }
+  }
+}
+
+function makeFieldsRequired () {
+  var termCode = $('#selectedTerm').val();
+  var whichTerm = termCode.toString().substr(-2);
+  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+    if ($('#selectedContractHours').val()=="") {
+      category = "danger"
+      msg = "Please fill out all fields before submitting.";
+      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+      $("#flasher").delay(3000).fadeOut()
+    }
+  }
+  else {
+    if ($('.makeRequired').prop('required') == true) {
+      category = "danger"
+      msg = "Please fill out all fields before submitting.";
+      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+      $("#flasher").delay(3000).fadeOut()
+    }
   }
 }
 
