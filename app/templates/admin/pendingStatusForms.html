@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+{{super()}}
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script> -->
+  <script type="text/javascript" src="{{url_for('static', filename='js/pendingStatusForms.js') }}"></script>
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.css"/>
+  <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"rel="stylesheet" type="text/css" />
+{% endblock %}
+
+{% block app_content %}
+
+
+
+<title>
+    Pending Forms
+</title>
+{% for form in pending_status_forms %}
+  <p> Hello, there </p>
+
+{% endfor %}
+
+{% endblock %}

@@ -116,13 +116,11 @@ def termStatusCheck():
             #print(type(rsp['deptName']))
             term = Term.get(rsp['termBtn'])
             print("this is the term " + str(term))
-            print("Before:")
             print(term.termState)
             if term.termState == True:
                 term.termState = False
             elif term.termState == False:
                 term.termState = True
-            print("After:")
             print(term.termState)
             term.save()
             print("worked")
