@@ -19,20 +19,23 @@ from flask import Flask, redirect, url_for, flash
 from app import cfg
 
 @main_bp.route('/laborstatusform', methods=['GET'])
-@main_bp.route('/laborstatusform/<formID>', methods=['GET'])
-def laborStatusForm(formID = None):
+@main_bp.route('/laborstatusform/<laborStatusKey>', methods=['GET'])
+def laborStatusForm(laborStatusKey = None):
+    """ Render labor Status Form, and pre-populate LaborStatusForm page with the correct information when redirected from Labor History."""
     currentUser = require_login()
     if not currentUser:        # Not logged in
         return render_template('errors/403.html')
     # Logged in
-    wls = STUPOSN.select(STUPOSN.WLS).distinct()
-    posnCode = STUPOSN.select(STUPOSN.POSN_CODE).distinct()
-    forms = LaborStatusForm.select()
+    wls = STUPOSN.select(STUPOSN.WLS).distinct() # getting WLS from TRACY
+    posnCode = STUPOSN.select(STUPOSN.POSN_CODE).distinct() # getting position code from TRACY
     students = STUDATA.select().order_by(STUDATA.FIRST_NAME.asc()) # getting student names from TRACY
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
     staffs = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # getting supervisors from TRACY
-    departments = STUPOSN.select(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT).distinct() # getting deparmtent names from TRACY
-
+    departments = STUPOSN.select(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT).distinct() # getting department names from TRACY
+    if laborStatusKey != None:
+        forms = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey) # getting labor status form id, to prepopulate laborStatusForm.
+    else:
+        forms = None
     return render_template( 'main/laborStatusForm.html',
 				            title=('Labor Status Form'),
                             username = currentUser,
@@ -44,6 +47,7 @@ def laborStatusForm(formID = None):
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
+    """ Create labor status form. Create labor history form."""
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         if rsp:
@@ -62,9 +66,9 @@ def userInsert():
                 d, created = Term.get_or_create(termCode = data['Term'])
                 term = d.termCode
                 start = data['Start Date']
-                startDate = datetime.strptime(start, "%m-%d-%Y")
+                startDate = datetime.strptime(start, "%m/%d/%Y").strftime('%Y-%m-%d')
                 end = data['End Date']
-                endDate = datetime.strptime(end, "%m-%d-%Y")
+                endDate = datetime.strptime(end, "%m/%d/%Y").strftime('%Y-%m-%d')
                 lsf = LaborStatusForm.create(termCode = term,
                                              studentSupervisee = student,
                                              supervisor = primarySupervisor,
@@ -95,16 +99,18 @@ def userInsert():
 
 @main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])
 def getDates(termcode):
+    """ Get the start and end dates of the selected term. """
     dates = Term.select().where(Term.termCode == termcode)
     datesDict = {}
     for date in dates:
         start = date.termStart
         end  = date.termEnd
-        datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m-%d-%Y")  , "End Date": datetime.strftime(end, "%m-%d-%Y")}
+        datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
     return json.dumps(datesDict)
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
 def getPositions(department):
+    """ Get all of the positions that are in the selected department """
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
     positionDict = {}
     for position in positions:
@@ -113,6 +119,7 @@ def getPositions(department):
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
 def checkForPrimaryPosition(termCode, student):
+    """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     primaryPositions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.jobType == "Primary", LaborStatusForm.studentSupervisee == student)
     primaryPositionsDict = {}
     for primary_position in primaryPositions:
@@ -122,6 +129,7 @@ def checkForPrimaryPosition(termCode, student):
 
 @main_bp.route("/laborstatusform/gethours/<termCode>/<student>", methods=["GET"])
 def checkForTotalHours(termCode, student):
+    """ Calculates total weekly hours of a student and returns the total. """
     hours = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
     total = 0
     hoursDict = {}
@@ -132,6 +140,7 @@ def checkForTotalHours(termCode, student):
 
 @main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
 def checkCompliance(department):
+    """ Gets the compliance status of a department. """
     depts = Department.select().where(Department.DEPT_NAME == department)
     deptDict = {}
     for dept in depts:
