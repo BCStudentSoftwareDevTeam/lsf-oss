@@ -16,11 +16,6 @@ $(document).on('keyup', 'input[name=contractHours]', function () { // sets contr
        _this.val( min );
 });
 
-// // make fields required.
-// $(".require").prop('required',true);
-// $(".disable").prop('required',true);
-
-
 // Pops up a modal for Seconday Postion
 $('#jobType').change(function(){
   //this is just getting the value that is selected
@@ -270,10 +265,37 @@ function displayTable(preventPlusFromSubmitting = "") { // displays table when p
   var termCode = $('#selectedTerm').val();
   var whichTerm = termCode.toString().substr(-2);
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+    $(".require").prop('required',true);
     checkDuplicateBreaks(preventPlusFromSubmitting);
   }
   else {
-    checkDuplicate(preventPlusFromSubmitting);
+    $(".require").prop('required',true);
+    $('.makeRequired').prop('required',true);
+    $('#selectedContractHours').prop('required',false);
+    if (makeFieldsRequired() == false) {
+      checkDuplicate(preventPlusFromSubmitting);
+    }
+  }
+}
+
+function makeFieldsRequired () {
+  var termCode = $('#selectedTerm').val();
+  var whichTerm = termCode.toString().substr(-2);
+  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+    if ($('#selectedContractHours').val()=="") {
+      category = "danger"
+      msg = "Please fill out all fields before submitting.";
+      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+      $("#flasher").delay(3000).fadeOut()
+    }
+  }
+  else {
+    if ($('.makeRequired').prop('required') == true) {
+      category = "danger"
+      msg = "Please fill out all fields before submitting.";
+      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+      $("#flasher").delay(3000).fadeOut()
+    }
   }
 }
 
@@ -548,7 +570,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
     for (var key in allTableDataDict) {
       var student = allTableDataDict[key]["Student"];
-      var studentName = student.substring(0, student.indexOf('B0'));
+      var studentName = student.substring(0, student.indexOf('(B0'));
       var position = allTableDataDict[key]["Position"];
       var selectedContractHours = allTableDataDict[key]["Contract Hours"];
       var bigString = "<li>" + studentName + ' | ' + position + ' | ' + selectedContractHours + ' Hours';
@@ -563,7 +585,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
   else {
     for (var key in allTableDataDict) {
       var student = allTableDataDict[key]["Student"];
-      var studentName = student.substring(0, student.indexOf('B0'));
+      var studentName = student.substring(0, student.indexOf('(B0'));
       var position = allTableDataDict[key]["Position"];
       var jobType = allTableDataDict[key]["Job Type"];
       var hours = allTableDataDict[key]["Hours Per Week"];
@@ -658,15 +680,16 @@ function userInsert(){
            if (response){
              for (var key in allTableDataDict) {
                var student = allTableDataDict[key]["Student"];
+               var studentName = student.substring(0, student.indexOf('(B0'));
                var position = allTableDataDict[key]["Position"];
                var selectedContractHours = allTableDataDict[key]["Contract Hours"];
                var jobType = allTableDataDict[key]["Job Type"];
                var hours = allTableDataDict[key]["Hours Per Week"];
                if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-                 var bigString = "<li>" +"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + selectedContractHours;
+                 var bigString = "<li>" +"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + studentName + ' | ' + position + ' | ' + selectedContractHours;
                }
                else {
-                 var bigString = "<li>"+"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
+                 var bigString = "<li>"+"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + studentName + ' | ' + position + ' | ' + jobType + ' | ' + hours;
               }
               modalList.push(bigString)
             }
@@ -675,15 +698,16 @@ function userInsert(){
           else {
             for (var key in allTableDataDict) {
                var student = allTableDataDict[key]["Student"];
+               var studentName = student.substring(0, student.indexOf('(B0'));
                var position = allTableDataDict[key]["Position"];
                var selectedContractHours = allTableDataDict[key]["Contract Hours"];
                var hours = allTableDataDict[key]["Hours Per Week"];
 
               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-               var bigString = "<li>" +"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + selectedContractHours;
+               var bigString = "<li>" +"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + studentName + ' | ' + position + ' | ' + selectedContractHours;
               }
               else {
-                var bigString = "<li>"+"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
+                var bigString = "<li>"+"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + studentName + ' | ' + position + ' | ' + jobType + ' | ' + hours;
               }
               modalList.push(bigString)
             }

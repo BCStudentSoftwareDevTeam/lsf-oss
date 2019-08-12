@@ -32,8 +32,17 @@ def laborStatusForm(laborStatusKey = None):
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
     staffs = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # getting supervisors from TRACY
     departments = STUPOSN.select(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT).distinct() # getting department names from TRACY
+
+    # Only prepopulate form if current user is the supervisor or creator of the form.
     if laborStatusKey != None:
-        forms = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey) # getting labor status form id, to prepopulate laborStatusForm.
+        selectedLSForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+        selectedFormHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
+        creator = selectedFormHistory.createdBy.username
+        supervisor = selectedLSForm.supervisor.username
+        if currentUser.username == supervisor or currentUser.username == creator:
+            forms = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey) # getting labor status form id, to prepopulate laborStatusForm.
+        else:
+            forms = None
     else:
         forms = None
     return render_template( 'main/laborStatusForm.html',
