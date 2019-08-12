@@ -2,119 +2,203 @@
 
 {% block scripts %}
 {{super()}}
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
 <script type="text/javascript" src="{{url_for('static', filename='js/index.js') }}"></script>
 {% endblock %}
 
 {% block styles %}
 {{super()}}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.css"/>
+<link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"rel="stylesheet" type="text/css" />
 {% endblock %}
-
 {% block app_content %}
 
 <link rel="stylesheet" type="text/css" href="/static/css/index.css" />
-<div align= "right">
 
 <!-- header -->
-    <div align="center">
-      <h1>Supervisor Portal</h1>
-      <h3 id="portalTitle" >Current Students</h3>
-    </div>
+<div align="center">
+  <h1>Supervisor Portal</h1>
+  <h3 id="portalTitle" >Current Students</h3>
+</div>
 
-    <div align= "right"><button class="btn btn-success" data-toggle="modal" data-target="#downloadModal">Download</button></div>
-    <br/>
+<div class="col-md-2"></div>
+  <div class="col-md-8" align= "right">
+    <button class="btn btn-success" id="download" data-toggle="modal" data-target="#downloadModal">Download</button>
+  </div>
+<div class="col-md-2"></div>
+
 
 <!-- start of modal -->
 <form target="frame" method="POST">
-     <div class="modal fade" id="downloadModal" role="dialog" >
-         <div class="modal-dialog">
-
-           <div class="modal-content" align="center">
-             <div class="modal-header" align="center">
-
-               <h4 class="modal-title">Please select what you would like to download.</h4>
-             </div>
-
-             <div  class="modal-body">
-                <input type="checkbox" name="student" id="select-all"> <b>Select all</b>
-
-               {% for form in active_supervisees %}
-               <label class="container" id="currentStu">
-                  <input class='actStu' type="checkbox" id ='{{form.laborStatusFormID}}' name='{{form.studentSupervisee.ID}}' value='{{form.laborStatusFormID}}'>
-                  {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}
-                </label>
-                {% endfor %}
-             {% for form in inactive_supervisees %}
-               <label class="container" id="pastStu" style="display:none">
-                  <input class='pastStu' type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.studentSupervisee.ID}}' value='{{form.laborStatusFormID}}' disabled>
-                  {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}
-                </label>
-                {% endfor %}
-
-             </div>
-
-             <div class="modal-footer" align="center">
-                 <button  class="btn btn-danger" id="closeButton" onclick="downloadHistory()" data-dismiss="modal">Close</button>
-                 <button type="submit" value="Submit" class="btn btn-success" id="modal">Download</button>
-             </div>
-
-           </div>
-
-         </div>
+ <div class="modal fade" id="downloadModal" role="dialog" >
+   <div class="modal-dialog">
+     <div class="modal-content" align="center">
+       <div class="modal-header" align="center">
+         <h4 class="modal-title">Please select what you would like to download.</h4>
        </div>
+       <div class="modal-body">
+          <input type="checkbox" name="student" id="select-all"> <b>Select all</b>
+
+          <!-- Populate the modal with the current students of user -->
+          <div class="currentStu">
+          {% for form in currentSupervisees %}
+          <label class="container">
+            <input class="currentStudentModal" type="checkbox" id ='{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}'>
+              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}
+          </label>
+          {% endfor %}
+          </div>
+
+          <!-- Populate the modal with the past students of user who are still students -->
+          <div class="pastStu" style="display:none">
+          {% for form in pastSupervisees %}
+          <label class="container">
+            <input class="pastStudentModal" type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}' disabled>
+              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}
+          </label>
+          {% endfor %}
+          </div>
+
+          <!-- Populate the modal with the past students of user who are no longer students-->
+          <div class="pastStu" style="display:none">
+          {% for form in inactiveSupervisees %}
+          <label class="container">
+            <input class="pastStudentModal" type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}' disabled>
+              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} <strong>(No longer a student.)</strong>
+          </label>
+          {% endfor %}
+          </div>
+
+          <!-- Populate the modal with the all students of the user's department -->
+          <div class="allDeptStu" style="display:none">
+          {% for form in allDepartmentStudents %}
+          <label class="container">
+            <input class="allDepartmentModal" type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}' disabled>
+              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.termCode.termName}})
+          </label>
+          {% endfor %}
+          </div>
+
+          <!-- Populate the modal with the current students of the user's department -->
+          <div class="currentDeptStu" style="display:none">
+          {% for form in currentDepartmentStudents %}
+          <label class="container">
+            <input class="currentDepartmentModal" type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}' disabled>
+              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.termCode.termName}})
+          </label>
+          {% endfor %}
+          </div>
+       </div>
+       <div class="modal-footer" align="center">
+         <button  class="btn btn-danger" id="closeButton" onclick="downloadHistory()" data-dismiss="modal">Close</button>
+         <button type="submit" value="Submit" class="btn btn-success" id="modal">Download</button>
+       </div>
+     </div>
+   </div>
+  </div>
 </form>
 <!-- end of modal-->
 
-
-
-
 <!-- Start of data-table that will display the supervisee -->
-    <div class="col-md-3"></div>
-    <div class="col-md-6" align="center" >
-    <table id="studentList" class="table table-striped studentTable" >
-      <thead>
-        <tr>
-          <th> </th>
-        </tr>
-      </thead>
+<div class="col-md-3"></div>
+<div class="col-md-7" align="center" >
+  <table id="studentList" class="table table-striped studentTable" >
+    <!-- Made empty header tags because we need to hide the header -->
+    <thead>
+      <tr>
+        <th> </th>
+        <th> </th>
+      </tr>
+    </thead>
 
-  <!-- Display all the current students by going through active_supervisees list from main_route.py -->
+    <!-- Display all the current students by going through currentSupervisees list from main_route.py -->
+    {% for form in currentSupervisees %}
+      <tr>
+        <td><a href="/laborHistory/{{form.studentSupervisee.ID}}" value=0>
+          <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span></a>
+          <br />
+          <span class="pushLeft h6"> {{form.termCode.termName}} - {{form.POSN_TITLE}} - {{form.department.DEPT_NAME}}</span>
+        </td>
+        <td style="display:none">My Current Students</td>
+      </tr>
+    {% endfor %}
+    <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
+    <tr class="currentStu">
+      <td style="display:none"></td>
+      <td style="display:none">My Current Students</td>
+    </tr>
 
-        {% for form in active_supervisees %}
-        <tr id="currentStu" name="currentStu">
-          <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
-            <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span></a>
-              <br />
-            <span class="pushLeft h6">{{form.POSN_TITLE}} - {{form.department.DEPT_NAME}}</span>
-          </td>
-        </tr>
-        {% endfor %}
-        <tr id="currentStu" >
-          <td style="display:none"></td>
+    <!-- Display all the current students by going through pastSupervisees list from main_route.py -->
+    {% for form in pastSupervisees %}
+      <tr>
+        <td><a href="/laborHistory/{{form.studentSupervisee.ID}}" value=0>
+          <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span></a>
+          <br />
+          <span class="pushLeft h6"> {{form.termCode.termName}} - {{form.POSN_TITLE}} - {{form.department.DEPT_NAME}}</span>
+        </td>
+        <td style="display:none">My Past Students</td>
+      </tr>
+    {% endfor %}
+    <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
+    <tr class="currentStu">
+      <td style="display:none"></td>
+      <td style="display:none">My Past Students</td>
+    </tr>
 
+    <!-- Display all the current students by going through inactiveSupervisees list from main_route.py -->
+    {% for form in inactiveSupervisees %}
+    <tr>
+      <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
+        <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span></a>
+        <br />
+        <span class="pushLeft h6"> No longer a student.</span>
+      </td>
+      <td style="display:none">My Past Students</td>
+    </tr>
+    {% endfor %}
+    <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
+    <tr class="pastStu">
+      <td style="display:none"></td>
+      <td style="display:none">My Past Students</td>
+    </tr>
 
+    <!--Populate the datatable with all the students from the currents users department -->
+    {% for student in allDepartmentStudents %}
+      <tr>
+        <td><a href="/laborHistory/{{student.studentSupervisee.ID}}">
+          <span class="h4">{{student.studentSupervisee.FIRST_NAME}} {{student.studentSupervisee.LAST_NAME}} ({{student.studentSupervisee.ID}})</span></a>
+          <br />
+          <span class="pushLeft h6"> {{student.termCode.termName}} - {{student.POSN_TITLE}} - {{student.department.DEPT_NAME}}</span>
+        </td>
+        <td style="display:none">All Department Students</td>
+      </tr>
+    {% endfor %}
+    <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
+    <tr class="allDepartmentStudents" style="display:none">
+      <td style="display:none"></td>
+      <td style="display:none">All Department Students</td>
+    </tr>
 
-  <!-- Display all the current students by going through active_supervisees list from main_route.py -->
-
-        {% for form in inactive_supervisees %}
-          <tr id="pastStu" style="display:none">
-            <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
-              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})
-              <P>No longer a student</P>
-            </a></td>
-          </tr>
-        {% endfor %}
-        <tr id="pastStu">
-        <td style="display:none"></td>
-
-
-      </table>
-
-    </div>
-    <div class="col-md-3">
+    <!-- Populate the datatable with all the students currently employed by the department -->
+    {% for student in currentDepartmentStudents %}
+      <tr>
+        <td><a href="/laborHistory/{{student.studentSupervisee.ID}}">
+          <span class="h4">{{student.studentSupervisee.FIRST_NAME}} {{student.studentSupervisee.LAST_NAME}} ({{student.studentSupervisee.ID}})</span></a>
+          <br />
+          <span class="pushLeft h6"> {{student.termCode.termName}} - {{student.POSN_TITLE}} - {{student.department.DEPT_NAME}}</span>
+        </td>
+      <td style="display:none">Current Department Students</td>
+      </tr>
+    {% endfor %}
+    <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
+    <tr class="currentDepartmentStudents" style="display:none">
+      <td style="display:none"></td>
+      <td style="display:none">Current Department Students</td>
+    </tr>
+  </table>
 </div>
+<div class="col-md-2"></div>
 <!-- End of data-table that will display the supervisee -->
 
 <!-- Keeps modal form closing when submit( Download ) button is pressed -->

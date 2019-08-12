@@ -87,7 +87,6 @@ class ExcelMaker:
                                 'Supervisor Notes'])
         ## fill infomations ##
             for form in downloadForms:
-                print(form.POSN_TITLE)
                 filewriter.writerow([form.studentSupervisee.FIRST_NAME + " " + form.studentSupervisee.LAST_NAME,
                                     form.studentSupervisee.ID,
                                     form.POSN_TITLE,
