@@ -548,7 +548,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
     for (var key in allTableDataDict) {
       var student = allTableDataDict[key]["Student"];
-      var studentName = student.substring(0, student.indexOf('B0'));
+      var studentName = student.substring(0, student.indexOf('(B0'));
       var position = allTableDataDict[key]["Position"];
       var selectedContractHours = allTableDataDict[key]["Contract Hours"];
       var bigString = "<li>" + studentName + ' | ' + position + ' | ' + selectedContractHours + ' Hours';
@@ -563,7 +563,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
   else {
     for (var key in allTableDataDict) {
       var student = allTableDataDict[key]["Student"];
-      var studentName = student.substring(0, student.indexOf('B0'));
+      var studentName = student.substring(0, student.indexOf('(B0'));
       var position = allTableDataDict[key]["Position"];
       var jobType = allTableDataDict[key]["Job Type"];
       var hours = allTableDataDict[key]["Hours Per Week"];
@@ -658,15 +658,16 @@ function userInsert(){
            if (response){
              for (var key in allTableDataDict) {
                var student = allTableDataDict[key]["Student"];
+               var studentName = student.substring(0, student.indexOf('(B0'));
                var position = allTableDataDict[key]["Position"];
                var selectedContractHours = allTableDataDict[key]["Contract Hours"];
                var jobType = allTableDataDict[key]["Job Type"];
                var hours = allTableDataDict[key]["Hours Per Week"];
                if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-                 var bigString = "<li>" +"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + selectedContractHours;
+                 var bigString = "<li>" +"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + studentName + ' | ' + position + ' | ' + selectedContractHours;
                }
                else {
-                 var bigString = "<li>"+"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
+                 var bigString = "<li>"+"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + studentName + ' | ' + position + ' | ' + jobType + ' | ' + hours;
               }
               modalList.push(bigString)
             }
@@ -675,15 +676,16 @@ function userInsert(){
           else {
             for (var key in allTableDataDict) {
                var student = allTableDataDict[key]["Student"];
+               var studentName = student.substring(0, student.indexOf('(B0'));
                var position = allTableDataDict[key]["Position"];
                var selectedContractHours = allTableDataDict[key]["Contract Hours"];
                var hours = allTableDataDict[key]["Hours Per Week"];
 
               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-               var bigString = "<li>" +"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + selectedContractHours;
+               var bigString = "<li>" +"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + studentName + ' | ' + position + ' | ' + selectedContractHours;
               }
               else {
-                var bigString = "<li>"+"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
+                var bigString = "<li>"+"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + studentName + ' | ' + position + ' | ' + jobType + ' | ' + hours;
               }
               modalList.push(bigString)
             }
