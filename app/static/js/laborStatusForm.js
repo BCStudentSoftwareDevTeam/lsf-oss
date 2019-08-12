@@ -261,7 +261,7 @@ function deleteRow(row) { // Deletes Row when remove glyphicon is clicked.
 //END of glyphicons
 
 // TABLE
-function displayTable(preventPlusFromSubmitting = "") { // displays table when plus glyphicon is clicked
+function displayTable(preventPlusFromSubmitting = "") { // displays table when plus glyphicon is clicked and check if fields are filled out
   if ($('#selectedSupervisor').val()=="" || $('#selectedDepartment').val()=="" || $('#selectedTerm').val()=="" || $("#dateTimePicker1").val()=="" || $("#dateTimePicker2").val()=="") {
     category = "danger"
     msg = "Please fill out all fields before submitting.";
@@ -270,84 +270,29 @@ function displayTable(preventPlusFromSubmitting = "") { // displays table when p
 
   }
   else {
-    console.log("1");
     var termCode = $('#selectedTerm').val();
     var whichTerm = termCode.toString().substr(-2);
     if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-      console.log('2');
-      if ($('#student').val()=="" || $('#position').val()=="" || $('#selectedContractHours').val()=="") {
+      if ($('#student').val()=="" || $('#student').val()==null || $('#position').val()=="" || $('#position').val()==null || $('#selectedContractHours').val()=="") {
         category = "danger"
         msg = "Please fill out all fields before submitting.";
         $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
         $("#flasher").delay(3000).fadeOut()
       }
       else {
-        console.log('3');
         checkDuplicateBreaks(preventPlusFromSubmitting);
        }
       }
     else {
-      // console.log('4');
-      // console.log('student: ', $('#student').val());
-      // console.log('position: ', $('#position').val());
-      // console.log('jobType: ', $('#jobType').val());
-      // console.log('selectedHoursPerWeek: ', $('#selectedHoursPerWeek').val());
-      if ($('#student').val()==null || $('#position').val()==null || $('#jobType').val()==null || $('#selectedHoursPerWeek').val()==null) {
-        console.log('student: ', $('#student').val());
-        console.log('position: ', $('#position').val());
-        console.log('jobType: ', $('#jobType').val());
-        console.log('selectedHoursPerWeek: ', $('#selectedHoursPerWeek').val());
+      if ($('#student').val()=="" || $('#student').val()==null || $('#position').val()=="" || $('#position').val()==null || $('#jobType').val()=="" || $('#jobType').val()==null || $('#selectedHoursPerWeek').val()=="" || $('#selectedHoursPerWeek').val()==null) {
         category = "danger"
         msg = "Please fill out all fields before submitting.";
         $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
         $("#flasher").delay(3000).fadeOut()
       }
       else {
-        console.log('5');
         checkDuplicate(preventPlusFromSubmitting);
       }
-    }
-  }
-}
-
-function makeFieldsRequired () {
-  var termCode = $('#selectedTerm').val();
-  var whichTerm = termCode.toString().substr(-2);
-  if ($('#supervisor').val()=="" || $('#department').val()=="" || $('#term').val()=="" || $("#dateTimePicker1").val()=="" || $("#dateTimePicker2").val()=="" || $('#student').val()=="" || $('#position').val()=="") {
-    category = "danger"
-    msg = "Please fill out all fields before submitting.";
-    $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-    $("#flasher").delay(3000).fadeOut()
-
-  }
-  else {
-    return false
-  }
-  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-    if ($('#student').val()=="" || $('#position').val()=="" || $('#selectedContractHours').val()=="") {
-      category = "danger"
-      msg = "Please fill out all fields before submitting.";
-      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-      $("#flasher").delay(3000).fadeOut()
-      return true
-    }
-    else {
-      console.log("I'm here")
-      return false
-    }
-  }
-  else {
-    console.log("I'm here1")
-    if ($('#student').val()=="" || $('#position').val()=="" || $('#jobType').val()=="" || $('#selectedHoursPerWeek').val()=="") {
-      category = "danger"
-      msg = "Please fill out all fields before submitting.";
-      $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-      $("#flasher").delay(3000).fadeOut()
-      return true
-    }
-    else {
-      console.log("I'm here2")
-      return false
     }
   }
 }
@@ -602,15 +547,30 @@ function createAndFillTableForBreaks(preventPlusFromSubmitting = '') {// Fills t
 // END OF (THIS IS FOR BREAKSSSS)
 
 
-function reviewButtonFunctionality(preventPlusFromSubmitting) { // Triggred when Review button is clicked
-  if( !$('#student').val() ) {
-    var rowLength = document.getElementById("mytable").rows.length;
-    if (rowLength > 1) {
-       createModalContent();
-    }
+function reviewButtonFunctionality(preventPlusFromSubmitting) { // Triggred when Review button is clicked and checks if fields are filled out. 
+  if ($('#selectedSupervisor').val()=="" || $('#selectedDepartment').val()=="" || $('#selectedTerm').val()=="" || $("#dateTimePicker1").val()=="" || $("#dateTimePicker2").val()=="") {
+    category = "danger"
+    msg = "Please fill out all fields before submitting.";
+    $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+    $("#flasher").delay(3000).fadeOut()
   }
-  else{
-    displayTable(preventPlusFromSubmitting); // the passed argument is used to prevent plus glyphicon from submitting the form.
+  else {
+
+    if( !$('#student').val() ) {
+      var rowLength = document.getElementById("mytable").rows.length;
+      if (rowLength > 1) {
+         createModalContent();
+      }
+      else {
+        category = "danger"
+        msg = "Please fill out all fields before submitting.";
+        $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+        $("#flasher").delay(3000).fadeOut()
+      }
+    }
+    else{
+      displayTable(preventPlusFromSubmitting); // the passed argument is used to prevent plus glyphicon from submitting the form.
+    }
   }
 }
 
