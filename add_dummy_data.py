@@ -210,7 +210,7 @@ staffs = [
             "EMAIL"  :"heggens@berea.edu",
             "CPO":"6300",
             "ORG":"Berea College",
-            "DEPT_NAME": "CS"
+            "DEPT_NAME": "Computer Science"
             },
 
             {
@@ -221,7 +221,7 @@ staffs = [
             "EMAIL"  :"pearcej@berea.edu",
             "CPO":"6301",
             "ORG":"Berea College",
-            "DEPT_NAME": "CS"
+            "DEPT_NAME": "Biology"
             },
 
             {
@@ -232,7 +232,7 @@ staffs = [
             "EMAIL"  :"nakazawam@berea.edu",
             "CPO":"6300",
             "ORG":"Berea College",
-            "DEPT_NAME": "CS"
+            "DEPT_NAME": "Mathematics"
             }
 
 
