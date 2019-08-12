@@ -262,18 +262,46 @@ function deleteRow(row) { // Deletes Row when remove glyphicon is clicked.
 
 // TABLE
 function displayTable(preventPlusFromSubmitting = "") { // displays table when plus glyphicon is clicked
-  var termCode = $('#selectedTerm').val();
-  var whichTerm = termCode.toString().substr(-2);
-  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-    $(".require").prop('required',true);
-    checkDuplicateBreaks(preventPlusFromSubmitting);
+  if ($('#selectedSupervisor').val()=="" || $('#selectedDepartment').val()=="" || $('#selectedTerm').val()=="" || $("#dateTimePicker1").val()=="" || $("#dateTimePicker2").val()=="") {
+    category = "danger"
+    msg = "Please fill out all fields before submitting.";
+    $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+    $("#flasher").delay(3000).fadeOut()
+
   }
   else {
-    $(".require").prop('required',true);
-    $('.makeRequired').prop('required',true);
-    $('#selectedContractHours').prop('required',false);
-    if (makeFieldsRequired() == false) {
-      checkDuplicate(preventPlusFromSubmitting);
+    console.log("1");
+    var termCode = $('#selectedTerm').val();
+    var whichTerm = termCode.toString().substr(-2);
+    if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+      console.log('2');
+      if ($('#student').val()=="" || $('#position').val()=="" || $('#selectedContractHours').val()=="") {
+        category = "danger"
+        msg = "Please fill out all fields before submitting.";
+        $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+        $("#flasher").delay(3000).fadeOut()
+      }
+      else {
+        console.log('3');
+        checkDuplicateBreaks(preventPlusFromSubmitting);
+       }
+      }
+    else {
+      console.log('4');
+      if ($('#student').val()=="" || $('#position').val()=="" || $('#jobType').val()=="" || $('#selectedHoursPerWeek').val()=="") {
+        console.log('student: ', $('#student').val());
+        console.log('position: ', $('#position').val());
+        console.log('jobType: ', $('#jobType').val());
+        console.log('selectedHoursPerWeek: ', $('#selectedHoursPerWeek').val());
+        category = "danger"
+        msg = "Please fill out all fields before submitting.";
+        $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+        $("#flasher").delay(3000).fadeOut()
+      }
+      else {
+        console.log('5');
+        checkDuplicate(preventPlusFromSubmitting);
+      }
     }
   }
 }
@@ -281,20 +309,41 @@ function displayTable(preventPlusFromSubmitting = "") { // displays table when p
 function makeFieldsRequired () {
   var termCode = $('#selectedTerm').val();
   var whichTerm = termCode.toString().substr(-2);
+  if ($('#supervisor').val()=="" || $('#department').val()=="" || $('#term').val()=="" || $("#dateTimePicker1").val()=="" || $("#dateTimePicker2").val()=="" || $('#student').val()=="" || $('#position').val()=="") {
+    category = "danger"
+    msg = "Please fill out all fields before submitting.";
+    $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+    $("#flasher").delay(3000).fadeOut()
+
+  }
+  else {
+    return false
+  }
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-    if ($('#selectedContractHours').val()=="") {
+    if ($('#student').val()=="" || $('#position').val()=="" || $('#selectedContractHours').val()=="") {
       category = "danger"
       msg = "Please fill out all fields before submitting.";
       $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
       $("#flasher").delay(3000).fadeOut()
+      return true
+    }
+    else {
+      console.log("I'm here")
+      return false
     }
   }
   else {
-    if ($('.makeRequired').prop('required') == true) {
+    console.log("I'm here1")
+    if ($('#student').val()=="" || $('#position').val()=="" || $('#jobType').val()=="" || $('#selectedHoursPerWeek').val()=="") {
       category = "danger"
       msg = "Please fill out all fields before submitting.";
       $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
       $("#flasher").delay(3000).fadeOut()
+      return true
+    }
+    else {
+      console.log("I'm here2")
+      return false
     }
   }
 }
@@ -680,7 +729,7 @@ function userInsert(){
            if (response){
              for (var key in allTableDataDict) {
                var student = allTableDataDict[key]["Student"];
-               var studentName = student.substring(0, student.indexOf('(B0'));
+               var studentName= student.substring(0, student.indexOf('(B0'));
                var position = allTableDataDict[key]["Position"];
                var selectedContractHours = allTableDataDict[key]["Contract Hours"];
                var jobType = allTableDataDict[key]["Job Type"];
