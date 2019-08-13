@@ -14,30 +14,31 @@
 .floatleft {
 float: left;
 width: 47%;
+height: 370px;
 }
+
 .floatright {
 float: right;
 width: 47%;
+height: 370px;
 }
 
-/* .removePadding{
-  padding-left: 0px;
-  width: 100%;
-} */
+.setSelectpickerHeight {
+  height: 59px;
+}
 
 #mytable {
   table-layout: fixed;
   border-collapse: collapse;
-  width: 98%;
+  width: 100%;
 }
 
-/* #mytable tr:nth-child(odd) {
+#mytable tr:nth-child(odd) {
   background-color: #f2f2f2;
-} */
+}
 
 #mytable th, #mytable td {
   text-align: center;
-  border-bottom: 1px solid #ddd;
   word-wrap: break-word;
 }
 
@@ -45,21 +46,28 @@ selectpicker, label {
   display: block;
 }
 
-/* .tableContent {
-  float:left;
-  padding-right: 5px;
-  width: 225px;
-  height: 59px;
-} */
+.col-xs-12 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+#endDateStyle {
+  padding-left: 7px;
+  padding-right: 0px;
+  width: 50%;
+}
+
+#startDateStyle {
+  padding-right: 7px;
+  padding-left: 0px;
+  width: 50%;
+
+}
 
 #plus {
   margin-top: 18px;
   width: 0px;
 }
-
-/* #datepicker {
-  padding-right: 0px;
-} */
 
 #glyphicon{
       font-size: 29px;
@@ -80,8 +88,6 @@ selectpicker, label {
   padding-left: 26px;
 }
 
-#review-button {
-  text-align: right;
-  padding-top: 30px;
-  padding-bottom: 10px;
+#reviewButton {
+  float: right;
 }
