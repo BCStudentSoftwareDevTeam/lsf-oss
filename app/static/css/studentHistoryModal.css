@@ -35,3 +35,8 @@ p {
     overflow: -moz-scrollbars-vertical;
     overflow-y: scroll;
     }
+
+.rejectReasonTextArea {
+    overflow: -moz-scrollbars-vertical;
+    overflow-y: scroll;
+    }

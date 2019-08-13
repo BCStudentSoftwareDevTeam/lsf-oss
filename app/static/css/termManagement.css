@@ -1,22 +1,13 @@
-/* Style the buttons that are used to open and close the accordion panel */
-/* .accordion {
-  background-color: #eee;
-  color: #444;
-  cursor: pointer;
-  padding: 18px;
-  width: 100%;
-  text-align: left;
-  border: none;
-  outline: none;
-  transition: 0.4s;
-} */
-
-#termname {
+#termHeader {
   text-align: center;
   font-weight: 650;
 }
 
-#p {
+#tableHeaders {
+  font-size: 16px;
+}
+
+#subHeader {
   text-align: center;
 }
 
@@ -25,36 +16,19 @@
   padding-top: 14px;
 }
 
-#academicYear {
-  font-size: 18px;
-  font-weight: 550;
-}
-
-/*#container {
+#wrapper {
   position: relative;
   left: 105px;
   top: 20px;
-}*/
+}
 
-#datepicker {
+.btn-link {
+  width: 100%;
+  text-align: left;
+}
+
+.input-group {
   width: 79%;
-}
-
-#rowHeaders {
-  padding-left: 50px;
-  padding-top: 14px;
-  font-size: 16px;
-}
-
-#dates {
-  padding-left: 90px;
-  padding-top: 14px;
-  font-size: 16px;
-}
-
-#stateDate {
-  padding-top: 14px;
-  font-size: 16px;
 }
 
 .btn-med{
@@ -64,17 +38,26 @@
 .glyphicon-bookmark {
   visibility: visible;
   width: 20px;
-  color: #000000;
   border-radius: 6px;
   padding: 5px;
 }
 
-/* .active, .accordion:hover {
-  background-color: #1C78BB;;
-} */
+.card-header {
+  background-color: #efebeb;
+  margin-bottom: 7px;
+}
 
-.ui-accordion-header.ui-state-active { background-color: #1C78BB; }
+.mb-0, .collapsed {
+  outline-color: none;
+  color: black;
+  font-size: 18px;
+  font-weight: 550;
+}
 
-/* .x-accordion-heading .x-accordion-toggle {
-  background-color: #1C78BB;
-} */
+.active, .btn-link:focus {
+  background-color: #66c2cc;
+}
+
+.active, .card-header:hover {
+  background-color: #66c2cc;
+}
