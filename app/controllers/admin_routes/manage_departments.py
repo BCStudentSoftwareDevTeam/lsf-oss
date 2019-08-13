@@ -29,14 +29,10 @@ def manage_departments():
     departmentTracy = STUPOSN.select(STUPOSN.DEPT_NAME).distinct()
     # tracyDepartmentList = []
     for dept in departmentTracy:
-        print(dept.DEPT_NAME)
         d, created = Department.get_or_create(DEPT_NAME = dept.DEPT_NAME)
-        print(created)
-        print("After get/Create", d.DEPT_NAME)
         d.ACCOUNT = dept.ACCOUNT
         d.ORG = dept.ORG
         d.save()
-        print("D saved", d.ORG)
     department = Department.select()
     return render_template( 'admin/manageDepartments.html',
     title = ("Manage departments"),
@@ -49,19 +45,12 @@ def complianceStatusCheck():
     """
     This function changes the compliance status in the database for labor status forms.  It works in collaboration with the ajax call in manageDepartments.js
     """
-    #print("Starting compliance changer")
     try:
-        #print("Get request")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
-        #print(rsp)
         if rsp:
-            #print("Getting department name", rsp['deptName'])
-            #print(type(rsp['deptName']))
             department = Department.get(int(rsp['deptName']))
-            #print(department)
             department.departmentCompliance = not department.departmentCompliance
             department.save()
-            #print("worked")
             return jsonify({"Success": True})
     except Exception as e:
         #print(e)
