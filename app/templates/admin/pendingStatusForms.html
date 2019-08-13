@@ -16,7 +16,6 @@
 {% block title %}
 {{super()}}
     Pending Forms
-
 {% endblock %}
 
 {% block app_content %}
@@ -27,26 +26,61 @@
     <!-- Made empty header tags because we need to hide the header -->
     <thead>
       <tr id="tableHeaders">
+        <th> Approve </th>
         <th>Students</th>
         <th>Department</th>
         <th>Term</th>
         <th>Supervisor</th>
-        <th>Postion</th>
-        <th>WLS</th>
+        <th>Position (WLS)</th>
         <th>Hours</th>
-        <th>Form Submission Date</th>
-        <th>Labor Start Date</th>
+        <th>Created</th>
+        <th>Contract Dates</th>
+        <th> Edit </th>
+
+
+
 
       </tr>
     </thead>
     <tbody>
-      {% for form in pending_status_forms %}
+      {% for formHistory in pending_labor_forms %}
+      <tr>
+        <td>
+          <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' />
+        </td>
       <td>
-        <p> {{form.historyType}} </p>
+        {{formHistory.formID.studentSupervisee.FIRST_NAME}} {{formHistory.formID.studentSupervisee.LAST_NAME}}
+      </td>
+      <td>
+        {{formHistory.formID.department.DEPT_NAME}}
       </td>
 
+      <td>
+        {{formHistory.formID.termCode.termName}}
+      </td>
+      <td>
+        {{formHistory.formID.supervisor.FIRST_NAME}} {{formHistory.formID.supervisor.LAST_NAME}}
+      </td>
+      <td>
+        {{formHistory.formID.POSN_TITLE}} ({{formHistory.formID.WLS}})
+      </td>
+      <td>
+        {% if formHistory.formID.weeklyHours != None%} {{formHistory.formID.weeklyHours}} {% else %}   {{formHistory.formID.contractHours}} {% endif %}
+      </td>
+      <td>
+        {{formHistory.createdBy.username}}  <br/> {{formHistory.createdDate.strftime('%m/%d/%y')}}
+      </td>
+      <td>
+         {{formHistory.formID.startDate.strftime('%m/%d/%y')}} -  {{formHistory.formID.endDate.strftime('%m/%d/%y')}}
+      </td>
+      <td>
+        <span id="edit_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil"> </span>
+      </td>
+
+
+      </tr>
+      {% endfor %}
     </tbody>
-    {% endfor %}
     </div>
 
 
