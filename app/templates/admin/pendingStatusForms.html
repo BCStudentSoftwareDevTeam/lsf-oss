@@ -13,16 +13,19 @@
   <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"rel="stylesheet" type="text/css" />
 {% endblock %}
 
+{% block title %}
+{{super()}}
+    Pending Forms
+
+{% endblock %}
+
 {% block app_content %}
 
 
-
-<title>
-    Pending Forms
-</title>
 {% for form in pending_status_forms %}
-  <p> Hello, there </p>
+  <p> {{form.historyType}} </p>
 
 {% endfor %}
+
 
 {% endblock %}
