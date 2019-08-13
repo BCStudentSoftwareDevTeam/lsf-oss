@@ -14,10 +14,7 @@
 #sizeTermName {
   padding-left: 35px;
   padding-top: 14px;
-  font-family: "Segoe UI";
-  font-weight: 400;
 }
-
 
 #wrapper {
   position: relative;
@@ -41,7 +38,6 @@
 .glyphicon-bookmark {
   visibility: visible;
   width: 20px;
-  color: #000000;
   border-radius: 6px;
   padding: 5px;
 }

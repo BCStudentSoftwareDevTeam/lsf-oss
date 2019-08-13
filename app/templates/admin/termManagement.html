@@ -44,125 +44,67 @@
             <th>Start Date</th>
             <th>End Date</th>
             <th>Term State
-              <span class="glyphicon glyphicon-bookmark"
-              <a data-toggle="tooltip"
-                data-tooltip="true"
-                title="Opening a term allows you to add labor forms to the term that has been opened.
-                        Closing a term prevents you from adding labor forms."
-                data-placement="right"
-                id="glyphicon"
-              </a>
-              </span>
+                  <span data-toggle="tooltip"
+                    data-tooltip="true"
+                    title="Closing a term prevents you from adding labor forms to the term."
+                    data-placement="right"
+                    class="glyphicon glyphicon-bookmark">
+                  </span>
             </th>
         </tr>
         </thead>
         <tbody>
-
           {% for term in terms %}   <!-- This loop is what brings in the terms for each Academic year in the table that is in the accordion panel -->
                 <tr>
                   <td id="sizeTermName">{{term.termName}}</td>
-                  {% if term.termStart == None %} <!-- checks to see if the start date is empty -->
-                    <td>
-
-                      <div class="input-group date">
-                        <input id="start_{{term.termCode}}"
-                            onchange="getDate(this, {{term.termCode}}); updateStart(this, {{term.termCode}}); updateEnd(this, {{term.termCode}});"
-                            type="text"
-                            class="form-control"
-                            class="datepicker"
-                            class="emptyStart"
-                            placeholder="MM/DD/YYYY"
-                            data-startEnd="start"/>
-                          <span class="input-group-addon">
-                              <span class="glyphicon glyphicon-calendar"></span>
-                          </span>
-                      </div>
-
-                    </td>
-                  {% endif %}
-
-                  {% if term.termStart != None %} <!-- checks to see if the start date is not empty -->
+                  <!-- checks to see if the start date is not empty -->
                   <td>
                     <div class="input-group date">
                       <input
                           id="start_{{term.termCode}}"
-                          onchange="getDate(this, {{term.termCode}}); updateStart(this, {{term.termCode}}); updateEnd(this, {{term.termCode}});"
+                          onchange="getDate(this, {{term.termCode}}); updateEnd(this, {{term.termCode}});"
                           type="text"
-                          class="form-control"
-                          class="datepicker"
-                          class="start"
-                          data-startEnd="start1"
-                          value="{{term.termStart.strftime('%m/%d/%Y')}}" />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
+                          class="form-control datepicker start"
+                          placeholder="MM/DD/YYYY"
+                          value="{% if term.termStart != None %}{{term.termStart.strftime('%m/%d/%Y')}}{% endif %}"
+                      />
+                      <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                      </span>
                     </div>
                   </td>
-                  {% endif %}
-
-                  {% if term.termEnd == None %} <!-- checks to see if the end date is empty -->
-                    <td>
-                      <div class="input-group date">
-                          <input id="end_{{term.termCode}}"
-                              onchange="getDate(this, {{term.termCode}}); updateStart(this, {{term.termCode}}); updateEnd(this, {{term.termCode}});"
-                              type="text"
-                              class="form-control"
-                              class="datepicker"
-                              class="emptyEnd"
-                              placeholder="MM/DD/YYYY" />
-                          <span class="input-group-addon">
-                              <span class="glyphicon glyphicon-calendar"></span>
-                          </span>
-                      </div>
-                    </td>
-                  {% endif %}
-
-                  {% if term.termEnd != None %} <!-- checks to see if the start date is not empty -->
                   <td>
                     <div class="input-group date">
-                        <input id="end_{{term.termCode}}"
-                        onchange="getDate(this, {{term.termCode}}); updateStart(this, {{term.termCode}}); updateEnd(this, {{term.termCode}});"
-                        type="text"
-                        class="form-control"
-                        class="datepicker"
-                        class="end"
-                        value="{{term.termEnd.strftime('%m/%d/%Y')}}" />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    </div>
-                  </td>
-                  {% endif %}
-
-                  {% if term.termStart != None and term.termEnd != None and term.termState != None %}  <!-- checks to see if there are dates in the term -->
-                  <td>
-                    <button
-                      id="term_btn_{{term.termCode}}"
-                      name="termBtn"
-                      type="button"
-                      class="{% if term.termState == True %} btn btn-success btn-med {% elif term.termState == False %} btn btn-danger btn-med {% endif %}"
-                      onclick="termStatus({{term.termCode}})"
-                      value="{{term.termState}}">{% if term.termState == True %} Open {% elif term.termState == False %} Closed {% endif %}</button>
-                  </td>
-                    {% elif term.termStart == None or term.termEnd == None or term.termState == None %}  <!-- checks to see if the there is a datepicker that is empty, if there is have an inactive button -->
-                     <td>
-                       <button disabled
+                      <input id="end_{{term.termCode}}"
+                          onchange="getDate(this, {{term.termCode}}); updateStart(this, {{term.termCode}});"
+                          type="text"
+                          class="form-control datepicker emptyEnd"
+                          placeholder="MM/DD/YYYY"
+                          value="{% if term.termEnd != None %}{{term.termEnd.strftime('%m/%d/%Y')}}{% endif %}"
+                      />
+                      <span class="input-group-addon">
+                          <span class="glyphicon glyphicon-calendar"></span>
+                      </span>
+                      </div>
+                    </td>
+                    <td>
+                       <button
+                         {% if term.termStart == None or term.termEnd == None or term.termState == None %} disabled {% endif %}
                          id="term_btn_{{term.termCode}}"
                          name="termBtn"
                          type="button"
-                         class="{% if term.termState == True %} btn btn-success btn-med {% elif term.termState == False %} btn btn-danger btn-med {% endif %}"
+                         class="btn btn-med {% if term.termState == True %} btn-success {% elif term.termState == False %} btn-danger {% endif %}"
                          onclick="termStatus({{term.termCode}})"
                          value="{{term.termState}}">{% if term.termState == True %} Open {% elif term.termState == False %} Closed {% endif %}
                        </button>
                      </td>
-                    {% endif %}
-                </tr>
-              {% endfor %}
-          </tbody>
-        </table>
-      </div>
+                  </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    {% endfor %}
+  </div>
+  {% endfor %}
   </div>
 </div>
 {% endblock %}

@@ -1,3 +1,7 @@
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+});
+
 $('.glyphicon-calendar').click(function() {  // gets the calender glyphicon
    $(".datepicker").focus();
  });
@@ -19,7 +23,7 @@ function getDate(obj, termCode) {
   tabledata_dict[dateType] = obj.value;
   tabledata_dict["termCode"] = termID;
   data = JSON.stringify(tabledata_dict); // need to do this in order for the python to recognize it
-  console.log(data)
+//  console.log(data)
     $.ajax({
       type: "POST",
       url: "/termManagement/setDate/",
