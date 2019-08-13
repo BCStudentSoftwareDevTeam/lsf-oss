@@ -105,7 +105,6 @@ def termStatusCheck():
         print(rsp)
         if rsp:
             term = Term.get(rsp['termBtn'])
-print("this is the term " + str(term))
             # print(term.termState)
 
             if term.termState == True:
