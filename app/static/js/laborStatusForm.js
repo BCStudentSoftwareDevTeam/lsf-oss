@@ -540,6 +540,7 @@ function createAndFillTableForBreaks(preventPlusFromSubmitting = '') {// Fills t
 
 
 function reviewButtonFunctionality(preventPlusFromSubmitting) { // Triggred when Review button is clicked and checks if fields are filled out.
+  disableTerm()
   if ($('#selectedSupervisor').val()=="" || $('#selectedDepartment').val()=="" || $('#selectedTerm').val()=="" || $("#dateTimePicker1").val()=="" || $("#dateTimePicker2").val()=="") {
     category = "danger"
     msg = "Please fill out all fields before submitting.";

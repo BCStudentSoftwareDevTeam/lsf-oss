@@ -166,19 +166,15 @@
                  oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0" >
          </input>
     </div>
-    <div id="plus" class= "form-group">
-        <label> </label>
-          <span class="glyphicon glyphicon-plus disable"
-              <a  data-toggle="tooltip"
-                  data-tooltip="true"
-                  title="Add more students"
-                  data-placement = "center"
-                  id="glyphicon_2"
-                  onclick="displayTable(); disableTerm()"
-              </a>
-          </span>
-        {% include "snips/ReviewForm.html" %}
-    </div>
+</div>
+<br>
+<div id="plus" class= "col-md-12 ">
+  <button type="button"
+          class="btn btn-primary"
+          name = "addStudent"
+          id="addMoreStudent"
+          value = "formSubmission"
+          onclick="displayTable(); disableTerm()">Add Student</button>
 </div>
   <br />
     <table class="table table-striped " id="mytable">
