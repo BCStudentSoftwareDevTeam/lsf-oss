@@ -1,4 +1,4 @@
-function openModal(laborStatusKey) {
+function openModal(FormID) {
   /*
     This function gets a response from the controller function: populateModal() in laborHistory.py.  The response is the data for the modal that pops up
     when the position is clicked.
@@ -15,7 +15,7 @@ function openModal(laborStatusKey) {
 
       // $("#pending").attr("href", "//" + );  // IMPORTANT: This page (Modified Pendign form) has not been created yet
                                               // so make sure to have the redirect URL for it here.
-      $("#release").attr("href", "/laborReleaseForm/" + laborStatusKey); // will go to labor release form controller
+      $("#release").attr("href", "/laborReleaseForm/" + FormID); // will go to labor release form controller
     }
   });
 }
