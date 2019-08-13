@@ -26,7 +26,7 @@
   background-color: #f2f2f2;
 } */
 
-#mytable th, td {
+#mytable th, #mytable td {
   text-align: center;
   border-bottom: 1px solid #ddd;
   word-wrap: break-word;

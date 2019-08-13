@@ -34,7 +34,7 @@
               title="Supervisor"
               data-width="320px" >
         {% for staff in staffs %}
-          <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.username == staff.PIDM %} selected {% endif %}{% endif %}>{{staff.FIRST_NAME}} {{staff.LAST_NAME}} ({{staff.ID}})</option>
+          <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.username == staff.PIDM %} selected {% endif %}{% endif %}>{{staff.FIRST_NAME}} {{staff.LAST_NAME}} <ul>({{staff.ID}})</ul></option>
         {% endfor %}
       </select>
    </div>
@@ -194,7 +194,7 @@
       <thead>
         <tr class="item">
           <td>Student</td>
-          <td id = "position" data-value = "">Position</td>
+          <td id = "position" data-value = "">Position (WLS)</td>
           <td id="jobTable">Job Type</td>
           <td id="hoursTable">Hours Per Week</td>
           <td id="contractTable">Contract Hours</td>
