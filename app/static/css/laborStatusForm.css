@@ -14,13 +14,13 @@
 .floatleft {
 float: left;
 width: 47%;
-height: 370px;
+height: 310px;
 }
 
 .floatright {
 float: right;
 width: 47%;
-height: 370px;
+height: 310px;
 }
 
 .setSelectpickerHeight {
@@ -65,20 +65,17 @@ selectpicker, label {
 }
 
 #plus {
-  margin-top: 18px;
-  width: 0px;
+  text-align: center;
+  padding-bottom: 30px;
+}
+
+#addMoreStudent {
+  width: 200px;
 }
 
 #glyphicon{
       font-size: 29px;
       color: #337ab7;
-}
-
-#glyphicon_2{
-  font-size: 29px;
-  color: #337ab7;
-  padding-right: 0px;
-  padding-left: 26px;
 }
 
 #glyphicon_note{
