@@ -1,10 +1,8 @@
-$('.datepicker').datepicker()
-   .on('changeDate', function(e) {
-     alert($(this).data('startEnd'));
-     console.log($(this).data('startEnd'));
-   });
+$(function () {
+  $('[data-toggle="tooltip"]').tooltip()
+});
 
-$('.glyphicon-calendar').click(function() {
+$('.glyphicon-calendar').click(function() {  // gets the calender glyphicon
    $(".datepicker").focus();
  });
 
@@ -14,16 +12,18 @@ $(".form-control").datepicker({
 });
 
 function getDate(obj, termCode) {
-  var termStart = obj.value; // This is the start date
-  var termID = obj.id.split("_")[1] //
-  console.log(termID)
-  var dateType = obj.id.split("_")[0]
-  console.log(dateType)
+  /* this function makes a dictionary with term code being the keys, and the dates being the values
+  then this will trigger the ajax call and send the dictionary to termManagement.py */
+  var termStart = obj.value; // You need to get the value of this object otherwise it will show "object Object"
+  var termID = obj.id.split("_")[1] // This is how we format the term code
+  // console.log(termID)
+  var dateType = obj.id.split("_")[0] // This variable stores whether the value is a start date or an end date
+  // console.log(dateType)
   var tabledata_dict = {};
   tabledata_dict[dateType] = obj.value;
   tabledata_dict["termCode"] = termID;
-  data = JSON.stringify(tabledata_dict);
-  console.log(data)
+  data = JSON.stringify(tabledata_dict); // need to do this in order for the python to recognize it
+//  console.log(data)
     $.ajax({
       type: "POST",
       url: "/termManagement/setDate/",
@@ -31,17 +31,49 @@ function getDate(obj, termCode) {
       data: data,
       contentType: 'application/json',
       success: function(response){
-        console.log("js success")
+        // console.log(response)
+        if(response)
+        stateBtnValue = $("#term_btn_" + termCode).val();
+        start = $("#start_" + termCode).val();
+        // console.log(start)
+        end = $("#end_" +termCode).val();
+        // console.log(end)
+        if (start != "" && end != "") {
+          $('#term_btn_' + termCode).prop('disabled', false)
+          // console.log("It worked!!")
+        }
+        // console.log("js success")
       }
     });
 }
 
-function termStatus(term) {
-  var startID = $("#start_" +term);
-  var endID = $("#end_" +term);
-  var termBtnID = $("#term_btn_" + term);
+function updateStart(obj, termCode){
+  /* This function disables any dates that come after the selected end date */
+  var newEnd = new Date(obj.value)
+  var dayNewEnd = newEnd.getDate() - 1;
+  var monthNewEnd = newEnd.getMonth();
+  var yearNewEnd = newEnd.getFullYear();
+  $('#start_' + termCode).datepicker({maxDate: new Date(yearNewEnd, monthNewEnd, dayNewEnd)});
+  $('#start_' + termCode).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
+}
 
-  console.log(term)
+function updateEnd(obj, termCode){
+  /* This function disables any dates that come after the selected start date */
+  var newStart = new Date(obj.value)
+  var dayNewStart = newStart.getDate() + 1;
+  var monthNewStart = newStart.getMonth();
+  var yearNewStart = newStart.getFullYear();
+  $('#end_' + termCode).datepicker({minDate: new Date(yearNewStart, monthNewStart, dayNewStart)});
+  $("#end_" + termCode).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
+}
+
+function termStatus(term) {
+  /* this function changes the buttons from close and open whenever they are clicked */
+  var startID = $("#start_" + term); // This is how we get the unique ID, term is the term code
+  var endID = $("#end_" + term);
+  var termBtnID = $("#term_btn_" + term);
+  var inactiveBtnID = $("#inactive_btn_" + term);
+  // console.log(term)
     $.ajax({
       method: "POST",
       url: "/termManagement/manageStatus ",
@@ -54,7 +86,6 @@ function termStatus(term) {
       if(response["Success"]) {
         //category = "info"
         console.log("Hello, this works")
-
         console.log(termBtnID);
          if ($(termBtnID).hasClass("btn-success")) {
             $(termBtnID).removeClass("btn-success");
