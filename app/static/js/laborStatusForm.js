@@ -1,11 +1,12 @@
-$(document).ready(function(){
-    $('[data-tooltip="true"]').tooltip();
+$( "laborStatusForm" ).submit(function( event ) {
+  alert( "Handler for .submit() called." );
+  event.preventDefault();
 });
 
-var j = jQuery.noConflict();
-j( function() {
-   j( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
-} );
+$(document).ready(function(){
+    $('[data-tooltip="true"]').tooltip();
+    $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
+});
 
 $(document).on('keyup', 'input[name=contractHours]', function () { // sets contract hours minimum value
    var _this = $(this);
@@ -14,6 +15,11 @@ $(document).on('keyup', 'input[name=contractHours]', function () { // sets contr
    if(val < min)
        _this.val( min );
 });
+
+// // make fields required.
+// $(".require").prop('required',true);
+// $(".disable").prop('required',true);
+
 
 // Pops up a modal for Seconday Postion
 $('#jobType').change(function(){
@@ -30,13 +36,13 @@ $('#selectedHoursPerWeek').change(function(){
   var hour = $(this).val();
   if (hour == "20") {
       $('#OverloadModal').modal('show');
-      $('#overloadModalButton').attr('data-target', '') // preventa Primary Modal from showing up
+      $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
     }
 });
 
 function disableTerm() {
   // disables term select picker when student is selected
-  $("#term").prop("disabled", "disabled");
+  $("#selectedTerm").prop("disabled", "disabled");
 }
 
 function preFilledDate(obj){ // get term start date and end date
@@ -52,9 +58,50 @@ function preFilledDate(obj){ // get term start date and end date
 
 function fillDates(response){ // prefill term start and term end
   for (var key in response){
-    $("#dateTimePicker1").val(response[key]["Start Date"]);
-    $("#dateTimePicker2").val(response[key]["End Date"]);
+    var start = response[key]['Start Date'];
+    var end = response[key]["End Date"];
+    // Start Date
+    var startd = new Date(start)
+    var dayStart = startd.getDate();
+    var monthStart = startd.getMonth();
+    var yearStart = startd.getFullYear();
+    // End Date
+    var endd = new Date(end)
+    var dayEnd = endd.getDate();
+    var monthEnd = endd.getMonth();
+    var yearEnd = endd.getFullYear();
+    // Pre-populate values
+    $("#dateTimePicker1").val(start);
+    $("#dateTimePicker2").val(end);
+    // set the minimum and maximum Date for Term Start Date
+    $('#dateTimePicker1').datepicker({minDate: new Date(yearStart, monthStart, dayStart)});
+    $('#dateTimePicker1').datepicker({maxDate: new Date(yearEnd, monthEnd, dayEnd)});
+    $( "#dateTimePicker1" ).datepicker( "option", "minDate", new Date(yearStart, monthStart, dayStart) );
+    $( "#dateTimePicker1" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd, dayEnd));
+    // set the minimum and maximum Date for Term End Date
+    $('#dateTimePicker2').datepicker({maxDate: new Date(yearEnd, monthEnd, dayEnd)});
+    $('#dateTimePicker2').datepicker({minDate: new Date(yearStart, monthStart, dayStart)});
+    $( "#dateTimePicker2" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd, dayEnd));
+    $( "#dateTimePicker2" ).datepicker( "option", "minDate", new Date(yearStart, monthStart, dayStart) );
   }
+}
+
+function updateStart(obj){ // updates the max date of the start datepicker to not be after what the end datePicker picked
+  var newEnd = new Date(obj.value)
+  var dayNewEnd = newEnd.getDate() - 1;
+  var monthNewEnd = newEnd.getMonth();
+  var yearNewEnd = newEnd.getFullYear();
+  $('#dateTimePicker1').datepicker({maxDate: new Date(yearNewEnd, monthNewEnd, dayNewEnd)});
+  $( "#dateTimePicker1" ).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
+}
+
+function updateEnd(obj){ // updates the max date of the end datepicker to not be before what the start datePicker picked
+  var newStart = new Date(obj.value)
+  var dayNewStart = newStart.getDate() + 1;
+  var monthNewStart = newStart.getMonth();
+  var yearNewStart = newStart.getFullYear();
+  $('#dateTimePicker2').datepicker({minDate: new Date(yearNewStart, monthNewStart, dayNewStart)});
+  $( "#dateTimePicker2" ).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
 }
 
 function getDepartment(object) { // get department from select picker
@@ -75,16 +122,30 @@ function getDepartment(object) { // get department from select picker
      $("#position").empty();
      for (var key in response) {
        var options = document.createElement("option");
-       options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
-       options.value = key;
+       options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")";
+       options.id = key;
+       options.value = response[key]['WLS'];
        selectedPositions.appendChild(options);
      }
-     $('.selectpicker').selectpicker('refresh');
+       $('.selectpicker').selectpicker('refresh');
    }
  }
 
+ // Pops up a modal for WLS 5, 6 or more
+ $('#position').change(function(){
+   //this is just getting the value that is selected
+   var wls = $('#position').find('option:selected').attr('value');
+   if (wls >= 5) {
+     document.getElementById('WLSModalTitle').innerHTML = "Work-Learning-Service Levels (WLS)"
+     document.getElementById('WLSModalText').innerHTML = "Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
+                                                        "These positions require special authorization as specified at " +
+                                                        "<a href='http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS' target='_blank'>The Labor Program Website.</a>";
+     $('#WLSModal').modal('show');
+     }
+ });
 
- function fillHoursPerWeek(){ // prefill hours per week select picker
+
+ function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker
   var selectedHoursPerWeek = document.getElementById("selectedHoursPerWeek");
   var jobType = $("#jobType").val();
   if (selectedHoursPerWeek){
@@ -108,8 +169,16 @@ function getDepartment(object) { // get department from select picker
         selectedHoursPerWeek.options[selectedHoursPerWeek.options.length]= new Option(dict[key], key);
       }
     }
-    $('.selectpicker').selectpicker('refresh');
+    if (fillhours == ""){
+      $('.selectpicker').selectpicker('refresh');
+    }
   }
+}
+
+if(document.getElementById('jobType').value){// fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
+  var value = $('#selectedHoursPerWeek').val();
+  $('#selectedHoursPerWeek').val(value);
+  fillHoursPerWeek("fillhours");
 }
 
 // Check if department is in compliance.
@@ -122,30 +191,27 @@ function checkCompliance(obj) {
         success: function (response){
           if(response['Department']['Department Compliance'] == false){
             $('#OutofComplianceModal').modal('show');
-            $('#term').attr('disabled', true);
-            $('#dateTimePicker1').attr('disabled', true);
-            $('#dateTimePicker2').attr('disabled', true);
-            $('#student').attr('disabled', true);
-            $('#position').attr('disabled', true);
-            $('#jobType').attr('disabled', true);
-            $('#hoursPerWeek').attr('disabled', true);
-            $('#contractHours').attr('disabled', true);
+            $('.disable').prop('disabled', true);
           }
           else{
-            $('#term').attr('disabled', false);
-            $('#dateTimePicker1').attr('disabled', false);
-            $('#dateTimePicker2').attr('disabled', false);
-            $('#student').attr('disabled', false);
-            $('#position').attr('disabled', false);
-            $('#jobType').attr('disabled', false);
-            $('#hoursPerWeek').attr('disabled', false);
-            $('#contractHours').attr('disabled', false);
+            $('.disable').prop('disabled', false);
           }
         }
       });
 }
 
-
+//refresh select pickers
+function refreshSelectPickers() {
+  $("#selectedContractHours").val('');
+  $("#selectedHoursPerWeek").val('default');
+  $("#selectedHoursPerWeek").selectpicker("refresh");
+  $("#jobType").val('default');
+  $("#jobType").selectpicker("refresh");
+  $("#student").val('default');
+  $("#student").selectpicker("refresh");
+  $("#position").val('default');
+  $("#position").selectpicker("refresh");
+}
 
 // TABLE LABELS
 $("#contractHours").hide();
@@ -200,19 +266,18 @@ function deleteRow(row) { // Deletes Row when remove glyphicon is clicked.
 //END of glyphicons
 
 // TABLE
-function displayTable(test = "") { // displays table when plus glyphicon is clicked
-  $("#mytable").show();
-  var termCode = $('#term').val();
+function displayTable(preventPlusFromSubmitting = "") { // displays table when plus glyphicon is clicked
+  var termCode = $('#selectedTerm').val();
   var whichTerm = termCode.toString().substr(-2);
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-    checkDuplicateBreaks(test);
+    checkDuplicateBreaks(preventPlusFromSubmitting);
   }
   else {
-    checkDuplicate(test);
+    checkDuplicate(preventPlusFromSubmitting);
   }
 }
 
-function checkDuplicate(test = "") {// checks for duplicates in the table. This is for Academic Year
+function checkDuplicate(preventPlusFromSubmitting = "") {// checks for duplicates in the table. This is for Academic Year
     var table = document.getElementById("mytable");
     var student = document.getElementById("student");
     var studentName = student.options[student.selectedIndex].text;
@@ -238,6 +303,7 @@ function checkDuplicate(test = "") {// checks for duplicates in the table. This 
          $("#warningModal").modal('show')
          $("#jobTable").show();
          $("#hoursTable").show();
+         refreshSelectPickers()
           return;
           }
 
@@ -246,32 +312,35 @@ function checkDuplicate(test = "") {// checks for duplicates in the table. This 
          $("#warningModal").modal('show')
          $("#jobTable").show();
          $("#hoursTable").show();
+         refreshSelectPickers()
           return;
          }
   }
-    checkForPrimaryPosition(test);
+    checkForPrimaryPosition(preventPlusFromSubmitting);
 }
 
-function checkForPrimaryPosition(test = ""){ // does several stuff read the comments down below
+function checkForPrimaryPosition(preventPlusFromSubmitting = ""){ // does several stuff read the comments down below
+  var student = document.getElementById("student");
+  var studentName = student.options[student.selectedIndex].text;
   var jobType = document.getElementById("jobType");
   var jobTypeName = jobType.options[jobType.selectedIndex].text;
   var student = $("#student").val();
-  var term = $("#term").val();
+  var term = $("#selectedTerm").val();
   var url = "/laborstatusform/getstudents/" + term +"/" +student;
   $.ajax({
     url: url,
     dataType: "json",
     success: function (response){
       /* 1. Language for Primary Modal that shows up when student has a primary position and a secondary position is being submitted */
-      console.log(response);
       try {
         var primary_supervisor = response["PrimarySupervisor"]["Primary Supervisor FirstName"] + " " + response["PrimarySupervisor"]["Primary Supervisor LastName"]
-        document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Upon submission of the form, student's primary superviosr " + primary_supervisor + " will be notified."
+        document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Upon submission of the form, student's primary supervisor " +
+                                                                primary_supervisor + " will be notified."
       }
       catch (e) {
         if(jobTypeName == "Primary"){
 
-          createAndFillTable(test);
+          createAndFillTable(preventPlusFromSubmitting);
         }
       }
       $("#jobTable").show();
@@ -281,16 +350,20 @@ function checkForPrimaryPosition(test = ""){ // does several stuff read the comm
       /* 2. if student does not have a primary position show modal */
       var result = $.isEmptyObject(response);
       if (jobTypeName == "Secondary" && result) {
+        document.getElementById('NoPrimaryModalText').innerHTML = "<span class='glyphicon glyphicon-exclamation-sign' style='color:red; font-size:20px;'></span>"+
+                                                                  " The selected student " + studentName +" does not have a primary position."
         $('#NoPrimaryModal').modal('show');
+        refreshSelectPickers();
       }
       else if (jobTypeName == "Primary" && !result) { // 3. If a student already has a primary position, do not add to the table.
-        document.getElementById("warningModalText").innerHTML = "Student already has a primary position."
+        document.getElementById("warningModalText").innerHTML =  studentName + " already has a primary position."
         $("#warningModal").modal('show')
+        refreshSelectPickers();
       }
       else {
       /* 4. If student has a primary position check the total hours for overload and add to table  */
           checkTotalhoursTable();
-          checkForTotalHoursDatabase(test);
+          checkForTotalHoursDatabase(preventPlusFromSubmitting);
           createAndFillTable();
       }
     }
@@ -303,7 +376,7 @@ function createAndFillTable() { // fills the table for Academic Year.
   var studentName = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");
   var positionName = position.options[position.selectedIndex].text;
-  var positionCode = $("#position").val()
+  var positionCode = $("#position").find('option:selected').attr('id');
   var jobType = document.getElementById("jobType");
   var jobTypeName = jobType.options[jobType.selectedIndex].text;
   var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
@@ -333,17 +406,7 @@ function createAndFillTable() { // fills the table for Academic Year.
   cell4.innerHTML = hoursPerWeekName;
   cell5.innerHTML = notesGlyphicon;
   cell6.innerHTML = removeIcon;
-
-
-  $("#selectedHoursPerWeek").val('default');
-  $("#selectedHoursPerWeek").selectpicker("refresh");
-  $("#jobType").val('default');
-  $("#jobType").selectpicker("refresh");
-  $("#student").val('default');
-  $("#student").selectpicker("refresh");
-  $("#position").val('default');
-  $("#position").selectpicker("refresh");
-
+  refreshSelectPickers();
 }
 
 
@@ -367,9 +430,9 @@ function checkTotalhoursTable() {//Checks if the student has enough hours to req
 }
 
 
-function checkForTotalHoursDatabase(test = "") {// gets sum of the total weekly hours from the database and add it to the ones in the table.
+function checkForTotalHoursDatabase(preventPlusFromSubmitting = "") {// gets sum of the total weekly hours from the database and add it to the ones in the table.
   var student = $("#student").val();
-  var term = $("#term").val();
+  var term = $("#selectedTerm").val();
   var url = "/laborstatusform/gethours/" + term +"/" +student;
   $.ajax({
     url: url,
@@ -382,20 +445,15 @@ function checkForTotalHoursDatabase(test = "") {// gets sum of the total weekly 
         $('#OverloadModal').modal('show');
         $('#overloadModalButton').attr('data-target', '#PrimaryModal')
         $('#OverloadModal').on('hidden.bs.modal', function() {
-          $('#PrimaryModal').modal('show');
-          $('#PrimaryModal').on('hidden.bs.modal', function() {
-          if (test == 'test') {
-            createModalContent()
-            }
-          });
+        $('#PrimaryModal').modal('show');
         });
       }
       else{
-        $('#PrimaryModal').modal('show'); // modal saying primary superviosr will be notified
+        $('#PrimaryModal').modal('show'); // modal saying primary supervisor will be notified
+      }
+      if (preventPlusFromSubmitting == 'preventPlusFromSubmitting') {
         $('#PrimaryModal').on('hidden.bs.modal', function() {
-          if (test == 'test') {
-            createModalContent()
-          }
+          createModalContent();
         });
       }
     }
@@ -404,7 +462,7 @@ function checkForTotalHoursDatabase(test = "") {// gets sum of the total weekly 
 
 
 // THIS IS FOR BREAKSSSS
-function checkDuplicateBreaks(test = "") { // checks for duplicates in table. For summer or any other break.
+function checkDuplicateBreaks(preventPlusFromSubmitting = "") { // checks for duplicates in table. For summer or any other break.
       var table = document.getElementById("mytable");
       var student = document.getElementById("student");
       var studentName = student.options[student.selectedIndex].text;
@@ -420,13 +478,14 @@ function checkDuplicateBreaks(test = "") { // checks for duplicates in table. Fo
            document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and " + positionName
            $("#warningModal").modal('show')
             $("#contractTable").show();
+            refreshSelectPickers();
             return;
             }
           }
-          createAndFillTableForBreaks(test)
+          createAndFillTableForBreaks(preventPlusFromSubmitting)
         }
 
-function createAndFillTableForBreaks(test = '') {// Fills the table. For Summer term or any other break period
+function createAndFillTableForBreaks(preventPlusFromSubmitting = '') {// Fills the table. For Summer term or any other break period
   $("#mytable").show();
   $("#jobTable").hide();
   $("#hoursTable").hide();
@@ -437,8 +496,8 @@ function createAndFillTableForBreaks(test = '') {// Fills the table. For Summer 
   var studentName = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");
   var positionName = position.options[position.selectedIndex].text;
-  var positionCode = $("#position").val()
-  var contractHoursName = document.getElementById("contractHours").value;
+  var positionCode = $("#position").find('option:selected').attr('id');
+  var selectedContractHoursName = document.getElementById("selectedContractHours").value;
   var notesGlyphicon = "<a data-toggle='modal' onclick = 'showNotesModal(\""+String(studentName) + String(positionName)+"\")' id= '"+String(studentName) +
                                                           String(positionName)+"' ><span class='glyphicon glyphicon-edit'></span></a>";
   var removeIcon = "<a onclick = 'deleteRow(this)' class='remove'><span class='glyphicon glyphicon-remove'></span></a>";
@@ -455,24 +514,20 @@ function createAndFillTableForBreaks(test = '') {// Fills the table. For Summer 
 
   cell1.innerHTML = studentName;
   cell2.innerHTML = positionName;
-  cell3.innerHTML = contractHoursName;
+  cell3.innerHTML = selectedContractHoursName;
   cell4.innerHTML = notesGlyphicon;
   cell5.innerHTML = removeIcon;
 
-  $("#contractHours").val('');
-  $("#position").val('default');
-  $("#position").selectpicker("refresh");
-  $("#student").val('default');
-  $("#student").selectpicker("refresh");
+  refreshSelectPickers();
 
-  if (test == 'test'){
+  if (preventPlusFromSubmitting == 'preventPlusFromSubmitting'){
     createModalContent()
   }
 }
 // END OF (THIS IS FOR BREAKSSSS)
 
 
-function reviewButtonFunctionality(test) { // Triggred when Review button is clicked
+function reviewButtonFunctionality(preventPlusFromSubmitting) { // Triggred when Review button is clicked
   if( !$('#student').val() ) {
     var rowLength = document.getElementById("mytable").rows.length;
     if (rowLength > 1) {
@@ -480,41 +535,43 @@ function reviewButtonFunctionality(test) { // Triggred when Review button is cli
     }
   }
   else{
-    displayTable(test); // the passed argument is used to prevent plus glyphicon from submitting the form.
+    displayTable(preventPlusFromSubmitting); // the passed argument is used to prevent plus glyphicon from submitting the form.
   }
 }
 
 function createModalContent() { // Populates Submit Modal with Student information from the table
-  var testDict = createTabledataDictionary();
-  term = $("#term").val();
+  var allTableDataDict = createTabledataDictionary();
+  term = $("#selectedTerm").val();
   var whichTerm = term.toString().substr(-2);
   modalList = [];
 
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-    for (var key in testDict) {
-      var student = testDict[key]["Student"];
-      var position = testDict[key]["Position"];
-      var contractHours = testDict[key]["Contract Hours"];
-      var bigString = "<li>" + student + ' | ' + position + ' | ' + contractHours;
+    for (var key in allTableDataDict) {
+      var student = allTableDataDict[key]["Student"];
+      var studentName = student.substring(0, student.indexOf('B0'));
+      var position = allTableDataDict[key]["Position"];
+      var selectedContractHours = allTableDataDict[key]["Contract Hours"];
+      var bigString = "<li>" + studentName + ' | ' + position + ' | ' + selectedContractHours + ' Hours';
       modalList.push(bigString)
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                            "<ul style='display: inline-block;text-align:left;'>" +
+                                                            "<ul style='list-style-type:none; display:inline-block;text-align:left;'>" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day."
     $('#SubmitModal').modal('show')
   }
   else {
-    for (var key in testDict) {
-      var student = testDict[key]["Student"];
-      var position = testDict[key]["Position"];
-      var jobType = testDict[key]["Job Type"];
-      var hours = testDict[key]["Hours Per Week"];
-      var bigString = "<li>" + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
+    for (var key in allTableDataDict) {
+      var student = allTableDataDict[key]["Student"];
+      var studentName = student.substring(0, student.indexOf('B0'));
+      var position = allTableDataDict[key]["Position"];
+      var jobType = allTableDataDict[key]["Job Type"];
+      var hours = allTableDataDict[key]["Hours Per Week"];
+      var bigString = "<li>" + studentName + ' | ' + position + ' | ' + jobType + ' | ' + hours + ' Hours';
       modalList.push(bigString)
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                            "<ul style='display: inline-block;text-align:left;'>" +
+                                                            "<ul style='list-style-type:none;display: inline-block;text-align:left;'>" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day."
     $('#SubmitModal').modal('show')
@@ -526,9 +583,9 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
   var listDictAJAX = [];
   $('#mytable tr').has('td').each(function() {
     /* Get the input box values first */
-      supervisor = $("#supervisor").val();
-      department = $("#department").val();
-      term = $("#term").val();
+      supervisor = $("#selectedSupervisor").val();
+      department = $("#selectedDepartment").val();
+      term = $("#selectedTerm").val();
       var whichTerm = term.toString().substr(-2);
       startDate = $("#dateTimePicker1").val();
       endDate = $("#dateTimePicker2").val();
@@ -554,9 +611,9 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
           }
         });
         listDictAJAX.push(tableDataDict);
-        testDict = {}
+        allTableDataDict = {}
         for ( var key in listDictAJAX){
-          testDict[key] = listDictAJAX[key];
+          allTableDataDict[key] = listDictAJAX[key];
         }
       }
       /* If it's academic year, get the table values */
@@ -571,21 +628,21 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
             }
           });
           listDictAJAX.push(tableDataDict);
-          testDict = {} // FIXME rename to something else, this is the dictionary that contains all the forms
+          allTableDataDict = {} // this is the dictionary that contains all the forms
           for ( var key in listDictAJAX){
-            testDict[key] = listDictAJAX[key];
+            allTableDataDict[key] = listDictAJAX[key];
           }
       }
      });
 
-  delete testDict["0"] // gets rid of the first dictionary that contains table labels
-  return testDict
+  delete allTableDataDict["0"] // gets rid of the first dictionary that contains table labels
+  return allTableDataDict
 }
 
 // SEND DATA TO THE DATABASE
 function userInsert(){
-  var testDict = createTabledataDictionary()
-  data = JSON.stringify(testDict);
+  var allTableDataDict = createTabledataDictionary()
+  data = JSON.stringify(allTableDataDict);
   $('#laborStatusForm').on('submit', function(e) {
     e.preventDefault();
   });
@@ -595,18 +652,18 @@ function userInsert(){
          data: data,
          contentType: 'application/json',
          success: function(response) {
-           term = $("#term").val();
+           term = $("#selectedTerm").val();
            var whichTerm = term.toString().substr(-2);
            modalList = [];
            if (response){
-             for (var key in testDict) {
-               var student = testDict[key]["Student"];
-               var position = testDict[key]["Position"];
-               var contractHours = testDict[key]["Contract Hours"];
-               var jobType = testDict[key]["Job Type"];
-               var hours = testDict[key]["Hours Per Week"];
+             for (var key in allTableDataDict) {
+               var student = allTableDataDict[key]["Student"];
+               var position = allTableDataDict[key]["Position"];
+               var selectedContractHours = allTableDataDict[key]["Contract Hours"];
+               var jobType = allTableDataDict[key]["Job Type"];
+               var hours = allTableDataDict[key]["Hours Per Week"];
                if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-                 var bigString = "<li>" +"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + contractHours;
+                 var bigString = "<li>" +"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + selectedContractHours;
                }
                else {
                  var bigString = "<li>"+"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
@@ -616,14 +673,14 @@ function userInsert(){
           }
 
           else {
-            for (var key in testDict) {
-               var student = testDict[key]["Student"];
-               var position = testDict[key]["Position"];
-               var contractHours = testDict[key]["Contract Hours"];
-               var hours = testDict[key]["Hours Per Week"];
+            for (var key in allTableDataDict) {
+               var student = allTableDataDict[key]["Student"];
+               var position = allTableDataDict[key]["Position"];
+               var selectedContractHours = allTableDataDict[key]["Contract Hours"];
+               var hours = allTableDataDict[key]["Hours Per Week"];
 
               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-               var bigString = "<li>" +"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + contractHours;
+               var bigString = "<li>" +"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + selectedContractHours;
               }
               else {
                 var bigString = "<li>"+"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
@@ -632,7 +689,7 @@ function userInsert(){
             }
            }
          document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                                 "<ul style='display: inline-block;text-align:left;'>" +
+                                                                 "<ul style='list-style-type:none; display: inline-block;text-align:left;'>" +
                                                                  modalList.join("</li>")+"</ul>"+
                                                                  "<br><br>The labor status form will be eligible for approval in one business day."
          $('#SubmitModal').modal('show')
@@ -642,5 +699,5 @@ function userInsert(){
      $('#SubmitModal').modal({backdrop: true, keyboard: false, show: true});
      $('#SubmitModal').data('bs.modal').options.backdrop = 'static';
      document.getElementById('submitmodalid').innerHTML = "Done";
-     document.getElementById('submitmodalid').onclick = function() { window.location.reload();}
+     document.getElementById('submitmodalid').onclick = function() { window.location.replace("/laborstatusform");}
 }

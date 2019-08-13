@@ -1,16 +1,17 @@
-/*.container{
-  padding-right: 15px;
-  padding-left: 0px;
-  background-color: #F9F9F9;
-}*/
+selectpicker, label {
+  display: block;
+}
+.tableContent {
+  float:left;
+  padding-right: 5px;
+  width: 225px;
+  height: 59px;
+}
 
-/* .col-centered{
-    margin: 0 auto;
-    float: none;
-} */
-/*.col-md-1 {
-  width: 5.333333%;
-}*/
+#plus {
+  margin-top: 18px;
+  width: 0px;
+}
 
 #datepicker {
   padding-right: 0px;

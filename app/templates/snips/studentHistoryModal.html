@@ -34,6 +34,14 @@
                 <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">{{form.status}}</div>
               </div>
+              {% if form.status.statusName == "Denied" %}
+               <div class="row">
+                 <p class="control-label col-sm-6" align="right">Reject Reason: </p>
+               <div class="col-sm-6">
+                 <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
+               </div>
+               </div>
+              {% endif %}
               <div class= "h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
@@ -54,6 +62,14 @@
                 <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">{{form.status}}</div>
               </div>
+              {% if form.status.statusName == "Denied" %}
+              <div class="row">
+                <p class="control-label col-sm-6" align="right">Reject Reason: </p>
+              <div class="col-sm-6">
+                <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
+              </div>
+              </div>
+              {% endif %}
               <div class= "h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red"></span> {{form.historyType}}</div>
@@ -75,7 +91,7 @@
               <div class="row">
                 <p class="control-label col-sm-6" align="right">Reason for release:</p>
               <div class="col-sm-6">
-                <textarea  rows="3" cols="25" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
+                <textarea class="releaseReasonTextArea" rows="3" cols="25" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
               </div>
               </div>
           {% elif form.modifiedForm != None %}
@@ -91,6 +107,14 @@
               <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
               <div class="col-sm-3">{{form.status}}</div>
             </div>
+            {% if form.status.statusName == "Denied" %}
+            <div class="row">
+              <p class="control-label col-sm-6" align="right">Reject Reason: </p>
+            <div class="col-sm-6">
+              <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
+            </div>
+            </div>
+            {% endif %}
             <div class="h4">
               <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
               <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
@@ -115,6 +139,14 @@
                 <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">{{form.status}}</div>
               </div>
+              {% if form.status.statusName == "Denied" %}
+              <div class="row">
+                <p class="control-label col-sm-6" align="right">Reject Reason: </p>
+              <div class="col-sm-6">
+                <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
+              </div>
+              </div>
+              {% endif %}
               <div class="h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
@@ -142,18 +174,20 @@
           </div>
         {% endfor %}
         {% elif buttonState == 2 %}
+        {% for form1 in statusForm %}
         <div class = "col-sm-6">
-        <a id="pending" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Withdraw</button></a>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form1.laborStatusFormID}})">Withdraw</button>
         </div>
+        {% endfor %}
         <div class = "col-sm-6">
-        <a id="pending" href="#"><button type="button" class="btn btn-info" data-dismiss="modal">Modify</button></a>
+        <a id="pending" href="#"><button type="button" class="btn btn-info">Modify</button></a>
         </div>
         {% elif buttonState == 3 %}
         <div class = "col-sm-4" style="text-align: right">
-        <a id="release" href="#"><button type="button" class="btn btn-danger" data-dismiss="modal">Release</button></a>
+        <a id="release" href="#"><button type="button" class="btn btn-danger">Release</button></a>
         </div>
         <div class = "col-sm-4">
-        <a id="modify" href="#"><button type="button" class="btn btn-info" data-dismiss="modal">Modify</button></a>
+        <a id="modify" href="#"><button type="button" class="btn btn-info">Modify</button></a>
         </div>
         <div class = "col-sm-4" style="text-align:left">
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success">Rehire</button></a>

@@ -1,8 +1,14 @@
 {% extends "base.html" %}
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" type="text/css" href="/static/css/formHistory.css" />
+{% endblock %}
+{% block scripts %}
+{{super()}}
+<script type="text/javascript" src="/static/js/laborhistory.js"></script>
+{% endblock %}
 {% block app_content %}
 <div align= "center">
-  <script type="text/javascript" src="/static/js/laborhistory.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/laborhistory.css" />
   <h1>Labor History</h1>
     <h3>{{student.FIRST_NAME}} {{student.LAST_NAME}}</h3>
     <form method="POST" action="/laborHistory/download">
@@ -14,8 +20,8 @@
         {% for form in studentForms %}
         <tr>
           <td onclick="openModal({{form.laborStatusFormID}})" id="{{form.laborStatusFormID}}">
-            <p class = "lead"><strong>{{form.termCode.termName}} - {{form.department.DEPT_NAME}} Dept.</strong></p>
-            <p id= "second-line">{{form.jobType}} - {{form.POSN_TITLE}} ({{form.POSN_CODE}})</p>
+            <a><span class="h4">{{form.termCode.termName}} - {{form.department.DEPT_NAME}} Dept.</span></a>
+            <p class="h6" id="second-line">{{form.jobType}} - {{form.POSN_TITLE}} ({{form.POSN_CODE}})</p>
           </td>
         </tr>
         {% endfor %}

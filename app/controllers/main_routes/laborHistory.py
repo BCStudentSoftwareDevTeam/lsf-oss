@@ -23,12 +23,12 @@ def laborhistory(id):
             return render_template('errors/403.html')
 
         student = Student.get(Student.ID == id)
-        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student)
+        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         formHistoryList = ""
         for form in studentForms:
             formHistoryList = formHistoryList + str(form.laborStatusFormID) + ","
         formHistoryList = formHistoryList[0:-1]
-        return render_template( 'main/laborhistory.html',
+        return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,
                                 username=current_user.username,
@@ -40,6 +40,10 @@ def laborhistory(id):
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
 def downloadFormHistory():
+    """
+    This function is called when the download button is pressed.  It runs a function for writing to an excel sheet that is in download.py.
+    This function downloads the created excel sheet of the history from the page.
+    """
     try:
         data = request.form
         historyList = data["listOfForms"].split(',')
@@ -52,6 +56,11 @@ def downloadFormHistory():
 
 @main_bp.route('/laborHistory/modal/<statusKey>', methods=['GET'])
 def populateModal(statusKey):
+    """
+    This function creates the modal and populates it with the history of a selected position.  It works with the openModal() function in laborhistory.js
+    to create the modal, and append all of the data gathered here form the database to the modal.  It also sets a button state which decides which buttons
+    to put on the modal depending on what form is in the history.
+    """
     try:
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
@@ -64,15 +73,33 @@ def populateModal(statusKey):
             else:
                 if form.releaseForm != None:
                     if form.status.statusName == "Approved":
-                        buttonState = 0 #Only rehire button
-                        break
+                        if currentDate <= form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire button
+                            break
+                        elif currentDate > form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire
+                            break
                     elif form.status.statusName == "Pending":
                         buttonState = None # no buttons
                         break
+                    elif form.status.statusName == "Denied":
+                        if currentDate <= form.formID.termCode.termEnd:
+                            buttonState = 3   #Release, modify, and rehire buttons
+                            break
+                        elif currentDate > form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire
+                            break
                 if form.overloadForm != None:
                     if form.status.statusName == "Pending":
                         buttonState = 1 #Only withdraw button
                         break
+                    if form.status.statusName == "Denied":
+                        if currentDate <= form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire button
+                            break
+                        elif currentDate > form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire
+                            break
                 if form.modifiedForm != None:
                     if form.status.statusName == "Pending":
                         buttonState = None # no buttons
@@ -82,8 +109,12 @@ def populateModal(statusKey):
                         buttonState = 2 #Withdraw and modify buttons
                         break
                     elif form.status.statusName == "Denied":
-                        buttonState = 0 #Rehire button
-                        break
+                        if currentDate <= form.formID.termCode.termEnd:
+                            buttonState = 0 #Rehire button
+                            break
+                        elif currentDate > form.formID.termCode.termEnd:
+                            buttonState = 0 #Only rehire
+                            break
                     elif form.status.statusName == "Approved":
 
                         if currentDate <= form.formID.termCode.termEnd:
@@ -100,26 +131,39 @@ def populateModal(statusKey):
                                             ))
         return (resp)
     except Exception as e:
-        print(e)
+        # print(e)
         return render_template('errors/500.html')
         return (jsonify({"Success": False}))
 
 @main_bp.route('/laborHistory/modal/updatestatus', methods=['POST'])
 def updatestatus_post():
+    """
+    This function deletes forms from the database when they are pending and the "withdraw" button is clicked.
+    """
     try:
         rsp = eval(request.data.decode("utf-8"))
-        overloadkey = FormHistory.select().where(FormHistory.formID == rsp["FormID"])
         student = LaborStatusForm.get(rsp["FormID"]).studentSupervisee.ID
-        print(overloadkey)
-        for key in overloadkey:
-            sth = FormHistory.select().where(FormHistory.formHistoryID == key)
-        for i in sth:
-            deleteOverloadForm    = OverloadForm.get(OverloadForm.overloadFormID == i.overloadForm).delete_instance()
-        deleteFormHistoryOverload = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Overload Form").delete_instance()
-        deleteFormHistoryStatus = FormHistory.get(FormHistory.formID == rsp["FormID"] and FormHistory.historyType == "Labor Status Form").delete_instance()
-        deleteLaborStatusForm        = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == rsp["FormID"]).delete_instance()
+        selectedPendingForms = FormHistory.select().join(Status).where(FormHistory.formID == rsp["FormID"]).where(FormHistory.status.statusName == "Pending").order_by(FormHistory.historyType.asc())
+        for form in selectedPendingForms:
+            try:
+                OverloadForm.get(OverloadForm.overloadFormID == form.overloadForm.overloadFormID).delete_instance()
+                form.delete_instance()
+            except:
+                pass
+            try:
+                ModifiedForm.get(ModifiedForm.modifiedFormID == form.modifiedForm.modifiedFormID).delete_instance()
+                form.delete_instance()
+            except:
+                pass
+            try:
+                if form.historyType.historyTypeName == "Labor Status Form":
+                    formID = form.formID.laborStatusFormID
+                    form.delete_instance()
+                    LaborStatusForm.get(formID).delete_instance()
+            except:
+                pass
         flash("Your selected form has been withdrawn.", "success")
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
     except Exception as e:
-        print(e)
+        # print(e)
         return jsonify({"Success": False})

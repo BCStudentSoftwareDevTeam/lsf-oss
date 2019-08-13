@@ -25,9 +25,6 @@ def laborReleaseForm(laborStatusKey):
     if not current_user.isLaborAdmin:
         render_template("errors/403.html")
 
-    students = Student.select()
-    department = Department.select()
-    users = User.select()
     forms = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == laborStatusKey)
 
 
@@ -37,8 +34,13 @@ def laborReleaseForm(laborStatusKey):
             if historyForms:
                 for form in historyForms:
                     if form.status.statusName != "Denied":
+                        # If there is currently a pending labor release form for the labor status form
+                        # then the user should not be able submit another one
                         flash("An error has occurred. Student already has a 'Pending' labor release form.", "danger")
                         return redirect(url_for("main.index"))
+            # If the labor status form does not have a pending labor release form, then the user
+            # will be able to submit a labor release form. This section will create the new
+            # labor release form, and a new form in the form history table.
             datepickerDate = request.form.get("date")
             releaseDate = datetime.strptime(datepickerDate, "%m/%d/%Y").strftime("%Y-%m-%d")
             releaseReason = request.form.get("notes")
@@ -67,6 +69,9 @@ def laborReleaseForm(laborStatusKey):
                                         status = status.statusName,
                                         rejectReason = None
                                         )
+            # Once all the forms are created, the user gets redirected to the
+            # home page and gets a flash message telling them the forms were
+            # submited
             flash("Your labor release form has been submitted.", "success")
             return redirect(url_for("main.index"))
 
@@ -77,8 +82,5 @@ def laborReleaseForm(laborStatusKey):
 
     return render_template('main/laborReleaseForm.html',
 				            title=('Labor Release Form'),
-                            students = students,
-                            department = department,
-                            users = users,
                             forms = forms
                           )
