@@ -212,8 +212,6 @@ function refreshSelectPickers() {
 $("#contractHours").hide();
 $("#hoursPerWeek").hide();
 $("#JopTypes").hide();
-$("#Student").hide();
-$("#Position").hide();
 $("#plus").hide();
 $("#mytable").hide();
 
@@ -221,20 +219,14 @@ function showAccessLevel(obj){ // Make Table labels appear
   $("#contractHours").hide();
   $("#hoursPerWeek").hide();
   $("#JopTypes").hide();
-  $("#Student").hide();
-  $("#Position").hide();
   $("#plus").hide();
   var termCode = obj.value;
   var whichTerm = termCode.toString().substr(-2);
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) { // Summer term or any other break period table labels
-    $("#Student").show();
-    $("#Position").show();
     $("#contractHours").show();
     $("#plus").show();
   }
   else{ // normal semester like Fall or Spring table labels
-    $("#Student").show();
-    $("#Position").show();
     $("#hoursPerWeek").show();
     $("#JopTypes").show();
     $("#plus").show();
