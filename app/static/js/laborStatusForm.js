@@ -300,7 +300,7 @@ function checkDuplicate(preventPlusFromSubmitting = "") {// checks for duplicate
     var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
     var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
 
-    for(const tr of table.querySelectorAll("thead tr")) {
+    for(const tr of table.querySelectorAll(" tr")) {
        const td0 = tr.querySelector("td:nth-child(1)");
        const td1 = tr.querySelector("td:nth-child(2)");
        const td2 = tr.querySelector("td:nth-child(3)");
@@ -400,7 +400,6 @@ function createAndFillTable() { // fills the table for Academic Year.
   $("#mytable").show();
   $("#jobTable").show();
   $("#hoursTable").show();
-  $("#primary_table").hide();
   $("#contractTable").hide();
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
@@ -424,21 +423,24 @@ function createAndFillTable() { // fills the table for Academic Year.
 
 var totalHourDict = {}
 function checkTotalhoursTable() {//Checks if the student has enough hours to require an overload form
-  var table = document.getElementById("mytable");
-  var student = document.getElementById("student");
-  var studentName = student.options[student.selectedIndex].text;
-  var totalHours = 0
-  var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
-  var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
-  for(const tr of table.querySelectorAll("thead tr")) {
-     const td0 = tr.querySelector("td:nth-child(1)");
-     const td2 = tr.querySelector("td:nth-child(4)");
-     if ((td0.innerHTML == studentName)) {
-       totalHours = totalHours + parseInt(td2.innerHTML);
+  var rowLength = document.getElementById("mytable").rows.length;
+  if (rowLength > 1) {
+    var table = document.getElementById("mytable");
+    var student = document.getElementById("student");
+    var studentName = student.options[student.selectedIndex].text;
+    var totalHours = 0
+    var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
+    var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
+    for(const tr of table.querySelectorAll("tr")) {
+       const td0 = tr.querySelector("td:nth-child(0)");
+       const td2 = tr.querySelector("td:nth-child(4)");
+       if ((td0.innerHTML == studentName)) {
+         totalHours = totalHours + parseInt(td2.innerHTML);
+          }
         }
-      }
-  totalHours = totalHours + parseInt(hoursPerWeekName);
-  totalHourDict["total"] = {totalHours}
+    totalHours = totalHours + parseInt(hoursPerWeekName);
+    totalHourDict["total"] = {totalHours}
+  }
 }
 
 
@@ -481,7 +483,7 @@ function checkDuplicateBreaks(preventPlusFromSubmitting = "") { // checks for du
       var position = document.getElementById("position");
       var positionName = position.options[position.selectedIndex].text;
 
-      for(const tr of table.querySelectorAll("thead tr")) {
+      for(const tr of table.querySelectorAll(" tr")) {
          const td0 = tr.querySelector("td:nth-child(1)");
          const td1 = tr.querySelector("td:nth-child(2)");
          const td2 = tr.querySelector("td:nth-child(3)");
