@@ -1,9 +1,12 @@
-if(document.getElementById('selectedDepartment').value){
-  getDepartment(document.getElementById('selectedDepartment'), 'stopSelectRefresh')
-}
-
 $(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip()
+    $('[data-toggle="tooltip"]').tooltip()
+    // $('[data-tooltip="true"]').tooltip();
+    $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
+
+    if(document.getElementById('selectedDepartment').value){
+      console.log(document.getElementById('selectedDepartment').value);
+      getDepartment(document.getElementById('selectedDepartment'), 'stopSelectRefresh');
+    }
 });
 
 $( "laborStatusForm" ).submit(function( event ) {
@@ -11,10 +14,6 @@ $( "laborStatusForm" ).submit(function( event ) {
   event.preventDefault();
 });
 
-$(document).ready(function(){
-    $('[data-tooltip="true"]').tooltip();
-    $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
-});
 
 $(document).on('keyup', 'input[name=contractHours]', function () { // sets contract hours minimum value
    var _this = $(this);
@@ -123,18 +122,20 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
 
  function fillPositions(response, stopSelectRefresh="") { // prefill Position select picker with the positions of the selected department
    var selectedPositions = document.getElementById("position");
-   if (selectedPositions){
-     $("#position").empty();
-     for (var key in response) {
-       var options = document.createElement("option");
-       options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")";
-       options.id = key;
-       options.setAttribute('data-wls', response[key]['WLS']);
-       selectedPositions.appendChild(options);
-     }
-     if (stopSelectRefresh= "") {
-       $('.selectpicker').selectpicker('refresh');
-     }
+   $("#position").empty();
+   for (var key in response) {
+     var options = document.createElement("option");
+     options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")";
+     options.id = key;
+     options.setAttribute('data-wls', response[key]['WLS']);
+     selectedPositions.appendChild(options);
+   }
+   if (stopSelectRefresh== "") {
+     $('.selectpicker').selectpicker('refresh');
+   }
+   else {
+     value = $('#position').val();
+     $('#position').val(value);
    }
  }
 
@@ -251,7 +252,7 @@ function showAccessLevel(obj){ // Make Table labels appear
 // TABLE LABELS
 
 // hide review button will show when add student is clicked
-$('#reviewButton').hide()
+$('#reviewButton').hide();
 //end
 
 // Table glyphicons
@@ -410,7 +411,6 @@ function createAndFillTable() { // fills the table for Academic Year.
   var positionName = position.options[position.selectedIndex].text;
   var positionCode = $("#position").find('option:selected').attr('id');
   var wls = $('#position').find('option:selected').attr('data-wls');
-  console.log(wls);
   var jobType = document.getElementById("jobType");
   var jobTypeName = jobType.options[jobType.selectedIndex].text;
   var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
@@ -422,7 +422,6 @@ function createAndFillTable() { // fills the table for Academic Year.
   $("#mytable").show();
   $("#jobTable").show();
   $("#hoursTable").show();
-  $("#contractTable").hide();
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
@@ -446,9 +445,7 @@ function createAndFillTable() { // fills the table for Academic Year.
   if (rowLength > 1) {
     $('#reviewButton').show();
   }
-
 }
-
 
 var totalHourDict = {}
 function checkTotalhoursTable() {//Checks if the student has enough hours to require an overload form
@@ -512,7 +509,6 @@ function checkDuplicateBreaks() { // checks for duplicates in table. For summer 
        if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
          document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and " + positionName
          $("#warningModal").modal('show')
-          $("#contractTable").show();
           refreshSelectPickers();
           return;
           }
@@ -523,14 +519,14 @@ function checkDuplicateBreaks() { // checks for duplicates in table. For summer 
 function createAndFillTableForBreaks() {// Fills the table. For Summer term or any other break period
   $("#mytable").show();
   $("#jobTable").hide();
-  $("#hoursTable").hide();
-  $("#contractTable").show();
+  $("#hoursTable").show();
   var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
   var student = document.getElementById("student");
   var studentName = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");
   var positionName = position.options[position.selectedIndex].text;
   var positionCode = $("#position").find('option:selected').attr('id');
+  var wls = $('#position').find('option:selected').attr('data-wls');
   var selectedContractHoursName = document.getElementById("selectedContractHours").value;
   var notesGlyphicon = "<a data-toggle='modal' onclick = 'showNotesModal(\""+String(studentName) + String(positionName)+"\")' id= '"+String(studentName) +
                                                           String(positionName)+"' ><span class='glyphicon glyphicon-edit'></span></a>";
@@ -541,6 +537,7 @@ function createAndFillTableForBreaks() {// Fills the table. For Summer term or a
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
   $(cell2).attr("data-posn", positionCode);
+    $(cell2).attr("data-wls", wls)
   cell2.id="position_code";
   var cell3 = row.insertCell(2);
   var cell4 = row.insertCell(3);

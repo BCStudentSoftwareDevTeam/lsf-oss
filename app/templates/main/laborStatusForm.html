@@ -50,6 +50,7 @@
                 title="Department"
                 data-width="100%"
                 onchange = "checkCompliance(this); getDepartment(this)">
+          <option value = "" disabled selected>Select a Department</option>
           {% for department in departments %}
             <option value="{{department.DEPT_NAME}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %}>{{department.DEPT_NAME}}</option>
           {% endfor %}
@@ -115,7 +116,7 @@
           {% endfor %}
         </select>
   </div>
-  <div class= "form-group setSelectpickerHeight">
+  <div class= "form-group setSelectpickerHeight" id="Position">
       <!--selectpicker for positio3-->
       <label for="student">Position (WLS)</label>
         <select class="selectpicker disable require"
@@ -124,7 +125,7 @@
                 data-live-search='true'
                 data-width="100%"
                 title="Position" >
-                <option id="{{forms.POSN_CODE}}" value="{{forms.POSN_TITLE, forms.WLS}}" data-wls={{forms.WLS}} {% if forms %} selected {% endif %}>{{forms.POSN_TITLE}} ({{forms.WLS}})</option>
+                {% if forms %} <option id="{{forms.POSN_CODE}}" value="{{forms.POSN_TITLE, forms.WLS}}" data-wls={{forms.WLS}} {% if forms %} selected {% endif %}>{{forms.POSN_TITLE}} ({{forms.WLS}})</option>{% endif %}
         </select>
     </div>
     <div id="JopTypes" class= "form-group setSelectpickerHeight">
@@ -185,8 +186,8 @@
           <th>Student </th>
           <th id = "position">Position (WLS) </th>
           <th id="jobTable">Job Type </th>
-          <th id="hoursTable">Hours Per Week </th>
-          <th id="contractTable">Contract Hours </th>
+          <th id="hoursTable">Hours</th>
+          <th id="datesTable">Contract Dates</th>
           <th id ="notes">Notes</th>
           <th>Remove</th>
         </tr>
