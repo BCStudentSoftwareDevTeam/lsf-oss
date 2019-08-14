@@ -311,7 +311,7 @@ function checkDuplicate() {// checks for duplicates in the table. This is for Ac
     var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
     var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
 
-    for(const tr of table.querySelectorAll(" tr")) {
+    for(const tr of table.querySelectorAll("tbody tr")) {
        const td0 = tr.querySelector("td:nth-child(1)");
        const td1 = tr.querySelector("td:nth-child(2)");
        const td2 = tr.querySelector("td:nth-child(3)");
@@ -394,7 +394,7 @@ function checkForPrimaryPosition(){ // does several stuff read the comments down
 }
 
 function createAndFillTable() { // fills the table for Academic Year.
-  var table = document.getElementById("mytable");
+  var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
   var student = document.getElementById("student");
   var studentName = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");
@@ -440,24 +440,21 @@ function createAndFillTable() { // fills the table for Academic Year.
 
 var totalHourDict = {}
 function checkTotalhoursTable() {//Checks if the student has enough hours to require an overload form
-  var rowLength = document.getElementById("mytable").rows.length;
-  if (rowLength > 1) {
-    var table = document.getElementById("mytable");
-    var student = document.getElementById("student");
-    var studentName = student.options[student.selectedIndex].text;
-    var totalHours = 0
-    var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
-    var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
-    for(const tr of table.querySelectorAll("tr")) {
-       const td0 = tr.querySelector("td:nth-child(0)");
-       const td2 = tr.querySelector("td:nth-child(4)");
-       if ((td0.innerHTML == studentName)) {
-         totalHours = totalHours + parseInt(td2.innerHTML);
-          }
+  var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
+  var student = document.getElementById("student");
+  var studentName = student.options[student.selectedIndex].text;
+  var totalHours = 0
+  var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
+  var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
+  for(const tr of table.querySelectorAll("tbody tr")) {
+     const td0 = tr.querySelector("td:nth-child(0)");
+     const td2 = tr.querySelector("td:nth-child(4)");
+     if ((td0.innerHTML == studentName)) {
+       totalHours = totalHours + parseInt(td2.innerHTML);
         }
-    totalHours = totalHours + parseInt(hoursPerWeekName);
-    totalHourDict["total"] = {totalHours}
-  }
+      }
+  totalHours = totalHours + parseInt(hoursPerWeekName);
+  totalHourDict["total"] = {totalHours}
 }
 
 
@@ -516,7 +513,7 @@ function createAndFillTableForBreaks() {// Fills the table. For Summer term or a
   $("#jobTable").hide();
   $("#hoursTable").hide();
   $("#contractTable").show();
-  var table = document.getElementById("mytable");
+  var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
   var student = document.getElementById("student");
   var studentName = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");
