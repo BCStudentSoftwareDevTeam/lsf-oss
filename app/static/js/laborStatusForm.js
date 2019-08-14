@@ -1,7 +1,10 @@
+if(document.getElementById('selectedDepartment').value){
+  getDepartment(document.getElementById('selectedDepartment'), 'stopSelectRefresh')
+}
+
 $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip()
 });
-
 
 $( "laborStatusForm" ).submit(function( event ) {
   alert( "Handler for .submit() called." );
@@ -106,19 +109,19 @@ function updateEnd(obj){ // updates the max date of the end datepicker to not be
   $( "#dateTimePicker2" ).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
 }
 
-function getDepartment(object) { // get department from select picker
+function getDepartment(object, stopSelectRefresh="") { // get department from select picker
    var department = object.value;
    var url = "/laborstatusform/getPositions/" + department;
        $.ajax({
          url: url,
          dataType: "json",
          success: function (response){
-            fillPositions(response)
+            fillPositions(response, stopSelectRefresh)
          }
        })
  }
 
- function fillPositions(response) { // prefill Position select picker with the positions of the selected department
+ function fillPositions(response, stopSelectRefresh="") { // prefill Position select picker with the positions of the selected department
    var selectedPositions = document.getElementById("position");
    if (selectedPositions){
      $("#position").empty();
@@ -126,17 +129,20 @@ function getDepartment(object) { // get department from select picker
        var options = document.createElement("option");
        options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")";
        options.id = key;
-       options.value = response[key]['WLS'];
+       options.setAttribute('data-wls', response[key]['WLS']);
        selectedPositions.appendChild(options);
      }
+     if (stopSelectRefresh= "") {
        $('.selectpicker').selectpicker('refresh');
+     }
    }
  }
 
  // Pops up a modal for WLS 5, 6 or more
  $('#position').change(function(){
    //this is just getting the value that is selected
-   var wls = $('#position').find('option:selected').attr('value');
+   var wls = $('#position').find('option:selected').attr('data-wls');
+   console.log(wls);
    if (wls >= 5) {
      document.getElementById('WLSModalTitle').innerHTML = "Work-Learning-Service Levels (WLS)"
      document.getElementById('WLSModalText').innerHTML = "Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
@@ -194,6 +200,9 @@ function checkCompliance(obj) {
           if(response['Department']['Department Compliance'] == false){
             $('#OutofComplianceModal').modal('show');
             $('.disable').prop('disabled', true);
+            $('#selectedTerm').selectpicker('refresh');
+            $('#student').selectpicker('refresh');
+            $('#position').selectpicker('refresh');
           }
           else{
             $('.disable').prop('disabled', false);
@@ -400,6 +409,8 @@ function createAndFillTable() { // fills the table for Academic Year.
   var position = document.getElementById("position");
   var positionName = position.options[position.selectedIndex].text;
   var positionCode = $("#position").find('option:selected').attr('id');
+  var wls = $('#position').find('option:selected').attr('data-wls');
+  console.log(wls);
   var jobType = document.getElementById("jobType");
   var jobTypeName = jobType.options[jobType.selectedIndex].text;
   var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
@@ -423,6 +434,7 @@ function createAndFillTable() { // fills the table for Academic Year.
   cell1.innerHTML = studentName;
   cell2.innerHTML = positionName;
   $(cell2).attr("data-posn", positionCode);
+  $(cell2).attr("data-wls", wls)
   cell2.id="position_code";
   cell3.innerHTML = jobTypeName;
   cell4.innerHTML = hoursPerWeekName;
@@ -602,16 +614,18 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
   var listDictAJAX = [];
   $('#mytable tr').has('td').each(function() {
     /* Get the input box values first */
-      supervisor = $("#selectedSupervisor").val();
-      department = $("#selectedDepartment").val();
-      term = $("#selectedTerm").val();
+      var supervisor = $("#selectedSupervisor").val();
+      var department = $("#selectedDepartment").val();
+      var term = $("#selectedTerm").val();
       var whichTerm = term.toString().substr(-2);
-      startDate = $("#dateTimePicker1").val();
-      endDate = $("#dateTimePicker2").val();
+      var startDate = $("#dateTimePicker1").val();
+      var endDate = $("#dateTimePicker2").val();
       var positionCode = $("#position_code").attr("data-posn");
+      var wls = $('#position_code').attr('data-wls')
+      console.log(wls)
       listDict = []
-      listDict.push(supervisor, department, term, startDate, endDate, positionCode)
-      var headersLabel = ["Supervisor", "Department", "Term", "Start Date", "End Date", "Position Code"]
+      listDict.push(supervisor, department, term, startDate, endDate, positionCode, wls)
+      var headersLabel = ["Supervisor", "Department", "Term", "Start Date", "End Date", "Position Code", "WLS"]
       var tableDataDict = {};
       for (i in listDict) {
         tableDataDict[headersLabel[i]] = listDict[i];

@@ -62,8 +62,7 @@ def userInsert():
         if rsp:
             for data in rsp.values():
                 wlsIndexStart = data['Position'].find('(')
-                wlsIndexEnd = data['Position'].find(')')
-                wls = data['Position'][wlsIndexStart + 1 : wlsIndexEnd]
+                position = data['Position'][:wlsIndexStart]
                 bnumberIndexStart = data['Student'].find('(')
                 bnumberIndexEnd = data['Student'].find(')')
                 studentBnumber = data['Student'][bnumberIndexStart + 1: bnumberIndexEnd]
@@ -84,8 +83,8 @@ def userInsert():
                                              supervisor = primarySupervisor,
                                              department  = department,
                                              jobType = data['Job Type'],
-                                             WLS = wls,
-                                             POSN_TITLE = data['Position'],
+                                             WLS = data['WLS'],
+                                             POSN_TITLE = position,
                                              POSN_CODE = data['Position Code'],
                                              contractHours = data.get('Contract Hours', None),
                                              weeklyHours   = data.get('Hours Per Week', None),

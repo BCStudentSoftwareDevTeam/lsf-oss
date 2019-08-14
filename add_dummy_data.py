@@ -176,6 +176,14 @@ positions = [
             "DEPT_NAME":"Computer Science"
             },
             {
+            "POSN_CODE": "S61408",
+            "POSN_TITLE": "Teaching Assistant",
+            "WLS": "5",
+            "ORG" : "2134",
+            "ACCOUNT":"123786",
+            "DEPT_NAME":"Computer Science"
+            },
+            {
             "POSN_CODE": "S61419",
             "POSN_TITLE": "TA",
             "WLS": "1",

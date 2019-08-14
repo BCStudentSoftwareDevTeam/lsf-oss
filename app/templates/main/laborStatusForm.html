@@ -117,14 +117,14 @@
   </div>
   <div class= "form-group setSelectpickerHeight">
       <!--selectpicker for positio3-->
-      <label for="student">Position</label>
+      <label for="student">Position (WLS)</label>
         <select class="selectpicker disable require"
                 name='position'
                 id='position'
                 data-live-search='true'
                 data-width="100%"
                 title="Position" >
-                <option id="{{forms.POSN_CODE}}" value="{{forms.POSN_TITLE, forms.WLS}}"{% if forms %} selected {% endif %}>{{forms.POSN_TITLE}}</option>
+                <option id="{{forms.POSN_CODE}}" value="{{forms.POSN_TITLE, forms.WLS}}" data-wls={{forms.WLS}} {% if forms %} selected {% endif %}>{{forms.POSN_TITLE}} ({{forms.WLS}})</option>
         </select>
     </div>
     <div id="JopTypes" class= "form-group setSelectpickerHeight">
