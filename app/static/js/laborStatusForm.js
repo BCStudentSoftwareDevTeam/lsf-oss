@@ -1,3 +1,8 @@
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip()
+});
+
+
 $( "laborStatusForm" ).submit(function( event ) {
   alert( "Handler for .submit() called." );
   event.preventDefault();
@@ -38,6 +43,8 @@ $('#selectedHoursPerWeek').change(function(){
 function disableTerm() {
   // disables term select picker when student is selected
   $("#selectedTerm").prop("disabled", "disabled");
+  $("#termInfo").show();
+  $('#selectedTerm').selectpicker('refresh');
 }
 
 function preFilledDate(obj){ // get term start date and end date
@@ -290,7 +297,7 @@ function displayTable(preventPlusFromSubmitting = "") { // displays table when p
 }
 
 function checkDuplicate(preventPlusFromSubmitting = "") {// checks for duplicates in the table. This is for Academic Year
-    var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
+    var table = document.getElementById("mytable");
     var student = document.getElementById("student");
     var studentName = student.options[student.selectedIndex].text;
     var position = document.getElementById("position");
@@ -300,7 +307,7 @@ function checkDuplicate(preventPlusFromSubmitting = "") {// checks for duplicate
     var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
     var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
 
-    for(const tr of table.querySelectorAll("tbody tr")) {
+    for(const tr of table.querySelectorAll(" tr")) {
        const td0 = tr.querySelector("td:nth-child(1)");
        const td1 = tr.querySelector("td:nth-child(2)");
        const td2 = tr.querySelector("td:nth-child(3)");
@@ -383,7 +390,7 @@ function checkForPrimaryPosition(preventPlusFromSubmitting = ""){ // does severa
 }
 
 function createAndFillTable() { // fills the table for Academic Year.
-  var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
+  var table = document.getElementById("mytable");
   var student = document.getElementById("student");
   var studentName = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");
@@ -423,21 +430,24 @@ function createAndFillTable() { // fills the table for Academic Year.
 
 var totalHourDict = {}
 function checkTotalhoursTable() {//Checks if the student has enough hours to require an overload form
-  var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
-  var student = document.getElementById("student");
-  var studentName = student.options[student.selectedIndex].text;
-  var totalHours = 0
-  var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
-  var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
-  for(const tr of table.querySelectorAll("tbody tr")) {
-     const td0 = tr.querySelector("td:nth-child(1)");
-     const td2 = tr.querySelector("td:nth-child(4)");
-     if ((td0.innerHTML == studentName)) {
-       totalHours = totalHours + parseInt(td2.innerHTML);
+  var rowLength = document.getElementById("mytable").rows.length;
+  if (rowLength > 1) {
+    var table = document.getElementById("mytable");
+    var student = document.getElementById("student");
+    var studentName = student.options[student.selectedIndex].text;
+    var totalHours = 0
+    var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
+    var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
+    for(const tr of table.querySelectorAll("tr")) {
+       const td0 = tr.querySelector("td:nth-child(0)");
+       const td2 = tr.querySelector("td:nth-child(4)");
+       if ((td0.innerHTML == studentName)) {
+         totalHours = totalHours + parseInt(td2.innerHTML);
+          }
         }
-      }
-  totalHours = totalHours + parseInt(hoursPerWeekName);
-  totalHourDict["total"] = {totalHours}
+    totalHours = totalHours + parseInt(hoursPerWeekName);
+    totalHourDict["total"] = {totalHours}
+  }
 }
 
 
@@ -474,28 +484,27 @@ function checkForTotalHoursDatabase(preventPlusFromSubmitting = "") {// gets sum
 
 // THIS IS FOR BREAKSSSS
 function checkDuplicateBreaks(preventPlusFromSubmitting = "") { // checks for duplicates in table. For summer or any other break.
-    var table = document.getElementById("mytable");
-    var student = document.getElementById("student");
-    var studentName = student.options[student.selectedIndex].text;
-    var position = document.getElementById("position");
-    var positionName = position.options[position.selectedIndex].text;
+      var table = document.getElementById("mytable");
+      var student = document.getElementById("student");
+      var studentName = student.options[student.selectedIndex].text;
+      var position = document.getElementById("position");
+      var positionName = position.options[position.selectedIndex].text;
 
-    for(const tr of table.querySelectorAll("tbody tr")) {
-       const td0 = tr.querySelector("td:nth-child(1)");
-       console.log(tr);
-       const td1 = tr.querySelector("td:nth-child(2)");
-       const td2 = tr.querySelector("td:nth-child(3)");
+      for(const tr of table.querySelectorAll("thead tr")) {
+         const td0 = tr.querySelector("td:nth-child(1)");
+         const td1 = tr.querySelector("td:nth-child(2)");
+         const td2 = tr.querySelector("td:nth-child(3)");
 
-       if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
-         document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and " + positionName
-         $("#warningModal").modal('show')
-          $("#contractTable").show();
-          refreshSelectPickers();
-          return;
-        }
+         if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
+           document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and " + positionName
+           $("#warningModal").modal('show')
+            $("#contractTable").show();
+            refreshSelectPickers();
+            return;
+            }
+          }
           createAndFillTableForBreaks(preventPlusFromSubmitting)
         }
-      }
 
 function createAndFillTableForBreaks(preventPlusFromSubmitting = '') {// Fills the table. For Summer term or any other break period
   $("#mytable").show();
@@ -503,7 +512,7 @@ function createAndFillTableForBreaks(preventPlusFromSubmitting = '') {// Fills t
   $("#hoursTable").hide();
   $("#primary_table").hide();
   $("#contractTable").show();
-  var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
+  var table = document.getElementById("mytable");
   var student = document.getElementById("student");
   var studentName = student.options[student.selectedIndex].text;
   var position = document.getElementById("position");

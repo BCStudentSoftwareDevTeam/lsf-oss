@@ -58,11 +58,12 @@
   </div>
   <div class="form-group {% if forms %} has-error {% endif %} setSelectpickerHeight ">
     <!-- selectpicker for term  -->
-      <label for="term">Term</label>
+      <label for="term">Term <span type="button" id="termInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted to one term at a time"></span></label>
             <select class="selectpicker disable require"
                     name='term'
                     id='selectedTerm'
                     data-live-search="true"
+                    data-toggle="tooltip"
                     title="Term"
                     data-width="100%"
                     onchange = "showAccessLevel(this); preFilledDate(this)">
@@ -187,10 +188,9 @@
           <th id="contractTable">Contract Hours </th>
           <th id ="notes">Notes</th>
           <th>Remove</th>
-        <tr>
+        </tr>
       </thead>
-      <tbody>
-      </tbody>
+      <tbody></tbody>
     </table>
   <div class="col-md-12 ">
     <button type="button"
