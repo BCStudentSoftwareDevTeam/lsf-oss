@@ -49,6 +49,8 @@
         <tr id="tableData" class="tableData" align="center">
           <td> {# APPROVE #}
             <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.laborStatusFormID}}" />
+            <span id="notes_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-book btn-lg text-success" data-toggle="modal" data-target="#notesModal"> </span>
+
           </td>
           <td> {# TERM #}
             {{formHistory.formID.termCode.termName}}
@@ -78,8 +80,10 @@
            {{formHistory.formID.startDate.strftime('%m/%d/%y')}} -  {{formHistory.formID.endDate.strftime('%m/%d/%y')}}
         </td>
         <td> {# EDIT #}
-          <span id="edit_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil"> </span>
+          <a href="/modifyLSF/{{formHistory.formID.laborStatusFormID}}"> <span id="edit_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" > </span> </a>
+          <span id="reject_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-trash" data-toggle="modal" data-target="#rejectModal"> </span>
         </td>
+
 
 
         </tr>
@@ -100,7 +104,44 @@
       </div>
 
 
+      <!-- Modal -->
+      <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="notesModalLabel">Labor Office Notes</h4>
+            </div>
+            <div class="modal-body" >
+              <p> These notes are only for the Labor Office Staff.</p>
+              <p> Pre-fill this with the notes from the supervisor 
+              <textarea name="laborNotes" rows="8" cols="70"> </textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
+      <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="rejectModalLabel">Reject Status Form</h4>
+            </div>
+            <div class="modal-body">
+              ...For Rejection #FIXME: Look at old rejection interface
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
 </div>

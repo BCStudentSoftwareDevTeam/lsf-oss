@@ -14,7 +14,7 @@ import datetime
 # @login_required
 
 def term_Management():
-    #FIXME: Add user and admin checks to this route and all others on this page 
+    # FIXME: Add user and admin checks to this route and all others on this page
     # current_user = require_login()
     # if not current_user:                    # Not logged in
     #     return render_template('errors/403.html')
