@@ -447,7 +447,7 @@ function checkTotalhoursTable() {//Checks if the student has enough hours to req
   var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
   var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
   for(const tr of table.querySelectorAll("tbody tr")) {
-     const td0 = tr.querySelector("td:nth-child(0)");
+     const td0 = tr.querySelector("td:nth-child(1)");
      const td2 = tr.querySelector("td:nth-child(4)");
      if ((td0.innerHTML == studentName)) {
        totalHours = totalHours + parseInt(td2.innerHTML);
