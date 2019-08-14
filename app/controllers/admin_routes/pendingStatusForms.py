@@ -1,6 +1,6 @@
 #from flask import render_template  #, redirect, url_for, request, g, jsonify, current_app
 #from flask_login import current_user, login_required
-from flask import flash, send_file
+from flask import flash, send_file, json, jsonify
 from app.login_manager import *
 from app.controllers.admin_routes import admin
 from app.controllers.errors_routes.handlers import *
@@ -12,7 +12,7 @@ from app.models.formHistory import *
 from app.models.term import Term
 from datetime import datetime, date
 
-@admin.route('/admin/pendingStatusForms', methods=['GET', 'POST'])
+@admin.route('/admin/pendingStatusForms', methods=['GET'])
 def pendingForms():
     try:
         current_user = require_login()
@@ -24,27 +24,7 @@ def pendingForms():
 
         # pending_status_forms = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate)
         pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate)
-        # pending_release_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Release Form").order_by(-FormHistory.createdDate)
-        # pending_overload_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Overload Form").order_by(-FormHistory.createdDate)
-        # pending_modified_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Modified Labor Form").order_by(-FormHistory.createdDate)
-        #
-        # pendingModifiedList = []
-        # for i in pending_labor_forms:
-        #     print(str(i) + " this should be 1")
-        #
-        # for i in pending_release_forms:
-        #     print(str(i) + " this should be 7")
-        #
-        # for i in pending_overload_forms:
-        #     print(str(i) + "this should be 11")
-        #
-        # for i in pending_modified_forms:
-        #     pendingModifiedList.append(i)
-        #     print(pendingModifiedList)
-        #
-        #
-        #
-        # #print(len(pending_status_forms))
+
         # # Logged in & Admin
         users = User.select()
 
@@ -63,3 +43,22 @@ def pendingForms():
     except Exception as e:
         print(e)
         return render_template('errors/500.html')
+
+@admin.route('/admin/checkedForms', methods=['POST'])
+def approvedForms():
+    try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
+        rsp = eval(request.data.decode("utf-8"))
+        # print(rsp)
+        if rsp:
+            print("Inserted into nonexistent Banner DB")
+
+            return jsonify({"Success": True})
+    except Exception as e:
+        print("This did not work", e)
+        return jsonify({"Success": False})

@@ -32,11 +32,12 @@ function getDate(obj, termCode) {
       contentType: 'application/json',
       success: function(response){
         // console.log(response)
-        if(response)
+        if(response) 
         stateBtnValue = $("#term_btn_" + termCode).val();
         start = $("#start_" + termCode).val();
         // console.log(start)
         end = $("#end_" +termCode).val();
+
         // console.log(end)
         if (start != "" && end != "") {
           $('#term_btn_' + termCode).prop('disabled', false)
@@ -44,6 +45,7 @@ function getDate(obj, termCode) {
         }
         // console.log("js success")
       }
+
     });
 }
 
