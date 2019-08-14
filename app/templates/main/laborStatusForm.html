@@ -174,7 +174,9 @@
           name = "addStudent"
           id="addMoreStudent"
           value = "formSubmission"
-          onclick="displayTable(); disableTerm()">Add Student</button>
+          onclick="displayTable(); disableTerm()">
+          <span class= "glyphicon glyphicon-plus-sign "></span> Add Student
+  </button>
 </div>
   <br />
     <table class="table table-striped" id="mytable">
@@ -187,18 +189,18 @@
           <th id="contractTable">Contract Hours </th>
           <th id ="notes">Notes</th>
           <th>Remove</th>
-        <tr>
+        </tr>
       </thead>
       <tbody>
       </tbody>
     </table>
-  <div class="col-md-12 ">
+  <div class="col-md-12 " id="reviewButton">
     <button type="button"
             class="btn btn-primary"
             name = "formSubmission"
-            id="reviewButton"
+            id="reviewButton0"
             value = "formSubmission"
-            onclick="reviewButtonFunctionality('preventPlusFromSubmitting')">Review</button>
+            onclick="reviewButtonFunctionality()">Review</button>
       {% include "snips/ReviewForm.html" %}
   </div>
 </div>

@@ -86,6 +86,11 @@ selectpicker, label {
   padding-left: 26px;
 }
 
-#reviewButton {
+#reviewButton0 {
   float: right;
+}
+
+#flash_container {
+  width: 1012px;
+  height: 55px;
 }
