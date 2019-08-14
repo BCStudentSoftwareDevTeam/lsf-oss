@@ -241,6 +241,10 @@ function showAccessLevel(obj){ // Make Table labels appear
 }
 // TABLE LABELS
 
+// hide review button will show when add student is clicked
+$('#reviewButton').hide()
+//end
+
 // Table glyphicons
 function showNotesModal(obj){// pops up Note Modal when notes glyphicon is clicked
   document.getElementById("modal_text").value=document.getElementById(obj).getAttribute("data-note");
@@ -260,7 +264,7 @@ function deleteRow(row) { // Deletes Row when remove glyphicon is clicked.
 //END of glyphicons
 
 // TABLE
-function displayTable(preventPlusFromSubmitting = "") { // displays table when plus glyphicon is clicked and check if fields are filled out
+function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
   if ($('#selectedSupervisor').val()=="" || $('#selectedDepartment').val()=="" || $('#selectedTerm').val()=="" || $("#dateTimePicker1").val()=="" || $("#dateTimePicker2").val()=="") {
     category = "danger"
     msg = "Please fill out all fields before submitting.";
@@ -279,7 +283,7 @@ function displayTable(preventPlusFromSubmitting = "") { // displays table when p
         $("#flasher").delay(3000).fadeOut()
       }
       else {
-        checkDuplicateBreaks(preventPlusFromSubmitting);
+        checkDuplicateBreaks();
        }
       }
     else {
@@ -290,14 +294,14 @@ function displayTable(preventPlusFromSubmitting = "") { // displays table when p
         $("#flasher").delay(3000).fadeOut()
       }
       else {
-        checkDuplicate(preventPlusFromSubmitting);
+        checkDuplicate();
       }
     }
   }
 }
 
-function checkDuplicate(preventPlusFromSubmitting = "") {// checks for duplicates in the table. This is for Academic Year
-    var table = document.getElementById("mytable");
+function checkDuplicate() {// checks for duplicates in the table. This is for Academic Year
+    var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
     var student = document.getElementById("student");
     var studentName = student.options[student.selectedIndex].text;
     var position = document.getElementById("position");
@@ -335,10 +339,10 @@ function checkDuplicate(preventPlusFromSubmitting = "") {// checks for duplicate
           return;
          }
   }
-    checkForPrimaryPosition(preventPlusFromSubmitting);
+    checkForPrimaryPosition();
 }
 
-function checkForPrimaryPosition(preventPlusFromSubmitting = ""){ // does several stuff read the comments down below
+function checkForPrimaryPosition(){ // does several stuff read the comments down below
   var student = document.getElementById("student");
   var studentName = student.options[student.selectedIndex].text;
   var jobType = document.getElementById("jobType");
@@ -359,7 +363,7 @@ function checkForPrimaryPosition(preventPlusFromSubmitting = ""){ // does severa
       catch (e) {
         if(jobTypeName == "Primary"){
 
-          createAndFillTable(preventPlusFromSubmitting);
+          createAndFillTable();
         }
       }
       $("#jobTable").show();
@@ -382,7 +386,7 @@ function checkForPrimaryPosition(preventPlusFromSubmitting = ""){ // does severa
       else {
       /* 4. If student has a primary position check the total hours for overload and add to table  */
           checkTotalhoursTable();
-          checkForTotalHoursDatabase(preventPlusFromSubmitting);
+          checkForTotalHoursDatabase();
           createAndFillTable();
       }
     }
@@ -425,6 +429,12 @@ function createAndFillTable() { // fills the table for Academic Year.
   cell5.innerHTML = notesGlyphicon;
   cell6.innerHTML = removeIcon;
   refreshSelectPickers();
+
+  var rowLength = document.getElementById("mytable").rows.length;
+  if (rowLength > 1) {
+    $('#reviewButton').show();
+  }
+
 }
 
 
@@ -451,7 +461,7 @@ function checkTotalhoursTable() {//Checks if the student has enough hours to req
 }
 
 
-function checkForTotalHoursDatabase(preventPlusFromSubmitting = "") {// gets sum of the total weekly hours from the database and add it to the ones in the table.
+function checkForTotalHoursDatabase() {// gets sum of the total weekly hours from the database and add it to the ones in the table.
   var student = $("#student").val();
   var term = $("#selectedTerm").val();
   var url = "/laborstatusform/gethours/" + term +"/" +student;
@@ -472,45 +482,39 @@ function checkForTotalHoursDatabase(preventPlusFromSubmitting = "") {// gets sum
       else{
         $('#PrimaryModal').modal('show'); // modal saying primary supervisor will be notified
       }
-      if (preventPlusFromSubmitting == 'preventPlusFromSubmitting') {
-        $('#PrimaryModal').on('hidden.bs.modal', function() {
-          createModalContent();
-        });
-      }
     }
   });
 }
 
 
 // THIS IS FOR BREAKSSSS
-function checkDuplicateBreaks(preventPlusFromSubmitting = "") { // checks for duplicates in table. For summer or any other break.
-      var table = document.getElementById("mytable");
-      var student = document.getElementById("student");
-      var studentName = student.options[student.selectedIndex].text;
-      var position = document.getElementById("position");
-      var positionName = position.options[position.selectedIndex].text;
+function checkDuplicateBreaks() { // checks for duplicates in table. For summer or any other break.
+    var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
+    var student = document.getElementById("student");
+    var studentName = student.options[student.selectedIndex].text;
+    var position = document.getElementById("position");
+    var positionName = position.options[position.selectedIndex].text;
 
-      for(const tr of table.querySelectorAll("thead tr")) {
-         const td0 = tr.querySelector("td:nth-child(1)");
-         const td1 = tr.querySelector("td:nth-child(2)");
-         const td2 = tr.querySelector("td:nth-child(3)");
+    for(const tr of table.querySelectorAll("tbody tr")) {
+       const td0 = tr.querySelector("td:nth-child(1)");
+       const td1 = tr.querySelector("td:nth-child(2)");
+       const td2 = tr.querySelector("td:nth-child(3)");
 
-         if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
-           document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and " + positionName
-           $("#warningModal").modal('show')
-            $("#contractTable").show();
-            refreshSelectPickers();
-            return;
-            }
+       if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
+         document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and " + positionName
+         $("#warningModal").modal('show')
+          $("#contractTable").show();
+          refreshSelectPickers();
+          return;
           }
-          createAndFillTableForBreaks(preventPlusFromSubmitting)
         }
+        createAndFillTableForBreaks()
+      }
 
-function createAndFillTableForBreaks(preventPlusFromSubmitting = '') {// Fills the table. For Summer term or any other break period
+function createAndFillTableForBreaks() {// Fills the table. For Summer term or any other break period
   $("#mytable").show();
   $("#jobTable").hide();
   $("#hoursTable").hide();
-  $("#primary_table").hide();
   $("#contractTable").show();
   var table = document.getElementById("mytable");
   var student = document.getElementById("student");
@@ -541,38 +545,19 @@ function createAndFillTableForBreaks(preventPlusFromSubmitting = '') {// Fills t
 
   refreshSelectPickers();
 
-  if (preventPlusFromSubmitting == 'preventPlusFromSubmitting'){
-    createModalContent()
+  var rowLength = document.getElementById("mytable").rows.length;
+  if (rowLength > 1) {
+    $('#reviewButton').show();
   }
 }
 // END OF (THIS IS FOR BREAKSSSS)
 
 
-function reviewButtonFunctionality(preventPlusFromSubmitting) { // Triggred when Review button is clicked and checks if fields are filled out.
-  disableTerm()
-  if ($('#selectedSupervisor').val()=="" || $('#selectedDepartment').val()=="" || $('#selectedTerm').val()=="" || $("#dateTimePicker1").val()=="" || $("#dateTimePicker2").val()=="") {
-    category = "danger"
-    msg = "Please fill out all fields before submitting.";
-    $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-    $("#flasher").delay(3000).fadeOut()
-  }
-  else {
-
-    if( !$('#student').val() ) {
-      var rowLength = document.getElementById("mytable").rows.length;
-      if (rowLength > 1) {
-         createModalContent();
-      }
-      else {
-        category = "danger"
-        msg = "Please fill out all fields before submitting.";
-        $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
-        $("#flasher").delay(3000).fadeOut()
-      }
-    }
-    else{
-      displayTable(preventPlusFromSubmitting); // the passed argument is used to prevent plus glyphicon from submitting the form.
-    }
+function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
+  disableTerm();
+  var rowLength = document.getElementById("mytable").rows.length;
+  if (rowLength > 1) {
+     createModalContent();
   }
 }
 
@@ -671,8 +656,6 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
           }
       }
      });
-
-  delete allTableDataDict["0"] // gets rid of the first dictionary that contains table labels
   return allTableDataDict
 }
 

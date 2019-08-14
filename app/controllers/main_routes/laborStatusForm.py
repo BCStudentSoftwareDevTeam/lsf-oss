@@ -69,7 +69,6 @@ def userInsert():
                 studentBnumber = data['Student'][bnumberIndexStart + 1: bnumberIndexEnd]
                 d, created = Student.get_or_create(ID = studentBnumber)
                 student = d.ID
-                print(student)
                 d, created = User.get_or_create(username = data['Supervisor'])
                 primarySupervisor = d.username
                 d, created = Department.get_or_create(DEPT_NAME = data['Department'])
