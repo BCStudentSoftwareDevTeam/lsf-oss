@@ -74,9 +74,11 @@ def userInsert():
                 department = d.departmentID
                 d, created = Term.get_or_create(termCode = data['Term'])
                 term = d.termCode
-                start = data['Start Date']
+                startIndex = data['Contract Dates'].find(' -')
+                EndIndex = data['Contract Dates'].find('- ')
+                start = data['Contract Dates'][:startIndex]
+                end = data['Contract Dates'][EndIndex+2:]
                 startDate = datetime.strptime(start, "%m/%d/%Y").strftime('%Y-%m-%d')
-                end = data['End Date']
                 endDate = datetime.strptime(end, "%m/%d/%Y").strftime('%Y-%m-%d')
                 lsf = LaborStatusForm.create(termCode = term,
                                              studentSupervisee = student,

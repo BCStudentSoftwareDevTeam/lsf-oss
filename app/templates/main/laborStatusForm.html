@@ -35,6 +35,7 @@
                 id='selectedSupervisor'
                 data-live-search='true'
                 title="Supervisor">
+            <option value = "" disabled selected>Select a Supervisor</option>
           {% for staff in staffs %}
             <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.username == staff.PIDM %} selected {% endif %}{% endif %}>{{staff.FIRST_NAME}} {{staff.LAST_NAME}} ({{staff.ID}})</option>
           {% endfor %}
@@ -68,6 +69,7 @@
                     title="Term"
                     data-width="100%"
                     onchange = "showAccessLevel(this); preFilledDate(this)">
+                <option value = "" disabled selected>Select a Term</option>
             {% for term in terms %}
                 <option value = "{{term.termCode}}">{{term.termName}}</option>
             {% endfor %}
@@ -89,7 +91,7 @@
         <!--datePicker for End date-->
       <label for="dateTimePicker2" id="datePicker">End Date</label>
         <div class='input-group date'>
-            <input type='text' class="form-control disable require" id='dateTimePicker2' name="endDate" placeholder="End Date" data-width="320px" onchange="updateStart(this), updateDate(this)" />
+            <input type='text' class="form-control disable require" id='dateTimePicker2' name="endDate" placeholder="End Date" data-width="320px" onchange="updateDate(this), updateStart(this)" />
             <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
@@ -111,6 +113,7 @@
                 data-live-search='true'
                 data-width="100%"
                 title="Student" >
+              <option value = "" disabled selected>Select a Student</option>
           {% for student in students %}
               <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %}>{{student.FIRST_NAME}} {{student.LAST_NAME}} ({{student.ID}})</option>
           {% endfor %}
@@ -125,6 +128,7 @@
                 data-live-search='true'
                 data-width="100%"
                 title="Position" >
+                <option value = "" disabled selected>Select a Position</option>
                 {% if forms %} <option id="{{forms.POSN_CODE}}" value="{{forms.POSN_TITLE, forms.WLS}}" data-wls={{forms.WLS}} {% if forms %} selected {% endif %}>{{forms.POSN_TITLE}} ({{forms.WLS}})</option>{% endif %}
         </select>
     </div>
@@ -138,6 +142,7 @@
                   title="Job Type"
                   data-width="100%"
                   onchange="fillHoursPerWeek()" >
+            <option value = "" disabled selected>Select a Job Type</option>
             <option value="Primary"{% if forms %}{% if forms.jobType == "Primary" %} selected {% endif %}{% endif %}>Primary</option>
             <option value="Secondary"{% if forms %}{% if forms.jobType == "Secondary" %} selected {% endif %}{% endif %}>Secondary</option>
           </select>
@@ -152,6 +157,7 @@
                   data-live-search='true'
                   data-width="100%"
                   title="Hours per week" >
+          <option value = "" disabled selected>Select Hours Per Week</option>
           <option value="{{forms.weeklyHours}}"{% if forms %} selected {% endif %}>{{forms.weeklyHours}}</option>
           </select>​
     </div>

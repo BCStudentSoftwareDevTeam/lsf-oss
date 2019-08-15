@@ -4,7 +4,7 @@ $(document).ready(function(){
     $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
 
     if(document.getElementById('selectedDepartment').value){
-      console.log(document.getElementById('selectedDepartment').value);
+      checkCompliance(document.getElementById('selectedDepartment'));
       getDepartment(document.getElementById('selectedDepartment'), 'stopSelectRefresh');
     }
 });
@@ -14,10 +14,9 @@ $( "laborStatusForm" ).submit(function( event ) {
   event.preventDefault();
 });
 
-function updateDate() {$("#dateTimePicker1").datepicker({
-  onSelect: function() {
-    $('#data').text(this.value);
-    console.log(this.value)
+function updateDate(inst) {$("#dateTimePicker1").datepicker({
+  onSelect: function(formattedDate, date, inst) {
+        $(inst.el).trigger('change');
   }
 })
 }
@@ -424,6 +423,8 @@ function createAndFillTable() { // fills the table for Academic Year.
   var notesGlyphicon = "<a data-toggle='modal' onclick = 'showNotesModal(\""+String(studentName) + String(jobTypeName) + String(positionName)+"\")' id= '"+String(studentName) +
                                                           String(jobTypeName) + String(positionName)+"' ><span class='glyphicon glyphicon-edit'></span></a>";
   var removeIcon = "<a onclick = 'deleteRow(this)' class='remove'><span class='glyphicon glyphicon-remove'></span></a>";
+  var startDate  = $('#dateTimePicker1').datepicker({dateFormat: 'dd-mm-yy'}).val();
+  var endDate  = $('#dateTimePicker2').datepicker({dateFormat: 'dd-mm-yy'}).val();
 
   $("#mytable").show();
   $("#jobTable").show();
@@ -435,6 +436,7 @@ function createAndFillTable() { // fills the table for Academic Year.
   var cell4 = row.insertCell(3);
   var cell5 = row.insertCell(4);
   var cell6 = row.insertCell(5);
+  var cell7 = row.insertCell(6);
 
   cell1.innerHTML = studentName;
   cell2.innerHTML = positionName;
@@ -443,8 +445,9 @@ function createAndFillTable() { // fills the table for Academic Year.
   cell2.id="position_code";
   cell3.innerHTML = jobTypeName;
   cell4.innerHTML = hoursPerWeekName;
-  cell5.innerHTML = notesGlyphicon;
-  cell6.innerHTML = removeIcon;
+  cell5.innerHTML = startDate + ' - ' + endDate;
+  cell6.innerHTML = notesGlyphicon;
+  cell7.innerHTML = removeIcon;
   refreshSelectPickers();
 
   var rowLength = document.getElementById("mytable").rows.length;
@@ -537,6 +540,8 @@ function createAndFillTableForBreaks() {// Fills the table. For Summer term or a
   var notesGlyphicon = "<a data-toggle='modal' onclick = 'showNotesModal(\""+String(studentName) + String(positionName)+"\")' id= '"+String(studentName) +
                                                           String(positionName)+"' ><span class='glyphicon glyphicon-edit'></span></a>";
   var removeIcon = "<a onclick = 'deleteRow(this)' class='remove'><span class='glyphicon glyphicon-remove'></span></a>";
+  var startDate  = $('#dateTimePicker1').datepicker({dateFormat: 'dd-mm-yy'}).val();
+  var endDate  = $('#dateTimePicker2').datepicker({dateFormat: 'dd-mm-yy'}).val();
 
 
   var row = table.insertRow(-1);
@@ -548,12 +553,14 @@ function createAndFillTableForBreaks() {// Fills the table. For Summer term or a
   var cell3 = row.insertCell(2);
   var cell4 = row.insertCell(3);
   var cell5 = row.insertCell(4);
+  var cell6 = row.insertCell(5);
 
   cell1.innerHTML = studentName;
   cell2.innerHTML = positionName;
   cell3.innerHTML = selectedContractHoursName;
-  cell4.innerHTML = notesGlyphicon;
-  cell5.innerHTML = removeIcon;
+  cell4.innerHTML = startDate + ' - ' + endDate;
+  cell5.innerHTML = notesGlyphicon;
+  cell6.innerHTML = removeIcon;
 
   refreshSelectPickers();
 
@@ -621,14 +628,14 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
       var department = $("#selectedDepartment").val();
       var term = $("#selectedTerm").val();
       var whichTerm = term.toString().substr(-2);
-      var startDate = $("#dateTimePicker1").val();
-      var endDate = $("#dateTimePicker2").val();
+      // var startDate = $("#dateTimePicker1").val();
+      // var endDate = $("#dateTimePicker2").val();
       var positionCode = $("#position_code").attr("data-posn");
       var wls = $('#position_code').attr('data-wls')
       console.log(wls)
       listDict = []
-      listDict.push(supervisor, department, term, startDate, endDate, positionCode, wls)
-      var headersLabel = ["Supervisor", "Department", "Term", "Start Date", "End Date", "Position Code", "WLS"]
+      listDict.push(supervisor, department, term, positionCode, wls)
+      var headersLabel = ["Supervisor", "Department", "Term", "Position Code", "WLS"]
       var tableDataDict = {};
       for (i in listDict) {
         tableDataDict[headersLabel[i]] = listDict[i];
@@ -637,7 +644,7 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
       /* If it's a break, get table values */
       if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
         tableDataDict["Job Type"] = "Secondary";
-        var headers_2_data = ["Student", "Position", "Contract Hours"];
+        var headers_2_data = ["Student", "Position", "Contract Hours", "Contract Dates"];
         $('td', $(this)).each(function(index, item) {
           var aTag = $.parseHTML($(item).html());
           if (!$(aTag).hasClass('remove')) {
@@ -654,7 +661,7 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
       }
       /* If it's academic year, get the table values */
       else {
-          var headersData = ["Student", "Position", "Job Type", "Hours Per Week"];
+          var headersData = ["Student", "Position", "Job Type", "Hours Per Week", "Contract Dates"];
           $('td', $(this)).each(function(index, item) {
             var aTag = $.parseHTML($(item).html());
             if (!$(aTag).hasClass('remove')) {
