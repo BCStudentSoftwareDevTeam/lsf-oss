@@ -14,6 +14,13 @@ $( "laborStatusForm" ).submit(function( event ) {
   event.preventDefault();
 });
 
+function updateDate() {$("#dateTimePicker1").datepicker({
+  onSelect: function() {
+    $('#data').text(this.value);
+    console.log(this.value)
+  }
+})
+}
 
 $(document).on('keyup', 'input[name=contractHours]', function () { // sets contract hours minimum value
    var _this = $(this);
@@ -143,7 +150,6 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
  $('#position').change(function(){
    //this is just getting the value that is selected
    var wls = $('#position').find('option:selected').attr('data-wls');
-   console.log(wls);
    if (wls >= 5) {
      document.getElementById('WLSModalTitle').innerHTML = "Work-Learning-Service Levels (WLS)"
      document.getElementById('WLSModalText').innerHTML = "Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
