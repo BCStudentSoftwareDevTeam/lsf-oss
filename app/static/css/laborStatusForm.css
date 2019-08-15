@@ -90,7 +90,7 @@ selectpicker, label {
   float: right;
 }
 
-#termInfo {
+.glyphicon-question-sign  {
   display: none;
   color: #2d6a9f;
 }

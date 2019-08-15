@@ -29,8 +29,8 @@
 <div class="floatleft">
   <div class="form-group setSelectpickerHeight">
     <!--selectpicker for supervisor-->
-    <label for="supervisor">Supervisor</label>
-        <select class="selectpicker form-control require"
+    <label for="supervisor">Supervisor <span type="button" id="supervisorInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one supervisor at a time"></span></label>
+        <select class="selectpicker form-control disable require"
                 name='supervisor'
                 id='selectedSupervisor'
                 data-live-search='true'
@@ -43,8 +43,8 @@
   </div>
   <div class="form-group setSelectpickerHeight">
     <!--selectpicker for department-->
-    <label for="department">Department</label>
-        <select class="selectpicker require"
+    <label for="department">Department <span type="button" id="departmentInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one department at a time"></span></label>
+        <select class="selectpicker disable require"
                 name='department'
                 id='selectedDepartment'
                 data-live-search='true'

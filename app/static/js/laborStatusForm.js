@@ -53,6 +53,12 @@ function disableTerm() {
   $("#selectedTerm").prop("disabled", "disabled");
   $("#termInfo").show();
   $('#selectedTerm').selectpicker('refresh');
+  $("#selectedSupervisor").prop("disabled", "disabled");
+  $("#supervisorInfo").show();
+  $('#selectedSupervisor').selectpicker('refresh');
+  $("#selectedDepartment").prop("disabled", "disabled");
+  $("#departmentInfo").show();
+  $('#selectedDepartment').selectpicker('refresh');
 }
 
 function preFilledDate(obj){ // get term start date and end date
@@ -209,6 +215,8 @@ function checkCompliance(obj) {
             $('#selectedTerm').selectpicker('refresh');
             $('#student').selectpicker('refresh');
             $('#position').selectpicker('refresh');
+            $('#selectedSupervisor').selectpicker('refresh');
+            $('#selectedDepartment').selectpicker('refresh');
           }
           else{
             $('.disable').prop('disabled', false);
