@@ -40,51 +40,48 @@
           <th>Created</th>
           <th>Contract Dates</th>
           <th> Edit </th>
-
-
         </tr>
       </thead>
+
       <tbody id="tablebody">
         {% for formHistory in pending_labor_forms %}
         <tr id="tableData" class="tableData" align="center">
-          <td> {# APPROVE #}
-            <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.laborStatusFormID}}" />
-            <span id="notes_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-book btn-lg text-success" data-toggle="modal" data-target="#notesModal"> </span>
+            <td> {# APPROVE #}
+              <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.laborStatusFormID}}" />
+              <span id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})" class="glyphicon glyphicon-book btn-lg {% if formHistory.rejectReason != None %} text-success {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
 
+            </td>
+            <td> {# TERM #}
+              {{formHistory.formID.termCode.termName}}
+            </td>
+            <td> {# DEPARTMENT #}
+              {{formHistory.formID.department.DEPT_NAME}}
+            </td>
+            <td> {# SUPERVISOR #}
+              {{formHistory.formID.supervisor.FIRST_NAME}} {{formHistory.formID.supervisor.LAST_NAME}}
+            </td>
+            <td>
+              |
+            </td>
+            <td> {# STUDENT #}
+              {{formHistory.formID.studentSupervisee.FIRST_NAME}} {{formHistory.formID.studentSupervisee.LAST_NAME}}
+            </td>
+            <td> {# POSITON AND WLS #}
+              {{formHistory.formID.POSN_TITLE}} ({{formHistory.formID.WLS}})
+            </td>
+            <td> {# HOURS #}
+            {% if formHistory.formID.weeklyHours != None%} {{formHistory.formID.weeklyHours}} {% else %}   {{formHistory.formID.contractHours}} {% endif %}
           </td>
-          <td> {# TERM #}
-            {{formHistory.formID.termCode.termName}}
+          <td> {# CREATED BY #}
+            {{formHistory.createdBy.username}}  <br/> {{formHistory.createdDate.strftime('%m/%d/%y')}}
           </td>
-          <td> {# DEPARTMENT #}
-            {{formHistory.formID.department.DEPT_NAME}}
+          <td> {# CREATED DATE #}
+             {{formHistory.formID.startDate.strftime('%m/%d/%y')}} -  {{formHistory.formID.endDate.strftime('%m/%d/%y')}}
           </td>
-          <td> {# SUPERVISOR #}
-            {{formHistory.formID.supervisor.FIRST_NAME}} {{formHistory.formID.supervisor.LAST_NAME}}
+          <td> {# EDIT #}
+            <a href="/modifyLSF/{{formHistory.formID.laborStatusFormID}}"> <span id="edit_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" > </span> </a>
+            <span id="reject_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-trash" data-toggle="modal" data-target="#rejectModal"> </span>
           </td>
-          <td>
-            |
-          </td>
-          <td> {# STUDENT #}
-            {{formHistory.formID.studentSupervisee.FIRST_NAME}} {{formHistory.formID.studentSupervisee.LAST_NAME}}
-          </td>
-          <td> {# POSITON AND WLS #}
-            {{formHistory.formID.POSN_TITLE}} ({{formHistory.formID.WLS}})
-          </td>
-          <td> {# HOURS #}
-          {% if formHistory.formID.weeklyHours != None%} {{formHistory.formID.weeklyHours}} {% else %}   {{formHistory.formID.contractHours}} {% endif %}
-        </td>
-        <td> {# CREATED BY #}
-          {{formHistory.createdBy.username}}  <br/> {{formHistory.createdDate.strftime('%m/%d/%y')}}
-        </td>
-        <td> {# CREATED DATE #}
-           {{formHistory.formID.startDate.strftime('%m/%d/%y')}} -  {{formHistory.formID.endDate.strftime('%m/%d/%y')}}
-        </td>
-        <td> {# EDIT #}
-          <a href="/modifyLSF/{{formHistory.formID.laborStatusFormID}}"> <span id="edit_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" > </span> </a>
-          <span id="reject_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-trash" data-toggle="modal" data-target="#rejectModal"> </span>
-        </td>
-
-
 
         </tr>
         {% endfor %}
@@ -114,8 +111,9 @@
             </div>
             <div class="modal-body" >
               <p> These notes are only for the Labor Office Staff.</p>
-              <p> Pre-fill this with the notes from the supervisor 
-              <textarea name="laborNotes" rows="8" cols="70"> </textarea>
+              <p> Pre-fill this with the notes from the supervisor
+                <h4> Supervisor Notes </h4>
+                  <p id="notesText"> </p>
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -57,8 +57,36 @@ def approvedForms():
         # print(rsp)
         if rsp:
             print("Inserted into nonexistent Banner DB")
+            #FIXME: Update form history
 
             return jsonify({"Success": True})
+    except Exception as e:
+        print("This did not work", e)
+        return jsonify({"Success": False})
+
+
+@admin.route('/admin/getNotes/<formid>', methods=['GET'])
+def getNotes(formid):
+    try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+        print(formid)
+        notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid)
+        print(notes)
+
+        notesDict = {}
+        if notes.supervisorNotes:
+            notesDict["supervisorNotes"] = notes.supervisorNotes
+
+        if notes.laborDepartmentNotes:
+            notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes
+
+        print(notesDict["supervisorNotes"])
+        return jsonify(notesDict)
+        
     except Exception as e:
         print("This did not work", e)
         return jsonify({"Success": False})

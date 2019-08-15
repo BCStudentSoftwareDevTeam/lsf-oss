@@ -1105,7 +1105,7 @@ fh = [  {
              "reviewedDate": datetime.date(2020, 5, 4),
              "reviewedBy": None,
              "status": Status.get(Status.statusName == "Pending"),
-             "rejectReason": None
+             "rejectReason": "Hello, I am a reject reason."
                 },
                 {
                 "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 6),
@@ -1287,7 +1287,7 @@ fh = [  {
                 "reviewedDate": datetime.date(2020, 8, 25),
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Pending"),
-                "rejectReason": None
+                "rejectReason": "Hey, I am a reject reason."
                  },
                 {
                 "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 14),
@@ -1365,7 +1365,7 @@ fh = [  {
                 "reviewedDate": None,
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Pending"),
-                "rejectReason": None
+                "rejectReason": "Hi, I am a reject reason."
                  },
                  {
                  "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 18),
@@ -1378,7 +1378,7 @@ fh = [  {
                  "reviewedDate": None,
                  "reviewedBy": None,
                  "status": Status.get(Status.statusName == "Pending"),
-                 "rejectReason": None
+                 "rejectReason": "Holas, I am a reject reason."
                   },
                   {
                   "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 18),
@@ -1417,7 +1417,7 @@ fh = [  {
                 "reviewedDate": datetime.date(2017, 9, 12),
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Denied"),
-                "rejectReason": "Unnaceptable."
+                "rejectReason": "Unacceptable."
                  },
                  {
                  "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 19),

@@ -21,3 +21,22 @@ function insertApprovals() {
  }
  })
 };
+
+function getNotes (formID) {
+  console.log(formID);
+
+  $.ajax({
+    type: "GET",
+    url: "/admin/getNotes/"+formID,
+    datatype: "json",
+    success: function (response) {
+      if (!("Success" in response)) {
+        $("#notesText").append(response);
+      }
+
+      }
+
+  })
+
+
+};
