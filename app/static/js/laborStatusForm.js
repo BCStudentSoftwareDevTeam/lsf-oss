@@ -14,10 +14,9 @@ $(document).ready(function(){
     }
 });
 
-// $( "laborStatusForm" ).submit(function( event ) {
-//   alert( "Handler for .submit() called." );
-//   event.preventDefault();
-// });
+$( "laborStatusForm" ).submit(function( event ) {
+  event.preventDefault();
+});
 
 
 $(document).on('keyup', 'input[name=contractHours]', function () { // sets contract hours minimum value
