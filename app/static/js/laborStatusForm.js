@@ -1,25 +1,24 @@
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip()
-    // $('[data-tooltip="true"]').tooltip();
     $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
 
-    if(document.getElementById('selectedDepartment').value){
+    if(document.getElementById('selectedDepartment').value){// prepopulates position on redirect from rehire button and checks whether department is in compliance.
       checkCompliance(document.getElementById('selectedDepartment'));
       getDepartment(document.getElementById('selectedDepartment'), 'stopSelectRefresh');
     }
+
+    if(document.getElementById('jobType').value){// fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
+      var value = $('#selectedHoursPerWeek').val();
+      $('#selectedHoursPerWeek').val(value);
+      fillHoursPerWeek("fillhours");
+    }
 });
 
-$( "laborStatusForm" ).submit(function( event ) {
-  alert( "Handler for .submit() called." );
-  event.preventDefault();
-});
+// $( "laborStatusForm" ).submit(function( event ) {
+//   alert( "Handler for .submit() called." );
+//   event.preventDefault();
+// });
 
-function updateDate(inst) {$("#dateTimePicker1").datepicker({
-  onSelect: function(formattedDate, date, inst) {
-        $(inst.el).trigger('change');
-  }
-})
-}
 
 $(document).on('keyup', 'input[name=contractHours]', function () { // sets contract hours minimum value
    var _this = $(this);
@@ -48,8 +47,8 @@ $('#selectedHoursPerWeek').change(function(){
     }
 });
 
-function disableTerm() {
-  // disables term select picker when student is selected
+function disableTermSupervisorDept() {
+  // disables term, supervisor and department select pickers when add student button is clicked
   $("#selectedTerm").prop("disabled", "disabled");
   $("#termInfo").show();
   $('#selectedTerm').selectpicker('refresh');
@@ -193,12 +192,6 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
       $('.selectpicker').selectpicker('refresh');
     }
   }
-}
-
-if(document.getElementById('jobType').value){// fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
-  var value = $('#selectedHoursPerWeek').val();
-  $('#selectedHoursPerWeek').val(value);
-  fillHoursPerWeek("fillhours");
 }
 
 // Check if department is in compliance.
@@ -581,7 +574,7 @@ function createAndFillTableForBreaks() {// Fills the table. For Summer term or a
 
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
-  disableTerm();
+  disableTermSupervisorDept();
   var rowLength = document.getElementById("mytable").rows.length;
   if (rowLength > 1) {
      createModalContent();

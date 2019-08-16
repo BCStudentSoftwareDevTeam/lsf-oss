@@ -30,7 +30,7 @@
   <div class="form-group setSelectpickerHeight">
     <!--selectpicker for supervisor-->
     <label for="supervisor">Supervisor <span type="button" id="supervisorInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one supervisor at a time"></span></label>
-        <select class="selectpicker form-control disable require"
+        <select class="selectpicker form-control"
                 name='supervisor'
                 id='selectedSupervisor'
                 data-live-search='true'
@@ -44,7 +44,7 @@
   <div class="form-group setSelectpickerHeight">
     <!--selectpicker for department-->
     <label for="department">Department <span type="button" id="departmentInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one department at a time"></span></label>
-        <select class="selectpicker disable require"
+        <select class="selectpicker"
                 name='department'
                 id='selectedDepartment'
                 data-live-search='true'
@@ -61,7 +61,7 @@
   <div class="form-group {% if forms %} has-error {% endif %} setSelectpickerHeight ">
     <!-- selectpicker for term  -->
       <label for="term">Term <span type="button" id="termInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted to one term at a time"></span></label>
-            <select class="selectpicker disable require"
+            <select class="selectpicker disable"
                     name='term'
                     id='selectedTerm'
                     data-live-search="true"
@@ -81,7 +81,7 @@
         <!--datePicker for start date-->
         <label for="dateTimePicker1" id="datePicker">Start Date</label>
           <div class='input-group date'>
-            <input type='text' class="form-control disable require" id='dateTimePicker1' name="startDate" placeholder="Start Date" data-width="320px" onchange="updateEnd(this)" />
+            <input type='text' class="form-control disable" id='dateTimePicker1' name="startDate" placeholder="Start Date" data-width="320px" onchange="updateEnd(this)" />
             <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
@@ -91,7 +91,7 @@
         <!--datePicker for End date-->
       <label for="dateTimePicker2" id="datePicker">End Date</label>
         <div class='input-group date'>
-            <input type='text' class="form-control disable require" id='dateTimePicker2' name="endDate" placeholder="End Date" data-width="320px" onchange="updateDate(this), updateStart(this)" />
+            <input type='text' class="form-control disable" id='dateTimePicker2' name="endDate" placeholder="End Date" data-width="320px" onchange="updateStart(this)" />
             <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
@@ -107,7 +107,7 @@
   <div class= "form-group setSelectpickerHeight">
       <!-- selectpicker for student  -->
       <label for="student">Student</label>
-        <select class="selectpicker disable require"
+        <select class="selectpicker disable"
                 name='student'
                 id='student'
                 data-live-search='true'
@@ -122,7 +122,7 @@
   <div class= "form-group setSelectpickerHeight" id="Position">
       <!--selectpicker for positio3-->
       <label for="student">Position (WLS)</label>
-        <select class="selectpicker disable require"
+        <select class="selectpicker disable"
                 name='position'
                 id='position'
                 data-live-search='true'
@@ -135,7 +135,7 @@
     <div id="JopTypes" class= "form-group setSelectpickerHeight">
         <!--selectpicker for Job type-->
         <label for="student">Job Type</label>
-          <select class="selectpicker disable makeRequired"
+          <select class="selectpicker disable"
                   name='jobType'
                   id='jobType'
                   data-live-search='true'
@@ -151,7 +151,7 @@
     <div id="hoursPerWeek" class= "form-group setSelectpickerHeight">
         <!--selectpicker for hrs per week-->
         <label for="student">Hours Per Week</label>
-          <select class="selectpicker disable makeRequired"
+          <select class="selectpicker disable"
                   name='selectedHoursPerWeek'
                   id='selectedHoursPerWeek'
                   data-live-search='true'
@@ -164,7 +164,7 @@
     <div id="contractHours" class= "form-group setSelectpickerHeight">
     <!-- Contract hours for breaks -->
        <label for="student">Contract Hours</label>
-         <input class="form-control quantity disable contractHour"
+         <input class="form-control quantity disable"
                  type = "number"
                  name='contractHours'
                  id='selectedContractHours'
@@ -182,7 +182,7 @@
           name = "addStudent"
           id="addMoreStudent"
           value = "formSubmission"
-          onclick="displayTable(); disableTerm()">Add Student
+          onclick="displayTable(); disableTermSupervisorDept()">Add Student
   </button>
 </div>
   <br />
