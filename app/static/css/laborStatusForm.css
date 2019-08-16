@@ -105,3 +105,11 @@ selectpicker, label {
   width: 87%;
   height: 55px;
 }
+
+#dateTimePicker1 {
+  background-color: #fff;
+}
+
+#dateTimePicker2 {
+  background-color: #fff;
+}

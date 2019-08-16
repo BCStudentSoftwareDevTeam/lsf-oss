@@ -76,27 +76,42 @@ function fillDates(response){ // prefill term start and term end
     var end = response[key]["End Date"];
     // Start Date
     var startd = new Date(start)
-    var dayStart = startd.getDate();
-    var monthStart = startd.getMonth();
+    var dayStart1 = startd.getDate();
+    var monthStart1 = startd.getMonth();
     var yearStart = startd.getFullYear();
     // End Date
     var endd = new Date(end)
-    var dayEnd = endd.getDate();
-    var monthEnd = endd.getMonth();
+    var dayEnd1 = endd.getDate();
+    var monthEnd1 = endd.getMonth();
     var yearEnd = endd.getFullYear();
     // Pre-populate values
     $("#dateTimePicker1").val(start);
     $("#dateTimePicker2").val(end);
     // set the minimum and maximum Date for Term Start Date
-    $('#dateTimePicker1').datepicker({minDate: new Date(yearStart, monthStart, dayStart)});
-    $('#dateTimePicker1').datepicker({maxDate: new Date(yearEnd, monthEnd, dayEnd)});
-    $( "#dateTimePicker1" ).datepicker( "option", "minDate", new Date(yearStart, monthStart, dayStart) );
-    $( "#dateTimePicker1" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd, dayEnd));
+    $('#dateTimePicker1').datepicker({minDate: new Date(yearStart, monthStart1, dayStart1)});
+    $('#dateTimePicker1').datepicker({maxDate: new Date(yearEnd, monthEnd1, dayEnd1)});
+    $( "#dateTimePicker1" ).datepicker( "option", "minDate", new Date(yearStart, monthStart1, dayStart1) );
+    $( "#dateTimePicker1" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
     // set the minimum and maximum Date for Term End Date
-    $('#dateTimePicker2').datepicker({maxDate: new Date(yearEnd, monthEnd, dayEnd)});
-    $('#dateTimePicker2').datepicker({minDate: new Date(yearStart, monthStart, dayStart)});
-    $( "#dateTimePicker2" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd, dayEnd));
-    $( "#dateTimePicker2" ).datepicker( "option", "minDate", new Date(yearStart, monthStart, dayStart) );
+    $('#dateTimePicker2').datepicker({maxDate: new Date(yearEnd, monthEnd1, dayEnd1)});
+    $('#dateTimePicker2').datepicker({minDate: new Date(yearStart, monthStart1, dayStart1)});
+    $( "#dateTimePicker2" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
+    $( "#dateTimePicker2" ).datepicker( "option", "minDate", new Date(yearStart, monthStart1, dayStart1) );
+
+
+    /*Here is the code to start with for restricting dates for the datepicker when it is not readonly.  Right now it restricts dates when you type
+    them in and hit enter, not if you just type them in and tab over to the next selectpicker.  Right now the datepickers are readonly.*/
+    
+    // var dayStart2 = ("0" + (startd.getDate())).slice(-2);
+    // var monthStart2 = ("0" + (startd.getMonth() + 1)).slice(-2);
+    // var dayEnd2 = ("0" + (endd.getDate())).slice(-2);
+    // var monthEnd2 = ("0" + (endd.getMonth() + 1)).slice(-2);
+    // $("#dateTimePicker2").attr("min", monthStart2 + "-" + dayStart2 + "-" + yearStart);
+    // $("#dateTimePicker2").attr("max", monthEnd2 + "-" + dayEnd2 + "-" + yearEnd);
+    // $("#dateTimePicker1").attr("min", monthStart2 + "-" + dayStart2 + "-" + yearStart);
+    // $("#dateTimePicker1").attr("max", monthEnd2 + "-" + dayEnd2 + "-" + yearEnd);
+    // $("#dateTimePicker1").datepicker('refresh');
+    // $("#dateTimePicker2").datepicker('refresh');
   }
 }
 
