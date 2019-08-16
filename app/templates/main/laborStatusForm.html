@@ -29,7 +29,7 @@
 <div class="floatleft">
   <div class="form-group setSelectpickerHeight">
     <!--selectpicker for supervisor-->
-    <label for="supervisor">Supervisor <span type="button" id="supervisorInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one supervisor at a time"></span></label>
+    <label for="selectedSupervisor">Supervisor <span type="button" id="supervisorInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one supervisor at a time"></span></label>
         <select class="selectpicker form-control"
                 name='supervisor'
                 id='selectedSupervisor'
@@ -37,13 +37,13 @@
                 title="Supervisor">
             <option value = "" disabled selected>Select a Supervisor</option>
           {% for staff in staffs %}
-            <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.username == staff.PIDM %} selected {% endif %}{% endif %}>{{staff.FIRST_NAME}} {{staff.LAST_NAME}} ({{staff.ID}})</option>
+            <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.username == staff.PIDM %} selected {% endif %}{% endif %} data-subtext="({{staff.ID}})">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
           {% endfor %}
         </select>
   </div>
   <div class="form-group setSelectpickerHeight">
     <!--selectpicker for department-->
-    <label for="department">Department <span type="button" id="departmentInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one department at a time"></span></label>
+    <label for="selectedDepartment">Department <span type="button" id="departmentInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one department at a time"></span></label>
         <select class="selectpicker"
                 name='department'
                 id='selectedDepartment'
@@ -53,14 +53,14 @@
                 onchange = "checkCompliance(this); getDepartment(this)">
           <option value = "" disabled selected>Select a Department</option>
           {% for department in departments %}
-            <option value="{{department.DEPT_NAME}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %}>{{department.DEPT_NAME}}</option>
+            <option value="{{department.DEPT_NAME}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-subtext = "({{department.ORG}}-{{department.ACCOUNT}})">{{department.DEPT_NAME}}</option>
           {% endfor %}
         </select>
         {% include "snips/ReviewForm.html" %}
   </div>
   <div class="form-group {% if forms %} has-error {% endif %} setSelectpickerHeight ">
     <!-- selectpicker for term  -->
-      <label for="term">Term <span type="button" id="termInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted to one term at a time"></span></label>
+      <label for="selectedTerm">Term <span type="button" id="termInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted to one term at a time"></span></label>
             <select class="selectpicker disable"
                     name='term'
                     id='selectedTerm'
@@ -107,21 +107,21 @@
   <div class= "form-group setSelectpickerHeight">
       <!-- selectpicker for student  -->
       <label for="student">Student</label>
-        <select class="selectpicker disable"
-                name='student'
+        <select class="selectpicker disable stu"
+                name='ssstudent'
                 id='student'
                 data-live-search='true'
                 data-width="100%"
                 title="Student" >
               <option value = "" disabled selected>Select a Student</option>
           {% for student in students %}
-              <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %}>{{student.FIRST_NAME}} {{student.LAST_NAME}} ({{student.ID}})</option>
+              <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %} data-subtext="({{student.ID}})">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
           {% endfor %}
         </select>
   </div>
   <div class= "form-group setSelectpickerHeight" id="Position">
       <!--selectpicker for positio3-->
-      <label for="student">Position (WLS)</label>
+      <label for="position">Position (WLS)</label>
         <select class="selectpicker disable"
                 name='position'
                 id='position'
@@ -134,7 +134,7 @@
     </div>
     <div id="JopTypes" class= "form-group setSelectpickerHeight">
         <!--selectpicker for Job type-->
-        <label for="student">Job Type</label>
+        <label for="jobType">Job Type</label>
           <select class="selectpicker disable"
                   name='jobType'
                   id='jobType'
@@ -150,7 +150,7 @@
     </div>
     <div id="hoursPerWeek" class= "form-group setSelectpickerHeight">
         <!--selectpicker for hrs per week-->
-        <label for="student">Hours Per Week</label>
+        <label for="selectedHoursPerWeek">Hours Per Week</label>
           <select class="selectpicker disable"
                   name='selectedHoursPerWeek'
                   id='selectedHoursPerWeek'
@@ -163,7 +163,7 @@
     </div>
     <div id="contractHours" class= "form-group setSelectpickerHeight">
     <!-- Contract hours for breaks -->
-       <label for="student">Contract Hours</label>
+       <label for="selectedContractHours">Contract Hours</label>
          <input class="form-control quantity disable"
                  type = "number"
                  name='contractHours'

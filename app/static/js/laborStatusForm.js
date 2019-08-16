@@ -101,7 +101,7 @@ function fillDates(response){ // prefill term start and term end
 
     /*Here is the code to start with for restricting dates for the datepicker when it is not readonly.  Right now it restricts dates when you type
     them in and hit enter, not if you just type them in and tab over to the next selectpicker.  Right now the datepickers are readonly.*/
-    
+
     // var dayStart2 = ("0" + (startd.getDate())).slice(-2);
     // var monthStart2 = ("0" + (startd.getMonth() + 1)).slice(-2);
     // var dayEnd2 = ("0" + (endd.getDate())).slice(-2);
@@ -440,6 +440,7 @@ function createAndFillTable() { // fills the table for Academic Year.
   var removeIcon = "<a onclick = 'deleteRow(this)' class='remove'><span class='glyphicon glyphicon-remove'></span></a>";
   var startDate  = $('#dateTimePicker1').datepicker({dateFormat: 'dd-mm-yy'}).val();
   var endDate  = $('#dateTimePicker2').datepicker({dateFormat: 'dd-mm-yy'}).val();
+  var studentbnumber = $('#student').val();
 
   $("#mytable").show();
   $("#jobTable").show();
@@ -453,7 +454,7 @@ function createAndFillTable() { // fills the table for Academic Year.
   var cell6 = row.insertCell(5);
   var cell7 = row.insertCell(6);
 
-  cell1.innerHTML = studentName;
+  cell1.innerHTML = studentName + ' ' + '(' + studentbnumber+ ')';
   cell2.innerHTML = positionName;
   $(cell2).attr("data-posn", positionCode);
   $(cell2).attr("data-wls", wls)
@@ -557,20 +558,20 @@ function createAndFillTableForBreaks() {// Fills the table. For Summer term or a
   var removeIcon = "<a onclick = 'deleteRow(this)' class='remove'><span class='glyphicon glyphicon-remove'></span></a>";
   var startDate  = $('#dateTimePicker1').datepicker({dateFormat: 'dd-mm-yy'}).val();
   var endDate  = $('#dateTimePicker2').datepicker({dateFormat: 'dd-mm-yy'}).val();
-
+  var studentbnumber = $('#student').val();
 
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
   $(cell2).attr("data-posn", positionCode);
-    $(cell2).attr("data-wls", wls)
+  $(cell2).attr("data-wls", wls)
   cell2.id="position_code";
   var cell3 = row.insertCell(2);
   var cell4 = row.insertCell(3);
   var cell5 = row.insertCell(4);
   var cell6 = row.insertCell(5);
 
-  cell1.innerHTML = studentName;
+  cell1.innerHTML = studentName + ' ' + '(' + studentbnumber+ ')';
   cell2.innerHTML = positionName;
   cell3.innerHTML = selectedContractHoursName;
   cell4.innerHTML = startDate + ' - ' + endDate;
@@ -643,11 +644,8 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
       var department = $("#selectedDepartment").val();
       var term = $("#selectedTerm").val();
       var whichTerm = term.toString().substr(-2);
-      // var startDate = $("#dateTimePicker1").val();
-      // var endDate = $("#dateTimePicker2").val();
       var positionCode = $("#position_code").attr("data-posn");
       var wls = $('#position_code').attr('data-wls')
-      console.log(wls)
       listDict = []
       listDict.push(supervisor, department, term, positionCode, wls)
       var headersLabel = ["Supervisor", "Department", "Term", "Position Code", "WLS"]
@@ -699,6 +697,7 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
 function userInsert(){
   var allTableDataDict = createTabledataDictionary()
   data = JSON.stringify(allTableDataDict);
+  alert(data)
   $('#laborStatusForm').on('submit', function(e) {
     e.preventDefault();
   });
