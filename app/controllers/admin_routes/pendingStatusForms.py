@@ -86,7 +86,7 @@ def getNotes(formid):
 
         print(notesDict["supervisorNotes"])
         return jsonify(notesDict)
-        
+
     except Exception as e:
         print("This did not work", e)
         return jsonify({"Success": False})

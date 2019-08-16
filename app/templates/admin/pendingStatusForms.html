@@ -48,8 +48,8 @@
         <tr id="tableData" class="tableData" align="center">
             <td> {# APPROVE #}
               <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.laborStatusFormID}}" />
-              <span id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})" class="glyphicon glyphicon-book btn-lg {% if formHistory.rejectReason != None %} text-success {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
-
+              <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})" class="glyphicon glyphicon-book btn-lg {% if formHistory.rejectReason != None %} text-success {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
+              <input id="dummyInput"  value="{{formHistory.formID.laborStatusFormID}}" hidden/>
             </td>
             <td> {# TERM #}
               {{formHistory.formID.termCode.termName}}
@@ -79,8 +79,8 @@
              {{formHistory.formID.startDate.strftime('%m/%d/%y')}} -  {{formHistory.formID.endDate.strftime('%m/%d/%y')}}
           </td>
           <td> {# EDIT #}
-            <a href="/modifyLSF/{{formHistory.formID.laborStatusFormID}}"> <span id="edit_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" > </span> </a>
-            <span id="reject_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-trash" data-toggle="modal" data-target="#rejectModal"> </span>
+            <a href="/modifyLSF/{{formHistory.formID.laborStatusFormID}}"> <span id="edit_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
+            <span id="reject_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-trash" data-toggle="modal" data-target="#rejectModal"></span>
           </td>
 
         </tr>
@@ -101,7 +101,7 @@
       </div>
 
 
-      <!-- Modal -->
+      <!-- START OF MODAL adding notes -->
       <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -112,17 +112,25 @@
             <div class="modal-body" >
               <p> These notes are only for the Labor Office Staff.</p>
               <p> Pre-fill this with the notes from the supervisor
-                <h4> Supervisor Notes </h4>
-                  <p id="notesText"> </p>
+                <div id="notesDiv">
+                   <h5> <b>Supervisor Notes  </b> </h5>
+                  <p id="notesText" class="notesText"> </p>
+
+
+                <h5> <b>Labor Office Notes </b> </h5>
+                  <textarea id="laborNotesText" rows="5" cols="60" style="resize: none;" value= "Bria is testing, again"> </textarea>
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="saveNotes()">Save Changes</button>
             </div>
           </div>
         </div>
       </div>
+      <!-- END OF MODAL-->
 
+      <!-- START OF MODAL reject pending-->
       <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -140,7 +148,7 @@
           </div>
         </div>
       </div>
-
+      <!-- END OF MODAL-->
 
 </div>
 {% endblock %}

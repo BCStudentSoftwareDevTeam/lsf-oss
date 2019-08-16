@@ -31,12 +31,44 @@ function getNotes (formID) {
     datatype: "json",
     success: function (response) {
       if (!("Success" in response)) {
-        $("#notesText").append(response);
+        console.log(response);
+        console.log(response["supervisorNotes"])
+        // var testingText = document.createTextNode("This is a test for the p tag")
+        $("#notesText").html(response["supervisorNotes"]);
       }
-
-      }
-
+    }
   })
-
-
 };
+
+
+function saveLaborNotes() { // saves notes written in textarea when save button of modal is clicked
+  var notesTextId = $("#dummyInput").val();
+  var notesUniqueId = "notes_" + notesTextId;
+  console.log(notesUniqueId);
+  document.getElementById("laborNotesText").value=document.getElementById(notesUniqueId).getAttribute("data-note");
+  document.getElementById("saveNotes").setAttribute('onclick',"saveNotes('" + notesUniqueId +"')");
+  console.log(idDummyInput);
+}
+
+ function saveNotes() { // saves notes written in textarea when save button of modal is clicked
+   var notes = document.getElementById("laborNotesText").value;
+   document.getElementById(notesTextId).setAttribute("data-note", notes);
+ }
+
+ function notesInsert() {
+   notes = []
+   data = JSON.stringify(notes);
+   $("#saveNotes").on('submit', function(e) {
+     e.preventDefault();
+   });
+
+   $.ajax({
+          method: "POST",
+          url: '/laborstatusform/notesInsert',
+          data: notes,
+          contentType: 'application/json',
+          success: function(response) {
+            console.log(response);
+
+          }
+        });
