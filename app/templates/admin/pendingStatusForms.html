@@ -48,7 +48,7 @@
         <tr id="tableData" class="tableData" align="center">
             <td> {# APPROVE #}
               <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.laborStatusFormID}}" />
-              <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})" class="glyphicon glyphicon-book btn-lg {% if formHistory.rejectReason != None %} text-success {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
+              <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})" class="glyphicon glyphicon-book btn-lg {% if formHistory.formID.supervisorNotes != None %} text-success {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
               <input id="dummyInput"  value="{{formHistory.formID.laborStatusFormID}}" hidden/>
             </td>
             <td> {# TERM #}
@@ -64,7 +64,7 @@
               |
             </td>
             <td> {# STUDENT #}
-              {{formHistory.formID.studentSupervisee.FIRST_NAME}}  {{formHistory.formID.studentSupervisee.LAST_NAME}} {{formHistory.formID.studentSupervisee.ID}}
+              {{formHistory.formID.studentSupervisee.FIRST_NAME}}  {{formHistory.formID.studentSupervisee.LAST_NAME}}  ({{formHistory.formID.studentSupervisee.ID}})
             </td>
             <td> {# POSITON AND WLS #}
               {{formHistory.formID.POSN_TITLE}} ({{formHistory.formID.WLS}})
