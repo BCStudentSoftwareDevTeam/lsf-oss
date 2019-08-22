@@ -105,7 +105,8 @@
                                id="Hours"
                                data-live-search="true"
                                title = {{prefillhours}}
-                               value = {{prefillhours}}>
+                               value = {{prefillhours}}
+                               onchange = "hourscheck()">
               {% if prefilljobtype == "Secondary"%}
                 <option title="5" value="5">5</option>
                 <option title="10" value="10">10</option>
@@ -113,10 +114,12 @@
                 <option title="10" value="10">10</option>
                 <option title="12" value="12">12</option>
                 <option title="15" value="15">15</option>
+                <option title="20" value="20">20</option>
               {% endif %}
-                      <!-- I think thats it...should there be a 20 for overload? ask ela and hila/whoever is doing LSF -->
+                      <!-- I think thats it... should there be a 20 for overload? ask ela and hila/whoever is doing LSF -->
               </select>
               <input hidden class = "oldValue"  id= "oldHours" value="{{prefillhours}}">  </input>
+              {% include "snips/ReviewForm.html" %}
             </div>
           </div>
 

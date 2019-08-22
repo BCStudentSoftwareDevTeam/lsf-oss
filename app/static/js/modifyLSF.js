@@ -1,7 +1,9 @@
 $("#contractHours").hide();
 $("#hoursPerWeek").hide();
 $("#datetimepicker0").datepicker();
-$("#datetimepicker0").datepicker("setDate", new Date()); //Sets datepicker to todays date by default
+// $("#datetimepicker0").datepicker("setDate", new Date()); //Sets datepicker to todays date by default
+$("#datetimepicker0").datepicker({startDate: new Date()});
+// $("#datetimepicker0").datepicker({ minDate: 0 })
 //FIXME: add a contstraint that does not allow user to set date before today's date
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
@@ -38,7 +40,15 @@ $(document).ready(function(){
      $("#hoursPerWeek").show();
    }
 });
-
+// Pops up a modal for overload
+function hourscheck(){
+  var hour = document.getElementById("Hours").value;
+  console.log(hour)
+  if (hour == "20") {
+      $('#OverloadModal').modal('show');
+      $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
+    }
+};
 //////////Modified form check and dictionary creation////////////
 //Structure: {[field]:{[oldValue],[newValue],[effective date]}}
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');
