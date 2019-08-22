@@ -27,7 +27,8 @@ def modifyLSF(laborStatusKey):
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
     prefilldepartment = form.department.DEPT_NAME
-    prefillposition = form.POSN_TITLE #FIXME: add WLS to this; they should be connected
+    prefillposition = form.POSN_TITLE + " " +"("+ form.WLS + ")"#FIXME: add WLS to this; they should be connected
+    print(prefillposition)
     prefilljobtype = form.jobType
     prefillterm = form.termCode.termName
     if form.weeklyHours != None:
@@ -56,10 +57,10 @@ def modifyLSF(laborStatusKey):
                             prefillnotes = prefillnotes,
                             supervisors = supervisors,
                             positions = positions,
-                            wls = wls
+                            wls = wls,
+                            form = form
                           )
 @main_bp.route("/modifyLSF/getPositions/<department>", methods=['GET'])
-#I Stole this from LSF.py
 def getPositions(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
     position_dict = {}

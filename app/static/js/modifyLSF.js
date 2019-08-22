@@ -1,26 +1,24 @@
+$("#contractHours").hide();
+$("#hoursPerWeek").hide();
 $("#datetimepicker0").datepicker();
 $("#datetimepicker0").datepicker("setDate", new Date()); //Sets datepicker to todays date by default
 //FIXME: add a contstraint that does not allow user to set date before today's date
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
-///////////Putting position with WLS- I whole yanked this from laborStatusForm.js-kat//////////
 function fill_positions(response) {
   var selected_positions = document.getElementById("Position");
-  if (selected_positions){
-    $("#Position").empty();
     for (var key in response) {
       var options = document.createElement("option");
       options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
       options.value = key;
       selected_positions.appendChild(options);
-    }
     $('.selectpicker').selectpicker('refresh');
   }
 }
-function getDepartment(object) {
-   var department = object.value;
-   var url = "/laborstatusform/getPositions/" + department;
+$(document).ready(function(){
+   var department = document.getElementById("Department").value;
+   var url = "/modifyLSF/getPositions/" + department;
        $.ajax({
          url: url,
          dataType: "json",
@@ -28,17 +26,19 @@ function getDepartment(object) {
             fill_positions(response)
          }
        })
- }
- ///////////////Hiding 5 hour option if jobtype == Primary/////////////////////
-function disableFiveHourOption(){ //FIXME: This currently doesnt work :()
-// This is for hiding the 0-5 option of primary is selected for job Type
-  var jobType = document.getElementById("JobType");
-  var hours = document.getElementById("Hours");
-  if (jobType.value == "Primary"){
-    hours.options[0].disabled;
-    console.log("0-5 should be disabled...");
-  }
-}
+ });
+$(document).ready(function(){
+   var termcode = document.getElementById("termCode").value;
+   var specificTerm = termcode.toString().substr(-2);
+   if (specificTerm != 11 && specificTerm != 12 && specificTerm != 00){
+     document.getElementById("JobType").disabled = true;
+     $("#contractHours").show();
+   }
+   else{
+     $("#hoursPerWeek").show();
+   }
+});
+
 //////////Modified form check and dictionary creation////////////
 //Structure: {[field]:{[oldValue],[newValue],[effective date]}}
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');

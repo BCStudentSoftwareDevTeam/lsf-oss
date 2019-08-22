@@ -42,12 +42,11 @@
        <div class="form-group">
          <label for="Department">Department:</label> <!--User CANNOT edit-->
          <div>
-           <input type="Department" class="form-control" id="Department" value="{{prefilldepartment}}" onclick= "getDepartment(this)"> <!--FIXME: this function should be called elsewhere cause this never ever gets clicked --><!--User CANNOT edit-->
-           <!-- disabled --> <!--FIXME:UNCOMMENT THIS WHEN GETDEPARTMENTS IS RELOCATED-->
+           <input type="Department" class="form-control" id="Department" value="{{prefilldepartment}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
-         <label for="Position" class="field">Position:</label> <!--FIXME: ADD WLS TO POSITION LIKE IN LSF UI -->
+         <label for="Position" class="field">Position:</label>
          <div>
            <select required type="Position"
                             class="selectpicker form-control newValue"
@@ -55,14 +54,11 @@
                             data-live-search="true"
                             >
                 <option title="{{prefillposition}}" value="{{prefillposition}}">{{prefillposition}}</option>
-                {% for posn in positions %}
-                  <option value="{{posn.POSN_CODE}}">{{posn.POSN_TITLE}}</option>
-                {% endfor %}
            </select>
            <input hidden class = "oldValue"  id= "{{prefillposition}}" value="{{prefillposition}}"></input>
          </div>
        </div>
-       <!-- FIXME: Add conditional that renders jobtype select disabled if term is for a break, since jobtype is always Secondary-->
+       <!-- This selectpicker will be disabled if term is for a break, since jobtype is always Secondary-->
        <div class="form-group">
          <label for="JobType">Job Type</label>
          <div>
@@ -70,7 +66,6 @@
                             class="selectpicker form-control newValue"
                             id="JobType"
                             data-live-search="true"
-                            onchange = disableFiveHourOption()
                             value = {{prefilljobtype}}
                             title = {{prefilljobtype}}>
                 <option title="Primary" value="Primary">Primary</option>
@@ -85,11 +80,25 @@
        <label for="Term">Term:</label> <!--User CANNOT edit-->
        <div >
          <input type="Term" class="form-control" id="Term" value="{{prefillterm}}"disabled> <!--User CANNOT edit-->
+         <input hidden id= "termCode" value="{{form.termCode}}"> </input>
        </div>
      </div>
-
-     <div class="form-group">
-            <label for="Hours">Hours:FIXME</label>
+     <div id="contractHours" class="form-group">
+        <!-- Contract hours for breaks -->
+           <label for="Hours">Contract Hours</label>
+             <input class="form-control quantity disable"
+                     type = "number"
+                     name='contractHours'
+                     id='selectedContractHours'
+                     title= "{{prefillhours}}"
+                     placeholder="Contract Hours"
+                     min = "1"
+                     value = "{{prefillhours}}"
+                     oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0">
+             </input>
+        </div>
+     <div id="hoursPerWeek" class="form-group">
+            <label for="Hours">Hours Per Week</label>
             <div>
               <select required type="Hours"
                                class="selectpicker form-control newValue"
@@ -97,13 +106,15 @@
                                data-live-search="true"
                                title = {{prefillhours}}
                                value = {{prefillhours}}>
-
-                    <!---FIXME: Should we make this to where if its secondary, it becomes a text input? (0-5, or 140 contract hours...? talk to LSF team)--->
-                    <!---FIXME: 0-5 Needs to ONLY appear when its a secondary: add if statements !-->
-                     <option title="5" value="5">5</option>
-                     <option title="10" value="10">10</option>
-                     <option title="12" value="12">12</option>
-                     <option title="15" value="15">15</option> <!-- I think thats it...should there be a 20 for overload? ask ela and hila/whoever is doing LSF -->
+              {% if prefilljobtype == "Secondary"%}
+                <option title="5" value="5">5</option>
+                <option title="10" value="10">10</option>
+              {% else %}
+                <option title="10" value="10">10</option>
+                <option title="12" value="12">12</option>
+                <option title="15" value="15">15</option>
+              {% endif %}
+                      <!-- I think thats it...should there be a 20 for overload? ask ela and hila/whoever is doing LSF -->
               </select>
               <input hidden class = "oldValue"  id= "oldHours" value="{{prefillhours}}">  </input>
             </div>
