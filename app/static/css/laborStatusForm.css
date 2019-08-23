@@ -29,10 +29,6 @@ width: 47%;
 height: 310px;
 }
 
-.setSelectpickerHeight {
-  height: 59px;
-}
-
 #mytable {
   table-layout: fixed;
   border-collapse: collapse;

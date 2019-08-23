@@ -208,6 +208,22 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
   }
 }
 
+// checks if wls is greater than 5
+
+function checkWLS() {
+  var wls = $('#position').find('option:selected').attr('data-wls');
+  var hoursPerWeek = $('#selectedHoursPerWeek').val();
+  if (wls >= 5 && hoursPerWeek < 15 ) {
+    document.getElementById('WLSModalTitle').innerHTML = "Insert Rejected"  // FIXME: Maybe change Modal title (ask Scott)
+    document.getElementById('WLSModalText').innerHTML = "Student requires at least a 15 hour contract with positions WLS 5 or greater."; // FIXME Maybe change modal Language (ask Scott)
+    $('#WLSModal').modal('show');
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
 // Check if department is in compliance.
 function checkCompliance(obj) {
   var department = obj.value;
@@ -302,7 +318,7 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
     $("#flasher").delay(3000).fadeOut()
 
   }
-  else {
+  else if (checkWLS()){
     var termCode = $('#selectedTerm').val();
     var whichTerm = termCode.toString().substr(-2);
     if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
