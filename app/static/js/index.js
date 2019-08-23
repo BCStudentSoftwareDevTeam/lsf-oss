@@ -8,7 +8,8 @@ $(document).ready(function() {
 
   $("#currentDepartmentStudents").hide()
   $("#allDepartmentStudents").hide()
-  $(".userDepartments").hide()
+  $("#userDepartments").hide()
+  $("#placeholder").show()
 
   $(".currentStu").show();
   $(".allDeptStu").hide();
@@ -207,7 +208,8 @@ document.getElementById("myStudents").addEventListener("click",function(){
   // When the 'My Students' tab in the sidebar is clicked, this Function
   // hides and shows the correct buttons for that page, filter the datatable,
   // and shows the correct checkboxes that should show in the modal
-  $(".userDepartments").hide()
+  $("#userDepartments").hide()
+  $("#placeholder").show()
   $("#currentDepartmentStudents").hide()
   $("#allDepartmentStudents").hide()
   $("#myCurrentStudents").show()
@@ -237,7 +239,8 @@ document.getElementById("department").addEventListener("click",function(){
   // When the 'My Department' tab in the sidebar is clicked, this Function
   // hides and shows the correct buttons for that page, filter the datatable,
   // and shows the correct checkboxes that should show in the modal
-  $(".userDepartments").show()
+  $("#userDepartments").show()
+  $("#placeholder").hide()
   $(".currentStu").hide();
   $(".allDeptStu").hide();
   $(".currentDeptStu").show();
