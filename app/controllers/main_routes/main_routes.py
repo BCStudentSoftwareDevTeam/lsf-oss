@@ -29,7 +29,10 @@ def index():
     todayDate = date.today()
     # Grabs all the labor status forms where the current user is the supervisor
     formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.username).order_by(LaborStatusForm.endDate.desc())
-    allCurrentUserForms = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.createdBy == current_user.username) or (FormHistory.formID.supervisor == current_user.username)).distinct()
+    # allCurrentUserForms = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.createdBy == current_user.username) or (FormHistory.formID.supervisor == current_user.username)).distinct()
+
+
+    allCurrentUserForms = FormHistory.select().where(FormHistory.createdBy == current_user.username)
     # Grabs all the labor status forms where the current users department matches the status forms derpartment, and where the current date is less than the term end date on the status form
     currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.endDate >= todayDate).where(LaborStatusForm.department.DEPT_NAME == "Computer Science")
     # Grabs all the labor status forms where the current users department matches the status forms derpartment
@@ -37,8 +40,7 @@ def index():
     print(current_user.DEPT_NAME)
     ##### Testing Code
     for i in allCurrentUserForms:
-        print(i.formID)
-    print(allCurrentUserForms)
+        print(i)
     #####
 
     inactiveSupervisees = []
