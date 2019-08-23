@@ -43,6 +43,7 @@ def laborStatusForm(laborStatusKey = None):
             forms = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey) # getting labor status form id, to prepopulate laborStatusForm.
         else:
             forms = None
+            return render_template('errors/403.html')
     else:
         forms = None
     return render_template( 'main/laborStatusForm.html',
