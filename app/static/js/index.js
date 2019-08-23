@@ -8,6 +8,7 @@ $(document).ready(function() {
 
   $("#currentDepartmentStudents").hide()
   $("#allDepartmentStudents").hide()
+  $(".userDepartments").hide()
 
   $(".currentStu").show();
   $(".allDeptStu").hide();
@@ -206,6 +207,7 @@ document.getElementById("myStudents").addEventListener("click",function(){
   // When the 'My Students' tab in the sidebar is clicked, this Function
   // hides and shows the correct buttons for that page, filter the datatable,
   // and shows the correct checkboxes that should show in the modal
+  $(".userDepartments").hide()
   $("#currentDepartmentStudents").hide()
   $("#allDepartmentStudents").hide()
   $("#myCurrentStudents").show()
@@ -235,6 +237,7 @@ document.getElementById("department").addEventListener("click",function(){
   // When the 'My Department' tab in the sidebar is clicked, this Function
   // hides and shows the correct buttons for that page, filter the datatable,
   // and shows the correct checkboxes that should show in the modal
+  $(".userDepartments").show()
   $(".currentStu").hide();
   $(".allDeptStu").hide();
   $(".currentDeptStu").show();
@@ -283,4 +286,8 @@ $('.openBtn').on('click',function(){
 
 function downloadHistory(){
   $('input[type="checkbox"]:checked').prop('checked',false);
+}
+
+function populateTable(){
+  alert("Hello World")
 }

@@ -22,10 +22,17 @@
   <h3 id="portalTitle" >Current Students</h3>
 </div>
 
-<div class="col-md-2"></div>
-  <div class="col-md-8" align= "right">
-    <button class="btn btn-success" id="download" data-toggle="modal" data-target="#downloadModal">Download</button>
-  </div>
+<div class="col-md-5"></div>
+<div class="col-md-2" align="center">
+  <select class="selectpicker" class="userDepartments" onchange="populateTable()" title="Department" data-width="100%">
+    {% for formHistory in currentUserDepartments %}
+    <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
+    {% endfor %}
+  </select>
+</div>
+<div class="col-md-3" align= "right">
+  <button class="btn btn-success" id="download" data-toggle="modal" data-target="#downloadModal">Download</button>
+</div>
 <div class="col-md-2"></div>
 
 
