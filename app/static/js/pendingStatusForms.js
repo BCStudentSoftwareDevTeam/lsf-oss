@@ -34,11 +34,14 @@ function getNotes (formID) {
         console.log(response);
         console.log(response["supervisorNotes"])
         // var testingText = document.createTextNode("This is a test for the p tag")
+        
         $("#notesText").html(response["supervisorNotes"]);
+
       }
     }
   })
 };
+
 
 
 function saveLaborNotes() { // saves notes written in textarea when save button of modal is clicked
