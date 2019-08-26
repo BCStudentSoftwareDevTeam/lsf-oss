@@ -20,7 +20,7 @@ function fill_positions(response) {
 }
 $(document).ready(function(){
    var department = document.getElementById("Department").value;
-   var url = "/modifyLSF/getPositions/" + department;
+   var url = "/modifyLSF/getPosition/" + department;
        $.ajax({
          url: url,
          dataType: "json",

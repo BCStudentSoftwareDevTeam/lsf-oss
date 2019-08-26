@@ -60,8 +60,8 @@ def modifyLSF(laborStatusKey):
                             wls = wls,
                             form = form
                           )
-@main_bp.route("/modifyLSF/getPositions/<department>", methods=['GET'])
-def getPositions(department):
+@main_bp.route("/modifyLSF/getPosition/<department>", methods=['GET'])
+def getPosition(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
     position_dict = {}
     for position in positions:
