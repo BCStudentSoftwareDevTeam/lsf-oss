@@ -34,7 +34,8 @@ function getNotes (formID) {
         console.log(response);
         console.log(response["supervisorNotes"])
         // var testingText = document.createTextNode("This is a test for the p tag")
-        
+
+        console.log($("#notesText").html(response["supervisorNotes"]));
         $("#notesText").html(response["supervisorNotes"]);
 
       }
