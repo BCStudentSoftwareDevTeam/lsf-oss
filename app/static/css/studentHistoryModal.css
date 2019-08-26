@@ -1,0 +1,42 @@
+#currentData {
+  border-style: solid;
+}
+
+#modalid {
+  overflow: auto;
+}
+
+textarea {
+  align: left;
+  padding-left: 0;
+  resize: none;
+  border: none;
+  margin-bottom: 0px;
+}
+
+.form-group {
+  overflow: auto;
+}
+
+.modal-body {
+  height:350px;
+  overflow:auto;
+}
+
+.modal-footer{
+  text-align: center;
+}
+
+p {
+   margin:0
+  }
+
+.releaseReasonTextArea {
+    overflow: -moz-scrollbars-vertical;
+    overflow-y: scroll;
+    }
+
+.rejectReasonTextArea {
+    overflow: -moz-scrollbars-vertical;
+    overflow-y: scroll;
+    }

@@ -1,0 +1,42 @@
+selectpicker, label {
+  display: block;
+}
+.tableContent {
+  float:left;
+  padding-right: 5px;
+  width: 225px;
+  height: 59px;
+}
+
+#plus {
+  margin-top: 18px;
+  width: 0px;
+}
+
+#datepicker {
+  padding-right: 0px;
+}
+
+#glyphicon{
+      font-size: 29px;
+      color: #337ab7;
+}
+
+#glyphicon_2{
+  font-size: 29px;
+  color: #337ab7;
+  padding-right: 0px;
+  padding-left: 26px;
+}
+
+#glyphicon_note{
+  font-size: 29px;
+  color: #337ab7;
+  padding-right: 0px;
+  padding-left: 26px;
+}
+
+#review-button {
+    text-align: center;
+    padding-bottom: 10px;
+}

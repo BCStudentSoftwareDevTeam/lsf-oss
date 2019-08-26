@@ -1,7 +1,8 @@
 from flask import Flask
 import yaml
 from flask_bootstrap import Bootstrap
-
+from flask_nav import Nav
+from flask_nav.elements import *
 
 
 app = Flask(__name__)
@@ -14,7 +15,7 @@ def load_config(file):
     return cfg
 
 cfg = load_config("app/config/secret_config.yaml")
-app.secret_key = cfg["secret_key"]  
+app.secret_key = cfg["secret_key"]
 
 # Registers blueprints (controllers). These are general routes, like /index
 from app.controllers.main_routes import main_bp as main_bp

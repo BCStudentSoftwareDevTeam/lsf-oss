@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="/static/css/laborStatusForm.css" type="text/css"/>
+{% endblock %}
+
+​{% block scripts %}
+{{super()}}
+<script type=text/javascript src="{{url_for('static', filename='js/laborStatusForm.js')}}"></script>
+{% endblock %}
+
+{% block app_content %}
+<form id="laborStatusForm">
+  <h1 class="col-md-12 col-md-offset-4">Labor Status Form
+    <span class="glyphicon glyphicon-bookmark"
+      <a  data-toggle="tooltip" data-tooltip="true"
+          title="This online labor status form is used to
+          establish a student's work status in the Labor Program."
+          data-placement = "right" id="glyphicon">
+      </a>
+    </span>
+  </h1>
+  <br />
+<div class="form-group row col-md-12 col-md-offset-4">
+  <!--selectpicker for supervisor-->
+  <label for="supervisor" class="col-2 col-form-label">Supervisor</label>
+    <div class="col-10">
+      <select class="selectpicker form-control require"
+              name='supervisor'
+              id='selectedSupervisor'
+              data-live-search='true'
+              title="Supervisor"
+              data-width="320px" >
+        {% for staff in staffs %}
+          <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.username == staff.PIDM %} selected {% endif %}{% endif %}>{{staff.FIRST_NAME}} {{staff.LAST_NAME}} ({{staff.ID}})</option>
+        {% endfor %}
+      </select>
+   </div>
+</div>
+  <br />
+  <div class="form-group row col-md-12 col-md-offset-4">
+    <!--selectpicker for department-->
+    <label for="department" class="col-2 col-form-label">Department</label>
+      <div class="col-10">
+        <select class="selectpicker require"
+                name='department'
+                id='selectedDepartment'
+                data-live-search='true'
+                title="Department"
+                onchange = "checkCompliance(this); getDepartment(this)"
+                data-width="320px" >
+          {% for department in departments %}
+            <option value="{{department.DEPT_NAME}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %}>{{department.DEPT_NAME}}</option>
+          {% endfor %}
+        </select>
+        {% include "snips/ReviewForm.html" %}
+      </div>
+  </div>
+  <br />
+  <div class="form-group row col-md-12 col-md-offset-4">
+    <!-- selectpicker for term  -->
+    <div class="col-10 {% if forms %} has-error {% endif %}">
+      <label for="term" class="col-2 col-form-label">Term</label>
+          <div class="col-10">
+            <select class="selectpicker disable"
+                    name='term'
+                    id='selectedTerm'
+                    data-live-search="true"
+                    title="Term"
+                    onchange = "showAccessLevel(this); preFilledDate(this)"
+                    data-width="320px"
+                    required>
+            {% for term in terms %}
+                <option value = "{{term.termCode}}">{{term.termName}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+  </div>
+<br />
+<div class="form-group col-md-12 col-md-offset-2 row">
+<!-- datePickerS -->
+    <div  class="form-group col-md-4">
+      <!--datePicker for start date-->
+      <label for="dateTimePicker1" class="col-2 col-form-label" id="datePicker">Start Date</label>
+        <div class='input-group date'>
+          <input type='text' class="form-control disable" id='dateTimePicker1' name="startDate" placeholder="Start Date" data-width="320px" onchange="updateEnd(this)" required/>
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+          </span>
+        </div>
+    </div>
+​
+    <div class="form-group col-md-4">
+      <!--datePicker for End date-->
+    <label for="dateTimePicker2" class="col-2 col-form-label" id="datePicker">End Date</label>
+      <div class='input-group date'>
+          <input type='text' class="form-control disable" id='dateTimePicker2' name="endDate" placeholder="End Date" data-width="320px" onchange="updateStart(this)" required/>
+          <span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+          </span>
+      </div>
+    </div>​
+</div>
+<br />
+ <!-- Table that contains select pickers -->
+<div>
+<table>
+  <thead>
+    <tr>
+      <th id="Student" class= "tableContent">
+          <!-- selectpicker for student  -->
+          <label for="student">Student</label>
+            <select class="selectpicker disable"
+                    name='student'
+                    id='student'
+                    data-live-search='true'
+                    title="Student">
+              {% for student in students %}
+                  <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %}>{{student.FIRST_NAME}} {{student.LAST_NAME}} ({{student.ID}})</option>
+              {% endfor %}
+            </select>
+      </th>
+      <th id="Position" class= "tableContent">
+          <!--selectpicker for positio3-->
+          <label for="student">Position</label>
+            <select class="selectpicker disable"
+                    name='position'
+                    id='position'
+                    data-live-search='true'
+                    title="Position">
+                    <option id="{{forms.POSN_CODE}}" value="{{forms.POSN_TITLE, forms.WLS}}"{% if forms %} selected {% endif %}>{{forms.POSN_TITLE}}</option>
+            </select>
+        </th>
+        <th id="JopTypes" class= "tableContent">
+            <!--selectpicker for Job type-->
+            <label for="student">Job Type</label>
+              <select class="selectpicker disable"
+                      name='jobType'
+                      id='jobType'
+                      data-live-search='true'
+                      title="Job Type"
+                      onchange="fillHoursPerWeek()">
+                <option value="Primary"{% if forms %}{% if forms.jobType == "Primary" %} selected {% endif %}{% endif %}>Primary</option>
+                <option value="Secondary"{% if forms %}{% if forms.jobType == "Secondary" %} selected {% endif %}{% endif %}>Secondary</option>
+              </select>
+            {% include "snips/ReviewForm.html" %}
+        </th>
+        <th id="hoursPerWeek" class= "tableContent">
+            <!--selectpicker for hrs per week-->
+            <label for="student">Hours Per Week</label>
+              <select class="selectpicker disable"
+                      name='selectedHoursPerWeek'
+                      id='selectedHoursPerWeek'
+                      data-live-search='true'
+                      title="Hours per week">
+              <option value="{{forms.weeklyHours}}"{% if forms %} selected {% endif %}>{{forms.weeklyHours}}</option>
+              </select>​
+        </th>
+        <th id="contractHours" class= "tableContent">
+        <!-- Contract hours for breaks -->
+           <label for="student">Contract Hours</label>
+             <input class="form-control quantity disable"
+                     type = "number"
+                     name='contractHours'
+                     id='selectedContractHours'
+                     title="Contract Hours"
+                     placeholder="Contract Hours"
+                     min = "1"
+                     oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0">
+             </input>
+        </th>
+        <th id="plus" class= "tableContent">
+            <label> </label>
+              <span class="glyphicon glyphicon-plus disable"
+                  <a  data-toggle="tooltip"
+                      data-tooltip="true"
+                      title="Add more students"
+                      data-placement = "center"
+                      id="glyphicon_2"
+                      onclick="displayTable(); disableTerm()"
+                  </a>
+              </span>
+            {% include "snips/ReviewForm.html" %}
+        </th>
+      </tr>
+    </thead>
+  </table>
+</div>
+  <br />
+​  <div class = "col-md-10">
+    <table class="table table-striped " id="mytable">
+      <thead>
+        <tr class="item">
+          <td>Student</td>
+          <td id = "position" data-value = "">Position</td>
+          <td id="jobTable">Job Type</td>
+          <td id="hoursTable">Hours Per Week</td>
+          <td id="contractTable">Contract Hours</td>
+          <td id ="notes"> Notes </td>
+          <td> Remove </td>
+        </tr>
+      </thead>
+    </table>
+  </div>
+  <div class="col-md-12 " id="review-button">
+    <button type="button"
+            class="btn btn-primary"
+            name = "formSubmission"
+            value = "formSubmission"
+            onclick="reviewButtonFunctionality('preventPlusFromSubmitting')">Review</button>
+      {% include "snips/ReviewForm.html" %}
+  </div>
+</form>
+{% endblock %}

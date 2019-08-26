@@ -1,0 +1,63 @@
+#termHeader {
+  text-align: center;
+  font-weight: 650;
+}
+
+#tableHeaders {
+  font-size: 16px;
+}
+
+#subHeader {
+  text-align: center;
+}
+
+#sizeTermName {
+  padding-left: 35px;
+  padding-top: 14px;
+}
+
+#wrapper {
+  position: relative;
+  left: 105px;
+  top: 20px;
+}
+
+.btn-link {
+  width: 100%;
+  text-align: left;
+}
+
+.input-group {
+  width: 79%;
+}
+
+.btn-med{
+  width: 75px;
+}
+
+.glyphicon-bookmark {
+  visibility: visible;
+  width: 20px;
+  border-radius: 6px;
+  padding: 5px;
+}
+
+.card-header {
+  background-color: #efebeb;
+  margin-bottom: 7px;
+}
+
+.mb-0, .collapsed {
+  outline-color: none;
+  color: black;
+  font-size: 18px;
+  font-weight: 550;
+}
+
+.active, .btn-link:focus {
+  background-color: #66c2cc;
+}
+
+.active, .card-header:hover {
+  background-color: #66c2cc;
+}

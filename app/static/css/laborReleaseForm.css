@@ -1,0 +1,54 @@
+#submit {
+  float: right;
+}
+
+#student {
+  background-color: #dcdee4;
+}
+
+#supervisor {
+  background-color: #dcdee4;
+}
+
+#department {
+  background-color: #dcdee4;
+}
+
+#jobType {
+  background-color: #dcdee4;
+}
+
+#glyphicon {
+  color: #337ab7;
+}
+
+#submitModal {
+ margin-left: 431px;
+}
+
+.floatleft {
+float: left;
+width: 47%;
+}
+.floatright {
+float: right;
+width: 47%;
+}
+
+textarea {
+  width: 100%;
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
+}
+
+.padding {
+  padding-right: 100px;
+  padding-left: 100px;
+}
+
+@media (min-width: 970px) and (max-width: 2500px) {
+   .container {
+      width: 80%;
+   }
+}

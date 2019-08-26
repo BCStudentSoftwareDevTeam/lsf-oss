@@ -11,15 +11,12 @@
   right: 0;
 }
 
-.studentTable {
-
-  width: 30%; /* Full-width */
-
-  font-size: 18px; /* Increase font-size */
+.pushLeft {
+    padding-left: 10px;
 }
 
 .studentTable th, .studentTable td {
-  text-align: center; /* Left-align text */
+  text-align: left; /* Left-align text */
   padding: 12px; /* Add padding */
 }
 
@@ -31,4 +28,15 @@
 .studentTable tr.header, .studentTable tr:hover {
   /* Add a grey background color to the table header and on hover */
   background-color: #f1f1f1;
+}
+iframe{
+  display: none;
+}
+
+#closeButton {
+  margin-right: 405px
+}
+
+#download {
+  margin-bottom: 10px;
 }
