@@ -1,0 +1,193 @@
+<!-- Modal for Review Button -->
+<div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div id="SubmitModalText" class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button id="submitmodalid"
+                type="submit"
+                class="btn btn-primary"
+                name = "formsubmission"
+                value = "formsubmission"
+                onclick = "userInsert()">Submit</button>
+      </div>
+    </div>
+</div>
+</div>
+
+<!-- ModalEnds -->
+
+<!-- START OF MODAL For when Student has a primary position-->
+<div class="modal fade" id="OutofComplianceModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
+<div class="modal-dialog" role="document">
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+     </button>
+     <h4 class="modal-title">Out of Compliance</h4>
+   </div>
+   <div class="modal-body">
+     Department is out of compliance because position descriptions are not up to date. Please contact labor office to update your position description.
+   </div>
+   <div class="modal-footer">
+     <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
+   </div>
+ </div>
+</div>
+</div>
+​
+<!-- END OF THE MODAL -->
+
+<!-- START OF MODAL For Secondary-->
+<div class="modal fade" id="SecondaryModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
+<div class="modal-dialog" role="document">
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+     </button>
+     <h4 class="modal-title">Secondary Postion</h4>
+   </div>
+   <div class="modal-body">
+     The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.
+   </div>
+   <div class="modal-footer">
+     <button type="button" class="btn btn-primary" data-dismiss="modal">I agree</button>
+   </div>
+ </div>
+</div>
+</div>
+​
+<!-- END OF THE MODAL -->
+
+<!-- START OF MODAL For when Student does not have a Primary Position-->
+<div class="modal fade" id="NoPrimaryModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
+<div class="modal-dialog" role="document">
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+     </button>
+
+     <h4 class="modal-title">Unable to Add a Secondary Position</h4>
+   </div>
+   <div id='NoPrimaryModalText' class="modal-body"> </div>
+   <div class="modal-footer">
+     <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
+   </div>
+ </div>
+</div>
+</div>
+​
+<!-- END OF THE MODAL -->
+
+<!-- START OF MODAL For when Student has a primary position-->
+<div class="modal fade" id="PrimaryModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
+<div class="modal-dialog" role="document">
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+     </button>
+     <h4 class="modal-title">Notifying Primary Supervisor</h4>
+   </div>
+   <div id ="PrimaryModalText" class="modal-body">
+   </div>
+   <div class="modal-footer">
+     <button type="button" class="btn btn-primary" data-dismiss="modal">Okay</button>
+   </div>
+ </div>
+</div>
+</div>
+​
+<!-- END OF THE MODAL -->
+
+<!-- START OF MODAL For Overload-->
+<div class="modal fade" id="OverloadModal" tabindex="-1" role="dialog" aria- aria-hidden="true">
+<div class="modal-dialog" role="document">
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+     </button>
+     <h4 class="modal-title">Labor Overload</h4>
+   </div>
+   <div id="OverloadModalText"class="modal-body">
+
+  A labor overload is defined as more than 15 hours of labor per week during regular
+  academic year and may not be approved retroactively. All approvals are subject to periodic review.<br><br>
+  Guidlines for Approval:<br>
+  <li>Sophomore, junior, or senior classification</li>
+  <li>Not on any form of probation</li>
+  <li>Enrolled in less than 5 course credits with less than 8 preparations</li>
+  <li>Have a 2.50 GPA, both cumulative and for the previous full term</li>
+  <li>The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term.</li><br>
+  Students shoud not work any hours within a secondary assignment until notification of approved Labor Overload.
+   </div>
+   <div class="modal-footer">
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" id="overloadModalButton">I Accept</button>
+   </div>
+ </div>
+</div>
+</div>
+​
+<!-- END OF THE MODAL -->
+
+<!-- START OF MODAL adding notes-->
+<div class="modal fade" id="noteModal" role="dialog" style="margin-top: 14%">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Notes</h4>
+        </div>
+        <div class="modal-body" id = "body_of_modal">
+          <textarea id="modal_text" rows="5" cols="77" style="resize: none;"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" data-dismiss="modal" id="saveButton" onclick="saveNotes()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- END OF MODAL -->
+
+<!-- START OF MODAL FOR WARNINGS-->
+<div class="modal fade" id="warningModal" role="dialog" style="margin-top: 14%">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Insert Rejected</h4>
+        </div>
+        <div class="modal-body" id = "warningModalText">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- END OF MODAL -->
+
+<!-- START OF MODAL FOR WARNINGS-->
+<div class="modal fade" id="WLSModal" role="dialog" style="margin-top: 14%">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title" id = 'WLSModalTitle'>Insert Rejected</h4>
+        </div>
+        <div class="modal-body" id = "WLSModalText">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!-- END OF MODAL -->
