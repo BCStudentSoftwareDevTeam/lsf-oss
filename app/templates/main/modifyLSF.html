@@ -67,7 +67,8 @@
                             id="JobType"
                             data-live-search="true"
                             value = {{prefilljobtype}}
-                            title = {{prefilljobtype}}>
+                            title = {{prefilljobtype}}
+                            onchange="fillHoursPerWeek()">
                 <option title="Primary" value="Primary">Primary</option>
                 <option title="Secondary" value="Secondary">Secondary</option>
            </select>
@@ -103,6 +104,7 @@
               <select required type="Hours"
                                class="selectpicker form-control newValue"
                                id="Hours"
+                               name='selectedHoursPerWeek'
                                data-live-search="true"
                                title = {{prefillhours}}
                                value = {{prefillhours}}
@@ -116,7 +118,6 @@
                 <option title="15" value="15">15</option>
                 <option title="20" value="20">20</option>
               {% endif %}
-                      <!-- I think thats it... should there be a 20 for overload? ask ela and hila/whoever is doing LSF -->
               </select>
               <input hidden class = "oldValue"  id= "oldHours" value="{{prefillhours}}">  </input>
               {% include "snips/ReviewForm.html" %}
@@ -147,7 +148,7 @@
         <button type="cancel" class="btn btn-danger">Cancel</button>
       </div>
       <div class="submitbutton">
-        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal" onclick = buttonListener() >Submit Changes</button>
+        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal" onclick = "buttonListener()" >Submit Changes</button>
       </div>
     </div>
 
@@ -166,7 +167,7 @@
                </div>
                <div class="modal-footer">
                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                 <button type="submit" class="btn btn-success" id="modal" onclick = postModifications() >Submit</button>
+                 <button type="submit" class="btn btn-success" id="modal" {#onclick = postModifications()#} >Submit</button>
                </div>
              </div>
 

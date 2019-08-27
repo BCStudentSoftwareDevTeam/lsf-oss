@@ -1,10 +1,13 @@
 $("#contractHours").hide();
 $("#hoursPerWeek").hide();
-$("#datetimepicker0").datepicker();
-// $("#datetimepicker0").datepicker("setDate", new Date()); //Sets datepicker to todays date by default
-$("#datetimepicker0").datepicker({startDate: new Date()});
-// $("#datetimepicker0").datepicker({ minDate: 0 })
-//FIXME: add a contstraint that does not allow user to set date before today's date
+//adds a contstraint that does not allow user to set date before today's date
+var date = new Date();
+date.setDate(date.getDate());
+$("#datetimepicker0").datepicker({
+  minDate: date
+});
+$("#datetimepicker0").datepicker("setDate", "date");
+
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
@@ -49,6 +52,39 @@ function hourscheck(){
       $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
     }
 };
+function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker
+ console.log("hello")
+ var selectedHoursPerWeek = document.getElementById("Hours");
+ console.log(selectedHoursPerWeek)
+ var jobType = $("#JobType").val();
+ console.log(jobType)
+ if (selectedHoursPerWeek){
+   $("#Hours").empty();
+   if (jobType == "Primary"){
+     var options = document.createElement("option");
+     var dict = {
+       10: "10",
+       12: "12",
+       15: "15",
+       20: "20"}
+     for (var key in dict){
+       selectedHoursPerWeek.options[selectedHoursPerWeek.options.length]= new Option(dict[key], key);
+     }
+   }
+   else if (jobType == "Secondary") {
+     var options = document.createElement("option");
+     var dict = {
+       5: "5",
+       10: "10"}
+     for (var key in dict){
+       selectedHoursPerWeek.options[selectedHoursPerWeek.options.length]= new Option(dict[key], key);
+     }
+   }
+   if (fillhours == ""){
+     $('.selectpicker').selectpicker('refresh');
+   }
+ }
+}
 //////////Modified form check and dictionary creation////////////
 //Structure: {[field]:{[oldValue],[newValue],[effective date]}}
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');
@@ -64,12 +100,12 @@ function buttonListener () {
   console.log("notesOld"+notesOld);
   console.log("notesNew"+notesNew);
   for (var i=0; i < newValue.length-2; i=i+2) { //since newValue class is put on the div AND the select.. we skipped the div objects
-    // console.log(i/2);
-    // console.log(oldValue[i/2].value);
-    // console.log(newValue[i+1].value);
+    console.log(i/2);
+    console.log(oldValue[i/2].value);
+    console.log(newValue[i+1].value);
       newVal = $(newValue[i+1]).val();
     console.log(newVal)
-    if (oldValue[i/2].value != newVal) { //If the oldValue differs from the newValue, add it to the dictionary
+    if (oldValue[i/2].value != newVal && newVal != "") { //If the oldValue differs from the newValue, add it to the dictionary
       finalDict[newValue[i+1].id] = {"oldValue": oldValue[i/2].value,
                                      "newValue": newVal,
                                      "date": effectiveDate
@@ -84,6 +120,17 @@ function buttonListener () {
 
   }
   console.log(finalDict)
+  var url = "/modifyLSF/submitModifiedForm/";
+  modifiedDict = JSON.stringify(finalDict)
+      $.ajax({
+        url: url,
+        method: "POST",
+        contentType: 'application/json',
+        data: modifiedDict,
+        success: function (response){
+           console.log("successful")
+        }
+      })
 }
 //////////Saving to modifiedForm table/////////
 // function updateFormModifiedTable(finalDict){
