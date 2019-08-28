@@ -74,47 +74,32 @@ def sumbitModifiedForm():
         print(rsp)
         if rsp:
             print("Im not empty")
-            fieldModifieds = list(rsp.keys())
-            print(fieldModifieds)
-            for value in fieldModifieds:
-                oldValues = []
-                newValues  = []
-                effectiveDates = []
+            fieldsModified = list(rsp.keys())
+            print(fieldsModified)
+            oldValues = []
+            newValues  = []
+            effectiveDates = []
+            for value in fieldsModified:
                 newValues.append(rsp[value]["newValue"])
                 oldValues.append(rsp[value]["oldValue"])
                 effectiveDates.append(rsp[value]["date"])
             print(oldValues)
             print(newValues)
             print(effectiveDates)
-                # if data['JobType']['newValue'] != "" :
-                #     newjobtype = data['JobType']['newValue']
-                # if data['Notes']['newValue'] != "" :
-                #     pass
-                # if data['Position']['newValue'] != "" :
-                #     pass
-                # if data['Supervisor']['newValue'] != "" :
-                #     pass
-                # modifeidform = ModifiedForm.create(fieldModified =
-                #                                    oldValue      =
-                #                                    newValue      =
-                #                                    effectiveDate =
-                #                                    )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
+            status = Status.get(Status.statusName == "Pending")
+            for i in range(len(fieldsModified)):
+                ModifiedForm.create(fieldModified = fieldsModified[i],
+                                    oldValue      =  oldValues[i],
+                                    newValue      =  newValues[i],
+                                    effectiveDate =  datetime.strptime(effectiveDates[i], "%m/%d/%Y").strftime('%Y-%m-%d')
+                                    )
+                FormHistory.create( formID = lsf.laborStatusFormID, ## needs to be fixed
+                                    historyType = historyType.historyTypeName,
+                                    modifiedFormID = # the id
+                                    createdBy   = cfg['user']['debug'],
+                                    createdDate = date.today(),
+                                    status      = status.statusName)
 
 
 
