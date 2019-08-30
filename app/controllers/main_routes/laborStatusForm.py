@@ -67,9 +67,13 @@ def userInsert():
                 bnumberIndexStart = data['Student'].find('(')
                 bnumberIndexEnd = data['Student'].find(')')
                 studentBnumber = data['Student'][bnumberIndexStart + 1: bnumberIndexEnd]
-                d, created = Student.get_or_create(ID = studentBnumber)
+                print(studentBnumber)
+                created = Student.select().where(Student.ID == studentBnumber)
+                print(created)
                 if created:
+                    print(created)
                     student = d.ID
+                    print(student)
                     d, created = User.get_or_create(username = data['Supervisor'])
                     primarySupervisor = d.username
                     d, created = Department.get_or_create(DEPT_NAME = data['Department'])
@@ -78,7 +82,11 @@ def userInsert():
                     term = d.termCode
                 else:
                     #Getting data from TRACY if the student is not already in our database
-                    firstName = STUDATA.select(STUDATA.FIRST_NAME).where(STUDATA.ID == studentBnumber).FIRST_NAME
+                    print("HELOO")
+                    student = STUDATA.select().where(STUDATA.ID == studentBnumber)
+                    print(type(student))
+                    print("1")
+                    print(student)
                     lastName = STUDATA.select(STUDATA.LAST_NAME).where(STUDATA.ID == studentBnumber).LAST_NAME
                     classLevel = STUDATA.select(STUDATA.CLASS_LEVEL).where(STUDATA.ID == studentBnumber).CLASS_LEVEL
                     academicFocus = STUDATA.select(STUDATA.ACADEMIC_FOCUS).where(STUDATA.ID == studentBnumber).ACADEMIC_FOCUS
@@ -90,18 +98,34 @@ def userInsert():
                     lastPosition = STUDATA.select(STUDATA.LAST_POSN).where(STUDATA.ID == studentBnumber).LAST_POSN
                     lastSupervisorPIDM = STUDATA.select(STUDATA.LAST_SUP_PIDM).where(STUDATA.ID == studentBnumber).LAST_SUP_PIDM
                     print(firstName)
+
+                    student = Student.create(ID = studentBnumber,
+                                            FIRST_NAME = firstName,
+                                            LAST_NAME = lastName,
+                                            CLASS_LEVEL = classLevel,
+                                            ACADEMIC_FOCUS = academicFocus,
+                                            MAJOR = major,
+                                            PROBATION = probation,
+                                            ADVISOR = advisor,
+                                            STU_EMAIL = studentEmail,
+                                            STU_CPO = studentCPO,
+                                            LAST_POSN = lastPosition,
+                                            LAST_SUP_PIDM = lastSupervisorPIDM
+                                            )
                     #Adding the absent data to the Student table
-                    d, created = Student.create(FIRST_NAME = firstName)
-                    d, created = Student.create(LAST_name = lastName)
-                    d, created = Student.create(CLASS_LEVEL = classLevel)
-                    d, created = Student.create(ACADEMIC_FOCUS = academicFocus)
-                    d, created = Student.create(MAJOR = major)
-                    d, created = Student.create(PROBATION = probation)
-                    d, created = Student.create(ADVISOR = advisor)
-                    d, created = Student.create(STU_EMAIL = studentEmail)
-                    d, created = Student.create(STU_CPO = studentCPO)
-                    d, created = Student.create(LAST_POSN = lastPosition)
-                    d, created = Student.create(LAST_SUP_PIDM = lastSupervisorPIDM)
+                    # d, created = Student.create(FIRST_NAME = firstName, LAST_name = lastName, CLASS_LEVEL = classLevel)
+                    # # d, created = Student.create(LAST_name = lastName)
+                    # # d, created = Student.create(CLASS_LEVEL = classLevel)
+                    # d, created = Student.create(ACADEMIC_FOCUS = academicFocus)
+                    # d, created = Student.create(MAJOR = major)
+                    # d, created = Student.create(PROBATION = probation)
+                    # d, created = Student.create(ADVISOR = advisor)
+                    # d, created = Student.create(STU_EMAIL = studentEmail)
+                    # d, created = Student.create(STU_CPO = studentCPO)
+                    # d, created = Student.create(LAST_POSN = lastPosition)
+                    # d, created = Student.create(LAST_SUP_PIDM = lastSupervisorPIDM)
+
+
 
                 startIndex = data['Contract Dates'].find(' -')
                 EndIndex = data['Contract Dates'].find('- ')
