@@ -63,7 +63,7 @@ def getPosition(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
     position_dict = {}
     for position in positions:
-        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
+        position_dict[position.POSN_TITLE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
     return json.dumps(position_dict)
 
 @main_bp.route("/modifyLSF/submitModifiedForm/", methods=['POST'])
@@ -94,12 +94,12 @@ def sumbitModifiedForm():
                                     newValue      =  newValues[i],
                                     effectiveDate =  datetime.strptime(effectiveDates[i], "%m/%d/%Y").strftime('%Y-%m-%d')
                                     )
-                FormHistory.create( formID = lsf.laborStatusFormID, ## needs to be fixed
-                                    historyType = historyType.historyTypeName,
-                                    modifiedFormID = # the id
-                                    createdBy   = cfg['user']['debug'],
-                                    createdDate = date.today(),
-                                    status      = status.statusName)
+                # FormHistory.create( formID = lsf.laborStatusFormID, ## needs to be fixed
+                #                     historyType = historyType.historyTypeName,
+                #                     # modifiedFormID = # the id,
+                #                     createdBy   = cfg['user']['debug'],
+                #                     createdDate = date.today(),
+                #                     status      = status.statusName)
 
 
 
