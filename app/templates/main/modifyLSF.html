@@ -29,7 +29,7 @@
          <div>
            <select required type="Supervisor"
                             class="selectpicker form-control newValue"
-                            id="Supervisor"
+                            id="supervisor"
                             data-live-search="true">
                 <option title="{{prefillsupervisor}}" value="{{prefillsupervisor}}">{{prefillsupervisor}}</option> <!-- not showing up fam-->
                 {% for staff in supervisors %}
@@ -50,7 +50,7 @@
          <div>
            <select required type="Position"
                             class="selectpicker form-control newValue"
-                            id="Position"
+                            id="POSN_TITLE"
                             data-live-search="true"
                             >
                 <option title="{{prefillposition}}" value="{{prefillposition}}">{{prefillposition}}</option>
@@ -64,7 +64,7 @@
          <div>
            <select type="JobType"
                             class="selectpicker form-control newValue"
-                            id="JobType"
+                            id="jobType"
                             data-live-search="true"
                             value = {{prefilljobtype}}
                             title = {{prefilljobtype}}
@@ -87,10 +87,10 @@
      <div id="contractHours" class="form-group">
         <!-- Contract hours for breaks -->
            <label for="Hours">Contract Hours</label>
-             <input class="form-control quantity disable"
+             <input class="form-control quantity newValue disable"
                      type = "number"
                      name='contractHours'
-                     id='selectedContractHours'
+                     id='contractHours'
                      title= "{{prefillhours}}"
                      placeholder="Contract Hours"
                      min = "1"
@@ -103,7 +103,7 @@
             <div>
               <select required type="Hours"
                                class="selectpicker form-control newValue"
-                               id="Hours"
+                               id="weeklyHours"
                                name='selectedHoursPerWeek'
                                data-live-search="true"
                                title = {{prefillhours}}
@@ -136,7 +136,7 @@
      <div class="form-group" >
        <label for="Notes">Notes:</label>
        <div>
-         <textarea name="notes" rows="8" cols="73" id="Notes" class = "newValue" >{{prefillnotes}}</textarea>
+         <textarea name="notes" rows="8" cols="73" id="supervisorNotes" class = "newValue" >{{prefillnotes}}</textarea>
           <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}">  </input>
        </div>
      </div>
@@ -148,7 +148,7 @@
         <button type="cancel" class="btn btn-danger">Cancel</button>
       </div>
       <div class="submitbutton">
-        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal" onclick = "buttonListener()" >Submit Changes</button>
+        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal" onclick = "buttonListener({{form.laborStatusFormID}})" >Submit Changes</button>
       </div>
     </div>
 
