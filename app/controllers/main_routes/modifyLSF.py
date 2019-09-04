@@ -63,11 +63,11 @@ def getPosition(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
     position_dict = {}
     for position in positions:
-        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
+        position_dict[position.POSN_TITLE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
     return json.dumps(position_dict)
 
-@main_bp.route("/modifyLSF/submitModifiedForm/", methods=['POST'])
-def sumbitModifiedForm():
+@main_bp.route("/modifyLSF/submitModifiedForm/<laborStatusKey>", methods=['POST'])
+def sumbitModifiedForm(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
@@ -89,17 +89,21 @@ def sumbitModifiedForm():
             historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
             status = Status.get(Status.statusName == "Pending")
             for i in range(len(fieldsModified)):
-                ModifiedForm.create(fieldModified = fieldsModified[i],
+                modifiedforms = ModifiedForm.create(fieldModified = fieldsModified[i],
                                     oldValue      =  oldValues[i],
                                     newValue      =  newValues[i],
                                     effectiveDate =  datetime.strptime(effectiveDates[i], "%m/%d/%Y").strftime('%Y-%m-%d')
                                     )
-                FormHistory.create( formID = lsf.laborStatusFormID, ## needs to be fixed
+                formhistorys = FormHistory.create( formID = laborStatusKey,
                                     historyType = historyType.historyTypeName,
                                     # modifiedFormID = # the id
+                                    modifiedForm = modifiedforms.modifiedFormID,
+
                                     createdBy   = cfg['user']['debug'],
                                     createdDate = date.today(),
                                     status      = status.statusName)
+                # LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+
 
 
 

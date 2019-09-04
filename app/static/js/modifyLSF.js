@@ -89,7 +89,8 @@ function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker
 //Structure: {[field]:{[oldValue],[newValue],[effective date]}}
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');
 var finalDict = {};
-function buttonListener () {
+function buttonListener(laborStatusKey) {
+  console.log(laborStatusKey)
   //YOOOO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
   var newValue = $("#modifyLSF").find(".newValue");
@@ -113,14 +114,13 @@ function buttonListener () {
       }
   }
   if (notesOld != notesNew) { //Adds notes to dictionary if theyre different
-    finalDict["Notes"] = {"oldValue": notesOld,
+    finalDict["supervisorNotes"] = {"oldValue": notesOld,
                                    "newValue": notesNew,
                                    "date": effectiveDate
                                   }
-
   }
   console.log(finalDict)
-  var url = "/modifyLSF/submitModifiedForm/";
+  var url = "/modifyLSF/submitModifiedForm/" + laborStatusKey;
   modifiedDict = JSON.stringify(finalDict)
       $.ajax({
         url: url,
