@@ -1,5 +1,5 @@
 $("#contractHours").hide();
-$("#hoursPerWeek").hide();
+$("#weeklyHours").hide();
 //adds a contstraint that does not allow user to set date before today's date
 var date = new Date();
 date.setDate(date.getDate());
@@ -12,7 +12,7 @@ $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
 function fill_positions(response) {
-  var selected_positions = document.getElementById("Position");
+  var selected_positions = document.getElementById("POSN_TITLE");
     for (var key in response) {
       var options = document.createElement("option");
       options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
@@ -36,16 +36,16 @@ $(document).ready(function(){
    var termcode = document.getElementById("termCode").value;
    var specificTerm = termcode.toString().substr(-2);
    if (specificTerm != 11 && specificTerm != 12 && specificTerm != 00){
-     document.getElementById("JobType").disabled = true;
+     document.getElementById("jobType").disabled = true;
      $("#contractHours").show();
    }
    else{
-     $("#hoursPerWeek").show();
+     $("#weeklyHours").show();
    }
 });
 // Pops up a modal for overload
 function hourscheck(){
-  var hour = document.getElementById("Hours").value;
+  var hour = document.getElementById("weeklyHours").value;
   console.log(hour)
   if (hour == "20") {
       $('#OverloadModal').modal('show');
@@ -54,12 +54,12 @@ function hourscheck(){
 };
 function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker
  console.log("hello")
- var selectedHoursPerWeek = document.getElementById("Hours");
+ var selectedHoursPerWeek = document.getElementById("weeklyHours");
  console.log(selectedHoursPerWeek)
- var jobType = $("#JobType").val();
+ var jobType = $("#jobType").val();
  console.log(jobType)
  if (selectedHoursPerWeek){
-   $("#Hours").empty();
+   $("#weeklyHours").empty();
    if (jobType == "Primary"){
      var options = document.createElement("option");
      var dict = {
@@ -97,7 +97,7 @@ function buttonListener(laborStatusKey) {
   var effectiveDate = document.getElementById("datetimepicker0").value;
   //Do we need to pull the notes FIELD (ID) separate as well? (its the key for the outer dict..)
   var notesOld = document.getElementById("oldNotes").value; //TODO: add this to oldValue
-  var notesNew = document.getElementById("Notes").value;//TODO: add this to newValue
+  var notesNew = document.getElementById("supervisorNotes").value;//TODO: add this to newValue
   console.log("notesOld"+notesOld);
   console.log("notesNew"+notesNew);
   for (var i=0; i < newValue.length-2; i=i+2) { //since newValue class is put on the div AND the select.. we skipped the div objects
