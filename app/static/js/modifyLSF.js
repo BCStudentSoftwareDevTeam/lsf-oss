@@ -1,5 +1,5 @@
-$("#contractHours").hide();
-$("#weeklyHours").hide();
+$("#contractHoursDiv").hide();
+$("#weeklyHoursDiv").hide();
 //adds a contstraint that does not allow user to set date before today's date
 var date = new Date();
 date.setDate(date.getDate());
@@ -37,10 +37,10 @@ $(document).ready(function(){
    var specificTerm = termcode.toString().substr(-2);
    if (specificTerm != 11 && specificTerm != 12 && specificTerm != 00){
      document.getElementById("jobType").disabled = true;
-     $("#contractHours").show();
+     $("#contractHoursDiv").show();
    }
    else{
-     $("#weeklyHours").show();
+     $("#weeklyHoursDiv").show();
    }
 });
 // Pops up a modal for overload

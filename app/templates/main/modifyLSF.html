@@ -25,9 +25,9 @@
          </div>
        </div>
        <div class="form-group">
-         <label for="Supervisor" class="field">Supervisor:</label>
+         <label for="supervisor" class="field">Supervisor:</label>
          <div>
-           <select required type="Supervisor"
+           <select required type="supervisor"
                             class="selectpicker form-control newValue"
                             id="supervisor"
                             data-live-search="true">
@@ -84,7 +84,7 @@
          <input hidden id= "termCode" value="{{form.termCode}}"> </input>
        </div>
      </div>
-     <div id="contractHours" class="form-group">
+     <div id="contractHoursDiv" class="form-group">
         <!-- Contract hours for breaks -->
            <label for="contractHours">Contract Hours</label>
              <input class="form-control quantity newValue disable"
@@ -98,10 +98,10 @@
                      oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0">
              </input>
         </div>
-     <div id="weeklyHours" class="form-group">
+     <div id="weeklyHoursDiv" class="form-group">
             <label for="weeklyHours">Hours Per Week</label>
             <div>
-              <select required type="Hours"
+              <select required type="weeklyHours"
                                class="selectpicker form-control newValue"
                                id="weeklyHours"
                                name='selectedHoursPerWeek'
@@ -134,9 +134,9 @@
       </div>
      </div>
      <div class="form-group" >
-       <label for="upervisorNotes">Notes:</label>
+       <label for="supervisorNotes">Notes:</label>
        <div>
-         <textarea name="upervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue" >{{prefillnotes}}</textarea>
+         <textarea name="supervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue" >{{prefillnotes}}</textarea>
           <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}">  </input>
        </div>
      </div>

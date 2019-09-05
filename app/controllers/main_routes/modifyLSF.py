@@ -101,77 +101,34 @@ def sumbitModifiedForm(laborStatusKey):
                                     createdDate = date.today(),
                                     status      = status.statusName)
                 # LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-
-
-
-
-        #         wlsIndexStart = data['Position'].find('(')
-        #         wlsIndexEnd = data['Position'].find(')')
-        #         wls = data['Position'][wlsIndexStart + 1 : wlsIndexEnd]
-        #         bnumberIndex = data['Student'].find('B0')
-        #         studentBnumber = data['Student'][bnumberIndex:]
-        #         d, created = Student.get_or_create(ID = studentBnumber)
-        #         student = d.ID
-        #         d, created = User.get_or_create(username = data['Supervisor'])
-        #         primarySupervisor = d.username
-        #         d, created = Department.get_or_create(DEPT_NAME = data['Department'])
-        #         department = d.departmentID
-        #         d, created = Term.get_or_create(termCode = data['Term'])
-        #         term = d.termCode
-        #         start = data['Start Date']
-        #         startDate = datetime.strptime(start, "%m/%d/%Y").strftime('%Y-%m-%d')
-        #         end = data['End Date']
-        #         endDate = datetime.strptime(end, "%m/%d/%Y").strftime('%Y-%m-%d')
-        #         lsf = LaborStatusForm.create(termCode = term,
-        #                                      studentSupervisee = student,
-        #                                      supervisor = primarySupervisor,
-        #                                      department  = department,
-        #                                      jobType = data['Job Type'],
-        #                                      WLS = wls,
-        #                                      POSN_TITLE = data['Position'],
-        #                                      POSN_CODE = data['Position Code'],
-        #                                      contractHours = data.get('Contract Hours', None),
-        #                                      weeklyHours   = data.get('Hours Per Week', None),
-        #                                      startDate = startDate,
-        #                                      endDate = endDate,
-        #                                      supervisorNotes = data.get('Supervisor Notes', None)
-        #                                      )
-        #
-        #         historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-        #         status = Status.get(Status.statusName == "Pending")
-        #         formHistroy = FormHistory.create( formID = lsf.laborStatusFormID,
-        #                                           historyType = historyType.historyTypeName,
-        #                                           createdBy   = cfg['user']['debug'],
-        #                                           createdDate = date.today(),
-        #                                           status      = status.statusName)
         #     flash("Labor Status Form(s) has been created.", "success")
         return jsonify({"Success": True})
     except Exception as e:
         flash("An error occured.", "danger")
         print(e)
         return jsonify({"Success": False})
-@main_bp.route("/saveChanges/<laborStatusFormID>", methods=["POST"]) #Should this be the reroute or should it be in JS?
-def saveChanges(laborStatusFormID):
-    #Takes dictionary from ajax and dumps to db
-    try:
-        laborstatusform = laborStatusForm.get(laborStatusForm.laborStatusFormID==laborStatusFormID)
-        data = request.form
-        laborstatusform.supervisor = (data['supervisor'])
-        laborstatusform.POSN_TITLE = (data['position'])
-        laborstatusform.WLS = (data['WLS'])
-        laborstatusform.jobType = (data['jobType'])
-        laborstatusform.weeklyHours = (data['weeklyHours']) #FIXME: not always weekly hours (if secondary/break).
-        laborstatusform.laborSupervisorNotes = (data['laborSupervisorNotes'])
-        #modifiedForm #Not sure if this will work...
-        modifiedform = modifiedForm.get(modifiedForm.modifiedFormID==modifiedFormID)
-        modifiedform.fieldModified = (data['fieldModified'])
-        modifiedform.oldValue = (data['oldValue'])
-        modifiedform.oldValue = (data['newValue'])
-        modifiedform.effectiveDate = (data['effectiveDate'])
-        #FIXME: I think this well be a separate save since its a separate dictionary for a separate table
-        #old value
-        #new value
-        #date
-    except:
-        flash("An error has occurred, your changes were NOT saved. Please try again.","error")
-        return json.dumps({"error":0})
+# @main_bp.route("/saveChanges/<laborStatusFormID>", methods=["POST"]) #Should this be the reroute or should it be in JS?
+# def saveChanges(laborStatusFormID):
+#     #Takes dictionary from ajax and dumps to db
+#     try:
+#         laborstatusform = laborStatusForm.get(laborStatusForm.laborStatusFormID==laborStatusFormID)
+#         data = request.form
+#         laborstatusform.supervisor = (data['supervisor'])
+#         laborstatusform.POSN_TITLE = (data['position'])
+#         laborstatusform.WLS = (data['WLS'])
+#         laborstatusform.jobType = (data['jobType'])
+#         laborstatusform.weeklyHours = (data['weeklyHours']) #FIXME: not always weekly hours (if secondary/break).
+#         laborstatusform.laborSupervisorNotes = (data['laborSupervisorNotes'])
+#         #modifiedForm #Not sure if this will work...
+#         modifiedform = modifiedForm.get(modifiedForm.modifiedFormID==modifiedFormID)
+#         modifiedform.fieldModified = (data['fieldModified'])
+#         modifiedform.oldValue = (data['oldValue'])
+#         modifiedform.oldValue = (data['newValue'])
+#         modifiedform.effectiveDate = (data['effectiveDate'])
+#         #FIXME: I think this well be a separate save since its a separate dictionary for a separate table
+#         #old value
+#         #new value
+#         #date
+#     except:
+#         flash("An error has occurred, your changes were NOT saved. Please try again.","error")
+#         return json.dumps({"error":0})
