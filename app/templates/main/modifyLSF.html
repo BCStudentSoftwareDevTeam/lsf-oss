@@ -25,9 +25,9 @@
          </div>
        </div>
        <div class="form-group">
-         <label for="Supervisor" class="field">Supervisor:</label>
+         <label for="supervisor" class="field">Supervisor:</label>
          <div>
-           <select required type="Supervisor"
+           <select required type="supervisor"
                             class="selectpicker form-control newValue"
                             id="supervisor"
                             data-live-search="true">
@@ -46,9 +46,9 @@
          </div>
        </div>
        <div class="form-group">
-         <label for="Position" class="field">Position:</label>
+         <label for="POSN_TITLE" class="field">Position:</label>
          <div>
-           <select required type="Position"
+           <select required type="POSN_TITLE"
                             class="selectpicker form-control newValue"
                             id="POSN_TITLE"
                             data-live-search="true"
@@ -60,9 +60,9 @@
        </div>
        <!-- This selectpicker will be disabled if term is for a break, since jobtype is always Secondary-->
        <div class="form-group">
-         <label for="JobType">Job Type</label>
+         <label for="jobType">Job Type</label>
          <div>
-           <select type="JobType"
+           <select type="jobType"
                             class="selectpicker form-control newValue"
                             id="jobType"
                             data-live-search="true"
@@ -84,9 +84,9 @@
          <input hidden id= "termCode" value="{{form.termCode}}"> </input>
        </div>
      </div>
-     <div id="contractHours" class="form-group">
+     <div id="contractHoursDiv" class="form-group">
         <!-- Contract hours for breaks -->
-           <label for="Hours">Contract Hours</label>
+           <label for="contractHours">Contract Hours</label>
              <input class="form-control quantity newValue disable"
                      type = "number"
                      name='contractHours'
@@ -98,10 +98,10 @@
                      oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0">
              </input>
         </div>
-     <div id="hoursPerWeek" class="form-group">
-            <label for="Hours">Hours Per Week</label>
+     <div id="weeklyHoursDiv" class="form-group">
+            <label for="weeklyHours">Hours Per Week</label>
             <div>
-              <select required type="Hours"
+              <select required type="weeklyHours"
                                class="selectpicker form-control newValue"
                                id="weeklyHours"
                                name='selectedHoursPerWeek'
@@ -134,9 +134,9 @@
       </div>
      </div>
      <div class="form-group" >
-       <label for="Notes">Notes:</label>
+       <label for="supervisorNotes">Notes:</label>
        <div>
-         <textarea name="notes" rows="8" cols="73" id="supervisorNotes" class = "newValue" >{{prefillnotes}}</textarea>
+         <textarea name="supervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue" >{{prefillnotes}}</textarea>
           <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}">  </input>
        </div>
      </div>
