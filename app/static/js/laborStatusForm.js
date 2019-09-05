@@ -713,7 +713,7 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
 function userInsert(){
   var allTableDataDict = createTabledataDictionary()
   data = JSON.stringify(allTableDataDict);
-  alert(data)
+  //alert(data)
   $('#laborStatusForm').on('submit', function(e) {
     e.preventDefault();
   });

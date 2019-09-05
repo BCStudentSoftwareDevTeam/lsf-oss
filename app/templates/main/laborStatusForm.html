@@ -37,7 +37,7 @@
                 title="Supervisor">
             <option value = "" disabled selected>Select a Supervisor</option>
           {% for staff in staffs %}
-            <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.username == staff.PIDM %} selected {% endif %}{% endif %} data-subtext="({{staff.ID}})">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
+            <option value="{{staff.ID}}" {% if forms %}{% if forms.supervisor.ID == staff.ID %} selected {% endif %}{% endif %} data-subtext="({{staff.ID}})">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
           {% endfor %}
         </select>
   </div>
