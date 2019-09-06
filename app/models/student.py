@@ -3,7 +3,7 @@ from app.models import *
 
 #Capitalized fields are originally from Tracy
 class Student(baseModel):
-    ID              = CharField(primary_key = True)		        # B-number
+    ID              = CharField(primary_key = True)		      # B-number
     FIRST_NAME      = CharField(null=True)
     LAST_NAME       = CharField(null=True)
     CLASS_LEVEL     = CharField(null=True)

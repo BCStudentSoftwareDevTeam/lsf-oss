@@ -38,7 +38,9 @@ function getNotes (formID) {
         console.log($("#notesText").html(response["supervisorNotes"]));
         $("#notesText").html(response["supervisorNotes"]);
 
-      }
+      } else {
+            $("#notesText").empty();
+            }
     }
   })
 };

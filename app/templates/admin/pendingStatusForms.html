@@ -48,14 +48,19 @@
         <tr id="tableData" class="tableData" align="center">
             <td> {# APPROVE #}
               <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.laborStatusFormID}}" />
-              <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})" class="glyphicon glyphicon-book btn-lg {% if formHistory.formID.supervisorNotes != None %} text-success {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
+              <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})"
+                     class="glyphicon glyphicon-book btn-lg
+                          {% if formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes == None %} text-success
+                          {% elif formHistory.formID.laborDepartmentNotes != None and formHistory.formID.supervisorNotes == None  %} text-danger
+                          {% elif formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes != None %} text-danger
+                          {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
               <input id="dummyInput"  value="{{formHistory.formID.laborStatusFormID}}" hidden/>
             </td>
             <td> {# TERM #}
               {{formHistory.formID.termCode.termName}}
             </td>
             <td> {# DEPARTMENT #}
-              {{formHistory.formID.department.DEPT_NAME}}
+              {{formHistory.formID.department.DEPT_NAME}} ({{formHistory.formID.department.ACCOUNT}}-{{formHistory.formID.department.ORG}})
             </td>
             <td> {# SUPERVISOR #}
               {{formHistory.formID.supervisor.FIRST_NAME}} {{formHistory.formID.supervisor.LAST_NAME}}
@@ -128,7 +133,7 @@
           </div>
         </div>
       </div>
-      <!-- END OF MODAL-->
+      <!-- END OF MODAL -->
 
       <!-- START OF MODAL reject pending-->
       <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel">
@@ -150,5 +155,24 @@
       </div>
       <!-- END OF MODAL-->
 
+      <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+            </div>
+            <div id="SubmitModalText" class="modal-body">
+              The following Labor Status form(s) will be approved:
+            </div>
+            <div class="modal-footer">
+              <button id="submitmodalid"
+                      type="submit"
+                      class="btn btn-primary"
+                      name = "formsubmission"
+                      value = "formsubmission"
+                      onclick = "userInsert()">Submit</button>
+            </div>
+          </div>
+      </div>
+      </div>
 </div>
 {% endblock %}
