@@ -60,7 +60,9 @@ class Student(peewee.Model):
 
 @snapshot.append
 class User(peewee.Model):
-    username = CharField(max_length=255, primary_key=True)
+    UserID = PrimaryKeyField(primary_key=True)
+    PIDM = IntegerField()
+    username = CharField(max_length=255, null=True)
     FIRST_NAME = CharField(max_length=255, null=True)
     LAST_NAME = CharField(max_length=255, null=True)
     EMAIL = CharField(max_length=255, null=True)

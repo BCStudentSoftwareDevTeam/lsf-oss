@@ -59,8 +59,8 @@ def userInsert():
                 studentBnumber = data['Student'][bnumberIndex:]
                 d, created = Student.get_or_create(ID = studentBnumber)
                 student = d.ID
-                d, created = User.get_or_create(username = data['Supervisor'])
-                primarySupervisor = d.username
+                d, created = User.get_or_create(UserID = data['Supervisor'])
+                primarySupervisor = d.UserID
                 d, created = Department.get_or_create(DEPT_NAME = data['Department'])
                 department = d.departmentID
                 d, created = Term.get_or_create(termCode = data['Term'])
@@ -95,6 +95,7 @@ def userInsert():
             return jsonify({"Success": True})
     except Exception as e:
         flash("An error occured.", "danger")
+        print("ERROR: " + str(e))
         return jsonify({"Success": False})
 
 @main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])

@@ -40,7 +40,7 @@ class STUPOSN(peewee.Model):
 
 @snapshot.append
 class STUSTAFF(peewee.Model):
-    PIDM = CharField(max_length=255, primary_key=True)
+    PIDM = PrimaryKeyField(primary_key=True)
     ID = CharField(max_length=255, null=True)
     FIRST_NAME = CharField(max_length=255, null=True)
     LAST_NAME = CharField(max_length=255, null=True)
