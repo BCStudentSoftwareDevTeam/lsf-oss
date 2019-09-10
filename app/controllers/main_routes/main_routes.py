@@ -10,6 +10,9 @@ from app.models.department import Department
 from app.models.term import Term
 from app.models.formHistory import FormHistory
 from datetime import datetime, date
+from flask import request
+from flask import jsonify
+from flask import make_response
 
 
 @main_bp.before_app_request
@@ -17,7 +20,6 @@ def before_request():
     pass # TODO Do we need to do anything here? User stuff?
 
 @main_bp.route('/', methods=['GET', 'POST'])
-@main_bp.route('/index', methods=['GET', 'POST'])
 def index():
     current_user = require_login()
     #print(current_user)
@@ -119,14 +121,30 @@ def index():
         # Returns the file path so the button will download the file
         return send_file(completePath,as_attachment=True, attachment_filename=filename)
 
-
+    randomVariable = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == 1)
     return render_template( 'main/index.html',
 				    title=('Home'),
                     currentSupervisees = currentSupervisees,
                     pastSupervisees = pastSupervisees,
                     inactiveSupervisees = inactiveSupervisees,
                     username = current_user,
-                    currentDepartmentStudents = currentDepartmentStudents,
-                    allDepartmentStudents = allDepartmentStudents,
                     currentUserDepartments = currentUserDepartments
                           )
+
+@main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
+def populateDepartment(departmentSelected):
+    try:
+        department = departmentSelected
+        print(department)
+        todayDate = date.today()
+        currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.endDate >= todayDate).where(LaborStatusForm.department.DEPT_NAME == department)
+        # Grabs all the labor status forms where the current users department matches the status forms derpartment
+        allDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == department).order_by(LaborStatusForm.endDate.desc())
+        resp = make_response(render_template( 'snips/departmentDatatable.html',
+                        currentDepartmentStudents = currentDepartmentStudents,
+                        allDepartmentStudents = allDepartmentStudents
+                              ))
+        return (resp)
+    except Exception as e:
+        print(e)
+        return jsonify({"Success": False})

@@ -25,7 +25,7 @@
 <div class="col-md-5"></div>
 <div class="col-md-2" id="placeholder"></div>
 <div class="col-md-2" align="center" id="userDepartments">
-  <select class="selectpicker" onchange="populateTable()" title="Department" data-width="100%">
+  <select class="selectpicker" id="departmentDropDown" onchange="populateTable()" title="Department" data-width="100%">
     {% for formHistory in currentUserDepartments %}
     <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
     {% endfor %}
@@ -171,8 +171,12 @@
       <td style="display:none">My Past Students</td>
     </tr>
 
+
+    <div id="departmentSection">
+
+    </div>
     <!--Populate the datatable with all the students from the currents users department -->
-    {% for student in allDepartmentStudents %}
+    <!-- {% for student in allDepartmentStudents %}
       <tr>
         <td><a href="/laborHistory/{{student.studentSupervisee.ID}}">
           <span class="h4">{{student.studentSupervisee.FIRST_NAME}} {{student.studentSupervisee.LAST_NAME}} ({{student.studentSupervisee.ID}})</span></a>
@@ -181,15 +185,15 @@
         </td>
         <td style="display:none">All Department Students</td>
       </tr>
-    {% endfor %}
+    {% endfor %} -->
     <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
-    <tr class="allDepartmentStudents" style="display:none">
+    <!-- <tr class="allDepartmentStudents" style="display:none">
       <td style="display:none"></td>
       <td style="display:none">All Department Students</td>
-    </tr>
+    </tr> -->
 
     <!-- Populate the datatable with all the students currently employed by the department -->
-    {% for student in currentDepartmentStudents %}
+    <!-- {% for student in currentDepartmentStudents %}
       <tr>
         <td><a href="/laborHistory/{{student.studentSupervisee.ID}}">
           <span class="h4">{{student.studentSupervisee.FIRST_NAME}} {{student.studentSupervisee.LAST_NAME}} ({{student.studentSupervisee.ID}})</span></a>
@@ -198,12 +202,12 @@
         </td>
       <td style="display:none">Current Department Students</td>
       </tr>
-    {% endfor %}
+    {% endfor %} -->
     <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
-    <tr class="currentDepartmentStudents" style="display:none">
+    <!-- <tr class="currentDepartmentStudents" style="display:none">
       <td style="display:none"></td>
       <td style="display:none">Current Department Students</td>
-    </tr>
+    </tr> -->
   </table>
 </div>
 <div class="col-md-2"></div>

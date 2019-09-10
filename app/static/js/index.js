@@ -292,5 +292,16 @@ function downloadHistory(){
 }
 
 function populateTable(){
-  alert("Hello World")
+  var departmentDropDown = document.getElementById("departmentDropDown");
+  var departmentSelected = departmentDropDown.options[departmentDropDown.selectedIndex].value;
+  $.ajax({
+    method: "GET",
+    url: "/main/department/" + departmentSelected,
+    success: function(response) {
+      console.log(response);
+      $("#downloadModal").append(response);
+      $("#studentList tbody").append(response);
+      table.ajax.reload();
+    }
+  })
 }
