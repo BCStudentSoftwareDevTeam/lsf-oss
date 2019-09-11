@@ -233,7 +233,7 @@ staffs = [
             "CPO":"6302",
             "ORG":"2143",
             "DEPT_NAME": "Mathematics"
-            }
+            },
 
             {
             "ID": "B1236236",
