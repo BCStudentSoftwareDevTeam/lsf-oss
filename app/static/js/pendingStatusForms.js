@@ -4,6 +4,12 @@ function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
     ids.push(this.value);
     console.log(ids);
+// var checkapproval= $("#approveChecked").val();
+    $("#approvalContent").text(ids);
+
+    // console.log(checkapproval)
+
+
   })
   data = JSON.stringify(ids);
 
@@ -23,7 +29,7 @@ function insertApprovals() {
 };
 
 function getNotes (formID) {
-  console.log(formID);
+  // console.log(formID);
 
   $.ajax({
     type: "GET",
@@ -80,3 +86,22 @@ function saveLaborNotes() { // saves notes written in textarea when save button 
           }
         });
 }
+
+
+
+
+// function approvereview(){
+//   // var listofStuInfo = [];
+//   var student= $("#tablebody #student").text();
+//   // var checkIDs = $("#chk_").val();
+//   // console.log(checkIDs)
+//   console.log(student);
+//
+//
+//   // for(var i=0; i < student.length; i++){
+//   //   console.log(student[i])
+//   // }
+//
+//
+//
+// }

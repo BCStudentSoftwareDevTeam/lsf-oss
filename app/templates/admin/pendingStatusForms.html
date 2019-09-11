@@ -47,14 +47,18 @@
         {% for formHistory in pending_labor_forms %}
         <tr id="tableData" class="tableData" align="center">
             <td> {# APPROVE #}
-              <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.laborStatusFormID}}" />
+              <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.studentSupervisee.FIRST_NAME}} {{formHistory.formID.studentSupervisee.LAST_NAME}}" />
+
               <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})"
                      class="glyphicon glyphicon-book btn-lg
                           {% if formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes == None %} text-success
                           {% elif formHistory.formID.laborDepartmentNotes != None and formHistory.formID.supervisorNotes == None  %} text-danger
                           {% elif formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes != None %} text-danger
                           {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
-              <input id="dummyInput"  value="{{formHistory.formID.laborStatusFormID}}" hidden/>
+                          <input id="dummyInput" value="{{formHistory.formID.laborStatusFormID}}" hidden/>
+                          {# the below input is the hidden id for student first and last name. we are using#}
+                          <input id="approveChecked"  value="{{formHistory.formID.studentSupervisee.FIRST_NAME}} {{formHistory.formID.studentSupervisee.LAST_NAME}}" hidden/>
+
             </td>
             <td> {# TERM #}
               {{formHistory.formID.termCode.termName}}
@@ -68,7 +72,7 @@
             <td>
               |
             </td>
-            <td> {# STUDENT #}
+            <td id="student"> {# STUDENT #}
               {{formHistory.formID.studentSupervisee.FIRST_NAME}}  {{formHistory.formID.studentSupervisee.LAST_NAME}}  ({{formHistory.formID.studentSupervisee.ID}})
             </td>
             <td> {# POSITON AND WLS #}
@@ -108,27 +112,53 @@
             type="button"
             class="btn btn-newcolor"
             onclick="insertApprovals();"
-            value="Approve Selected">
+            value="Approve Selected"
+            data-toggle="modal"
+            data-target="#approvalModal">
+
             Approve Selected
           </button>
+<!-- Modal -->
+    <div class="modal fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Approve Selected?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <p id="approvalContent"> </p>
+
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Approve</button>
+          </div>
         </div>
       </div>
-
-
-      <!-- START OF MODAL adding notes -->
-      <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="notesModalLabel">Labor Office Notes</h4>
+    </div>
             </div>
-            <div class="modal-body" >
-              <p> These notes are only for the Labor Office Staff.</p>
-              <p> Pre-fill this with the notes from the supervisor
-                <div id="notesDiv">
-                   <h5> <b>Supervisor Notes  </b> </h5>
-                  <p id="notesText" class="notesText" </p>
+          </div>
+
+
+          <!-- START OF MODAL adding notes -->
+          <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="notesModalLabel">Labor Office Notes</h4>
+                </div>
+                <div class="modal-body" >
+                  <p> These notes are only for the Labor Office Staff.</p>
+                  <p> Pre-fill this with the notes from the supervisor
+                    <div id="notesDiv">
+                       <h5> <b>Supervisor Notes  </b> </h5>
+                      <p id="notesText" class="notesText"> </p>
 
 
                 <h5> <b>Labor Office Notes </b> </h5>
@@ -164,7 +194,7 @@
       </div>
       <!-- END OF MODAL-->
 
-      <!-- MODAL -->
+    {#  MODAL -->
       <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -184,6 +214,6 @@
           </div>
       </div>
       </div>
-      <!-- END OF MODAL -->
+      <!-- END OF MODAL #}
 </div>
 {% endblock %}
