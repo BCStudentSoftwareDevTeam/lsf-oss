@@ -38,7 +38,7 @@ def laborStatusForm(laborStatusKey = None):
         forms = None
     return render_template( 'main/laborStatusForm.html',
 				            title=('Labor Status Form'),
-                            username = currentUser,
+                            UserID = currentUser,
                             forms = forms,
                             students = students,
                             terms = terms,
@@ -125,7 +125,7 @@ def checkForPrimaryPosition(termCode, student):
     primaryPositionsDict = {}
     for primary_position in primaryPositions:
         primaryPositionsDict["PrimarySupervisor"] = {"Primary Supervisor FirstName":primary_position.supervisor.FIRST_NAME,
-        "Primary Supervisor LastName": primary_position.supervisor.LAST_NAME, "Primary Supervisor ID":primary_position.supervisor.username}
+        "Primary Supervisor LastName": primary_position.supervisor.LAST_NAME, "Primary Supervisor ID":primary_position.supervisor.UserID}
     return json.dumps(primaryPositionsDict)
 
 @main_bp.route("/laborstatusform/gethours/<termCode>/<student>", methods=["GET"])
