@@ -62,6 +62,8 @@ def userInsert():
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         if rsp:
             for data in rsp.values():
+                del data['undefined']
+                print(data)
                 # wlsIndexStart = data['Position'].find('(')
                 # position = data['Position'][:wlsIndexStart]
                 # bnumberIndexStart = data['Student'].find('(')
@@ -73,12 +75,24 @@ def userInsert():
                 # if created:
                     # print(created)
                     # student = d.ID
-                print("Supervisor", data['supervisor'])
-                d, created = User.get_or_create(ID = data['supervisor'])
-                    # primarySupervisor = d.username
-                if created:
-                    print("Adding user ", data['supervisor'])
-                    ps = STUSTAFF.get(STUDATA.ID == d.ID)
+                print('supervisor name')
+                print(data['Supervisor'])
+                d, created = User.get_or_create(username = data['Supervisor'])
+                print(d.username)
+                primarySupervisor = d.username
+                if not created: # true ( FIXME: 'not' should be removed. It should be 'if created'. I have it there just for checking)
+                    print("Adding user ")
+                    supervisor = STUSTAFF.get(STUSTAFF.PIDM == d.username)
+                    supervisorBnumber = supervisor.ID
+                    supervisorFirstName = supervisor.FIRST_NAME
+                    supervisorLastName = supervisor.LAST_NAME
+                    supervisorCPO = supervisor.CPO
+                    supervisorORG = supervisor.ORG
+                    supervisorPIDM = supervisor.PIDM
+                    print(supervisor)
+                    print(supervisorBnumber)
+                    print(supervisorCPO)
+
 
                 # d, created = Department.get_or_create(DEPT_NAME = data['Department'])
                 # department = d.departmentID
