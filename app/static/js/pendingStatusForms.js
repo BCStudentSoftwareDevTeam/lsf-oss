@@ -57,7 +57,9 @@ function saveLaborNotes() { // saves notes written in textarea when save button 
 }
 
  function saveNotes() { // saves notes written in textarea when save button of modal is clicked
-   var notes = document.getElementById("laborNotesText").value;
+   var notes = $("#laborNotesText").val();
+   console.log(notes);
+
    document.getElementById(notesTextId).setAttribute("data-note", notes);
  }
 
