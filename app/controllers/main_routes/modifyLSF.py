@@ -102,7 +102,14 @@ def sumbitModifiedForm(laborStatusKey):
                                     createdBy   = cfg['user']['debug'],
                                     createdDate = date.today(),
                                     status      = status.statusName)
-                # LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+                for form in range(len(fieldsModified)):
+                    keyfield = str(fieldsModified[form])
+                    LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+                    print(LSF)
+                    print(keyfield)
+                    setattr(LSF, keyfield, newValues[form])
+                    obj = getattr(LSF, keyfield)
+                    print(obj)
         #     flash("Labor Status Form(s) has been created.", "success")
         return jsonify({"Success": True})
     except Exception as e:
