@@ -4,12 +4,7 @@ function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
     ids.push(this.value);
     console.log(ids);
-// var checkapproval= $("#approveChecked").val();
     $("#approvalContent").text(ids);
-
-    // console.log(checkapproval)
-
-
   })
   data = JSON.stringify(ids);
 
