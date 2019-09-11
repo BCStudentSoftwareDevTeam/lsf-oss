@@ -230,9 +230,19 @@ staffs = [
             "FIRST_NAME":"Mario",
             "LAST_NAME" : "Nakazawa",
             "EMAIL"  :"nakazawam@berea.edu",
-            "CPO":"6300",
+            "CPO":"6302",
             "ORG":"2143",
             "DEPT_NAME": "Mathematics"
+            }
+
+            {
+            "ID": "B1236236",
+            "FIRST_NAME":"Matt",
+            "LAST_NAME" : "Jadud",
+            "EMAIL"  :"jadudm@berea.edu",
+            "CPO":"6303",
+            "ORG":"2144",
+            "DEPT_NAME": "Geology"
             }
 
 
@@ -240,9 +250,10 @@ staffs = [
 stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
 print(stustaff)
 
-def insert_to_users(staff):
-    for sta in staff:
-        u = User(User.PIDM = sta.PIDM)
+def insert_to_users(staffs):
+    for sta in staffs[0:3]: #insert staff members into stustaff
+        u = User()
+        u.PIDM = sta.PIDM
         u.FIRST_NAME = sta.FIRST_NAME
         u.LAST_NAME = sta.LAST_NAME
         u.username = sta.EMAIL.split("@")[0]
@@ -253,7 +264,7 @@ def insert_to_users(staff):
         u.save()
         # ...
 
-insert_to_users(stustaff)
+insert_to_users(STUSTAFF.select())
 
 
 #############################
