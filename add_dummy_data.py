@@ -8,25 +8,25 @@ This file will need to be changed if the format of models changes (new fields, d
 #############################
 from datetime import *
 
-from app.models.user import User
-users = [
-             {
-             "PIDM":1,
-             "username": "heggens",
-             "FIRST_NAME":"Scott",
-             "LAST_NAME": "Heggen",
-             "isLaborAdmin": True
-             },
-            {
-            "PIDM":2,
-            "username": "pearcej",
-            "FIRST_NAME":"Jan",
-            "LAST_NAME": "Pearce",
-            "isLaborAdmin": False
-            }
-        ]
-User.insert_many(users).on_conflict_replace().execute()
-print("users added")
+
+# users = [
+#              {
+#              "PIDM":1,
+#              "username": "heggens",
+#              "FIRST_NAME":"Scott",
+#              "LAST_NAME": "Heggen",
+#              "isLaborAdmin": True
+#              },
+#             {
+#             "PIDM":2,
+#             "username": "pearcej",
+#             "FIRST_NAME":"Jan",
+#             "LAST_NAME": "Pearce",
+#             "isLaborAdmin": False
+#             }
+#         ]
+# User.insert_many(users).on_conflict_replace().execute()
+# print("users added")
 
 #############################
 # Students (TRACY)
@@ -202,45 +202,59 @@ print("positions (TRACY) added")
 # TRACY Staff
 #############################
 from app.models.Tracy.stustaff import STUSTAFF
+from app.models.user import User
 
 staffs = [
             {
-            "PIDM":1,
             "ID": "B12361006",
             "FIRST_NAME":"Scott",
             "LAST_NAME" : "Heggen",
             "EMAIL"  :"heggens@berea.edu",
             "CPO":"6300",
-            "ORG":"Berea College",
-            "DEPT_NAME": "CS"
+            "ORG":"2141",
+            "DEPT_NAME": "Biology"
             },
 
             {
-            "PIDM":2,
             "ID": "B12365892",
             "FIRST_NAME":"Jan",
             "LAST_NAME" : "Pearce",
             "EMAIL"  :"pearcej@berea.edu",
             "CPO":"6301",
-            "ORG":"Berea College",
-            "DEPT_NAME": "CS"
+            "ORG":"2142",
+            "DEPT_NAME": "Computer Science"
             },
 
             {
-            "PIDM":3,
             "ID": "B1236236",
             "FIRST_NAME":"Mario",
             "LAST_NAME" : "Nakazawa",
             "EMAIL"  :"nakazawam@berea.edu",
             "CPO":"6300",
-            "ORG":"Berea College",
-            "DEPT_NAME": "CS"
+            "ORG":"2143",
+            "DEPT_NAME": "Mathematics"
             }
 
 
         ]
-STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
-print("staff added")
+stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
+print(stustaff)
+
+def insert_to_users(staff):
+    for sta in staff:
+        u = User(User.PIDM = sta.PIDM)
+        u.FIRST_NAME = sta.FIRST_NAME
+        u.LAST_NAME = sta.LAST_NAME
+        u.username = sta.EMAIL.split("@")[0]
+        u.EMAIL = sta.EMAIL
+        u.CPO = sta.CPO
+        u.ORG = sta.ORG
+        u.DEPT_NAME = sta.DEPT_NAME
+        u.save()
+        # ...
+
+insert_to_users(stustaff)
+
 
 #############################
 # Terms

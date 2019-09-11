@@ -414,7 +414,6 @@ var totalHourDict = {}
 function checkTotalhoursTable() {//Checks if the student has enough hours to require an overload form
   var table = document.getElementById("mytable");
   var student = document.getElementById("student");
-  console.log(student);
   var studentName = $(student.options[student.selectedIndex]).text();
   var totalHours = 0
   var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
@@ -433,7 +432,9 @@ function checkTotalhoursTable() {//Checks if the student has enough hours to req
 
 function checkForTotalHoursDatabase(preventPlusFromSubmitting = "") {// gets sum of the total weekly hours from the database and add it to the ones in the table.
   var student = $("#student").val();
+  console.log(student);
   var term = $("#selectedTerm").val();
+  console.log(term);
   var url = "/laborstatusform/gethours/" + term +"/" +student;
   $.ajax({
     url: url,

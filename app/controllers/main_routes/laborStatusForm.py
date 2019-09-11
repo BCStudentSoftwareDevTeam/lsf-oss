@@ -131,7 +131,7 @@ def checkForPrimaryPosition(termCode, student):
 @main_bp.route("/laborstatusform/gethours/<termCode>/<student>", methods=["GET"])
 def checkForTotalHours(termCode, student):
     """ Calculates total weekly hours of a student and returns the total. """
-    hours = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    hours = LaborStatusForm.select().where(LaborStatusForm.termCode == int(termCode), LaborStatusForm.studentSupervisee == student)
     total = 0
     hoursDict = {}
     for hour in hours:
