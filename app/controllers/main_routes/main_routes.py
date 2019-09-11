@@ -140,10 +140,10 @@ def populateDepartment(departmentSelected):
         currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.endDate >= todayDate).where(LaborStatusForm.department.DEPT_NAME == department)
         # Grabs all the labor status forms where the current users department matches the status forms derpartment
         allDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == department).order_by(LaborStatusForm.endDate.desc())
-        resp = make_response(render_template( 'snips/departmentDatatable.html',
+        resp = make_response(jsonify(render_template( 'snips/departmentDatatable.html',
                         currentDepartmentStudents = currentDepartmentStudents,
                         allDepartmentStudents = allDepartmentStudents
-                              ))
+                              )))
         return (resp)
     except Exception as e:
         print(e)

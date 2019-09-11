@@ -299,9 +299,9 @@ function populateTable(){
     url: "/main/department/" + departmentSelected,
     success: function(response) {
       console.log(response);
-      $("#downloadModal").append(response);
+      $(".modal-body").append(response);
       $("#studentList tbody").append(response);
-      table.ajax.reload();
+      // table.ajax.reload();
     }
   })
 }
