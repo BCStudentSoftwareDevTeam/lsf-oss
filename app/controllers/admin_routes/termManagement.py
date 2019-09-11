@@ -49,7 +49,7 @@ def createTerms(termList, iteration):
             elif i == 6:
                 termList.create(termCode = (code + 13), termName = ("Summer " + str(termYear + 1)))
         except Exception as e:
-            # print("You failed to create a term in the " + str(termYear) + " AY.")
+             print("You failed to create a term in the " + str(termYear) + " AY.")
 
 def accordionTerms():
     """ This function populates all the Academic Years with the correct terms.
