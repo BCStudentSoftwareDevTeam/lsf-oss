@@ -8,8 +8,17 @@ contributors:
   - name: "Evan Johnson"
     username: "johnsone"
     year: 2019
+  - name: "Anne Otieno"
+    username: "otienoa"
+    year: 2020
+  - name: "Jamal Aw Yoonis"
+    username: ""
+    year: 2020
   - name: "Alex Bryant"
     username: "bryantal"
+    year: 2020
+  - name: "Basant Phuyal"
+    username: "phuyalb"
     year: 2020
   - name: "Roberto Santos Hernandez"
     username: ""
@@ -31,4 +40,4 @@ contributors:
     year: 2022
   - name: "Luis Jesus Riera Soto"
     username: "rieral"
-    year: 2022  
+    year: 2022

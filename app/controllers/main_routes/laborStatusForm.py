@@ -38,7 +38,7 @@ def laborStatusForm(laborStatusKey = None):
         forms = None
     return render_template( 'main/laborStatusForm.html',
 				            title=('Labor Status Form'),
-                            username = currentUser,
+                            UserID = currentUser,
                             forms = forms,
                             students = students,
                             terms = terms,
@@ -59,8 +59,8 @@ def userInsert():
                 studentBnumber = data['Student'][bnumberIndex:]
                 d, created = Student.get_or_create(ID = studentBnumber)
                 student = d.ID
-                d, created = User.get_or_create(username = data['Supervisor'])
-                primarySupervisor = d.username
+                d, created = User.get_or_create(UserID = data['Supervisor'])
+                primarySupervisor = d.UserID
                 d, created = Department.get_or_create(DEPT_NAME = data['Department'])
                 department = d.departmentID
                 d, created = Term.get_or_create(termCode = data['Term'])
@@ -95,6 +95,7 @@ def userInsert():
             return jsonify({"Success": True})
     except Exception as e:
         flash("An error occured.", "danger")
+        print("ERROR: " + str(e))
         return jsonify({"Success": False})
 
 @main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])
@@ -124,13 +125,13 @@ def checkForPrimaryPosition(termCode, student):
     primaryPositionsDict = {}
     for primary_position in primaryPositions:
         primaryPositionsDict["PrimarySupervisor"] = {"Primary Supervisor FirstName":primary_position.supervisor.FIRST_NAME,
-        "Primary Supervisor LastName": primary_position.supervisor.LAST_NAME, "Primary Supervisor ID":primary_position.supervisor.username}
+        "Primary Supervisor LastName": primary_position.supervisor.LAST_NAME, "Primary Supervisor ID":primary_position.supervisor.UserID}
     return json.dumps(primaryPositionsDict)
 
 @main_bp.route("/laborstatusform/gethours/<termCode>/<student>", methods=["GET"])
 def checkForTotalHours(termCode, student):
     """ Calculates total weekly hours of a student and returns the total. """
-    hours = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    hours = LaborStatusForm.select().where(LaborStatusForm.termCode == int(termCode), LaborStatusForm.studentSupervisee == student)
     total = 0
     hoursDict = {}
     for hour in hours:
