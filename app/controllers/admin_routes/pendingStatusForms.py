@@ -85,6 +85,7 @@ def getNotes(formid):
             notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes
 
         print(notesDict["supervisorNotes"])
+        print(notesDict["laborDepartmentNotes"])
         return jsonify(notesDict)
 
     except Exception as e:

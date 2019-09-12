@@ -37,6 +37,7 @@ function getNotes (formID) {
 
         console.log($("#notesText").html(response["supervisorNotes"]));
         $("#notesText").html(response["supervisorNotes"]);
+        $("#laborNotesText").html(response["laborDepartmentNotes"]);
 
       } else {
             $("#notesText").empty();
@@ -50,14 +51,16 @@ function getNotes (formID) {
 function saveLaborNotes() { // saves notes written in textarea when save button of modal is clicked
   var notesTextId = $("#dummyInput").val();
   var notesUniqueId = "notes_" + notesTextId;
+  var uniqueTextArea = "laborNotesText" + notesTextId
   console.log(notesUniqueId);
-  document.getElementById("laborNotesText").value=document.getElementById(notesUniqueId).getAttribute("data-note");
-  document.getElementById("saveNotes").setAttribute('onclick',"saveNotes('" + notesUniqueId +"')");
-  console.log(idDummyInput);
+  $("#laborNotesText").val()= $(uniqueTextArea).attr("data-note");
+  $("#saveNotes").attr('onclick',"saveNotes('" + uniqueTextArea +"')");
+
 }
 
  function saveNotes() { // saves notes written in textarea when save button of modal is clicked
    var notes = $("#laborNotesText").val();
+
    console.log(notes);
 
    document.getElementById(notesTextId).setAttribute("data-note", notes);
