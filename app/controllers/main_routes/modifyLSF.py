@@ -26,6 +26,7 @@ def modifyLSF(laborStatusKey):
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
+    superviser_id = form.supervisor.UserID
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_TITLE + " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
@@ -45,6 +46,7 @@ def modifyLSF(laborStatusKey):
     return render_template( 'main/modifyLSF.html',
 				            title=('Modify LSF'),
                             username = current_user,
+                            superviser_id = superviser_id,
                             prefillstudent = prefillstudent,
                             prefillsupervisor = prefillsupervisor,
                             prefilldepartment = prefilldepartment,
@@ -88,7 +90,13 @@ def sumbitModifiedForm(laborStatusKey):
             print(effectiveDates)
             historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
             status = Status.get(Status.statusName == "Pending")
+            username = cfg['user']['debug']
+            createdbyid = User.get(User.username == username)
             for i in range(len(fieldsModified)):
+                if fieldsModified[i] == "supervisor":
+                    newsupervisor = User.get(User.PIDM == newValues[i])
+                    newValues[i] = newsupervisor.FIRST_NAME + " " + newsupervisor.LAST_NAME
+
                 modifiedforms = ModifiedForm.create(fieldModified = fieldsModified[i],
                                     oldValue      =  oldValues[i],
                                     newValue      =  newValues[i],
@@ -98,23 +106,24 @@ def sumbitModifiedForm(laborStatusKey):
                                     historyType = historyType.historyTypeName,
                                     # modifiedFormID = # the id
                                     modifiedForm = modifiedforms.modifiedFormID,
-
-                                    createdBy   = cfg['user']['debug'],
+                                    createdBy   = createdbyid.UserID,
                                     createdDate = date.today(),
                                     status      = status.statusName)
                 for form in range(len(fieldsModified)):
                     try:
                         print(range(len(fieldsModified)))
-                        keyfield = str(fieldsModified[form])
+                        column = str(fieldsModified[form])
                         LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-                        print(LSF)
-                        print(keyfield)
-                        setattr(LSF, keyfield, newValues[form])
-                        obj = getattr(LSF, keyfield)
+                        if keyfield == "supervisor":
+                            print("i'm here")
+                            LSF.supervisor.UserID == newValues[form]
+                            LSF.save()
+                        else:
+                            setattr(LSF, column, newValues[form])
+                        print("new value form:", newValues[form])
                     except Exception as e:
                         print("I am error")
                         print(e)
-                    print(obj)
         #     flash("Labor Status Form(s) has been created.", "success")
         return jsonify({"Success": True})
     except Exception as e:

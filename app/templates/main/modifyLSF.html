@@ -31,9 +31,9 @@
                             class="selectpicker form-control newValue"
                             id="supervisor"
                             data-live-search="true">
-                <option title="{{prefillsupervisor}}" value="{{prefillsupervisor}}">{{prefillsupervisor}}</option> <!-- not showing up fam-->
+                <option title="{{prefillsupervisor}}" value="{{superviser_id}}">{{prefillsupervisor}}</option> <!-- not showing up fam-->
                 {% for staff in supervisors %}
-                  <option value="{{staff.FIRST_NAME}} {{staff.LAST_NAME}}">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
+                  <option value="{{staff.PIDM}}">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
                 {% endfor %}
            </select>
            <input hidden class = "oldValue"  value="{{prefillsupervisor}}" > </input> <!-- stores value of original-->
