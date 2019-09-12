@@ -96,7 +96,9 @@ def sumbitModifiedForm(laborStatusKey):
                                     )
                 formhistorys = FormHistory.create( formID = laborStatusKey,
                                     historyType = historyType.historyTypeName,
+                                    # modifiedFormID = # the id
                                     modifiedForm = modifiedforms.modifiedFormID,
+
                                     createdBy   = cfg['user']['debug'],
                                     createdDate = date.today(),
                                     status      = status.statusName)
