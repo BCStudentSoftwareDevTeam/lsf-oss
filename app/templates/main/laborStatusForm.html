@@ -71,7 +71,7 @@
                     onchange = "showAccessLevel(this); preFilledDate(this)">
                 <option value = "" disabled selected>Select a Term</option>
             {% for term in terms %}
-                <option value = "{{term.termCode}}">{{term.termName}}</option>
+                <option value = "{{term.termCode}}" data-termCode = "{{term.termCode}}">{{term.termName}}</option>
             {% endfor %}
           </select>
   </div>

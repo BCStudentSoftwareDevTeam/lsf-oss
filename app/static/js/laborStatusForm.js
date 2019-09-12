@@ -154,6 +154,7 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
      options.id = key;
      options.setAttribute('data-wls', response[key]['WLS']);
      selectedPositions.appendChild(options);
+     console.log(key['WLS']);
    }
    if (stopSelectRefresh== "") {
      $('.selectpicker').selectpicker('refresh');
@@ -168,12 +169,19 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
  $('#position').change(function(){
    //this is just getting the value that is selected
    var wls = $('#position').find('option:selected').attr('data-wls');
-   if (wls >= 5) {
-     document.getElementById('WLSModalTitle').innerHTML = "Work-Learning-Service Levels (WLS)"
-     document.getElementById('WLSModalText').innerHTML = "Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
-                                                        "These positions require special authorization as specified at " +
-                                                        "<a href='http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS' target='_blank'>The Labor Program Website.</a>";
-     $('#WLSModal').modal('show');
+   var termCodeSelected = $('#selectedTerm').find('option:selected').attr('data-termCode')
+   if (termCodeSelected.slice(-2) == "11" || "12") {
+     if (wls >= 5) {
+       document.getElementById('WLSModalTitle').innerHTML = "Work-Learning-Service Levels (WLS)"
+       document.getElementById('WLSModalText').innerHTML = "Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
+                                                          "These positions require special authorization as specified at " +
+                                                          "<a href='http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS' target='_blank'>The Labor Program Website.</a>";
+      $('#WLSModal').modal('show');
+   }
+   else {
+      $('#WLSModal').modal('show');
+   }
+
      }
  });
 
@@ -213,11 +221,14 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
 function checkWLS() {
   var wls = $('#position').find('option:selected').attr('data-wls');
   var hoursPerWeek = $('#selectedHoursPerWeek').val();
-  if (wls >= 5 && hoursPerWeek < 15 ) {
-    document.getElementById('WLSModalTitle').innerHTML = "Insert Rejected"  // FIXME: Maybe change Modal title (ask Scott)
-    document.getElementById('WLSModalText').innerHTML = "Student requires at least a 15 hour contract with positions WLS 5 or greater."; // FIXME Maybe change modal Language (ask Scott)
-    $('#WLSModal').modal('show');
-    return false;
+  var termCodeSelected = $('#selectedTerm').find('option:selected').attr('data-termCode')
+  if ((termCodeSelected.endsWith("11")) || (termCodeSelected.endsWith("12"))) {  // Checks the term so that
+    if (wls >= 5 && hoursPerWeek < 15 ) {
+      document.getElementById('WLSModalTitle').innerHTML = "Insert Rejected"  // FIXME: Maybe change Modal title (ask Scott)
+      document.getElementById('WLSModalText').innerHTML = "Student requires at least a 15 hour contract with positions WLS 5 or greater."; // FIXME Maybe change modal Language (ask Scott)
+      $('#WLSModal').modal('show');
+      return false;
+    }
   }
   else {
     return true;
@@ -329,6 +340,7 @@ function deleteRow(row) { // Deletes Row when remove glyphicon is clicked.
 function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
   if ($('#selectedSupervisor').val()=="" || $('#selectedDepartment').val()=="" || $('#selectedTerm').val()=="" || $("#dateTimePicker1").val()=="" || $("#dateTimePicker2").val()=="") {
     category = "danger"
+    console.log(here)
     msg = "Please fill out all fields before submitting.";
     $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
     $("#flasher").delay(3000).fadeOut()
@@ -357,6 +369,7 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
       }
       else {
         checkDuplicate();
+        return
       }
     }
   }
@@ -572,10 +585,13 @@ function checkDuplicateBreaks(preventPlusFromSubmitting = "") { // checks for du
             refreshSelectPickers();
             return;
             }
+          else {
+            createAndFillTableForBreaks()
+            return;
+          }
           }
         }
-        createAndFillTableForBreaks()
-      }
+
 
 function createAndFillTableForBreaks() {// Fills the table. For Summer term or any other break period
   $("#mytable").show();
