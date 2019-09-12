@@ -169,20 +169,13 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
  $('#position').change(function(){
    //this is just getting the value that is selected
    var wls = $('#position').find('option:selected').attr('data-wls');
-   var termCodeSelected = $('#selectedTerm').find('option:selected').attr('data-termCode')
-   if (termCodeSelected.slice(-2) == "11" || "12") {
-     if (wls >= 5) {
+   if (wls >= 5) {
        document.getElementById('WLSModalTitle').innerHTML = "Work-Learning-Service Levels (WLS)"
        document.getElementById('WLSModalText').innerHTML = "Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
                                                           "These positions require special authorization as specified at " +
                                                           "<a href='http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS' target='_blank'>The Labor Program Website.</a>";
-      $('#WLSModal').modal('show');
    }
-   else {
-      $('#WLSModal').modal('show');
-   }
-
-     }
+     $('#WLSModal').modal('show');
  });
 
 
