@@ -8,23 +8,25 @@ This file will need to be changed if the format of models changes (new fields, d
 #############################
 from datetime import *
 
-from app.models.user import User
-users = [
-             {
-             "username": "heggens",
-             "FIRST_NAME":"Scott",
-             "LAST_NAME": "Heggen",
-             "isLaborAdmin": True
-             },
-            {
-                "username": "pearcej",
-                "FIRST_NAME":"Jan",
-                "LAST_NAME": "Pearce",
-                "isLaborAdmin": False
-            }
-        ]
-User.insert_many(users).on_conflict_replace().execute()
-print("users added")
+
+# users = [
+#              {
+#              "PIDM":1,
+#              "username": "heggens",
+#              "FIRST_NAME":"Scott",
+#              "LAST_NAME": "Heggen",
+#              "isLaborAdmin": True
+#              },
+#             {
+#             "PIDM":2,
+#             "username": "pearcej",
+#             "FIRST_NAME":"Jan",
+#             "LAST_NAME": "Pearce",
+#             "isLaborAdmin": False
+#             }
+#         ]
+# User.insert_many(users).on_conflict_replace().execute()
+# print("users added")
 
 #############################
 # Students (TRACY)
@@ -223,45 +225,70 @@ print("positions (TRACY) added")
 # TRACY Staff
 #############################
 from app.models.Tracy.stustaff import STUSTAFF
+from app.models.user import User
 
 staffs = [
             {
-            "PIDM":"heggens",
             "ID": "B12361006",
             "FIRST_NAME":"Scott",
             "LAST_NAME" : "Heggen",
             "EMAIL"  :"heggens@berea.edu",
             "CPO":"6300",
-            "ORG":"Berea College",
-            "DEPT_NAME": "Computer Science"
+            "ORG":"2141",
+            "DEPT_NAME": "Biology"
             },
 
             {
-            "PIDM":"pearcej",
             "ID": "B12365892",
             "FIRST_NAME":"Jan",
             "LAST_NAME" : "Pearce",
             "EMAIL"  :"pearcej@berea.edu",
             "CPO":"6301",
-            "ORG":"Berea College",
-            "DEPT_NAME": "Biology"
+            "ORG":"2142",
+            "DEPT_NAME": "Computer Science"
             },
 
             {
-            "PIDM":"nakazawam",
             "ID": "B1236236",
             "FIRST_NAME":"Mario",
             "LAST_NAME" : "Nakazawa",
             "EMAIL"  :"nakazawam@berea.edu",
-            "CPO":"6300",
-            "ORG":"Berea College",
+            "CPO":"6302",
+            "ORG":"2143",
             "DEPT_NAME": "Mathematics"
+            },
+
+            {
+            "ID": "B1236236",
+            "FIRST_NAME":"Matt",
+            "LAST_NAME" : "Jadud",
+            "EMAIL"  :"jadudm@berea.edu",
+            "CPO":"6303",
+            "ORG":"2144",
+            "DEPT_NAME": "Geology"
             }
 
 
         ]
-STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
-print("staff added")
+stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
+print(stustaff)
+
+def insert_to_users(staffs):
+    for sta in staffs[0:3]: #insert staff members into stustaff
+        u = User()
+        u.PIDM = sta.PIDM
+        u.FIRST_NAME = sta.FIRST_NAME
+        u.LAST_NAME = sta.LAST_NAME
+        u.username = sta.EMAIL.split("@")[0]
+        u.EMAIL = sta.EMAIL
+        u.CPO = sta.CPO
+        u.ORG = sta.ORG
+        u.DEPT_NAME = sta.DEPT_NAME
+        u.save()
+        # ...
+
+insert_to_users(STUSTAFF.select())
+
 
 #############################
 # Terms
@@ -444,7 +471,7 @@ from app.models.Tracy.stustaff import STUSTAFF
 
 staffs = [
             {
-            "PIDM":"heggens",
+            "PIDM":1,
             "ID": "B12361006",
             "FIRST_NAME":"Scott",
             "LAST_NAME" : "Heggen",
@@ -455,7 +482,7 @@ staffs = [
             },
 
             {
-            "PIDM":"pearcej",
+            "PIDM":2,
             "ID": "B12365892",
             "FIRST_NAME":"Jan",
             "LAST_NAME" : "Pearce",
@@ -466,7 +493,7 @@ staffs = [
             },
 
             {
-            "PIDM":"nakazawam",
+            "PIDM":3,
             "ID": "B1236236",
             "FIRST_NAME":"Mario",
             "LAST_NAME" : "Nakazawa",
@@ -537,7 +564,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201911"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Primary",
     "WLS":"1",
@@ -551,7 +578,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201912"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Secondary",
     "WLS":"1",
@@ -565,7 +592,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201913"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Secondary",
     "WLS":"2",
@@ -579,7 +606,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201901"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Secondary",
     "WLS":"2",
@@ -593,7 +620,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201911"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Secondary",
     "WLS":"2",
@@ -607,7 +634,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201912"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Primary",
     "WLS":"2",
@@ -621,7 +648,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201913"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Secondary",
     "WLS":"2",
@@ -635,7 +662,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201901"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Secondary",
     "WLS":"2",
@@ -649,7 +676,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201911"),
     "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Biology"),
     "jobType": "Primary",
     "WLS":"2",
@@ -663,7 +690,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201912"),
     "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Biology"),
     "jobType": "Primary",
     "WLS":"2",
@@ -677,7 +704,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201913"),
     "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Biology"),
     "jobType": "Secondary",
     "WLS":"2",
@@ -691,7 +718,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201901"),
     "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Biology"),
     "jobType": "Secondary",
     "WLS":"2",
@@ -705,7 +732,7 @@ lsfs = [
     # {
     # "termCode": Term.get(Term.termCode == "201811"),
     # "studentSupervisee": Student.get(Student.ID == "B00734511"),
-    # "supervisor": User.get(User.username == "heggens"),
+    # "supervisor": User.get(User.PIDM == 1),
     # "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     # "jobType": "Primary",
     # "WLS":"1",
@@ -719,7 +746,7 @@ lsfs = [
     # {
     # "termCode": Term.get(Term.termCode == "201811"),
     # "studentSupervisee": Student.get(Student.ID == "B00711232"),
-    # "supervisor": User.get(User.username == "heggens"),
+    # "supervisor": User.get(User.PIDM == 1),
     # "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     # "jobType": "Primary",
     # "WLS":"1",
@@ -733,7 +760,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "202011"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Primary",
     "WLS":"2",
@@ -747,7 +774,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "202011"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Secondary",
     "WLS":"2",
@@ -761,7 +788,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "202012"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Primary",
     "WLS":"2",
@@ -775,7 +802,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "202012"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Secondary",
     "WLS":"2",
@@ -789,7 +816,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "202111"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Primary",
     "WLS":"2",
@@ -803,7 +830,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "202111"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Secondary",
     "WLS":"2",
@@ -817,7 +844,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201711"),
     "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Biology"),
     "jobType": "Secondary",
     "WLS":"2",
@@ -831,7 +858,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201811"),
     "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Biology"),
     "jobType": "Primary",
     "WLS":"2",
@@ -845,7 +872,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201712"),
     "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Biology"),
     "jobType": "Primary",
     "WLS":"2",
@@ -859,7 +886,7 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "201612"),
     "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.username == "heggens"),
+    "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Biology"),
     "jobType": "Primary",
     "WLS":"2",
@@ -1006,7 +1033,7 @@ fh = [  {
             "releaseForm": None,
             "modifiedForm": None,
             "overloadForm": None,
-            "createdBy": User.get(User.username == "heggens"),
+            "createdBy": User.get(User.PIDM == 1),
             "createdDate": datetime.date(2019, 8, 20),
             "reviewedDate": None,
             "reviewedBy": None,
@@ -1019,7 +1046,7 @@ fh = [  {
             "releaseForm": None,
             "modifiedForm": None,
             "overloadForm": None,
-            "createdBy": User.get(User.username == "heggens"),
+            "createdBy": User.get(User.PIDM == 1),
             "createdDate": datetime.date(2020, 1, 5),
             "reviewedDate": datetime.date(2020, 5, 4),
             "reviewedBy": None,
@@ -1032,7 +1059,7 @@ fh = [  {
             "releaseForm": None,
             "modifiedForm": None,
             "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 1),
-            "createdBy": User.get(User.username == "heggens"),
+            "createdBy": User.get(User.PIDM == 1),
             "createdDate": datetime.date(2020, 1, 7),
             "reviewedDate": datetime.date(2020, 5, 5),
             "reviewedBy": None,
@@ -1045,7 +1072,7 @@ fh = [  {
             "releaseForm": None,
             "modifiedForm": None,
             "overloadForm": None,
-            "createdBy": User.get(User.username == "heggens"),
+            "createdBy": User.get(User.PIDM == 1),
             "createdDate": datetime.date(2020, 5, 4),
             "reviewedDate": datetime.date(2020, 5, 7),
             "reviewedBy": None,
@@ -1058,7 +1085,7 @@ fh = [  {
             "releaseForm": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 1),
             "modifiedForm": None,
             "overloadForm": None,
-            "createdBy": User.get(User.username == "heggens"),
+            "createdBy": User.get(User.PIDM == 1),
             "createdDate": datetime.date(2020, 6, 5),
             "reviewedDate": datetime.date(2020, 6, 8),
             "reviewedBy": None,
@@ -1071,7 +1098,7 @@ fh = [  {
             "releaseForm": None,
             "modifiedForm": None,
             "overloadForm": None,
-            "createdBy": User.get(User.username == "heggens"),
+            "createdBy": User.get(User.PIDM == 1),
             "createdDate": datetime.date(2020, 6, 5),
             "reviewedDate": datetime.date(2020, 6, 8),
             "reviewedBy": None,
@@ -1084,7 +1111,7 @@ fh = [  {
             "releaseForm": None,
             "modifiedForm": ModifiedForm.get(ModifiedForm.modifiedFormID == 1),
             "overloadForm": None,
-            "createdBy": User.get(User.username == "heggens"),
+            "createdBy": User.get(User.PIDM == 1),
             "createdDate": datetime.date(2020, 6, 9),
             "reviewedDate": datetime.date(2020, 6, 10),
             "reviewedBy": None,
@@ -1097,7 +1124,7 @@ fh = [  {
            "releaseForm": None,
            "modifiedForm": None,
            "overloadForm": None,
-           "createdBy": User.get(User.username == "heggens"),
+           "createdBy": User.get(User.PIDM == 1),
            "createdDate": datetime.date(2019, 8, 20),
            "reviewedDate": datetime.date(2019, 12, 14),
            "reviewedBy": None,
@@ -1110,7 +1137,7 @@ fh = [  {
               "releaseForm": None,
               "modifiedForm": ModifiedForm.get(ModifiedForm.modifiedFormID == 2),
               "overloadForm": None,
-              "createdBy": User.get(User.username == "heggens"),
+              "createdBy": User.get(User.PIDM == 1),
               "createdDate": datetime.date(2019, 9, 5),
               "reviewedDate": None,
               "reviewedBy": None,
@@ -1123,7 +1150,7 @@ fh = [  {
              "releaseForm": None,
              "modifiedForm": None,
              "overloadForm": None,
-             "createdBy": User.get(User.username == "heggens"),
+             "createdBy": User.get(User.PIDM == 1),
              "createdDate": datetime.date(2020, 1, 5),
              "reviewedDate": datetime.date(2020, 5, 4),
              "reviewedBy": None,
@@ -1136,7 +1163,7 @@ fh = [  {
                 "releaseForm": None,
                 "modifiedForm": None,
                 "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 2),
-                "createdBy": User.get(User.username == "heggens"),
+                "createdBy": User.get(User.PIDM == 1),
                 "createdDate": datetime.date(2020, 5, 10),
                 "reviewedDate": datetime.date(2020, 5, 15),
                 "reviewedBy": None,
@@ -1149,7 +1176,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2020, 5, 4),
                  "reviewedDate": datetime.date(2020, 5, 7),
                  "reviewedBy": None,
@@ -1162,7 +1189,7 @@ fh = [  {
                  "releaseForm": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 2),
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2020, 6, 5),
                  "reviewedDate": None,
                  "reviewedBy": None,
@@ -1175,7 +1202,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2020, 11, 24),
                  "reviewedDate": datetime.date(2020, 11, 25),
                  "reviewedBy": None,
@@ -1188,7 +1215,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": ModifiedForm.get(ModifiedForm.modifiedFormID == 3),
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2020, 11, 27),
                  "reviewedDate": None,
                  "reviewedBy": None,
@@ -1201,7 +1228,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2019, 8, 20),
                  "reviewedDate": datetime.date(2019, 8, 23),
                  "reviewedBy": None,
@@ -1214,7 +1241,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2020, 1, 5),
                  "reviewedDate": datetime.date(2020, 5, 4),
                  "reviewedBy": None,
@@ -1227,7 +1254,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 3),
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2020, 1, 6),
                  "reviewedDate": datetime.date(2020, 5, 5),
                  "reviewedBy": None,
@@ -1240,7 +1267,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2020, 5, 20),
                  "reviewedDate": datetime.date(2020, 5, 22),
                  "reviewedBy": None,
@@ -1253,7 +1280,7 @@ fh = [  {
                  "releaseForm": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 3),
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2020, 5, 24),
                  "reviewedDate": datetime.date(2020, 5, 25),
                  "reviewedBy": None,
@@ -1266,7 +1293,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2020, 11, 24),
                  "reviewedDate": datetime.date(2020, 11, 25),
                  "reviewedBy": None,
@@ -1279,7 +1306,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": ModifiedForm.get(ModifiedForm.modifiedFormID == 4),
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2020, 11, 27),
                  "reviewedDate": datetime.date(2020, 11, 28),
                  "reviewedBy": None,
@@ -1292,7 +1319,7 @@ fh = [  {
                 "releaseForm": None,
                 "modifiedForm": None,
                 "overloadForm": None,
-                "createdBy": User.get(User.username == "heggens"),
+                "createdBy": User.get(User.PIDM == 1),
                 "createdDate": datetime.date(2020, 8, 20),
                 "reviewedDate": datetime.date(2020, 12, 14),
                 "reviewedBy": None,
@@ -1305,7 +1332,7 @@ fh = [  {
                 "releaseForm": None,
                 "modifiedForm": None,
                 "overloadForm": None,
-                "createdBy": User.get(User.username == "heggens"),
+                "createdBy": User.get(User.PIDM == 1),
                 "createdDate": datetime.date(2020, 8, 20),
                 "reviewedDate": datetime.date(2020, 8, 25),
                 "reviewedBy": None,
@@ -1318,7 +1345,7 @@ fh = [  {
                 "releaseForm": None,
                 "modifiedForm": None,
                 "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 4),
-                "createdBy": User.get(User.username == "heggens"),
+                "createdBy": User.get(User.PIDM == 1),
                 "createdDate": datetime.date(2020, 9, 20),
                 "reviewedDate": datetime.date(2020, 9, 25),
                 "reviewedBy": None,
@@ -1331,7 +1358,7 @@ fh = [  {
                 "releaseForm": None,
                 "modifiedForm": None,
                 "overloadForm": None,
-                "createdBy": User.get(User.username == "heggens"),
+                "createdBy": User.get(User.PIDM == 1),
                 "createdDate": datetime.date(2021, 2, 20),
                 "reviewedDate": datetime.date(2021, 5, 14),
                 "reviewedBy": None,
@@ -1344,7 +1371,7 @@ fh = [  {
                 "releaseForm": None,
                 "modifiedForm": None,
                 "overloadForm": None,
-                "createdBy": User.get(User.username == "heggens"),
+                "createdBy": User.get(User.PIDM == 1),
                 "createdDate": datetime.date(2021, 1, 20),
                 "reviewedDate": datetime.date(2021, 5, 15),
                 "reviewedBy": None,
@@ -1357,7 +1384,7 @@ fh = [  {
                 "releaseForm": None,
                 "modifiedForm": ModifiedForm.get(ModifiedForm.modifiedFormID == 5),
                 "overloadForm": None,
-                "createdBy": User.get(User.username == "heggens"),
+                "createdBy": User.get(User.PIDM == 1),
                 "createdDate": datetime.date(2021, 2, 18),
                 "reviewedDate": datetime.date(2021, 5, 16),
                 "reviewedBy": None,
@@ -1370,7 +1397,7 @@ fh = [  {
                 "releaseForm": None,
                 "modifiedForm": None,
                 "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 5),
-                "createdBy": User.get(User.username == "heggens"),
+                "createdBy": User.get(User.PIDM == 1),
                 "createdDate": datetime.date(2021, 2, 19),
                 "reviewedDate": datetime.date(2021, 5, 17),
                 "reviewedBy": None,
@@ -1383,7 +1410,7 @@ fh = [  {
                 "releaseForm": None,
                 "modifiedForm": None,
                 "overloadForm": None,
-                "createdBy": User.get(User.username == "heggens"),
+                "createdBy": User.get(User.PIDM == 1),
                 "createdDate": datetime.date(2021, 1, 5),
                 "reviewedDate": None,
                 "reviewedBy": None,
@@ -1396,7 +1423,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2021, 1, 10),
                  "reviewedDate": None,
                  "reviewedBy": None,
@@ -1409,7 +1436,7 @@ fh = [  {
                   "releaseForm": None,
                   "modifiedForm": None,
                   "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 6),
-                  "createdBy": User.get(User.username == "heggens"),
+                  "createdBy": User.get(User.PIDM == 1),
                   "createdDate": datetime.date(2021, 2, 19),
                   "reviewedDate": datetime.date(2021, 5, 17),
                   "reviewedBy": None,
@@ -1422,7 +1449,7 @@ fh = [  {
                   "releaseForm": None,
                   "modifiedForm": None,
                   "overloadForm": None,
-                  "createdBy": User.get(User.username == "heggens"),
+                  "createdBy": User.get(User.PIDM == 1),
                   "createdDate": datetime.date(2017, 8, 25),
                   "reviewedDate": datetime.date(2017, 8, 27),
                   "reviewedBy": None,
@@ -1435,7 +1462,7 @@ fh = [  {
                 "releaseForm": None,
                 "modifiedForm": ModifiedForm.get(ModifiedForm.modifiedFormID == 6),
                 "overloadForm": None,
-                "createdBy": User.get(User.username == "heggens"),
+                "createdBy": User.get(User.PIDM == 1),
                 "createdDate": datetime.date(2017, 9, 10),
                 "reviewedDate": datetime.date(2017, 9, 12),
                 "reviewedBy": None,
@@ -1448,7 +1475,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 7),
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2017, 9, 11),
                  "reviewedDate": datetime.date(2017, 9, 12),
                  "reviewedBy": None,
@@ -1461,7 +1488,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2018, 8, 25),
                  "reviewedDate": datetime.date(2018, 8, 27),
                  "reviewedBy": None,
@@ -1474,7 +1501,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": ModifiedForm.get(ModifiedForm.modifiedFormID == 7),
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2018, 9, 10),
                  "reviewedDate": datetime.date(2018, 9, 12),
                  "reviewedBy": None,
@@ -1487,7 +1514,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2018, 1, 9),
                  "reviewedDate": datetime.date(2018, 1, 12),
                  "reviewedBy": None,
@@ -1500,7 +1527,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": OverloadForm.get(OverloadForm.overloadFormID == 8),
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2018, 1, 10),
                  "reviewedDate": datetime.date(2018, 1, 13),
                  "reviewedBy": None,
@@ -1513,7 +1540,7 @@ fh = [  {
                  "releaseForm": None,
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2017, 1, 7),
                  "reviewedDate": datetime.date(2017, 1, 8),
                  "reviewedBy": None,
@@ -1526,7 +1553,7 @@ fh = [  {
                  "releaseForm": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 4),
                  "modifiedForm": None,
                  "overloadForm": None,
-                 "createdBy": User.get(User.username == "heggens"),
+                 "createdBy": User.get(User.PIDM == 1),
                  "createdDate": datetime.date(2017, 2, 10),
                  "reviewedDate": datetime.date(2017, 2, 11),
                  "reviewedBy": None,
