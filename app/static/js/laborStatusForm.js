@@ -349,13 +349,13 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
 function checkDuplicate() {// checks for duplicates in the table. This is for Academic Year
     var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
     var student = document.getElementById("student");
-    var studentName = student.options[student.selectedIndex].text;
+    var studentName = $(student.options[student.selectedIndex]).text();
     var position = document.getElementById("position");
-    var positionName = position.options[position.selectedIndex].text;
+    var positionName = $(position.options[position.selectedIndex]).text();
     var jobType = document.getElementById("jobType");
-    var jobTypeName = jobType.options[jobType.selectedIndex].text;
+    var jobTypeName = $(jobType.options[jobType.selectedIndex]).text();
     var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
-    var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
+    var hoursPerWeekName = $(hoursPerWeek.options[hoursPerWeek.selectedIndex]).text();
 
     for(const tr of table.querySelectorAll("tbody tr")) {
        const td0 = tr.querySelector("td:nth-child(1)");
@@ -390,9 +390,9 @@ function checkDuplicate() {// checks for duplicates in the table. This is for Ac
 
 function checkForPrimaryPosition(){ // does several stuff read the comments down below
   var student = document.getElementById("student");
-  var studentName = student.options[student.selectedIndex].text;
+  var studentName = $(student.options[student.selectedIndex]).text();
   var jobType = document.getElementById("jobType");
-  var jobTypeName = jobType.options[jobType.selectedIndex].text;
+  var jobTypeName = $(jobType.options[jobType.selectedIndex]).text();
   var student = $("#student").val();
   var term = $("#selectedTerm").val();
   var url = "/laborstatusform/getstudents/" + term +"/" +student;
@@ -442,15 +442,15 @@ function checkForPrimaryPosition(){ // does several stuff read the comments down
 function createAndFillTable() { // fills the table for Academic Year.
   var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
   var student = document.getElementById("student");
-  var studentName = student.options[student.selectedIndex].text;
+  var studentName = $(student.options[student.selectedIndex]).text();
   var position = document.getElementById("position");
-  var positionName = position.options[position.selectedIndex].text;
+  var positionName = $(position.options[position.selectedIndex]).text();
   var positionCode = $("#position").find('option:selected').attr('id');
   var wls = $('#position').find('option:selected').attr('data-wls');
   var jobType = document.getElementById("jobType");
-  var jobTypeName = jobType.options[jobType.selectedIndex].text;
+  var jobTypeName = $(jobType.options[jobType.selectedIndex]).text();
   var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
-  var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
+  var hoursPerWeekName = $(hoursPerWeek.options[hoursPerWeek.selectedIndex]).text();
   var notesGlyphicon = "<a data-toggle='modal' onclick = 'showNotesModal(\""+String(studentName) + String(jobTypeName) + String(positionName)+"\")' id= '"+String(studentName) +
                                                           String(jobTypeName) + String(positionName)+"' ><span class='glyphicon glyphicon-edit'></span></a>";
   var removeIcon = "<a onclick = 'deleteRow(this)' class='remove'><span class='glyphicon glyphicon-remove'></span></a>";
@@ -492,11 +492,16 @@ var totalHourDict = {}
 function checkTotalhoursTable() {//Checks if the student has enough hours to require an overload form
   var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
   var student = document.getElementById("student");
-  var studentName = student.options[student.selectedIndex].text;
+  var studentName = $(student.options[student.selectedIndex]).text();
   var totalHours = 0
   var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
+<<<<<<< HEAD
   var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
   for(const tr of table.querySelectorAll("tbody tr")) {
+=======
+  var hoursPerWeekName = $(hoursPerWeek.options[hoursPerWeek.selectedIndex]).text();
+  for(const tr of table.querySelectorAll("thead tr")) {
+>>>>>>> development
      const td0 = tr.querySelector("td:nth-child(1)");
      const td2 = tr.querySelector("td:nth-child(4)");
      if ((td0.innerHTML == studentName)) {
@@ -510,7 +515,9 @@ function checkTotalhoursTable() {//Checks if the student has enough hours to req
 
 function checkForTotalHoursDatabase() {// gets sum of the total weekly hours from the database and add it to the ones in the table.
   var student = $("#student").val();
+  console.log(student);
   var term = $("#selectedTerm").val();
+  console.log(term);
   var url = "/laborstatusform/gethours/" + term +"/" +student;
   $.ajax({
     url: url,
@@ -535,6 +542,7 @@ function checkForTotalHoursDatabase() {// gets sum of the total weekly hours fro
 
 
 // THIS IS FOR BREAKSSSS
+<<<<<<< HEAD
 function checkDuplicateBreaks() { // checks for duplicates in table. For summer or any other break.
     var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
     var student = document.getElementById("student");
@@ -552,6 +560,27 @@ function checkDuplicateBreaks() { // checks for duplicates in table. For summer 
          $("#warningModal").modal('show')
           refreshSelectPickers();
           return;
+=======
+function checkDuplicateBreaks(preventPlusFromSubmitting = "") { // checks for duplicates in table. For summer or any other break.
+      var table = document.getElementById("mytable");
+      var student = document.getElementById("student");
+      var studentName = $(student.options[student.selectedIndex]).text();
+      var position = document.getElementById("position");
+      var positionName = $(position.options[position.selectedIndex]).text();
+
+      for(const tr of table.querySelectorAll("thead tr")) {
+         const td0 = tr.querySelector("td:nth-child(1)");
+         const td1 = tr.querySelector("td:nth-child(2)");
+         const td2 = tr.querySelector("td:nth-child(3)");
+
+         if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
+           document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and " + positionName
+           $("#warningModal").modal('show')
+            $("#contractTable").show();
+            refreshSelectPickers();
+            return;
+            }
+>>>>>>> development
           }
         }
         createAndFillTableForBreaks()
@@ -563,9 +592,9 @@ function createAndFillTableForBreaks() {// Fills the table. For Summer term or a
   $("#hoursTable").show();
   var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
   var student = document.getElementById("student");
-  var studentName = student.options[student.selectedIndex].text;
+  var studentName = $(student.options[student.selectedIndex]).text();
   var position = document.getElementById("position");
-  var positionName = position.options[position.selectedIndex].text;
+  var positionName = $(position.options[position.selectedIndex]).text();
   var positionCode = $("#position").find('option:selected').attr('id');
   var wls = $('#position').find('option:selected').attr('data-wls');
   var selectedContractHoursName = document.getElementById("selectedContractHours").value;
