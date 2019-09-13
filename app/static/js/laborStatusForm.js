@@ -176,7 +176,6 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
                               "<a href='http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS'"+
                               "target='_blank'>The Labor Program Website.</a>");
      $('#WLSModal').modal('show');
-     }
  });
 
 
@@ -202,9 +201,34 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
 function checkWLS() {
   var wls = $('#position').find('option:selected').attr('data-wls');
   var hoursPerWeek = $('#selectedHoursPerWeek').val();
+// <<<<<<< HEAD
   if (wls >= 5 && hoursPerWeek < 15 ) {
     $('#WLSModalTitle').html("Insert Rejected");  // FIXME: Maybe change Modal title (ask Scott)
     $('#WLSModalText').html("Student requires at least a 15 hour contract with positions WLS 5 or greater."); // FIXME Maybe change modal Language (ask Scott)
+// =======
+//   var termCodeSelected = $('#selectedTerm').find('option:selected').attr('data-termCode')
+//   if ((termCodeSelected.endsWith("11")) || (termCodeSelected.endsWith("12"))) {  // Checks the term so that
+//     if (wls >= 5 && hoursPerWeek < 15 ) {
+//       document.getElementById('WLSModalTitle').innerHTML = "Insert Rejected"  // FIXME: Maybe change Modal title (ask Scott)
+//       document.getElementById('WLSModalText').innerHTML = "Student requires at least a 15 hour contract with positions WLS 5 or greater."; // FIXME Maybe change modal Language (ask Scott)
+//       $('#WLSModal').modal('show');
+//       return false;
+//     }
+//   }
+//   else {
+//     return true;
+//   }
+// }
+//
+// function checkJobType() {
+//   // This function checks the job type selected along with the WLS of the position.
+//   // If the job type is secondary and the WLS is 5 or 6, it rejects the insert.
+//   var jobTypeSelected = $('#jobType').find('option:selected').attr('data-jobType');
+//   var wlsSelected = $('#position').find('option:selected').attr('data-wls');
+//   if (jobTypeSelected == "Secondary" && wls >=5) {
+//     document.getElementById('WLSModalTitle').innerHTML = "Insert Rejected";
+//     document.getElementById('WLSModalText').innerHTML = "Position with WLS 5 or 6 cannot be a secondary position.";
+// // >>>>>>> 2a1b3482f76101aa0a9f25c9cd8d690d04bdd7a7
     $('#WLSModal').modal('show');
     return false;
   }
@@ -339,6 +363,7 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
       }
       else {
         checkDuplicate();
+        return
       }
     }
   }
@@ -539,27 +564,52 @@ function checkForTotalHoursDatabase() {// gets sum of the total weekly hours fro
 
 
 // THIS IS FOR BREAKSSSS
-function checkDuplicateBreaks() { // checks for duplicates in table. For summer or any other break.
-    var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
-    var student = document.getElementById("student");
-    var studentName = student.options[student.selectedIndex].text;
-    var position = document.getElementById("position");
-    var positionName = position.options[position.selectedIndex].text;
+// <<<<<<< HEAD
+// function checkDuplicateBreaks() { // checks for duplicates in table. For summer or any other break.
+//     var table = document.getElementById("mytable").getElementsByTagName('tbody')[0];
+//     var student = document.getElementById("student");
+//     var studentName = student.options[student.selectedIndex].text;
+//     var position = document.getElementById("position");
+//     var positionName = position.options[position.selectedIndex].text;
+//
+//     for(const tr of table.querySelectorAll("tbody tr")) {
+//        const td0 = tr.querySelector("td:nth-child(1)");
+//        const td1 = tr.querySelector("td:nth-child(2)");
+//        const td2 = tr.querySelector("td:nth-child(3)");
+//
+//        if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
+//          document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and " + positionName
+//          $("#warningModal").modal('show')
+//           refreshSelectPickers();
+//           return;
+// =======
+function checkDuplicateBreaks(preventPlusFromSubmitting = "") { // checks for duplicates in table. For summer or any other break.
+      var table = document.getElementById("mytable");
+      var student = document.getElementById("student");
+      var studentName = $(student.options[student.selectedIndex]).text();
+      var position = document.getElementById("position");
+      var positionName = $(position.options[position.selectedIndex]).text();
 
-    for(const tr of table.querySelectorAll("tbody tr")) {
-       const td0 = tr.querySelector("td:nth-child(1)");
-       const td1 = tr.querySelector("td:nth-child(2)");
-       const td2 = tr.querySelector("td:nth-child(3)");
+      for(const tr of table.querySelectorAll("thead tr")) {
+         const td0 = tr.querySelector("td:nth-child(1)");
+         const td1 = tr.querySelector("td:nth-child(2)");
+         const td2 = tr.querySelector("td:nth-child(3)");
 
-       if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
-         document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and " + positionName
-         $("#warningModal").modal('show')
-          refreshSelectPickers();
-          return;
+         if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
+           document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and " + positionName
+           $("#warningModal").modal('show')
+            $("#contractTable").show();
+            refreshSelectPickers();
+            return;
+            }
+          else {
+            createAndFillTableForBreaks()
+            return;
+          }
+// >>>>>>> 2a1b3482f76101aa0a9f25c9cd8d690d04bdd7a7
           }
         }
-        createAndFillTableForBreaks()
-      }
+
 
 function createAndFillTableForBreaks() {// Fills the table. For Summer term or any other break period
   $("#mytable").show();
