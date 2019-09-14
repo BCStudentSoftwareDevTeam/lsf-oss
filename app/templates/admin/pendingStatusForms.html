@@ -120,7 +120,7 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "closeNotesModal()"><span aria-hidden="true">&times;</span></button>
               <h4 class="modal-title" id="notesModalLabel">Labor Office Notes</h4>
             </div>
             <div class="modal-body" >
@@ -132,11 +132,11 @@
 
 
                 <h5> <b>Labor Office Notes </b> </h5>
-                  <textarea id="laborNotesText" rows="5" cols="60" style="resize: none;" value= "Bria is testing, again"> </textarea>
+                  <textarea id="laborNotesText" rows="5" cols="60" style="resize: none;"> </textarea>
 
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "closeNotesModal()">Close</button>
               <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="saveNotes()">Save Changes</button>
             </div>
           </div>

@@ -30,18 +30,17 @@ function getNotes (formID) {
     url: "/admin/getNotes/"+formID,
     datatype: "json",
     success: function (response) {
-      if (!("Success" in response)) {
-        console.log(response);
-        console.log(response["supervisorNotes"])
-        // var testingText = document.createTextNode("This is a test for the p tag")
-
-        console.log($("#notesText").html(response["supervisorNotes"]));
-        $("#notesText").html(response["supervisorNotes"]);
-        $("#laborNotesText").html(response["laborDepartmentNotes"]);
-
+      if ("Success" in response) {
+        // console.log(response);
+        //Clears supervisor notes p tag and the labor notes textarea
+        $("#notesText").empty();
+        $("#laborNotesText").empty();
       } else {
-            $("#notesText").empty();
-            }
+          // console.log(response);
+          //Populates notes value from the database
+          $("#notesText").html(response["supervisorNotes"]);
+          $("#laborNotesText").html(response["laborDepartmentNotes"]);
+      }
     }
   })
 };
@@ -49,8 +48,8 @@ function getNotes (formID) {
 
 
 function saveLaborNotes() { // saves notes written in textarea when save button of modal is clicked
-  var notesTextId = $("#dummyInput").val();
-  var notesUniqueId = "notes_" + notesTextId;
+  var notesTextId = $("#dummyInput").val(); //a dummy value in order to retrieve the id
+  var notesUniqueId = "notes_" + notesTextId; //
   var uniqueTextArea = "laborNotesText" + notesTextId
   console.log(notesUniqueId);
   $("#laborNotesText").val()= $(uniqueTextArea).attr("data-note");
@@ -63,7 +62,7 @@ function saveLaborNotes() { // saves notes written in textarea when save button 
 
    console.log(notes);
 
-   document.getElementById(notesTextId).setAttribute("data-note", notes);
+   console.log($(uniqueTextArea).attr("data-note", notes));
  }
 
  function notesInsert() {
@@ -81,7 +80,16 @@ function saveLaborNotes() { // saves notes written in textarea when save button 
           contentType: 'application/json',
           success: function(response) {
             console.log(response);
-
           }
         });
+}
+
+$("#notesModal").on('hidden.bs.modal', function(event){
+  $("#notesText").empty();
+  $("#laborNotesText").empty();
+})
+
+function closeNotesModal(){ //makes sure that it empties text areas and p tags when modal is closed
+  $("#notesText").empty();
+  $("#laborNotesText").empty();
 }
