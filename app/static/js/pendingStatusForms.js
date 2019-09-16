@@ -1,8 +1,8 @@
 
-function insertApprovals() {
+function insertApprovals() { //gets only the forms that the user has checked
   var ids = [];
   var getChecked = $('input:checked').each(function() {
-    ids.push(this.value);
+    ids.push(this.value); //gets the ids of checked forms
     console.log(ids);
   })
   data = JSON.stringify(ids);
@@ -16,7 +16,6 @@ function insertApprovals() {
    success: function(response){
      if (response){
        console.log(response);
-
    }
  }
  })
@@ -45,33 +44,31 @@ function getNotes (formID) {
   })
 };
 
-
-
 function saveLaborNotes() { // saves notes written in textarea when save button of modal is clicked
   var notesTextId = $("#dummyInput").val(); //a dummy value in order to retrieve the id
   var notesUniqueId = "notes_" + notesTextId; //
   var uniqueTextArea = "laborNotesText" + notesTextId
   console.log(notesUniqueId);
+
   $("#laborNotesText").val()= $(uniqueTextArea).attr("data-note");
   $("#saveNotes").attr('onclick',"saveNotes('" + uniqueTextArea +"')");
+  return uniqueTextArea
 
 }
 
- function saveNotes() { // saves notes written in textarea when save button of modal is clicked
-   var notes = $("#laborNotesText").val();
-
-   console.log(notes);
-
-   console.log($(uniqueTextArea).attr("data-note", notes));
- }
-
  function notesInsert() {
-   notes = []
+   var notes = []
+   var laborNotes = $("#laborNotesText").val(); //this is getting the id of the labor notes text area
+     notes.push(laborNotes);
+     console.log(notes);
+     console.log("Here's the labor notes:", laborNotes)
+  //this sets the text area to what the user types in it
+
+
    data = JSON.stringify(notes);
    $("#saveNotes").on('submit', function(e) {
      e.preventDefault();
      });
-
 
    $.ajax({
           method: "POST",
@@ -84,7 +81,7 @@ function saveLaborNotes() { // saves notes written in textarea when save button 
         });
 }
 
-$("#notesModal").on('hidden.bs.modal', function(event){
+$("#notesModal").on('hidden.bs.modal', function(event){ //this is supposed to clear the modal even if the user doesn not click the "closed" button, pero it does not work
   $("#notesText").empty();
   $("#laborNotesText").empty();
 })

@@ -46,6 +46,9 @@ def pendingForms():
 
 @admin.route('/admin/checkedForms', methods=['POST'])
 def approvedForms():
+    '''
+    This function gets the forms that are checked by the user and inserts them into the database
+    '''
     try:
         current_user = require_login()
         if not current_user:                    # Not logged in
@@ -67,6 +70,9 @@ def approvedForms():
 
 @admin.route('/admin/getNotes/<formid>', methods=['GET'])
 def getNotes(formid):
+    '''
+    This function retrieves the supervisor and labor department notes.
+    '''
     try:
         current_user = require_login()
         if not current_user:                    # Not logged in
@@ -91,6 +97,39 @@ def getNotes(formid):
         return jsonify(notesDict)
 
 
+    except Exception as e:
+        print("This did not work", e)
+        return jsonify({"Success": False})
+
+
+@admin.route('/admin/notesInsert', methods=['POST'])
+def insertNotes():
+    '''
+    This function inserts the labor office notes into the database
+    '''
+    try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
+        rsp = eval(request.data.decode("utf-8"))
+        print(rsp)
+        notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid)
+        print(notes)
+        print(data)
+        if rsp:
+            # for data in rsp.values():
+            #     try:
+            #         pending_labor_forms
+
+
+
+
+            #FIXME: Update form history
+
+            return jsonify({"Success": True})
     except Exception as e:
         print("This did not work", e)
         return jsonify({"Success": False})
