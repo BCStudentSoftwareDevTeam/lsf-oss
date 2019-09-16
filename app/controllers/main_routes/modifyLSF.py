@@ -93,9 +93,9 @@ def sumbitModifiedForm(laborStatusKey):
             username = cfg['user']['debug']
             createdbyid = User.get(User.username == username)
             for i in range(len(fieldsModified)):
-                if fieldsModified[i] == "supervisor":
-                    newsupervisor = User.get(User.PIDM == newValues[i])
-                    newValues[i] = newsupervisor.FIRST_NAME + " " + newsupervisor.LAST_NAME
+                #if fieldsModified[i] == "supervisor":
+                    #newsupervisor = User.get(User.PIDM == newValues[i])
+                    #newValues[i] = newsupervisor.FIRST_NAME + " " + newsupervisor.LAST_NAME
 
                 modifiedforms = ModifiedForm.create(fieldModified = fieldsModified[i],
                                     oldValue      =  oldValues[i],
@@ -114,10 +114,14 @@ def sumbitModifiedForm(laborStatusKey):
                         print(range(len(fieldsModified)))
                         column = str(fieldsModified[form])
                         LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-                        if keyfield == "supervisor":
+                        if column == "supervisor":
                             print("i'm here")
-                            LSF.supervisor.UserID == newValues[form]
-                            LSF.save()
+                            print(newValues[form])
+                            print(LSF.supervisor.UserID)
+                            #LSF.supervisor.UserID = newValues[form]
+                            #LSF.save()
+                            LSF.update_or_create(supervisor.UserID = newValues[form])
+                            print(LSF.supervisor.UserID)
                         else:
                             setattr(LSF, column, newValues[form])
                         print("new value form:", newValues[form])
