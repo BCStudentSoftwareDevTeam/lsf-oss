@@ -54,15 +54,38 @@ def approvedForms():
             return render_template('errors/403.html')
 
         rsp = eval(request.data.decode("utf-8"))
-        # print(rsp)
         if rsp:
             print("Inserted into nonexistent Banner DB")
             #FIXME: Update form history
-
-            return jsonify({"Success": True})
+            approved_details = modal_aproval_data(rsp)
+            print(approved_details, "before return")
+            return jsonify(approved_details)
     except Exception as e:
         print("This did not work", e)
         return jsonify({"Success": False})
+
+#method extracts data from the data base to papulate pending form approvale modal
+def modal_aproval_data(approval_ids):
+    id_list = []
+    for student in approval_ids:
+        student_details = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == int(student))
+        student_firstname, student_lastname = student_details.studentSupervisee.FIRST_NAME, student_details.studentSupervisee.LAST_NAME
+        student_name = str(student_firstname) + " " + str(student_lastname)
+        # print(student_name)
+        student_pos = student_details.POSN_TITLE
+        supervisor_firstname, supervisor_lastname = student_details.supervisor.FIRST_NAME, student_details.supervisor.LAST_NAME
+        supervisor_name = str(supervisor_firstname) +" "+ str(supervisor_lastname)
+        print(supervisor_name)
+        student_hours = student_details.weeklyHours
+        student_hours_ch = student_details.contractHours
+        temp_list = []
+        temp_list.append(student_name)
+        temp_list.append(student_pos)
+        temp_list.append(student_hours)
+        temp_list.append(supervisor_name)
+        temp_list.append(student_hours_ch)
+        id_list.append(temp_list)
+    return(id_list)
 
 
 @admin.route('/admin/getNotes/<formid>', methods=['GET'])

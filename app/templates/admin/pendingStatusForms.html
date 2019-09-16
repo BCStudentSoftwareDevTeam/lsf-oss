@@ -47,7 +47,8 @@
         {% for formHistory in pending_labor_forms %}
         <tr id="tableData" class="tableData" align="center">
             <td> {# APPROVE #}
-              <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.studentSupervisee.FIRST_NAME}} {{formHistory.formID.studentSupervisee.LAST_NAME}}" />
+              <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}'
+              value= "{{formHistory.formID.laborStatusFormID}}" />
 
               <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})"
                      class="glyphicon glyphicon-book btn-lg
@@ -56,8 +57,7 @@
                           {% elif formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes != None %} text-danger
                           {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
                           <input id="dummyInput" value="{{formHistory.formID.laborStatusFormID}}" hidden/>
-                          {# the below input is the hidden id for student first and last name. we are using#}
-                          <input id="approveChecked"  value="{{formHistory.formID.studentSupervisee.FIRST_NAME}} {{formHistory.formID.studentSupervisee.LAST_NAME}}" hidden/>
+                          <!-- <input id="approveChecked"  value="{{formHistory.formID.studentSupervisee.FIRST_NAME}} {{formHistory.formID.studentSupervisee.LAST_NAME}}" hidden/> -->
 
             </td>
             <td> {# TERM #}
@@ -115,32 +115,40 @@
             value="Approve Selected"
             data-toggle="modal"
             data-target="#approvalModal">
-
             Approve Selected
           </button>
-<!-- Modal -->
-    <div class="modal fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Approve Selected?</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+      <!-- Modal -->
+          <div class="modal fade" id="approvalModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel"><b>Student(s) ready for Approval</b></h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <!-- putting info into modal using table for better viewing -->
+                  <table id="classTable" class="table table-bordered">
+                    <thead>
+                      <tr>
+                        <th scope="col">Student(s)</th>
+                        <th scope="col">Position</th>
+                        <th scope="col">Supervisor</th>
+                        <th scope="col">Hours</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary">Approve</button>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="modal-body">
-
-            <p id="approvalContent"> </p>
-
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Approve</button>
-          </div>
-        </div>
-      </div>
-    </div>
             </div>
           </div>
 
