@@ -745,10 +745,10 @@ function userInsert(){
                var jobType = allTableDataDict[key]["Job Type"];
                var hours = allTableDataDict[key]["Hours Per Week"];
                if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-                 var bigString = "<li>" +"<span class="glyphicon glyphicon-ok" style="color:green"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
+                 var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                }
                else {
-                 var bigString = "<li>"+"<span class="glyphicon glyphicon-ok" style="color:green"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
+                 var bigString = "<li>"+"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
               }
               modalList.push(bigString);
             }
@@ -763,16 +763,16 @@ function userInsert(){
                var hours = allTableDataDict[key]["Hours Per Week"];
 
               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-               var bigString = "<li>" +"<span class="glyphicon glyphicon-remove" style="color:red"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
+               var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
               }
               else {
-                var bigString = "<li>"+"<span class="glyphicon glyphicon-remove" style="color:red"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
+                var bigString = "<li>"+"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
               }
               modalList.push(bigString);
             }
            }
          document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                                 "<ul style="list-style-type:none; display: inline-block;text-align:left;">" +
+                                                                 "<ul style=\"list-style-type:none; display: inline-block;text-align:left;\">" +
                                                                  modalList.join("</li>")+"</ul>"+
                                                                  "<br><br>The labor status form will be eligible for approval in one business day.";
          $("#SubmitModal").modal("show");
@@ -782,5 +782,5 @@ function userInsert(){
      $("#SubmitModal").modal({backdrop: true, keyboard: false, show: true});
      $("#SubmitModal").data("bs.modal").options.backdrop = "static";
      document.getElementById("submitmodalid").innerHTML = "Done";
-     document.getElementById("submitmodalid").onclick = function() { window.location.replace("/laborstatusform");}
-}
+     document.getElementById("submitmodalid").onclick = function() { window.location.replace("/laborstatusform");};
+   }
