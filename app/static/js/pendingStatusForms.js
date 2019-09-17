@@ -16,6 +16,7 @@ function insertApprovals() {
      if (response){
        // console.log(response);
        returned_details = response;
+        $("#approvalModal").empty().append(returned_details);
        updateApproveTableData(returned_details);
       }
     }
@@ -29,6 +30,7 @@ function updateApproveTableData(returned_details){
      var hour= returned_details[i][2]
       var supervisor= returned_details[i][3]
       $('#classTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+hour+'</td></tr>');
+       // $("#approvalModal").empty().append(returned_details);
   }
 
 }
