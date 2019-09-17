@@ -102,8 +102,8 @@ def getNotes(formid):
         return jsonify({"Success": False})
 
 
-@admin.route('/admin/notesInsert', methods=['POST'])
-def insertNotes():
+@admin.route('/admin/notesInsert/<formid>', methods=['POST'])
+def insertNotes(formid):
     '''
     This function inserts the labor office notes into the database
     '''
@@ -116,14 +116,14 @@ def insertNotes():
 
         rsp = eval(request.data.decode("utf-8"))
         print(rsp)
-        notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid)
+        notes =  LaborStatusForm.get(LaborStatusForm.laborDepartmentNotes == formid)
         print(notes)
+
         print(data)
         if rsp:
-            # for data in rsp.values():
-            #     try:
+            for data in rsp.values():
+                pass
             #         pending_labor_forms
-
 
 
 

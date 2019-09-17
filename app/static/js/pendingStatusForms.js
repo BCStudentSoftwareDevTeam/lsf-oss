@@ -44,22 +44,21 @@ function getNotes (formID) {
   })
 };
 
-function saveLaborNotes() { // saves notes written in textarea when save button of modal is clicked
-  var notesTextId = $("#dummyInput").val(); //a dummy value in order to retrieve the id
-  var notesUniqueId = "notes_" + notesTextId; //
-  var uniqueTextArea = "laborNotesText" + notesTextId
-  console.log(notesUniqueId);
-
-  $("#laborNotesText").val()= $(uniqueTextArea).attr("data-note");
-  $("#saveNotes").attr('onclick',"saveNotes('" + uniqueTextArea +"')");
-  return uniqueTextArea
-
-}
+// function saveLaborNotes() { // saves notes written in textarea when save button of modal is clicked
+//   var notesTextId = $("#dummyInput").val(); //a dummy value in order to retrieve the id
+//   var notesUniqueId = "notes_" + notesTextId; //
+//   var uniqueTextArea = "laborNotesText" + notesTextId
+//
+//   $("#saveNotes").attr('onclick',"saveNotes('" + uniqueTextArea +"')");
+// 
+// }
 
  function notesInsert() {
    var notes = []
+   var notesTest = ("laborNotesText" + $("#dummyInput").val()) ;
+   console.log(notesTest);
    var laborNotes = $("#laborNotesText").val(); //this is getting the id of the labor notes text area
-     notes.push(laborNotes);
+       notes.push(laborNotes);
      console.log(notes);
      console.log("Here's the labor notes:", laborNotes)
   //this sets the text area to what the user types in it
