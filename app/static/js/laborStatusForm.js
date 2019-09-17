@@ -1,5 +1,5 @@
 $(document).ready(function(){
-    $("[data-toggle="tooltip"]").tooltip();
+    $("[data-toggle=\"tooltip\"]").tooltip();
     $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
 
     if($("#selectedDepartment").val()){// prepopulates position on redirect from rehire button and checks whether department is in compliance.
@@ -14,7 +14,7 @@ $(document).ready(function(){
     }
 });
 
-$( "laborStatusForm" ).submit(function( event ) {
+$("laborStatusForm").submit(function(event) {
   event.preventDefault();
 });
 
@@ -90,13 +90,13 @@ function fillDates(response){ // prefill term start and term end
     // set the minimum and maximum Date for Term Start Date
     $("#dateTimePicker1").datepicker({minDate: new Date(yearStart, monthStart1, dayStart1)});
     $("#dateTimePicker1").datepicker({maxDate: new Date(yearEnd, monthEnd1, dayEnd1)});
-    $( "#dateTimePicker1" ).datepicker( "option", "minDate", new Date(yearStart, monthStart1, dayStart1) );
-    $( "#dateTimePicker1" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
+    $( "#dateTimePicker1").datepicker("option", "minDate", new Date(yearStart, monthStart1, dayStart1));
+    $( "#dateTimePicker1").datepicker("option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
     // set the minimum and maximum Date for Term End Date
     $("#dateTimePicker2").datepicker({maxDate: new Date(yearEnd, monthEnd1, dayEnd1)});
     $("#dateTimePicker2").datepicker({minDate: new Date(yearStart, monthStart1, dayStart1)});
-    $( "#dateTimePicker2" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
-    $( "#dateTimePicker2" ).datepicker( "option", "minDate", new Date(yearStart, monthStart1, dayStart1) );
+    $( "#dateTimePicker2").datepicker("option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
+    $( "#dateTimePicker2").datepicker("option", "minDate", new Date(yearStart, monthStart1, dayStart1));
 
 
     /*Here is the code to start with for restricting dates for the datepicker when it is not readonly.  Right now it restricts dates when you type
@@ -121,7 +121,7 @@ function updateStart(obj){ // updates the max date of the start datepicker to no
   var monthNewEnd = newEnd.getMonth();
   var yearNewEnd = newEnd.getFullYear();
   $("#dateTimePicker1").datepicker({maxDate: new Date(yearNewEnd, monthNewEnd, dayNewEnd)});
-  $( "#dateTimePicker1" ).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
+  $("#dateTimePicker1").datepicker("option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
 }
 
 function updateEnd(obj){ // updates the max date of the end datepicker to not be before what the start datePicker picked
@@ -173,8 +173,8 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
      $("#WLSModalTitle").html("Work-Learning-Service Levels (WLS)");
      $("#WLSModalText").html("Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
                               "These positions require special authorization as specified at " +
-                              "<a href="http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS""+
-                              "target="_blank">The Labor Program Website.</a>");
+                              "<a href=\"http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS\""+
+                              "target=\"_blank\">The Labor Program Website.</a>");
      $("#WLSModal").modal("show");
  }
 });
@@ -285,7 +285,7 @@ $("#reviewButton").hide();
 // Table glyphicons
 function showNotesModal(obj){// pops up Note Modal when notes glyphicon is clicked
   $("modal_text").val($("#"+obj).attr("data-note"));
-  $("#saveButton").attr("onclick","saveNotes("" + obj +"")");
+  $("#saveButton").attr("onclick","saveNotes(\"" + obj +"\")");
   $("#noteModal").modal("show");
 }
 
@@ -312,7 +312,7 @@ function fields_are_empty(id_list) { // Checks if selectpickers are empty
 function errorFlash(){
   category = "danger";
   msg = "Please fill out all fields before submitting.";
-  $("#flash_container").prepend("<div class="alert alert-"+ category +"" role="alert" id="flasher">"+msg+"</div>");
+  $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+msg+"</div>");
   $("#flasher").delay(3000).fadeOut();
 }
 
@@ -404,7 +404,7 @@ function checkForPrimaryPosition(){ // does several stuff read the comments down
       /* 1. Language for Primary Modal that shows up when student has a primary position and a secondary position is being submitted */
       try {
         var primary_supervisor = response.PrimarySupervisor["Primary Supervisor FirstName"] + " " + response.PrimarySupervisor["Primary Supervisor LastName"];
-        document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Upon submission of the form, student"s primary supervisor " +
+        document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Upon submission of the form, student's primary supervisor " +
                                                                 primary_supervisor + " will be notified.";
       }
       catch (e) {
@@ -414,12 +414,10 @@ function checkForPrimaryPosition(){ // does several stuff read the comments down
       }
       $("#jobTable").show();
       $("#hoursTable").show();
-
-
       /* 2. if student does not have a primary position show modal */
       var result = $.isEmptyObject(response);
       if (jobTypeName == "Secondary" && result) {
-        document.getElementById("NoPrimaryModalText").innerHTML = "<span class="glyphicon glyphicon-exclamation-sign" style="color:red; font-size:20px;"></span>"+
+        document.getElementById("NoPrimaryModalText").innerHTML = "<span class=\"glyphicon glyphicon-exclamation-sign\" style=\"color:red; font-size:20px;\"></span>"+
                                                                   " The selected student " + studentName +" does not have a primary position.";
         $("#NoPrimaryModal").modal("show");
         refreshSelectPickers();
@@ -454,9 +452,9 @@ function createAndFillTable() { // fills the table for Academic Year.
   var notesID0 = String(studentName + jobTypeName+ positionName);
   var notesID1 = notesID0.replace(/ /g, "");
   var notesID2 = notesID1.substring(0, notesID1.indexOf("("));
-  var notesGlyphicon = "<a data-toggle="modal" onclick = "showNotesModal(\""+notesID2+"\")" id= ""+notesID2+
-                                                          "" ><span class="glyphicon glyphicon-edit"></span></a>";
-  var removeIcon = "<a onclick = "deleteRow(this)" class="remove"><span class="glyphicon glyphicon-remove"></span></a>";
+  var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(\""+notesID2+"\")\" id= \""+notesID2+
+                                                          "\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
+  var removeIcon = "<a onclick = \"deleteRow(this)\" class=\"remove\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
   var startDate  = $("#dateTimePicker1").datepicker({dateFormat: "dd-mm-yy"}).val();
   var endDate  = $("#dateTimePicker2").datepicker({dateFormat: "dd-mm-yy"}).val();
   var studentbnumber = $("#student").val();
@@ -502,7 +500,7 @@ function checkTotalhoursTable() {//Checks if the student has enough hours to req
   for(const tr of table.querySelectorAll("tbody tr")) {
      const td0 = tr.querySelector("td:nth-child(1)");
      const td2 = tr.querySelector("td:nth-child(4)");
-     if ((td0.innerHTML == studentName)) {
+     if (td0.innerHTML == studentName) {
        totalHours = totalHours + parseInt(td2.innerHTML);
         }
       }
@@ -579,9 +577,9 @@ function createAndFillTableForBreaks() {// Fills the table. For Summer term or a
   var positionCode = $("#position").find("option:selected").attr("id");
   var wls = $("#position").find("option:selected").attr("data-wls");
   var selectedContractHoursName = document.getElementById("selectedContractHours").value;
-  var notesGlyphicon = "<a data-toggle="modal" onclick = "showNotesModal(\""+String(studentName) + String(positionName)+"\")" id= ""+String(studentName) +
-                                                          String(positionName)+"" ><span class="glyphicon glyphicon-edit"></span></a>";
-  var removeIcon = "<a onclick = "deleteRow(this)" class="remove"><span class="glyphicon glyphicon-remove"></span></a>";
+  var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(\""+String(studentName) + String(positionName)+"\")\" id= \""+String(studentName) +
+                                                          String(positionName)+"\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
+  var removeIcon = "<a onclick = \"deleteRow(this)\" class=\"remove\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
   var startDate  = $("#dateTimePicker1").datepicker({dateFormat: "dd-mm-yy"}).val();
   var endDate  = $("#dateTimePicker2").datepicker({dateFormat: "dd-mm-yy"}).val();
   var studentbnumber = $("#student").val();
@@ -597,7 +595,7 @@ function createAndFillTableForBreaks() {// Fills the table. For Summer term or a
   var cell5 = row.insertCell(4);
   var cell6 = row.insertCell(5);
 
-  cell1.innerHTML = studentName + " " + "(" + studentbnumber+ ")";
+  cell1.innerHTML = studentName + " " + "(" + studentbnumber + ")";
   cell2.innerHTML = positionName;
   cell3.innerHTML = selectedContractHoursName;
   cell4.innerHTML = startDate + " - " + endDate;
@@ -638,7 +636,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
       modalList.push(bigString);
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                            "<ul style="display:inline-block;text-align:left;">" +
+                                                            "<ul style=\"display:inline-block;text-align:left;\">" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day.";
     $("#SubmitModal").modal("show");
@@ -654,7 +652,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
       modalList.push(bigString);
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
-                                                            "<ul style="display: inline-block;text-align:left;">" +
+                                                            "<ul style=\"display: inline-block;text-align:left;\">" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day.";
     $("#SubmitModal").modal("show");
