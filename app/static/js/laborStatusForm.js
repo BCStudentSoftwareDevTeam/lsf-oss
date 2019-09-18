@@ -14,7 +14,7 @@ $(document).ready(function(){
     }
 });
 
-$( "laborStatusForm" ).submit(function( event ) {
+$("laborStatusForm").submit(function(event) {
   event.preventDefault();
 });
 
@@ -90,13 +90,13 @@ function fillDates(response){ // prefill term start and term end
     // set the minimum and maximum Date for Term Start Date
     $("#dateTimePicker1").datepicker({minDate: new Date(yearStart, monthStart1, dayStart1)});
     $("#dateTimePicker1").datepicker({maxDate: new Date(yearEnd, monthEnd1, dayEnd1)});
-    $( "#dateTimePicker1" ).datepicker( "option", "minDate", new Date(yearStart, monthStart1, dayStart1) );
-    $( "#dateTimePicker1" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
+    $( "#dateTimePicker1").datepicker("option", "minDate", new Date(yearStart, monthStart1, dayStart1));
+    $( "#dateTimePicker1").datepicker("option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
     // set the minimum and maximum Date for Term End Date
     $("#dateTimePicker2").datepicker({maxDate: new Date(yearEnd, monthEnd1, dayEnd1)});
     $("#dateTimePicker2").datepicker({minDate: new Date(yearStart, monthStart1, dayStart1)});
-    $( "#dateTimePicker2" ).datepicker( "option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
-    $( "#dateTimePicker2" ).datepicker( "option", "minDate", new Date(yearStart, monthStart1, dayStart1) );
+    $( "#dateTimePicker2").datepicker("option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
+    $( "#dateTimePicker2").datepicker("option", "minDate", new Date(yearStart, monthStart1, dayStart1));
 
 
     /*Here is the code to start with for restricting dates for the datepicker when it is not readonly.  Right now it restricts dates when you type
@@ -121,7 +121,7 @@ function updateStart(obj){ // updates the max date of the start datepicker to no
   var monthNewEnd = newEnd.getMonth();
   var yearNewEnd = newEnd.getFullYear();
   $("#dateTimePicker1").datepicker({maxDate: new Date(yearNewEnd, monthNewEnd, dayNewEnd)});
-  $( "#dateTimePicker1" ).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
+  $("#dateTimePicker1").datepicker("option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
 }
 
 function updateEnd(obj){ // updates the max date of the end datepicker to not be before what the start datePicker picked
@@ -414,8 +414,6 @@ function checkForPrimaryPosition(){ // does several stuff read the comments down
       }
       $("#jobTable").show();
       $("#hoursTable").show();
-
-
       /* 2. if student does not have a primary position show modal */
       var result = $.isEmptyObject(response);
       if (jobTypeName == "Secondary" && result) {
@@ -502,7 +500,7 @@ function checkTotalhoursTable() {//Checks if the student has enough hours to req
   for(const tr of table.querySelectorAll("tbody tr")) {
      const td0 = tr.querySelector("td:nth-child(1)");
      const td2 = tr.querySelector("td:nth-child(4)");
-     if ((td0.innerHTML == studentName)) {
+     if (td0.innerHTML == studentName) {
        totalHours = totalHours + parseInt(td2.innerHTML);
         }
       }
@@ -597,7 +595,7 @@ function createAndFillTableForBreaks() {// Fills the table. For Summer term or a
   var cell5 = row.insertCell(4);
   var cell6 = row.insertCell(5);
 
-  cell1.innerHTML = studentName + " " + "(" + studentbnumber+ ")";
+  cell1.innerHTML = studentName + " " + "(" + studentbnumber + ")";
   cell2.innerHTML = positionName;
   cell3.innerHTML = selectedContractHoursName;
   cell4.innerHTML = startDate + " - " + endDate;
