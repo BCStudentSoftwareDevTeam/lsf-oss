@@ -47,7 +47,7 @@
         {% for formHistory in pending_labor_forms %}
         <tr id="tableData" class="tableData" align="center">
             <td> {# APPROVE #}
-              <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}'
+              <input type='checkbox' name="check[]" id='chk_{{formHistory.formID.laborStatusFormID}}'
               value= "{{formHistory.formID.laborStatusFormID}}" />
 
               <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})"
@@ -72,7 +72,7 @@
             <td>
               |
             </td>
-            <td id="student"> {# STUDENT #}
+            <td > {# STUDENT #}
               {{formHistory.formID.studentSupervisee.FIRST_NAME}}  {{formHistory.formID.studentSupervisee.LAST_NAME}}  ({{formHistory.formID.studentSupervisee.ID}})
             </td>
             <td> {# POSITON AND WLS #}
@@ -144,7 +144,7 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary" data-dismiss="modal" >Approve</button>
+                  <button id="refreshContent" type="button" class="btn btn-primary" data-dismiss="modal" >Approve</button>
                 </div>
               </div>
             </div>

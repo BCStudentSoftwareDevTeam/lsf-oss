@@ -87,6 +87,19 @@ def modal_aproval_data(approval_ids):
         id_list.append(temp_list)
     return(id_list)
 
+@admin.route('/admin/finalApproval', methods=['POST'])
+def finalApproval():
+    try:
+        rsp = eval(request.data.decode("utf-8"))
+        for id in rsp:
+            approving_labor_forms = FormHistory.get(FormHistory.formHistoryID == id)
+            print("before approved \n" , approving_labor_forms.status.statusName)
+            approving_labor_forms.status.statusName = "Approved"
+            print("approved reached : \n", approving_labor_forms.status.statusName)
+            approving_labor_forms.save()
+         # return pendingForms()
+    except Exception as e:
+        print("final approval of the modal did not work", e)
 
 @admin.route('/admin/getNotes/<formid>', methods=['GET'])
 def getNotes(formid):
