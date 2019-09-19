@@ -349,47 +349,113 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
   // }
 }
 
+// function checkDuplicate() {// checks for duplicates in the table. This is for Academic Year
+//     var table = document.getElementById("mytable").getElementsByTagName("tbody")[0];
+//     var student = document.getElementById("student");
+//     var studentName = $(student.options[student.selectedIndex]).text();
+//     var position = document.getElementById("position");
+//     var positionName = $(position.options[position.selectedIndex]).text();
+//     var jobType = document.getElementById("jobType");
+//     var jobTypeName = $(jobType.options[jobType.selectedIndex]).text();
+//     var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
+//    // var hoursPerWeekName = $(hoursPerWeek.options[hoursPerWeek.selectedIndex]).text();
+//
+//     for(const tr of table.querySelectorAll("tbody tr")) {
+//        const td0 = tr.querySelector("td:nth-child(1)");
+//        const td1 = tr.querySelector("td:nth-child(2)");
+//        const td2 = tr.querySelector("td:nth-child(3)");
+//        const td3 = tr.querySelector("td:nth-child(4)");
+//        const td4 = tr.querySelector("td:nth-child(5)");
+//
+//        if(!td0 || !td1 || !td2 || !td3 || !td4) { //If we are missing cells skip it
+//        continue;
+//        }
+//
+//        if ((td0.innerHTML == studentName) && (jobTypeName == "Primary") &&(td2.innerHTML == "Primary")) {
+//          document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and Primary.";
+//          $("#warningModal").modal("show");
+//          $("#jobTable").show();
+//          $("#hoursTable").show();
+//          refreshSelectPickers();
+//          return;
+//           }
+//
+//        if ((td0.innerHTML == studentName) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionName) && (jobTypeName == "Secondary")) {
+//          document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +", "+ positionName + " and Secondary.";
+//          $("#warningModal").modal("show");
+//          $("#jobTable").show();
+//          $("#hoursTable").show();
+//          refreshSelectPickers();
+//          return;
+//          }
+//   }
+//     checkForPrimaryPosition();
+// }
 function checkDuplicate() {// checks for duplicates in the table. This is for Academic Year
     var table = document.getElementById("mytable").getElementsByTagName("tbody")[0];
     var student = document.getElementById("student");
     var studentName = $(student.options[student.selectedIndex]).text();
     var position = document.getElementById("position");
     var positionName = $(position.options[position.selectedIndex]).text();
-    var jobType = document.getElementById("jobType");
-    var jobTypeName = $(jobType.options[jobType.selectedIndex]).text();
-    var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
+    var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode"); 
+    if (termCodeSelected.slice(-2) == "11" || "12") {
+      var jobType = document.getElementById("jobType");
+      var jobTypeName = $(jobType.options[jobType.selectedIndex]).text();
+      var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
+
    // var hoursPerWeekName = $(hoursPerWeek.options[hoursPerWeek.selectedIndex]).text();
 
-    for(const tr of table.querySelectorAll("tbody tr")) {
-       const td0 = tr.querySelector("td:nth-child(1)");
-       const td1 = tr.querySelector("td:nth-child(2)");
-       const td2 = tr.querySelector("td:nth-child(3)");
-       const td3 = tr.querySelector("td:nth-child(4)");
-       const td4 = tr.querySelector("td:nth-child(5)");
+      for (const tr of table.querySelectorAll("tbody tr")) {
+         const td0 = tr.querySelector("td:nth-child(1)");
+         const td1 = tr.querySelector("td:nth-child(2)");
+         const td2 = tr.querySelector("td:nth-child(3)");
+         const td3 = tr.querySelector("td:nth-child(4)");
+         const td4 = tr.querySelector("td:nth-child(5)");
 
-       if(!td0 || !td1 || !td2 || !td3 || !td4) { //If we are missing cells skip it
-       continue;
-       }
-
-       if ((td0.innerHTML == studentName) && (jobTypeName == "Primary") &&(td2.innerHTML == "Primary")) {
-         document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and Primary.";
-         $("#warningModal").modal("show");
-         $("#jobTable").show();
-         $("#hoursTable").show();
-         refreshSelectPickers();
-         return;
-          }
-
-       if ((td0.innerHTML == studentName) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionName) && (jobTypeName == "Secondary")) {
-         document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +", "+ positionName + " and Secondary.";
-         $("#warningModal").modal("show");
-         $("#jobTable").show();
-         $("#hoursTable").show();
-         refreshSelectPickers();
-         return;
+         if(!td0 || !td1 || !td2 || !td3 || !td4) { //If we are missing cells skip it
+         continue;
          }
-  }
-    checkForPrimaryPosition();
+
+         if ((td0.innerHTML == studentName) && (jobTypeName == "Primary") &&(td2.innerHTML == "Primary")) {
+           document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and Primary.";
+           $("#warningModal").modal("show");
+           $("#jobTable").show();
+           $("#hoursTable").show();
+           refreshSelectPickers();
+           return;
+            }
+
+         if ((td0.innerHTML == studentName) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionName) && (jobTypeName == "Secondary")) {
+           document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +", "+ positionName + " and Secondary.";
+           $("#warningModal").modal("show");
+           $("#jobTable").show();
+           $("#hoursTable").show();
+           refreshSelectPickers();
+           return;
+           }
+    }
+      checkForPrimaryPosition();
+    }
+    else {
+      for(const tr of table.querySelectorAll("thead tr")) {
+         const td0 = tr.querySelector("td:nth-child(1)");
+         const td1 = tr.querySelector("td:nth-child(2)");
+         // const td2 = tr.querySelector("td:nth-child(3)");
+
+         if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
+           document.getElementById("warningModalText").innerHTML = ("Match found for " +studentName +" and " + positionName);
+           $("#warningModal").modal("show");
+            $("#contractTable").show();
+            refreshSelectPickers();
+            return;
+            }
+          else {
+            //createAndFillTableForBreaks();
+            createAndFillTable();
+            return;
+          }
+          }
+    }
 }
 
 function checkForPrimaryPosition(){ // does several stuff read the comments down below
@@ -609,32 +675,32 @@ function checkForTotalHoursDatabase() {// gets sum of the total weekly hours fro
 
 
 // THIS IS FOR BREAKSSSS
-function checkDuplicateBreaks(preventPlusFromSubmitting = "") { // checks for duplicates in table. For summer or any other break.
-      var table = document.getElementById("mytable");
-      var student = document.getElementById("student");
-      var studentName = $(student.options[student.selectedIndex]).text();
-      var position = document.getElementById("position");
-      var positionName = $(position.options[position.selectedIndex]).text();
-
-      for(const tr of table.querySelectorAll("thead tr")) {
-         const td0 = tr.querySelector("td:nth-child(1)");
-         const td1 = tr.querySelector("td:nth-child(2)");
-         // const td2 = tr.querySelector("td:nth-child(3)");
-
-         if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
-           document.getElementById("warningModalText").innerHTML = ("Match found for " +studentName +" and " + positionName);
-           $("#warningModal").modal("show");
-            $("#contractTable").show();
-            refreshSelectPickers();
-            return;
-            }
-          else {
-            //createAndFillTableForBreaks();
-            createAndFillTable();
-            return;
-          }
-          }
-        }
+// function checkDuplicateBreaks(preventPlusFromSubmitting = "") { // checks for duplicates in table. For summer or any other break.
+//       var table = document.getElementById("mytable");
+//       var student = document.getElementById("student");
+//       var studentName = $(student.options[student.selectedIndex]).text();
+//       var position = document.getElementById("position");
+//       var positionName = $(position.options[position.selectedIndex]).text();
+//
+//       for(const tr of table.querySelectorAll("thead tr")) {
+//          const td0 = tr.querySelector("td:nth-child(1)");
+//          const td1 = tr.querySelector("td:nth-child(2)");
+//          // const td2 = tr.querySelector("td:nth-child(3)");
+//
+//          if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
+//            document.getElementById("warningModalText").innerHTML = ("Match found for " +studentName +" and " + positionName);
+//            $("#warningModal").modal("show");
+//             $("#contractTable").show();
+//             refreshSelectPickers();
+//             return;
+//             }
+//           else {
+//             //createAndFillTableForBreaks();
+//             createAndFillTable();
+//             return;
+//           }
+//           }
+//         }
 
 
 // function createAndFillTableForBreaks() {// Fills the table. For Summer term or any other break period
