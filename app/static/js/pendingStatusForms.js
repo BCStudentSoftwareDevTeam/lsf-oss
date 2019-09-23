@@ -1,18 +1,20 @@
 
 
+
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
     labor_details_ids.push(this.value);
   })
 
-  var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;
-  if (!atLeastOneIsChecked){
-   $("#approveSelected").prop("disabled",true);
-   location.reload();
-   console.log("hh");
-      }
-  // $("#StudentId").text(labor_details_ids);
+//this checks wether the checkbox is checked or not and if does not it disable the approve selected button
+var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;
+if (!atLeastOneIsChecked){
+  $("#approveSelected").prop("disabled",true);
+  location.reload();
+
+     }
+
   data = JSON.stringify(labor_details_ids);
  $.ajax({
    type: "POST",
@@ -22,7 +24,6 @@ function insertApprovals() {
    contentType: 'application/json',
    success: function(response){
      if (response){
-       // console.log(response);
        returned_details = response;
        updateApproveTableData(returned_details);
       }
@@ -37,14 +38,20 @@ function updateApproveTableData(returned_details){
      var hour= returned_details[i][2]
       var supervisor= returned_details[i][3]
       $('#classTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+hour+'</td></tr>');
+
+
   }
 
 }
 
+
 //this function is for final approve button in the approve selected modal
+// function finalApproval() {
+//   data = JSON.stringify(labor_details_ids);
+//   console.log("before ajax call ")
+
 function finalApproval() {
   data = JSON.stringify(labor_details_ids);
-  console.log("before ajax call ")
   $.ajax({
     type: "POST",
     url: "/admin/finalApproval",
@@ -62,8 +69,20 @@ function finalApproval() {
      }
    })
 
+ };
 
-};
+
+
+
+
+
+
+
+// this refreshes the page each time form(s) is approved to empty up the modal content
+// $('#refreshContent').click(function() {
+//     location.reload();
+// });
+
 
 
 function getNotes (formID) {
@@ -184,70 +203,3 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
   delete allTableDataDict["0"] // gets rid of the first dictionary that contains table labels
   return allTableDataDict
 }
-
-function approve_selected(){
-  ss = $("#student").text();
-  console.log(ss);
-}
-
-// SEND DATA TO THE DATABASE
-// function approvalInsert(){
-//   var allTableDataDict = createTabledataDictionary()
-//   data = JSON.stringify(allTableDataDict);
-//   $('#laborStatusForm').on('submit', function(e) {
-//     e.preventDefault();
-//   });
-//   $.ajax({
-//          method: "POST",
-//          url: '/laborstatusform/approvalInsert',
-//          data: data,
-//          contentType: 'application/json',
-//          success: function(response) {
-//            term = $("#selectedTerm").val();
-//            var whichTerm = term.toString().substr(-2);
-//            modalList = [];
-//            if (response){
-//              for (var key in allTableDataDict) {
-//                var student = allTableDataDict[key]["Student"];
-//                var position = allTableDataDict[key]["Position"];
-//                var selectedContractHours = allTableDataDict[key]["Contract Hours"];
-//                var jobType = allTableDataDict[key]["Job Type"];
-//                var hours = allTableDataDict[key]["Hours Per Week"];
-//                if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-//                  var bigString = "<li>" +"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + selectedContractHours;
-//                }
-//                else {
-//                  var bigString = "<li>"+"<span class='glyphicon glyphicon-ok' style='color:green'></span> " + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
-//               }
-//               modalList.push(bigString)
-//             }
-//           }
-//
-//           else {
-//             for (var key in allTableDataDict) {
-//                var student = allTableDataDict[key]["Student"];
-//                var position = allTableDataDict[key]["Position"];
-//                var selectedContractHours = allTableDataDict[key]["Contract Hours"];
-//                var hours = allTableDataDict[key]["Hours Per Week"];
-//
-//               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-//                var bigString = "<li>" +"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + selectedContractHours;
-//               }
-//               else {
-//                 var bigString = "<li>"+"<span class='glyphicon glyphicon-remove' style='color:red'></span> " + student + ' | ' + position + ' | ' + jobType + ' | ' + hours;
-//               }
-//               modalList.push(bigString)
-//             }
-//            }
-//          document.getElementById("approvedModal").innerHTML = "Labor status form(s) was approved for:<br><br>" +
-//                                                                  "<ul style='list-style-type:none; display: inline-block;text-align:left;'>" +
-//                                                                  modalList.join("</li>")+"</ul>"
-//          $('#SubmitModal').modal('show')
-//        }
-//      });
-//
-//       $('#exampleModal').modal({backdrop: true, keyboard: false, show: true});
-//       $('#exampleModal').data('bs.modal').options.backdrop = 'static';
-//       document.getElementById('validApprovalModal').innerHTML = "Done";
-//      document.getElementById('validApprovalModal').onclick = function() { window.location.replace("/laborstatusform");}
-// }

@@ -48,7 +48,6 @@
             <td> {# APPROVE #}
               <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}'
               value= "{{formHistory.formID.laborStatusFormID}}" name="check[]" />
-
               <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})"
                      class="glyphicon glyphicon-book btn-lg
                           {% if formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes == None %} text-success
@@ -71,7 +70,7 @@
             <td>
               |
             </td>
-            <td> {# STUDENT #}
+            <td > {# STUDENT #}
               {{formHistory.formID.studentSupervisee.FIRST_NAME}}  {{formHistory.formID.studentSupervisee.LAST_NAME}}  ({{formHistory.formID.studentSupervisee.ID}})
             </td>
             <td> {# POSITON AND WLS #}
@@ -117,6 +116,7 @@
             Approve Selected
           </button>
       <!-- Modal -->
+
           <div class="modal fade" id="approvalModal" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
