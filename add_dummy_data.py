@@ -205,7 +205,9 @@ from app.models.Tracy.stustaff import STUSTAFF
 from app.models.user import User
 
 staffs = [
-            {
+
+    #TODO: Ask Scott about isLaborAdmin field
+            {s
             "ID": "B12361006",
             "FIRST_NAME":"Scott",
             "LAST_NAME" : "Heggen",
@@ -249,6 +251,7 @@ staffs = [
         ]
 stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
 print(stustaff)
+print("staff added")
 
 def insert_to_users(staffs):
     for sta in staffs[0:3]: #insert staff members into stustaff
@@ -262,7 +265,6 @@ def insert_to_users(staffs):
         u.ORG = sta.ORG
         u.DEPT_NAME = sta.DEPT_NAME
         u.save()
-        # ...
 
 insert_to_users(STUSTAFF.select())
 

@@ -50,19 +50,21 @@ function getNotes (formID) {
 //   var uniqueTextArea = "laborNotesText" + notesTextId
 //
 //   $("#saveNotes").attr('onclick',"saveNotes('" + uniqueTextArea +"')");
-// 
+//
 // }
 
- function notesInsert() {
+ function notesInsert(formID) {
    var notes = []
-   var notesTest = ("laborNotesText" + $("#dummyInput").val()) ;
-   console.log(notesTest);
+   var notesTest = $("#notes_" +formID).val();
+   console.log("lol what", notesTest);
    var laborNotes = $("#laborNotesText").val(); //this is getting the id of the labor notes text area
        notes.push(laborNotes);
      console.log(notes);
      console.log("Here's the labor notes:", laborNotes)
   //this sets the text area to what the user types in it
 
+   var aLaborNote = $("#notes_" + formID).val();
+   console.log("I hope this works", aLaborNote);
 
    data = JSON.stringify(notes);
    $("#saveNotes").on('submit', function(e) {
@@ -75,6 +77,9 @@ function getNotes (formID) {
           data: notes,
           contentType: 'application/json',
           success: function(response) {
+            if(response)
+            aLaborNote = $("#notes_" + formID).val();
+            console.log("I hope this works", aLaborNote);
             console.log(response);
           }
         });
