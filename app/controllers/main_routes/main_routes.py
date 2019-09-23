@@ -28,7 +28,7 @@ def index():
     # Get all the forms from the supervisor form that has Scott as the Supervisor and order them by the endDate  #
     todayDate = date.today()
     # Grabs all the labor status forms where the current user is the supervisor
-    formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.username).order_by(LaborStatusForm.endDate.desc())
+    formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.UserID).order_by(LaborStatusForm.endDate.desc())
     # Grabs all the labor status forms where the current users department matches the status forms derpartment, and where the current date is less than the term end date on the status form
     currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.endDate >= todayDate).where(LaborStatusForm.department.DEPT_NAME == current_user.DEPT_NAME)
     # Grabs all the labor status forms where the current users department matches the status forms derpartment
@@ -122,7 +122,7 @@ def index():
                     currentSupervisees = currentSupervisees,
                     pastSupervisees = pastSupervisees,
                     inactiveSupervisees = inactiveSupervisees,
-                    username = current_user,
+                    UserID = current_user,
                     currentDepartmentStudents = currentDepartmentStudents,
                     allDepartmentStudents = allDepartmentStudents
                           )
