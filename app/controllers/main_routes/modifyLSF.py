@@ -73,10 +73,8 @@ def sumbitModifiedForm(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     # try:
     rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
-
-
     rsp = dict(rsp)
-    print(type(rsp))
+    print(rsp)
     for k in rsp:
         print(k)
         modifiedforms = ModifiedForm.create(fieldModified = k,
