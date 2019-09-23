@@ -1,9 +1,17 @@
 
+
+var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
-  var labor_details_ids = [];
   var getChecked = $('input:checked').each(function() {
     labor_details_ids.push(this.value);
   })
+
+  var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;
+  if (!atLeastOneIsChecked){
+   $("#approveSelected").prop("disabled",true);
+   location.reload();
+   console.log("hh");
+      }
   // $("#StudentId").text(labor_details_ids);
   data = JSON.stringify(labor_details_ids);
  $.ajax({
@@ -32,6 +40,31 @@ function updateApproveTableData(returned_details){
   }
 
 }
+
+//this function is for final approve button in the approve selected modal
+function finalApproval() {
+  data = JSON.stringify(labor_details_ids);
+  console.log("before ajax call ")
+  $.ajax({
+    type: "POST",
+    url: "/admin/finalApproval",
+    datatype: "json",
+    data: data,
+    contentType: 'application/json',
+    success: function(response){
+      if (response){
+        console.log('success', response["success"]);
+        if(response["success"]) {
+            console.log("It was true")
+            location.reload(true);
+        }
+       }
+     }
+   })
+
+
+};
+
 
 function getNotes (formID) {
   console.log(formID);

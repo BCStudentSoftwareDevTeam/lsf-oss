@@ -1,6 +1,6 @@
 #from flask import render_template  #, redirect, url_for, request, g, jsonify, current_app
 #from flask_login import current_user, login_required
-from flask import flash, send_file, json, jsonify
+from flask import flash, send_file, json, jsonify, redirect, url_for
 from app.login_manager import *
 from app.controllers.admin_routes import admin
 from app.controllers.errors_routes.handlers import *
@@ -21,15 +21,13 @@ def pendingForms():
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
 
-
         # pending_status_forms = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate)
         pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate)
 
         # # Logged in & Admin
         users = User.select()
 
-
-        return render_template( 'admin/pendingStatusForms.html',
+        return render_template('admin/pendingStatusForms.html',
                                 title=('Pending Forms'),
                                 username=current_user.username,
                                 users=users,
@@ -55,14 +53,33 @@ def approvedForms():
 
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
-            print("Inserted into nonexistent Banner DB")
+            # print("Inserted into nonexistent Banner DB")
             #FIXME: Update form history
             approved_details = modal_aproval_data(rsp)
-            print(approved_details, "before return")
+            # print(approved_details, "before return")
             return jsonify(approved_details)
     except Exception as e:
         print("This did not work", e)
         return jsonify({"Success": False})
+
+@admin.route('/admin/finalApproval', methods=['POST'])
+def finalApproval():
+    try:
+        print("inside try")
+        rsp = eval(request.data.decode("utf-8"))
+        print('rsp', rsp)
+        for id in rsp:
+            # print("ID: ", int(id))
+            approving_labor_forms = FormHistory.get(FormHistory.formID == int(id), FormHistory.historyType == 'Labor Status Form')
+            # print("before approved" , approving_labor_forms.formHistoryID, approving_labor_forms.status.statusName)
+            approving_labor_forms.status = Status.get(Status.statusName == "Approved")
+            approving_labor_forms.save()
+            # print("approved reached: ", approving_labor_forms.status.statusName)
+        # return pendingForms()
+        return jsonify({"success": True})
+    except Exception as e:
+        print("final approval of the modal did not work", e)
+        return jsonify({"success": False})
 
 #method extracts data from the data base to papulate pending form approvale modal
 def modal_aproval_data(approval_ids):
