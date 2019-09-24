@@ -79,24 +79,24 @@
           </div>
 
           <!-- Populate the modal with the all students of the user's department -->
-          <div class="allDeptStu" style="display:none">
+          <!-- <div class="allDeptStu" style="display:none">
           {% for form in allDepartmentStudents %}
           <label class="container">
             <input class="allDepartmentModal" type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}' disabled>
               {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.termCode.termName}})
           </label>
           {% endfor %}
-          </div>
+          </div> -->
 
           <!-- Populate the modal with the current students of the user's department -->
-          <div class="currentDeptStu" style="display:none">
+          <!-- <div class="currentDeptStu" style="display:none">
           {% for form in currentDepartmentStudents %}
           <label class="container">
             <input class="currentDepartmentModal" type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}' disabled>
               {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.termCode.termName}})
           </label>
           {% endfor %}
-          </div>
+          </div> -->
        </div>
        <div class="modal-footer" align="center">
          <button  class="btn btn-danger" id="closeButton" onclick="downloadHistory()" data-dismiss="modal">Close</button>

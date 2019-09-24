@@ -11,7 +11,7 @@ from app.models.term import Term
 from app.models.formHistory import FormHistory
 from datetime import datetime, date
 from flask import request
-from flask import jsonify
+from flask import json, jsonify
 from flask import make_response
 
 
@@ -31,11 +31,21 @@ def index():
     todayDate = date.today()
     # Grabs all the labor status forms where the current user is the supervisor
     formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.UserID).order_by(LaborStatusForm.endDate.desc())
+    currentUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.createdBy == current_user.UserID) or (FormHistory.formID.supervisor == current_user.UserID)).distinct()
+
+    print(current_user.username)
+
+    try:
+        for i in currentUserDepartments:
+            print(i.formID.department.DEPT_NAME)
+    except Exception as e:
+        print("Wassup May")
+        print(e)
 
     # Grabs all the labor status forms where the current users department matches the status forms derpartment, and where the current date is less than the term end date on the status form
-    currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.endDate >= todayDate).where(LaborStatusForm.department.DEPT_NAME == "Computer Science")
+    # currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.endDate >= todayDate).where(LaborStatusForm.department.DEPT_NAME == "Computer Science")
     # Grabs all the labor status forms where the current users department matches the status forms derpartment
-    allDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == "Computer Science").order_by(LaborStatusForm.endDate.desc())
+    # allDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == "Computer Science").order_by(LaborStatusForm.endDate.desc())
 
 
     inactiveSupervisees = []
@@ -126,9 +136,7 @@ def index():
                     pastSupervisees = pastSupervisees,
                     inactiveSupervisees = inactiveSupervisees,
                     UserID = current_user,
-                    currentDepartmentStudents = currentDepartmentStudents,
-                    allDepartmentStudents = allDepartmentStudents
-
+                    currentUserDepartments = currentUserDepartments
                           )
 
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
@@ -140,11 +148,37 @@ def populateDepartment(departmentSelected):
         currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.endDate >= todayDate).where(LaborStatusForm.department.DEPT_NAME == department)
         # Grabs all the labor status forms where the current users department matches the status forms derpartment
         allDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == department).order_by(LaborStatusForm.endDate.desc())
-        resp = make_response(jsonify(render_template( 'snips/departmentDatatable.html',
-                        currentDepartmentStudents = currentDepartmentStudents,
-                        allDepartmentStudents = allDepartmentStudents
-                              )))
-        return (resp)
+        departmentStudents = {}
+        x = 0
+        for i in currentDepartmentStudents:
+            departmentStudents[x] = {"Status":"Current Department Students",
+                                    "Student": i.studentSupervisee.FIRST_NAME + " " + i.studentSupervisee.LAST_NAME,
+                                    "BNumber": i.studentSupervisee.ID,
+                                    "Term": i.termCode.termName,
+                                    "Position": i.POSN_TITLE,
+                                    "textModalClass" : "currentDeptStu",
+                                    "checkboxModalClass" : "currentDepartmentModal",
+                                    "Department": i.department.DEPT_NAME}
+            x += 1
+        for i in allDepartmentStudents:
+            departmentStudents[x] = {"Status":"All Department Students",
+                                    "Student": i.studentSupervisee.FIRST_NAME + " " + i.studentSupervisee.LAST_NAME,
+                                    "BNumber": i.studentSupervisee.ID,
+                                    "Term": i.termCode.termName,
+                                    "Position": i.POSN_TITLE,
+                                    "textModalClass" : "allDeptStu",
+                                    "checkboxModalClass" : "allDepartmentModal",
+                                    "Department": i.department.DEPT_NAME}
+            x += 1
+        return json.dumps(departmentStudents)
+
+
+
+        # resp = make_response(jsonify(render_template( 'snips/departmentDatatable.html',
+        #                 currentDepartmentStudents = currentDepartmentStudents,
+        #                 allDepartmentStudents = allDepartmentStudents
+        #                       )))
+        # return (resp)
     except Exception as e:
         print(e)
         return jsonify({"Success": False})

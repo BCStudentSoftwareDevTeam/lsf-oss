@@ -28,6 +28,9 @@ $(document).ready(function() {
 var table = $("#studentList").DataTable({
   "drawCallback": function( settings ) {
     $("#studentList thead").remove(); } , // Used to hide the data table header
+  "columnDefs":[
+    {"visable": false, "target": [1]}
+  ],
    "order": [[0, "desc"]], //display order on column
    "pagingType": "simple_numbers",
    "ordering": false,
@@ -208,6 +211,7 @@ document.getElementById("myStudents").addEventListener("click",function(){
   // When the 'My Students' tab in the sidebar is clicked, this Function
   // hides and shows the correct buttons for that page, filter the datatable,
   // and shows the correct checkboxes that should show in the modal
+  changeButtonColor("#myCurrentStudents")
   $("#userDepartments").hide()
   $("#placeholder").show()
   $("#currentDepartmentStudents").hide()
@@ -218,6 +222,7 @@ document.getElementById("myStudents").addEventListener("click",function(){
   $('#portalTitle').text("Current Students");
   $("#myCurrentStudents").removeClass("btn-primary");
   $("#myCurrentStudents").addClass("btn-light");
+
 
   table
     .columns( 1 )
@@ -239,6 +244,7 @@ document.getElementById("department").addEventListener("click",function(){
   // When the 'My Department' tab in the sidebar is clicked, this Function
   // hides and shows the correct buttons for that page, filter the datatable,
   // and shows the correct checkboxes that should show in the modal
+  changeButtonColor("#currentDepartmentStudents")
   $("#userDepartments").show()
   $("#placeholder").hide()
   $(".currentStu").hide();
@@ -297,11 +303,59 @@ function populateTable(){
   $.ajax({
     method: "GET",
     url: "/main/department/" + departmentSelected,
+    datatype: "json",
     success: function(response) {
-      console.log(response);
-      $(".modal-body").append(response);
-      $("#studentList tbody").append(response);
-      // table.ajax.reload();
+      // console.log(response);
+
+      if ($("#currentDepartmentStudents").hasClass('btn-light')){
+        table
+        .columns( 1 )
+        .search("All Department Students")
+        .draw();
+        table
+        .rows({ filter : 'applied'}).remove().draw();
+
+        table
+        .columns( 1 )
+        .search("Current Department Students")
+        .draw();
+        table
+        .rows({ filter : 'applied'}).remove().draw();
+      }
+      else{
+        table
+        .columns( 1 )
+        .search("Current Department Students")
+        .draw();
+        table
+        .rows({ filter : 'applied'}).remove().draw();
+
+        table
+        .columns( 1 )
+        .search("All Department Students")
+        .draw();
+        table
+        .rows({ filter : 'applied'}).remove().draw();
+      }
+
+
+      response = JSON.parse(response)
+      for (var key in response){
+        var bNumber = response[key]["BNumber"]
+        var student = response[key]["Student"]
+        var term = response[key]["Term"]
+        var position = response[key]["Position"]
+        var department = response[key]["Department"]
+        var status = response[key]["Status"]
+        // table.column(1).visable(false);
+        // table.row.add(["<h3>" + student + "</h3>", "My Current Students"])
+        table.row.add(["<a href='/laborHistory/" + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>" +
+        "<br />" + "<span class='pushLeft h6'>" + term + " - " + position + " - " + department + "</span>",
+        "<span style='display:none'>" + status + "</span>"])
+        .draw()
+      // $(".hiddenColumn").hide()
+        // console.log(student);
+      }
     }
   })
 }
