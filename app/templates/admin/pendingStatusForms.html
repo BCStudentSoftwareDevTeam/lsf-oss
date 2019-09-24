@@ -49,15 +49,12 @@
             <td> {# APPROVE #}
               <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.laborStatusFormID}}" />
               <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})"
-                      {# This class handles the changing of the colors for the notes glyphicon #}
                      class="glyphicon glyphicon-book btn-lg
                           {% if formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes == None %} text-success
                           {% elif formHistory.formID.laborDepartmentNotes != None and formHistory.formID.supervisorNotes == None  %} text-danger
                           {% elif formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes != None %} text-danger
-                          {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal">
-                           {#<input id="dummyInput"  value="laborNotes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})" hidden/> #}
-            </span>
-
+                          {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
+              <input id="dummyInput"  value="{{formHistory.formID.laborStatusFormID}}" hidden/>
             </td>
             <td> {# TERM #}
               {{formHistory.formID.termCode.termName}}
@@ -141,7 +138,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "closeNotesModal()">Close</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert(formID)">Save Notes</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
             </div>
           </div>
         </div>
