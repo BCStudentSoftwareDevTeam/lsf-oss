@@ -314,9 +314,12 @@ function errorFlash(){
 // TABLE
 function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
   var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2"];
-  var foundDuplicate = checkDuplicate(); //testing
-  console.log(foundDuplicate);
-  if(foundDuplicate != true){
+  var studentDict = createStuDict();
+  var primaryInDatabase = checkPrimaryPosition(studentDict);
+  console.log(primaryInDatabase);
+  if(!(checkDuplicate(studentDict)) && !(primaryInDatabase)){
+    globalArrayOfStudents.push(studentDict);
+    //TODO:CHECK HOURSSSSSSSSSSSSSSSSSSSSSSSSSSSSsss
     createAndFillTable();
   }
   return;
@@ -347,8 +350,7 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
   //   }
   // }
 }
-
-function checkDuplicate() {// checks for duplicates in the table. This is for Academic Year
+function createStuDict(){
   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
   var termCodeLastTwo = termCodeSelected.slice(-2);
   var student = $("student");
@@ -381,7 +383,8 @@ function checkDuplicate() {// checks for duplicates in the table. This is for Ac
                       stuEndDate: endDate,
                       stuTermCode: termCodeSelected,
                       stuTermCodeLastTwo: termCodeLastTwo,
-                      stuNotes: ""};
+                      stuNotes: ""
+                      };
   }
   else{
     /* #TODO: Add student dictionary for breaks to the global array
@@ -397,117 +400,43 @@ function checkDuplicate() {// checks for duplicates in the table. This is for Ac
                       stuTermCode: termCodeSelected,
                       stuNotes: ""};*/
   }
+  return studentDict;
+}
+
+function checkDuplicate(studentDict) {// checks for duplicates in the table. This is for Academic Year
   for(i = 0; i < globalArrayOfStudents.length; i++){
     if(globalArrayOfStudents[i].stuName == studentDict.stuName && studentDict.stuJobType == "Primary" && globalArrayOfStudents[i].stuJobType == studentDict.stuJobType){
-      refreshSelectPickers();
+      document.getElementById("warningModalText").innerHTML = "Match found for" + studentDict.stuName +"'s Primary position.";
+      $("#warningModal").modal("show");
       return true;
     }
   }
-  globalArrayOfStudents.push(studentDict);
   console.log(globalArrayOfStudents);
   return false;
-    // var table = document.getElementById("mytable").getElementsByTagName("tbody")[0];
-    // var student = document.getElementById("student");
-    // var studentName = $(student.options[student.selectedIndex]).text();
-    // var position = document.getElementById("position");
-    // var positionName = $(position.options[position.selectedIndex]).text();
-    // var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
-    // if (termCodeSelected.slice(-2) == "11" || "12") {
-    //   var jobType = document.getElementById("jobType");
-    //   var jobTypeName = $(jobType.options[jobType.selectedIndex]).text();
-    //   var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
-    //   for (const tr of table.querySelectorAll("tbody tr")) {
-    //      const td0 = tr.querySelector("td:nth-child(1)");
-    //      const td1 = tr.querySelector("td:nth-child(2)");
-    //      const td2 = tr.querySelector("td:nth-child(3)");
-    //      const td3 = tr.querySelector("td:nth-child(4)");
-    //      const td4 = tr.querySelector("td:nth-child(5)");
-    //      if(!td0 || !td1 || !td2 || !td3 || !td4) { //If we are missing cells skip it
-    //      continue;
-    //      }
-    //      if ((td0.innerHTML == studentName) && (jobTypeName == "Primary") &&(td2.innerHTML == "Primary")) {
-    //        document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +" and Primary.";
-    //        $("#warningModal").modal("show");
-    //        $("#jobTable").show();
-    //        $("#hoursTable").show();
-    //        refreshSelectPickers();
-    //        return;
-    //         }
-    //      if ((td0.innerHTML == studentName) && (td2.innerHTML == "Secondary") && (td1.innerHTML == positionName) && (jobTypeName == "Secondary")) {
-    //        document.getElementById("warningModalText").innerHTML = "Match found for " +studentName +", "+ positionName + " and Secondary.";
-    //        $("#warningModal").modal("show");
-    //        $("#jobTable").show();
-    //        $("#hoursTable").show();
-    //        refreshSelectPickers();
-    //        return;
-    //        }
-    // }
-    //   checkForPrimaryPosition();
-    // }
-    // else {
-    //   for(const tr of table.querySelectorAll("thead tr")) {
-    //      const td0 = tr.querySelector("td:nth-child(1)");
-    //      const td1 = tr.querySelector("td:nth-child(2)");
-    //      // const td2 = tr.querySelector("td:nth-child(3)");
-    //      if ((td0.innerHTML == studentName) && (td1.innerHTML==positionName)) {
-    //        document.getElementById("warningModalText").innerHTML = ("Match found for " +studentName +" and " + positionName);
-    //        $("#warningModal").modal("show");
-    //         $("#contractTable").show();
-    //         refreshSelectPickers();
-    //         return;
-    //         }
-    //       else {
-    //         //createAndFillTableForBreaks();
-    //         createAndFillTable();
-    //         return;
-    //       }
-    //       }
-    // }
 }
 
-function checkForPrimaryPosition(){ // does several stuff read the comments down below
-  //var studentName = $($("#student").options[$("#student").selectedIndex]).text();
-  var studentName = $( "#student option:selected" ).text();
-  var jobType = document.getElementById("jobType");
-  var jobTypeName = $(jobType.options[jobType.selectedIndex]).text();
-  var student = $("#student").val();
+function checkPrimaryPosition(studentDict){ // does several stuff read the comments down below
   var term = $("#selectedTerm").val();
-  var url = "/laborstatusform/getstudents/" + term +"/" +student;
+  var url = "/laborstatusform/getstudents/" + term +"/" +studentDict["stuName"];
   $.ajax({
     url: url,
     dataType: "json",
     success: function (response){
-      /* 1. Language for Primary Modal that shows up when student has a primary position and a secondary position is being submitted */
-      try {
-        var primary_supervisor = response.PrimarySupervisor["Primary Supervisor FirstName"] + " " + response.PrimarySupervisor["Primary Supervisor LastName"];
-        document.getElementById("PrimaryModalText").innerHTML = "Secondary position has been added. Upon submission of the form, student's primary supervisor " +
-                                                                primary_supervisor + " will be notified.";
+      if (response && studentDict["stuJobType"] == "Primary"){
+        /// TODO: Display modal saying student already has a primary postion
+        alert(studentDict["stuName"] + " already has a Primary position.");
+        return true;
       }
-      catch (e) {
-        if(jobTypeName == "Primary"){
-          createAndFillTable();
-        }
+      else if (!response && studentDict["stuJobType"] == "Primary"){
+        return false;
       }
-      $("#jobTable").show();
-      $("#hoursTable").show();
-      /* 2. if student does not have a primary position show modal */
-      var result = $.isEmptyObject(response);
-      if (jobTypeName == "Secondary" && result) {
-        document.getElementById("NoPrimaryModalText").innerHTML = "<span class=\"glyphicon glyphicon-exclamation-sign\" style=\"color:red; font-size:20px;\"></span>"+
-                                                                  " The selected student " + studentName +" does not have a primary position.";
-        $("#NoPrimaryModal").modal("show");
-        refreshSelectPickers();
+      else if(response && studentDict["stuJobType"] == "Secondary"){
+        return false;
       }
-      else if (jobTypeName == "Primary" && !result) { // 3. If a student already has a primary position, do not add to the table.
-        document.getElementById("warningModalText").innerHTML =  studentName + " already has a primary position.";
-        $("#warningModal").modal("show");
-        refreshSelectPickers();
-      }
-      else {
-      /* 4. If student has a primary position check the total hours for overload and add to table  */
-          checkTotalhoursTable();
-          checkForTotalHoursDatabase();
-          createAndFillTable();
+      else if(!response && studentDict["stuJobType"] == "Secondary"){
+        //TODO: Display modal saying student does not have a Primary postion to get a Secondary position
+        alert(studentDict["stuName"] + " doesn't have a Primary position.");
+        return true;
       }
     }
   });
@@ -565,38 +494,27 @@ function createAndFillTable() { // fills the table for Academic Year.
 
 var totalHourDict = {};
 function checkTotalhoursTable() {//Checks if the student has enough hours to require an overload form
-  var table = document.getElementById("mytable").getElementsByTagName("tbody")[0];
-  var student = document.getElementById("student");
-  var studentName = $(student.options[student.selectedIndex]).text();
-  var totalHours = 0;
-  var hoursPerWeek = document.getElementById("selectedHoursPerWeek");
-  //var hoursPerWeekName = hoursPerWeek.options[hoursPerWeek.selectedIndex].text;
-  var hoursPerWeekName = $("hoursPerWeek option:selected").text();
-  for(const tr of table.querySelectorAll("tbody tr")) {
-     const td0 = tr.querySelector("td:nth-child(1)");
-     const td2 = tr.querySelector("td:nth-child(4)");
-     if (td0.innerHTML == studentName) {
-       totalHours = totalHours + parseInt(td2.innerHTML);
-        }
-      }
-  totalHours = totalHours + parseInt(hoursPerWeekName);
-  totalHourDict.total = {totalHours};
 }
 
-function checkForTotalHoursDatabase() {// gets sum of the total weekly hours from the database and add it to the ones in the table.
+function checkForTotalHours() {// gets sum of the total weekly hours from the database and add it to the ones in the table.
   var student = $("#student").val();
-  console.log(student);
+  // console.log(student);
   var term = $("#selectedTerm").val();
-  console.log(term);
+  // console.log(term);
   var url = "/laborstatusform/gethours/" + term +"/" +student;
   $.ajax({
     url: url,
     dataType: "json",
     success: function (response){
+      var totalHours = 0;
+      for(i = 0; i < globalArrayOfStudents.length; i++) {
+         if (globalArrayOfStudents[i].stuName == student) {
+           totalHours = totalHours + globalArrayOfStudents[i].stuHours;
+            }
+          }
       var totalWeeklyHoursFromDatabase = response.weeklyHours["Total Weekly Hours"];
-      var totalWeeklyHoursFromTable = totalHourDict.total.totalHours;
-      var total = totalWeeklyHoursFromDatabase + totalWeeklyHoursFromTable;
-      if (total > 15){ // if hours exceed 15 pop up overload modal
+      totalHours = totalWeeklyHoursFromDatabase + totalHours;
+      if (totalHours > 15){ // if hours exceed 15 pop up overload modal
         $("#OverloadModal").modal("show");
         $("#overloadModalButton").attr("data-target", "#PrimaryModal");
         $("#OverloadModal").on("hidden.bs.modal", function() {
@@ -656,65 +574,65 @@ function createModalContent() { // Populates Submit Modal with Student informati
   }
 }
 
-function createTabledataDictionary() { // puts all of the forms into dictionaries
-  var listDictAJAX = [];
-  $("#mytable tr").has("td").each(function() {
-    /* Get the input box values first */
-      var supervisor = $("#selectedSupervisor").val();
-      var department = $("#selectedDepartment").val();
-      var term = $("#selectedTerm").val();
-      var whichTerm = term.toString().substr(-2);
-      var positionCode = $("#position_code").attr("data-posn");
-      var wls = $("#position_code").attr("data-wls");
-      listDict = [];
-      listDict.push(supervisor, department, term, positionCode, wls);
-      var headersLabel = ["Supervisor", "Department", "Term", "Position Code", "WLS"];
-      var tableDataDict = {};
-      for (var i in listDict) {
-        tableDataDict[headersLabel[i]] = listDict[i];
-      }
-      /* If it"s a break, get table values */
-      if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-        tableDataDict["Job Type"] = "Secondary";
-        var headers_2_data = ["Student", "Position", "Contract Hours", "Contract Dates"];
-        $("td", $(this)).each(function(index, item) {
-          var aTag = $.parseHTML($(item).html());
-          if (!$(aTag).hasClass("remove")) {
-            var notes = $(aTag).data("note");
-            tableDataDict["Supervisor Notes"] = notes;
-            tableDataDict[headers_2_data[index]] = $(item).html();
-          }
-        });
-        listDictAJAX.push(tableDataDict);
-        allTableDataDict = {};
-        for (var key in listDictAJAX){
-          allTableDataDict[key] = listDictAJAX[key];
-        }
-      }
-      /* If it"s academic year, get the table values */
-      else {
-          var headersData = ["Student", "Position", "Job Type", "Hours Per Week", "Contract Dates"];
-          $("td", $(this)).each(function(index, item) {
-            var aTag = $.parseHTML($(item).html());
-            if (!$(aTag).hasClass("remove")) {
-              var notes = $(aTag).data("note");
-              tableDataDict["Supervisor Notes"] = notes;
-              tableDataDict[headersData[index]] = $(item).html();
-            }
-          });
-          listDictAJAX.push(tableDataDict);
-          allTableDataDict = {}; // this is the dictionary that contains all the forms
-          for (var key in listDictAJAX){
-            allTableDataDict[key] = listDictAJAX[key];
-          }
-      }
-     });
-  return allTableDataDict;
-}
+// function createTabledataDictionary() { // puts all of the forms into dictionaries
+//   var listDictAJAX = [];
+//   $("#mytable tr").has("td").each(function() {
+//     /* Get the input box values first */
+//       var supervisor = $("#selectedSupervisor").val();
+//       var department = $("#selectedDepartment").val();
+//       var term = $("#selectedTerm").val();
+//       var whichTerm = term.toString().substr(-2);
+//       var positionCode = $("#position_code").attr("data-posn");
+//       var wls = $("#position_code").attr("data-wls");
+//       listDict = [];
+//       listDict.push(supervisor, department, term, positionCode, wls);
+//       var headersLabel = ["Supervisor", "Department", "Term", "Position Code", "WLS"];
+//       var tableDataDict = {};
+//       for (var i in listDict) {
+//         tableDataDict[headersLabel[i]] = listDict[i];
+//       }
+//       /* If it"s a break, get table values */
+//       if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+//         tableDataDict["Job Type"] = "Secondary";
+//         var headers_2_data = ["Student", "Position", "Contract Hours", "Contract Dates"];
+//         $("td", $(this)).each(function(index, item) {
+//           var aTag = $.parseHTML($(item).html());
+//           if (!$(aTag).hasClass("remove")) {
+//             var notes = $(aTag).data("note");
+//             tableDataDict["Supervisor Notes"] = notes;
+//             tableDataDict[headers_2_data[index]] = $(item).html();
+//           }
+//         });
+//         listDictAJAX.push(tableDataDict);
+//         allTableDataDict = {};
+//         for (var key in listDictAJAX){
+//           allTableDataDict[key] = listDictAJAX[key];
+//         }
+//       }
+//       /* If it"s academic year, get the table values */
+//       else {
+//           var headersData = ["Student", "Position", "Job Type", "Hours Per Week", "Contract Dates"];
+//           $("td", $(this)).each(function(index, item) {
+//             var aTag = $.parseHTML($(item).html());
+//             if (!$(aTag).hasClass("remove")) {
+//               var notes = $(aTag).data("note");
+//               tableDataDict["Supervisor Notes"] = notes;
+//               tableDataDict[headersData[index]] = $(item).html();
+//             }
+//           });
+//           listDictAJAX.push(tableDataDict);
+//           allTableDataDict = {}; // this is the dictionary that contains all the forms
+//           for (var key in listDictAJAX){
+//             allTableDataDict[key] = listDictAJAX[key];
+//           }
+//       }
+//      });
+//   return allTableDataDict;
+// }
 
 // SEND DATA TO THE DATABASE
 function userInsert(){
-  var allTableDataDict = createTabledataDictionary();
+  var allTableDataDict = globalArrayOfStudents;//createTabledataDictionary();
   data = JSON.stringify(allTableDataDict);
   //alert(data)
   $("#laborStatusForm").on("submit", function(e) {
