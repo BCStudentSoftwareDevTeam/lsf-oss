@@ -387,18 +387,16 @@ function createStuDict(){
                       };
   }
   else{
-    /* #TODO: Add student dictionary for breaks to the global array
+     //#TODO: Add student dictionary for breaks to the global array
     var studentDict ={stuName: studentName,
                       stuBNumber: studentBNumber,
                       stuPosition: positionName,
                       stuPositionCode: positionCode,
-                      stuJobType: jobTypeName,
-                      stuHours: hoursPerWeekName,
-                      stuWLS: wls,
+                      stuContractHours: contractHoursName,
                       stuStartDate: startDate,
                       stuEndDate: endDate,
                       stuTermCode: termCodeSelected,
-                      stuNotes: ""};*/
+                      stuNotes: ""};
   }
   return studentDict;
 }
