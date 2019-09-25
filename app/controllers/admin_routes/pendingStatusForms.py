@@ -53,10 +53,8 @@ def approvedForms():
 
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
-            # print("Inserted into nonexistent Banner DB")
             #FIXME: Update form history
             approved_details = modal_aproval_data(rsp)
-            # print(approved_details, "before return")
             return jsonify(approved_details)
     except Exception as e:
         print("This did not work", e)
@@ -65,17 +63,11 @@ def approvedForms():
 @admin.route('/admin/finalApproval', methods=['POST'])
 def finalApproval():
     try:
-        print("inside try")
         rsp = eval(request.data.decode("utf-8"))
-        # print('rsp', rsp)
         for id in rsp:
-            # print("ID: ", int(id))
             approving_labor_forms = FormHistory.get(FormHistory.formID == int(id), FormHistory.historyType == 'Labor Status Form')
-            # print("before approved" , approving_labor_forms.formHistoryID, approving_labor_forms.status.statusName)
             approving_labor_forms.status = Status.get(Status.statusName == "Approved")
             approving_labor_forms.save()
-            # print("approved reached: ", approving_labor_forms.status.statusName)
-        # return pendingForms()
         return jsonify({"success": True})
     except Exception as e:
         print("final approval of the modal did not work", e)
@@ -88,7 +80,6 @@ def modal_aproval_data(approval_ids):
         student_details = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == int(student))
         student_firstname, student_lastname = student_details.studentSupervisee.FIRST_NAME, student_details.studentSupervisee.LAST_NAME
         student_name = str(student_firstname) + " " + str(student_lastname)
-        # print(student_name)
         student_pos = student_details.POSN_TITLE
         supervisor_firstname, supervisor_lastname = student_details.supervisor.FIRST_NAME, student_details.supervisor.LAST_NAME
         supervisor_name = str(supervisor_firstname) +" "+ str(supervisor_lastname)
@@ -104,19 +95,6 @@ def modal_aproval_data(approval_ids):
         id_list.append(temp_list)
     return(id_list)
 
-# @admin.route('/admin/finalApproval', methods=['POST'])
-# def finalApproval():
-#     try:
-#         rsp = eval(request.data.decode("utf-8"))
-#         for id in rsp:
-#             approving_labor_forms = FormHistory.get(FormHistory.formHistoryID == id)
-#             print("before approved \n" , approving_labor_forms.status.statusName)
-#             approving_labor_forms.status.statusName = "Approved"
-#             print("approved reached : \n", approving_labor_forms.status.statusName)
-#             approving_labor_forms.save()
-#          # return pendingForms()
-#     except Exception as e:
-#         print("final approval of the modal did not work", e)
 
 @admin.route('/admin/getNotes/<formid>', methods=['GET'])
 def getNotes(formid):
