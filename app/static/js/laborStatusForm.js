@@ -384,18 +384,16 @@ function checkDuplicate() {// checks for duplicates in the table. This is for Ac
                       stuNotes: ""};
   }
   else{
-    /* #TODO: Add student dictionary for breaks to the global array
+     //#TODO: Add student dictionary for breaks to the global array
     var studentDict ={stuName: studentName,
                       stuBNumber: studentBNumber,
                       stuPosition: positionName,
                       stuPositionCode: positionCode,
-                      stuJobType: jobTypeName,
-                      stuHours: hoursPerWeekName,
-                      stuWLS: wls,
+                      stuContractHours: contractHoursName,
                       stuStartDate: startDate,
                       stuEndDate: endDate,
                       stuTermCode: termCodeSelected,
-                      stuNotes: ""};*/
+                      stuNotes: ""};
   }
   for(i = 0; i < globalArrayOfStudents.length; i++){
     if(globalArrayOfStudents[i].stuName == studentDict.stuName && studentDict.stuJobType == "Primary" && globalArrayOfStudents[i].stuJobType == studentDict.stuJobType){
