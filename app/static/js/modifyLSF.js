@@ -46,18 +46,14 @@ $(document).ready(function(){
 // Pops up a modal for overload
 function hourscheck(){
   var hour = document.getElementById("weeklyHours").value;
-  console.log(hour)
   if (hour == "20") {
       $('#OverloadModal').modal('show');
       $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
     }
 };
-function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker
- console.log("hello")
+function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker)
  var selectedHoursPerWeek = document.getElementById("weeklyHours");
- console.log(selectedHoursPerWeek)
  var jobType = $("#jobType").val();
- console.log(jobType)
  if (selectedHoursPerWeek){
    $("#weeklyHours").empty();
    if (jobType == "Primary"){
@@ -90,27 +86,22 @@ function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');
 var finalDict = {};
 function buttonListener(laborStatusKey) {
-  console.log(laborStatusKey)
-  //YOOOO THIS IS VERY FRAGILE!!!! Notes MUST be last or it will break. be mindful of this. -Kat and Bri
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
-  var newValue = $("#modifyLSF").find(".newValue");
+  var newValue = $("#modifyLSF").find("select.newValue, textarea.newValue, input.newValue");
   var effectiveDate = document.getElementById("datetimepicker0").value;
-  //Do we need to pull the notes FIELD (ID) separate as well? (its the key for the outer dict..)
-  var notesOld = document.getElementById("oldNotes").value; //TODO: add this to oldValue
-  var notesNew = document.getElementById("supervisorNotes").value;//TODO: add this to newValue
-  console.log("notesOld"+notesOld);
-  console.log("notesNew"+notesNew);
-  for (var i=0; i < newValue.length-2; i=i+2) { //since newValue class is put on the div AND the select.. we skipped the div objects
-    console.log(i/2);
-    console.log(oldValue[i/2].value);
-    console.log(newValue[i+1].value);
-      newVal = $(newValue[i+1]).val();
+  var notesOld = document.getElementById("oldNotes").value;
+  var notesNew = document.getElementById("supervisorNotes").value;
+  for (var i=0; i < newValue.length; i=i+1) {
+    console.log(i);
+    console.log(oldValue[i].value);
+    console.log(newValue[i].value);
+    newVal = $(newValue[i]).val();
     console.log(newVal)
-    if (oldValue[i/2].value != newVal && newVal != "") { //If the oldValue differs from the newValue, add it to the dictionary
-      finalDict[newValue[i+1].id] = {"oldValue": oldValue[i/2].value,
+    if (oldValue[i].value != newVal && newVal != "") { //If the oldValue differs from the newValue, add it to the dictionary
+      finalDict[newValue[i].id] = {"oldValue": oldValue[i].value,
                                      "newValue": newVal,
                                      "date": effectiveDate
-                                    }
+                                  }
       }
   }
   if (notesOld != notesNew) { //Adds notes to dictionary if theyre different

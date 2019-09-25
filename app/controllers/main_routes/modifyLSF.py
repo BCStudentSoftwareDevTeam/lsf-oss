@@ -43,6 +43,7 @@ def modifyLSF(laborStatusKey):
     positions = STUPOSN.select(STUPOSN.POSN_CODE).distinct()
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
+
     return render_template( 'main/modifyLSF.html',
 				            title=('Modify LSF'),
                             username = current_user,
