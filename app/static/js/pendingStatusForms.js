@@ -7,28 +7,29 @@ function insertApprovals() {
     labor_details_ids.push(this.value);
   })
 
-//this checks wether the checkbox is checked or not and if does not it disable the approve selected button
-var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;
-if (!atLeastOneIsChecked){
-  $("#approveSelected").prop("disabled",true);
-  location.reload();
+  //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
+  var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;
+  if (!atLeastOneIsChecked){
+    $("#approveSelected").prop("disabled",true);
+    location.reload();
 
-     }
+       }
 
-  data = JSON.stringify(labor_details_ids);
- $.ajax({
-   type: "POST",
-   url: "/admin/checkedForms",
-   datatype: "json",
-   data: data,
-   contentType: 'application/json',
-   success: function(response){
-     if (response){
-       returned_details = response;
-       updateApproveTableData(returned_details);
+    data = JSON.stringify(labor_details_ids);
+   $.ajax({
+     type: "POST",
+     url: "/admin/checkedForms",
+     datatype: "json",
+     data: data,
+     contentType: 'application/json',
+     success: function(response){
+       if (response){
+         returned_details = response;
+         updateApproveTableData(returned_details);
+         // updateDenialTableData(returned_details);
+        }
       }
-    }
-  })
+    })
 };
 //this method adds data to each row in the approve selected Modal
 function updateApproveTableData(returned_details){
@@ -44,12 +45,7 @@ function updateApproveTableData(returned_details){
 
 }
 
-
-//this function is for final approve button in the approve selected modal
-// function finalApproval() {
-//   data = JSON.stringify(labor_details_ids);
-//   console.log("before ajax call ")
-
+//this method changes the status of the lsf from pending to approved status
 function finalApproval() {
   data = JSON.stringify(labor_details_ids);
   $.ajax({
@@ -70,6 +66,79 @@ function finalApproval() {
    })
 
  };
+
+
+labor_denial_id=[];
+function insertDenial(){
+  //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
+  var getChecked = $('input:checked').each(function() {
+    labor_denial_id.push(this.value);
+  })
+  console.log("denial id(s): ", labor_denial_id)
+
+    data = JSON.stringify(labor_denial_id);
+    console.log("data :", data)
+   $.ajax({
+     type: "POST",
+     url: "/admin/checkedForms",
+     datatype: "json",
+     data: data,
+     contentType: 'application/json',
+     success: function(response){
+       if (response){
+         console.log("response: ", response);
+         labor_denial_detials = response;
+         finalDenial_data(labor_denial_detials);
+         // updateDenialTableData(returned_details);
+        }
+      }
+    })
+};
+
+
+function finalDenial_data(returned_details){
+  for (var i = 0; i < returned_details.length; i++){
+    var student=returned_details[i][0]
+    var position= returned_details[i][1]
+     var hour= returned_details[i][2]
+     var someHousrs= returned_details[i][3]
+      var supervisor= returned_details[i][4]
+      console.log("hour ", hour)
+      $('#denyTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+hour+'</td></tr>');
+
+
+  }
+
+}
+
+
+//this function is for final approve button in the approve selected modal
+// function finalApproval() {
+//   data = JSON.stringify(labor_details_ids);
+//   console.log("before ajax call ")
+
+
+
+ function finalDenial() {
+   data = JSON.stringify(labor_details_ids);
+   $.ajax({
+     type: "POST",
+     url: "/admin/finalDenial",
+     datatype: "json",
+     data: data,
+     contentType: 'application/json',
+     success: function(response){
+       if (response){
+         console.log('success', response["success"]);
+         if(response["success"]) {
+             console.log("It was true")
+             location.reload(true);
+         }
+        }
+      }
+    })
+
+  };
 
 
 

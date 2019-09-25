@@ -52,6 +52,7 @@ def approvedForms():
             return render_template('errors/403.html')
 
         rsp = eval(request.data.decode("utf-8"))
+        print("rsp here :", rsp)
         if rsp:
             #FIXME: Update form history
             approved_details = modal_aproval_data(rsp)
@@ -67,6 +68,20 @@ def finalApproval():
         for id in rsp:
             approving_labor_forms = FormHistory.get(FormHistory.formID == int(id), FormHistory.historyType == 'Labor Status Form')
             approving_labor_forms.status = Status.get(Status.statusName == "Approved")
+            approving_labor_forms.save()
+        return jsonify({"success": True})
+    except Exception as e:
+        print("final approval of the modal did not work", e)
+        return jsonify({"success": False})
+
+
+@admin.route('/admin/finalDenial', methods=['POST'])
+def finalDenial():
+    try:
+        rsp = eval(request.data.decode("utf-8"))
+        for id in rsp:
+            approving_labor_forms = FormHistory.get(FormHistory.formID == int(id), FormHistory.historyType == 'Labor Status Form')
+            approving_labor_forms.status = Status.get(Status.statusName == "Denied")
             approving_labor_forms.save()
         return jsonify({"success": True})
     except Exception as e:
@@ -89,9 +104,9 @@ def modal_aproval_data(approval_ids):
         temp_list = []
         temp_list.append(student_name)
         temp_list.append(student_pos)
-        temp_list.append(student_hours)
         temp_list.append(supervisor_name)
-        temp_list.append(student_hours_ch)
+        temp_list.append(str(student_hours))
+        temp_list.append(str(student_hours_ch))
         id_list.append(temp_list)
     return(id_list)
 
