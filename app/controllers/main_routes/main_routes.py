@@ -14,6 +14,8 @@ from flask import request
 from flask import json, jsonify
 from flask import make_response
 
+department = "placeholder"
+
 
 @main_bp.before_app_request
 def before_request():
@@ -33,19 +35,10 @@ def index():
     formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.UserID).order_by(LaborStatusForm.endDate.desc())
     currentUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.createdBy == current_user.UserID) or (FormHistory.formID.supervisor == current_user.UserID)).distinct()
 
-    print(current_user.username)
-
-    try:
-        for i in currentUserDepartments:
-            print(i.formID.department.DEPT_NAME)
-    except Exception as e:
-        print("Wassup May")
-        print(e)
-
     # Grabs all the labor status forms where the current users department matches the status forms derpartment, and where the current date is less than the term end date on the status form
-    # currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.endDate >= todayDate).where(LaborStatusForm.department.DEPT_NAME == "Computer Science")
+    currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.endDate >= todayDate).where(LaborStatusForm.department.DEPT_NAME == "Computer Science")
     # Grabs all the labor status forms where the current users department matches the status forms derpartment
-    # allDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == "Computer Science").order_by(LaborStatusForm.endDate.desc())
+    allDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == "Computer Science").order_by(LaborStatusForm.endDate.desc())
 
 
     inactiveSupervisees = []
@@ -88,6 +81,9 @@ def index():
 
     # On the click of the download button, 'POST' method will send all checked boxes from modal to excel maker
     if request.method== 'POST':
+        print(department)
+        currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.endDate >= todayDate).where(LaborStatusForm.department.DEPT_NAME == department)
+        allDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == department).order_by(LaborStatusForm.endDate.desc())
         value =[]
         for form in currentSupervisees:
             name = str(form.laborStatusFormID)
@@ -139,9 +135,11 @@ def index():
                     currentUserDepartments = currentUserDepartments
                           )
 
+
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
 def populateDepartment(departmentSelected):
     try:
+        global department
         department = departmentSelected
         print(department)
         todayDate = date.today()
@@ -156,8 +154,8 @@ def populateDepartment(departmentSelected):
                                     "BNumber": i.studentSupervisee.ID,
                                     "Term": i.termCode.termName,
                                     "Position": i.POSN_TITLE,
-                                    "textModalClass" : "currentDeptStu",
                                     "checkboxModalClass" : "currentDepartmentModal",
+                                    "formID" : i.laborStatusFormID,
                                     "Department": i.department.DEPT_NAME}
             x += 1
         for i in allDepartmentStudents:
@@ -166,19 +164,13 @@ def populateDepartment(departmentSelected):
                                     "BNumber": i.studentSupervisee.ID,
                                     "Term": i.termCode.termName,
                                     "Position": i.POSN_TITLE,
-                                    "textModalClass" : "allDeptStu",
                                     "checkboxModalClass" : "allDepartmentModal",
+                                    "formID" : i.laborStatusFormID,
                                     "Department": i.department.DEPT_NAME}
             x += 1
         return json.dumps(departmentStudents)
 
 
-
-        # resp = make_response(jsonify(render_template( 'snips/departmentDatatable.html',
-        #                 currentDepartmentStudents = currentDepartmentStudents,
-        #                 allDepartmentStudents = allDepartmentStudents
-        #                       )))
-        # return (resp)
     except Exception as e:
         print(e)
         return jsonify({"Success": False})

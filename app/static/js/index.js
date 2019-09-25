@@ -339,6 +339,11 @@ function populateTable(){
       }
 
 
+      // $("#May").append('<label><input type="checkbox" name="" id=""/>Wassup May</label>')
+      // $("#May").append('<label><input type="checkbox" name="" id=""/>Wassup Dude</label>')
+      // $("#May2").html('<label><input type="checkbox" name="" id=""/>Wassup Dog</label>')
+
+
       response = JSON.parse(response)
       for (var key in response){
         var bNumber = response[key]["BNumber"]
@@ -347,12 +352,21 @@ function populateTable(){
         var position = response[key]["Position"]
         var department = response[key]["Department"]
         var status = response[key]["Status"]
+        var divClass = response[key]["checkboxModalClass"]
+        var formID = response[key]["formID"]
         // table.column(1).visable(false);
         // table.row.add(["<h3>" + student + "</h3>", "My Current Students"])
         table.row.add(["<a href='/laborHistory/" + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>" +
         "<br />" + "<span class='pushLeft h6'>" + term + " - " + position + " - " + department + "</span>",
         "<span style='display:none'>" + status + "</span>"])
         .draw()
+
+        if (divClass == "currentDepartmentModal"){
+          $("#May2").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +'</label><br/>')
+        }
+        else{
+          $("#May").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student + " (" + (term) + ")" +'</label><br/>')
+        }
       // $(".hiddenColumn").hide()
         // console.log(student);
       }

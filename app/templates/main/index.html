@@ -45,7 +45,7 @@
        <div class="modal-header" align="center">
          <h4 class="modal-title">Please select what you would like to download.</h4>
        </div>
-       <div class="modal-body">
+       <div id="downloadModalText" class="modal-body">
           <input type="checkbox" name="student" id="select-all"> <b>Select all</b>
 
           <!-- Populate the modal with the current students of user -->
@@ -79,24 +79,24 @@
           </div>
 
           <!-- Populate the modal with the all students of the user's department -->
-          <!-- <div class="allDeptStu" style="display:none">
-          {% for form in allDepartmentStudents %}
+          <div id="May" class="allDeptStu">
+          <!-- {% for form in allDepartmentStudents %}
           <label class="container">
             <input class="allDepartmentModal" type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}' disabled>
               {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.termCode.termName}})
           </label>
-          {% endfor %}
-          </div> -->
+          {% endfor %} -->
+          </div>
 
           <!-- Populate the modal with the current students of the user's department -->
-          <!-- <div class="currentDeptStu" style="display:none">
-          {% for form in currentDepartmentStudents %}
+          <div id="May2" class="currentDeptStu">
+          <!-- {% for form in currentDepartmentStudents %}
           <label class="container">
             <input class="currentDepartmentModal" type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}' disabled>
               {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.termCode.termName}})
           </label>
-          {% endfor %}
-          </div> -->
+          {% endfor %} -->
+          </div>
        </div>
        <div class="modal-footer" align="center">
          <button  class="btn btn-danger" id="closeButton" onclick="downloadHistory()" data-dismiss="modal">Close</button>
