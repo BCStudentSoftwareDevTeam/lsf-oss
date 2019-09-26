@@ -116,10 +116,12 @@ def insertNotes(formId):
 
         rsp = eval(request.data.decode("utf-8"))
         print(rsp)
-        notes =  LaborStatusForm.get(LaborStatusForm.laborsDepartmentNotes == formid)
-        print(notes)
+        laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborsDepartmentNotes == formid)
+        print(laborDeptNotes)
 
         if rsp:
+            laborNotes = data.get('notes')
+            print(laborNotes)
             print("This freggin' worked omg")
             # notes.laborDepartmentNotes:
             #     notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes

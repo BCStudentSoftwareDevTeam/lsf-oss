@@ -51,10 +51,9 @@ function getNotes (formId) {
    var laborNotes = $("#laborNotesText").val(); //this is getting the id of the labor notes text area
    var notes = {'formId': formId, 'notes':laborNotes};   // {ID: textarea value} this sets the text area to what the user types in it
 
-
    var formId = notes.formId; //This is how we get the ID of the form
    var note = notes.notes; //This is how we are getting the note object from the dictionary
-   console.log(typeof(note));
+
    console.log(formId, note);
    $("#saveNotes").on('submit', function(e) {
      e.preventDefault();
@@ -63,7 +62,7 @@ function getNotes (formId) {
    $.ajax({
           method: "POST",
           url: '/admin/notesInsert/'+ formId,
-          data: note,
+          data: notes,
           contentType: 'application/json',
           success: function(response) {
              if (response){
