@@ -81,7 +81,7 @@ def getNotes(formid):
             return render_template('errors/403.html')
         print(formid)
         notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid)
-        print(notes)
+        #print(notes)
 
         notesDict = {}
         if notes.supervisorNotes:
@@ -102,8 +102,8 @@ def getNotes(formid):
         return jsonify({"Success": False})
 
 
-@admin.route('/admin/notesInsert', methods=['POST'])
-def insertNotes():
+@admin.route('/admin/notesInsert/<formId>', methods=['POST'])
+def insertNotes(formId):
     '''
     This function inserts the labor office notes into the database
     '''
@@ -116,21 +116,18 @@ def insertNotes():
 
         rsp = eval(request.data.decode("utf-8"))
         print(rsp)
-        laborNotesValue = rsp.get
-        laborNotes =  LaborStatusForm.get(LaborStatusForm.laborDepartmentNotes == laborDepartmentNotes)
+        notes =  LaborStatusForm.get(LaborStatusForm.laborsDepartmentNotes == formid)
         print(notes)
 
-        print(data)
         if rsp:
-            for data in rsp.values():
-                pass
+            print("This freggin' worked omg")
+            # notes.laborDepartmentNotes:
+            #     notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes
             #         pending_labor_forms
-
-
 
             #FIXME: Update form history
 
             return jsonify({"Success": True})
     except Exception as e:
-        print("This did not work", e)
+        print("This ain't work", e)
         return jsonify({"Success": False})

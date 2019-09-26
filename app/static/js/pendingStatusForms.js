@@ -16,17 +16,17 @@ function insertApprovals() { //gets only the forms that the user has checked
    success: function(response){
      if (response){
        console.log(response);
-   }
+     }
  }
  })
 };
 
-function getNotes (formID) {
-  console.log(formID);
+function getNotes (formId) {
+  console.log(formId);
 
   $.ajax({
     type: "GET",
-    url: "/admin/getNotes/"+formID,
+    url: "/admin/getNotes/"+formId,
     datatype: "json",
     success: function (response) {
       if ("Success" in response && response["Success"] == "false") {
@@ -37,7 +37,7 @@ function getNotes (formID) {
       } else {
           // console.log(response);
           //Populates notes value from the database
-          $("#laborNotesText").data('formID',formID)
+          $("#laborNotesText").data('formId',formId)
           $("#notesText").html(response["supervisorNotes"]);
           $("#laborNotesText").html(response["laborDepartmentNotes"]);
       }
@@ -45,37 +45,30 @@ function getNotes (formID) {
   })
 };
 
-// function saveLaborNotes() { // saves notes written in textarea when save button of modal is clicked
-//   var notesTextId = $("#dummyInput").val(); //a dummy value in order to retrieve the id
-//   var notesUniqueId = "notes_" + notesTextId; //
-//   var uniqueTextArea = "laborNotesText" + notesTextId
-//
-//   $("#saveNotes").attr('onclick',"saveNotes('" + uniqueTextArea +"')");
-//
-// }
 
  function notesInsert() {
-   console.log("notesInsert")
-   console.log(formID)
-   var formID = $("#laborNotesText").data('formID');
+   var formId = $("#laborNotesText").data('formId');
    var laborNotes = $("#laborNotesText").val(); //this is getting the id of the labor notes text area
-   var notes = {'formID': formID, 'notes':laborNotes};
-     console.log(notes);
-  //this sets the text area to what the user types in it
+   var notes = {'formId': formId, 'notes':laborNotes};   // {ID: textarea value} this sets the text area to what the user types in it
 
 
-   data = JSON.stringify(notes);
+   var formId = notes.formId; //This is how we get the ID of the form
+   var note = notes.notes; //This is how we are getting the note object from the dictionary
+   console.log(typeof(note));
+   console.log(formId, note);
    $("#saveNotes").on('submit', function(e) {
      e.preventDefault();
      });
 
    $.ajax({
           method: "POST",
-          url: '/laborstatusform/notesInsert',
-          data: notes,
+          url: '/admin/notesInsert/'+ formId,
+          data: note,
           contentType: 'application/json',
           success: function(response) {
-            console.log(response);
+             if (response){
+               console.log("SUCCESS");
+            }
           }
         });
 }
