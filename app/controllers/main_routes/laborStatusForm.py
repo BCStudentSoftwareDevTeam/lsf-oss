@@ -225,7 +225,7 @@ def checkForPrimaryPosition(termCode, student):
     primaryPositionsDict = {}
     for primary_position in primaryPositions:
         primaryPositionsDict["PrimarySupervisor"] = {"Primary Supervisor FirstName":primary_position.supervisor.FIRST_NAME,
-        "Primary Supervisor LastName": primary_position.supervisor.LAST_NAME, "Primary Supervisor ID":primary_position.supervisor.UserID}
+        "Primary Supervisor LastName": primary_position.supervisor.LAST_NAME, "Primary Supervisor ID":primary_position.supervisor.UserID, "selectedJobType":primary_position.jobType}
     return json.dumps(primaryPositionsDict)
 
 @main_bp.route("/laborstatusform/gethours/<termCode>/<student>", methods=["GET"])

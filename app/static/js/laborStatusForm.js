@@ -368,9 +368,9 @@ function createStuDict(){
     var hoursPerWeek = $("selectedHoursPerWeek");
     var hoursPerWeekName = $("#selectedHoursPerWeek option:selected").text();
   }
-  // else {
-  //   var selectedContractHoursName = $("selectedContractHours").value;
-  // }
+  else {
+    var selectedContractHoursName = $("selectedContractHours").value;
+  }
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
     var studentDict ={stuName: studentName,
                       stuBNumber: studentBNumber,
@@ -404,7 +404,7 @@ function createStuDict(){
 function checkDuplicate(studentDict) {// checks for duplicates in the table. This is for Academic Year
   for(i = 0; i < globalArrayOfStudents.length; i++){
     if(globalArrayOfStudents[i].stuName == studentDict.stuName && studentDict.stuJobType == "Primary" && globalArrayOfStudents[i].stuJobType == studentDict.stuJobType){
-      document.getElementById("warningModalText").innerHTML = "Match found for" + studentDict.stuName +"'s Primary position.";
+      document.getElementById("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s Primary position.";
       $("#warningModal").modal("show");
       return true;
     }
@@ -420,18 +420,22 @@ function checkPrimaryPosition(studentDict){ // does several stuff read the comme
     url: url,
     dataType: "json",
     success: function (response){
-      if (response && studentDict["stuJobType"] == "Primary"){
+      console.log(response.PrimarySupervisor[""])
+      console.log(studentDict);
+      if (response["selectedJobType"] == "Primary" && studentDict["stuJobType"] == "Primary"){
+        console.log(response.PrimarySupervisor["selectedJobType"])
+        console.log(studentDict["stuJobType"]);
         /// TODO: Display modal saying student already has a primary postion
         alert(studentDict["stuName"] + " already has a Primary position.");
         return true;
       }
-      else if (!response && studentDict["stuJobType"] == "Primary"){
+      else if (response["selectedJobType"] != "Primary" && studentDict["stuJobType"] == "Primary"){
         return false;
       }
-      else if(response && studentDict["stuJobType"] == "Secondary"){
+      else if(response["selectedJobType"] == "Primary" && studentDict["stuJobType"] == "Secondary"){
         return false;
       }
-      else if(!response && studentDict["stuJobType"] == "Secondary"){
+      else if(response["selectedJobType"] != "Primary" && studentDict["stuJobType"] == "Secondary"){
         //TODO: Display modal saying student does not have a Primary postion to get a Secondary position
         alert(studentDict["stuName"] + " doesn't have a Primary position.");
         return true;
