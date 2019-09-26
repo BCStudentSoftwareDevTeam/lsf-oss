@@ -43,7 +43,7 @@ def modifyLSF(laborStatusKey):
     positions = STUPOSN.select(STUPOSN.POSN_CODE).distinct()
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
-
+    oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
     return render_template( 'main/modifyLSF.html',
 				            title=('Modify LSF'),
                             username = current_user,
@@ -59,7 +59,8 @@ def modifyLSF(laborStatusKey):
                             supervisors = supervisors,
                             positions = positions,
                             wls = wls,
-                            form = form
+                            form = form,
+                            oldSupervisor = oldSupervisor
                           )
 @main_bp.route("/modifyLSF/getPosition/<department>", methods=['GET'])
 def getPosition(department):
@@ -72,19 +73,15 @@ def getPosition(department):
 @main_bp.route("/modifyLSF/submitModifiedForm/<laborStatusKey>", methods=['POST'])
 def sumbitModifiedForm(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
-    # try:
     rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
     rsp = dict(rsp)
     print(rsp)
     for k in rsp:
-        print(k)
         modifiedforms = ModifiedForm.create(fieldModified = k,
                                         oldValue      =  rsp[k]['oldValue'],
                                         newValue      =  rsp[k]['newValue'],
                                         effectiveDate =  datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d')
                                         )
-        print(modifiedforms)
-        print(rsp[k])
         historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
         status = Status.get(Status.statusName == "Pending")
         username = cfg['user']['debug']
@@ -95,16 +92,16 @@ def sumbitModifiedForm(laborStatusKey):
                                          createdBy   = createdbyid.UserID,
                                          createdDate = date.today(),
                                          status      = status.statusName)
-        print(formhistorys)
         LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-        if k == "supervisor":
-            print("Form value", rsp[k]['newValue'])
-            print(LSF.supervisor.PIDM)
-            user = User.get(User.PIDM == rsp[k]['newValue'])
-            print("User id: ", user.PIDM, user.FIRST_NAME, user.username)
-            LSF.supervisor = user
-            LSF.save()
-            print("After save", LSF.supervisor.UserID)
+        print(LSF.select())
+        # if k == "supervisor":
+        #     print("Form value", rsp[k]['newValue'])
+        #     print(LSF.supervisor.PIDM)
+        #     user = User.get(User.PIDM == rsp[k]['newValue'])
+        #     print("User id: ", user.PIDM, user.FIRST_NAME, user.username)
+        #     LSF.supervisor = user
+        #     LSF.save()
+        #     print("After save", LSF.supervisor.UserID)
 
     return jsonify({"Success": True})
 
