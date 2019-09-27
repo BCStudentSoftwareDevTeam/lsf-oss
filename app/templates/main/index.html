@@ -78,24 +78,14 @@
           {% endfor %}
           </div>
 
-          <!-- Populate the modal with the all students of the user's department -->
-          <div id="May" class="allDeptStu">
-          <!-- {% for form in allDepartmentStudents %}
-          <label class="container">
-            <input class="allDepartmentModal" type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}' disabled>
-              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.termCode.termName}})
-          </label>
-          {% endfor %} -->
+          <!-- Leaving this Div empty because it will be populated dynamically in the JS file -->
+          <div id="allDepartmentStudentsDiv" class="allDeptStu">
+
           </div>
 
-          <!-- Populate the modal with the current students of the user's department -->
-          <div id="May2" class="currentDeptStu">
-          <!-- {% for form in currentDepartmentStudents %}
-          <label class="container">
-            <input class="currentDepartmentModal" type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}' disabled>
-              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.termCode.termName}})
-          </label>
-          {% endfor %} -->
+          <!-- Leaving this Div empty because it will be populated dynamically in the JS file -->
+          <div id="currentDepartmentStudentsDiv" class="currentDeptStu">
+
           </div>
        </div>
        <div class="modal-footer" align="center">
@@ -171,43 +161,6 @@
       <td style="display:none">My Past Students</td>
     </tr>
 
-
-    <div id="departmentSection">
-
-    </div>
-    <!--Populate the datatable with all the students from the currents users department -->
-    <!-- {% for student in allDepartmentStudents %}
-      <tr>
-        <td><a href="/laborHistory/{{student.studentSupervisee.ID}}">
-          <span class="h4">{{student.studentSupervisee.FIRST_NAME}} {{student.studentSupervisee.LAST_NAME}} ({{student.studentSupervisee.ID}})</span></a>
-          <br />
-          <span class="pushLeft h6"> {{student.termCode.termName}} - {{student.POSN_TITLE}} - {{student.department.DEPT_NAME}}</span>
-        </td>
-        <td style="display:none">All Department Students</td>
-      </tr>
-    {% endfor %} -->
-    <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
-    <!-- <tr class="allDepartmentStudents" style="display:none">
-      <td style="display:none"></td>
-      <td style="display:none">All Department Students</td>
-    </tr> -->
-
-    <!-- Populate the datatable with all the students currently employed by the department -->
-    <!-- {% for student in currentDepartmentStudents %}
-      <tr>
-        <td><a href="/laborHistory/{{student.studentSupervisee.ID}}">
-          <span class="h4">{{student.studentSupervisee.FIRST_NAME}} {{student.studentSupervisee.LAST_NAME}} ({{student.studentSupervisee.ID}})</span></a>
-          <br />
-          <span class="pushLeft h6"> {{student.termCode.termName}} - {{student.POSN_TITLE}} - {{student.department.DEPT_NAME}}</span>
-        </td>
-      <td style="display:none">Current Department Students</td>
-      </tr>
-    {% endfor %} -->
-    <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
-    <!-- <tr class="currentDepartmentStudents" style="display:none">
-      <td style="display:none"></td>
-      <td style="display:none">Current Department Students</td>
-    </tr> -->
   </table>
 </div>
 <div class="col-md-2"></div>
