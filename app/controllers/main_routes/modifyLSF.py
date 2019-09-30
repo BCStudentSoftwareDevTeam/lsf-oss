@@ -94,14 +94,29 @@ def sumbitModifiedForm(laborStatusKey):
                                          status      = status.statusName)
         LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         print(LSF.select())
-        # if k == "supervisor":
-        #     print("Form value", rsp[k]['newValue'])
-        #     print(LSF.supervisor.PIDM)
-        #     user = User.get(User.PIDM == rsp[k]['newValue'])
-        #     print("User id: ", user.PIDM, user.FIRST_NAME, user.username)
-        #     LSF.supervisor = user
-        #     LSF.save()
-        #     print("After save", LSF.supervisor.UserID)
+        if k == "supervisor":
+            print("Form value", rsp[k]['newValue'])
+            print(LSF.supervisor.PIDM)
+            user = User.get(User.PIDM == rsp[k]['newValue'])
+            print("User id: ", user.PIDM, user.FIRST_NAME, user.username)
+            LSF.supervisor = user
+            LSF.save()
+            print("After save", LSF.supervisor.UserID)
+        if k == "POSN_TITLE":
+            LSF.POSN_TITLE = rsp[k]['newValue']
+            LSF.save()
+        if k == "supervisorNotes":
+            LSF.supervisorNotes = rsp[k]['newValue']
+            LSF.save()
+        if k == "contractHours":
+            LSF.contractHours = rsp[k]['newValue']
+            LSF.save()
+        if k == "weeklyHours":
+            LSF.weeklyHours = rsp[k]['newValue']
+            LSF.save()
+        if k == "jobType":
+            LSF.jobType = rsp[k]['newValue']
+            LSF.save()
 
     return jsonify({"Success": True})
 
