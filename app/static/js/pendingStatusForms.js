@@ -17,7 +17,7 @@ function insertApprovals() { //gets only the forms that the user has checked
      if (response){
        console.log(response);
      }
- }
+    }
  })
 };
 
@@ -53,8 +53,13 @@ function getNotes (formId) {
 
    var formId = notes.formId; //This is how we get the ID of the form
    var note = notes.notes; //This is how we are getting the note object from the dictionary
+   // console.log(formId, note);
 
-   console.log(formId, note);
+   data = JSON.stringify(note);
+
+    var notesGlyph = $("#notes_" + formId);
+    console.log(notesGlyph);
+
    $("#saveNotes").on('submit', function(e) {
      e.preventDefault();
      });
@@ -62,11 +67,20 @@ function getNotes (formId) {
    $.ajax({
           method: "POST",
           url: '/admin/notesInsert/'+ formId,
-          data: notes,
+          data: data,
           contentType: 'application/json',
           success: function(response) {
              if (response){
-               console.log("SUCCESS");
+               //This changes the color of the notes glyphicon when a labor note is saved
+               if ($(notesGlyph).hasClass("text-success")) {
+                   console.log("TRUEEEEE");
+                   $(notesGlyph).removeClass("text-success");
+                   $(notesGlyph).addClass("text-danger");
+                 }
+               else if ($(notesGlyph).hasClass("text-secondary")) {
+                 $(notesGlyph).removeClass("text-secondary");
+                 $(notesGlyph).addClass("text-danger");
+                 }
             }
           }
         });

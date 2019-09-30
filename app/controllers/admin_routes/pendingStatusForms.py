@@ -11,6 +11,7 @@ from app.models.overloadForm import OverloadForm
 from app.models.formHistory import *
 from app.models.term import Term
 from datetime import datetime, date
+from flask import Flask, redirect, url_for, flash
 
 @admin.route('/admin/pendingStatusForms', methods=['GET'])
 def pendingForms():
@@ -91,7 +92,7 @@ def getNotes(formid):
             notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes
 
 
-        print(notesDict)
+        # print(notesDict)
         # print(notesDict["supervisorNotes"])
         # print(notesDict["laborDepartmentNotes"])
         return jsonify(notesDict)
@@ -115,21 +116,21 @@ def insertNotes(formId):
             return render_template('errors/403.html')
 
         rsp = eval(request.data.decode("utf-8"))
-        print(rsp)
-        laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborsDepartmentNotes == formid)
+        print("hey there", rsp)
+        laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
+
         print(laborDeptNotes)
 
         if rsp:
-            laborNotes = data.get('notes')
-            print(laborNotes)
-            print("This freggin' worked omg")
-            # notes.laborDepartmentNotes:
-            #     notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes
-            #         pending_labor_forms
+            laborDeptNotes.laborDepartmentNotes = rsp
+            laborDeptNotes.save() #Updates labor notes
 
-            #FIXME: Update form history
+            flash("notes saved", "success")
+            print("DB:", laborDeptNotes.laborDepartmentNotes)
+            print("This freggin' worked omg")
 
             return jsonify({"Success": True})
     except Exception as e:
+
         print("This ain't work", e)
         return jsonify({"Success": False})
