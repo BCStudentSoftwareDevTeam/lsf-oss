@@ -54,7 +54,7 @@
                           {% elif formHistory.formID.laborDepartmentNotes != None and formHistory.formID.supervisorNotes == None  %} text-danger
                           {% elif formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes != None %} text-danger
                           {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
-              <input id="dummyInput"  value="{{formHistory.formID.laborStatusFormID}}" hidden/>
+              
             </td>
             <td> {# TERM #}
               {{formHistory.formID.termCode.termName}}
