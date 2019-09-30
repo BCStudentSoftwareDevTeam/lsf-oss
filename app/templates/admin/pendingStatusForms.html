@@ -89,13 +89,14 @@
             <a href="/modifyLSF/{{formHistory.formID.laborStatusFormID}}"><span id="edit_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil"></span></a>
             <button
                   id="reject_{{formHistory.formID.laborStatusFormID}}"
+                  value="{{formHistory.formID.laborStatusFormID}}"
                   type="button"
                   class ="btn btn-danger"
                   name = "rejectBtn"
                   value = "Reject"
                   data-toggle="modal"
                   data-target="#denyModal"
-                  onclick="insertDenial()">
+                  onclick="insertDenial(this.value);">
                   Deny
             </button>
           </td>
@@ -136,8 +137,8 @@
                   <tr>
                     <th scope="col">Student(s)</th>
                     <th scope="col">Position</th>
-                    <th scope="col">Supervisor</th>
                     <th scope="col">Hours</th>
+                    <th scope="col">Supervisor</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -145,7 +146,7 @@
               </table>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload()">Close</button>
               <button type="button" class="btn btn-danger" onclick="finalDenial()">Deny</button>
             </div>
           </div>
@@ -177,7 +178,7 @@
                   </table>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload()">Close</button>
                   <button id="approveModalButton" type="button" class="btn btn-primary"  data-dismiss="modal" onclick="finalApproval()" >Approve</button>
                 </div>
               </div>

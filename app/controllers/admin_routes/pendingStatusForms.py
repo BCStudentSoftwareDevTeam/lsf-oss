@@ -74,7 +74,7 @@ def finalApproval():
         print("final approval of the modal did not work", e)
         return jsonify({"success": False})
 
-
+#this meathod shows the data in deniel popup modal
 @admin.route('/admin/finalDenial', methods=['POST'])
 def finalDenial():
     try:

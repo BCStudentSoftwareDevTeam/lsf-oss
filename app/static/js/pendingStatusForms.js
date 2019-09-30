@@ -12,9 +12,7 @@ function insertApprovals() {
   if (!atLeastOneIsChecked){
     $("#approveSelected").prop("disabled",true);
     location.reload();
-
        }
-
     data = JSON.stringify(labor_details_ids);
    $.ajax({
      type: "POST",
@@ -27,10 +25,10 @@ function insertApprovals() {
          returned_details = response;
          updateApproveTableData(returned_details);
          // updateDenialTableData(returned_details);
-        }
-      }
-    })
-};
+              }
+            }
+          })
+      };
 //this method adds data to each row in the approve selected Modal
 function updateApproveTableData(returned_details){
   for (var i = 0; i < returned_details.length; i++){
@@ -41,9 +39,9 @@ function updateApproveTableData(returned_details){
       $('#classTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+hour+'</td></tr>');
 
 
-  }
+        }
 
-}
+      }
 
 //this method changes the status of the lsf from pending to approved status
 function finalApproval() {
@@ -58,7 +56,6 @@ function finalApproval() {
       if (response){
         console.log('success', response["success"]);
         if(response["success"]) {
-            console.log("It was true")
             location.reload(true);
         }
        }
@@ -67,17 +64,12 @@ function finalApproval() {
 
  };
 
-
-labor_denial_id=[];
-function insertDenial(){
-  //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
-  var getChecked = $('input:checked').each(function() {
-    labor_denial_id.push(this.value);
-  })
-  console.log("denial id(s): ", labor_denial_id)
-
+labor_denial_id=[]; //this arrary is for insertDenial() and finalDenial() methods
+//This method calls AJAX from checkforms methods in the controller
+function insertDenial(val){
+    labor_denial_id.push(val);
     data = JSON.stringify(labor_denial_id);
-    console.log("data :", data)
+    // console.log("data :", data)
    $.ajax({
      type: "POST",
      url: "/admin/checkedForms",
@@ -86,41 +78,38 @@ function insertDenial(){
      contentType: 'application/json',
      success: function(response){
        if (response){
-         console.log("response: ", response);
          labor_denial_detials = response;
+         // location.reload(true);
          finalDenial_data(labor_denial_detials);
-         // updateDenialTableData(returned_details);
+
         }
       }
     })
 };
 
-
+// this method inserts data to the table of denial popup modal
 function finalDenial_data(returned_details){
   for (var i = 0; i < returned_details.length; i++){
     var student=returned_details[i][0]
     var position= returned_details[i][1]
-     var hour= returned_details[i][2]
-     var someHousrs= returned_details[i][3]
-      var supervisor= returned_details[i][4]
-      console.log("hour ", hour)
-      $('#denyTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+hour+'</td></tr>');
+     var r_hour= returned_details[i][3]
+     var c_Hours= returned_details[i][4]
+     console.log(c_Hours,"jamalito")
+      var supervisor= returned_details[i][2]
+      var hours = " "
+      if (r_hour.length==4){
+        hours = c_Hours
+      }
+      else {
+        hours = r_hour
+      }
+      $('#denyTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>');
+        }
 
-
-  }
-
-}
-
-
-//this function is for final approve button in the approve selected modal
-// function finalApproval() {
-//   data = JSON.stringify(labor_details_ids);
-//   console.log("before ajax call ")
-
-
-
+      }
+// this mehod is AJAX call for the finalDenial method in python file
  function finalDenial() {
-   data = JSON.stringify(labor_details_ids);
+   data = JSON.stringify(labor_denial_id);
    $.ajax({
      type: "POST",
      url: "/admin/finalDenial",
@@ -131,27 +120,13 @@ function finalDenial_data(returned_details){
        if (response){
          console.log('success', response["success"]);
          if(response["success"]) {
-             console.log("It was true")
              location.reload(true);
-         }
-        }
-      }
-    })
+              }
+            }
+          }
+        })
 
-  };
-
-
-
-
-
-
-
-
-// this refreshes the page each time form(s) is approved to empty up the modal content
-// $('#refreshContent').click(function() {
-//     location.reload();
-// });
-
+      };
 
 
 function getNotes (formID) {
@@ -199,8 +174,6 @@ function saveLaborNotes() { // saves notes written in textarea when save button 
    $("#saveNotes").on('submit', function(e) {
      e.preventDefault();
      });
-
-
    $.ajax({
           method: "POST",
           url: '/laborstatusform/notesInsert',
@@ -208,10 +181,9 @@ function saveLaborNotes() { // saves notes written in textarea when save button 
           contentType: 'application/json',
           success: function(response) {
             console.log(response);
-
           }
         });
-}
+     }
 
 function createTabledataDictionary() { // puts all of the forms into dictionaries
   var listDictAJAX = [];
