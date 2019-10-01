@@ -118,51 +118,10 @@ function buttonListener(laborStatusKey) {
         method: "POST",
         contentType: 'application/json',
         data: modifiedDict,
-        success: function (response){
-           console.log("successful")
-        }
+        success: function(response) {
+            if (response["Success"]) {
+              window.location.href = response["url"]
+            }
+          }
       })
 }
-//////////Saving to modifiedForm table/////////
-// function updateFormModifiedTable(finalDict){
-//   //saves the following to modified form table:
-//   //modifidFormID (primary key, auto increment), fieldModified, oldValue, newValue, effectiveDate (from form)
-//   //parses through dictionary
-//   for (var key in finalDict){
-//     var value = dict[key];
-//   }
-//   //saving the old/new values to the appropriate field modified
-// }
-
-
-///////////Saving to LSF table////////////
-// function postModifications(laborStatusFormID){
-//   //passes form attributes into a dictionary for ajax, posts to db, redirects\
-//   console.log("postModifications called");
-//   var formModifications = {} //For passing into Ajax data field (multiple attributes to pass)
-//   //student cannot be changed
-//   formModifications["supervisor"] = document.getElementById('Supervisor').value;
-//   //department cannot be changed
-//   formModifications["position"] = document.getElementById('Position').value;
-//   formModifications["WLS"] = document.getElementById('WLS').value;
-//   formModifications["jobtype"] = document.getElementById('JobType').value;
-//   //Term cannot be changed
-//   formModifications["weeklyHours"] = document.getElementById('Hours').value; //FIX ME: WILL NOT ALWAYS BEEN WEEKLY H(OURS COULD BE CONTRACT)
-//   formModifications["effectiveDate"] = document.getElementById('datetimepicker0').value;
-//   formModifications["laborSupervisorNotes"] = document.getElementById('Notes').value;
-//   var url = '/saveChanges/'+getFormId();
-//        $.ajax({
-//            type: "POST",
-//               url: url,
-//               data: formModifications,     //Dictionary pass
-//               dataType: 'json',
-//               success: function(response){
-//                       window.location = "/index" //FIXME: should we go to Supervisor portal or back to that student's labor history?
-//                        createTimestamp() ; //FIX ME: should add to form history bot just create a timestamp
-//               },
-//               error: function(error){
-//                   console.log("ERROR")
-//                   window.location.assign("/modifyLSF/formID")
-//               }
-//        });
-// }

@@ -77,6 +77,8 @@ def sumbitModifiedForm(laborStatusKey):
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
         print(rsp)
+        student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
+        print(student)
         for k in rsp:
             modifiedforms = ModifiedForm.create(fieldModified = k,
                                             oldValue      =  rsp[k]['oldValue'],
@@ -94,7 +96,6 @@ def sumbitModifiedForm(laborStatusKey):
                                              createdDate = date.today(),
                                              status      = status.statusName)
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-            print(LSF.select())
             if k == "supervisor":
                 print("Form value", rsp[k]['newValue'])
                 print(LSF.supervisor.PIDM)
@@ -118,9 +119,9 @@ def sumbitModifiedForm(laborStatusKey):
             if k == "jobType":
                 LSF.jobType = rsp[k]['newValue']
                 LSF.save()
-        flash("The Labor Status Form has been Modified.", "success")
-        return jsonify({"Success": True})
+        flash("Your labor status form has been modified.", "success")
+        return jsonify({"Success":True, "url":"/laborHistory/" + student})
     except Exception as e:
-       flash("An error occured.", "danger")
-       print(e)
-       return jsonify({"Success": False})
+        flash("An error occured.", "danger")
+        print(e)
+        return jsonify({"Success": False})
