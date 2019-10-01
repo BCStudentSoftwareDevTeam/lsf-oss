@@ -35,7 +35,6 @@ def pendingForms():
                                 username=current_user.username,
                                 users=users,
                                 pending_labor_forms = pending_labor_forms
-                                # pending_status_forms = pending_status_forms
                                 # pending_modified_forms = pending_modified_forms,
                                 # pending_release_forms = pending_release_forms,
                                 # pending_overload_forms = pending_overload_forms
@@ -90,9 +89,6 @@ def getNotes(formid):
 
         if notes.laborDepartmentNotes:
             notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes
-
-
-        # print(notesDict)
         # print(notesDict["supervisorNotes"])
         # print(notesDict["laborDepartmentNotes"])
         return jsonify(notesDict)
@@ -116,21 +112,18 @@ def insertNotes(formId):
             return render_template('errors/403.html')
 
         rsp = eval(request.data.decode("utf-8"))
-        print("hey there", rsp)
+        # print(rsp)
         laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
-
-        print(laborDeptNotes)
+        # print(laborDeptNotes)
 
         if rsp:
             laborDeptNotes.laborDepartmentNotes = rsp
             laborDeptNotes.save() #Updates labor notes
 
             flash("notes saved", "success")
-            print("DB:", laborDeptNotes.laborDepartmentNotes)
             print("This freggin' worked omg")
 
             return jsonify({"Success": True})
     except Exception as e:
-
         print("This ain't work", e)
         return jsonify({"Success": False})

@@ -1,4 +1,3 @@
-
 function insertApprovals() { //gets only the forms that the user has checked
   var ids = [];
   var getChecked = $('input:checked').each(function() {
@@ -29,22 +28,31 @@ function getNotes (formId) {
     url: "/admin/getNotes/"+formId,
     datatype: "json",
     success: function (response) {
+
       if ("Success" in response && response["Success"] == "false") {
-        // console.log(response);
         //Clears supervisor notes p tag and the labor notes textarea
+        console.log("This is why it failed: ", response);
         $("#notesText").empty();
         $("#laborNotesText").empty();
-      } else {
-          // console.log(response);
-          //Populates notes value from the database
-          $("#laborNotesText").data('formId',formId)
-          $("#notesText").html(response["supervisorNotes"]);
-          $("#laborNotesText").html(response["laborDepartmentNotes"]);
-      }
-    }
-  })
-};
 
+      } else {
+          $("#laborNotesText").data('formId',formId) //attaches the formid data to the textarea
+          //Populates notes value from the database
+
+          if ("supervisorNotes" in response) {
+            $("#notesText").html(response["supervisorNotes"]);
+            console.log(response);
+             }
+
+          if ("laborDepartmentNotes" in response) {
+            $("#laborNotesText").html(response["laborDepartmentNotes"]);
+            console.log(response);
+            console.log(response["laborDepartmentNotes"]);
+            }
+         }
+       }
+   })
+};
 
  function notesInsert() {
    var formId = $("#laborNotesText").data('formId');
@@ -53,12 +61,10 @@ function getNotes (formId) {
 
    var formId = notes.formId; //This is how we get the ID of the form
    var note = notes.notes; //This is how we are getting the note object from the dictionary
-   // console.log(formId, note);
 
    data = JSON.stringify(note);
 
     var notesGlyph = $("#notes_" + formId);
-    console.log(notesGlyph);
 
    $("#saveNotes").on('submit', function(e) {
      e.preventDefault();
@@ -73,7 +79,6 @@ function getNotes (formId) {
              if (response){
                //This changes the color of the notes glyphicon when a labor note is saved
                if ($(notesGlyph).hasClass("text-success")) {
-                   console.log("TRUEEEEE");
                    $(notesGlyph).removeClass("text-success");
                    $(notesGlyph).addClass("text-danger");
                  }
@@ -81,17 +86,19 @@ function getNotes (formId) {
                  $(notesGlyph).removeClass("text-secondary");
                  $(notesGlyph).addClass("text-danger");
                  }
-            }
+
+                 window.location.reload(true);
+                      }
           }
         });
 }
 
-$("#notesModal").on('hidden.bs.modal', function(event){ //this is supposed to clear the modal even if the user doesn not click the "closed" button, pero it does not work
-  $("#notesText").empty();
-  $("#laborNotesText").empty();
-})
+// $("#notesModal").on('hidden.bs.modal', function(event){ //this is supposed to clear the modal even if the user doesn not click the "closed" button, pero it does not work
+//   $("#notesText").val('');
+//   $("#laborNotesText").val('');
+// })
 
-function closeNotesModal(){ //makes sure that it empties text areas and p tags when modal is closed
+function clearTextArea(){ //makes sure that it empties text areas and p tags when modal is closed
   $("#notesText").empty();
   $("#laborNotesText").empty();
 }
