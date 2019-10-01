@@ -34,9 +34,18 @@ function updateApproveTableData(returned_details){
   for (var i = 0; i < returned_details.length; i++){
     var student=returned_details[i][0]
     var position= returned_details[i][1]
-     var hour= returned_details[i][2]
-      var supervisor= returned_details[i][3]
-      $('#classTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+hour+'</td></tr>');
+     var r_hour= returned_details[i][3]
+     var c_Hours= returned_details[i][4]
+     // console.log(c_Hours,"jamalito")
+      var supervisor= returned_details[i][2]
+      var hours = " "
+      if (r_hour.length==4){
+        hours = c_Hours
+      }
+      else {
+        hours = r_hour
+      }
+      $('#classTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
 
 
         }
