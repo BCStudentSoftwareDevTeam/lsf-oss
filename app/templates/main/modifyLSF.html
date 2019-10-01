@@ -105,14 +105,14 @@
      <div id="weeklyHoursDiv" class="form-group">
             <label for="weeklyHours">Hours Per Week</label>
             <div>
-              <select required type="weeklyHours"
-                               class="selectpicker form-control newValue"
-                               id="weeklyHours"
-                               name='selectedHoursPerWeek'
-                               data-live-search="true"
-                               title = {{prefillhours}}
-                               value = {{prefillhours}}
-                               onchange = "hourscheck()">
+              <select  type="weeklyHours"
+                       class="selectpicker form-control newValue"
+                       id="weeklyHours"
+                       name='selectedHoursPerWeek'
+                       data-live-search="true"
+                       title = {{prefillhours}}
+                       value = {{prefillhours}}
+                       onchange = "hourscheck()">
               {% if prefilljobtype == "Secondary"%}
                 <option title="5" value="5">5</option>
                 <option title="10" value="10">10</option>
@@ -140,7 +140,7 @@
      <div class="form-group" >
        <label for="supervisorNotes">Notes:</label>
        <div>
-         <textarea name="supervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue" >{{prefillnotes}}</textarea>
+         <textarea name="supervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue">{{prefillnotes}}</textarea>
           <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}">  </input>
        </div>
      </div>
@@ -152,7 +152,7 @@
         <button type="cancel" class="btn btn-danger">Cancel</button>
       </div>
       <div class="submitbutton">
-        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal" onclick = "buttonListener({{form.laborStatusFormID}})" >Submit Changes</button>
+        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal" Submit Changes</button>
       </div>
     </div>
 
@@ -171,7 +171,7 @@
                </div>
                <div class="modal-footer">
                  <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                 <button type="submit" class="btn btn-success" id="modal" {#onclick = postModifications()#} >Submit</button>
+                 <button type="submit" class="btn btn-success" id="modal" onclick = "buttonListener({{form.laborStatusFormID}})" >Submit</button>
                </div>
              </div>
 
