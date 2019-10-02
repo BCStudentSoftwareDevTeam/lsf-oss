@@ -45,24 +45,26 @@ def laborReleaseForm(laborStatusKey):
             releaseDate = datetime.strptime(datepickerDate, "%m/%d/%Y").strftime("%Y-%m-%d")
             releaseReason = request.form.get("notes")
             releaseCondition = request.form.get("condition")
+            print("I made it here")
 
             newLaborReleaseForm = LaborReleaseForm.create(
                                         conditionAtRelease = releaseCondition,
                                         releaseDate = releaseDate,
                                         reasonForRelease = releaseReason
                                         )
-
+            print("Then I made it here")
             historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Release Form")
             status = Status.get(Status.statusName == "Pending")
             laborStatusForiegnKey = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-
+            print("Finally down here")
+            print(current_user.UserID)
             newFormHistory = FormHistory.create(
                                         formID = laborStatusForiegnKey.laborStatusFormID,
                                         historyType = historytype.historyTypeName,
                                         releaseForm = newLaborReleaseForm.laborReleaseFormID,
                                         modifiedForm = None,
                                         overloadForm = None,
-                                        createdBy = current_user.username,
+                                        createdBy = current_user.UserID,
                                         createdDate = date.today(),
                                         reviewedDate = None,
                                         reviewedBy = None,

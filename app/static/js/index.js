@@ -20,8 +20,8 @@ $(document).ready(function() {
   $(".currentDepartmentModal").attr("disabled", true);
   $(".currentStudentModal").removeAttr("disabled");
   $('#portalTitle').text("Current Students");
-  $("#myCurrentStudents").removeClass("btn-primary");
-  $("#myCurrentStudents").addClass("btn-light");
+  $("#myCurrentStudents").removeClass("btn-light");
+  $("#myCurrentStudents").addClass("btn-primary");
 
 });
 
@@ -54,8 +54,8 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".currentStudentModal").removeAttr("disabled");
           $('#portalTitle').text("Current Students");
-          $("#myCurrentStudents").removeClass("btn-primary");
-          $("#myCurrentStudents").addClass("btn-light");
+          $("#myCurrentStudents").removeClass("btn-light");
+          $("#myCurrentStudents").addClass("btn-primary");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -79,8 +79,8 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".pastStudentModal").removeAttr("disabled");
           $('#portalTitle').text("Past Students");
-          $("#myPastStudents").removeClass("btn-primary");
-          $("#myPastStudents").addClass("btn-light");
+          $("#myPastStudents").removeClass("btn-light");
+          $("#myPastStudents").addClass("btn-primary");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -104,8 +104,8 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".currentStudentModal").removeAttr("disabled");
           $('#portalTitle').text("All Students");
-          $("#allMyStudents").removeClass("btn-primary");
-          $("#allMyStudents").addClass("btn-light");
+          $("#allMyStudents").removeClass("btn-light");
+          $("#allMyStudents").addClass("btn-primary");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -129,8 +129,8 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").removeAttr("disabled");
           $(".pastStudentModal").attr("disabled", true);
           $('#portalTitle').text("Current Department Students");
-          $("#currentDepartmentStudents").removeClass("btn-primary");
-          $("#currentDepartmentStudents").addClass("btn-light");
+          $("#currentDepartmentStudents").removeClass("btn-light");
+          $("#currentDepartmentStudents").addClass("btn-primary");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -154,8 +154,8 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".pastStudentModal").attr("disabled", true);
           $('#portalTitle').text("All Department Students");
-          $("#allDepartmentStudents").removeClass("btn-primary");
-          $("#allDepartmentStudents").addClass("btn-light");
+          $("#allDepartmentStudents").removeClass("btn-light");
+          $("#allDepartmentStudents").addClass("btn-primary");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -169,7 +169,7 @@ var table = $("#studentList").DataTable({
     // Function used to remove the default class given to datatable buttons, and
     // give buttons bootstrap classes instead
     var btns = $('.dt-button');
-    btns.addClass('btn btn-primary');
+    btns.addClass('btn btn-light');
     btns.removeClass('dt-button');
 
     }
@@ -178,29 +178,29 @@ var table = $("#studentList").DataTable({
 
 function changeButtonColor(ID) {
   var buttonID = ID
-  if ($("#myPastStudents").hasClass("btn btn-light")){
-    $("#myPastStudents").removeClass("btn btn-light");
-    $("#myPastStudents").addClass("btn btn-primary");
+  if ($("#myPastStudents").hasClass("btn btn-primary")){
+    $("#myPastStudents").removeClass("btn btn-primary");
+    $("#myPastStudents").addClass("btn btn-light");
   }
-  if ($("#myCurrentStudents").hasClass("btn btn-light")){
-    $("#myCurrentStudents").removeClass("btn btn-light");
-    $("#myCurrentStudents").addClass("btn btn-primary");
+  if ($("#myCurrentStudents").hasClass("btn btn-primary")){
+    $("#myCurrentStudents").removeClass("btn btn-primary");
+    $("#myCurrentStudents").addClass("btn btn-light");
   }
-  if ($("#allMyStudents").hasClass("btn btn-light")){
-    $("#allMyStudents").removeClass("btn btn-light");
-    $("#allMyStudents").addClass("btn btn-primary");
+  if ($("#allMyStudents").hasClass("btn btn-primary")){
+    $("#allMyStudents").removeClass("btn btn-primary");
+    $("#allMyStudents").addClass("btn btn-light");
   }
-  if ($("#currentDepartmentStudents").hasClass("btn btn-light")){
-    $("#currentDepartmentStudents").removeClass("btn btn-light");
-    $("#currentDepartmentStudents").addClass("btn btn-primary");
+  if ($("#currentDepartmentStudents").hasClass("btn btn-primary")){
+    $("#currentDepartmentStudents").removeClass("btn btn-primary");
+    $("#currentDepartmentStudents").addClass("btn btn-light");
   }
-  if ($("#allDepartmentStudents").hasClass("btn btn-light")){
-    $("#allDepartmentStudents").removeClass("btn btn-light");
-    $("#allDepartmentStudents").addClass("btn btn-primary");
+  if ($("#allDepartmentStudents").hasClass("btn btn-primary")){
+    $("#allDepartmentStudents").removeClass("btn btn-primary");
+    $("#allDepartmentStudents").addClass("btn btn-light");
   }
-  if ($(buttonID).hasClass("btn btn-light")){
-    $(buttonID).addClass('btn btn-primary');
-    $(buttonID).removeClass('btn btn-light');
+  if ($(buttonID).hasClass("btn btn-primary")){
+    $(buttonID).addClass('btn btn-light');
+    $(buttonID).removeClass('btn btn-primary');
   }
 }
 
@@ -220,8 +220,8 @@ document.getElementById("myStudents").addEventListener("click",function(){
   $("#myPastStudents").show()
   $("#allMyStudents").show()
   $('#portalTitle').text("Current Students");
-  $("#myCurrentStudents").removeClass("btn-primary");
-  $("#myCurrentStudents").addClass("btn-light");
+  $("#myCurrentStudents").removeClass("btn-light");
+  $("#myCurrentStudents").addClass("btn-primary");
 
 
   table
@@ -256,8 +256,8 @@ document.getElementById("department").addEventListener("click",function(){
   $(".currentDepartmentModal").removeAttr("disabled");
   $(".pastStudentModal").attr("disabled", true);
   $('#portalTitle').text("Current Department Students");
-  $("#currentDepartmentStudents").removeClass("btn-primary");
-  $("#currentDepartmentStudents").addClass("btn-light");
+  $("#currentDepartmentStudents").removeClass("btn-light");
+  $("#currentDepartmentStudents").addClass("btn-primary");
 
   table
     .columns( 1 )
@@ -307,7 +307,7 @@ function populateTable(){
     success: function(response) {
       // console.log(response);
 
-      if ($("#currentDepartmentStudents").hasClass('btn-light')){
+      if ($("#currentDepartmentStudents").hasClass('btn-primary')){
         table
         .columns( 1 )
         .search("All Department Students")

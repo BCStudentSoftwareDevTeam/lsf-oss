@@ -14,8 +14,6 @@ from flask import request
 from flask import json, jsonify
 from flask import make_response
 
-department = "placeholder"
-
 
 @main_bp.before_app_request
 def before_request():
@@ -35,10 +33,13 @@ def index():
     formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.UserID).order_by(LaborStatusForm.endDate.desc())
     currentUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.createdBy == current_user.UserID) or (FormHistory.formID.supervisor == current_user.UserID)).distinct()
 
-    # Grabs all the labor status forms where the current users department matches the status forms derpartment, and where the current date is less than the term end date on the status form
-    # currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.endDate >= todayDate).where(LaborStatusForm.department.DEPT_NAME == "Computer Science")
-    # Grabs all the labor status forms where the current users department matches the status forms derpartment
-    # allDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == "Computer Science").order_by(LaborStatusForm.endDate.desc())
+    # print("All Kids from Department:")
+    # for i in formsBySupervisees:
+    #     print(i.studentSupervisee.FIRST_NAME)
+    #     print(i.endDate)
+    #     print(i.startDate)
+    #     print(i.termCode.termName)
+    #     print("\n")
 
 
     inactiveSupervisees = []
@@ -46,7 +47,6 @@ def index():
     pastSupervisees = []
 
     student_processed = False  # This variable dictates whether a student has already been added to the supervisor's portal
-    end_date = None
 
     for supervisee in formsBySupervisees: # go through all the form in the formsBySupervisees
         try:
@@ -61,13 +61,14 @@ def index():
                 if supervisee.endDate < todayDate:
                     pastSupervisees.append(supervisee)
                 elif supervisee.endDate >= todayDate:
-                    studentFormHistory = FormHistory.select().where(FormHistory.formID == supervisee.laborStatusFormID)
-                    for form in studentFormHistory:
-                        if form.historyType.historyTypeName == "Labor Release Form":
-                            if form.status.statusName == "Approved":
-                                pastSupervisees.append(supervisee)
-                            else:
-                                currentSupervisees.append(supervisee)
+                    studentFormHistory = FormHistory.select().where(FormHistory.formID == supervisee.laborStatusFormID).order_by(FormHistory.createdDate.desc())[0]
+                    if studentFormHistory.historyType.historyTypeName == "Labor Release Form":
+                        if studentFormHistory.status.statusName == "Approved":
+                            pastSupervisees.append(supervisee)
+                        else:
+                            currentSupervisees.append(supervisee)
+                    else:
+                        currentSupervisees.append(supervisee)
             else:
                 student_processed = False  # Resets state machine.
         except: # if they are inactive
@@ -82,8 +83,6 @@ def index():
     # On the click of the download button, 'POST' method will send all checked boxes from modal to excel maker
     if request.method== 'POST':
         print(department)
-        currentDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.endDate >= todayDate).where(LaborStatusForm.department.DEPT_NAME == department)
-        allDepartmentStudents = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == department).order_by(LaborStatusForm.endDate.desc())
         value =[]
         for form in currentSupervisees:
             name = str(form.laborStatusFormID)
@@ -109,6 +108,10 @@ def index():
             name = str(form.laborStatusFormID)
             if request.form.get(name):
                 value.append( request.form.get(name))
+        for form in inactiveDepStudent:
+            name = str(form.laborStatusFormID)
+            if request.form.get(name):
+                value.append( request.form.get(name))
         # Prevents 'POST' method from sending the same value twice to excel maker
         noDuplicateList = []
         for i in value:
@@ -125,7 +128,6 @@ def index():
         # Returns the file path so the button will download the file
         return send_file(completePath,as_attachment=True, attachment_filename=filename)
 
-    randomVariable = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == 1)
     return render_template( 'main/index.html',
 				    title=('Home'),
                     currentSupervisees = currentSupervisees,
@@ -135,7 +137,6 @@ def index():
                     currentUserDepartments = currentUserDepartments
                           )
 
-
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
 def populateDepartment(departmentSelected):
     try:
@@ -143,43 +144,50 @@ def populateDepartment(departmentSelected):
         department = departmentSelected
         todayDate = date.today()
 
-
         formsByDept = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == department).order_by(LaborStatusForm.endDate.desc())
+        print("All Kids from Department:")
+        for i in formsByDept:
+            print(i.studentSupervisee.FIRST_NAME)
+            print(i.endDate)
+            print(i.startDate)
+            print(i.termCode.termName)
+            print("\n")
+
+        global currentDepartmentStudents
+        global allDepartmentStudents
+        global inactiveDepStudent
+
         currentDepartmentStudents = []
         allDepartmentStudents = []
         inactiveDepStudent = []
-        student_processed = False
-        for form in formsByDept:
-            print('1')
+        student_processed = False  # This variable dictates whether a student has already been added to the supervisor's portal
+
         for supervisee in formsByDept: # go through all the form in the formsBySupervisees
             try:
                 tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
-                print('here')
+                for student in currentDepartmentStudents:
+                    if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an current student.
+                        student_processed = True
                 for student in allDepartmentStudents:
                     if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an past student.
-                        print('here2')
                         student_processed = True
                 if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
                     if supervisee.endDate < todayDate:
-                        print('add to all')
                         allDepartmentStudents.append(supervisee)
-                if supervisee.endDate >= todayDate:
-                    print('here3')
-                    studentFormHistory = FormHistory.select().where(FormHistory.formID == supervisee.laborStatusFormID)
-                    for form in studentFormHistory:
-                        if ((form.historyType.historyTypeName == "Labor Release Form")and (form.status.statusName == "Approved")):
-                                if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
-                                    print('add to all')
-                                    allDepartmentStudents.append(supervisee)
+                    elif supervisee.endDate >= todayDate:
+                        studentFormHistory = FormHistory.select().where(FormHistory.formID == supervisee.laborStatusFormID).order_by(FormHistory.createdDate.desc())[0]
+                        if studentFormHistory.historyType.historyTypeName == "Labor Release Form":
+                            if studentFormHistory.status.statusName == "Approved":
+                                allDepartmentStudents.append(supervisee)
+                            else:
+                                currentDepartmentStudents.append(supervisee)
+                                allDepartmentStudents.append(supervisee)
                         else:
-                            print('add to current')
                             currentDepartmentStudents.append(supervisee)
                             allDepartmentStudents.append(supervisee)
-
                 else:
                     student_processed = False  # Resets state machine.
             except: # if they are inactive
-                print('not in')
                 for student in inactiveDepStudent:
                     if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
                         student_processed = True
@@ -188,6 +196,26 @@ def populateDepartment(departmentSelected):
                 else:
                     student_processed = False  # Resets state machine
 
+        print("Current Kids:")
+        for i in currentDepartmentStudents:
+            print(i.studentSupervisee.FIRST_NAME)
+            print(i.endDate)
+            print(i.termCode.termName)
+            print("\n")
+
+        print("All Kids:")
+        for i in allDepartmentStudents:
+            print(i.studentSupervisee.FIRST_NAME)
+            print(i.endDate)
+            print(i.termCode.termName)
+            print("\n")
+
+        print("Inactive Kids:")
+        for i in inactiveDepStudent:
+            print(i.studentSupervisee.FIRST_NAME)
+            print(i.endDate)
+            print(i.termCode.termName)
+            print("\n")
 
         departmentStudents = {}
         x = 0
