@@ -158,18 +158,23 @@ def insertNotes(formId):
             return render_template('errors/403.html')
 
         rsp = eval(request.data.decode("utf-8"))
-        # print(rsp)
+        print(rsp)
         laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
         # print(laborDeptNotes)
 
         if rsp:
             laborDeptNotes.laborDepartmentNotes = rsp
+            # print(type(rsp))
             laborDeptNotes.save() #Updates labor notes
 
-            flash("notes saved", "success")
-            print("This freggin' worked omg")
-
+            flash("Your note was saved.", "success")
             return jsonify({"Success": True})
+
+        elif rsp=="" or rsp==None:
+            # print("reached")
+            flash("No changes made to notes.", "danger")
+            return jsonify({"Success": False})
+
     except Exception as e:
         print("This ain't work", e)
         return jsonify({"Success": False})

@@ -183,6 +183,7 @@ function getNotes (formId) {
      e.preventDefault();
      });
 
+       $.ajax({
           method: "POST",
           url: '/admin/notesInsert/'+ formId,
           data: data,
