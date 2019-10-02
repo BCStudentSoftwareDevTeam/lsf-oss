@@ -27,9 +27,11 @@
     {% if pending_labor_forms %}
     <table id="pendingForms" class="table table-striped pendingForms dataTable" >
       <!-- Made empty header tags because we need to hide the header -->
-      <thead id="headTable" text-align="center">
-        <tr id="tableHeaders" class="tableHeaders">
-          <th>Approve</th>
+
+      <thead id="headTable" align="center">
+        <tr id="tableHeaders" class="tableHeaders" >
+          <th> Approve </th>
+
           <th>Term</th>
           <th>Department</th>
           <th>Supervisor</th>
@@ -63,7 +65,7 @@
               {{formHistory.formID.termCode.termName}}
             </td>
             <td> {# DEPARTMENT #}
-              {{formHistory.formID.department.DEPT_NAME}} ({{formHistory.formID.department.ORG}}-{{formHistory.formID.department.ACCOUNT}})
+              {{formHistory.formID.department.DEPT_NAME}} ({{formHistory.formID.department.ACCOUNT}}-{{formHistory.formID.department.ORG}})
             </td>
             <td> {# SUPERVISOR #}
               {{formHistory.formID.supervisor.FIRST_NAME}} {{formHistory.formID.supervisor.LAST_NAME}}
@@ -87,6 +89,7 @@
              {{formHistory.formID.startDate.strftime('%m/%d/%y')}} -  {{formHistory.formID.endDate.strftime('%m/%d/%y')}}
           </td>
           <td> {# EDIT #}
+
             <a href="/modifyLSF/{{formHistory.formID.laborStatusFormID}}"><span id="edit_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil"></span></a>
             <button
                   id="reject_{{formHistory.formID.laborStatusFormID}}"
@@ -100,6 +103,7 @@
                   onclick="insertDenial(this.value);">
                   Deny
             </button>
+
           </td>
         </tr>
         {% endfor %}
@@ -242,7 +246,9 @@
       </div> -->
       <!-- END OF MODAL -->
 
+
     <!--  MODAL -->
+
       <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
@@ -262,5 +268,7 @@
           </div>
         </div>
       </div>
+
     <!-- END OF MODAL -->
+
 {% endblock %}
