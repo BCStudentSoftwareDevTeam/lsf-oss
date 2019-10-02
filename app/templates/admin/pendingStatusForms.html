@@ -57,10 +57,10 @@
                           {% elif formHistory.formID.laborDepartmentNotes != None and formHistory.formID.supervisorNotes == None  %} text-danger
                           {% elif formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes != None %} text-danger
                           {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
-                          <input id="dummyInput" value="{{formHistory.formID.laborStatusFormID}}" hidden/>
+                        <input id="dummyInput" value="{{formHistory.formID.laborStatusFormID}}" hidden/>
                           <!-- <input id="approveChecked"  value="{{formHistory.formID.studentSupervisee.FIRST_NAME}} {{formHistory.formID.studentSupervisee.LAST_NAME}}" hidden/> -->
 
-            </td>
+          </td>
             <td> {# TERM #}
               {{formHistory.formID.termCode.termName}}
             </td>
@@ -138,6 +138,7 @@
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
+
               <h5 class="modal-title" id="exampleModalLabel"><b>Deny Student</b></h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -161,6 +162,28 @@
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload()">Close</button>
               <button type="button" class="btn btn-danger" onclick="finalDenial()">Deny</button>
+
+
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="notesModalLabel">Labor Office Notes</h4>
+            </div>
+            <div class="modal-body" >
+              <p> These notes are only for the Labor Office Staff.</p>
+              <p> Pre-fill this with the notes from the supervisor
+                <div id="notesDiv">
+                   <h5> <b>Supervisor Notes  </b> </h5>
+                  <p id="notesText" class="notesText" </p>
+
+
+                <h5> <b>Labor Office Notes </b> </h5>
+
+                  <textarea id="laborNotesText" rows="5" cols="60" style="resize: none;"> </textarea>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
+
             </div>
           </div>
         </div>
@@ -226,28 +249,6 @@
             </div>
       <!-- END OF MODAL -->
 
-      <!-- START OF MODAL reject pending-->
-      <!-- <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-              <h4 class="modal-title" id="rejectModalLabel">Reject Status Form</h4>
-            </div>
-            <div class="modal-body">
-              ...For Rejection #FIXME: Look at old rejection interface
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-          </div>
-        </div>
-      </div> -->
-      <!-- END OF MODAL -->
-
-
-    <!--  MODAL -->
 
       <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">

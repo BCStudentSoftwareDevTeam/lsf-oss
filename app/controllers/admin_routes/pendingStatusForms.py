@@ -11,6 +11,7 @@ from app.models.overloadForm import OverloadForm
 from app.models.formHistory import *
 from app.models.term import Term
 from datetime import datetime, date
+from flask import Flask, redirect, url_for, flash
 
 @admin.route('/admin/pendingStatusForms', methods=['GET'])
 def pendingForms():
@@ -32,7 +33,6 @@ def pendingForms():
                                 username=current_user.username,
                                 users=users,
                                 pending_labor_forms = pending_labor_forms
-                                # pending_status_forms = pending_status_forms
                                 # pending_modified_forms = pending_modified_forms,
                                 # pending_release_forms = pending_release_forms,
                                 # pending_overload_forms = pending_overload_forms
@@ -44,6 +44,9 @@ def pendingForms():
 
 @admin.route('/admin/checkedForms', methods=['POST'])
 def approvedForms():
+    '''
+    This function gets the forms that are checked by the user and inserts them into the database
+    '''
     try:
         current_user = require_login()
         if not current_user:                    # Not logged in
@@ -113,6 +116,9 @@ def modal_aproval_data(approval_ids):
 
 @admin.route('/admin/getNotes/<formid>', methods=['GET'])
 def getNotes(formid):
+    '''
+    This function retrieves the supervisor and labor department notes.
+    '''
     try:
         current_user = require_login()
         if not current_user:                    # Not logged in
@@ -121,7 +127,7 @@ def getNotes(formid):
             return render_template('errors/403.html')
         print(formid)
         notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid)
-        print(notes)
+        #print(notes)
 
         notesDict = {}
         if notes.supervisorNotes:
@@ -129,10 +135,41 @@ def getNotes(formid):
 
         if notes.laborDepartmentNotes:
             notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes
-
-        print(notesDict["supervisorNotes"])
+        # print(notesDict["supervisorNotes"])
+        # print(notesDict["laborDepartmentNotes"])
         return jsonify(notesDict)
+
 
     except Exception as e:
         print("This did not work", e)
+        return jsonify({"Success": False})
+
+
+@admin.route('/admin/notesInsert/<formId>', methods=['POST'])
+def insertNotes(formId):
+    '''
+    This function inserts the labor office notes into the database
+    '''
+    try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
+        rsp = eval(request.data.decode("utf-8"))
+        # print(rsp)
+        laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
+        # print(laborDeptNotes)
+
+        if rsp:
+            laborDeptNotes.laborDepartmentNotes = rsp
+            laborDeptNotes.save() #Updates labor notes
+
+            flash("notes saved", "success")
+            print("This freggin' worked omg")
+
+            return jsonify({"Success": True})
+    except Exception as e:
+        print("This ain't work", e)
         return jsonify({"Success": False})

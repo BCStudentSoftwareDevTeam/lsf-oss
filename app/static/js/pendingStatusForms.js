@@ -1,6 +1,3 @@
-
-
-
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
@@ -47,9 +44,7 @@ function updateApproveTableData(returned_details){
       }
       $('#classTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
 
-
         }
-
       }
 
 //this method changes the status of the lsf from pending to approved status
@@ -138,58 +133,74 @@ function finalDenial_data(returned_details){
       };
 
 
-function getNotes (formID) {
-  console.log(formID);
+function getNotes (formId) {
+  console.log(formId);
 
   $.ajax({
     type: "GET",
-    url: "/admin/getNotes/"+formID,
+    url: "/admin/getNotes/"+formId,
     datatype: "json",
     success: function (response) {
-      if (!("Success" in response)) {
-        console.log(response);
-        console.log(response["supervisorNotes"])
-        // var testingText = document.createTextNode("This is a test for the p tag")
 
-        console.log($("#notesText").html(response["supervisorNotes"]));
-        $("#notesText").html(response["supervisorNotes"]);
+      if ("Success" in response && response["Success"] == "false") {
+        //Clears supervisor notes p tag and the labor notes textarea
+        console.log("This is why it failed: ", response);
+        $("#notesText").empty();
+        $("#laborNotesText").empty();
 
-      } else {
-            $("#notesText").empty();
+       } else {
+          $("#laborNotesText").data('formId',formId) //attaches the formid data to the textarea
+          //Populates notes value from the database
+
+          if ("supervisorNotes" in response) {
+            $("#notesText").html(response["supervisorNotes"]);
+            console.log(response);
+             }
+
+          if ("laborDepartmentNotes" in response) {
+            $("#laborNotesText").html(response["laborDepartmentNotes"]);
+            console.log(response);
+            console.log(response["laborDepartmentNotes"]);
             }
-    }
-  })
+         }
+       }
+   })
 };
 
-
-
-function saveLaborNotes() { // saves notes written in textarea when save button of modal is clicked
-  var notesTextId = $("#dummyInput").val();
-  var notesUniqueId = "notes_" + notesTextId;
-  console.log(notesUniqueId);
-  document.getElementById("laborNotesText").value=document.getElementById(notesUniqueId).getAttribute("data-note");
-  document.getElementById("saveNotes").setAttribute('onclick',"saveNotes('" + notesUniqueId +"')");
-  console.log(idDummyInput);
-}
-
- function saveNotes() { // saves notes written in textarea when save button of modal is clicked
-   var notes = document.getElementById("laborNotesText").value;
-   document.getElementById(notesTextId).setAttribute("data-note", notes);
- }
-
  function notesInsert() {
-   notes = []
-   data = JSON.stringify(notes);
+   var formId = $("#laborNotesText").data('formId');
+   var laborNotes = $("#laborNotesText").val(); //this is getting the id of the labor notes text area
+   var notes = {'formId': formId, 'notes':laborNotes};   // {ID: textarea value} this sets the text area to what the user types in it
+
+   var formId = notes.formId; //This is how we get the ID of the form
+   var note = notes.notes; //This is how we are getting the note object from the dictionary
+
+   data = JSON.stringify(note);
+
+    var notesGlyph = $("#notes_" + formId);
+
    $("#saveNotes").on('submit', function(e) {
      e.preventDefault();
      });
-   $.ajax({
+
           method: "POST",
-          url: '/laborstatusform/notesInsert',
-          data: notes,
+          url: '/admin/notesInsert/'+ formId,
+          data: data,
           contentType: 'application/json',
           success: function(response) {
-            console.log(response);
+            if (response){
+              //This changes the color of the notes glyphicon when a labor note is saved
+              if ($(notesGlyph).hasClass("text-success")) {
+                  $(notesGlyph).removeClass("text-success");
+                  $(notesGlyph).addClass("text-danger");
+                }
+              else if ($(notesGlyph).hasClass("text-secondary")) {
+                $(notesGlyph).removeClass("text-secondary");
+                $(notesGlyph).addClass("text-danger");
+                }
+
+                window.location.reload(true);
+              }
           }
         });
      }
@@ -223,6 +234,7 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
             var notes = $(aTag).data('note');
             tableDataDict["Supervisor Notes"] = notes;
             tableDataDict[headers_2_data[index]] = $(item).html();
+
           }
         });
         listDictAJAX.push(tableDataDict);
@@ -252,4 +264,10 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
 
   delete allTableDataDict["0"] // gets rid of the first dictionary that contains table labels
   return allTableDataDict
+}
+
+
+function clearTextArea(){ //makes sure that it empties text areas and p tags when modal is closed
+  $("#notesText").empty();
+  $("#laborNotesText").empty();
 }
