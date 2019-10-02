@@ -416,7 +416,7 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
   return false;
 }
 
-function checkPrimaryPosition(studentDict){ 
+function checkPrimaryPosition(studentDict){
   var term = $("#selectedTerm").val();
   var url = "/laborstatusform/getstudents/" + term +"/" +studentDict["stuBNumber"];
   $.ajax({
@@ -432,7 +432,9 @@ function checkPrimaryPosition(studentDict){
         if (response["PrimarySupervisor"]["selectedJobType"] == "Primary" && studentDict["stuJobType"] == "Primary"){
           console.log(1);
           /// TODO: Display modal saying student already has a primary postion
-          alert(studentDict["stuName"] + " already has a Primary position.");
+          $("warningModalText").innerHTML = studentDict['stuName'] + " aleady has a primary position."
+          $("warningModal").modal("show");
+          //alert(studentDict["stuName"] + " already has a Primary position.");
           return true;
         }
         else if (response["PrimarySupervisor"]["selectedJobType"] != "Primary" && studentDict["stuJobType"] == "Primary"){
@@ -443,8 +445,9 @@ function checkPrimaryPosition(studentDict){
           console.log(3);
           return false;
         }
-        else if(response["PrimarySupervisor"]["selectedJobType"] != "Primary" && studentDict["stuJobType"] == "Secondary"){
+        else if(response["PrimarySupervisor"]["selectedJobType"] != "Primary" && studentDict["stuJobType"] == "Secondary"){ //Shouldn't this be if selectedJobType == "Secondary" && stuJobType != "Primary".  I'm sure there are other ways to word it as well.
           console.log(4);
+          $("NoPrimaryModal").modal("show");
           //TODO: Display modal saying student does not have a Primary postion to get a Secondary position
           alert(studentDict["stuName"] + " doesn't have a Primary position.");
           return true;
@@ -572,7 +575,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
       var bigString = "<li>" + studentName + " | " + position + " | " + selectedContractHours + " hours";
       modalList.push(bigString);
     }
-    document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
+    $("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
                                                             "<ul style=\"display:inline-block;text-align:left;\">" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day.";
