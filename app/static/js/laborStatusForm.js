@@ -91,8 +91,8 @@ function fillDates(response){ // prefill term start and term end
     // set the minimum and maximum Date for Term Start Date
     $("#dateTimePicker1").datepicker({minDate: new Date(yearStart, monthStart1, dayStart1)});
     $("#dateTimePicker1").datepicker({maxDate: new Date(yearEnd, monthEnd1, dayEnd1)});
-    $( "#dateTimePicker1").datepicker("option", "minDate", new Date(yearStart, monthStart1, dayStart1));
-    $( "#dateTimePicker1").datepicker("option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
+    $("#dateTimePicker1").datepicker("option", "minDate", new Date(yearStart, monthStart1, dayStart1));
+    $("#dateTimePicker1").datepicker("option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
     // set the minimum and maximum Date for Term End Date
     $("#dateTimePicker2").datepicker({maxDate: new Date(yearEnd, monthEnd1, dayEnd1)});
     $("#dateTimePicker2").datepicker({minDate: new Date(yearStart, monthStart1, dayStart1)});
@@ -316,8 +316,10 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
   var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2"];
   var studentDict = createStuDict();
   var primaryInDatabase = checkPrimaryPosition(studentDict);
+  console.log("STAFFFSssSSS");
   console.log(primaryInDatabase);
-  if(!(checkDuplicate(studentDict)) && !(primaryInDatabase)){
+  if(checkDuplicate(studentDict) == false && primaryInDatabase == false){
+    console.log("We in here bois");
     globalArrayOfStudents.push(studentDict);
     //TODO:CHECK HOURSSSSSSSSSSSSSSSSSSSSSSSSSSSSsss
     createAndFillTable();
@@ -403,43 +405,61 @@ function createStuDict(){
 
 function checkDuplicate(studentDict) {// checks for duplicates in the table. This is for Academic Year
   for(i = 0; i < globalArrayOfStudents.length; i++){
-    if(globalArrayOfStudents[i].stuName == studentDict.stuName && studentDict.stuJobType == "Primary" && globalArrayOfStudents[i].stuJobType == studentDict.stuJobType){
-      document.getElementById("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s Primary position.";
+    if(globalArrayOfStudents[i].stuName == studentDict.stuName && globalArrayOfStudents[i].stuJobType == studentDict.stuJobType){
+      //FIXME: Change this to JQuery
+      document.getElementById("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position.";
       $("#warningModal").modal("show");
       return true;
     }
   }
-  console.log(globalArrayOfStudents);
+  console.log("No dup in table");
   return false;
 }
 
-function checkPrimaryPosition(studentDict){ // does several stuff read the comments down below
+function checkPrimaryPosition(studentDict){ 
   var term = $("#selectedTerm").val();
-  var url = "/laborstatusform/getstudents/" + term +"/" +studentDict["stuName"];
+  var url = "/laborstatusform/getstudents/" + term +"/" +studentDict["stuBNumber"];
   $.ajax({
     url: url,
     dataType: "json",
+    async: false, // Makes the code wait for the AJAX call to finish
     success: function (response){
-      console.log(response.PrimarySupervisor[""])
+      console.log(response);
+      console.log("post response");
       console.log(studentDict);
-      if (response["selectedJobType"] == "Primary" && studentDict["stuJobType"] == "Primary"){
-        console.log(response.PrimarySupervisor["selectedJobType"])
-        console.log(studentDict["stuJobType"]);
-        /// TODO: Display modal saying student already has a primary postion
-        alert(studentDict["stuName"] + " already has a Primary position.");
-        return true;
+
+      try {
+        if (response["PrimarySupervisor"]["selectedJobType"] == "Primary" && studentDict["stuJobType"] == "Primary"){
+          console.log(1);
+          /// TODO: Display modal saying student already has a primary postion
+          alert(studentDict["stuName"] + " already has a Primary position.");
+          return true;
+        }
+        else if (response["PrimarySupervisor"]["selectedJobType"] != "Primary" && studentDict["stuJobType"] == "Primary"){
+          console.log(2);
+          return false;
+        }
+        else if(response["PrimarySupervisor"]["selectedJobType"] == "Primary" && studentDict["stuJobType"] == "Secondary"){
+          console.log(3);
+          return false;
+        }
+        else if(response["PrimarySupervisor"]["selectedJobType"] != "Primary" && studentDict["stuJobType"] == "Secondary"){
+          console.log(4);
+          //TODO: Display modal saying student does not have a Primary postion to get a Secondary position
+          alert(studentDict["stuName"] + " doesn't have a Primary position.");
+          return true;
+        }
       }
-      else if (response["selectedJobType"] != "Primary" && studentDict["stuJobType"] == "Primary"){
-        return false;
+      catch(e) {
+        //console.log(e);
+        if(studentDict["stuJobType"] == "Primary"){
+          return false;
+        }
+        else{
+          return true;
+        }
       }
-      else if(response["selectedJobType"] == "Primary" && studentDict["stuJobType"] == "Secondary"){
-        return false;
-      }
-      else if(response["selectedJobType"] != "Primary" && studentDict["stuJobType"] == "Secondary"){
-        //TODO: Display modal saying student does not have a Primary postion to get a Secondary position
-        alert(studentDict["stuName"] + " doesn't have a Primary position.");
-        return true;
-      }
+
     }
   });
 }
