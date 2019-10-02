@@ -315,15 +315,7 @@ function errorFlash(){
 function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
   var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2"];
   var studentDict = createStuDict();
-  var primaryInDatabase = checkPrimaryPosition(studentDict);
-  console.log("STAFFFSssSSS");
-  console.log(primaryInDatabase);
-  if(checkDuplicate(studentDict) == false && primaryInDatabase == false){
-    console.log("We in here bois");
-    globalArrayOfStudents.push(studentDict);
-    //TODO:CHECK HOURSSSSSSSSSSSSSSSSSSSSSSSSSSSSsss
-    createAndFillTable();
-  }
+  checkPrimaryPosition(studentDict);
   return;
   // if (fields_are_empty(id_list)) {
   //   errorFlash();
@@ -384,7 +376,6 @@ function createStuDict(){
                       stuStartDate: startDate,
                       stuEndDate: endDate,
                       stuTermCode: termCodeSelected,
-                      stuTermCodeLastTwo: termCodeLastTwo,
                       stuNotes: ""
                       };
   }
@@ -398,22 +389,24 @@ function createStuDict(){
                       stuStartDate: startDate,
                       stuEndDate: endDate,
                       stuTermCode: termCodeSelected,
-                      stuNotes: ""};
+                      stuNotes: ""
+                      };
   }
   return studentDict;
 }
 
 function checkDuplicate(studentDict) {// checks for duplicates in the table. This is for Academic Year
   for(i = 0; i < globalArrayOfStudents.length; i++){
-    if(globalArrayOfStudents[i].stuName == studentDict.stuName && globalArrayOfStudents[i].stuJobType == studentDict.stuJobType){
+    if(globalArrayOfStudents[i].stuName == studentDict.stuName &&
+      globalArrayOfStudents[i].stuJobType == studentDict.stuJobType &&
+      (studentDict.stuJobType == "Primary" || globalArrayOfStudents[i].stuPosition == studentDict.stuPosition)){
       //FIXME: Change this to JQuery
       document.getElementById("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position.";
       $("#warningModal").modal("show");
-      return true;
+      return false;
     }
   }
-  console.log("No dup in table");
-  return false;
+  return true;
 }
 
 function checkPrimaryPosition(studentDict){
@@ -422,7 +415,6 @@ function checkPrimaryPosition(studentDict){
   $.ajax({
     url: url,
     dataType: "json",
-    async: false, // Makes the code wait for the AJAX call to finish
     success: function (response){
       console.log(response);
       console.log("post response");
@@ -430,51 +422,48 @@ function checkPrimaryPosition(studentDict){
 
       try {
         if (response["PrimarySupervisor"]["selectedJobType"] == "Primary" && studentDict["stuJobType"] == "Primary"){
-          console.log(1);
+          console.log("Adding Primary with Primary in database");
           /// TODO: Display modal saying student already has a primary postion
           $("warningModalText").innerHTML = studentDict['stuName'] + " aleady has a primary position."
           $("warningModal").modal("show");
-          //alert(studentDict["stuName"] + " already has a Primary position.");
-          return true;
-        }
-        else if (response["PrimarySupervisor"]["selectedJobType"] != "Primary" && studentDict["stuJobType"] == "Primary"){
-          console.log(2);
-          return false;
         }
         else if(response["PrimarySupervisor"]["selectedJobType"] == "Primary" && studentDict["stuJobType"] == "Secondary"){
-          console.log(3);
-          return false;
-        }
-        else if(response["PrimarySupervisor"]["selectedJobType"] != "Primary" && studentDict["stuJobType"] == "Secondary"){ //Shouldn't this be if selectedJobType == "Secondary" && stuJobType != "Primary".  I'm sure there are other ways to word it as well.
-          console.log(4);
-          $("NoPrimaryModal").modal("show");
-          //TODO: Display modal saying student does not have a Primary postion to get a Secondary position
-          alert(studentDict["stuName"] + " doesn't have a Primary position.");
-          return true;
+          console.log("Adding Secondary with Primary in database");
+          if (checkDuplicate(studentDict) == true){
+            createAndFillTable(studentDict);
+          }
         }
       }
       catch(e) {
         //console.log(e);
         if(studentDict["stuJobType"] == "Primary"){
-          return false;
+          console.log("Adding Primary without Primary in database");
+          if (checkDuplicate(studentDict) == true){
+            createAndFillTable(studentDict);
+          }
         }
         else{
-          return true;
+          console.log("Adding Secondary without Primary in database");
+          //TODO: Display modal saying that the student does NOT have a primary position
+
         }
       }
 
     }
   });
 }
-function createAndFillTable() { // fills the table for Academic Year.
+function createAndFillTable(studentDict) {
+  console.log(globalArrayOfStudents);
+  console.log("Filling table"); // fills the table.
+  globalArrayOfStudents.push(studentDict);
+  console.log(globalArrayOfStudents);
   $("#mytable").show();
   $("#jobTable").show();
   $("#hoursTable").show();
-  var lastStudent = (globalArrayOfStudents.length) - 1;
-  var termCodeLastTwo = (globalArrayOfStudents[lastStudent]).stuTermCode.slice(-2);
+  var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
   var table = document.getElementById("mytable").getElementsByTagName("tbody")[0]; //This one needs document.getElementById, it won't work without it
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00") {
-    var notesID0 = String((globalArrayOfStudents[lastStudent]).stuName + (globalArrayOfStudents[lastStudent]).stuJobType + (globalArrayOfStudents[lastStudent]).stuPosition);
+    var notesID0 = String((studentDict).stuName + (studentDict).stuJobType + (studentDict).stuPosition);
     var notesID1 = notesID0.replace(/ /g, "");
     var notesID2 = notesID1.substring(0, notesID1.indexOf("("));
   }
@@ -492,21 +481,21 @@ function createAndFillTable() { // fills the table for Academic Year.
   var cell5 = row.insertCell(4);
   var cell6 = row.insertCell(5);
   var cell7 = row.insertCell(6);
-  cell1.innerHTML = (globalArrayOfStudents[lastStudent]).stuName + " " + "(" + (globalArrayOfStudents[lastStudent]).stuBNumber+ ")";
-  cell2.innerHTML = (globalArrayOfStudents[lastStudent]).stuPosition;
-  $(cell2).attr("data-posn", (globalArrayOfStudents[lastStudent]).stuPositionCode);
-  $(cell2).attr("data-wls", (globalArrayOfStudents[lastStudent]).stuWLS);
+  cell1.innerHTML = (studentDict).stuName + " " + "(" + (studentDict).stuBNumber+ ")";
+  cell2.innerHTML = (studentDict).stuPosition;
+  $(cell2).attr("data-posn", (studentDict).stuPositionCode);
+  $(cell2).attr("data-wls", (studentDict).stuWLS);
   cell2.id="position_code";
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00") {
-    cell3.innerHTML = (globalArrayOfStudents[lastStudent]).stuJobType;
-    cell4.innerHTML = (globalArrayOfStudents[lastStudent]).stuHours;
-    cell5.innerHTML = (globalArrayOfStudents[lastStudent]).stuStartDate + " - " + (globalArrayOfStudents[lastStudent]).stuEndDate;
+    cell3.innerHTML = (studentDict).stuJobType;
+    cell4.innerHTML = (studentDict).stuHours;
+    cell5.innerHTML = (studentDict).stuStartDate + " - " + (studentDict).stuEndDate;
     cell6.innerHTML = notesGlyphicon;
     cell7.innerHTML = removeIcon;
   }
   else {
     cell3.innerHTML = selectedContractHoursName;
-    cell5.innerHTML = (globalArrayOfStudents[lastStudent]).stuStartDate + " - " + (globalArrayOfStudents[lastStudent]).stuEndDate;
+    cell5.innerHTML = (studentDict).stuStartDate + " - " + (studentDict).stuEndDate;
     cell6.innerHTML = notesGlyphicon;
     cell7.innerHTML = removeIcon;
   }
