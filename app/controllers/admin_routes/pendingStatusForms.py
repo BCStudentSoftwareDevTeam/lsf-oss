@@ -92,8 +92,7 @@ def getNotes(formid):
         # print(notesDict["supervisorNotes"])
         # print(notesDict["laborDepartmentNotes"])
         return jsonify(notesDict)
-
-
+        
     except Exception as e:
         print("This did not work", e)
         return jsonify({"Success": False})
@@ -120,9 +119,9 @@ def insertNotes(formId):
             laborDeptNotes.laborDepartmentNotes = rsp
             laborDeptNotes.save() #Updates labor notes
 
-            flash("notes saved", "success")
-            print("This freggin' worked omg")
 
+            print("This freggin' worked omg")
+            flash("Notes Saved", "success")
             return jsonify({"Success": True})
     except Exception as e:
         print("This ain't work", e)
