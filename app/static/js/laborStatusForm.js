@@ -493,7 +493,7 @@ function createAndFillTable(studentDict) {
     var notesID2 = notesID1.substring(0, notesID1.indexOf("("));
   }
   else {
-    var selectedContractHoursName = $("selectedContractHours").value;
+    var selectedContractHoursName = $("selectedContractHours").val();// For whatever reason this is undefined
   }
   var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(\""+notesID2+"\")\" id= \""+notesID2+
                                                           "\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
@@ -519,7 +519,9 @@ function createAndFillTable(studentDict) {
     cell7.innerHTML = removeIcon;
   }
   else {
-    cell3.innerHTML = selectedContractHoursName;
+    console.log(selectedContractHoursName);
+    cell3.innerHTML = "Secondary"
+    cell4.innerHTML = selectedContractHoursName;
     cell5.innerHTML = (studentDict).stuStartDate + " - " + (studentDict).stuEndDate;
     cell6.innerHTML = notesGlyphicon;
     cell7.innerHTML = removeIcon;
