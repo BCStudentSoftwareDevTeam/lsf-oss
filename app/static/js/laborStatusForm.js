@@ -292,6 +292,7 @@ function saveNotes(obj){ // saves notes written in textarea when save button of 
 
 function deleteRow(row) { // Deletes Row when remove glyphicon is clicked.
   $(row).parents("tr").remove();
+  // TODO: Will we need to modify the global array at all when this is called as well?
 }
 //END of glyphicons
 
@@ -385,7 +386,7 @@ function createStuDict(){
                       stuBNumber: studentBNumber,
                       stuPosition: positionName,
                       stuPositionCode: positionCode,
-                      stuContractHours: contractHoursName,
+                      stuContractHours: selectedContractHoursName,
                       stuStartDate: startDate,
                       stuEndDate: endDate,
                       stuTermCode: termCodeSelected,
@@ -401,7 +402,7 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
       globalArrayOfStudents[i].stuJobType == studentDict.stuJobType &&
       (studentDict.stuJobType == "Primary" || globalArrayOfStudents[i].stuPosition == studentDict.stuPosition)){
       //FIXME: Change this to JQuery
-      document.getElementById("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position.";
+      $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position.";
       $("#warningModal").modal("show");
       return false;
     }
@@ -410,6 +411,7 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
 }
 
 function checkPrimaryPosition(studentDict){
+  var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
   var term = $("#selectedTerm").val();
   var url = "/laborstatusform/getstudents/" + term +"/" +studentDict["stuBNumber"];
   $.ajax({
@@ -432,6 +434,11 @@ function checkPrimaryPosition(studentDict){
           if (checkDuplicate(studentDict) == true){
             createAndFillTable(studentDict);
           }
+          else {
+            console.log("This is a duplicate")
+            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position."; //Is this right?  Someone should double check
+            $("#warningModal").modal("show");
+          }
         }
       }
       catch(e) {
@@ -441,10 +448,28 @@ function checkPrimaryPosition(studentDict){
           if (checkDuplicate(studentDict) == true){
             createAndFillTable(studentDict);
           }
+          else {
+            console.log("This is a duplicate")
+            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position."; //Is this right?  Someone should double check
+            $("#warningModal").modal("show");
         }
-        else{
+      }
+        else {
+          if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
           console.log("Adding Secondary without Primary in database");
-          //TODO: Display modal saying that the student does NOT have a primary position
+          $("warningModalText").innerHTML = studentDict['stuName'] + " needs a primary position before a secondary position can be added."
+          $("warningModal").modal("show");
+        }
+        else {
+          if (checkDuplicate(studentDict) == true){
+            createAndFillTable(studentDict);
+          }
+          else {
+            console.log("This is a duplicate")
+            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position."; //Is this right?  Someone should double check
+            $("#warningModal").modal("show");
+        }
+        }
 
         }
       }

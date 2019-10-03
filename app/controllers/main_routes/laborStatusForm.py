@@ -226,7 +226,7 @@ def checkForPrimaryPosition(termCode, student):
     print(type(positions))
     positionsList = []
     for item in positions:
-        positionDict = {}
+        positionsDict = {}
         print(type(item))
         print(item)
         print(item.__data__["weeklyHours"])
