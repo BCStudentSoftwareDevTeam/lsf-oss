@@ -56,7 +56,7 @@
                             >
                 <option title="{{prefillposition}}" value="{{prefillposition}}">{{prefillposition}}</option>
            </select>
-           <input hidden class = "oldValue"  id= "{{prefillposition}}" value="{{prefillposition}}"></input>
+           <input hidden class = "oldValue"  id= "prefillposition" value="{{prefillposition}}"></input>
          </div>
        </div>
        <!-- This selectpicker will be disabled if term is for a break, since jobtype is always Secondary-->
@@ -69,7 +69,7 @@
                             data-live-search="true"
                             value = {{prefilljobtype}}
                             title = {{prefilljobtype}}
-                            onchange="fillHoursPerWeek()">
+                            onchange="fillHoursPerWeek(); positioncheck()">
                 <option title="Primary" value="Primary">Primary</option>
                 <option title="Secondary" value="Secondary">Secondary</option>
            </select>

@@ -81,6 +81,18 @@ function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker
    }
  }
 }
+function positioncheck(){
+  var jobType = $("#jobType").val();
+  var position = $("#POSN_TITLE").val();
+  var wls = position[position.length -1]
+  console.log(jobType)
+  console.log(position)
+  console.log(wls)
+  if (jobType == "Secondary" && (wls == "(6)" || wls == "(5)" )){
+    $("#POSN_TITLE").val(1);
+    $('.selectpicker').selectpicker('refresh');
+  }
+}
 //////////Modified form check and dictionary creation////////////
 //Structure: {[field]:{[oldValue],[newValue],[effective date]}}
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');
