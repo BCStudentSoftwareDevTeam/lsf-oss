@@ -23,7 +23,45 @@
 
 <div class="container" id="wrapper" align="center">
 
-  <b><h1 id="header"> Pending Forms </h1></b>
+  <div class="container">
+    <b><h1 id="header"> Pending Forms </h1></b>
+  </div>
+     <div align="center" id="pendingTabs" class="container">
+     <ul  class="nav nav-pills">
+       <li class="active">
+          <a  href="#allPendingForms" data-toggle="tab">All Pending Forms</a>
+       </li>
+        <li>
+          <a href="#laborPendingForms" data-toggle="tab">Pending Labor Forms</a>
+        </li>
+        <li>
+          <a href="#modifiedPendingForms" data-toggle="tab">Pending Modified Forms</a>
+        </li>
+        <li>
+          <a href="#overloadPendingForms" data-toggle="tab">Pending Overload Forms</a>
+        </li>
+      </ul>
+
+      <div align="center" class="tab-content clearfix">
+			  <div class="tab-pane active" id="allPendingForms">
+          <h3>Content's background color is the same for the tab</h3>
+				</div>
+				<div class="tab-pane" id="laborPendingForms">
+          <h3>We use the class nav-pills instead of nav-tabs which automatically creates a background color for the tab</h3>
+				</div>
+        <div class="tab-pane" id="modifiedPendingForms">
+          <h3>We applied clearfix to the tab-content to rid of the gap between the tab and the content</h3>
+				</div>
+          <div class="tab-pane" id="overloadPendingForms">
+          <h3>We use css to change the background color of the content to be equal to the tab</h3>
+				</div>
+			</div>
+  </div>
+
+
+
+
+    </div>
   <div class="col-lg-12" align="center" >
     <table id="pendingForms" class="table table-striped pendingForms dataTable" >
       <!-- Made empty header tags because we need to hide the header -->

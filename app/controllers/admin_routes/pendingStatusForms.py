@@ -22,9 +22,11 @@ def pendingForms():
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
 
-
-        # pending_status_forms = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate)
+        all_pending_forms = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate)
         pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate)
+        pending_modified_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Modified Labor Form").order_by(-FormHistory.createdDate)
+        pending_release_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Release Form").order_by(-FormHistory.createdDate)
+        pending_overload_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Overload Form").order_by(-FormHistory.createdDate)
 
         # # Logged in & Admin
         users = User.select()
@@ -34,10 +36,11 @@ def pendingForms():
                                 title=('Pending Forms'),
                                 username=current_user.username,
                                 users=users,
-                                pending_labor_forms = pending_labor_forms
-                                # pending_modified_forms = pending_modified_forms,
-                                # pending_release_forms = pending_release_forms,
-                                # pending_overload_forms = pending_overload_forms
+                                all_pending_forms = all_pending_forms,
+                                pending_labor_forms = pending_labor_forms,
+                                pending_modified_forms = pending_modified_forms,
+                                pending_release_forms = pending_release_forms,
+                                pending_overload_forms = pending_overload_forms
                                 )
 
     except Exception as e:
@@ -92,7 +95,7 @@ def getNotes(formid):
         # print(notesDict["supervisorNotes"])
         # print(notesDict["laborDepartmentNotes"])
         return jsonify(notesDict)
-        
+
     except Exception as e:
         print("This did not work", e)
         return jsonify({"Success": False})
