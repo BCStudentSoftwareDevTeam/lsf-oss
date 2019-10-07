@@ -13,8 +13,9 @@ from app.models.term import Term
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 
-@admin.route('/admin/pendingStatusForms', methods=['GET'])
-def pendingForms():
+#       ALL PENDING FORMS       #
+@admin.route('/admin/allPendingForms',  methods=['GET'])
+def allPendingForms():
     try:
         current_user = require_login()
         if not current_user:                    # Not logged in
@@ -23,26 +24,104 @@ def pendingForms():
             return render_template('errors/403.html')
 
         all_pending_forms = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate)
-        pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate)
-        pending_modified_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Modified Labor Form").order_by(-FormHistory.createdDate)
-        pending_release_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Release Form").order_by(-FormHistory.createdDate)
-        pending_overload_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Overload Form").order_by(-FormHistory.createdDate)
-
-        # # Logged in & Admin
         users = User.select()
 
+        return render_template( 'admin/allPendingForms.html',
+                                username=current_user.username,
+                                users=users,
+                                all_pending_forms = all_pending_forms
+                                )
+    except Exception as e:
+        print(e)
+        return render_template('errors/500.html')
+
+#        PENDING LABOR STATUS FORMS         #
+@admin.route('/admin/pendingStatusForms',  methods=['GET'])
+def pendingForms():
+    try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
+        pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate)
+        print(pending_labor_forms)
+        users = User.select()
 
         return render_template( 'admin/pendingStatusForms.html',
                                 title=('Pending Forms'),
                                 username=current_user.username,
                                 users=users,
-                                all_pending_forms = all_pending_forms,
-                                pending_labor_forms = pending_labor_forms,
-                                pending_modified_forms = pending_modified_forms,
-                                pending_release_forms = pending_release_forms,
+                                pending_labor_forms = pending_labor_forms
+                                )
+    except Exception as e:
+        print(e)
+        return render_template('errors/500.html')
+
+#        PENDING MODIFIED FORMS         #
+@admin.route('/admin/pendingModifiedForms',  methods=['GET'])
+def pendingModifiedForms():
+    try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
+        pending_modified_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Modified Labor Form").order_by(-FormHistory.createdDate)                # # Logged in & Admin
+        print(pending_modified_forms)
+        users = User.select()
+
+        return render_template( 'admin/pendingModifiedForms.html',
+                                username=current_user.username,
+                                users=users,
+                                pending_modified_forms = pending_modified_forms
+                                )
+    except Exception as e:
+        print(e)
+        return render_template('errors/500.html')
+
+#        PENDING OVERLOAD FORMS         #
+@admin.route('/admin/pendingOverloadForms',  methods=['GET'])
+def pendingOverloadForms():
+    try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
+        pending_overload_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Overload Form").order_by(-FormHistory.createdDate)
+        users = User.select()
+
+        return render_template( 'admin/pendingOverloadForms.html',
+                                username=current_user.username,
+                                users=users,
                                 pending_overload_forms = pending_overload_forms
                                 )
+    except Exception as e:
+        print(e)
+        return render_template('errors/500.html')
 
+#        PENDING RELEASE FORMS         #
+@admin.route('/admin/pendingReleaseForms.html',  methods=['GET'])
+def pendingReleaseForms():
+    try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
+        pending_release_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Release Form").order_by(-FormHistory.createdDate)
+        users = User.select()
+
+        return render_template( 'admin/pendingReleaseForms.html',
+                                username=current_user.username,
+                                users=users,
+                                pending_release_forms = pending_release_forms
+                                )
     except Exception as e:
         print(e)
         return render_template('errors/500.html')
