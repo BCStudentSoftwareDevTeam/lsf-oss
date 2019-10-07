@@ -378,7 +378,7 @@ function populateTable(){
           $("#currentDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +'</label><br/>')
         }
         else{
-          $("#allDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student + " (" + (term) + ")" +'</label><br/>')
+          $("#allDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +'</label><br/>')
         }
       // $(".hiddenColumn").hide()
         // console.log(student);

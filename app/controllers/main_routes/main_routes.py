@@ -82,36 +82,37 @@ def index():
 
     # On the click of the download button, 'POST' method will send all checked boxes from modal to excel maker
     if request.method== 'POST':
-        print(department)
         value =[]
+        try:
+            for form in currentDepartmentStudents:
+                name = str(form.laborStatusFormID)
+                if request.form.get(name):
+                    value.append( request.form.get(name))
+
+            for form in allDepartmentStudents:
+                name = str(form.laborStatusFormID)
+                if request.form.get(name):
+                    value.append( request.form.get(name))
+            for form in inactiveDepStudent:
+                name = str(form.laborStatusFormID)
+                if request.form.get(name):
+                    value.append( request.form.get(name))
+        except Exception as e:
+            print(e)
         for form in currentSupervisees:
             name = str(form.laborStatusFormID)
             if request.form.get(name):
                 value.append( request.form.get(name))
-
         for form in pastSupervisees:
             name = str(form.laborStatusFormID)
             if request.form.get(name):
                 value.append( request.form.get(name))
-
         for form in inactiveSupervisees:
             name = str(form.laborStatusFormID)
             if request.form.get(name):
                 value.append( request.form.get(name))
 
-        for form in currentDepartmentStudents:
-            name = str(form.laborStatusFormID)
-            if request.form.get(name):
-                value.append( request.form.get(name))
 
-        for form in allDepartmentStudents:
-            name = str(form.laborStatusFormID)
-            if request.form.get(name):
-                value.append( request.form.get(name))
-        for form in inactiveDepStudent:
-            name = str(form.laborStatusFormID)
-            if request.form.get(name):
-                value.append( request.form.get(name))
         # Prevents 'POST' method from sending the same value twice to excel maker
         noDuplicateList = []
         for i in value:
