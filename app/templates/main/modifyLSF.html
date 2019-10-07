@@ -152,11 +152,10 @@
         <button type="cancel" class="btn btn-danger">Cancel</button>
       </div>
       <div class="submitbutton">
-        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal"> Submit Changes</button>
+        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal">Submit Changes</button>
+        {% include "snips/ReviewForm.html" %}
       </div>
     </div>
-
-
     <!-- start of modal -->
        <div class="modal fade" id="submitModal" role="dialog">
            <div class="modal-dialog modal-dialog-centered" role="document">

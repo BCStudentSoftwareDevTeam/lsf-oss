@@ -107,7 +107,7 @@ function positioncheck(){
       $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", false);
       $('.selectpicker').selectpicker('refresh');
     }
-  }s
+  }
   catch(err){
     console.log(err)
   }
@@ -117,42 +117,50 @@ function positioncheck(){
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');
 var finalDict = {};
 function buttonListener(laborStatusKey) {
-  var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
-  var newValue = $("#modifyLSF").find("select.newValue, textarea.newValue, input.newValue");
-  var effectiveDate = document.getElementById("datetimepicker0").value;
-  var notesOld = document.getElementById("oldNotes").value;
-  var notesNew = document.getElementById("supervisorNotes").value;
-  for (var i=0; i < newValue.length; i=i+1) {
-    console.log(i);
-    console.log(oldValue[i].value);
-    console.log(newValue[i].value);
-    newVal = $(newValue[i]).val();
-    console.log(newVal)
-    if (oldValue[i].value != newVal && newVal != "") { //If the oldValue differs from the newValue, add it to the dictionary
-      finalDict[newValue[i].id] = {"oldValue": oldValue[i].value,
-                                     "newValue": newVal,
+  $("#modifyLSF :input").change(function() {
+     $("#modifyLSF").data("changed",true);
+  });
+  if ($("#myform").data("changed")) {
+    var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
+    var newValue = $("#modifyLSF").find("select.newValue, textarea.newValue, input.newValue");
+    var effectiveDate = document.getElementById("datetimepicker0").value;
+    var notesOld = document.getElementById("oldNotes").value;
+    var notesNew = document.getElementById("supervisorNotes").value;
+    for (var i=0; i < newValue.length; i=i+1) {
+      console.log(i);
+      console.log(oldValue[i].value);
+      console.log(newValue[i].value);
+      newVal = $(newValue[i]).val();
+      console.log(newVal)
+      if (oldValue[i].value != newVal && newVal != "") { //If the oldValue differs from the newValue, add it to the dictionary
+        finalDict[newValue[i].id] = {"oldValue": oldValue[i].value,
+                                       "newValue": newVal,
+                                       "date": effectiveDate
+                                    }
+        }
+    }
+    if (notesOld != notesNew) { //Adds notes to dictionary if theyre different
+      finalDict["supervisorNotes"] = {"oldValue": notesOld,
+                                     "newValue": notesNew,
                                      "date": effectiveDate
-                                  }
-      }
-  }
-  if (notesOld != notesNew) { //Adds notes to dictionary if theyre different
-    finalDict["supervisorNotes"] = {"oldValue": notesOld,
-                                   "newValue": notesNew,
-                                   "date": effectiveDate
-                                  }
-  }
-  console.log(finalDict)
-  var url = "/modifyLSF/submitModifiedForm/" + laborStatusKey;
-  modifiedDict = JSON.stringify(finalDict)
-      $.ajax({
-        url: url,
-        method: "POST",
-        contentType: 'application/json',
-        data: modifiedDict,
-        success: function(response) {
-            if (response["Success"]) {
-              window.location.href = response["url"]
+                                    }
+    }
+    console.log(finalDict)
+    var url = "/modifyLSF/submitModifiedForm/" + laborStatusKey;
+    modifiedDict = JSON.stringify(finalDict)
+        $.ajax({
+          url: url,
+          method: "POST",
+          contentType: 'application/json',
+          data: modifiedDict,
+          success: function(response) {
+              if (response["Success"]) {
+                window.location.href = response["url"]
+              }
             }
-          }
-      })
+        })
+  }
+  else{
+    
+  }
 }
