@@ -16,7 +16,7 @@ function fill_positions(response) {
     for (var key in response) {
       var options = document.createElement("option");
       options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
-      options.value = key;
+      options.value = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")";
       selected_positions.appendChild(options);
     $('.selectpicker').selectpicker('refresh');
   }
@@ -82,15 +82,34 @@ function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker
  }
 }
 function positioncheck(){
-  var jobType = $("#jobType").val();
-  var position = $("#POSN_TITLE").val();
-  var wls = position[position.length -1]
-  console.log(jobType)
-  console.log(position)
-  console.log(wls)
-  if (jobType == "Secondary" && (wls == "(6)" || wls == "(5)" )){
-    $("#POSN_TITLE").val(1);
-    $('.selectpicker').selectpicker('refresh');
+  try{
+    var position =$("#POSN_TITLE").val();
+    var jobType = $("#jobType").val();
+    if (jobType == "Primary"){
+      $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", false);
+      $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", false);
+      $('.selectpicker').selectpicker('refresh');
+    }
+    var wls = position[position.length -2]
+    if (jobType == "Secondary" && (wls == "6" || wls == "5" )){
+      $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", true);
+      $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", true);
+      $("#POSN_TITLE").val(1);
+      $('.selectpicker').selectpicker('refresh');
+    }
+    if (jobType == "Secondary" && (wls !== "6" || wls !== "5" )){
+      $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", true);
+      $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", true);
+      $('.selectpicker').selectpicker('refresh');
+    }
+    if (jobType == "Primary" && (wls !== "6" || wls !== "5")){
+      $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", false);
+      $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", false);
+      $('.selectpicker').selectpicker('refresh');
+    }
+  }s
+  catch(err){
+    console.log(err)
   }
 }
 //////////Modified form check and dictionary creation////////////
