@@ -26,7 +26,7 @@
        </div>
        <div class="form-group">
          <label for="supervisor" class="field">Supervisor:</label>
-         <div>
+         <div class="change">
            <select required type="supervisor"
                             class="selectpicker form-control newValue"
                             id="supervisor"
@@ -48,7 +48,7 @@
        </div>
        <div class="form-group">
          <label for="POSN_TITLE" class="field">Position:</label>
-         <div>
+         <div  class="change">
            <select required type="POSN_TITLE"
                             class="selectpicker form-control newValue"
                             id="POSN_TITLE"
@@ -62,7 +62,7 @@
        <!-- This selectpicker will be disabled if term is for a break, since jobtype is always Secondary-->
        <div class="form-group">
          <label for="jobType">Job Type</label>
-         <div>
+         <div  class="change">
            <select type="jobType"
                             class="selectpicker form-control newValue"
                             id="jobType"
@@ -88,7 +88,7 @@
      <div id="contractHoursDiv" class="form-group newValue">
         <!-- Contract hours for breaks -->
            <label for="contractHours">Contract Hours</label>
-           <div>
+           <div  class="change">
              <input class="form-control quantity newValue disable"
                      type = "number"
                      name='contractHours'
@@ -104,7 +104,7 @@
         </div>
      <div id="weeklyHoursDiv" class="form-group">
             <label for="weeklyHours">Hours Per Week</label>
-            <div>
+            <div  class="change">
               <select  type="weeklyHours"
                        class="selectpicker form-control newValue"
                        id="weeklyHours"
@@ -130,7 +130,7 @@
 
     <div class="form-group" id= "dateDiv">
     <label for="datetimepicker" class="required-asterisk">Date Needed:</label>
-      <div class="input-group date">
+      <div class="input-group date"  class="change">
         <input type="text" class="form-control effectiveDate" id="datetimepicker0" placeholder="MM/DD/YYYY" required > <!--Should prefill with todays date though// effective date does not have old/new value comparison-->
         <span class="input-group-addon">
         <span class="glyphicon glyphicon-calendar"></span>
@@ -139,7 +139,7 @@
      </div>
      <div class="form-group" >
        <label for="supervisorNotes">Notes:</label>
-       <div>
+       <div class ="change">
          <textarea name="supervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue">{{prefillnotes}}</textarea>
           <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}">  </input>
        </div>
@@ -152,7 +152,7 @@
         <button type="cancel" class="btn btn-danger">Cancel</button>
       </div>
       <div class="submitbutton">
-        <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal">Submit Changes</button>
+        <button id="submit" type="button" class="btn btn-success" onclick="checkForChange()">Submit Changes</button>
         {% include "snips/ReviewForm.html" %}
       </div>
     </div>
