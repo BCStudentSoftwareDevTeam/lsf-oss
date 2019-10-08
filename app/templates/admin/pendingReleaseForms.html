@@ -20,49 +20,49 @@
     </thead>
 
     <tbody id="tablebody">
-      {% for formHistory in pending_labor_forms %}
+      {% for releaseForms in pending_release_forms %}
       <tr id="tableData" class="tableData" align="center">
           <td> {# APPROVE #}
-            <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.laborStatusFormID}}" />
-            <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})"
+            <input type='checkbox' id='chk_{{releaseForms.formID.laborStatusFormID}}' value= "{{releaseForms.formID.laborStatusFormID}}" />
+            <span  id="notes_{{releaseForms.formID.laborStatusFormID}}" onclick="getNotes({{releaseForms.formID.laborStatusFormID}})"
                    class="glyphicon glyphicon-book btn-lg
-                        {% if formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes == None %} text-success
-                        {% elif formHistory.formID.laborDepartmentNotes != None and formHistory.formID.supervisorNotes == None  %} text-danger
-                        {% elif formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes != None %} text-danger
+                        {% if releaseForms.formID.supervisorNotes != None and releaseForms.formID.laborDepartmentNotes == None %} text-success
+                        {% elif releaseForms.formID.laborDepartmentNotes != None and releaseForms.formID.supervisorNotes == None  %} text-danger
+                        {% elif releaseForms.formID.supervisorNotes != None and releaseForms.formID.laborDepartmentNotes != None %} text-danger
                         {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
 
           </td>
           <td> {# TERM #}
-            {{formHistory.formID.termCode.termName}}
+            {{releaseForms.formID.termCode.termName}}
           </td>
           <td> {# DEPARTMENT #}
-            {{formHistory.formID.department.DEPT_NAME}} ({{formHistory.formID.department.ORG}}-{{formHistory.formID.department.ACCOUNT}})
+            {{releaseForms.formID.department.DEPT_NAME}} ({{releaseForms.formID.department.ORG}}-{{releaseForms.formID.department.ACCOUNT}})
           </td>
           <td> {# SUPERVISOR #}
-            {{formHistory.formID.supervisor.FIRST_NAME}} {{formHistory.formID.supervisor.LAST_NAME}}
+            {{releaseForms.formID.supervisor.FIRST_NAME}} {{releaseForms.formID.supervisor.LAST_NAME}}
           </td>
           <td>
             |
           </td>
           <td> {# STUDENT #}
-            {{formHistory.formID.studentSupervisee.FIRST_NAME}}  {{formHistory.formID.studentSupervisee.LAST_NAME}}  ({{formHistory.formID.studentSupervisee.ID}})
+            {{releaseForms.formID.studentSupervisee.FIRST_NAME}}  {{releaseForms.formID.studentSupervisee.LAST_NAME}}  ({{releaseForms.formID.studentSupervisee.ID}})
           </td>
           <td> {# POSITON AND WLS #}
-            {{formHistory.formID.POSN_TITLE}} ({{formHistory.formID.WLS}})
+            {{releaseForms.formID.POSN_TITLE}} ({{releaseForms.formID.WLS}})
           </td>
           <td> {# HOURS #}
-          {% if formHistory.formID.weeklyHours != None%} {{formHistory.formID.weeklyHours}} {% else %}   {{formHistory.formID.contractHours}} {% endif %}
+          {% if releaseForms.formID.weeklyHours != None%} {{releaseForms.formID.weeklyHours}} {% else %}   {{releaseForms.formID.contractHours}} {% endif %}
         </td>
         <td> {# CREATED BY #}
-          {{formHistory.createdBy.username}}  <br/> {{formHistory.createdDate.strftime('%m/%d/%y')}}
+          {{releaseForms.createdBy.username}}  <br/> {{releaseForms.createdDate.strftime('%m/%d/%y')}}
         </td>
         <td> {# CREATED DATE #}
-           {{formHistory.formID.startDate.strftime('%m/%d/%y')}} -  {{formHistory.formID.endDate.strftime('%m/%d/%y')}}
+           {{releaseForms.formID.startDate.strftime('%m/%d/%y')}} -  {{releaseForms.formID.endDate.strftime('%m/%d/%y')}}
         </td>
         <td> {# EDIT #}
-          <a href="/modifyLSF/{{formHistory.formID.laborStatusFormID}}"> <span id="edit_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
+          <a href="/modifyLSF/{{releaseForms.formID.laborStatusFormID}}"> <span id="edit_{{releaseForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
           <button
-                id="reject_{{formHistory.formID.laborStatusFormID}}"
+                id="reject_{{releaseForms.formID.laborStatusFormID}}"
                 type="button"
                 class ="btn btn-danger"
                 name = "rejectBtn"

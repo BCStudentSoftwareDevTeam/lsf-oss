@@ -50,10 +50,14 @@
           {% include "admin/allPendingForms.html" %}
 				</div>
 				<div class="tab-pane" id="laborPendingForms">
-          <h3>#TODO</h3>
+          <div class="tab-content">
+            <h3>#TODO</h3>
+          </div>
 				</div>
         <div class="tab-pane" id="modifiedPendingForms">
-          {% include "admin/pendingModifiedForms.html" %}
+          <div class="tab-content">
+            {% include "/admin/pendingModifiedForms.html" %}
+          </div>
 				</div>
           <div class="tab-pane" id="overloadPendingForms">
           {% include "admin/pendingOverloadForms.html" %}
@@ -68,8 +72,8 @@
 
 
     </div>
-  <div class="col-lg-12" align="center" >
-    <table id="pendingForms" class="table table-striped pendingForms dataTable" >
+    <div class="col-lg-12" align="center" >
+    <table id="statusForms" class="table table-striped statusForms dataTable" >
       <!-- Made empty header tags because we need to hide the header -->
       <thead id="headTable" text-align="center" >
         <tr id="tableHeaders" class="tableHeaders"  >
@@ -88,49 +92,49 @@
       </thead>
 
       <tbody id="tablebody">
-        {% for formHistory in pending_labor_forms %}
+        {% for statusForm in pending_labor_forms %}
         <tr id="tableData" class="tableData" align="center">
             <td> {# APPROVE #}
-              <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.laborStatusFormID}}" />
-              <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})"
+              <input type='checkbox' id='chk_{{statusForm.formID.laborStatusFormID}}' value= "{{statusForm.formID.laborStatusFormID}}" />
+              <span  id="notes_{{statusForm.formID.laborStatusFormID}}" onclick="getNotes({{statusForm.formID.laborStatusFormID}})"
                      class="glyphicon glyphicon-book btn-lg
-                          {% if formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes == None %} text-success
-                          {% elif formHistory.formID.laborDepartmentNotes != None and formHistory.formID.supervisorNotes == None  %} text-danger
-                          {% elif formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes != None %} text-danger
+                          {% if statusForm.formID.supervisorNotes != None and statusForm.formID.laborDepartmentNotes == None %} text-success
+                          {% elif statusForm.formID.laborDepartmentNotes != None and statusForm.formID.supervisorNotes == None  %} text-danger
+                          {% elif statusForm.formID.supervisorNotes != None and statusForm.formID.laborDepartmentNotes != None %} text-danger
                           {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
 
             </td>
             <td> {# TERM #}
-              {{formHistory.formID.termCode.termName}}
+              {{statusForm.formID.termCode.termName}}
             </td>
             <td> {# DEPARTMENT #}
-              {{formHistory.formID.department.DEPT_NAME}} ({{formHistory.formID.department.ORG}}-{{formHistory.formID.department.ACCOUNT}})
+              {{statusForm.formID.department.DEPT_NAME}} ({{statusForm.formID.department.ORG}}-{{statusForm.formID.department.ACCOUNT}})
             </td>
             <td> {# SUPERVISOR #}
-              {{formHistory.formID.supervisor.FIRST_NAME}} {{formHistory.formID.supervisor.LAST_NAME}}
+              {{statusForm.formID.supervisor.FIRST_NAME}} {{statusForm.formID.supervisor.LAST_NAME}}
             </td>
             <td>
               |
             </td>
             <td> {# STUDENT #}
-              {{formHistory.formID.studentSupervisee.FIRST_NAME}}  {{formHistory.formID.studentSupervisee.LAST_NAME}}  ({{formHistory.formID.studentSupervisee.ID}})
+              {{statusForm.formID.studentSupervisee.FIRST_NAME}}  {{statusForm.formID.studentSupervisee.LAST_NAME}}  ({{statusForm.formID.studentSupervisee.ID}})
             </td>
             <td> {# POSITON AND WLS #}
-              {{formHistory.formID.POSN_TITLE}} ({{formHistory.formID.WLS}})
+              {{statusForm.formID.POSN_TITLE}} ({{statusForm.formID.WLS}})
             </td>
             <td> {# HOURS #}
-            {% if formHistory.formID.weeklyHours != None%} {{formHistory.formID.weeklyHours}} {% else %}   {{formHistory.formID.contractHours}} {% endif %}
+            {% if statusForm.formID.weeklyHours != None%} {{statusForm.formID.weeklyHours}} {% else %}   {{statusForm.formID.contractHours}} {% endif %}
           </td>
           <td> {# CREATED BY #}
-            {{formHistory.createdBy.username}}  <br/> {{formHistory.createdDate.strftime('%m/%d/%y')}}
+            {{statusForm.createdBy.username}}  <br/> {{statusForm.createdDate.strftime('%m/%d/%y')}}
           </td>
           <td> {# CREATED DATE #}
-             {{formHistory.formID.startDate.strftime('%m/%d/%y')}} -  {{formHistory.formID.endDate.strftime('%m/%d/%y')}}
+             {{statusForm.formID.startDate.strftime('%m/%d/%y')}} -  {{statusForm.formID.endDate.strftime('%m/%d/%y')}}
           </td>
           <td> {# EDIT #}
-            <a href="/modifyLSF/{{formHistory.formID.laborStatusFormID}}"> <span id="edit_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
+            <a href="/modifyLSF/{{statusForm.formID.laborStatusFormID}}"> <span id="edit_{{statusForm.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
             <button
-                  id="reject_{{formHistory.formID.laborStatusFormID}}"
+                  id="reject_{{statusForm.formID.laborStatusFormID}}"
                   type="button"
                   class ="btn btn-danger"
                   name = "rejectBtn"
@@ -138,9 +142,7 @@
                   data-toggle="modal" data-target="#rejectModal">
                   Deny
             </button>
-
           </td>
-
         </tr>
         {% endfor %}
       </tbody>
@@ -157,6 +159,8 @@
           </button>
         </div>
       </div>
+
+
 
 
       <!-- START OF MODAL adding notes -->
@@ -230,5 +234,6 @@
       </div>
       </div>
       <!-- END OF MODAL -->
+
 </div>
 {% endblock %}

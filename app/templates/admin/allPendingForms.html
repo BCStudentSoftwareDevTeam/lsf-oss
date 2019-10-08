@@ -19,49 +19,49 @@
     </thead>
 
     <tbody id="tablebody">
-      {% for formHistory in pending_labor_forms %}
+      {% for allForms in all_pending_forms %}
       <tr id="tableData" class="tableData" align="center">
           <td> {# APPROVE #}
-            <input type='checkbox' id='chk_{{formHistory.formID.laborStatusFormID}}' value= "{{formHistory.formID.laborStatusFormID}}" />
-            <span  id="notes_{{formHistory.formID.laborStatusFormID}}" onclick="getNotes({{formHistory.formID.laborStatusFormID}})"
+            <input type='checkbox' id='chk_{{allForms.formID.laborStatusFormID}}' value= "{{allForms.formID.laborStatusFormID}}" />
+            <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
                    class="glyphicon glyphicon-book btn-lg
-                        {% if formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes == None %} text-success
-                        {% elif formHistory.formID.laborDepartmentNotes != None and formHistory.formID.supervisorNotes == None  %} text-danger
-                        {% elif formHistory.formID.supervisorNotes != None and formHistory.formID.laborDepartmentNotes != None %} text-danger
+                        {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
+                        {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
+                        {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
                         {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
 
           </td>
           <td> {# TERM #}
-            {{formHistory.formID.termCode.termName}}
+            {{allForms.formID.termCode.termName}}
           </td>
           <td> {# DEPARTMENT #}
-            {{formHistory.formID.department.DEPT_NAME}} ({{formHistory.formID.department.ORG}}-{{formHistory.formID.department.ACCOUNT}})
+            {{allForms.formID.department.DEPT_NAME}} ({{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}})
           </td>
           <td> {# SUPERVISOR #}
-            {{formHistory.formID.supervisor.FIRST_NAME}} {{formHistory.formID.supervisor.LAST_NAME}}
+            {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
           </td>
           <td>
             |
           </td>
           <td> {# STUDENT #}
-            {{formHistory.formID.studentSupervisee.FIRST_NAME}}  {{formHistory.formID.studentSupervisee.LAST_NAME}}  ({{formHistory.formID.studentSupervisee.ID}})
+            {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}  ({{allForms.formID.studentSupervisee.ID}})
           </td>
           <td> {# POSITON AND WLS #}
-            {{formHistory.formID.POSN_TITLE}} ({{formHistory.formID.WLS}})
+            {{allForms.formID.POSN_TITLE}} ({{allForms.formID.WLS}})
           </td>
           <td> {# HOURS #}
-          {% if formHistory.formID.weeklyHours != None%} {{formHistory.formID.weeklyHours}} {% else %}   {{formHistory.formID.contractHours}} {% endif %}
+          {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}
         </td>
         <td> {# CREATED BY #}
-          {{formHistory.createdBy.username}}  <br/> {{formHistory.createdDate.strftime('%m/%d/%y')}}
+          {{allForms.createdBy.username}}  <br/> {{allForms.createdDate.strftime('%m/%d/%y')}}
         </td>
         <td> {# CREATED DATE #}
-           {{formHistory.formID.startDate.strftime('%m/%d/%y')}} -  {{formHistory.formID.endDate.strftime('%m/%d/%y')}}
+           {{allForms.formID.startDate.strftime('%m/%d/%y')}} -  {{allForms.formID.endDate.strftime('%m/%d/%y')}}
         </td>
         <td> {# EDIT #}
-          <a href="/modifyLSF/{{formHistory.formID.laborStatusFormID}}"> <span id="edit_{{formHistory.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
+          <a href="/modifyLSF/{{allForms.formID.laborStatusFormID}}"> <span id="edit_{{allForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
           <button
-                id="reject_{{formHistory.formID.laborStatusFormID}}"
+                id="reject_{{allForms.formID.laborStatusFormID}}"
                 type="button"
                 class ="btn btn-danger"
                 name = "rejectBtn"
@@ -100,7 +100,7 @@
           </div>
           <div class="modal-body" >
             <p> These notes are only for the Labor Office Staff.</p>
-            <p> Pre-fill this with the notes from the supervisor
+            <p> Pre-fill this with the notes from the supervisor </p>
               <div id="notesDiv">
                  <h5> <b>Supervisor Notes  </b> </h5>
                 <p id="notesText" class="notesText" </p>
