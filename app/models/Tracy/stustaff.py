@@ -3,7 +3,7 @@ from app.models.Tracy import *
 
 
 class STUSTAFF(baseModel):
-	PIDM  		= CharField(primary_key=True)
+	PIDM  		= PrimaryKeyField() 
 	ID  		= CharField(null=True)		# B-number
 	FIRST_NAME  = CharField(null=True)
 	LAST_NAME  	= CharField(null=True)
