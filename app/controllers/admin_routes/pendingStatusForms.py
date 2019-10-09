@@ -38,8 +38,8 @@ def allPendingForms():
         return render_template('errors/500.html')
 
 #        PENDING LABOR STATUS FORMS         #
-@admin.route('/admin/pendingStatusForms',  methods=['GET'])
-def pendingForms():
+@admin.route('/admin/allPendingForms',  methods=['GET'])
+def allPendingForms():
     try:
         current_user = require_login()
         if not current_user:                    # Not logged in
@@ -57,7 +57,7 @@ def pendingForms():
         # print(pending_labor_forms)
         users = User.select()
 
-        return render_template( 'admin/pendingStatusForms.html',
+        return render_template( 'admin/allPendingForms.html',
 
                                 title=('Pending Forms'),
                                 username=current_user.username,
@@ -71,6 +71,32 @@ def pendingForms():
     except Exception as e:
         print("pending status", e)
         return render_template('errors/500.html')
+
+//=
+@admin.route('/admin/pendingStatusForms',  methods=['GET'])
+def pendingStatusForms():
+    try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
+        print("Test")
+        pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate)                # # Logged in & Admin
+        print("I'm here")
+        print(pending_modified_forms)
+        users = User.select()
+
+        return render_template( 'admin/pendingModifiedForms.html',
+                                username=current_user.username,
+                                users=users,
+                                pending_labor_forms = pending_labor_forms
+                                )
+    except Exception as e:
+        print(e)
+        return render_template('errors/500.html')
+
 
 #        PENDING MODIFIED FORMS         #
 @admin.route('/admin/pendingModifiedForms',  methods=['GET'])

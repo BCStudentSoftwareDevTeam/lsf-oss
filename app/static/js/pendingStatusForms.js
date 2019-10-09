@@ -47,8 +47,7 @@ function updateApproveTableData(returned_details){
         }
       }
 
-//this method changes the status of the lsf from pending to approved status
-function finalApproval() {
+function finalApproval() { //this method changes the status of the lsf from pending to approved status
   data = JSON.stringify(labor_details_ids);
   $.ajax({
     type: "POST",
@@ -65,7 +64,6 @@ function finalApproval() {
        }
      }
    })
-
  };
 
 labor_denial_id=[]; //this arrary is for insertDenial() and finalDenial() methods
@@ -85,7 +83,6 @@ function insertDenial(val){
          labor_denial_detials = response;
          // location.reload(true);
          finalDenial_data(labor_denial_detials);
-
         }
       }
     })
@@ -109,10 +106,9 @@ function finalDenial_data(returned_details){
       }
       $('#denyTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>');
         }
-
       }
-// this mehod is AJAX call for the finalDenial method in python file
- function finalDenial() {
+
+ function finalDenial() {// this mehod is AJAX call for the finalDenial method in python file
    data = JSON.stringify(labor_denial_id);
    $.ajax({
      type: "POST",
@@ -129,9 +125,7 @@ function finalDenial_data(returned_details){
             }
           }
         })
-
       };
-
 
 function getNotes (formId) {
   console.log(formId);
@@ -199,7 +193,6 @@ function getNotes (formId) {
                 $(notesGlyph).removeClass("text-secondary");
                 $(notesGlyph).addClass("text-danger");
                 }
-
                 window.location.reload(true);
               }
           }
@@ -208,7 +201,7 @@ function getNotes (formId) {
 
 function createTabledataDictionary() { // puts all of the forms into dictionaries
   var listDictAJAX = [];
-  $('#mytable tr').has('td').each(function() {
+  $('#statusForms tr').has('td').each(function() {
     /* Get the input box values first */
       supervisor = $("#selectedSupervisor").val();
       department = $("#selectedDepartment").val();
@@ -235,7 +228,6 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
             var notes = $(aTag).data('note');
             tableDataDict["Supervisor Notes"] = notes;
             tableDataDict[headers_2_data[index]] = $(item).html();
-
           }
         });
         listDictAJAX.push(tableDataDict);
@@ -266,7 +258,6 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
   delete allTableDataDict["0"] // gets rid of the first dictionary that contains table labels
   return allTableDataDict
 }
-
 
 function clearTextArea(){ //makes sure that it empties text areas and p tags when modal is closed
   $("#notesText").empty();
