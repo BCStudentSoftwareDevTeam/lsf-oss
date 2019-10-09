@@ -34,7 +34,7 @@ def allPendingForms():
                                 all_pending_forms = all_pending_forms
                                 )
     except Exception as e:
-        print(e)
+        print("all pending", e)
         return render_template('errors/500.html')
 
 #        PENDING LABOR STATUS FORMS         #
@@ -69,7 +69,7 @@ def pendingForms():
                                 pending_release_forms = pending_release_forms
                                 )
     except Exception as e:
-        print(e)
+        print("pending status", e)
         return render_template('errors/500.html')
 
 #        PENDING MODIFIED FORMS         #
