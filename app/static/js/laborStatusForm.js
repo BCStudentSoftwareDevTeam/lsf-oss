@@ -293,6 +293,8 @@ function saveNotes(obj){ // saves notes written in textarea when save button of 
 function deleteRow(row) { // Deletes Row when remove glyphicon is clicked.
   $(row).parents("tr").remove();
   // TODO: Will we need to modify the global array at all when this is called as well?
+  // Yes. We'll need to delete the corresponding item when this funtion is called
+  // TODO: Delete the corresponding item when this funtion is called. Likely before it is removed from the table
 }
 //END of glyphicons
 
@@ -364,15 +366,15 @@ function createStuDict(){
     var hoursPerWeekName = $("#selectedHoursPerWeek option:selected").text();
   }
   else {
-    var selectedContractHoursName = $("selectedContractHours").value;
+    var selectedContractHoursName = $("#selectedContractHours").val();
   }
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
-    var studentDict ={stuName: studentName,
+    var studentDict = {stuName: studentName,
                       stuBNumber: studentBNumber,
                       stuPosition: positionName,
                       stuPositionCode: positionCode,
                       stuJobType: jobTypeName,
-                      stuHours: hoursPerWeekName,
+                      stuHours: parseInt(hoursPerWeekName, 10),
                       stuWLS: wls,
                       stuStartDate: startDate,
                       stuEndDate: endDate,
@@ -382,15 +384,16 @@ function createStuDict(){
   }
   else{
      //#TODO: Add student dictionary for breaks to the global array
-    var studentDict ={stuName: studentName,
+    var studentDict = {stuName: studentName,
                       stuBNumber: studentBNumber,
                       stuPosition: positionName,
                       stuPositionCode: positionCode,
-                      stuContractHours: selectedContractHoursName,
+                      stuContractHours: parseInt(selectedContractHoursName, 10),
                       stuStartDate: startDate,
                       stuEndDate: endDate,
                       stuTermCode: termCodeSelected,
-                      stuNotes: ""
+                      stuNotes: "",
+                      stuJobType: "Secondary"
                       };
   }
   return studentDict;
@@ -401,7 +404,6 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
     if(globalArrayOfStudents[i].stuName == studentDict.stuName &&
       globalArrayOfStudents[i].stuJobType == studentDict.stuJobType &&
       (studentDict.stuJobType == "Primary" || globalArrayOfStudents[i].stuPosition == studentDict.stuPosition)){
-      //FIXME: Change this to JQuery
       $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position.";
       $("#warningModal").modal("show");
       return false;
@@ -421,59 +423,57 @@ function checkPrimaryPosition(studentDict){
       console.log(response);
       console.log("post response");
       console.log(studentDict);
-
-      try {
-        if (response["PrimarySupervisor"]["selectedJobType"] == "Primary" && studentDict["stuJobType"] == "Primary"){
+      console.log(Object.keys(response).length);
+      if(Object.keys(response).length > 0) {
+        if (studentDict["stuJobType"] == "Primary"){
           console.log("Adding Primary with Primary in database");
-          /// TODO: Display modal saying student already has a primary postion
-          $("warningModalText").innerHTML = studentDict['stuName'] + " aleady has a primary position."
+          $("warningModalText").innerHTML = studentDict['stuName'] + " already has a primary position."
           $("warningModal").modal("show");
         }
-        else if(response["PrimarySupervisor"]["selectedJobType"] == "Primary" && studentDict["stuJobType"] == "Secondary"){
+        else if(studentDict["stuJobType"] == "Secondary"){
           console.log("Adding Secondary with Primary in database");
-          if (checkDuplicate(studentDict) == true){
+          if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true) {
             createAndFillTable(studentDict);
           }
           else {
             console.log("This is a duplicate")
-            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position."; //Is this right?  Someone should double check
+            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position."; //Is this right?  Someone should double check
             $("#warningModal").modal("show");
           }
         }
       }
-      catch(e) {
-        //console.log(e);
+
+
+      else {
         if(studentDict["stuJobType"] == "Primary"){
           console.log("Adding Primary without Primary in database");
-          if (checkDuplicate(studentDict) == true){
+          if (checkDuplicate(studentDict) == true  && checkTotalHours(studentDict, response) == true){
             createAndFillTable(studentDict);
           }
           else {
             console.log("This is a duplicate")
-            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position."; //Is this right?  Someone should double check
+            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position."; //Is this right?  Someone should double check
             $("#warningModal").modal("show");
+          }
         }
-      }
         else {
           if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
-          console.log("Adding Secondary without Primary in database");
-          $("warningModalText").innerHTML = studentDict['stuName'] + " needs a primary position before a secondary position can be added."
-          $("warningModal").modal("show");
-        }
-        else {
-          if (checkDuplicate(studentDict) == true){
-            createAndFillTable(studentDict);
+            console.log("Adding Secondary without Primary in database");
+            $("warningModalText").innerHTML = studentDict['stuName'] + " needs an approved primary position before a secondary position can be added."
+            $("warningModal").modal("show");
           }
           else {
-            console.log("This is a duplicate")
-            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position."; //Is this right?  Someone should double check
-            $("#warningModal").modal("show");
-        }
-        }
-
+            if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true){
+              createAndFillTable(studentDict);
+            }
+            else {
+              console.log("This is a duplicate")
+              $("warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position."; //Is this right?  Someone should double check
+              $("#warningModal").modal("show");
+            }
+          }
         }
       }
-
     }
   });
 }
@@ -493,7 +493,7 @@ function createAndFillTable(studentDict) {
     var notesID2 = notesID1.substring(0, notesID1.indexOf("("));
   }
   else {
-    var selectedContractHoursName = $("selectedContractHours").val();// For whatever reason this is undefined
+    var selectedContractHoursName = $("#selectedContractHours").val();// For whatever reason this is undefined
   }
   var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(\""+notesID2+"\")\" id= \""+notesID2+
                                                           "\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
@@ -533,40 +533,30 @@ function createAndFillTable(studentDict) {
   }
 }
 
-var totalHourDict = {};
-function checkTotalhoursTable() {//Checks if the student has enough hours to require an overload form
-}
-
-function checkForTotalHours() {// gets sum of the total weekly hours from the database and add it to the ones in the table.
-  var student = $("#student").val();
-  // console.log(student);
-  var term = $("#selectedTerm").val();
-  // console.log(term);
-  var url = "/laborstatusform/gethours/" + term +"/" +student;
-  $.ajax({
-    url: url,
-    dataType: "json",
-    success: function (response){
-      var totalHours = 0;
-      for(i = 0; i < globalArrayOfStudents.length; i++) {
-         if (globalArrayOfStudents[i].stuName == student) {
-           totalHours = totalHours + globalArrayOfStudents[i].stuHours;
-            }
-          }
-      var totalWeeklyHoursFromDatabase = response.weeklyHours["Total Weekly Hours"];
-      totalHours = totalWeeklyHoursFromDatabase + totalHours;
-      if (totalHours > 15){ // if hours exceed 15 pop up overload modal
-        $("#OverloadModal").modal("show");
-        $("#overloadModalButton").attr("data-target", "#PrimaryModal");
-        $("#OverloadModal").on("hidden.bs.modal", function() {
-        $("#PrimaryModal").modal("show");
-        });
-      }
-      else{
-        $("#PrimaryModal").modal("show"); // modal saying primary supervisor will be notified
-      }
+function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours from the database and add it to the ones in the table.
+  totalHoursCount = studentDict.stuHours;
+  console.log("In checkTotalHours");
+  console.log(studentDict);
+  console.log(databasePositions);
+  console.log("First Loop");
+  for (i = 0; i < globalArrayOfStudents.length; i++){
+    if (globalArrayOfStudents[i].stuName == studentDict.stuName){
+      console.log(totalHoursCount);
+      totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuHours;
     }
-  });
+  }
+  console.log("Second Loop");
+  for (i = 0; i < databasePositions.length; i++){
+    console.log(totalHoursCount);
+    totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours;
+  }
+  console.log(totalHoursCount + "     YEEEEEET!");
+  if (totalHoursCount >= (69 - 54)){
+    // TODO: Show modal saying they have too many hours
+    console.log("Student has too many hours and needs an overload form");
+    //return false
+  }
+  return true;
 }
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.

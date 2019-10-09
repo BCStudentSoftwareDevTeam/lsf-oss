@@ -222,34 +222,21 @@ def getPositions(department):
 def checkForPrimaryPosition(termCode, student):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
-    print("Something")
-    print(type(positions))
+    print("Inside the Controller")
     positionsList = []
     for item in positions:
         positionsDict = {}
-        print(type(item))
-        print(item)
-        print(item.__data__["weeklyHours"])
-        positionsDict["weeklyHours"] = item.__data__["weeklyHours"]
-        positionsDict["contractHours"] = item.__data__["contractHours"]
-        positionsDict["jobType"] = item.__data__["jobType"]
-        positionsDict["weeklyHours"] = item.__data__["weeklyHours"]
-        positionsDict["weeklyHours"] = item.__data__["weeklyHours"]
-        positionsDict["weeklyHours"] = item.__data__["weeklyHours"]
-        positionsDict["weeklyHours"] = item.__data__["weeklyHours"]
-        positionsDict["weeklyHours"] = item.__data__["weeklyHours"]
+        positionsDict["weeklyHours"] = item.weeklyHours
+        positionsDict["contractHours"] = item.contractHours
+        positionsDict["jobType"] = item.jobType
+        positionsDict["POSN_TITLE"] = item.POSN_TITLE
+        positionsDict["POSN_CODE"] = item.POSN_CODE
+        positionsDict["primarySupervisorName"] = item.supervisor.FIRST_NAME
+        positionsDict["primarySupervisorLastName"] = item.supervisor.LAST_NAME
+        # positionsDict["primarySupervisorUserName"] = item.supervisor.username #Passes Primary Supervisor's username if necessary
+        positionsList.append(positionsDict)
+    # print(positionsList)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
-
-# @main_bp.route("/laborstatusform/gethours/<termCode>/<student>", methods=["GET"])
-# def checkForTotalHours(termCode, student):
-#     """ Calculates total weekly hours of a student and returns the total. """
-#     hours = LaborStatusForm.select().where(LaborStatusForm.termCode == int(termCode), LaborStatusForm.studentSupervisee == student)
-#     total = 0
-#     hoursDict = {}
-#     for hour in hours:
-#         total += hour.weeklyHours
-#     hoursDict["weeklyHours"] = {"Total Weekly Hours": total}
-#     return json.dumps(hoursDict)
 
 @main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
 def checkCompliance(department):
