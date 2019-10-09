@@ -318,32 +318,32 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
   var studentDict = createStuDict();
   checkPrimaryPosition(studentDict);
   return;
-  // if (fields_are_empty(id_list)) {
-  //   errorFlash();
-  // }
-  // // else if (checkWLS()){
-  //   var termCode = $("#selectedTerm").val();
-  //   var whichTerm = termCode.toString().substr(-2);
-  //   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-  //     id_list = ["student", "position", "selectedContractHours"];
-  //     if (fields_are_empty(id_list)) {
-  //       errorFlash();
-  //     }
-  //     else {
-  //       checkDuplicateBreaks();
-  //      }
-  //     }
-  //   else {
-  //     id_list = ["student", "position", "jobType", "selectedHoursPerWeek"];
-  //     if (fields_are_empty(id_list)) {
-  //       errorFlash();
-  //     }
-  //     else {
-        // checkDuplicate();
-        // return;
-  //     }
-  //   }
-  // }
+  if (fields_are_empty(id_list)) {
+    errorFlash();
+  }
+  else if (checkWLS()){
+    var termCode = $("#selectedTerm").val();
+    var whichTerm = termCode.toString().substr(-2);
+    if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+      id_list = ["student", "position", "selectedContractHours"];
+      if (fields_are_empty(id_list)) {
+        errorFlash();
+      }
+      else {
+        checkDuplicate();
+       }
+      }
+    else {
+      id_list = ["student", "position", "jobType", "selectedHoursPerWeek"];
+      if (fields_are_empty(id_list)) {
+        errorFlash();
+      }
+      else {
+        checkDuplicate();
+        return;
+      }
+    }
+  }
 }
 function createStuDict(){
   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
@@ -364,7 +364,7 @@ function createStuDict(){
     var hoursPerWeekName = $("#selectedHoursPerWeek option:selected").text();
   }
   else {
-    var selectedContractHoursName = $("selectedContractHours").value;
+    var selectedContractHoursName = $("#selectedContractHours").val();
   }
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
     var studentDict ={stuName: studentName,
@@ -436,7 +436,7 @@ function checkPrimaryPosition(studentDict){
           }
           else {
             console.log("This is a duplicate")
-            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position."; //Is this right?  Someone should double check
+            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position."; //Is this right?  Should double check
             $("#warningModal").modal("show");
           }
         }
@@ -450,7 +450,7 @@ function checkPrimaryPosition(studentDict){
           }
           else {
             console.log("This is a duplicate")
-            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position."; //Is this right?  Someone should double check
+            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position."; //Is this right?  Should double check
             $("#warningModal").modal("show");
         }
       }
@@ -466,7 +466,7 @@ function checkPrimaryPosition(studentDict){
           }
           else {
             console.log("This is a duplicate")
-            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position."; //Is this right?  Someone should double check
+            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position."; //Is this right?  Should double check
             $("#warningModal").modal("show");
         }
         }
@@ -493,7 +493,7 @@ function createAndFillTable(studentDict) {
     var notesID2 = notesID1.substring(0, notesID1.indexOf("("));
   }
   else {
-    var selectedContractHoursName = $("selectedContractHours").val();// For whatever reason this is undefined
+    var selectedContractHoursName = $("#selectedContractHours"); // For whatever reason this is undefined
   }
   var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(\""+notesID2+"\")\" id= \""+notesID2+
                                                           "\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
