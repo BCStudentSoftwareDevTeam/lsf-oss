@@ -31,15 +31,11 @@ def index():
     todayDate = date.today()
     # Grabs all the labor status forms where the current user is the supervisor
     formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.UserID).order_by(LaborStatusForm.endDate.desc())
-    currentUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.createdBy == current_user.UserID) or (FormHistory.formID.supervisor == current_user.UserID)).distinct()
+    currentUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).distinct()
+    allDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).distinct()
 
-    # print("All Kids from Department:")
-    # for i in formsBySupervisees:
-    #     print(i.studentSupervisee.FIRST_NAME)
-    #     print(i.endDate)
-    #     print(i.startDate)
-    #     print(i.termCode.termName)
-    #     print("\n")
+    for i in allDepartments:
+        print(i.formID.department.DEPT_NAME)
 
 
     inactiveSupervisees = []
@@ -128,6 +124,16 @@ def index():
 
         # Returns the file path so the button will download the file
         return send_file(completePath,as_attachment=True, attachment_filename=filename)
+
+    if current_user.isLaborAdmin == 1:
+        return render_template( 'main/index.html',
+                    title=('Home'),
+                    currentSupervisees = currentSupervisees,
+                    pastSupervisees = pastSupervisees,
+                    inactiveSupervisees = inactiveSupervisees,
+                    UserID = current_user,
+                    currentUserDepartments = allDepartments
+                          )
 
     return render_template( 'main/index.html',
 				    title=('Home'),
