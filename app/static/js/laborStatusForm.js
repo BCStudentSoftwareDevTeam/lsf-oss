@@ -320,32 +320,32 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
   var studentDict = createStuDict();
   checkPrimaryPosition(studentDict);
   return;
-  // if (fields_are_empty(id_list)) {
-  //   errorFlash();
-  // }
-  // // else if (checkWLS()){
-  //   var termCode = $("#selectedTerm").val();
-  //   var whichTerm = termCode.toString().substr(-2);
-  //   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-  //     id_list = ["student", "position", "selectedContractHours"];
-  //     if (fields_are_empty(id_list)) {
-  //       errorFlash();
-  //     }
-  //     else {
-  //       checkDuplicateBreaks();
-  //      }
-  //     }
-  //   else {
-  //     id_list = ["student", "position", "jobType", "selectedHoursPerWeek"];
-  //     if (fields_are_empty(id_list)) {
-  //       errorFlash();
-  //     }
-  //     else {
-        // checkDuplicate();
-        // return;
-  //     }
-  //   }
-  // }
+  if (fields_are_empty(id_list)) {
+    errorFlash();
+  }
+  else if (checkWLS()){
+    var termCode = $("#selectedTerm").val();
+    var whichTerm = termCode.toString().substr(-2);
+    if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+      id_list = ["student", "position", "selectedContractHours"];
+      if (fields_are_empty(id_list)) {
+        errorFlash();
+      }
+      else {
+        checkDuplicate();
+       }
+      }
+    else {
+      id_list = ["student", "position", "jobType", "selectedHoursPerWeek"];
+      if (fields_are_empty(id_list)) {
+        errorFlash();
+      }
+      else {
+        checkDuplicate();
+        return;
+      }
+    }
+  }
 }
 function createStuDict(){
   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
