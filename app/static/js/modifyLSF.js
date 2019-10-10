@@ -144,11 +144,14 @@ function checkForChange(){
   console.log(finalDict)
   if (JSON.stringify(finalDict) !== '{}'){
     $('#submitModal').modal('show');
+    console.log("hih")
     return finalDict
   }
-  if (JSON.stringify(finalDict) === '{}'){
-    console.log("here");
+  if (JSON.stringify(finalDict) == '{}'){
+    console.log(JSON.stringify(finalDict));
     $('#NochangeModal').modal('show');
+    // $("#NochangeModal").css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
+    console.log("here")
   }
 }
 function buttonListener(laborStatusKey) {
