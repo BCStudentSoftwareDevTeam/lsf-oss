@@ -18,7 +18,7 @@ from flask import Flask, redirect, url_for, flash
 def allPendingForms():
     try:
         current_user = require_login()
-        print("1", current_user)
+        
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
@@ -32,8 +32,7 @@ def allPendingForms():
 
         # print(pending_labor_forms)
         users = User.select()
-        print("2", users)
-        print("3", current_user)
+
         return render_template( 'admin/allPendingForms.html',
 
                                 title=('All Pending Forms'),
