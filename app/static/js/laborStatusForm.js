@@ -404,7 +404,7 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
     if(globalArrayOfStudents[i].stuName == studentDict.stuName &&
       globalArrayOfStudents[i].stuJobType == studentDict.stuJobType &&
       (studentDict.stuJobType == "Primary" || globalArrayOfStudents[i].stuPosition == studentDict.stuPosition)){
-      $("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position.";
+      document.getElementById("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position.";
       $("#warningModal").modal("show");
       return false;
     }
@@ -427,8 +427,8 @@ function checkPrimaryPosition(studentDict){
       if(Object.keys(response).length > 0) {
         if (studentDict["stuJobType"] == "Primary"){
           console.log("Adding Primary with Primary in database");
-          $("warningModalText").innerHTML = studentDict['stuName'] + " already has a primary position."
-          $("warningModal").modal("show");
+          document.getElementById("warningModalText").innerHTML = studentDict.stuName + " already has a primary position.";
+          $("#warningModal").modal("show");
         }
         else if(studentDict["stuJobType"] == "Secondary"){
           console.log("Adding Secondary with Primary in database");
@@ -437,7 +437,7 @@ function checkPrimaryPosition(studentDict){
           }
           else {
             console.log("This is a duplicate")
-            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position."; //Is this right?  Someone should double check
+            document.getElementById("warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.";
             $("#warningModal").modal("show");
           }
         }
@@ -452,15 +452,15 @@ function checkPrimaryPosition(studentDict){
           }
           else {
             console.log("This is a duplicate")
-            $("warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position."; //Is this right?  Someone should double check
+            document.getElementById("#warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.";
             $("#warningModal").modal("show");
           }
         }
         else {
           if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
             console.log("Adding Secondary without Primary in database");
-            $("warningModalText").innerHTML = studentDict['stuName'] + " needs an approved primary position before a secondary position can be added."
-            $("warningModal").modal("show");
+            document.getElementById("#warningModalText").innerHTML = studentDict['stuName'] + " needs an approved primary position before a secondary position can be added."
+            $("#warningModal").modal("show");
           }
           else {
             if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true){
@@ -468,7 +468,7 @@ function checkPrimaryPosition(studentDict){
             }
             else {
               console.log("This is a duplicate")
-              $("warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position."; //Is this right?  Someone should double check
+              document.getElementById("#warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.";
               $("#warningModal").modal("show");
             }
           }
@@ -551,7 +551,7 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
     totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours;
   }
   console.log(totalHoursCount + "     YEEEEEET!");
-  if (totalHoursCount >= (69 - 54)){
+  if (totalHoursCount > (15)){
     // TODO: Show modal saying they have too many hours
     console.log("Student has too many hours and needs an overload form");
     //return false
@@ -581,7 +581,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
       var bigString = "<li>" + studentName + " | " + position + " | " + selectedContractHours + " hours";
       modalList.push(bigString);
     }
-    $("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
+    document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
                                                             "<ul style=\"display:inline-block;text-align:left;\">" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day.";
