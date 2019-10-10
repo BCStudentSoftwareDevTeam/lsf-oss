@@ -291,7 +291,19 @@ function saveNotes(obj){ // saves notes written in textarea when save button of 
 }
 
 function deleteRow(row) { // Deletes Row when remove glyphicon is clicked.
-  $(row).parents("tr").remove();
+  console.log(row);
+  var table = document.getElementById("mytable").getElementsByTagName("tbody")[0];
+  for (var i = 0, row; row = table.rows[i]; i++) {
+    if row == table.rows[i] {
+        $(row).parents("tr").remove();
+        globalArrayOfStudents[i].remove(;)
+    }
+    else {
+
+    }
+   //iterate through rows
+   //rows would be accessed using the "row" variable assigned in the for loop
+ }
   // TODO: Will we need to modify the global array at all when this is called as well?
   // Yes. We'll need to delete the corresponding item when this funtion is called
   // TODO: Delete the corresponding item when this funtion is called. Likely before it is removed from the table
