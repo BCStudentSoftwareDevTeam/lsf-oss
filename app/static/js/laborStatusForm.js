@@ -554,6 +554,10 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
   if (totalHoursCount > (15)){
     // TODO: Show modal saying they have too many hours
     console.log("Student has too many hours and needs an overload form");
+    $('#OverloadModal').modal('show');
+    $('#overloadModalButton').attr('data-target', '#PrimaryModal')
+    // $('#OverloadModal').on('hidden.bs.modal', function() {
+    // $('#PrimaryModal').modal('show');
     //return false
   }
   return true;
@@ -605,61 +609,61 @@ function createModalContent() { // Populates Submit Modal with Student informati
   }
 }
 
-// function createTabledataDictionary() { // puts all of the forms into dictionaries
-//   var listDictAJAX = [];
-//   $("#mytable tr").has("td").each(function() {
-//     /* Get the input box values first */
-//       var supervisor = $("#selectedSupervisor").val();
-//       var department = $("#selectedDepartment").val();
-//       var term = $("#selectedTerm").val();
-//       var whichTerm = term.toString().substr(-2);
-//       var positionCode = $("#position_code").attr("data-posn");
-//       var wls = $("#position_code").attr("data-wls");
-//       listDict = [];
-//       listDict.push(supervisor, department, term, positionCode, wls);
-//       var headersLabel = ["Supervisor", "Department", "Term", "Position Code", "WLS"];
-//       var tableDataDict = {};
-//       for (var i in listDict) {
-//         tableDataDict[headersLabel[i]] = listDict[i];
-//       }
-//       /* If it"s a break, get table values */
-//       if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-//         tableDataDict["Job Type"] = "Secondary";
-//         var headers_2_data = ["Student", "Position", "Contract Hours", "Contract Dates"];
-//         $("td", $(this)).each(function(index, item) {
-//           var aTag = $.parseHTML($(item).html());
-//           if (!$(aTag).hasClass("remove")) {
-//             var notes = $(aTag).data("note");
-//             tableDataDict["Supervisor Notes"] = notes;
-//             tableDataDict[headers_2_data[index]] = $(item).html();
-//           }
-//         });
-//         listDictAJAX.push(tableDataDict);
-//         allTableDataDict = {};
-//         for (var key in listDictAJAX){
-//           allTableDataDict[key] = listDictAJAX[key];
-//         }
-//       }
-//       /* If it"s academic year, get the table values */
-//       else {
-//           var headersData = ["Student", "Position", "Job Type", "Hours Per Week", "Contract Dates"];
-//           $("td", $(this)).each(function(index, item) {
-//             var aTag = $.parseHTML($(item).html());
-//             if (!$(aTag).hasClass("remove")) {
-//               var notes = $(aTag).data("note");
-//               tableDataDict["Supervisor Notes"] = notes;
-//               tableDataDict[headersData[index]] = $(item).html();
-//             }
-//           });
-//           listDictAJAX.push(tableDataDict);
-//           allTableDataDict = {}; // this is the dictionary that contains all the forms
-//           for (var key in listDictAJAX){
-//             allTableDataDict[key] = listDictAJAX[key];
-//           }
-//       }
-//      });
-//   return allTableDataDict;
-// }
+function createTabledataDictionary() { // puts all of the forms into dictionaries
+  var listDictAJAX = [];
+  $("#mytable tr").has("td").each(function() {
+    /* Get the input box values first */
+      var supervisor = $("#selectedSupervisor").val();
+      var department = $("#selectedDepartment").val();
+      var term = $("#selectedTerm").val();
+      var whichTerm = term.toString().substr(-2);
+      var positionCode = $("#position_code").attr("data-posn");
+      var wls = $("#position_code").attr("data-wls");
+      listDict = [];
+      listDict.push(supervisor, department, term, positionCode, wls);
+      var headersLabel = ["Supervisor", "Department", "Term", "Position Code", "WLS"];
+      var tableDataDict = {};
+      for (var i in listDict) {
+        tableDataDict[headersLabel[i]] = listDict[i];
+      }
+      /* If it"s a break, get table values */
+      if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+        tableDataDict["Job Type"] = "Secondary";
+        var headers_2_data = ["Student", "Position", "Contract Hours", "Contract Dates"];
+        $("td", $(this)).each(function(index, item) {
+          var aTag = $.parseHTML($(item).html());
+          if (!$(aTag).hasClass("remove")) {
+            var notes = $(aTag).data("note");
+            tableDataDict["Supervisor Notes"] = notes;
+            tableDataDict[headers_2_data[index]] = $(item).html();
+          }
+        });
+        listDictAJAX.push(tableDataDict);
+        allTableDataDict = {};
+        for (var key in listDictAJAX){
+          allTableDataDict[key] = listDictAJAX[key];
+        }
+      }
+      /* If it"s academic year, get the table values */
+      else {
+          var headersData = ["Student", "Position", "Job Type", "Hours Per Week", "Contract Dates"];
+          $("td", $(this)).each(function(index, item) {
+            var aTag = $.parseHTML($(item).html());
+            if (!$(aTag).hasClass("remove")) {
+              var notes = $(aTag).data("note");
+              tableDataDict["Supervisor Notes"] = notes;
+              tableDataDict[headersData[index]] = $(item).html();
+            }
+          });
+          listDictAJAX.push(tableDataDict);
+          allTableDataDict = {}; // this is the dictionary that contains all the forms
+          for (var key in listDictAJAX){
+            allTableDataDict[key] = listDictAJAX[key];
+          }
+      }
+     });
+  return allTableDataDict;
+}
 
 // SEND DATA TO THE DATABASE
 function userInsert(){
