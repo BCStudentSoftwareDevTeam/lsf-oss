@@ -120,26 +120,73 @@
       </div>
     </div>
     <!-- END OF MODAL -->
-
-    <!-- START OF MODAL reject pending-->
-    <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="rejectModalLabel">Reject Status Form</h4>
-          </div>
-          <div class="modal-body">
-            ...For Rejection #FIXME: Look at old rejection interface
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="approvalModal" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel" align="center"><b>Form(s) ready for Approval</b></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- putting info into modal using table for better viewing -->
+          <table id="classTable" class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Student(s)</th>
+                <th scope="col">Position</th>
+                <th scope="col">Hours</th>
+                <th scope="col">Supervisor</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload()">Close</button>
+          <button id="approveModalButton" type="button" class="btn btn-primary"  data-dismiss="modal" onclick="finalApproval()" >Approve</button>
         </div>
       </div>
     </div>
-    <!-- END OF MODAL-->
+    </div>
+
+      <!-- Modal -->
+    <div class="modal fade" id="denyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+
+          <h5 class="modal-title" id="exampleModalLabel" align="center"><b>Deny Labor Status Form</b></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to deny the selected labor status form?
+          <table id="denyTable" class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Student(s)</th>
+                <th scope="col">Position</th>
+                <th scope="col">Supervisor</th>
+                <th scope="col">Hours</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload()">Close</button>
+          <button type="button" class="btn btn-danger" onclick="finalDenial()">Deny</button>
+        </div>
+      </div>
+    </div>
+    </div>
 
     <!-- MODAL -->
     <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">

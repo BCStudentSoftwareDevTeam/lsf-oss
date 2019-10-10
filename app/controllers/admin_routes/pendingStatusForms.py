@@ -18,35 +18,11 @@ from flask import Flask, redirect, url_for, flash
 def allPendingForms():
     try:
         current_user = require_login()
+        print("1", current_user)
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
-
-
-        all_pending_forms = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate)
-        users = User.select()
-
-        return render_template( 'admin/allPendingForms.html',
-                                title=('All Pending Forms'),
-                                username=current_user.username,
-                                users=users,
-                                all_pending_forms = all_pending_forms
-                                )
-    except Exception as e:
-        print("all pending", e)
-        return render_template('errors/500.html')
-
-#        PENDING LABOR STATUS FORMS         #
-@admin.route('/admin/allPendingForms',  methods=['GET'])
-def allPendingForms():
-    try:
-        current_user = require_login()
-        if not current_user:                    # Not logged in
-            return render_template('errors/403.html')
-        if not current_user.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html')
-
 
         pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate)
         pending_modified_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Modified Labor Form").order_by(-FormHistory.createdDate)
@@ -56,10 +32,11 @@ def allPendingForms():
 
         # print(pending_labor_forms)
         users = User.select()
-
+        print("2", users)
+        print("3", current_user)
         return render_template( 'admin/allPendingForms.html',
 
-                                title=('Pending Forms'),
+                                title=('All Pending Forms'),
                                 username=current_user.username,
                                 users=users,
                                 all_pending_forms = all_pending_forms,
@@ -69,10 +46,10 @@ def allPendingForms():
                                 pending_release_forms = pending_release_forms
                                 )
     except Exception as e:
-        print("pending status", e)
+        print("All Pending", e)
         return render_template('errors/500.html')
 
-//=
+#        PENDING STATUS FORMS         #
 @admin.route('/admin/pendingStatusForms',  methods=['GET'])
 def pendingStatusForms():
     try:
@@ -88,15 +65,14 @@ def pendingStatusForms():
         print(pending_modified_forms)
         users = User.select()
 
-        return render_template( 'admin/pendingModifiedForms.html',
+        return render_template( 'admin/pendingStatusForms.html',
                                 username=current_user.username,
                                 users=users,
                                 pending_labor_forms = pending_labor_forms
                                 )
     except Exception as e:
-        print(e)
+        print("Pending Status", e)
         return render_template('errors/500.html')
-
 
 #        PENDING MODIFIED FORMS         #
 @admin.route('/admin/pendingModifiedForms',  methods=['GET'])
@@ -108,10 +84,7 @@ def pendingModifiedForms():
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
 
-        print("Test")
         pending_modified_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Modified Labor Form").order_by(-FormHistory.createdDate)                # # Logged in & Admin
-        print("I'm here")
-        print(pending_modified_forms)
         users = User.select()
 
         return render_template( 'admin/pendingModifiedForms.html',
@@ -120,7 +93,7 @@ def pendingModifiedForms():
                                 pending_modified_forms = pending_modified_forms
                                 )
     except Exception as e:
-        print(e)
+        print("Pending Modified", e)
         return render_template('errors/500.html')
 
 #        PENDING OVERLOAD FORMS         #
@@ -142,7 +115,7 @@ def pendingOverloadForms():
                                 pending_overload_forms = pending_overload_forms
                                 )
     except Exception as e:
-        print(e)
+        print("Pending Overload", e)
         return render_template('errors/500.html')
 
 #        PENDING RELEASE FORMS         #
@@ -164,7 +137,7 @@ def pendingReleaseForms():
                                 pending_release_forms = pending_release_forms
                                 )
     except Exception as e:
-        print(e)
+        print("Pending Release", e)
         return render_template('errors/500.html')
 
 @admin.route('/admin/checkedForms', methods=['POST'])

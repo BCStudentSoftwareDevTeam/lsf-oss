@@ -24,9 +24,8 @@
 <div class="container" id="wrapper" align="center">
 
     <b><h1 id="header"> Pending Forms </h1></b>
-    {% if all_pending_forms %}
 
-     <div align="center" id="pendingTabs" class="container">
+       <div align="center" id="pendingTabs" class="container">
      <ul  class="nav nav-pills">
        <li class="active">
           <a  href="#allPendingForms" data-toggle="tab">All Pending Forms</a>
@@ -136,13 +135,6 @@
                     Approve Selected
                   </button>
                 </div>
-
-              {% else %}
-               <div class="card" style="margin-top : 80px;">
-               <div class="card-body">
-                 <b class="text-success">Congratulations, You do not have any pending forms to approve!</b>
-               </div>
-              </div>
 
 
               <!-- START OF MODAL adding notes -->
@@ -265,8 +257,10 @@
               <!-- END OF MODAL -->
           </div>
 				</div>
+
+        </div>
 				<div class="tab-pane" id="laborPendingForms">
-          {% include "admin/allPendingForms.html" %}
+          {% include "admin/pendingStatusForms.html" %}
 				</div>
         <div class="tab-pane" id="modifiedPendingForms">
           <div class="tab-content">
@@ -279,7 +273,7 @@
         <div class="tab-pane" id="releasedPendingForms">
           {% include "admin/pendingReleaseForms.html" %}
       </div>
-			</div>
+
    </div>
  </div>
 </div>
