@@ -3,8 +3,8 @@ $(document).ready( function(){
         'columnDefs': [{ 'orderable': false, 'targets': [0,4,10]}], // hide sort icon on header of first column
         // 'columnDefs': [{ 'orderable': false, 'targets': 9 }],
         'aaSorting': [[1, 'asc']], // start to sort data in second column
-        pageLength: 10,
-        "sDom": 'Rlfrtlip'
+        pageLength: 10
+        // "dom": '<"top"fl>rt<"bottom"p><"clear">'
 
     });
 });
