@@ -136,35 +136,7 @@
                 </div>
 
 
-              <!-- START OF MODAL adding notes -->
-              <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
-                      <h4 class="modal-title" id="notesModalLabel">Labor Office Notes</h4>
-                    </div>
-                    <div class="modal-body" >
-                      <p> These notes are only for the Labor Office Staff.</p>
-                      <p> Pre-fill this with the notes from the supervisor </p>
-                        <div id="notesDiv">
-                           <h5> <b>Supervisor Notes  </b> </h5>
-                          <p id="notesText" class="notesText" </p>
-
-                        <h5> <b>Labor Office Notes </b> </h5>
-
-                          <textarea id="laborNotesText" rows="5" cols="60" style="resize: none;"> </textarea>
-
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
-                      <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-              <!-- END OF MODAL -->
+              {% include "snips/pendingFormsModals.html" %}
 
           <!-- Modal -->
           <div class="modal fade" id="approvalModal" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

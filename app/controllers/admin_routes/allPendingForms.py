@@ -61,7 +61,6 @@ def pendingStatusForms():
         print("Test")
         pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate)                # # Logged in & Admin
         print("I'm here")
-        print(pending_modified_forms)
         users = User.select()
 
         return render_template( 'admin/pendingStatusForms.html',
