@@ -23,13 +23,14 @@
         {% for statusForm in pending_labor_forms %}
         <tr id="tableData" class="tableData" align="center">
             <td> {# APPROVE #}
-              <input type='checkbox' id='chk_{{statusForm.formID.laborStatusFormID}}' value= "{{statusForm.formID.laborStatusFormID}}" />
+              <input type='checkbox' id='chk_{{statusForm.formID.laborStatusFormID}}' value= "{{statusForm.formID.laborStatusFor}}"  name="check[]"/>
               <span  id="notes_{{statusForm.formID.laborStatusFormID}}" onclick="getNotes({{statusForm.formID.laborStatusFormID}})"
                      class="glyphicon glyphicon-book btn-lg
                           {% if statusForm.formID.supervisorNotes != None and statusForm.formID.laborDepartmentNotes == None %} text-success
                           {% elif statusForm.formID.laborDepartmentNotes != None and statusForm.formID.supervisorNotes == None  %} text-danger
                           {% elif statusForm.formID.supervisorNotes != None and statusForm.formID.laborDepartmentNotes != None %} text-danger
                           {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
+                          <input id="dummyInput" value="{{statusForm.formID.laborStatusFormID}}" hidden/>
 
             </td>
             <td> {# TERM #}
@@ -80,12 +81,14 @@
       </table>
         <div class="btn-holder">
           <button
-            id="approveSelected"
+            id="approvePendingForm"
             name="approveBtn"
             type="button"
             class="btn btn-newcolor"
             onclick="insertApprovals();"
-            value="Approve Selected">
+            value="Approve Selected"
+            data-target="#approveLabor"
+            data-toggle="modal">
             Approve Selected
           </button>
         </div>
@@ -122,10 +125,12 @@
           </div>
         </div>
       </div>
+      </div>
+
       <!-- END OF MODAL -->
 
       <!-- Modal -->
-      <div class="modal fade" id="approvalModal" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="approveLabor" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -136,7 +141,7 @@
           </div>
           <div class="modal-body">
             <!-- putting info into modal using table for better viewing -->
-            <table id="classTable" class="table table-bordered">
+            <table id="laborClassTable" class="table table-bordered">
               <thead>
                 <tr>
                   <th scope="col">Student(s)</th>
@@ -193,7 +198,7 @@
 
 
       <!-- MODAL -->
-      <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
+      <!-- <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -211,8 +216,8 @@
             </div>
           </div>
       </div>
-      </div>
+      </div> -->
       <!-- END OF MODAL -->
 
-</div>
+<!-- </div> -->
 {% endblock %}

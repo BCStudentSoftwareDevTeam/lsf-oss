@@ -165,9 +165,26 @@ def finalApproval():
     try:
         rsp = eval(request.data.decode("utf-8"))
         for id in rsp:
-            approving_labor_forms = FormHistory.get(FormHistory.formID == int(id), FormHistory.historyType == 'Labor Status Form')
-            approving_labor_forms.status = Status.get(Status.statusName == "Approved")
-            approving_labor_forms.save()
+            # if FormHistory.get(FormHistory. == int(id), FormHistory.historyType == 'Labor Status Form'):
+            #     print("LSF Yallah", id)
+            #     approving_labor_forms = FormHistory.get(FormHistory.formID == int(id), FormHistory.historyType == 'Labor Status Form')
+            #     approving_labor_forms.status = Status.get(Status.statusName == "Approved")
+            #     approving_labor_forms.save()
+            # elif FormHistory.get(FormHistory.formID == int(id), FormHistory.historyType == 'Modified Labor Form'):
+            #     print("MLF Yallah")
+            #     approving_labor_modified_forms = FormHistory.get(FormHistory.formID == int(id), FormHistory.historyType == 'Modified Labor Form')
+            #     approving_labor_modified_forms.status = Status.get(Status.statusName == "Approved")
+            #     approving_labor_modified_forms.save()
+            # if FormHistory.get(FormHistory.formID == int(id), FormHistory.historyType == 'Labor Overload Form'):
+            #     print("LOF Yallah", id)
+            #     approving_labor_overload_forms = FormHistory.get(FormHistory.formID == int(id), FormHistory.historyType == 'Labor Overload Form')
+            #     approving_labor_overload_forms.status = Status.get(Status.statusName == "Approved")
+            #     approving_labor_overload_forms.save()
+            if FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Labor Release Form'):
+                print("LRF Yallah")
+                approving_labor_release_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Release Form')
+                approving_labor_release_forms.status = Status.get(Status.statusName == "Approved")
+                approving_labor_release_forms.save()
         return jsonify({"success": True})
     except Exception as e:
         print("final approval of the modal did not work", e)

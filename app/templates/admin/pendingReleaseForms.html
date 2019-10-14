@@ -23,13 +23,15 @@
       {% for releaseForms in pending_release_forms %}
       <tr id="tableData" class="tableData" align="center">
           <td> {# APPROVE #}
-            <input type='checkbox' id='chk_{{releaseForms.formID.laborStatusFormID}}' value= "{{releaseForms.formID.laborStatusFormID}}" />
+            <input type='checkbox' id='chk_{{releaseForms.formID.laborStatusFormID}}' value= "{{releaseForms.formHistoryID}}"  name="check[]"/>
             <span  id="notes_{{releaseForms.formID.laborStatusFormID}}" onclick="getNotes({{releaseForms.formID.laborStatusFormID}})"
                    class="glyphicon glyphicon-book btn-lg
                         {% if releaseForms.formID.supervisorNotes != None and releaseForms.formID.laborDepartmentNotes == None %} text-success
                         {% elif releaseForms.formID.laborDepartmentNotes != None and releaseForms.formID.supervisorNotes == None  %} text-danger
                         {% elif releaseForms.formID.supervisorNotes != None and releaseForms.formID.laborDepartmentNotes != None %} text-danger
                         {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
+                        <input id="dummyInput" value="{{releaseForms.formID.laborStatusFormID}}" hidden/>
+
 
           </td>
           <td> {# TERM #}
@@ -79,12 +81,15 @@
     </table>
       <div class="btn-holder">
         <button
-          id="approveSelected"
+          id="approveRelease"
           name="approveBtn"
           type="button"
           class="btn btn-newcolor"
           onclick="insertApprovals();"
-          value="Approve Selected">
+          value="Approve Selected"
+          data-target="#approverelease"
+          data-toggle="modal"
+          >
           Approve Selected
         </button>
       </div>
@@ -119,10 +124,12 @@
         </div>
       </div>
     </div>
+  </div>
+
     <!-- END OF MODAL -->
 
     <!-- Modal -->
-    <div class="modal fade" id="approvalModal" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="approverelease" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -133,7 +140,7 @@
         </div>
         <div class="modal-body">
           <!-- putting info into modal using table for better viewing -->
-          <table id="classTable" class="table table-bordered">
+          <table id="classRelease" class="table table-bordered">
             <thead>
               <tr>
                 <th scope="col">Student(s)</th>
@@ -187,30 +194,7 @@
       </div>
     </div>
     </div>
-
-
-    <!-- MODAL -->
-    <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-          </div>
-          <div id="SubmitModalText" class="modal-body">
-            The following Labor Status form(s) will be approved:
-          </div>
-          <div class="modal-footer">
-            <button id="submitmodalid"
-                    type="submit"
-                    class="btn btn-primary"
-                    name = "formsubmission"
-                    value = "formsubmission"
-                    onclick = "userInsert()">Submit</button>
-          </div>
-        </div>
-    </div>
-    </div>
     <!-- END OF MODAL -->
-</div>
 
 
 {% endblock %}

@@ -27,7 +27,12 @@ function insertApprovals() {
   var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;
   if (!atLeastOneIsChecked){
     $("#approveSelected").prop("disabled",true);
-    location.reload();
+    $("#approvePendingForm").prop("disabled",true);
+    $("#modifiedApproval").prop("disabled",true);
+    $("#approveOverload").prop("disabled",true);
+    $("#approveRelease").prop("disabled",true);
+
+     location.reload();
        }
     data = JSON.stringify(labor_details_ids);
    $.ajax({
@@ -47,6 +52,7 @@ function insertApprovals() {
       };
 //this method adds data to each row in the approve selected Modal
 function updateApproveTableData(returned_details){
+  console.log("inside the update approval",returned_details)
   for (var i = 0; i < returned_details.length; i++){
     var student=returned_details[i][0]
     var position= returned_details[i][1]
@@ -62,7 +68,10 @@ function updateApproveTableData(returned_details){
         hours = r_hour
       }
       $('#classTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
-
+      $('#laborClassTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
+      $('#modifiedClass').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
+      $('#classOverload').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
+      $('#classRelease').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
         }
       }
 

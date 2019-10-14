@@ -23,13 +23,15 @@
       {% for overloadForm in pending_overload_forms %}
       <tr id="tableData" class="tableData" align="center">
           <td> {# APPROVE #}
-            <input type='checkbox' id='chk_{{overloadForm.formID.laborStatusFormID}}' value= "{{overloadForm.formID.laborStatusFormID}}" />
+            <input type='checkbox' id='chk_{{overloadForm.formID.laborStatusFormID}}' value= "{{overloadForm.formID.laborStatusFormID}}"  name="check[]"/>
             <span  id="notes_{{overloadForm.formID.laborStatusFormID}}" onclick="getNotes({{overloadForm.formID.laborStatusFormID}})"
                    class="glyphicon glyphicon-book btn-lg
                         {% if overloadForm.formID.supervisorNotes != None and overloadForm.formID.laborDepartmentNotes == None %} text-success
                         {% elif overloadForm.formID.laborDepartmentNotes != None and overloadForm.formID.supervisorNotes == None  %} text-danger
                         {% elif overloadForm.formID.supervisorNotes != None and overloadForm.formID.laborDepartmentNotes != None %} text-danger
                         {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
+                        <input id="dummyInput" value="{{overloadForm.formID.laborStatusFormID}}" hidden/>
+
 
           </td>
           <td> {# TERM #}
@@ -79,12 +81,14 @@
     </table>
       <div class="btn-holder">
         <button
-          id="approveSelected"
+          id="approveOverload"
           name="approveBtn"
           type="button"
           class="btn btn-newcolor"
           onclick="insertApprovals();"
-          value="Approve Selected">
+          value="Approve Selected"
+          data-target="#approveoverload"
+          data-toggle="modal">
           Approve Selected
         </button>
       </div>
@@ -119,10 +123,12 @@
         </div>
       </div>
     </div>
+  </div>
+
     <!-- END OF MODAL -->
 
     <!-- Modal -->
-    <div class="modal fade" id="approvalModal" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="approveoverload" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -133,7 +139,7 @@
         </div>
         <div class="modal-body">
           <!-- putting info into modal using table for better viewing -->
-          <table id="classTable" class="table table-bordered">
+          <table id="classOverload" class="table table-bordered">
             <thead>
               <tr>
                 <th scope="col">Student(s)</th>
@@ -188,28 +194,7 @@
     </div>
     </div>
 
-    <!-- MODAL -->
-    <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-          </div>
-          <div id="SubmitModalText" class="modal-body">
-            The following Labor Status form(s) will be approved:
-          </div>
-          <div class="modal-footer">
-            <button id="submitmodalid"
-                    type="submit"
-                    class="btn btn-primary"
-                    name = "formsubmission"
-                    value = "formsubmission"
-                    onclick = "userInsert()">Submit</button>
-          </div>
-        </div>
-    </div>
-    </div>
     <!-- END OF MODAL -->
-</div>
 
 
 {% endblock %}

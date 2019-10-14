@@ -68,13 +68,14 @@
                 {% for allForms in all_pending_forms %}
                 <tr id="tableData" class="tableData" align="center">
                     <td> {# APPROVE #}
-                      <input type='checkbox' id='chk_{{allForms.formID.laborStatusFormID}}' value= "{{allForms.formID.laborStatusFormID}}" />
+                      <input type='checkbox' id='chk_{{allForms.formID.laborStatusFormID}}' value= "{{allForms.formID.laborStatusFormID}}" name="check[]" />
                       <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
                              class="glyphicon glyphicon-book btn-lg
                                   {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
                                   {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
                                   {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
                                   {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
+                                  <input id="dummyInput" value="{{allForms.formID.laborStatusFormID}}" hidden/>
 
                     </td>
                     <td> {# TERM #}
@@ -130,7 +131,9 @@
                     type="button"
                     class="btn btn-newcolor"
                     onclick="insertApprovals();"
-                    value="Approve Selected">
+                    value="Approve Selected"
+                    data-target="#approvalModal"
+                    data-toggle="modal">
                     Approve Selected
                   </button>
                 </div>
