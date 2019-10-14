@@ -18,17 +18,17 @@ from flask import Flask, redirect, url_for, flash
 def allPendingForms():
     try:
         current_user = require_login()
-        
+
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
 
-        pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate)
-        pending_modified_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Modified Labor Form").order_by(-FormHistory.createdDate)
-        pending_overload_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Overload Form").order_by(-FormHistory.createdDate)
-        pending_release_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Release Form").order_by(-FormHistory.createdDate)
-        all_pending_forms = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate)
+        pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate).distinct()
+        pending_modified_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Modified Labor Form").order_by(-FormHistory.createdDate).distinct()
+        pending_overload_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Overload Form").order_by(-FormHistory.createdDate).distinct()
+        pending_release_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Release Form").order_by(-FormHistory.createdDate).distinct()
+        all_pending_forms = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
 
         # print(pending_labor_forms)
         users = User.select()
