@@ -1,0 +1,20 @@
+<!-- start of modal -->
+   <div class="modal fade" id="submitModal" role="dialog">
+       <div class="modal-dialog modal-dialog-centered" role="document">
+
+         <div class="modal-content">
+           <div class="modal-header">
+             <button type="button" class="close" data-dismiss="modal">&times;</button>
+             <h4 class="modal-title">Are you sure you want to submit?</h4>
+           </div>
+           <div class="modal-body">
+             <p>Submitting this form will modify the student's current labor position.</p>
+           </div>
+           <div class="modal-footer">
+             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+             <button type="submit" class="btn btn-success" id="modal" onclick = "buttonListener({{form.laborStatusFormID}})" >Submit</button>
+           </div>
+         </div>
+
+       </div>
+     </div>

@@ -142,6 +142,7 @@ function checkForChange(){
                                   }
   }
   console.log(finalDict)
+  console.log(JSON.stringify(finalDict));
   if (JSON.stringify(finalDict) !== '{}'){
     $('#submitModal').modal('show');
     console.log("hih")
