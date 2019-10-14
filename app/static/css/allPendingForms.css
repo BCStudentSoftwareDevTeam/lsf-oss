@@ -10,7 +10,7 @@
   font-weight: 650;
 }
 
-.btn-holder {s
+.btn-holder {
    position: relative;
    left: 700px !important;
 }
@@ -21,4 +21,12 @@
 
 th {
   text-align: center;
+}
+
+div#pendingTabs.container {
+  width: 1500px;
+}
+
+div#pendingForms_length.dataTables_length {
+  text-align: left;
 }
