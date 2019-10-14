@@ -544,10 +544,10 @@ from datetime import date
 lsfs = [
 
     {
-    "termCode": Term.get(Term.termCode == "201911"),
+    "termCode": Term.get(Term.termCode == "201711"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
     "jobType": "Primary",
     "WLS":"1",
     "POSN_TITLE":"Student Programmer",
@@ -558,7 +558,7 @@ lsfs = [
     "endDate": datetime.date(2019,12,15)
     },
     {
-    "termCode": Term.get(Term.termCode == "201912"),
+    "termCode": Term.get(Term.termCode == "201712"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -572,7 +572,7 @@ lsfs = [
     "endDate": datetime.date(2020,5,4)
     },
     {
-    "termCode": Term.get(Term.termCode == "201913"),
+    "termCode": Term.get(Term.termCode == "201813"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -586,7 +586,7 @@ lsfs = [
     "endDate": datetime.date(2020,8,9)
     },
     {
-    "termCode": Term.get(Term.termCode == "201901"),
+    "termCode": Term.get(Term.termCode == "201911"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -600,7 +600,7 @@ lsfs = [
     "endDate": datetime.date(2020,11,30)
     },
     {
-    "termCode": Term.get(Term.termCode == "201911"),
+    "termCode": Term.get(Term.termCode == "201711"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -614,7 +614,7 @@ lsfs = [
     "endDate": datetime.date(2019,12,15)
     },
     {
-    "termCode": Term.get(Term.termCode == "201912"),
+    "termCode": Term.get(Term.termCode == "201712"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -628,7 +628,7 @@ lsfs = [
     "endDate": datetime.date(2020,5,4)
     },
     {
-    "termCode": Term.get(Term.termCode == "201913"),
+    "termCode": Term.get(Term.termCode == "201813"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -642,7 +642,7 @@ lsfs = [
     "endDate": datetime.date(2020,8,9)
     },
     {
-    "termCode": Term.get(Term.termCode == "201901"),
+    "termCode": Term.get(Term.termCode == "201911"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -750,11 +750,11 @@ lsfs = [
     "POSN_CODE":"S61419",
     "weeklyHours": 10,
     "contractHours": None,
-    "startDate": datetime.date(2018,8,20),
-    "endDate": datetime.date(2018,12,15)
+    "startDate": datetime.date(2020,8,20),
+    "endDate": datetime.date(2020,12,15)
     },
     {
-    "termCode": Term.get(Term.termCode == "202011"),
+    "termCode": Term.get(Term.termCode == "201712"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -768,52 +768,10 @@ lsfs = [
     "endDate": datetime.date(2020,5,4)
     },
     {
-    "termCode": Term.get(Term.termCode == "201711"),
-    "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Biology"),
-    "jobType": "Secondary",
-    "WLS":"2",
-    "POSN_TITLE":"TA",
-    "POSN_CODE":"S61420",
-    "weeklyHours": 10,
-    "contractHours": None,
-    "startDate": datetime.date(2017,8,25),
-    "endDate": datetime.date(2017,12,14)
-    },
-    {
-    "termCode": Term.get(Term.termCode == "201811"),
-    "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Biology"),
-    "jobType": "Primary",
-    "WLS":"2",
-    "POSN_TITLE":"TA",
-    "POSN_CODE":"S61420",
-    "weeklyHours": 10,
-    "contractHours": None,
-    "startDate": datetime.date(2018,8,25),
-    "endDate": datetime.date(2018,12,14)
-    },
-    {
-    "termCode": Term.get(Term.termCode == "201712"),
-    "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Biology"),
-    "jobType": "Primary",
-    "WLS":"2",
-    "POSN_TITLE":"TA",
-    "POSN_CODE":"S61420",
-    "weeklyHours": 20,
-    "contractHours": None,
-    "startDate": datetime.date(2018,1,7),
-    "endDate": datetime.date(2018,5,4)
-    },
-    {
     "termCode": Term.get(Term.termCode == "201612"),
     "studentSupervisee": Student.get(Student.ID == "B00734292"),
     "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Biology"),
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Primary",
     "WLS":"2",
     "POSN_TITLE":"TA",
@@ -822,6 +780,20 @@ lsfs = [
     "contractHours": None,
     "startDate": datetime.date(2017,1,7),
     "endDate": datetime.date(2017,5,4)
+    },
+    {
+    "termCode": Term.get(Term.termCode == "201612"),
+    "studentSupervisee": Student.get(Student.ID == "B00711232"),
+    "supervisor": User.get(User.PIDM == 1),
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "jobType": "Primary",
+    "WLS":"2",
+    "POSN_TITLE":"TA",
+    "POSN_CODE":"S61420",
+    "weeklyHours": 10,
+    "contractHours": None,
+    "startDate": datetime.date(2019,1,7),
+    "endDate": datetime.date(2019,12,4)
     }
 ]
 
@@ -854,6 +826,11 @@ lrfs=[
         "conditionAtRelease":"Unsatisfactory",
         "releaseDate":"2017/2/10",
         "reasonForRelease":"He STOLE fizzy lifting drinks."
+    },
+    {
+        "conditionAtRelease":"Unsatisfactory",
+        "releaseDate":"2019/2/10",
+        "reasonForRelease":"May was spelling 'dawg' as 'dog'."
     }
 ]
 LaborReleaseForm.insert_many(lrfs).on_conflict_replace().execute()
@@ -1263,6 +1240,45 @@ fh = [  {
             "reviewedDate": None,
             "reviewedBy": None,
             "status": Status.get(Status.statusName == "Pending"),
+            "rejectReason": None
+            },
+            {
+            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 15),
+            "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+            "releaseForm": None,
+            "modifiedForm": None,
+            "overloadForm": None,
+            "createdBy": User.get(User.username == "heggens"),
+            "createdDate": datetime.date(2019, 8, 20),
+            "reviewedDate": None,
+            "reviewedBy": None,
+            "status": Status.get(Status.statusName == "Approved"),
+            "rejectReason": None
+            },
+            {
+            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 16),
+            "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+            "releaseForm": None,
+            "modifiedForm": None,
+            "overloadForm": None,
+            "createdBy": User.get(User.username == "heggens"),
+            "createdDate": datetime.date(2019, 8, 20),
+            "reviewedDate": None,
+            "reviewedBy": None,
+            "status": Status.get(Status.statusName == "Approved"),
+            "rejectReason": None
+            },
+            {
+            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 16),
+            "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Release Form"),
+            "releaseForm": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 5),
+            "modifiedForm": None,
+            "overloadForm": None,
+            "createdBy": User.get(User.username == "heggens"),
+            "createdDate": datetime.date(2019, 10, 20),
+            "reviewedDate": None,
+            "reviewedBy": None,
+            "status": Status.get(Status.statusName == "Approved"),
             "rejectReason": None
             }
     ]

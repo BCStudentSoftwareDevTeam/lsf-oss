@@ -1,5 +1,3 @@
-# from flask import render_template  #, redirect, url_for, request, g, jsonify, current_app
-# from flask_login import current_user, login_required
 from flask import flash, send_file
 from app.controllers.main_routes import *
 from app.controllers.main_routes.download import ExcelMaker
@@ -26,17 +24,13 @@ def index():
     if not current_user:
         return render_template('errors/403.html')
 
-    # This is the start of grabbing the data from the labor status form and displaying it on the Supervisor portal
-    # Get all the forms from the supervisor form that has Scott as the Supervisor and order them by the endDate  #
     todayDate = date.today()
     # Grabs all the labor status forms where the current user is the supervisor
     formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.UserID).order_by(LaborStatusForm.endDate.desc())
+    # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments asscioted with those forms. Will only grab each department once.
     currentUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).distinct()
+    # Grabs every single department that currently has at least one labor status form in it
     allDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).distinct()
-
-    for i in allDepartments:
-        print(i.formID.department.DEPT_NAME)
-
 
     inactiveSupervisees = []
     currentSupervisees = []
@@ -79,6 +73,9 @@ def index():
     # On the click of the download button, 'POST' method will send all checked boxes from modal to excel maker
     if request.method== 'POST':
         value =[]
+        # The "Try" and "Except" block here is needed because if the user tries to use the download button before they chose
+        # a department from the dropdown, then this will throw an error. The "Try" and "Except" blocks will catch this error so that
+        # a user can use the download button before they chose a department.
         try:
             for form in currentDepartmentStudents:
                 name = str(form.laborStatusFormID)
@@ -125,6 +122,7 @@ def index():
         # Returns the file path so the button will download the file
         return send_file(completePath,as_attachment=True, attachment_filename=filename)
 
+    # If the user is an admin, then we load in all the departments that have at least one labor status form
     if current_user.isLaborAdmin == 1:
         return render_template( 'main/index.html',
                     title=('Home'),
@@ -134,7 +132,7 @@ def index():
                     UserID = current_user,
                     currentUserDepartments = allDepartments
                           )
-
+    # If the user is not an admin, then we will only load in the departments the user is tied to
     return render_template( 'main/index.html',
 				    title=('Home'),
                     currentSupervisees = currentSupervisees,
@@ -147,19 +145,13 @@ def index():
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
 def populateDepartment(departmentSelected):
     try:
-        global department
         department = departmentSelected
         todayDate = date.today()
 
+        # This will retrieve all the forms that are tied to the department the user selected from the select picker
         formsByDept = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == department).order_by(LaborStatusForm.endDate.desc())
-        print("All Kids from Department:")
-        for i in formsByDept:
-            print(i.studentSupervisee.FIRST_NAME)
-            print(i.endDate)
-            print(i.startDate)
-            print(i.termCode.termName)
-            print("\n")
 
+        # These three variables need to be global variables because they need to be iterated through in the "POST" call
         global currentDepartmentStudents
         global allDepartmentStudents
         global inactiveDepStudent
@@ -179,16 +171,22 @@ def populateDepartment(departmentSelected):
                     if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an past student.
                         student_processed = True
                 if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
+                    # If a forms "endDate" is less than today's date, then we know the form is from the past and will go into "All Departments"
                     if supervisee.endDate < todayDate:
                         allDepartmentStudents.append(supervisee)
+                    # If a forms "endDate" is greater than today's date, then we need to look at other conditions
                     elif supervisee.endDate >= todayDate:
+                        # For every form at this point, we need to see if there are any "Labor Release Forms" tied to the form
                         studentFormHistory = FormHistory.select().where(FormHistory.formID == supervisee.laborStatusFormID).order_by(FormHistory.createdDate.desc())[0]
                         if studentFormHistory.historyType.historyTypeName == "Labor Release Form":
+                            # If the form has a "Labor Release Form" with a status of "Approved", then we know the student is no longer employed
                             if studentFormHistory.status.statusName == "Approved":
                                 allDepartmentStudents.append(supervisee)
+                            # If the form has a "Labor Release Form" with a status not equal to "Approved", then we know the student is still employed
                             else:
                                 currentDepartmentStudents.append(supervisee)
                                 allDepartmentStudents.append(supervisee)
+                        # If the form does not have a "Labor Release Form", then we know the student is still employed
                         else:
                             currentDepartmentStudents.append(supervisee)
                             allDepartmentStudents.append(supervisee)
@@ -203,27 +201,7 @@ def populateDepartment(departmentSelected):
                 else:
                     student_processed = False  # Resets state machine
 
-        print("Current Kids:")
-        for i in currentDepartmentStudents:
-            print(i.studentSupervisee.FIRST_NAME)
-            print(i.endDate)
-            print(i.termCode.termName)
-            print("\n")
-
-        print("All Kids:")
-        for i in allDepartmentStudents:
-            print(i.studentSupervisee.FIRST_NAME)
-            print(i.endDate)
-            print(i.termCode.termName)
-            print("\n")
-
-        print("Inactive Kids:")
-        for i in inactiveDepStudent:
-            print(i.studentSupervisee.FIRST_NAME)
-            print(i.endDate)
-            print(i.termCode.termName)
-            print("\n")
-
+        # This section will format our JSON data with the key-value pairs we want to pass back to the JS function
         departmentStudents = {}
         x = 0
         for i in currentDepartmentStudents:

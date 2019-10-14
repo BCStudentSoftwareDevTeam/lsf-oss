@@ -45,6 +45,8 @@ var table = $("#studentList").DataTable({
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
           changeButtonColor("#myCurrentStudents")
+          // Function changeButtonColor will change the color of the buttons
+          // to show make it clear which button was pressed last
           $(".currentStu").show();
           $(".allDeptStu").hide();
           $(".currentDeptStu").hide();
@@ -54,8 +56,6 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".currentStudentModal").removeAttr("disabled");
           $('#portalTitle').text("Current Students");
-          $("#myCurrentStudents").removeClass("btn-light");
-          $("#myCurrentStudents").addClass("btn-primary");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -70,6 +70,8 @@ var table = $("#studentList").DataTable({
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
           changeButtonColor("#myPastStudents")
+          // Function changeButtonColor will change the color of the buttons
+          // to show make it clear which button was pressed last
           $(".currentStu").hide();
           $(".allDeptStu").hide();
           $(".currentDeptStu").hide();
@@ -79,8 +81,6 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".pastStudentModal").removeAttr("disabled");
           $('#portalTitle').text("Past Students");
-          $("#myPastStudents").removeClass("btn-light");
-          $("#myPastStudents").addClass("btn-primary");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -95,6 +95,8 @@ var table = $("#studentList").DataTable({
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
           changeButtonColor("#allMyStudents")
+          // Function changeButtonColor will change the color of the buttons
+          // to show make it clear which button was pressed last
           $(".currentStu").show();
           $(".allDeptStu").hide();
           $(".currentDeptStu").hide();
@@ -104,8 +106,6 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".currentStudentModal").removeAttr("disabled");
           $('#portalTitle').text("All Students");
-          $("#allMyStudents").removeClass("btn-light");
-          $("#allMyStudents").addClass("btn-primary");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -120,6 +120,8 @@ var table = $("#studentList").DataTable({
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
           changeButtonColor("#currentDepartmentStudents")
+          // Function changeButtonColor will change the color of the buttons
+          // to show make it clear which button was pressed last
           $(".currentStu").hide();
           $(".allDeptStu").hide();
           $(".currentDeptStu").show();
@@ -129,8 +131,6 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").removeAttr("disabled");
           $(".pastStudentModal").attr("disabled", true);
           $('#portalTitle').text("Current Department Students");
-          $("#currentDepartmentStudents").removeClass("btn-light");
-          $("#currentDepartmentStudents").addClass("btn-primary");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -145,6 +145,8 @@ var table = $("#studentList").DataTable({
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
           changeButtonColor("#allDepartmentStudents")
+          // Function changeButtonColor will change the color of the buttons
+          // to show make it clear which button was pressed last
           $(".currentStu").hide();
           $(".allDeptStu").show();
           $(".currentDeptStu").hide();
@@ -154,8 +156,6 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".pastStudentModal").attr("disabled", true);
           $('#portalTitle').text("All Department Students");
-          $("#allDepartmentStudents").removeClass("btn-light");
-          $("#allDepartmentStudents").addClass("btn-primary");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -178,30 +178,15 @@ var table = $("#studentList").DataTable({
 
 function changeButtonColor(ID) {
   var buttonID = ID
-  if ($("#myPastStudents").hasClass("btn btn-primary")){
-    $("#myPastStudents").removeClass("btn btn-primary");
-    $("#myPastStudents").addClass("btn btn-light");
+  var buttonIDList = ["#myPastStudents", "#myCurrentStudents", "#allMyStudents",
+    "#currentDepartmentStudents", "#allDepartmentStudents"]
+  for (i = 0; i < buttonIDList.length; i++){
+    $(buttonIDList[i]).removeClass("btn btn-primary");
+    $(buttonIDList[i]).addClass("btn btn-light");
   }
-  if ($("#myCurrentStudents").hasClass("btn btn-primary")){
-    $("#myCurrentStudents").removeClass("btn btn-primary");
-    $("#myCurrentStudents").addClass("btn btn-light");
-  }
-  if ($("#allMyStudents").hasClass("btn btn-primary")){
-    $("#allMyStudents").removeClass("btn btn-primary");
-    $("#allMyStudents").addClass("btn btn-light");
-  }
-  if ($("#currentDepartmentStudents").hasClass("btn btn-primary")){
-    $("#currentDepartmentStudents").removeClass("btn btn-primary");
-    $("#currentDepartmentStudents").addClass("btn btn-light");
-  }
-  if ($("#allDepartmentStudents").hasClass("btn btn-primary")){
-    $("#allDepartmentStudents").removeClass("btn btn-primary");
-    $("#allDepartmentStudents").addClass("btn btn-light");
-  }
-  if ($(buttonID).hasClass("btn btn-primary")){
-    $(buttonID).addClass('btn btn-light');
-    $(buttonID).removeClass('btn btn-primary');
-  }
+
+  $(buttonID).removeClass('btn btn-light');
+  $(buttonID).addClass('btn btn-primary');
 }
 
 // show the sub-sidebar only on this page
@@ -298,15 +283,27 @@ function downloadHistory(){
 }
 
 function populateTable(){
+  // This function will take input from the department select picker, and based
+  // off of what department is choosen, the function will populate both the data table
+  // and the modal with the correct data from that department
+
+  // This grabs the department selected from the select picker
   var departmentDropDown = document.getElementById("departmentDropDown");
   var departmentSelected = departmentDropDown.options[departmentDropDown.selectedIndex].value;
+
+  // AJAX call sends our controller the department choosen, and the controller
+  // should send back the data we need as JSON
   $.ajax({
     method: "GET",
     url: "/main/department/" + departmentSelected,
     datatype: "json",
     success: function(response) {
-      // console.log(response);
 
+      // This section checks to see which button is currently pressed, and filters
+      // the data table based off that button so that the data is filtered correctly
+      // when we append the new data into the data table.
+      // Before we append the new department data into the data table, this section will
+      // first delete all of the current department data that we have in the data table.
       if ($("#currentDepartmentStudents").hasClass('btn-primary')){
         table
         .columns( 1 )
@@ -338,16 +335,16 @@ function populateTable(){
         .rows({ filter : 'applied'}).remove().draw();
       }
 
-
-      // $("#May").append('<label><input type="checkbox" name="" id=""/>Wassup May</label>')
-      // $("#May").append('<label><input type="checkbox" name="" id=""/>Wassup Dude</label>')
-      // $("#May2").html('<label><input type="checkbox" name="" id=""/>Wassup Dog</label>')
-
+      // This section will clear any data currently in the Div's because we will
+      // be repopulating them with new department data
       $("#currentDepartmentStudentsDiv").empty()
       $("#allDepartmentStudentsDiv").empty()
 
-
+      // Parse the JSON we get back from the controller
       response = JSON.parse(response)
+      // This section will iterate through the JSON data, and access the values
+      // from the key-value pairs that we will need to populate both the modal and the
+      // data table
       for (var key in response){
         var bNumber = response[key]["BNumber"]
         var student = response[key]["Student"]
@@ -358,30 +355,33 @@ function populateTable(){
         var divClass = response[key]["checkboxModalClass"]
         var formID = response[key]["formID"]
         var activeStatus = response[key]["activeStatus"]
-        // table.column(1).visable(false);
-        // table.row.add(["<h3>" + student + "</h3>", "My Current Students"])
 
+        // The first "If" statment will populate both the data table and modal if the student's activeStatus == 'True', meaning that the
+        // student is currently still a student at Berea
         if (activeStatus == "True") {
           table.row.add(["<a href='/laborHistory/" + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>" +
           "<br />" + "<span class='pushLeft h6'>" + term + " - " + position + " - " + department + "</span>",
           "<span style='display:none'>" + status + "</span>"])
           .draw()
+
+          if (divClass == "currentDepartmentModal"){
+            $("#currentDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +'</label><br/>')
+          }
+          else{
+            $("#allDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +'</label><br/>')
+          }
         }
+        // The "Else" statment will populate both the data table and modal if the student's activeStatus == 'False', meaning that the
+        // student is no longer a student at Berea
         else{
           table.row.add(["<a href='/laborHistory/" + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>" +
           "<br />" + "<span class='pushLeft h6'>No longer a student.</span>",
           "<span style='display:none'>" + status + "</span>"])
           .draw()
+
+          $("#allDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +' <strong>(No longer a student.)</strong></label><br/>')
         }
 
-        if (divClass == "currentDepartmentModal"){
-          $("#currentDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +'</label><br/>')
-        }
-        else{
-          $("#allDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +'</label><br/>')
-        }
-      // $(".hiddenColumn").hide()
-        // console.log(student);
       }
     }
   })
