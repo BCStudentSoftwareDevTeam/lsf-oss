@@ -290,20 +290,33 @@ function saveNotes(obj){ // saves notes written in textarea when save button of 
   $("#"+obj).attr("data-note", notes);
 }
 
-function deleteRow(row) { // Deletes Row when remove glyphicon is clicked.
-  console.log(row);
+$(".remove").on("click", function(){
+  console.log("something");
+    var colIndex = $(this).parent().children().index($(this));
+    var rowIndex = $(this).parent().parent().children().index($(this).parent());
+    alert('Row: ' + rowIndex + ', Column: ' + colIndex);
+});
+
+function deleteRow(thing) {
+  var otherThingy = $(thing).parent().parent().children().index($(thing).parent());
+  console.log("Deleting Row"); // Deletes Row when remove glyphicon is clicked.
+  console.log(otherThingy);
+  console.log(globalArrayOfStudents);
   var table = document.getElementById("mytable").getElementsByTagName("tbody")[0];
   for (var i = 0, row; row = table.rows[i]; i++) {
-    if row == table.rows[i] {
-        $(row).parents("tr").remove();
-        globalArrayOfStudents[i].remove(;)
+    console.log("Number: " + i);
+    console.log(table.rows[i]);
+    if (0 == table.rows[i]) { //TODO: Fix if statement not working correctly
+      console.log("Inside if");
+      $(thing).parents("tr").remove();
+      globalArrayOfStudents.splice(i, 1);
     }
-    else {
 
-    }
    //iterate through rows
    //rows would be accessed using the "row" variable assigned in the for loop
  }
+ console.log("Outside for loop");
+ console.log(globalArrayOfStudents);
   // TODO: Will we need to modify the global array at all when this is called as well?
   // Yes. We'll need to delete the corresponding item when this funtion is called
   // TODO: Delete the corresponding item when this funtion is called. Likely before it is removed from the table
@@ -509,7 +522,7 @@ function createAndFillTable(studentDict) {
   }
   var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(\""+notesID2+"\")\" id= \""+notesID2+
                                                           "\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
-  var removeIcon = "<a onclick = \"deleteRow(this)\" class=\"remove\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
+  var removeIcon = "<a id = \"removeIcon\" class=\"remove\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
