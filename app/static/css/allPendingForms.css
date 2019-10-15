@@ -12,7 +12,7 @@
 
 .btn-holder {
    position: relative;
-   left: 700px !important;
+   align-content: !important;
 }
 
 .table {
@@ -28,5 +28,20 @@ div#pendingTabs.container {
 }
 
 div#pendingForms_length.dataTables_length {
+  text-align: left;
+}
+
+div#statusForms_length.dataTables_length {
+  text-align: left;
+}
+
+div#overloadForms_length.dataTables_length {
+  text-align: left;
+}
+div#modifiedForms_length.dataTables_length {
+  text-align: left;
+}
+
+div#releaseForms_length.dataTables_length {
   text-align: left;
 }
