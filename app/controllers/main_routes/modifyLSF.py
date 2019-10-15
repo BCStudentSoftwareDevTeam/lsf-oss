@@ -1,7 +1,7 @@
 from app.controllers.main_routes import *
 from app.controllers.main_routes.main_routes import *
 from app.controllers.main_routes.laborHistory import *
-from app.models.user import *
+from app.models.user import User
 from app.models.Tracy.studata import *
 from app.models.Tracy.stustaff import *
 from app.models.Tracy.stuposn import *
@@ -12,6 +12,7 @@ from datetime import *
 from flask import json, jsonify
 from flask import request
 from flask import flash
+
 
 
 @main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
@@ -99,11 +100,28 @@ def sumbitModifiedForm(laborStatusKey):
             if k == "supervisor":
                 print("Form value", rsp[k]['newValue'])
                 print(LSF.supervisor.PIDM)
-                user = User.get(User.PIDM == rsp[k]['newValue'])
-                print("User id: ", user.PIDM, user.FIRST_NAME, user.username)
-                LSF.supervisor = user
+                d, created = User.get_or_create(PIDM = rsp[k]['newValue'])
+                print(d)
+                print(created)
+                if not created:
+                    LSF.supervisor = d.PIDM
                 LSF.save()
                 print("After save", LSF.supervisor.UserID)
+                if created:
+                    tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
+                    tracyEmail = tracyUser.EMAIL
+                    tracyUsername = tracyEmail.find('@')
+                    user = User.get(User.PIDM == rsp[k]['newValue'])
+                    user.username   = tracyEmail[:tracyUsername]
+                    user.FIRST_NAME = tracyUser.FIRST_NAME
+                    user.LAST_NAME  = tracyUser.LAST_NAME
+                    user.EMAIL      = tracyUser.EMAIL
+                    user.CPO        = tracyUser.CPO
+                    user.ORG        = tracyUser.ORG
+                    user.DEPT_NAME  = tracyUser.DEPT_NAME
+                    user.save()
+                    LSF.supervisor = d.PIDM
+                    LSF.save()
             if k == "POSN_TITLE":
                 LSF.POSN_TITLE = rsp[k]['newValue']
                 LSF.save()

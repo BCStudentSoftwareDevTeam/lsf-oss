@@ -11,6 +11,15 @@ $("#datetimepicker0").datepicker("setDate", "date");
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
+$(document).ready(function(){
+  var map = {};
+  $('select option').each(function () {
+      if (map[this.value]) {
+          $(this).remove()
+      }
+      map[this.value] = true;
+  })
+});
 function fill_positions(response) {
   var selected_positions = document.getElementById("POSN_TITLE");
     for (var key in response) {
