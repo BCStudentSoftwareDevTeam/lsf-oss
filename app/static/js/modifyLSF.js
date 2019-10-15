@@ -46,6 +46,15 @@ $(document).ready(function(){
    var specificTerm = termcode.toString().substr(-2);
    if (specificTerm != 11 && specificTerm != 12 && specificTerm != 00){
      document.getElementById("jobType").disabled = true;
+     $("#jobType").val("Secondary");
+     var jobType = $("#jobType").val();
+     if (jobType == "Secondary"){
+       console.log("here");
+       $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", true);
+       $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", true);
+       $('.selectpicker').selectpicker('refresh');
+       console.log($("#jobType").val())
+     }
      $("#contractHoursDiv").show();
    }
    else{
@@ -94,6 +103,7 @@ function positioncheck(){
   try{
     var position =$("#POSN_TITLE").val();
     var jobType = $("#jobType").val();
+    console.log(jobType);
     if (jobType == "Primary"){
       $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", false);
       $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", false);

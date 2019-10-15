@@ -149,7 +149,7 @@
 
     <div class="container">
       <div class="floatleft">
-        <button type="cancel" class="btn btn-danger">Cancel</button>
+        <button type="cancel" class="btn btn-danger" onclick="window.history.go(-1); return false;">Cancel</button>
       </div>
       <div class="submitbutton">
         <button id="submit" type="button" class="btn btn-success" onclick="checkForChange()">Submit Changes</button>
@@ -157,9 +157,7 @@
         {% include "snips/ModifyLSFSubmit.html" %}
       </div>
     </div>
-
-
-
+    
  </form>
 
 <script language="JavaScript" type="text/javascript" src="/static/js/modifyLSF.js"></script>
