@@ -279,28 +279,30 @@ $("#reviewButton").hide();
 //end
 
 // Table glyphicons
-function showNotesModal(obj){// pops up Note Modal when notes glyphicon is clicked
-  $("modal_text").val($("#"+obj).attr("data-note"));
-  $("#saveButton").attr("onclick","saveNotes(\"" + obj +"\")");
-  $("#noteModal").modal("show");
-}
-
-function saveNotes(obj){ // saves notes written in textarea when save button of modal is clicked
-  var notes = $("#modal_text").val();
-  $("#"+obj).attr("data-note", notes);
-}
-
-$("#removeIcon").click(function(){
-  console.log("something");
-
-});
-
-function deleteRow(thing) {
-  var rowParent = thing.parentNode.parentNode;
+function showNotesModal(glyphicon){// pops up Note Modal when notes glyphicon is clicked
+  var rowParent = glyphicon.parentNode.parentNode;
   var table = document.getElementById("mytable").getElementsByTagName("tbody")[0];
   for (var i = 0, row; row = table.rows[i]; i++) {
     if (rowParent === table.rows[i]) {
-      $(thing).parents("tr").remove();
+      $("#modal_text").val(globalArrayOfStudents[i].stuNotes);
+      $("#saveButton").attr("onclick","saveNotes(\"" + i +"\")");
+      break;
+    }
+  }
+  $("#noteModal").modal("show");
+}
+
+function saveNotes(arrayIndex){ // saves notes written in textarea when save button of modal is clicked
+  var notes = $("#modal_text").val();
+  globalArrayOfStudents[arrayIndex].stuNotes = notes;
+}
+
+function deleteRow(glyphicon) {
+  var rowParent = glyphicon.parentNode.parentNode;
+  var table = document.getElementById("mytable").getElementsByTagName("tbody")[0];
+  for (var i = 0, row; row = table.rows[i]; i++) {
+    if (rowParent === table.rows[i]) {
+      $(glyphicon).parents("tr").remove();
       globalArrayOfStudents.splice(i, 1);
       break;
     }
@@ -312,7 +314,7 @@ function fields_are_empty(id_list) { // Checks if selectpickers are empty
   empty_element = false;
   $.each(id_list, function(id) {
     value = $("#"+id).val();
-    empty_element = (value=="" || value==null);
+    empty_element = (value == "" || value == null);
   });
   return empty_element;
 }
@@ -330,32 +332,32 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
   var studentDict = createStuDict();
   checkPrimaryPosition(studentDict);
   return;
-  if (fields_are_empty(id_list)) {
-    errorFlash();
-  }
-  else if (checkWLS()){
-    var termCode = $("#selectedTerm").val();
-    var whichTerm = termCode.toString().substr(-2);
-    if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-      id_list = ["student", "position", "selectedContractHours"];
-      if (fields_are_empty(id_list)) {
-        errorFlash();
-      }
-      else {
-        checkDuplicate();
-       }
-      }
-    else {
-      id_list = ["student", "position", "jobType", "selectedHoursPerWeek"];
-      if (fields_are_empty(id_list)) {
-        errorFlash();
-      }
-      else {
-        checkDuplicate();
-        return;
-      }
-    }
-  }
+  // if (fields_are_empty(id_list)) {
+  //   errorFlash();
+  // }
+  // else if (checkWLS()){
+  //   var termCode = $("#selectedTerm").val();
+  //   var whichTerm = termCode.toString().substr(-2);
+  //   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+  //     id_list = ["student", "position", "selectedContractHours"];
+  //     if (fields_are_empty(id_list)) {
+  //       errorFlash();
+  //     }
+  //     else {
+  //       checkDuplicate();
+  //      }
+  //     }
+  //   else {
+  //     id_list = ["student", "position", "jobType", "selectedHoursPerWeek"];
+  //     if (fields_are_empty(id_list)) {
+  //       errorFlash();
+  //     }
+  //     else {
+  //       checkDuplicate();
+  //       return;
+  //     }
+  //   }
+  // }
 }
 function createStuDict(){
   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
@@ -505,9 +507,9 @@ function createAndFillTable(studentDict) {
   else {
     var selectedContractHoursName = $("#selectedContractHours").val();// For whatever reason this is undefined
   }
-  var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(\""+notesID2+"\")\" id= \""+notesID2+
+  var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(this)\" id= \""+notesID2+
                                                           "\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
-  var removeIcon = "<a onclick= \"deleteRow(this)\" id = \"removeIcon\" class=\"remove\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
+  var removeIcon = "<a onclick= \"deleteRow(this)\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
@@ -582,7 +584,7 @@ function reviewButtonFunctionality() { // Triggred when Review button is clicked
 }
 
 function createModalContent() { // Populates Submit Modal with Student information from the table
-  var allTableDataDict = createTabledataDictionary();
+  var allTableDataDict = globalArrayOfStudents;
   term = $("#selectedTerm").val();
   var whichTerm = term.toString().substr(-2);
   modalList = [];
@@ -619,67 +621,10 @@ function createModalContent() { // Populates Submit Modal with Student informati
   }
 }
 
-function createTabledataDictionary() { // puts all of the forms into dictionaries
-  var listDictAJAX = [];
-  $("#mytable tr").has("td").each(function() {
-    /* Get the input box values first */
-      var supervisor = $("#selectedSupervisor").val();
-      var department = $("#selectedDepartment").val();
-      var term = $("#selectedTerm").val();
-      var whichTerm = term.toString().substr(-2);
-      var positionCode = $("#position_code").attr("data-posn");
-      var wls = $("#position_code").attr("data-wls");
-      listDict = [];
-      listDict.push(supervisor, department, term, positionCode, wls);
-      var headersLabel = ["Supervisor", "Department", "Term", "Position Code", "WLS"];
-      var tableDataDict = {};
-      for (var i in listDict) {
-        tableDataDict[headersLabel[i]] = listDict[i];
-      }
-      /* If it"s a break, get table values */
-      if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-        tableDataDict["Job Type"] = "Secondary";
-        var headers_2_data = ["Student", "Position", "Contract Hours", "Contract Dates"];
-        $("td", $(this)).each(function(index, item) {
-          var aTag = $.parseHTML($(item).html());
-          if (!$(aTag).hasClass("remove")) {
-            var notes = $(aTag).data("note");
-            tableDataDict["Supervisor Notes"] = notes;
-            tableDataDict[headers_2_data[index]] = $(item).html();
-          }
-        });
-        listDictAJAX.push(tableDataDict);
-        allTableDataDict = {};
-        for (var key in listDictAJAX){
-          allTableDataDict[key] = listDictAJAX[key];
-        }
-      }
-      /* If it"s academic year, get the table values */
-      else {
-          var headersData = ["Student", "Position", "Job Type", "Hours Per Week", "Contract Dates"];
-          $("td", $(this)).each(function(index, item) {
-            var aTag = $.parseHTML($(item).html());
-            if (!$(aTag).hasClass("remove")) {
-              var notes = $(aTag).data("note");
-              tableDataDict["Supervisor Notes"] = notes;
-              tableDataDict[headersData[index]] = $(item).html();
-            }
-          });
-          listDictAJAX.push(tableDataDict);
-          allTableDataDict = {}; // this is the dictionary that contains all the forms
-          for (var key in listDictAJAX){
-            allTableDataDict[key] = listDictAJAX[key];
-          }
-      }
-     });
-  return allTableDataDict;
-}
-
 // SEND DATA TO THE DATABASE
 function userInsert(){
-  var allTableDataDict = globalArrayOfStudents;//createTabledataDictionary();
-  data = JSON.stringify(allTableDataDict);
-  //alert(data)
+  var data = JSON.stringify(globalArrayOfStudents);
+  console.log(data);
   $("#laborStatusForm").on("submit", function(e) {
     e.preventDefault();
   });
@@ -693,9 +638,9 @@ function userInsert(){
            var whichTerm = term.toString().substr(-2);
            modalList = [];
            if (response){
-             for (var key in allTableDataDict) {
+             for (var i = 0; i < globalArrayOfStudents.length(); i++) {
                var student = allTableDataDict[key].Student;
-               var studentName= student.substring(0, student.indexOf("(B0"));
+               var studentName = student.substring(0, student.indexOf("(B0"));
                var position = allTableDataDict[key].Position;
                var selectedContractHours = allTableDataDict[key]["Contract Hours"];
                var jobType = allTableDataDict[key]["Job Type"];
