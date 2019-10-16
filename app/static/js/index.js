@@ -23,6 +23,9 @@ $(document).ready(function() {
   $("#myCurrentStudents").removeClass("btn-light");
   $("#myCurrentStudents").addClass("btn-primary");
 
+  var file = 325
+  console.log(btoa(file));
+  console.log(atob(btoa(file)));
 });
 
 var table = $("#studentList").DataTable({

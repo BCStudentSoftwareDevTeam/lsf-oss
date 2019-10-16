@@ -11,7 +11,7 @@ from datetime import datetime, date
 from flask import request
 from flask import json, jsonify
 from flask import make_response
-
+import base64
 
 @main_bp.before_app_request
 def before_request():
@@ -20,7 +20,6 @@ def before_request():
 @main_bp.route('/', methods=['GET', 'POST'])
 def index():
     current_user = require_login()
-    #print(current_user)
     if not current_user:
         return render_template('errors/403.html')
 
@@ -31,6 +30,18 @@ def index():
     currentUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).distinct()
     # Grabs every single department that currently has at least one labor status form in it
     allDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).distinct()
+
+    file = base64.b64encode(b"7")
+    print(file)
+
+    file2 = base64.b64decode("Nw==")
+    print(file2)
+
+    file2 = int(file2)
+    print(file2)
+
+    # file2 = base64.b64decode(file)
+    # print(file2)
 
     inactiveSupervisees = []
     currentSupervisees = []
@@ -113,8 +124,6 @@ def index():
                 noDuplicateList.append(i)
             else:
                 pass
-        print(value)
-        print(noDuplicateList)
         excel = ExcelMaker()
         completePath = excel.makeList(noDuplicateList)
         filename = completePath.split('/').pop()
