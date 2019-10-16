@@ -37,30 +37,72 @@ $(document).ready(function(){
          url: url,
          dataType: "json",
          success: function (response){
-            fill_positions(response)
+            fill_positions(response);
+            jobPositionDisable();
          }
        })
  });
-$(document).ready(function(){
-   var termcode = document.getElementById("termCode").value;
-   var specificTerm = termcode.toString().substr(-2);
-   if (specificTerm != 11 && specificTerm != 12 && specificTerm != 00){
-     document.getElementById("jobType").disabled = true;
-     $("#jobType").val("Secondary");
-     var jobType = $("#jobType").val();
-     if (jobType == "Secondary"){
-       console.log("here");
-       $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", true);
-       $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", true);
-       $('.selectpicker').selectpicker('refresh');
-       console.log($("#jobType").val())
-     }
-     $("#contractHoursDiv").show();
-   }
-   else{
-     $("#weeklyHoursDiv").show();
-   }
-});
+function jobPositionDisable(){
+  var termcode = document.getElementById("termCode").value;
+  var specificTerm = termcode.toString().substr(-2);
+  if (specificTerm != 11 && specificTerm != 12 && specificTerm != 00){
+    document.getElementById("jobType").disabled = true;
+    $("#jobType").val("Secondary");
+    var jobType = $("#jobType").val();
+    if (jobType == "Secondary"){
+      WLScheck()
+    $("#contractHoursDiv").show();
+    }
+  else{
+    $("#weeklyHoursDiv").show();
+  }
+  }
+}
+function WLScheck(){
+  var jobType = $("#jobType").val();
+  var selected = []
+  $("#POSN_TITLE option").each(function()
+  {
+  selected.push($(this).val().substr(-3))
+  });
+  var wls5 = selected.indexOf('(5)')
+  var wls6 = selected.indexOf('(6)')
+  if (jobType == "Secondary" && wls5 >= 0){
+    console.log("here1")
+    document.getElementById("POSN_TITLE").options[wls5].disabled = true;
+    $("#POSN_TITLE").val(1);
+    $('.selectpicker').selectpicker('refresh');
+  }
+  if (jobType == "Secondary" && wls6 >= 0){
+    console.log("here2")
+    document.getElementById("POSN_TITLE").options[wls6].disabled = true;
+    $("#POSN_TITLE").val(1);
+    $('.selectpicker').selectpicker('refresh');
+  }
+  if (jobType == "Primary" && (wls6 <= 0 || wls5 <= 0)){
+    console.log("here3")
+    $('#POSN_TITLE').prop('disabled', false);
+    $(".selectpicker[data-id='POSN_TITLE']").removeClass("disabled");
+  }
+  if (jobType == "Primary" && (wls6 >= 0 || wls5 >= 0)){
+    console.log("here4")
+    if(wls6 >= 0){
+      console.log(wls6)
+      console.log("hereeee");
+        document.getElementById("POSN_TITLE").options[wls6].disabled = false;
+        $('.selectpicker').selectpicker('refresh');
+    }
+    if(wls5 >= 0){
+      console.log("nopeee");
+        document.getElementById("POSN_TITLE").options[wls5].disabled = false;
+        $('.selectpicker').selectpicker('refresh');
+    }
+    // $('#POSN_TITLE').prop('disabled', false);
+    // // $(".selectpicker[data-id='POSN_TITLE']").removeClass("disabled");
+    // $('.selectpicker').selectpicker('refresh');
+
+  }
+}
 // Pops up a modal for overload
 function hourscheck(){
   var hour = document.getElementById("weeklyHours").value;
@@ -104,28 +146,35 @@ function positioncheck(){
     var position =$("#POSN_TITLE").val();
     var jobType = $("#jobType").val();
     console.log(jobType);
-    if (jobType == "Primary"){
-      $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", false);
-      $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", false);
-      $('.selectpicker').selectpicker('refresh');
-    }
-    var wls = position[position.length -2]
-    if (jobType == "Secondary" && (wls == "6" || wls == "5" )){
-      $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", true);
-      $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", true);
-      $("#POSN_TITLE").val(1);
-      $('.selectpicker').selectpicker('refresh');
-    }
-    if (jobType == "Secondary" && (wls !== "6" || wls !== "5" )){
-      $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", true);
-      $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", true);
-      $('.selectpicker').selectpicker('refresh');
-    }
-    if (jobType == "Primary" && (wls !== "6" || wls !== "5")){
-      $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", false);
-      $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", false);
-      $('.selectpicker').selectpicker('refresh');
-    }
+    WLScheck()
+    //
+    //
+    // if (jobType == "Primary"){
+    //   WLScheck()
+    //   // $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", false);
+    //   // $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", false);
+    //   // $('.selectpicker').selectpicker('refresh');
+    // }
+    // var wls = position[position.length -2]
+    // if (jobType == "Secondary" && (wls == "6" || wls == "5" )){
+    //   WLScheck()
+    //   // $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", true);
+    //   // $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", true);
+    //   $("#POSN_TITLE").val(1);
+    //   $('.selectpicker').selectpicker('refresh');
+    // }
+    // if (jobType == "Secondary" && (wls !== "6" || wls !== "5" )){
+    //   WLScheck()
+    //   // $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", true);
+    //   // $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", true);
+    //   // $('.selectpicker').selectpicker('refresh');
+    // }
+    // if (jobType == "Primary" && (wls !== "6" || wls !== "5")){
+    //   WLScheck()
+    //   // $('#POSN_TITLE').find('option[value="TA (6)"]').prop("disabled", false);
+    //   // $('#POSN_TITLE').find('option[value="TA (5)"]').prop("disabled", false);
+    //   // $('.selectpicker').selectpicker('refresh');
+    // }
   }
   catch(err){
     console.log(err)
@@ -170,8 +219,6 @@ function checkForChange(){
   if (JSON.stringify(finalDict) == '{}'){
     console.log(JSON.stringify(finalDict));
     $('#NochangeModal').modal('show');
-    // $("#NochangeModal").css("z-index", parseInt($('.modal-backdrop').css('z-index')) + 1);
-    console.log("here")
   }
 }
 function buttonListener(laborStatusKey) {
