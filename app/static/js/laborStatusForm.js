@@ -33,7 +33,12 @@ $("#jobType").change(function(){
   //this is just getting the value that is selected
   var jobType = $(this).val();
   if (jobType == "Secondary") {
-      $("#SecondaryModal").modal("show");
+      $("#warningModal").modal("show");
+      $("#warningModalText").innerHTML = "The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form."
+      $("#warningModal").on("hidden.bs.modal", function(){
+        $("#warningModalText").innerHTML = "";
+        //Testing out modal stuff here
+});
   }
 });
 
