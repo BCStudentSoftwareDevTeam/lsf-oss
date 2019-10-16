@@ -63,35 +63,28 @@ def userInsert():
         if rsp:
             for i in rsp:
                 print(i)
-                wlsIndexStart = data['Position'].find('(')
-                wlsIndexEnd = data['Position'].find(')')
-                wls = data['Position'][wlsIndexStart + 1 : wlsIndexEnd]
-                bnumberIndex = data['Student'].find('B0')
-                studentBnumber = data['Student'][bnumberIndex:]
-                d, created = Student.get_or_create(ID = studentBnumber)
+                d, created = Student.get_or_create(ID = i['stuBNumber'])
                 student = d.ID
-                d, created = User.get_or_create(UserID = data['Supervisor'])
+                d, created = User.get_or_create(UserID = i['Supervisor'])
                 primarySupervisor = d.UserID
-                d, created = Department.get_or_create(DEPT_NAME = data['Department'])
+                d, created = Department.get_or_create(DEPT_NAME = i['Department'])
                 department = d.departmentID
-                d, created = Term.get_or_create(termCode = data['Term'])
+                d, created = Term.get_or_create(termCode = i['Term'])
                 term = d.termCode
-                start = data['Start Date']
-                startDate = datetime.strptime(start, "%m/%d/%Y").strftime('%Y-%m-%d')
-                endDate = datetime.strptime(end, "%m/%d/%Y").strftime('%Y-%m-%d')
+                start = i['Start Date']
                 lsf = LaborStatusForm.create(termCode = term,
                                              studentSupervisee = student,
                                              supervisor = primarySupervisor,
                                              department  = department,
-                                             jobType = data['Job Type'],
-                                             WLS = data['WLS'],
-                                             POSN_TITLE = position,
-                                             POSN_CODE = data['Position Code'],
-                                             contractHours = data.get('Contract Hours', None),
-                                             weeklyHours   = data.get('Hours Per Week', None),
-                                             startDate = startDate,
-                                             endDate = endDate,
-                                             supervisorNotes = data.get('Supervisor Notes', None)
+                                             jobType = i["stuJobType"],
+                                             WLS = i["stuWLS"],
+                                             POSN_TITLE = i["stuPosition"],
+                                             POSN_CODE = i["stuPositionCode"],
+                                             contractHours = i.get("stuContractHours", None),
+                                             weeklyHours   = i.get("stuHours", None),
+                                             startDate = i["stuStartDate"],
+                                             endDate = i["stuEndDate"],
+                                             supervisorNotes = i["stuNotes"]
                                              )
 
                 historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")

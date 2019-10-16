@@ -376,16 +376,11 @@ function createStuDict(){
   var studentBNumber = $("#student").val();
   var startDate  = $("#dateTimePicker1").datepicker({dateFormat: "dd-mm-yy"}).val();
   var endDate  = $("#dateTimePicker2").datepicker({dateFormat: "dd-mm-yy"}).val();
-  if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00") {
+  if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
     var jobType = $("jobType");
     var jobTypeName = $("#jobType option:selected").text();
     var hoursPerWeek = $("selectedHoursPerWeek");
     var hoursPerWeekName = $("#selectedHoursPerWeek option:selected").text();
-  }
-  else {
-    var selectedContractHoursName = $("#selectedContractHours").val();
-  }
-  if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
     var studentDict = {stuName: studentName,
                       stuBNumber: studentBNumber,
                       stuPosition: positionName,
@@ -401,6 +396,7 @@ function createStuDict(){
   }
   else{
      //#TODO: Add student dictionary for breaks to the global array
+    var selectedContractHoursName = $("#selectedContractHours").val();
     var studentDict = {stuName: studentName,
                       stuBNumber: studentBNumber,
                       stuPosition: positionName,
@@ -589,17 +585,13 @@ function reviewButtonFunctionality() { // Triggred when Review button is clicked
 }
 
 function createModalContent() { // Populates Submit Modal with Student information from the table
-  var allTableDataDict = globalArrayOfStudents;
   term = $("#selectedTerm").val();
   var whichTerm = term.toString().substr(-2);
   modalList = [];
   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-    for (var key in allTableDataDict) {
-      var student = allTableDataDict[key].Student;
-      var studentName = student.substring(0, student.indexOf("(B0"));
-      var position = allTableDataDict[key].Position;
-      var selectedContractHours = allTableDataDict[key]["Contract Hours"];
-      var bigString = "<li>" + studentName + " | " + position + " | " + selectedContractHours + " hours";
+    for (var i = 0; i < globalArrayOfStudents.length; i++) {
+      var bigString = "<li>" + globalArrayOfStudents[i].stuName + " | " + globalArrayOfStudents[i].stuPosition + " | " +
+                      globalArrayOfStudents[i].stuContractHours + " hours";
       modalList.push(bigString);
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
@@ -609,13 +601,9 @@ function createModalContent() { // Populates Submit Modal with Student informati
     $("#SubmitModal").modal("show");
   }
   else {
-    for (var key in allTableDataDict) {
-      var student = allTableDataDict[key].Student;
-      var studentName = student.substring(0, student.indexOf("(B0"));
-      var position = allTableDataDict[key].Position;
-      var jobType = allTableDataDict[key]["Job Type"];
-      var hours = allTableDataDict[key]["Hours Per Week"];
-      var bigString = "<li>" + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
+    for (var i = 0; i < globalArrayOfStudents.length; i++) {
+      var bigString = "<li>" + globalArrayOfStudents[i].stuName + " | " + globalArrayOfStudents[i].stuPosition +
+                      " | " + globalArrayOfStudents[i].stuJobType + " | " + globalArrayOfStudents[i].stuHours + " hours";
       modalList.push(bigString);
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
@@ -628,28 +616,28 @@ function createModalContent() { // Populates Submit Modal with Student informati
 
 // SEND DATA TO THE DATABASE
 function userInsert(){
-  var data = JSON.stringify(globalArrayOfStudents);
-  console.log(data);
+  // var data = JSON.stringify(globalArrayOfStudents);
+  // console.log(data);
   $("#laborStatusForm").on("submit", function(e) {
     e.preventDefault();
   });
   $.ajax({
          method: "POST",
          url: "/laborstatusform/userInsert",
-         data: data,
+         data: JSON.stringify(globalArrayOfStudents),
          contentType: "application/json",
          success: function(response) {
            term = $("#selectedTerm").val();
            var whichTerm = term.toString().substr(-2);
            modalList = [];
            if (response){
-             for (var i = 0; i < globalArrayOfStudents.length(); i++) {
-               var student = allTableDataDict[key].Student;
+             for (var i = 0; i < globalArrayOfStudents.length; i++) {
+               var student = globalArrayOfStudents[key].Student;
                var studentName = student.substring(0, student.indexOf("(B0"));
-               var position = allTableDataDict[key].Position;
-               var selectedContractHours = allTableDataDict[key]["Contract Hours"];
-               var jobType = allTableDataDict[key]["Job Type"];
-               var hours = allTableDataDict[key]["Hours Per Week"];
+               var position = globalArrayOfStudents[key].Position;
+               var selectedContractHours = globalArrayOfStudents[key]["Contract Hours"];
+               var jobType = globalArrayOfStudents[key]["Job Type"];
+               var hours = globalArrayOfStudents[key]["Hours Per Week"];
                if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
                  var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                }
@@ -660,13 +648,13 @@ function userInsert(){
             }
           }
           else {
-            for (var key in allTableDataDict) {
+            for (var key in globalArrayOfStudents) {
 
-              var student = allTableDataDict[key].Student;
+              var student = globalArrayOfStudents[key].Student;
               var studentName = student.substring(0, student.indexOf("(B0"));
-              var position = allTableDataDict[key].Position;
-              var selectedContractHours = allTableDataDict[key]["Contract Hours"];
-              var hours = allTableDataDict[key]["Hours Per Week"];
+              var position = globalArrayOfStudents[key].Position;
+              var selectedContractHours = globalArrayOfStudents[key]["Contract Hours"];
+              var hours = globalArrayOfStudents[key]["Hours Per Week"];
               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
                 var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
               }
