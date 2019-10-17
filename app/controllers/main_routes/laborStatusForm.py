@@ -58,9 +58,12 @@ def laborStatusForm(laborStatusKey = None):
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
     """ Create labor status form. Create labor history form."""
+    print("we in here")
     try:
+        print("we are now in here")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
-        if rsp:
+        print(rsp)
+        if rsp.values():
             print(rsp)
             for i in rsp:
                 print(i)
