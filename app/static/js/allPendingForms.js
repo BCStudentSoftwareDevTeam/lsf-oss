@@ -67,8 +67,8 @@ function updateApproveTableData(returned_details){
       else {
         hours = r_hour
       }
-      $('#classTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
       $('#laborClassTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
+      $('#classTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
       $('#modifiedClass').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
       $('#classOverload').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
       $('#classRelease').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
@@ -123,7 +123,6 @@ function finalDenial_data(returned_details){
     var position= returned_details[i][1]
      var r_hour= returned_details[i][3]
      var c_Hours= returned_details[i][4]
-     console.log(c_Hours,"jamalito")
       var supervisor= returned_details[i][2]
       var hours = " "
       if (r_hour.length==4){
