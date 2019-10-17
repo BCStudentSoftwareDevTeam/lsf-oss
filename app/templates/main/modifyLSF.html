@@ -69,7 +69,7 @@
                             data-live-search="true"
                             value = {{prefilljobtype}}
                             title = {{prefilljobtype}}
-                            onchange="fillHoursPerWeek(); positioncheck()">
+                            onchange="fillHoursPerWeek(); WLScheck()">
                 <option title="Primary" value="Primary">Primary</option>
                 <option title="Secondary" value="Secondary">Secondary</option>
            </select>
@@ -157,7 +157,7 @@
         {% include "snips/ModifyLSFSubmit.html" %}
       </div>
     </div>
-    
+
  </form>
 
 <script language="JavaScript" type="text/javascript" src="/static/js/modifyLSF.js"></script>
