@@ -61,6 +61,7 @@ def userInsert():
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         if rsp:
+            print(rsp)
             for i in rsp:
                 print(i)
                 d, created = Student.get_or_create(ID = i['stuBNumber'])

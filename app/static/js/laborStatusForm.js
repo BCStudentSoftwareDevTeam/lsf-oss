@@ -377,40 +377,45 @@ function createStuDict(){
   var startDate  = $("#dateTimePicker1").datepicker({dateFormat: "dd-mm-yy"}).val();
   var endDate  = $("#dateTimePicker2").datepicker({dateFormat: "dd-mm-yy"}).val();
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
-    var jobType = $("jobType");
+    var jobType = $("#jobType");
     var jobTypeName = $("#jobType option:selected").text();
-    var hoursPerWeek = $("selectedHoursPerWeek");
+    var hoursPerWeek = $("#selectedHoursPerWeek");
     var hoursPerWeekName = $("#selectedHoursPerWeek option:selected").text();
+  }
+  else {
+    var jobTypeName = "Secondary"
+    var selectedContractHoursName = $("#selectedContractHours").val();
+  }
     var studentDict = {stuName: studentName,
                       stuBNumber: studentBNumber,
                       stuPosition: positionName,
                       stuPositionCode: positionCode,
                       stuJobType: jobTypeName,
                       stuHours: parseInt(hoursPerWeekName, 10),
+                      stuContractHours: parseInt(selectedContractHoursName, 10),
                       stuWLS: wls,
                       stuStartDate: startDate,
                       stuEndDate: endDate,
                       stuTermCode: termCodeSelected,
                       stuNotes: ""
                       };
+    return studentDict;
   }
-  else{
-     //#TODO: Add student dictionary for breaks to the global array
-    var selectedContractHoursName = $("#selectedContractHours").val();
-    var studentDict = {stuName: studentName,
-                      stuBNumber: studentBNumber,
-                      stuPosition: positionName,
-                      stuPositionCode: positionCode,
-                      stuContractHours: parseInt(selectedContractHoursName, 10),
-                      stuStartDate: startDate,
-                      stuEndDate: endDate,
-                      stuTermCode: termCodeSelected,
-                      stuNotes: "",
-                      stuJobType: "Secondary"
-                      };
-  }
-  return studentDict;
-}
+    // Commenting this out for now, I think I was able to combine the two dictionaries, so it could not be needed.
+    //  //#TODO: Add student dictionary for breaks to the global array
+    // var selectedContractHoursName = $("#selectedContractHours").val();
+    // var studentDict = {stuName: studentName,
+    //                   stuBNumber: studentBNumber,
+    //                   stuPosition: positionName,
+    //                   stuPositionCode: positionCode,
+    //                   //stuContractHours: parseInt(selectedContractHoursName, 10),
+    //                   stuHours: parseInt(selectedContractHoursName, 10),
+    //                   stuStartDate: startDate,
+    //                   stuEndDate: endDate,
+    //                   stuTermCode: termCodeSelected,
+    //                   stuNotes: "",
+    //                   stuJobType: "Secondary"
+    //                   };
 
 function checkDuplicate(studentDict) {// checks for duplicates in the table. This is for Academic Year
   for(i = 0; i < globalArrayOfStudents.length; i++){
@@ -631,7 +636,8 @@ function userInsert(){
            var whichTerm = term.toString().substr(-2);
            modalList = [];
            if (response){
-             for (var i = 0; i < globalArrayOfStudents.length; i++) {
+             console.log(response)
+             for (var key = 0; key < globalArrayOfStudents.length; key++) {
                var student = globalArrayOfStudents[key].Student;
                var studentName = student.substring(0, student.indexOf("(B0"));
                var position = globalArrayOfStudents[key].Position;
