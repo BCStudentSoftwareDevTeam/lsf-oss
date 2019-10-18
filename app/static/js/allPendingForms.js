@@ -1,3 +1,15 @@
+$(document).ready( function(){
+    $('#pendingForms, #statusForms, #modifiedForms, #overloadForms, #releaseForms').DataTable({
+        'columnDefs': [{ 'orderable': false, 'targets': [0,4,10]}], // hide sort icon on header of first column
+        // 'columnDefs': [{ 'orderable': false, 'targets': 9 }],
+        'aaSorting': [[1, 'asc']], // start to sort data in second column
+        pageLength: 10
+        // "dom": '<"top"fl>rt<"bottom"p><"clear">'
+
+    });
+});
+
+
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
