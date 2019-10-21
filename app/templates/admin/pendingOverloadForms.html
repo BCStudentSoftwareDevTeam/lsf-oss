@@ -61,15 +61,19 @@
         </td>
         <td> {# EDIT #}
           <a href="/modifyLSF/{{overloadForm.formID.laborStatusFormID}}"> <span id="edit_{{overloadForm.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
+          {# added this onclick but it is still not working, will need to work on creating javascript function #}
           <button
                 id="reject_{{overloadForm.formID.laborStatusFormID}}"
                 type="button"
                 class ="btn btn-danger"
                 name = "rejectBtn"
                 value = "Reject"
-                data-toggle="modal" data-target="#rejectModal">
+                data-toggle="modal"
+                data-target="#denyModal"
+                onclick="insertDenial(this.value);">
                 Deny
           </button>
+
 
         </td>
 
