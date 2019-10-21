@@ -31,18 +31,6 @@ def index():
     # Grabs every single department that currently has at least one labor status form in it
     allDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).distinct()
 
-    file = base64.b64encode(b"7")
-    print(file)
-
-    file2 = base64.b64decode("Nw==")
-    print(file2)
-
-    file2 = int(file2)
-    print(file2)
-
-    # file2 = base64.b64decode(file)
-    # print(file2)
-
     inactiveSupervisees = []
     currentSupervisees = []
     pastSupervisees = []
@@ -85,24 +73,26 @@ def index():
     if request.method== 'POST':
         value =[]
         # The "Try" and "Except" block here is needed because if the user tries to use the download button before they chose
-        # a department from the dropdown, then this will throw an error. The "Try" and "Except" blocks will catch this error so that
+        # a department from the Department dropdown, it will throw a NameError. The reason behind the error is because the vairbales
+        # "currentDepartmentStudents", "allDepartmentStudents", and "inactiveDepStudent" are empty until the user chooses a department, so
+        # trying to iterate through the empty variables causes the error. The "Try" and "Except" blocks will catch this error so that
         # a user can use the download button before they chose a department.
         try:
             for form in currentDepartmentStudents:
                 name = str(form.laborStatusFormID)
                 if request.form.get(name):
-                    value.append( request.form.get(name))
-
+                    value.append(request.form.get(name))
             for form in allDepartmentStudents:
                 name = str(form.laborStatusFormID)
                 if request.form.get(name):
-                    value.append( request.form.get(name))
+                    value.append(request.form.get(name))
             for form in inactiveDepStudent:
                 name = str(form.laborStatusFormID)
                 if request.form.get(name):
-                    value.append( request.form.get(name))
-        except Exception as e:
+                    value.append(request.form.get(name))
+        except NameError as e:
             print(e)
+            print("The runtime error happens because a department has not yet been selected.")
         for form in currentSupervisees:
             name = str(form.laborStatusFormID)
             if request.form.get(name):
@@ -210,33 +200,30 @@ def populateDepartment(departmentSelected):
                 else:
                     student_processed = False  # Resets state machine
 
-        # This section will format our JSON data with the key-value pairs we want to pass back to the JS function
-        departmentStudents = {}
-        x = 0
+        # This section will format our JSON data with the key-value pairs we want to pass back to the AJAX call in our JS file.
+        departmentStudents = []
         for i in currentDepartmentStudents:
-            departmentStudents[x] = {"Status":"Current Department Students",
-                                    "Student": i.studentSupervisee.FIRST_NAME + " " + i.studentSupervisee.LAST_NAME,
-                                    "BNumber": i.studentSupervisee.ID,
-                                    "Term": i.termCode.termName,
-                                    "Position": i.POSN_TITLE,
-                                    "checkboxModalClass" : "currentDepartmentModal",
-                                    "activeStatus" : "True",
-                                    "formID" : i.laborStatusFormID,
-                                    "Department": i.department.DEPT_NAME}
-            x += 1
+            departmentStudents.append({"Status":"Current Department Students",
+                                        "Student": i.studentSupervisee.FIRST_NAME + " " + i.studentSupervisee.LAST_NAME,
+                                        "BNumber": i.studentSupervisee.ID,
+                                        "Term": i.termCode.termName,
+                                        "Position": i.POSN_TITLE,
+                                        "checkboxModalClass" : "currentDepartmentModal",
+                                        "activeStatus" : "True",
+                                        "formID" : i.laborStatusFormID,
+                                        "Department": i.department.DEPT_NAME})
         for i in allDepartmentStudents:
-            departmentStudents[x] = {"Status":"All Department Students",
-                                    "Student": i.studentSupervisee.FIRST_NAME + " " + i.studentSupervisee.LAST_NAME,
-                                    "BNumber": i.studentSupervisee.ID,
-                                    "Term": i.termCode.termName,
-                                    "Position": i.POSN_TITLE,
-                                    "checkboxModalClass" : "allDepartmentModal",
-                                    "activeStatus" : "True",
-                                    "formID" : i.laborStatusFormID,
-                                    "Department": i.department.DEPT_NAME}
-            x += 1
+            departmentStudents.append({"Status":"All Department Students",
+                                        "Student": i.studentSupervisee.FIRST_NAME + " " + i.studentSupervisee.LAST_NAME,
+                                        "BNumber": i.studentSupervisee.ID,
+                                        "Term": i.termCode.termName,
+                                        "Position": i.POSN_TITLE,
+                                        "checkboxModalClass" : "allDepartmentModal",
+                                        "activeStatus" : "True",
+                                        "formID" : i.laborStatusFormID,
+                                        "Department": i.department.DEPT_NAME})
         for i in inactiveDepStudent:
-            departmentStudents[x] = {"Status":"All Department Students",
+            departmentStudents.append({"Status":"All Department Students",
                                     "Student": i.studentSupervisee.FIRST_NAME + " " + i.studentSupervisee.LAST_NAME,
                                     "BNumber": i.studentSupervisee.ID,
                                     "Term": i.termCode.termName,
@@ -244,8 +231,7 @@ def populateDepartment(departmentSelected):
                                     "checkboxModalClass" : "allDepartmentModal",
                                     "activeStatus" : "False",
                                     "formID" : i.laborStatusFormID,
-                                    "Department": i.department.DEPT_NAME}
-            x += 1
+                                    "Department": i.department.DEPT_NAME})
         return json.dumps(departmentStudents)
 
     except Exception as e:

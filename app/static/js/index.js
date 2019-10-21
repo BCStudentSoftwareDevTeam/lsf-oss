@@ -23,9 +23,6 @@ $(document).ready(function() {
   $("#myCurrentStudents").removeClass("btn-light");
   $("#myCurrentStudents").addClass("btn-primary");
 
-  var file = 325
-  console.log(btoa(file));
-  console.log(atob(btoa(file)));
 });
 
 var table = $("#studentList").DataTable({
@@ -48,8 +45,6 @@ var table = $("#studentList").DataTable({
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
           changeButtonColor("#myCurrentStudents")
-          // Function changeButtonColor will change the color of the buttons
-          // to show make it clear which button was pressed last
           $(".currentStu").show();
           $(".allDeptStu").hide();
           $(".currentDeptStu").hide();
@@ -73,8 +68,6 @@ var table = $("#studentList").DataTable({
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
           changeButtonColor("#myPastStudents")
-          // Function changeButtonColor will change the color of the buttons
-          // to show make it clear which button was pressed last
           $(".currentStu").hide();
           $(".allDeptStu").hide();
           $(".currentDeptStu").hide();
@@ -98,8 +91,6 @@ var table = $("#studentList").DataTable({
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
           changeButtonColor("#allMyStudents")
-          // Function changeButtonColor will change the color of the buttons
-          // to show make it clear which button was pressed last
           $(".currentStu").show();
           $(".allDeptStu").hide();
           $(".currentDeptStu").hide();
@@ -123,8 +114,6 @@ var table = $("#studentList").DataTable({
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
           changeButtonColor("#currentDepartmentStudents")
-          // Function changeButtonColor will change the color of the buttons
-          // to show make it clear which button was pressed last
           $(".currentStu").hide();
           $(".allDeptStu").hide();
           $(".currentDeptStu").show();
@@ -148,8 +137,6 @@ var table = $("#studentList").DataTable({
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
           changeButtonColor("#allDepartmentStudents")
-          // Function changeButtonColor will change the color of the buttons
-          // to show make it clear which button was pressed last
           $(".currentStu").hide();
           $(".allDeptStu").show();
           $(".currentDeptStu").hide();
