@@ -40,6 +40,14 @@ def index():
     for supervisee in formsBySupervisees: # go through all the form in the formsBySupervisees
         try:
             tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
+
+        except: # if they are inactive
+            for student in inactiveSupervisees:
+                if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
+                    student_processed = True
+            if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
+                inactiveSupervisees.append(supervisee)
+        else: # if there is no exception (student is in Tracy and active) this code will run
             for student in currentSupervisees:
                 if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an current student.
                     student_processed = True
@@ -58,16 +66,8 @@ def index():
                             currentSupervisees.append(supervisee)
                     else:
                         currentSupervisees.append(supervisee)
-            else:
-                student_processed = False  # Resets state machine.
-        except: # if they are inactive
-            for student in inactiveSupervisees:
-                if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
-                    student_processed = True
-            if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
-                inactiveSupervisees.append(supervisee)
-            else:
-                student_processed = False  # Resets state machine
+        finally:# it will run at the end regardless of whether or no the excpet statement or else statement is met.
+            student_processed = False  # Resets state machine.
 
     # On the click of the download button, 'POST' method will send all checked boxes from modal to excel maker
     if request.method== 'POST':
@@ -163,6 +163,14 @@ def populateDepartment(departmentSelected):
         for supervisee in formsByDept: # go through all the form in the formsBySupervisees
             try:
                 tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
+
+            except: # if they are inactive
+                for student in inactiveDepStudent:
+                    if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
+                        student_processed = True
+                if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
+                    inactiveDepStudent.append(supervisee)
+            else: # if there is no exception (student is in Tracy and active) this code will run
                 for student in currentDepartmentStudents:
                     if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an current student.
                         student_processed = True
@@ -189,16 +197,10 @@ def populateDepartment(departmentSelected):
                         else:
                             currentDepartmentStudents.append(supervisee)
                             allDepartmentStudents.append(supervisee)
-                else:
-                    student_processed = False  # Resets state machine.
-            except: # if they are inactive
-                for student in inactiveDepStudent:
-                    if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
-                        student_processed = True
-                if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
-                    inactiveDepStudent.append(supervisee)
-                else:
-                    student_processed = False  # Resets state machine
+            finally: # it will run at the end regardless of whether or no the excpet statement or else statement is met.
+                student_processed = False  # Resets state machine.
+
+
 
         # This section will format our JSON data with the key-value pairs we want to pass back to the AJAX call in our JS file.
         departmentStudents = []
