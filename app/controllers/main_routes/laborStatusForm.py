@@ -61,45 +61,46 @@ def userInsert():
     print("we in here")
     try:
         print("we are now in here")
-        rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
-        print(rsp)
-        if rsp.values():
-            print(rsp)
-            for i in rsp:
-                print(i)
-                d, created = Student.get_or_create(ID = i['stuBNumber'])
-                student = d.ID
-                d, created = User.get_or_create(UserID = i['Supervisor'])
-                primarySupervisor = d.UserID
-                d, created = Department.get_or_create(DEPT_NAME = i['Department'])
-                department = d.departmentID
-                d, created = Term.get_or_create(termCode = i['Term'])
-                term = d.termCode
-                start = i['Start Date']
-                lsf = LaborStatusForm.create(termCode = term,
-                                             studentSupervisee = student,
-                                             supervisor = primarySupervisor,
-                                             department  = department,
-                                             jobType = i["stuJobType"],
-                                             WLS = i["stuWLS"],
-                                             POSN_TITLE = i["stuPosition"],
-                                             POSN_CODE = i["stuPositionCode"],
-                                             contractHours = i.get("stuContractHours", None),
-                                             weeklyHours   = i.get("stuHours", None),
-                                             startDate = i["stuStartDate"],
-                                             endDate = i["stuEndDate"],
-                                             supervisorNotes = i["stuNotes"]
-                                             )
+        print((request.data).decode("utf-8"))
+        rsp = ((request.data).decode("utf-8")) # This fixes byte indices must be intergers or slices error
+        print(jsonify (rsp))
+        print(type(rsp))
+        print((rsp))
+        # if rsp.values():
+        for i in rsp:
+            print(i)
+            d, created = Student.get_or_create(ID = i['stuBNumber'])
+            student = d.ID
+            d, created = User.get_or_create(UserID = i['stuSupervisor'])
+            primarySupervisor = d.UserID
+            d, created = Department.get_or_create(DEPT_NAME = i['stuDepartment'])
+            department = d.departmentID
+            d, created = Term.get_or_create(termCode = i['stuTermCode'])
+            term = d.termCode
+            lsf = LaborStatusForm.create(termCode_id = term,
+                                         studentSupervisee_id = student,
+                                         supervisor_id = primarySupervisor,
+                                         department_id  = department,
+                                         jobType = i["stuJobType"],
+                                         WLS = i["stuWLS"],
+                                         POSN_TITLE = i["stuPosition"],
+                                         POSN_CODE = i["stuPositionCode"],
+                                         contractHours = i.get("stuContractHours", None),
+                                         weeklyHours   = i.get("stuHours", None),
+                                         startDate = i["stuStartDate"],
+                                         endDate = i["stuEndDate"],
+                                         supervisorNotes = i["stuNotes"]
+                                         )
 
-                historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-                status = Status.get(Status.statusName == "Pending")
-                formHistroy = FormHistory.create( formID = lsf.laborStatusFormID,
-                                                  historyType = historyType.historyTypeName,
-                                                  createdBy   = cfg['user']['debug'],
-                                                  createdDate = date.today(),
-                                                  status      = status.statusName)
-            flash("Labor Status Form(s) has been created.", "success")
-            return jsonify({"Success": True})
+            historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
+            status = Status.get(Status.statusName == "Pending")
+            formHistroy = FormHistory.create( formID = lsf.laborStatusFormID,
+                                              historyType = historyType.historyTypeName,
+                                              createdBy   = cfg['user']['debug'],
+                                              createdDate = date.today(),
+                                              status      = status.statusName)
+        flash("Labor Status Form(s) has been created.", "success")
+        return jsonify({"Success": True})
     except Exception as e:
         flash("An error occured.", "danger")
         print("ERROR: " + str(e))

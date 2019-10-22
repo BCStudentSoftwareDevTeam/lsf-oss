@@ -298,8 +298,7 @@ function showNotesModal(glyphicon){// pops up Note Modal when notes glyphicon is
 }
 
 function saveNotes(arrayIndex){ // saves notes written in textarea when save button of modal is clicked
-  var notes = $("#modal_text").val();
-  globalArrayOfStudents[arrayIndex].stuNotes = notes;
+  globalArrayOfStudents[arrayIndex].stuNotes = $("#modal_text").val();
 }
 
 function deleteRow(glyphicon) {
@@ -316,12 +315,12 @@ function deleteRow(glyphicon) {
 //END of glyphicons
 
 function fields_are_empty(id_list) { // Checks if selectpickers are empty
-  empty_element = false;
+  emptyElement = false;
   $.each(id_list, function(id) {
     value = $("#"+id).val();
-    empty_element = (value == "" || value == null);
+    emptyElement = (value == "" || value == null);
   });
-  return empty_element;
+  return emptyElement;
 }
 
 function errorFlash(){
@@ -365,6 +364,8 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
   // }
 }
 function createStuDict(){
+  var supervisor = $("#selectedSupervisor").find("option:selected").text();
+  var department = $("#selectedDepartment").find("option:selected").text();
   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
   var termCodeLastTwo = termCodeSelected.slice(-2);
   var student = $("student");
@@ -386,36 +387,23 @@ function createStuDict(){
     var jobTypeName = "Secondary"
     var selectedContractHoursName = $("#selectedContractHours").val();
   }
-    var studentDict = {stuName: studentName,
-                      stuBNumber: studentBNumber,
-                      stuPosition: positionName,
-                      stuPositionCode: positionCode,
-                      stuJobType: jobTypeName,
-                      stuHours: parseInt(hoursPerWeekName, 10),
-                      stuContractHours: parseInt(selectedContractHoursName, 10),
-                      stuWLS: wls,
-                      stuStartDate: startDate,
-                      stuEndDate: endDate,
-                      stuTermCode: termCodeSelected,
-                      stuNotes: ""
-                      };
+  var studentDict = {stuName: studentName,
+                    stuBNumber: studentBNumber,
+                    stuPosition: positionName,
+                    stuPositionCode: positionCode,
+                    stuJobType: jobTypeName,
+                    stuWeeklyHours: parseInt(hoursPerWeekName, 10),
+                    stuContractHours: parseInt(selectedContractHoursName, 10),
+                    stuWLS: wls,
+                    stuStartDate: startDate,
+                    stuEndDate: endDate,
+                    stuTermCode: termCodeSelected,
+                    stuNotes: "",
+                    stuSupervisor: supervisor,
+                    stuDepartment: department
+                    };
     return studentDict;
   }
-    // Commenting this out for now, I think I was able to combine the two dictionaries, so it could not be needed.
-    //  //#TODO: Add student dictionary for breaks to the global array
-    // var selectedContractHoursName = $("#selectedContractHours").val();
-    // var studentDict = {stuName: studentName,
-    //                   stuBNumber: studentBNumber,
-    //                   stuPosition: positionName,
-    //                   stuPositionCode: positionCode,
-    //                   //stuContractHours: parseInt(selectedContractHoursName, 10),
-    //                   stuHours: parseInt(selectedContractHoursName, 10),
-    //                   stuStartDate: startDate,
-    //                   stuEndDate: endDate,
-    //                   stuTermCode: termCodeSelected,
-    //                   stuNotes: "",
-    //                   stuJobType: "Secondary"
-    //                   };
 
 function checkDuplicate(studentDict) {// checks for duplicates in the table. This is for Academic Year
   for(i = 0; i < globalArrayOfStudents.length; i++){
@@ -531,7 +519,7 @@ function createAndFillTable(studentDict) {
   cell2.id="position_code";
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00") {
     cell3.innerHTML = (studentDict).stuJobType;
-    cell4.innerHTML = (studentDict).stuHours;
+    cell4.innerHTML = (studentDict).stuWeeklyHours;
     cell5.innerHTML = (studentDict).stuStartDate + " - " + (studentDict).stuEndDate;
     cell6.innerHTML = notesGlyphicon;
     cell7.innerHTML = removeIcon;
@@ -552,7 +540,7 @@ function createAndFillTable(studentDict) {
 }
 
 function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours from the database and add it to the ones in the table.
-  totalHoursCount = studentDict.stuHours;
+  totalHoursCount = studentDict.stuWeeklyHours;
   console.log("In checkTotalHours");
   console.log(studentDict);
   console.log(databasePositions);
@@ -560,7 +548,7 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
   for (i = 0; i < globalArrayOfStudents.length; i++){
     if (globalArrayOfStudents[i].stuName == studentDict.stuName){
       console.log(totalHoursCount);
-      totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuHours;
+      totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
     }
   }
   console.log("Second Loop");
@@ -608,7 +596,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
   else {
     for (var i = 0; i < globalArrayOfStudents.length; i++) {
       var bigString = "<li>" + globalArrayOfStudents[i].stuName + " | " + globalArrayOfStudents[i].stuPosition +
-                      " | " + globalArrayOfStudents[i].stuJobType + " | " + globalArrayOfStudents[i].stuHours + " hours";
+                      " | " + globalArrayOfStudents[i].stuJobType + " | " + globalArrayOfStudents[i].stuWeeklyHours + " hours";
       modalList.push(bigString);
     }
     document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
@@ -638,12 +626,11 @@ function userInsert(){
            if (response){
              console.log(response)
              for (var key = 0; key < globalArrayOfStudents.length; key++) {
-               var student = globalArrayOfStudents[key].Student;
-               var studentName = student.substring(0, student.indexOf("(B0"));
+               var studentName = globalArrayOfStudents[key].stuName;
                var position = globalArrayOfStudents[key].Position;
-               var selectedContractHours = globalArrayOfStudents[key]["Contract Hours"];
-               var jobType = globalArrayOfStudents[key]["Job Type"];
-               var hours = globalArrayOfStudents[key]["Hours Per Week"];
+               var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
+               var jobType = globalArrayOfStudents[key].stuJobType;
+               var hours = globalArrayOfStudents[key].stuWeeklyHours;
                if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
                  var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                }
@@ -655,12 +642,10 @@ function userInsert(){
           }
           else {
             for (var key in globalArrayOfStudents) {
-
-              var student = globalArrayOfStudents[key].Student;
-              var studentName = student.substring(0, student.indexOf("(B0"));
-              var position = globalArrayOfStudents[key].Position;
-              var selectedContractHours = globalArrayOfStudents[key]["Contract Hours"];
-              var hours = globalArrayOfStudents[key]["Hours Per Week"];
+              var studentName = globalArrayOfStudents[key].stuName;
+              var position = globalArrayOfStudents[key].stuPosition;
+              var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
+              var hours = globalArrayOfStudents[key].stuWeeklyHours;
               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
                 var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
               }
