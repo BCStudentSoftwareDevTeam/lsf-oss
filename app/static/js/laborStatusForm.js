@@ -175,7 +175,7 @@ function getDepartment(object) { // get department from select picker
   }
 }
 
-if(&('jobType').value){// fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
+if(('#jobType').value){// fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
   var value = $('#selectedHoursPerWeek').val();
   $('#selectedHoursPerWeek').val(value);
   fillHoursPerWeek("fillhours");
@@ -187,8 +187,8 @@ function checkJobType() {
   var jobTypeSelected = $('#jobType').find('option:selected').attr('data-jobType');
   var wlsSelected = $('#position').find('option:selected').attr('data-wls');
   if (jobTypeSelected == "Secondary" && wls >=5) {
-    $('WLSModalTitle').innerHTML = "Insert Rejected";
-    $('WLSModalText').innerHTML = "Position with WLS 5 or 6 cannot be a secondary position.";
+    $('#WLSModalTitle').html("Insert Rejected");
+    $('#WLSModalText').html("Position with WLS 5 or 6 cannot be a secondary position.");
     $('#WLSModal').modal('show');
     return false;
   }
