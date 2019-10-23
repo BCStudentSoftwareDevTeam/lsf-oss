@@ -216,6 +216,23 @@ function checkWLS() {
   }
 }
 
+function checkJobType() {
+  // This function checks the job type selected along with the WLS of the position.
+  // If the job type is secondary and the WLS is 5 or 6, it rejects the insert.
+  var jobTypeSelected = $('#jobType').find('option:selected').attr('data-jobType');
+  var wlsSelected = $('#position').find('option:selected').attr('data-wls');
+  if (jobTypeSelected == "Secondary" && wlsSelected >=5) {
+    $('#WLSModalTitle').html("Insert Rejected");
+    $('#WLSModalText').html("Position with WLS 5 or 6 cannot be a secondary position.");
+    $('#WLSModal').modal('show');
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
+
 // Check if department is in compliance.
 function checkCompliance(obj) {
   var department = $(obj).val();
@@ -336,32 +353,32 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
   var studentDict = createStuDict();
   checkPrimaryPosition(studentDict);
   return;
-  // if (fields_are_empty(id_list)) {
-  //   errorFlash();
-  // }
-  // else if (checkWLS()){
-  //   var termCode = $("#selectedTerm").val();
-  //   var whichTerm = termCode.toString().substr(-2);
-  //   if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-  //     id_list = ["student", "position", "selectedContractHours"];
-  //     if (fields_are_empty(id_list)) {
-  //       errorFlash();
-  //     }
-  //     else {
-  //       checkDuplicate();
-  //      }
-  //     }
-  //   else {
-  //     id_list = ["student", "position", "jobType", "selectedHoursPerWeek"];
-  //     if (fields_are_empty(id_list)) {
-  //       errorFlash();
-  //     }
-  //     else {
-  //       checkDuplicate();
-  //       return;
-  //     }
-  //   }
-  // }
+  if (fields_are_empty(id_list)) {
+    errorFlash();
+  }
+  else if (checkWLS() && checkJobType()){
+    var termCode = $("#selectedTerm").val();
+    var whichTerm = termCode.toString().substr(-2);
+    if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+      id_list = ["student", "position", "selectedContractHours"];
+      if (fields_are_empty(id_list)) {
+        errorFlash();
+      }
+      else {
+        checkDuplicate();
+       }
+      }
+    else {
+      id_list = ["student", "position", "jobType", "selectedHoursPerWeek"];
+      if (fields_are_empty(id_list)) {
+        errorFlash();
+      }
+      else {
+        checkDuplicate();
+        return;
+      }
+    }
+  }
 }
 function createStuDict(){
   var supervisor = $("#selectedSupervisor").find("option:selected").text();
