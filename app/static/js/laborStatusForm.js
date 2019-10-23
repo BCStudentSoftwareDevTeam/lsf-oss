@@ -365,6 +365,7 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
 }
 function createStuDict(){
   var supervisor = $("#selectedSupervisor").find("option:selected").text();
+  var supervisorID = $("#selectedSupervisor").find("option:selected").attr("value");
   var department = $("#selectedDepartment").find("option:selected").text();
   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
   var termCodeLastTwo = termCodeSelected.slice(-2);
@@ -382,6 +383,7 @@ function createStuDict(){
     var jobTypeName = $("#jobType option:selected").text();
     var hoursPerWeek = $("#selectedHoursPerWeek");
     var hoursPerWeekName = $("#selectedHoursPerWeek option:selected").text();
+    // var selectedContractHoursName = 0;
   }
   else {
     var jobTypeName = "Secondary"
@@ -400,7 +402,8 @@ function createStuDict(){
                     stuTermCode: termCodeSelected,
                     stuNotes: "",
                     stuSupervisor: supervisor,
-                    stuDepartment: department
+                    stuDepartment: department,
+                    stuSupervisorID: supervisorID
                     };
     return studentDict;
   }
@@ -609,8 +612,6 @@ function createModalContent() { // Populates Submit Modal with Student informati
 
 // SEND DATA TO THE DATABASE
 function userInsert(){
-  // var data = JSON.stringify(globalArrayOfStudents);
-  // console.log(data);
   $("#laborStatusForm").on("submit", function(e) {
     e.preventDefault();
   });

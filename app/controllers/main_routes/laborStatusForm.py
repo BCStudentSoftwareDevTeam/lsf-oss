@@ -58,25 +58,21 @@ def laborStatusForm(laborStatusKey = None):
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
     """ Create labor status form. Create labor history form."""
-    print("we in here")
     try:
-        print("we are now in here")
-        print((request.data).decode("utf-8"))
-        rsp = ((request.data).decode("utf-8")) # This fixes byte indices must be intergers or slices error
-        print(jsonify (rsp))
-        print(type(rsp))
-        print((rsp))
-        # if rsp.values():
-        for i in rsp:
-            print(i)
+        rsp = (request.data).decode("utf-8")  # This turns byte data into a string
+        rspFunctional = json.loads(rsp) # This turns the string into whatever structure it should be. A list of dicts in this case.
+        for i in rspFunctional:
             d, created = Student.get_or_create(ID = i['stuBNumber'])
             student = d.ID
-            d, created = User.get_or_create(UserID = i['stuSupervisor'])
+            d, created = User.get_or_create(UserID = i['stuSupervisorID'])
             primarySupervisor = d.UserID
             d, created = Department.get_or_create(DEPT_NAME = i['stuDepartment'])
             department = d.departmentID
             d, created = Term.get_or_create(termCode = i['stuTermCode'])
             term = d.termCode
+            # Changes the dates into the appropriate format for the table
+            startDate = datetime.strptime(i['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
+            endDate = datetime.strptime(i['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
             lsf = LaborStatusForm.create(termCode_id = term,
                                          studentSupervisee_id = student,
                                          supervisor_id = primarySupervisor,
@@ -86,17 +82,18 @@ def userInsert():
                                          POSN_TITLE = i["stuPosition"],
                                          POSN_CODE = i["stuPositionCode"],
                                          contractHours = i.get("stuContractHours", None),
-                                         weeklyHours   = i.get("stuHours", None),
-                                         startDate = i["stuStartDate"],
-                                         endDate = i["stuEndDate"],
+                                         weeklyHours   = i.get("stuWeeklyHours", None),
+                                         startDate = startDate,
+                                         endDate = endDate,
                                          supervisorNotes = i["stuNotes"]
                                          )
-
             historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
             status = Status.get(Status.statusName == "Pending")
+            d, created = User.get_or_create(username = cfg['user']['debug'])
+            creatorID = d.UserID
             formHistroy = FormHistory.create( formID = lsf.laborStatusFormID,
                                               historyType = historyType.historyTypeName,
-                                              createdBy   = cfg['user']['debug'],
+                                              createdBy   = creatorID,
                                               createdDate = date.today(),
                                               status      = status.statusName)
         flash("Labor Status Form(s) has been created.", "success")
