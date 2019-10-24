@@ -232,7 +232,6 @@ function checkJobType() {
   }
 }
 
-
 // Check if department is in compliance.
 function checkCompliance(obj) {
   var department = $(obj).val();
@@ -349,37 +348,25 @@ function errorFlash(){
 
 // TABLE
 function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
-  var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2"];
+  var termCode = $("#selectedTerm").val();
+  var whichTerm = termCode.toString().substr(-2);
+  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+    var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedHoursPerWeek"];
+  }
+  else{
+    var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedContractHours"]
+  }
   var studentDict = createStuDict();
   checkPrimaryPosition(studentDict);
-  return;
   if (fields_are_empty(id_list)) {
     errorFlash();
   }
   else if (checkWLS() && checkJobType()){
-    var termCode = $("#selectedTerm").val();
-    var whichTerm = termCode.toString().substr(-2);
-    if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-      id_list = ["student", "position", "selectedContractHours"];
-      if (fields_are_empty(id_list)) {
-        errorFlash();
-      }
-      else {
         checkDuplicate();
-       }
+       return;
       }
-    else {
-      id_list = ["student", "position", "jobType", "selectedHoursPerWeek"];
-      if (fields_are_empty(id_list)) {
-        errorFlash();
-      }
-      else {
-        checkDuplicate();
-        return;
-      }
-    }
   }
-}
+
 function createStuDict(){
   var supervisor = $("#selectedSupervisor").find("option:selected").text();
   var supervisorID = $("#selectedSupervisor").find("option:selected").attr("value");
