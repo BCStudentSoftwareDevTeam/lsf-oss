@@ -594,7 +594,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
                       globalArrayOfStudents[i].stuContractHours + " hours";
       modalList.push(bigString);
     }
-    document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
+    document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) will be submitted for:<br><br>" +
                                                             "<ul style=\"display:inline-block;text-align:left;\">" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day.";
@@ -606,7 +606,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
                       " | " + globalArrayOfStudents[i].stuJobType + " | " + globalArrayOfStudents[i].stuWeeklyHours + " hours";
       modalList.push(bigString);
     }
-    document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
+    document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) will be submitted for:<br><br>" +
                                                             "<ul style=\"display: inline-block;text-align:left;\">" +
                                                             modalList.join("</li>")+"</ul>"+
                                                             "<br><br>The labor status form will be eligible for approval in one business day.";
@@ -628,8 +628,7 @@ function userInsert(){
            term = $("#selectedTerm").val();
            var whichTerm = term.toString().substr(-2);
            modalList = [];
-           if (response){
-             console.log(response)
+           if (response["Success"] == true){
              for (var key = 0; key < globalArrayOfStudents.length; key++) {
                var studentName = globalArrayOfStudents[key].stuName;
                var position = globalArrayOfStudents[key].Position;
@@ -660,7 +659,7 @@ function userInsert(){
               modalList.push(bigString);
             }
            }
-         document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) was submitted for:<br><br>" +
+         document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) will be submitted for:<br><br>" +
                                                                  "<ul style=\"list-style-type:none; display: inline-block;text-align:left;\">" +
                                                                  modalList.join("</li>")+"</ul>"+
                                                                  "<br><br>The labor status form will be eligible for approval in one business day.";
