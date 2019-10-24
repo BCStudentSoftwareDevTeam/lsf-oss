@@ -357,14 +357,19 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
     var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedContractHours"]
   }
   var studentDict = createStuDict();
-  checkPrimaryPosition(studentDict);
+  if (checkPrimaryPosition(studentDict) == true) {
+    createAndFillTable(studentDict);
+  }
+  else {
+    $("#warningModal").modal("show")
+  }
   if (fields_are_empty(id_list)) {
     errorFlash();
   }
-  else if (checkWLS() && checkJobType()){
+  else (checkWLS() && checkJobType()) { // In the console, it doesn't like this.  Not sure why
         checkDuplicate();
        return;
-      }
+     }
   }
 
 function createStuDict(){
@@ -441,17 +446,20 @@ function checkPrimaryPosition(studentDict){
         if (studentDict["stuJobType"] == "Primary"){
           console.log("Adding Primary with Primary in database");
           document.getElementById("warningModalText").innerHTML = studentDict.stuName + " already has a primary position.";
-          $("#warningModal").modal("show");
+          //$("#warningModal").modal("show");
+          return false
         }
         else if(studentDict["stuJobType"] == "Secondary"){
           console.log("Adding Secondary with Primary in database");
           if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true) {
-            createAndFillTable(studentDict);
+            //createAndFillTable(studentDict);
+            return true
           }
           else {
             console.log("This is a duplicate")
             document.getElementById("warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.";
-            $("#warningModal").modal("show");
+            //$("#warningModal").modal("show");
+            return false
           }
         }
       }
@@ -461,28 +469,33 @@ function checkPrimaryPosition(studentDict){
         if(studentDict["stuJobType"] == "Primary"){
           console.log("Adding Primary without Primary in database");
           if (checkDuplicate(studentDict) == true  && checkTotalHours(studentDict, response) == true){
-            createAndFillTable(studentDict);
+            //createAndFillTable(studentDict);
+            return true
           }
           else {
             console.log("This is a duplicate")
             document.getElementById("#warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.";
-            $("#warningModal").modal("show");
+            //$("#warningModal").modal("show");
+            return false
           }
         }
         else {
           if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
             console.log("Adding Secondary without Primary in database");
             document.getElementById("#warningModalText").innerHTML = studentDict['stuName'] + " needs an approved primary position before a secondary position can be added."
-            $("#warningModal").modal("show");
+            //$("#warningModal").modal("show");
+            return false
           }
           else {
             if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true){
-              createAndFillTable(studentDict);
+              //createAndFillTable(studentDict);
+              return true
             }
             else {
               console.log("This is a duplicate")
               document.getElementById("#warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.";
-              $("#warningModal").modal("show");
+              //$("#warningModal").modal("show");
+              return false
             }
           }
         }
@@ -492,7 +505,7 @@ function checkPrimaryPosition(studentDict){
 }
 function createAndFillTable(studentDict) {
   console.log(globalArrayOfStudents);
-  console.log("Filling table"); // fills the table.
+  console.log("Filling table");
   globalArrayOfStudents.push(studentDict);
   console.log(globalArrayOfStudents);
   $("#mytable").show();
