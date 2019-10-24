@@ -166,25 +166,25 @@ def finalApproval():
     rsp = eval(request.data.decode("utf-8"))
     for id in rsp:
         print(id, 'id')
-        historyType = FormHistory.get(FormHistory.formHistoryID == int(id))
+        history_type = FormHistory.get(FormHistory.formHistoryID == int(id))
         # historyType = str(historyType)
-        print(historyType, type(historyType))
-        if str(historyType.historyType) == 'Labor Status Form':
+        print("history_________type", history_type.historyType)
+        if str(history_type.historyType) == 'Labor Status Form':
             print("LSF Yallah", id)
             approving_labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Status Form')
             approving_labor_forms.status = Status.get(Status.statusName == "Approved")
             approving_labor_forms.save()
-        elif str(historyType.historyType) == 'Modified Labor Form':
+        elif str(history_type.historyType) == 'Modified Labor Form':
             print("MLF Yallah")
             approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
             approving_labor_modified_forms.status = Status.get(Status.statusName == "Approved")
             approving_labor_modified_forms.save()
-        elif str(historyType.historyType) == 'Labor Overload Form':
+        elif str(history_type.historyType) == 'Labor Overload Form':
             print("LOF Yallah", id)
             approving_labor_overload_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Overload Form')
             approving_labor_overload_forms.status = Status.get(Status.statusName == "Approved")
             approving_labor_overload_forms.save()
-        elif str(historyType.historyType) == 'Labor Release Form':
+        elif str(history_type.historyType) == 'Labor Release Form':
             print("LRF Yallah")
             approving_labor_release_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Release Form')
             approving_labor_release_forms.status = Status.get(Status.statusName == "Approved")
@@ -210,9 +210,12 @@ def finalDenial():
 
 #method extracts data from the data base to papulate pending form approvale modal
 def modal_aproval_data(approval_ids):
+    print(approval_ids, 'sdkfksdjklf')
     id_list = []
-    for student in approval_ids:
-        student_details = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == int(student))
+    for form_history_id in approval_ids:
+        fhistory_id = LaborStatusForm.select().join(FormHistory).where(FormHistory.formHistoryID == int(form_history_id)).get()
+        student_details = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == fhistory_id)
+        print("student_details : ", student_details)
         student_firstname, student_lastname = student_details.studentSupervisee.FIRST_NAME, student_details.studentSupervisee.LAST_NAME
         student_name = str(student_firstname) + " " + str(student_lastname)
         student_pos = student_details.POSN_TITLE

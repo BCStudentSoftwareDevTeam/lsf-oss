@@ -68,7 +68,7 @@
                 {% for allForms in all_pending_forms %}
                 <tr id="tableData" class="tableData" align="center">
                     <td> {# APPROVE #}
-                      <input type='checkbox' id='chk_{{allForms.formID.laborStatusFormID}}' value= "{{allForms.formID.laborStatusFormID}}" name="check[]" />
+                      <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" name="check[]"  autocomplete="off" />
                       <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
                              class="glyphicon glyphicon-book btn-lg
                                   {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success

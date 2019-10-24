@@ -21,8 +21,9 @@ var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
     labor_details_ids.push(this.value);
+    
   })
-
+  console.log(labor_details_ids,"id checking lsf")
   //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
   var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;
   if (!atLeastOneIsChecked){
@@ -88,6 +89,7 @@ function finalApproval() { //this method changes the status of the lsf from pend
         console.log('success', response["success"]);
         if(response["success"]) {
             location.reload(true);
+
         }
        }
      }

@@ -23,7 +23,7 @@
       {% for overloadForm in pending_overload_forms %}
       <tr id="tableData" class="tableData" align="center">
           <td> {# APPROVE #}
-            <input type='checkbox' id='chk_{{overloadForm.formHistoryID}}' value= "{{overloadForm.formHistoryID}}"  name="check[]"/>
+            <input type='checkbox' id='chk_{{overloadForm.formHistoryID}}' value= "{{overloadForm.formHistoryID}}"  name="check[]" autocomplete="off"/>
             <span  id="notes_{{overloadForm.formID.laborStatusFormID}}" onclick="getNotes({{overloadForm.formID.laborStatusFormID}})"
                    class="glyphicon glyphicon-book btn-lg
                         {% if overloadForm.formID.supervisorNotes != None and overloadForm.formID.laborDepartmentNotes == None %} text-success
