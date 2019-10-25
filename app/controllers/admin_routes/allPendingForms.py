@@ -175,7 +175,7 @@ def finalApproval():
             approving_labor_forms.status = Status.get(Status.statusName == "Approved")
             approving_labor_forms.save()
         elif str(history_type.historyType) == 'Modified Labor Form':
-            print("MLF Yallah")
+            print("MLF Yallah", id)
             approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
             approving_labor_modified_forms.status = Status.get(Status.statusName == "Approved")
             approving_labor_modified_forms.save()

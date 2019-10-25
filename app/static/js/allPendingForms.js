@@ -21,7 +21,7 @@ var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
     labor_details_ids.push(this.value);
-    
+
   })
   console.log(labor_details_ids,"id checking lsf")
   //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
@@ -78,6 +78,7 @@ function updateApproveTableData(returned_details){
 
 function finalApproval() { //this method changes the status of the lsf from pending to approved status
   data = JSON.stringify(labor_details_ids);
+  alert(data);
   $.ajax({
     type: "POST",
     url: "/admin/finalApproval",
