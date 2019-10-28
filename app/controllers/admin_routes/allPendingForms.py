@@ -139,7 +139,7 @@ def pendingReleaseForms():
         return render_template('errors/500.html')
 
 @admin.route('/admin/checkedForms', methods=['POST'])
-def approvedForms():
+def approved_and_denied_Forms():
     '''
     This function gets the forms that are checked by the user and inserts them into the database
     '''
@@ -151,10 +151,9 @@ def approvedForms():
             return render_template('errors/403.html')
 
         rsp = eval(request.data.decode("utf-8"))
-        print("rsp here :", rsp)
         if rsp:
             #FIXME: Update form history
-            approved_details = modal_aproval_data(rsp)
+            approved_details =  modal_aproval_and_denial_data(rsp)
             return jsonify(approved_details)
     except Exception as e:
         print("This did not work", e)
@@ -162,55 +161,60 @@ def approvedForms():
 
 @admin.route('/admin/finalApproval', methods=['POST'])
 def finalApproval():
-    # try:
+    ''' This method changes the status of the pending forms to approved '''
     rsp = eval(request.data.decode("utf-8"))
     for id in rsp:
-        print(id, 'id')
         history_type = FormHistory.get(FormHistory.formHistoryID == int(id))
-        # historyType = str(historyType)
-        print("history_________type", history_type.historyType)
         if str(history_type.historyType) == 'Labor Status Form':
-            print("LSF Yallah", id)
             approving_labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Status Form')
             approving_labor_forms.status = Status.get(Status.statusName == "Approved")
             approving_labor_forms.save()
         elif str(history_type.historyType) == 'Modified Labor Form':
-            print("MLF Yallah", id)
             approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
             approving_labor_modified_forms.status = Status.get(Status.statusName == "Approved")
             approving_labor_modified_forms.save()
         elif str(history_type.historyType) == 'Labor Overload Form':
-            print("LOF Yallah", id)
             approving_labor_overload_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Overload Form')
             approving_labor_overload_forms.status = Status.get(Status.statusName == "Approved")
             approving_labor_overload_forms.save()
         elif str(history_type.historyType) == 'Labor Release Form':
-            print("LRF Yallah")
             approving_labor_release_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Release Form')
             approving_labor_release_forms.status = Status.get(Status.statusName == "Approved")
             approving_labor_release_forms.save()
     return jsonify({"success": True})
-    # except Exception as e:
-    #     print("final approval of the modal did not work", e)
-    #     return jsonify({"success": False})
 
-#this meathod shows the data in deniel popup modal
+    
 @admin.route('/admin/finalDenial', methods=['POST'])
 def finalDenial():
+    ''' This method changes labor status pending forms to approved'''
     try:
         rsp = eval(request.data.decode("utf-8"))
         for id in rsp:
-            approving_labor_forms = FormHistory.get(FormHistory.formID == int(id), FormHistory.historyType == 'Labor Status Form')
-            approving_labor_forms.status = Status.get(Status.statusName == "Denied")
-            approving_labor_forms.save()
+            history_type = FormHistory.get(FormHistory.formHistoryID == int(id))
+            if str(history_type.historyType) == 'Labor Status Form':
+                approving_labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Status Form')
+                approving_labor_forms.status = Status.get(Status.statusName == "Denied")
+                approving_labor_forms.save()
+            elif str(history_type.historyType) == 'Modified Labor Form':
+                approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
+                approving_labor_modified_forms.status = Status.get(Status.statusName == "Denied")
+                approving_labor_modified_forms.save()
+            elif str(history_type.historyType) == 'Labor Overload Form':
+                approving_labor_overload_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Overload Form')
+                approving_labor_overload_forms.status = Status.get(Status.statusName == "Denied")
+                approving_labor_overload_forms.save()
+            elif str(history_type.historyType) == 'Labor Release Form':
+                approving_labor_release_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Release Form')
+                approving_labor_release_forms.status = Status.get(Status.statusName == "Denied")
+                approving_labor_release_forms.save()
         return jsonify({"success": True})
     except Exception as e:
         print("final approval of the modal did not work", e)
         return jsonify({"success": False})
 
 #method extracts data from the data base to papulate pending form approvale modal
-def modal_aproval_data(approval_ids):
-    print(approval_ids, 'sdkfksdjklf')
+def modal_aproval_and_denial_data(approval_ids):
+    ''' This method grabs the data that populated the on approve modal for lsf'''
     id_list = []
     for form_history_id in approval_ids:
         fhistory_id = LaborStatusForm.select().join(FormHistory).where(FormHistory.formHistoryID == int(form_history_id)).get()

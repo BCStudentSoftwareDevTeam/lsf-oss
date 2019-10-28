@@ -9,6 +9,13 @@ $(document).ready( function(){
     });
 });
 
+// $(document).ready( function(){
+//     $('#modifiedForms').DataTable({
+//         'columnDefs': [{ 'orderable': false, 'targets': [0,4,10]}], // hide sort icon on header of first column
+//         // 'columnDefs': [{ 'orderable': false, 'targets': 9 }],
+//         'aaSorting': [[1, 'asc']], // start to sort data in second column
+//         pageLength: 10
+
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
@@ -126,7 +133,11 @@ function finalDenial_data(returned_details){
       else {
         hours = r_hour
       }
-      $('#denyTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>');
+      $('#denialAllPendingForms').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>'); //populate the denial modal for all pending forms
+        $('#laborStatusDenyTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>');//populate the denial modal for labor status pending forms
+          $('#modifiedFormsTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>');//populate the denial modal for modified labor status forms
+            $('#overloadFormDenyTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>');//populate the denial modal for overload labor satus forms
+              $('#releaseFormsDenyTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>');//populate the denial modal for release labor status forms
         }
       }
 
@@ -169,15 +180,8 @@ function getNotes (formId) {
           //Populates notes value from the database
 
           if ("supervisorNotes" in response) {
-            $("#supeNotesLabel").show()
-            $("#notesText").show()
             $("#notesText").html(response["supervisorNotes"]);
             console.log(response);
-             }
-
-          if (!("supervisorNotes" in response)) {
-               $("#supeNotesLabel").hide()
-               $("#notesText").hide()
              }
 
           if ("laborDepartmentNotes" in response) {

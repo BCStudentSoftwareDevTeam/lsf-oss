@@ -29,7 +29,7 @@
                         {% if overloadForm.formID.supervisorNotes != None and overloadForm.formID.laborDepartmentNotes == None %} text-success
                         {% elif overloadForm.formID.laborDepartmentNotes != None and overloadForm.formID.supervisorNotes == None  %} text-danger
                         {% elif overloadForm.formID.supervisorNotes != None and overloadForm.formID.laborDepartmentNotes != None %} text-danger
-                        {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
+                        {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#overloadFormNotesModal"> </span>
                         <input id="dummyInput" value="{{overloadForm.formID.laborStatusFormID}}" hidden/>
 
 
@@ -65,15 +65,16 @@
           <a href="/modifyLSF/{{overloadForm.formID.laborStatusFormID}}"> <span id="edit_{{overloadForm.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
           {# added this onclick but it is still not working, will need to work on creating javascript function #}
           <button
-                id="reject_{{overloadForm.formID.laborStatusFormID}}"
-                type="button"
-                class ="btn btn-danger"
-                name = "rejectBtn"
-                value = "Reject"
-                data-toggle="modal"
-                data-target="#denyModal"
-                onclick="insertDenial(this.value);">
-                Deny
+              id="reject_{{overloadForm.formHistoryID}}"
+              value="{{overloadForm.formHistoryID}}"
+              type="button"
+              class ="btn btn-danger"
+              name = "rejectBtn"
+              value = "Reject"
+              data-toggle="modal"
+              data-target="#denyOverloadFormsModal"
+              onclick="insertDenial(this.value);">
+              Deny
           </button>
 
 
@@ -100,32 +101,27 @@
 
 
     <!-- START OF MODAL adding notes -->
-    <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="notesModalLabel">Labor Office Notes</h4>
-          </div>
-          <div class="modal-body" >
-            <p> These notes are only for the Labor Office Staff.</p>
-            <p> Pre-fill this with the notes from the supervisor
-              <div id="notesDiv">
-                 <h5> <b>Supervisor Notes  </b> </h5>
-                <p id="notesText" class="notesText" </p>
+    <div class="modal fade" id="overloadFormNotesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <b <h6 class="modal-title" id="notesModalLabel">Labor Office Notes </h6> </b>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
 
-
-              <h5> <b>Labor Office Notes </b> </h5>
-
-                <textarea id="laborNotesText" rows="5" cols="60" style="resize: none;"> </textarea>
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
-          </div>
+              </div>
+              <div class="modal-body" >
+                <div id="notesDiv">
+                   <label id="supeNotesLabel" class="col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </label>
+                      <textarea id="notesText" rows="2" cols="70" disabled> </textarea>
+                  <label class="col-md-4 control-label text-left" for ="laboroffice" align = "left"> Labor Office Notes: </label>
+                      <textarea id="laborNotesText" rows="2" cols="70"> </textarea>
+                </div>
+              <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
         </div>
       </div>
+    </div>
     </div>
   </div>
 
@@ -165,7 +161,7 @@
     </div>
 
       <!-- Modal -->
-    <div class="modal fade" id="denyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="denyOverloadFormsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -177,7 +173,7 @@
         </div>
         <div class="modal-body">
           Are you sure you want to deny the selected labor status form?
-          <table id="denyTable" class="table table-bordered">
+          <table id="overloadFormDenyTable" class="table table-bordered">
             <thead>
               <tr>
                 <th scope="col">Student(s)</th>
