@@ -30,6 +30,16 @@ function fill_positions(response) {
     $('.selectpicker').selectpicker('refresh');
   }
 }
+function fill_supervisor(response){
+  var selected_supervisors = document.getElementById("supervisor");
+    for (var key in response) {
+      var options = document.createElement("option");
+      options.text = response[key]["supervisorFirstName"].toString() + " " + response[key]["supervisorLastName"].toString();
+      options.value = response[key]["supervisorPIDM"].toString();
+      selected_supervisors.appendChild(options);
+    $('.selectpicker').selectpicker('refresh');
+  }
+}
 $(document).ready(function(){
    var department = document.getElementById("Department").value;
    var url = "/modifyLSF/getPosition/" + department;
@@ -38,6 +48,7 @@ $(document).ready(function(){
          dataType: "json",
          success: function (response){
             fill_positions(response);
+            fill_supervisor(response);
             jobPositionDisable();
          }
        })
@@ -48,18 +59,6 @@ function jobPositionDisable(){
   if (specificTerm != 11 && specificTerm != 12 && specificTerm != 00){
     document.getElementById("jobType").disabled = true;
     $("#jobType").val("Secondary");
-      // var selected = []
-      // $("#POSN_TITLE option").each(function()
-      // {
-      // selected.push($(this).val().substr(-3))
-      // });
-      // var wls5 = selected.indexOf('(5)')
-      // var wls6 = selected.indexOf('(6)')
-      // if(wls6 >= 0 || wls5 >= 0){
-      //   $('#POSN_TITLE option').eq(wls6).prop('disabled', true);
-      //   $('#POSN_TITLE option').eq(wls5).prop('disabled', true);
-      //   $('.selectpicker').selectpicker('refresh');
-      // }
       WLScheck()
       $("#contractHoursDiv").show();
   }
@@ -75,11 +74,11 @@ function WLScheck(){
     {
     selected.push($(this).val().substr(-3))
     });
-    var selectedPosition = $('#POSN_TITLE option:selected').val().substr(-3)
     console.log(selectedPosition)
     var wls5 = selected.indexOf('(5)')
     var wls6 = selected.indexOf('(6)')
     if (jobType == "Secondary"){
+      var selectedPosition = $('#POSN_TITLE option:selected').val().substr(-3)
       console.log("here1");
       if((wls6 >= 0 || wls5 >= 0) && (selectedPosition == "(6)" || selectedPosition =="(5)")){
         console.log("imhere");
