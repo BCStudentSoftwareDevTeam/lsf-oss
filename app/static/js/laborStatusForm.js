@@ -3,13 +3,11 @@ var globalArrayOfStudents = [];
 $(document).ready(function(){
     $("[data-toggle=\"tooltip\"]").tooltip();
     $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
-
-    if($("#selectedDepartment").val()){// prepopulates position on redirect from rehire button and checks whether department is in compliance.
+    if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
       checkCompliance($("#selectedDepartment"));
       getDepartment($("#selectedDepartment"), "stopSelectRefresh");
     }
-
-    if($("#jobType").val()){// fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
+    if($("#jobType").val()){ // fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
       var value = $("#selectedHoursPerWeek").val();
       $("#selectedHoursPerWeek").val(value);
       fillHoursPerWeek("fillhours");
@@ -24,23 +22,23 @@ $(document).on("keyup", "input[name=contractHours]", function () { // sets contr
    var _this = $(this);
    var min = parseInt(_this.attr("min")) || 1; // if min attribute is not defined, 1 is default
    var val = parseInt(_this.val()) || (min - 1); // if input char is not a number the value will be (min - 1) so first condition will be true
-   if(val < min)
+   if(val < min) {
        _this.val( min );
+     }
 });
 
-// Pops up a modal for Seconday Postion
-$("#jobType").change(function(){
+$("#jobType").change(function(){ // Pops up a modal for Seconday Postion
   //this is just getting the value that is selected
   var jobType = $(this).val();
   if (jobType == "Secondary") {
       $("#warningModal").modal("show");
-      $("#warningModalText").innerHTML = "The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form."
+      $("#warningModalText").innerHTML = "The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.";
       $("#warningModal").on("hidden.bs.modal", function(){
         $("#warningModalText").innerHTML = "";
         //Testing out modal stuff here
-});
-  }
-});
+      });
+    }
+  });
 
 // Pops up a modal for overload
 $("#selectedHoursPerWeek").change(function(){
@@ -120,7 +118,7 @@ function fillDates(response){ // prefill term start and term end
   }
 }
 
-function updateDate(obj){ // updates the max date of the start datepicker to not be after what the end datePicker picked
+function updateDate(obj){ // updates max and min dates of the datepickers as the other datepicker changes
   var dateToChange = new Date($(obj).val());
   var newMonth = dateToChange.getMonth();
   var newYear = dateToChange.getFullYear();
@@ -354,21 +352,21 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
     var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedHoursPerWeek"];
   }
   else{
-    var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedContractHours"]
+    var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedContractHours"];
   }
   var studentDict = createStuDict();
   if (checkPrimaryPosition(studentDict) == true) {
     createAndFillTable(studentDict);
   }
   else {
-    $("#warningModal").modal("show")
+    $("#warningModal").modal("show");
   }
   if (fields_are_empty(id_list)) {
     errorFlash();
   }
-  else (checkWLS() && checkJobType()) { // In the console, it doesn't like this.  Not sure why
+  else if (checkWLS() && checkJobType()) { // In the console, it doesn't like this.  Not sure why
         checkDuplicate();
-       return;
+        return;
      }
   }
 
@@ -395,7 +393,7 @@ function createStuDict(){
     // var selectedContractHoursName = 0;
   }
   else {
-    var jobTypeName = "Secondary"
+    var jobTypeName = "Secondary";
     var selectedContractHoursName = $("#selectedContractHours").val();
   }
   var studentDict = {stuName: studentName,
@@ -433,7 +431,7 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
 function checkPrimaryPosition(studentDict){
   var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
   var term = $("#selectedTerm").val();
-  var url = "/laborstatusform/getstudents/" + term +"/" +studentDict["stuBNumber"];
+  var url = "/laborstatusform/getstudents/" + term +"/" +studentDict.stuBNumber;
   $.ajax({
     url: url,
     dataType: "json",
@@ -443,59 +441,59 @@ function checkPrimaryPosition(studentDict){
       console.log(studentDict);
       console.log(Object.keys(response).length);
       if(Object.keys(response).length > 0) {
-        if (studentDict["stuJobType"] == "Primary"){
+        if (studentDict.stuJobType == "Primary"){
           console.log("Adding Primary with Primary in database");
           document.getElementById("warningModalText").innerHTML = studentDict.stuName + " already has a primary position.";
           //$("#warningModal").modal("show");
-          return false
+          return false;
         }
-        else if(studentDict["stuJobType"] == "Secondary"){
+        else if(studentDict.stuJobType == "Secondary"){
           console.log("Adding Secondary with Primary in database");
           if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true) {
             //createAndFillTable(studentDict);
-            return true
+            return true;
           }
           else {
-            console.log("This is a duplicate")
+            console.log("This is a duplicate");
             document.getElementById("warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.";
             //$("#warningModal").modal("show");
-            return false
+            return false;
           }
         }
       }
 
 
       else {
-        if(studentDict["stuJobType"] == "Primary"){
+        if(studentDict.stuJobType == "Primary"){
           console.log("Adding Primary without Primary in database");
           if (checkDuplicate(studentDict) == true  && checkTotalHours(studentDict, response) == true){
             //createAndFillTable(studentDict);
-            return true
+            return true;
           }
           else {
-            console.log("This is a duplicate")
+            console.log("This is a duplicate");
             document.getElementById("#warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.";
             //$("#warningModal").modal("show");
-            return false
+            return false;
           }
         }
         else {
           if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
             console.log("Adding Secondary without Primary in database");
-            document.getElementById("#warningModalText").innerHTML = studentDict['stuName'] + " needs an approved primary position before a secondary position can be added."
+            document.getElementById("#warningModalText").innerHTML = studentDict.stuName + " needs an approved primary position before a secondary position can be added.";
             //$("#warningModal").modal("show");
-            return false
+            return false;
           }
           else {
             if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true){
               //createAndFillTable(studentDict);
-              return true
+              return true;
             }
             else {
-              console.log("This is a duplicate")
+              console.log("This is a duplicate");
               document.getElementById("#warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.";
               //$("#warningModal").modal("show");
-              return false
+              return false;
             }
           }
         }
@@ -546,7 +544,7 @@ function createAndFillTable(studentDict) {
   }
   else {
     console.log(selectedContractHoursName);
-    cell3.innerHTML = "Secondary"
+    cell3.innerHTML = "Secondary";
     cell4.innerHTML = selectedContractHoursName;
     cell5.innerHTML = (studentDict).stuStartDate + " - " + (studentDict).stuEndDate;
     cell6.innerHTML = notesGlyphicon;
@@ -581,7 +579,7 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
     // TODO: Show modal saying they have too many hours
     console.log("Student has too many hours and needs an overload form");
     $('#OverloadModal').modal('show');
-    $('#overloadModalButton').attr('data-target', '#PrimaryModal')
+    $('#overloadModalButton').attr('data-target', '#PrimaryModal');
     // $('#OverloadModal').on('hidden.bs.modal', function() {
     // $('#PrimaryModal').modal('show');
     //return false
@@ -641,7 +639,7 @@ function userInsert(){
            term = $("#selectedTerm").val();
            var whichTerm = term.toString().substr(-2);
            modalList = [];
-           if (response["Success"] == true){
+           if (response.Success == true){
              for (var key = 0; key < globalArrayOfStudents.length; key++) {
                var studentName = globalArrayOfStudents[key].stuName;
                var position = globalArrayOfStudents[key].Position;
