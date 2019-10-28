@@ -78,7 +78,6 @@ function updateApproveTableData(returned_details){
 
 function finalApproval() { //this method changes the status of the lsf from pending to approved status
   data = JSON.stringify(labor_details_ids);
-  alert(data);
   $.ajax({
     type: "POST",
     url: "/admin/finalApproval",

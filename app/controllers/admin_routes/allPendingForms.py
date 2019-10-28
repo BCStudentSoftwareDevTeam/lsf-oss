@@ -215,7 +215,6 @@ def modal_aproval_data(approval_ids):
     for form_history_id in approval_ids:
         fhistory_id = LaborStatusForm.select().join(FormHistory).where(FormHistory.formHistoryID == int(form_history_id)).get()
         student_details = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == fhistory_id)
-        print("student_details : ", student_details)
         student_firstname, student_lastname = student_details.studentSupervisee.FIRST_NAME, student_details.studentSupervisee.LAST_NAME
         student_name = str(student_firstname) + " " + str(student_lastname)
         student_pos = student_details.POSN_TITLE
