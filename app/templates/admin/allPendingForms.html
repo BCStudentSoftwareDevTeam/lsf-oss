@@ -23,7 +23,7 @@
 
 <div class="container" id="wrapper" align="center">
     <b><h1 id="header"> Pending Forms </h1></b>
-
+        <br> </br>
      <div align="center" id="pendingTabs" class="container">
      <ul  class="nav nav-pills">
        <li class="active">
@@ -42,6 +42,9 @@
           <a href="#releasedPendingForms" data-toggle="tab">Pending Release Forms</a>
         </li>
       </ul>
+      </div>
+
+       <br> </br>
 
       <div align="center" class="tab-content clearfix">
 			  <div class="tab-pane active" id="allPendingForms">
@@ -137,37 +140,39 @@
                     Approve Selected
                   </button>
                 </div>
+                </div> {# Check div ending here if tabbing breaks #}
 
 
-              <!-- START OF MODAL adding notes -->
-              <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
-                      <h4 class="modal-title" id="notesModalLabel">Labor Office Notes</h4>
-                    </div>
-                    <div class="modal-body" >
-                      <p> These notes are only for the Labor Office Staff.</p>
-                      <p> Pre-fill this with the notes from the supervisor </p>
-                        <div id="notesDiv">
-                           <h5> <b>Supervisor Notes  </b> </h5>
-                          <p id="notesText" class="notesText" </p>
+            <!-- START OF MODAL adding notes -->
+            <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <b <h6 class="modal-title" id="notesModalLabel">Labor Office Notes </h6> </b>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
 
-                        <h5> <b>Labor Office Notes </b> </h5>
-
-                          <textarea id="laborNotesText" rows="5" cols="60" style="resize: none;"> </textarea>
-
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
-                      <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
-                    </div>
                   </div>
-                </div>
-              </div>
+                  <div class="modal-body" >
+                    <div id="notesDiv">
+                       <label id="supeNotesLabel" class="col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </label>
+                          <textarea id="notesText" rows="2" cols="70" disabled> </textarea>
+                      <label class="col-md-4 control-label text-left" for ="laboroffice" align = "left"> Labor Office Notes: </label>
+                          <textarea id="laborNotesText" rows="2" cols="70"> </textarea>
+                    </div>
+
+
+                  <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
             </div>
-              <!-- END OF MODAL -->
+          </div>
+        </div>
+      </div>
+    </div> {# Move div ending here if tabbing breaks #}
+      <!-- END OF MODAL -->
+
+      {#        {% include "snips/pendingFormsModals.html" %} #}
+
 
           <!-- Modal -->
           <div class="modal fade" id="approvalModal" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -199,6 +204,7 @@
                 <button id="approveModalButton" type="button" class="btn btn-primary"  data-dismiss="modal" onclick="finalApproval()" >Approve</button>
               </div>
             </div>
+
           </div>
         </div>
 
@@ -258,7 +264,7 @@
           </div>
               <!-- END OF MODAL -->
           </div>
-				 </div> {#check the div here if the tabbing breaks#}
+				  {#check the div here if the tabbing breaks#}
 
 
 				<div class="tab-pane" id="laborPendingForms">
@@ -287,7 +293,7 @@
 
    </div>
   </div>
- </div>
+  </div>
 
 
 

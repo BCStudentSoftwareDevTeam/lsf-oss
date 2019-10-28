@@ -9,13 +9,6 @@ $(document).ready( function(){
     });
 });
 
-// $(document).ready( function(){
-//     $('#modifiedForms').DataTable({
-//         'columnDefs': [{ 'orderable': false, 'targets': [0,4,10]}], // hide sort icon on header of first column
-//         // 'columnDefs': [{ 'orderable': false, 'targets': 9 }],
-//         'aaSorting': [[1, 'asc']], // start to sort data in second column
-//         pageLength: 10
-
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
@@ -176,8 +169,15 @@ function getNotes (formId) {
           //Populates notes value from the database
 
           if ("supervisorNotes" in response) {
+            $("#supeNotesLabel").show()
+            $("#notesText").show()
             $("#notesText").html(response["supervisorNotes"]);
             console.log(response);
+             }
+
+          if (!("supervisorNotes" in response)) {
+               $("#supeNotesLabel").hide()
+               $("#notesText").hide()
              }
 
           if ("laborDepartmentNotes" in response) {
