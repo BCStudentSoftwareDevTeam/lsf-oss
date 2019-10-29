@@ -12,12 +12,14 @@ from datetime import *
 from flask import json, jsonify
 from flask import request
 from flask import flash
+import base64
 
 
 
-@main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
-def modifyLSF(laborStatusKey):
+@main_bp.route('/modifyLSF/<encodedKey>', methods=['GET']) #History modal called it laborStatusKey
+def modifyLSF(encodedKey):
     ''' This function gets all the form's data and populates the front end with it'''
+    laborStatusKey = base64.b64decode(encodedKey)
     current_user = require_login()
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
