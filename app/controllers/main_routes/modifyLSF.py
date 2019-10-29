@@ -15,7 +15,6 @@ from flask import flash
 import base64
 
 
-
 @main_bp.route('/modifyLSF/<encodedKey>', methods=['GET']) #History modal called it laborStatusKey
 def modifyLSF(encodedKey):
     ''' This function gets all the form's data and populates the front end with it'''
@@ -36,10 +35,8 @@ def modifyLSF(encodedKey):
     prefillterm = form.termCode.termName
     if form.weeklyHours != None:
         prefillhours = form.weeklyHours
-        print ("WeeklyHours",prefillhours)
     else:
         prefillhours = form.contractHours
-        print ("ContractHours",prefillhours)
     prefillnotes = form.supervisorNotes
     #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
     supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
@@ -65,18 +62,16 @@ def modifyLSF(encodedKey):
                             form = form,
                             oldSupervisor = oldSupervisor
                           )
+
 @main_bp.route("/modifyLSF/getPosition/<department>", methods=['GET'])
 def getPosition(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
     supervisors = STUSTAFF.select().where(STUSTAFF.DEPT_NAME == department)
     position_dict = {}
     for supervisor in supervisors:
-        print("here1")
         position_dict[str(supervisor.PIDM)] = {"supervisorFirstName":supervisor.FIRST_NAME, "supervisorLastName":supervisor.LAST_NAME, "supervisorPIDM":supervisor.PIDM}
-    print(position_dict)
     for position in positions:
         position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
-    print(supervisors)
     return json.dumps(position_dict)
 
 @main_bp.route("/modifyLSF/submitModifiedForm/<laborStatusKey>", methods=['POST'])
@@ -85,9 +80,7 @@ def sumbitModifiedForm(laborStatusKey):
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
-        print(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
-        print(student)
         for k in rsp:
             modifiedforms = ModifiedForm.create(fieldModified = k,
                                             oldValue      =  rsp[k]['oldValue'],
@@ -106,15 +99,10 @@ def sumbitModifiedForm(laborStatusKey):
                                              status      = status.statusName)
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if k == "supervisor":
-                print("Form value", rsp[k]['newValue'])
-                print(LSF.supervisor.PIDM)
                 d, created = User.get_or_create(PIDM = rsp[k]['newValue'])
-                print(d)
-                print(created)
                 if not created:
                     LSF.supervisor = d.PIDM
                 LSF.save()
-                print("After save", LSF.supervisor.UserID)
                 if created:
                     tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
                     tracyEmail = tracyUser.EMAIL
@@ -149,5 +137,5 @@ def sumbitModifiedForm(laborStatusKey):
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
     except Exception as e:
         flash("An error occured.", "danger")
-        print(e)
+        # print(e)
         return jsonify({"Success": False})

@@ -11,11 +11,10 @@ $("#datetimepicker0").datepicker("setDate", "date");
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
+
 function fill_positions(response) {
-  console.log(response)
   var selected_positions = document.getElementById("POSN_TITLE");
     for (var key in response) {
-      console.log(key)
       try{
         var options = document.createElement("option");
         options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
@@ -23,20 +22,20 @@ function fill_positions(response) {
         selected_positions.appendChild(options);
       }
       catch(error){
-        console.log(error)
+        // console.log(error)
       }
     $('.selectpicker').selectpicker('refresh');
   }
 }
+
 function fill_supervisor(response){
   var selected_supervisors = document.getElementById("supervisor");
     for (var key in response) {
       try{
         var options = document.createElement("option");
-        console.log(response[key]["supervisorFirstName"])
+
         options.text = response[key]["supervisorFirstName"].toString() + " " + response[key]["supervisorLastName"].toString();
         options.value = response[key]["supervisorPIDM"].toString();
-        console.log(selected_supervisors)
         selected_supervisors.appendChild(options);
         $('.selectpicker').selectpicker('refresh');
         var map = {};
@@ -48,10 +47,11 @@ function fill_supervisor(response){
         })
       }
       catch(error){
-        console.log(error)
+        // console.log(error)
       }
   }
 }
+
 $(document).ready(function(){
    var department = document.getElementById("Department").value;
    var url = "/modifyLSF/getPosition/" + department;
@@ -65,6 +65,7 @@ $(document).ready(function(){
          }
        })
  });
+
 function jobPositionDisable(){
   var termcode = document.getElementById("termCode").value;
   var specificTerm = termcode.toString().substr(-2);
@@ -78,6 +79,7 @@ function jobPositionDisable(){
     $("#weeklyHoursDiv").show();
   }
 }
+
 function WLScheck(){
   try{
     var jobType = $("#jobType").val();
@@ -86,21 +88,17 @@ function WLScheck(){
     {
     selected.push($(this).val().substr(-3))
     });
-    console.log(selectedPosition)
     var wls5 = selected.indexOf('(5)')
     var wls6 = selected.indexOf('(6)')
     if (jobType == "Secondary"){
       var selectedPosition = $('#POSN_TITLE option:selected').val().substr(-3)
-      console.log("here1");
       if((wls6 >= 0 || wls5 >= 0) && (selectedPosition == "(6)" || selectedPosition =="(5)")){
-        console.log("imhere");
         $('#POSN_TITLE option').eq(wls6).prop('disabled', true);
         $('#POSN_TITLE option').eq(wls5).prop('disabled', true);
         $("#POSN_TITLE").val(1);
         $('.selectpicker').selectpicker('refresh');
       }
       if((selectedPosition != "(6)" || selectedPosition !="(5)") && (wls6 >= 0 || wls5 >= 0)){
-        console.log("here3");
         $('#POSN_TITLE option').eq(wls6).prop('disabled', true);
         $('#POSN_TITLE option').eq(wls5).prop('disabled', true);
         $('.selectpicker').selectpicker('refresh');
@@ -120,9 +118,10 @@ function WLScheck(){
     }
   }
   catch(error){
-    console.log(error)
+    // console.log(error)
   }
 }
+
 // Pops up a modal for overload
 function hourscheck(){
   var hour = document.getElementById("weeklyHours").value;
@@ -131,6 +130,7 @@ function hourscheck(){
       $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
     }
 };
+
 function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker)
  var selectedHoursPerWeek = document.getElementById("weeklyHours");
  var jobType = $("#jobType").val();
@@ -161,21 +161,18 @@ function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker
    }
  }
 }
+
 var effectiveDate = $("#datetimepicker0").datepicker('getDate');
 var finalDict = {};
+
 function checkForChange(){
-  console.log("here 1")
-  var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index  aka console.log(thing[0]);
+  var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index
   var newValue = $("#modifyLSF").find("select.newValue, textarea.newValue, input.newValue");
   var effectiveDate = document.getElementById("datetimepicker0").value;
   var notesOld = document.getElementById("oldNotes").value;
   var notesNew = document.getElementById("supervisorNotes").value;
   for (var i=0; i < newValue.length; i=i+1) {
-    console.log(i);
-    console.log(oldValue[i].value);
-    console.log(newValue[i].value);
     newVal = $(newValue[i]).val();
-    console.log(newVal)
     if (oldValue[i].value != newVal && newVal != "") { //If the oldValue differs from the newValue, add it to the dictionary
       finalDict[newValue[i].id] = {"oldValue": oldValue[i].value,
                                      "newValue": newVal,
@@ -189,18 +186,15 @@ function checkForChange(){
                                    "date": effectiveDate
                                   }
   }
-  console.log(finalDict)
-  console.log(JSON.stringify(finalDict));
   if (JSON.stringify(finalDict) !== '{}'){
     $('#submitModal').modal('show');
-    console.log("hih")
     return finalDict
   }
   if (JSON.stringify(finalDict) == '{}'){
-    console.log(JSON.stringify(finalDict));
     $('#NochangeModal').modal('show');
   }
 }
+
 function buttonListener(laborStatusKey) {
   var url = "/modifyLSF/submitModifiedForm/" + laborStatusKey;
   modifiedDict = JSON.stringify(finalDict)
