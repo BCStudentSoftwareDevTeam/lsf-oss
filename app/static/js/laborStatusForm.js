@@ -320,6 +320,7 @@ function fields_are_empty(id_list) { // Checks if selectpickers are empty
     value = $("#"+id).val();
     emptyElement = (value == "" || value == null);
   });
+  console.log(emptyElement);
   return emptyElement;
 }
 
@@ -342,12 +343,10 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
   // }
   var studentDict = createStuDict();
   checkPrimaryPosition(studentDict);
-  // if (fields_are_empty(id_list)) {
+  // if (fields_are_empty(id_list) == true) {
   //   errorFlash();
   // }
   // else if (checkWLS() && checkJobType()) { // In the console, it doesn't like this.  Not sure why
-  //       checkDuplicate();
-  //       return;
   //    }
   }
 
