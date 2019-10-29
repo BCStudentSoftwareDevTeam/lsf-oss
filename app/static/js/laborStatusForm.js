@@ -101,20 +101,6 @@ function fillDates(response){ // prefill term start and term end
     $("#dateTimePicker2").datepicker({minDate: new Date(yearStart, monthStart1, dayStart1)});
     $("#dateTimePicker2").datepicker("option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
     $("#dateTimePicker2").datepicker("option", "minDate", new Date(yearStart, monthStart1, dayStart1));
-
-    /*Here is the code to start with for restricting dates for the datepicker when it is not readonly.  Right now it restricts dates when you type
-    them in and hit enter, not if you just type them in and tab over to the next selectpicker.  Right now the datepickers are readonly.*/
-
-    // var dayStart2 = ("0" + (startd.getDate())).slice(-2);
-    // var monthStart2 = ("0" + (startd.getMonth() + 1)).slice(-2);
-    // var dayEnd2 = ("0" + (endd.getDate())).slice(-2);
-    // var monthEnd2 = ("0" + (endd.getMonth() + 1)).slice(-2);
-    // $("#dateTimePicker2").attr("min", monthStart2 + "-" + dayStart2 + "-" + yearStart);
-    // $("#dateTimePicker2").attr("max", monthEnd2 + "-" + dayEnd2 + "-" + yearEnd);
-    // $("#dateTimePicker1").attr("min", monthStart2 + "-" + dayStart2 + "-" + yearStart);
-    // $("#dateTimePicker1").attr("max", monthEnd2 + "-" + dayEnd2 + "-" + yearEnd);
-    // $("#dateTimePicker1").datepicker("refresh");
-    // $("#dateTimePicker2").datepicker("refresh");
   }
 }
 
@@ -444,20 +430,20 @@ function checkPrimaryPosition(studentDict){
       if(Object.keys(response).length > 0) {
         if (studentDict.stuJobType == "Primary"){
           console.log("Adding Primary with Primary in database");
-          document.getElementById("warningModalText").innerHTML = studentDict.stuName + " already has a primary position.";
-          //$("#warningModal").modal("show");
+          $("#warningModalText").html(studentDict.stuName + " already has a primary position.");
+          $("#warningModal").modal("show");
           return false;
         }
         else if(studentDict.stuJobType == "Secondary"){
           console.log("Adding Secondary with Primary in database");
           if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true) {
-            //createAndFillTable(studentDict);
+            createAndFillTable(studentDict);
             return true;
           }
           else {
             console.log("This is a duplicate");
-            document.getElementById("warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.";
-            //$("#warningModal").modal("show");
+            $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
+            $("#warningModal").modal("show");
             return false;
           }
         }
@@ -468,32 +454,32 @@ function checkPrimaryPosition(studentDict){
         if(studentDict.stuJobType == "Primary"){
           console.log("Adding Primary without Primary in database");
           if (checkDuplicate(studentDict) == true  && checkTotalHours(studentDict, response) == true){
-            //createAndFillTable(studentDict);
+            createAndFillTable(studentDict);
             return true;
           }
           else {
             console.log("This is a duplicate");
-            document.getElementById("#warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.";
-            //$("#warningModal").modal("show");
+            $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
+            $("#warningModal").modal("show");
             return false;
           }
         }
         else {
           if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
             console.log("Adding Secondary without Primary in database");
-            document.getElementById("#warningModalText").innerHTML = studentDict.stuName + " needs an approved primary position before a secondary position can be added.";
-            //$("#warningModal").modal("show");
+            $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
+            $("#warningModal").modal("show");
             return false;
           }
           else {
             if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true){
-              //createAndFillTable(studentDict);
+              createAndFillTable(studentDict);
               return true;
             }
             else {
               console.log("This is a duplicate");
-              document.getElementById("#warningModalText").innerHTML = "Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.";
-              //$("#warningModal").modal("show");
+              $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
+              $("#warningModal").modal("show");
               return false;
             }
           }
