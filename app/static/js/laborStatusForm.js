@@ -32,10 +32,10 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
   var jobType = $(this).val();
   if (jobType == "Secondary") {
       $("#warningModal").modal("show");
-      $("#warningModalText").innerHTML = "The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.";
+      $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
       $("#warningModal").on("hidden.bs.modal", function(){
-        $("#warningModalText").innerHTML = "";
-        //Testing out modal stuff here
+      $("#warningModalText").innerHTML = "";
+      //Testing out modal stuff here
       });
     }
   });
@@ -74,7 +74,7 @@ function preFilledDate(obj){ // get term start date and end date
   });
 }
 
-function fillDates(response){ // prefill term start and term end
+function fillDates(response) { // prefill term start and term end
   for (var key in response){
     var start = response[key]["Start Date"];
     var end = response[key]["End Date"];
@@ -104,7 +104,7 @@ function fillDates(response){ // prefill term start and term end
   }
 }
 
-function updateDate(obj){ // updates max and min dates of the datepickers as the other datepicker changes
+function updateDate(obj) { // updates max and min dates of the datepickers as the other datepicker changes
   var dateToChange = new Date($(obj).val());
   var newMonth = dateToChange.getMonth();
   var newYear = dateToChange.getFullYear();
@@ -128,9 +128,9 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
          dataType: "json",
          success: function (response){
             fillPositions(response, stopSelectRefresh);
-         }
-       });
- }
+          }
+        });
+  }
 
  function fillPositions(response, stopSelectRefresh="") { // prefill Position select picker with the positions of the selected department
    var selectedPositions = $("#position");
@@ -334,26 +334,21 @@ function errorFlash(){
 function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
   var termCode = $("#selectedTerm").val();
   var whichTerm = termCode.toString().substr(-2);
-  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-    var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedHoursPerWeek"];
-  }
-  else{
-    var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedContractHours"];
-  }
+  // if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+  //   var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedHoursPerWeek"];
+  // }
+  // else{
+  //   var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedContractHours"];
+  // }
   var studentDict = createStuDict();
-  if (checkPrimaryPosition(studentDict) == true) {
-    createAndFillTable(studentDict);
-  }
-  else {
-    $("#warningModal").modal("show");
-  }
-  if (fields_are_empty(id_list)) {
-    errorFlash();
-  }
-  else if (checkWLS() && checkJobType()) { // In the console, it doesn't like this.  Not sure why
-        checkDuplicate();
-        return;
-     }
+  checkPrimaryPosition(studentDict);
+  // if (fields_are_empty(id_list)) {
+  //   errorFlash();
+  // }
+  // else if (checkWLS() && checkJobType()) { // In the console, it doesn't like this.  Not sure why
+  //       checkDuplicate();
+  //       return;
+  //    }
   }
 
 function createStuDict(){
@@ -406,7 +401,7 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
     if(globalArrayOfStudents[i].stuName == studentDict.stuName &&
       globalArrayOfStudents[i].stuJobType == studentDict.stuJobType &&
       (studentDict.stuJobType == "Primary" || globalArrayOfStudents[i].stuPosition == studentDict.stuPosition)){
-      document.getElementById("warningModalText").innerHTML = "Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position.";
+      $("#warningModalText").html("Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position.");
       $("#warningModal").modal("show");
       return false;
     }
@@ -431,36 +426,29 @@ function checkPrimaryPosition(studentDict){
           console.log("Adding Primary with Primary in database");
           $("#warningModalText").html(studentDict.stuName + " already has a primary position.");
           $("#warningModal").modal("show");
-          return false;
         }
         else if(studentDict.stuJobType == "Secondary"){
           console.log("Adding Secondary with Primary in database");
           if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true) {
             createAndFillTable(studentDict);
-            return true;
           }
           else {
             console.log("This is a duplicate");
             $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
             $("#warningModal").modal("show");
-            return false;
           }
         }
       }
-
-
       else {
         if(studentDict.stuJobType == "Primary"){
           console.log("Adding Primary without Primary in database");
           if (checkDuplicate(studentDict) == true  && checkTotalHours(studentDict, response) == true){
             createAndFillTable(studentDict);
-            return true;
           }
           else {
             console.log("This is a duplicate");
             $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
             $("#warningModal").modal("show");
-            return false;
           }
         }
         else {
@@ -468,18 +456,15 @@ function checkPrimaryPosition(studentDict){
             console.log("Adding Secondary without Primary in database");
             $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
             $("#warningModal").modal("show");
-            return false;
           }
           else {
             if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true){
               createAndFillTable(studentDict);
-              return true;
             }
             else {
               console.log("This is a duplicate");
               $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
               $("#warningModal").modal("show");
-              return false;
             }
           }
         }
@@ -488,7 +473,6 @@ function checkPrimaryPosition(studentDict){
   });
 }
 function createAndFillTable(studentDict) {
-  console.log(globalArrayOfStudents);
   console.log("Filling table");
   globalArrayOfStudents.push(studentDict);
   console.log(globalArrayOfStudents);
@@ -545,25 +529,17 @@ function createAndFillTable(studentDict) {
 
 function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours from the database and add it to the ones in the table.
   totalHoursCount = studentDict.stuWeeklyHours;
-  console.log("In checkTotalHours");
-  console.log(studentDict);
-  console.log(databasePositions);
-  console.log("First Loop");
   for (i = 0; i < globalArrayOfStudents.length; i++){
     if (globalArrayOfStudents[i].stuName == studentDict.stuName){
       console.log(totalHoursCount);
       totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
     }
   }
-  console.log("Second Loop");
   for (i = 0; i < databasePositions.length; i++){
-    console.log(totalHoursCount);
     totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours;
   }
-  console.log(totalHoursCount + "     YEEEEEET!");
   if (totalHoursCount > (15)){
     // TODO: Show modal saying they have too many hours
-    console.log("Student has too many hours and needs an overload form");
     $('#OverloadModal').modal('show');
     $('#overloadModalButton').attr('data-target', '#PrimaryModal');
     // $('#OverloadModal').on('hidden.bs.modal', function() {
@@ -591,10 +567,10 @@ function createModalContent() { // Populates Submit Modal with Student informati
                       globalArrayOfStudents[i].stuContractHours + " hours";
       modalList.push(bigString);
     }
-    document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) will be submitted for:<br><br>" +
+    $("#SubmitModalText").html("Labor status form(s) will be submitted for:<br><br>" +
                                                             "<ul style=\"display:inline-block;text-align:left;\">" +
                                                             modalList.join("</li>")+"</ul>"+
-                                                            "<br><br>The labor status form will be eligible for approval in one business day.";
+                                                            "<br><br>The labor status form will be eligible for approval in one business day.");
     $("#SubmitModal").modal("show");
   }
   else {
@@ -603,10 +579,10 @@ function createModalContent() { // Populates Submit Modal with Student informati
                       " | " + globalArrayOfStudents[i].stuJobType + " | " + globalArrayOfStudents[i].stuWeeklyHours + " hours";
       modalList.push(bigString);
     }
-    document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) will be submitted for:<br><br>" +
-                                                            "<ul style=\"display: inline-block;text-align:left;\">" +
-                                                            modalList.join("</li>")+"</ul>"+
-                                                            "<br><br>The labor status form will be eligible for approval in one business day.";
+    $("#SubmitModalText").html("Labor status form(s) will be submitted for:<br><br>" +
+                               "<ul style=\"display: inline-block;text-align:left;\">" +
+                               modalList.join("</li>")+"</ul>"+
+                               "<br><br>The labor status form will be eligible for approval in one business day.");
     $("#SubmitModal").modal("show");
   }
 }
@@ -656,15 +632,16 @@ function userInsert(){
               modalList.push(bigString);
             }
            }
-         document.getElementById("SubmitModalText").innerHTML = "Labor status form(s) will be submitted for:<br><br>" +
-                                                                 "<ul style=\"list-style-type:none; display: inline-block;text-align:left;\">" +
-                                                                 modalList.join("</li>")+"</ul>"+
-                                                                 "<br><br>The labor status form will be eligible for approval in one business day.";
+         $("#SubmitModalText").html("Labor status form(s) will be submitted for:<br><br>" +
+                                    "<ul style=\"list-style-type:none; display: inline-block;text-align:left;\">" +
+                                     modalList.join("</li>")+"</ul>"+
+                                    "<br><br>The labor status form will be eligible for approval in one business day.");
          $("#SubmitModal").modal("show");
        }
      });
      $("#SubmitModal").modal({backdrop: true, keyboard: false, show: true});
      $("#SubmitModal").data("bs.modal").options.backdrop = "static";
-     document.getElementById("submitmodalid").innerHTML = "Done";
-     document.getElementById("submitmodalid").onclick = function() { window.location.replace("/laborstatusform");};
+     $("#submitmodalid").html("Done");
+     // $("#submitmodalid").attr("onclick", function() { window.location.replace("/laborstatusform");});
+     document.getElementById("submitmodalid").onclick = function() { window.location.replace("/laborstatusform");}; // seems to be necessary to use this line to get it to work
    }

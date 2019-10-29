@@ -59,8 +59,10 @@ def laborStatusForm(laborStatusKey = None):
 def userInsert():
     """ Create labor status form. Create labor history form."""
     try:
+        print("We in here homies!")
         rsp = (request.data).decode("utf-8")  # This turns byte data into a string
-        rspFunctional = json.loads(rsp) # This turns the string into whatever structure it should be. A list of dicts in this case.
+        rspFunctional = json.loads(rsp)
+        print(rspFunctional) # This turns the string into whatever structure it should be. A list of dicts in this case.
         for i in rspFunctional:
             d, created = Student.get_or_create(ID = i['stuBNumber'])
             student = d.ID
