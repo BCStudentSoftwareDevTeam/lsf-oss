@@ -68,11 +68,13 @@ def getPosition(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
     supervisors = STUSTAFF.select().where(STUSTAFF.DEPT_NAME == department)
     position_dict = {}
-    for position in positions:
-        position_dict[position.WLS] = {"position": position.POSN_TITLE, "WLS":position.WLS}
     for supervisor in supervisors:
-        position_dict[supervisor.PIDM] = {"supervisorFirstName":supervisor.FIRST_NAME, "supervisorLastName":supervisor.LAST_NAME, "supervisorPIDM":supervisor.PIDM}
+        print("here1")
+        position_dict[str(supervisor.PIDM)] = {"supervisorFirstName":supervisor.FIRST_NAME, "supervisorLastName":supervisor.LAST_NAME, "supervisorPIDM":supervisor.PIDM}
     print(position_dict)
+    for position in positions:
+        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
+    print(supervisors)
     return json.dumps(position_dict)
 
 @main_bp.route("/modifyLSF/submitModifiedForm/<laborStatusKey>", methods=['POST'])

@@ -11,33 +11,45 @@ $("#datetimepicker0").datepicker("setDate", "date");
 $('.glyphicon-calendar').click(function() {
     $("#datetimepicker0").focus();
 });
-$(document).ready(function(){
-  var map = {};
-  $('select option').each(function () {
-      if (map[this.value]) {
-          $(this).remove()
-      }
-      map[this.value] = true;
-  })
-});
 function fill_positions(response) {
+  console.log(response)
   var selected_positions = document.getElementById("POSN_TITLE");
     for (var key in response) {
-      var options = document.createElement("option");
-      options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
-      options.value = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")";
-      selected_positions.appendChild(options);
+      console.log(key)
+      try{
+        var options = document.createElement("option");
+        options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
+        options.value = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")";
+        selected_positions.appendChild(options);
+      }
+      catch(error){
+        console.log(error)
+      }
     $('.selectpicker').selectpicker('refresh');
   }
 }
 function fill_supervisor(response){
   var selected_supervisors = document.getElementById("supervisor");
     for (var key in response) {
-      var options = document.createElement("option");
-      options.text = response[key]["supervisorFirstName"].toString() + " " + response[key]["supervisorLastName"].toString();
-      options.value = response[key]["supervisorPIDM"].toString();
-      selected_supervisors.appendChild(options);
-    $('.selectpicker').selectpicker('refresh');
+      try{
+        var options = document.createElement("option");
+        console.log(response[key]["supervisorFirstName"])
+        options.text = response[key]["supervisorFirstName"].toString() + " " + response[key]["supervisorLastName"].toString();
+        options.value = response[key]["supervisorPIDM"].toString();
+        console.log(selected_supervisors)
+        selected_supervisors.appendChild(options);
+        $('.selectpicker').selectpicker('refresh');
+        var map = {};
+        $('select option').each(function () {
+            if (map[this.value]) {
+                $(this).remove()
+            }
+            map[this.value] = true;
+        })
+      }
+      catch(error){
+        console.log(error)
+      }
   }
 }
 $(document).ready(function(){
@@ -47,8 +59,8 @@ $(document).ready(function(){
          url: url,
          dataType: "json",
          success: function (response){
-            fill_positions(response);
             fill_supervisor(response);
+            fill_positions(response);
             jobPositionDisable();
          }
        })
