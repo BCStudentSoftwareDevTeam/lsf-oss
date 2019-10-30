@@ -314,14 +314,21 @@ function deleteRow(glyphicon) {
 }
 //END of glyphicons
 
-function fields_are_empty(id_list) { // Checks if selectpickers are empty
-  emptyElement = false;
-  $.each(id_list, function(id) {
-    value = $("#"+id).val();
-    emptyElement = (value == "" || value == null);
-  });
-  console.log(emptyElement);
-  return emptyElement;
+// function fields_are_empty(id_list) { // Checks if selectpickers are empty
+//   $.each(id_list, function(id) {
+//     value = $("#"+id).val();
+//     if (value == "" || value == null) {
+//       return false;
+//     }
+//     else {
+//       return true;
+//     }
+//   });
+// }
+function fields_are_empty(id_list) {
+  for (var i = 0; i < id_list; i++) {
+
+  }
 }
 
 function errorFlash(){
@@ -335,19 +342,20 @@ function errorFlash(){
 function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
   var termCode = $("#selectedTerm").val();
   var whichTerm = termCode.toString().substr(-2);
-  // if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-  //   var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedHoursPerWeek"];
-  // }
-  // else{
-  //   var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedContractHours"];
-  // }
+  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+    var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedHoursPerWeek"];
+  }
+  else{
+    var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedContractHours"];
+  }
   var studentDict = createStuDict();
-  checkPrimaryPosition(studentDict);
-  // if (fields_are_empty(id_list) == true) {
-  //   errorFlash();
-  // }
-  // else if (checkWLS() && checkJobType()) { // In the console, it doesn't like this.  Not sure why
-  //    }
+  console.log(fields_are_empty(id_list))
+  if (fields_are_empty(id_list) == true) {
+    errorFlash();
+  }
+  else  {
+    checkPrimaryPosition(studentDict);
+     }
   }
 
 function createStuDict(){
