@@ -13,6 +13,7 @@ from app.login_manager import require_login
 from flask import Flask, redirect, url_for, flash
 from flask import request
 from datetime import datetime, date
+from app.logic.emailHandler import*
 
 @main_bp.route('/laborReleaseForm/<laborStatusKey>', methods=['GET', 'POST'])
 # @main_bp.route('/laborReleaseForm', methods=['GET', 'POST'])
@@ -55,14 +56,15 @@ def laborReleaseForm(laborStatusKey):
             historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Release Form")
             status = Status.get(Status.statusName == "Pending")
             laborStatusForiegnKey = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-
+            for form in forms:
+                studentEmail = form.studentSupervisee.STU_EMAIL
             newFormHistory = FormHistory.create(
                                         formID = laborStatusForiegnKey.laborStatusFormID,
                                         historyType = historytype.historyTypeName,
                                         releaseForm = newLaborReleaseForm.laborReleaseFormID,
                                         modifiedForm = None,
                                         overloadForm = None,
-                                        createdBy = current_user.username,
+                                        createdBy = current_user.UserID,
                                         createdDate = date.today(),
                                         reviewedDate = None,
                                         reviewedBy = None,
@@ -73,6 +75,8 @@ def laborReleaseForm(laborStatusKey):
             # home page and gets a flash message telling them the forms were
             # submited
             flash("Your labor release form has been submitted.", "success")
+            email = emailHandler()
+            email.laborReleaseFormEmail(studentEmail)
             return redirect(url_for("main.index"))
 
         except Exception as e:
