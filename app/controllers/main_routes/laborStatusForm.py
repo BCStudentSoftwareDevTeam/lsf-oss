@@ -58,12 +58,14 @@ def laborStatusForm(laborStatusKey = None):
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
     """ Create labor status form. Create labor history form."""
-    try:
-        print("We in here homies!")
-        rsp = (request.data).decode("utf-8")  # This turns byte data into a string
-        rspFunctional = json.loads(rsp)
-        print(rspFunctional) # This turns the string into whatever structure it should be. A list of dicts in this case.
-        for i in rspFunctional:
+    print("We in here homies!")
+    rsp = (request.data).decode("utf-8")  # This turns byte data into a string
+    rspFunctional = json.loads(rsp)
+    print(rspFunctional) # This turns the string into whatever structure it should be. A list of dicts in this case.
+    resultsList = []
+    for i in rspFunctional:
+        try:
+            print(i)
             d, created = Student.get_or_create(ID = i['stuBNumber'])
             student = d.ID
             d, created = User.get_or_create(UserID = i['stuSupervisorID'])
@@ -98,12 +100,14 @@ def userInsert():
                                               createdBy   = creatorID,
                                               createdDate = date.today(),
                                               status      = status.statusName)
-        flash("Labor Status Form(s) has been created.", "success")
-        return jsonify({"Success": True})
-    except Exception as e:
-        flash("An error occured.", "danger")
-        print("ERROR: " + str(e))
-        return jsonify({"Success": False})
+            #flash("Labor Status Form(s) has been created.", "success")
+            #return jsonify({"Success": True})
+            resultsList.append(True)
+        except Exception as e:
+            #flash("An error occured.", "danger")
+            print("ERROR: " + str(e))
+            resultsList.append(False)
+    return jsonify(resultsList)
 
 @main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])
 def getDates(termcode):

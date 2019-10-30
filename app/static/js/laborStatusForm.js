@@ -356,9 +356,7 @@ function createStuDict(){
   var department = $("#selectedDepartment").find("option:selected").text();
   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
   var termCodeLastTwo = termCodeSelected.slice(-2);
-  var student = $("student");
   var studentName = $("#student option:selected" ).text();
-  var position = $("position");
   var positionName = $("#position option:selected").text();
   var positionCode = $("#position").find("option:selected").attr("id");
   var wls = $("#position").find("option:selected").attr("data-wls");
@@ -499,25 +497,25 @@ function createAndFillTable(studentDict) {
   var cell5 = row.insertCell(4);
   var cell6 = row.insertCell(5);
   var cell7 = row.insertCell(6);
-  cell1.innerHTML = (studentDict).stuName + " " + "(" + (studentDict).stuBNumber+ ")";
-  cell2.innerHTML = (studentDict).stuPosition;
+  $(cell1).html((studentDict).stuName + " " + "(" + (studentDict).stuBNumber+ ")");
+  $(cell2).html((studentDict).stuPosition);
   $(cell2).attr("data-posn", (studentDict).stuPositionCode);
   $(cell2).attr("data-wls", (studentDict).stuWLS);
   cell2.id="position_code";
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00") {
-    cell3.innerHTML = (studentDict).stuJobType;
-    cell4.innerHTML = (studentDict).stuWeeklyHours;
-    cell5.innerHTML = (studentDict).stuStartDate + " - " + (studentDict).stuEndDate;
-    cell6.innerHTML = notesGlyphicon;
-    cell7.innerHTML = removeIcon;
+    $(cell3).html((studentDict).stuJobType);
+    $(cell4).html((studentDict).stuWeeklyHours);
+    $(cell5).html((studentDict).stuStartDate + " - " + (studentDict).stuEndDate);
+    $(cell6).html(notesGlyphicon);
+    $(cell7).html(removeIcon);
   }
   else {
     console.log(selectedContractHoursName);
-    cell3.innerHTML = "Secondary";
-    cell4.innerHTML = selectedContractHoursName;
-    cell5.innerHTML = (studentDict).stuStartDate + " - " + (studentDict).stuEndDate;
-    cell6.innerHTML = notesGlyphicon;
-    cell7.innerHTML = removeIcon;
+    $(cell3).html("Secondary");
+    $(cell4).html(selectedContractHoursName);
+    $(cell5).html((studentDict).stuStartDate + " - " + (studentDict).stuEndDate);
+    $(cell6).html(notesGlyphicon);
+    $(cell7).html(removeIcon);
   }
   refreshSelectPickers();
   var rowLength = document.getElementById("mytable").rows.length;
@@ -600,37 +598,35 @@ function userInsert(){
            term = $("#selectedTerm").val();
            var whichTerm = term.toString().substr(-2);
            modalList = [];
-           if (response.Success == true){
-             for (var key = 0; key < globalArrayOfStudents.length; key++) {
-               var studentName = globalArrayOfStudents[key].stuName;
-               var position = globalArrayOfStudents[key].Position;
-               var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
-               var jobType = globalArrayOfStudents[key].stuJobType;
-               var hours = globalArrayOfStudents[key].stuWeeklyHours;
+           for(var key = 0; key < globalArrayOfStudents.length; key++){
+             var studentName = globalArrayOfStudents[key].stuName;
+             var position = globalArrayOfStudents[key].stuPosition;
+             var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
+             var jobType = globalArrayOfStudents[key].stuJobType;
+             var hours = globalArrayOfStudents[key].stuWeeklyHours;
+             var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
+             if (response[key] == true){
                if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
                  var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                }
                else {
                  var bigString = "<li>"+"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
-              }
-              modalList.push(bigString);
-            }
-          }
-          else {
-            for (var key in globalArrayOfStudents) {
-              var studentName = globalArrayOfStudents[key].stuName;
-              var position = globalArrayOfStudents[key].stuPosition;
-              var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
-              var hours = globalArrayOfStudents[key].stuWeeklyHours;
-              if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-                var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
-              }
-              else {
-                var bigString = "<li>"+"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
-              }
-              modalList.push(bigString);
-            }
+               }
+             }
+             else {
+               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
+                 var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
+               }
+               else {
+                 var bigString = "<li>"+"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
+               }
+             }
+             modalList.push(bigString);
            }
+
+
+
+
          $("#SubmitModalText").html("Labor status form(s) will be submitted for:<br><br>" +
                                     "<ul style=\"list-style-type:none; display: inline-block;text-align:left;\">" +
                                      modalList.join("</li>")+"</ul>"+
