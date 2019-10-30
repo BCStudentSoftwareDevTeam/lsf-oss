@@ -23,7 +23,7 @@ function insertApprovals() {
     labor_details_ids.push(this.value);
 
   })
-  console.log(labor_details_ids,"id checking lsf")
+//  console.log(labor_details_ids,"id checking lsf")
   //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
   var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;
   if (!atLeastOneIsChecked){
@@ -53,7 +53,7 @@ function insertApprovals() {
       };
 //this method adds data to each row in the approve selected Modal
 function updateApproveTableData(returned_details){
-  console.log("inside the update approval",returned_details)
+//  console.log("inside the update approval",returned_details)
   for (var i = 0; i < returned_details.length; i++){
     var student=returned_details[i][0]
     var position= returned_details[i][1]
@@ -86,7 +86,7 @@ function finalApproval() { //this method changes the status of the lsf from pend
     contentType: 'application/json',
     success: function(response){
       if (response){
-        console.log('success', response["success"]);
+      //  console.log('success', response["success"]);
         if(response["success"]) {
             location.reload(true);
 
@@ -151,7 +151,7 @@ function finalDenial_data(returned_details){
      contentType: 'application/json',
      success: function(response){
        if (response){
-         console.log('success', response["success"]);
+         //console.log('success', response["success"]);
          if(response["success"]) {
              location.reload(true);
               }
@@ -161,8 +161,7 @@ function finalDenial_data(returned_details){
       };
 
 function getNotes (formId) {
-  console.log(formId);
-
+//  console.log(formId);
   $.ajax({
     type: "GET",
     url: "/admin/getNotes/"+formId,
@@ -171,7 +170,7 @@ function getNotes (formId) {
 
       if ("Success" in response && response["Success"] == "false") {
         //Clears supervisor notes p tag and the labor notes textarea
-        console.log("This is why it failed: ", response);
+      //  console.log("This is why it failed: ", response);
         $("#notesText").empty();
         $("#laborNotesText").empty();
 
@@ -181,13 +180,13 @@ function getNotes (formId) {
 
           if ("supervisorNotes" in response) {
             $("#notesText").html(response["supervisorNotes"]);
-            console.log(response);
+          //  console.log(response);
              }
 
           if ("laborDepartmentNotes" in response) {
             $("#laborNotesText").html(response["laborDepartmentNotes"]);
-            console.log(response);
-            console.log(response["laborDepartmentNotes"]);
+            //console.log(response);
+            //console.log(response["laborDepartmentNotes"]);
             }
          }
        }
