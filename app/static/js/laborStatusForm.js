@@ -27,28 +27,49 @@ $(document).on("keyup", "input[name=contractHours]", function () { // sets contr
      }
 });
 
-$("#jobType").change(function(){ // Pops up a modal for Seconday Postion
-  //this is just getting the value that is selected
-  var jobType = $(this).val();
-  if (jobType == "Secondary") {
+// $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
+//   //this is just getting the value that is selected
+//   var jobType = $(this).val();
+//   if (jobType == "Secondary") {
+//       $("#warningModal").modal("show");
+//       $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
+//       $("#warningModal").on("hidden.bs.modal", function(){
+//       $("#warningModalText").innerHTML = "";
+//       //Testing out modal stuff here
+//       });
+//     }
+//   });
+
+// Pops up a modal for overload
+// $("#selectedHoursPerWeek").change(function(){
+//   //this is just getting the value that is selected
+//   var hour = $(this).val();
+//   if (hour == "20") {
+//       $("#OverloadModal").modal("show");
+//       $("#overloadModalButton").attr("data-target", ""); // prevent a Primary Modal from showing up
+//     }
+// });
+
+function showOverloadOrSecondary() {
+  var hour = $("#selectedHoursPerWeek").val();
+  if (hour == 20) {
+    $("#OverloadModal").modal("show");
+    $("#overloadModalButton").attr("data-target", "");
+  }
+  else {
+    //$("#SecondaryModal").modal("show");
+    var jobType = $("#jobType").val();
+    if (jobType == "Secondary") {
       $("#warningModal").modal("show");
       $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
       $("#warningModal").on("hidden.bs.modal", function(){
-      $("#warningModalText").innerHTML = "";
-      //Testing out modal stuff here
-      });
-    }
-  });
+      $("#warningModalText").innerHTML = ""
+    });
+  }
+}
+}
 
-// Pops up a modal for overload
-$("#selectedHoursPerWeek").change(function(){
-  //this is just getting the value that is selected
-  var hour = $(this).val();
-  if (hour == "20") {
-      $("#OverloadModal").modal("show");
-      $("#overloadModalButton").attr("data-target", ""); // prevent a Primary Modal from showing up
-    }
-});
+
 
 function disableTermSupervisorDept() {
   // disables term, supervisor and department select pickers when add student button is clicked
@@ -325,11 +346,11 @@ function deleteRow(glyphicon) {
 //     }
 //   });
 // }
-function fields_are_empty(id_list) {
-  for (var i = 0; i < id_list; i++) {
-
-  }
-}
+// function fields_are_empty(id_list) {
+//   for (var i = 0; i < id_list; i++) {
+//
+//   }
+// }
 
 function errorFlash(){
   category = "danger";
@@ -349,13 +370,13 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
     var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedContractHours"];
   }
   var studentDict = createStuDict();
-  console.log(fields_are_empty(id_list))
-  if (fields_are_empty(id_list) == true) {
-    errorFlash();
-  }
-  else  {
+  // console.log(fields_are_empty(id_list))
+  // if (fields_are_empty(id_list) == true) {
+  //   errorFlash();
+  // }
+  // else  {
     checkPrimaryPosition(studentDict);
-     }
+     // }
   }
 
 function createStuDict(){
@@ -544,14 +565,17 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
     totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours;
   }
   if (totalHoursCount > (15)){
-    // TODO: Show modal saying they have too many hours
-    $('#OverloadModal').modal('show');
-    $('#overloadModalButton').attr('data-target', '#PrimaryModal');
-    // $('#OverloadModal').on('hidden.bs.modal', function() {
-    // $('#PrimaryModal').modal('show');
-    //return false
+    // // TODO: Show modal saying they have too many hours
+    // $('#OverloadModal').modal('show');
+    // $('#overloadModalButton').attr('data-target', '#PrimaryModal');
+    // // $('#OverloadModal').on('hidden.bs.modal', function() {
+    // // $('#PrimaryModal').modal('show');
+    // //return false
+      return true;
   }
-  return true;
+  else {
+    return false
+  }
 }
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
