@@ -4,7 +4,7 @@ from app.models.student import Student
 
 
 # All caps fields are pulled from TRACY
-class visitTracker (baseModel):
+class VisitTracker (baseModel):
     officeVisitID       = PrimaryKeyField()
     ID                  = CharField(null=True)# B-number
     FIRST_NAME          = CharField(null=True)

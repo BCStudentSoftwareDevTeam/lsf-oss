@@ -14,6 +14,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     sed -i '' 's/migrations/lsf_migrations/g' migrations.json
 fi
 
+#pem add app.models.[filename].[classname]
 pem add app.models.user.User
 pem add app.models.laborStatusForm.LaborStatusForm
 pem add app.models.laborReleaseForm.LaborReleaseForm
