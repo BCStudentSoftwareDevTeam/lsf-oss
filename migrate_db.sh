@@ -26,6 +26,7 @@ pem add app.models.overloadForm.OverloadForm
 pem add app.models.status.Status
 pem add app.models.student.Student
 pem add app.models.historyType.HistoryType
+pem add app.models.visitTracker.VisitTracker
 
 pem watch
 pem migrate

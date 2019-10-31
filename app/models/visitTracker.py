@@ -4,7 +4,7 @@ from app.models.student import Student
 
 
 # All caps fields are pulled from TRACY
-class officeVisit (baseModel):
+class visitTracker (baseModel):
     officeVisitID       = PrimaryKeyField()
     ID                  = CharField(null=True)# B-number
     FIRST_NAME          = CharField(null=True)
@@ -13,6 +13,6 @@ class officeVisit (baseModel):
     isStudent           = BooleanFields(null=True) #If someone has a b#, this flag should be set to True.
     #There are cases in which staff comes in, though, and they DO have B#s. Ahad and Kat said they could indicate this rare case in the comments if its really necessary, but this flag is moreso for tracking non-BC affiliated visits
     comments            = Charfield(null=True)
-    
+
     def __str__(self):
         return str(self.__dict__)
