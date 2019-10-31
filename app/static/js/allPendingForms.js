@@ -179,10 +179,15 @@ function getNotes (formId) {
           //Populates notes value from the database
 
           if ("supervisorNotes" in response) {
+            $("#supeNotesLabel").show()
+            $("#notesText").show()
             $("#notesText").html(response["supervisorNotes"]);
           //  console.log(response);
              }
-
+          if (!("supervisorNotes" in response)) {
+              $("#supeNotesLabel").hide()
+              $("#notesText").hide()
+          }
           if ("laborDepartmentNotes" in response) {
             $("#laborNotesText").html(response["laborDepartmentNotes"]);
             //console.log(response);
