@@ -207,7 +207,7 @@ from app.models.user import User
 staffs = [
 
     #TODO: Ask Scott about isLaborAdmin field
-            {s
+            {
             "ID": "B12361006",
             "FIRST_NAME":"Scott",
             "LAST_NAME" : "Heggen",
