@@ -1,0 +1,47 @@
+#wrapper {
+  position: relative;
+  align: center;
+  width: 100%;
+
+}
+
+#header {
+  text-align: center;
+  font-weight: 650;
+}
+
+.btn-holder {
+   position: relative;
+   align-content: !important;
+}
+
+.table {
+  width: 100%;
+}
+
+th {
+  text-align: center;
+}
+
+div#pendingTabs.container {
+  width: 1500px;
+}
+
+div#pendingForms_length.dataTables_length {
+  text-align: left;
+}
+
+div#statusForms_length.dataTables_length {
+  text-align: left;
+}
+
+div#overloadForms_length.dataTables_length {
+  text-align: left;
+}
+div#modifiedForms_length.dataTables_length {
+  text-align: left;
+}
+
+div#releaseForms_length.dataTables_length {
+  text-align: left;
+}

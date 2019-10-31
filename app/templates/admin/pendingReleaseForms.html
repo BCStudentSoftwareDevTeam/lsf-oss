@@ -1,0 +1,200 @@
+{% block app_content %}
+
+<div class="col-lg-12" align="center" >
+  <table id="releaseForms" class="table table-striped releaseForms dataTable" >
+    <!-- Made empty header tags because we need to hide the header -->
+    <thead id="headTable" text-align="center" >
+      <tr id="tableHeaders" class="tableHeaders"  >
+        <th> Approve </th>
+        <th>Term</th>
+        <th>Department</th>
+        <th>Supervisor</th>
+        <th> </th>
+        <th>Students</th>
+        <th> Position (WLS)</th>
+        <th>Hours</th>
+        <th>Created</th>
+        <th>Contract Dates</th>
+        <th> Edit </th>
+      </tr>
+    </thead>
+
+    <tbody id="tablebody">
+      {% for releaseForms in pending_release_forms %}
+      <tr id="tableData" class="tableData" align="center">
+          <td> {# APPROVE #}
+            <input type='checkbox' id='chk_{{releaseForms.formHistoryID}}' value= "{{releaseForms.formHistoryID}}"  name="check[]"  autocomplete="off"/>
+            <span  id="notes_{{releaseForms.formID.laborStatusFormID}}" onclick="getNotes({{releaseForms.formID.laborStatusFormID}})"
+                   class="glyphicon glyphicon-book btn-lg
+                        {% if releaseForms.formID.supervisorNotes != None and releaseForms.formID.laborDepartmentNotes == None %} text-success
+                        {% elif releaseForms.formID.laborDepartmentNotes != None and releaseForms.formID.supervisorNotes == None  %} text-danger
+                        {% elif releaseForms.formID.supervisorNotes != None and releaseForms.formID.laborDepartmentNotes != None %} text-danger
+                        {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#ReleaseNotesModal"> </span>
+                        <input id="dummyInput" value="{{releaseForms.formID.laborStatusFormID}}" hidden/>
+
+
+          </td>
+          <td> {# TERM #}
+            {{releaseForms.formID.termCode.termName}}
+          </td>
+          <td> {# DEPARTMENT #}
+            {{releaseForms.formID.department.DEPT_NAME}} ({{releaseForms.formID.department.ORG}}-{{releaseForms.formID.department.ACCOUNT}})
+          </td>
+          <td> {# SUPERVISOR #}
+            {{releaseForms.formID.supervisor.FIRST_NAME}} {{releaseForms.formID.supervisor.LAST_NAME}}
+          </td>
+          <td>
+            |
+          </td>
+          <td> {# STUDENT #}
+            {{releaseForms.formID.studentSupervisee.FIRST_NAME}}  {{releaseForms.formID.studentSupervisee.LAST_NAME}}  ({{releaseForms.formID.studentSupervisee.ID}})
+          </td>
+          <td> {# POSITON AND WLS #}
+            {{releaseForms.formID.POSN_TITLE}} ({{releaseForms.formID.WLS}})
+          </td>
+          <td> {# HOURS #}
+          {% if releaseForms.formID.weeklyHours != None%} {{releaseForms.formID.weeklyHours}} {% else %}   {{releaseForms.formID.contractHours}} {% endif %}
+        </td>
+        <td> {# CREATED BY #}
+          {{releaseForms.createdBy.username}}  <br/> {{releaseForms.createdDate.strftime('%m/%d/%y')}}
+        </td>
+        <td> {# CREATED DATE #}
+           {{releaseForms.formID.startDate.strftime('%m/%d/%y')}} -  {{releaseForms.formID.endDate.strftime('%m/%d/%y')}}
+        </td>
+        <td> {# EDIT #}
+          <a href="/modifyLSF/{{releaseForms.formID.laborStatusFormID}}"> <span id="edit_{{releaseForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
+          <button
+                id="reject_{{releaseForms.formHistoryID}}"
+                value="{{releaseForms.formHistoryID}}"
+                type="button"
+                class ="btn btn-danger"
+                name = "rejectBtn"
+                value = "Reject"
+                data-toggle="modal"
+                data-target="#denyReleaseformSModal"
+                onclick="insertDenial(this.value);">
+                Deny
+          </button>
+
+        </td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+      <div class="btn-holder">
+        <button
+          id="approveRelease"
+          name="approveBtn"
+          type="button"
+          class="btn btn-newcolor"
+          onclick="insertApprovals();"
+          value="Approve Selected"
+          data-target="#approverelease"
+          data-toggle="modal"
+          >
+          Approve Selected
+        </button>
+      </div>
+    </div>
+
+
+    <!-- START OF MODAL adding notes -->
+          <div class="modal fade" id="ReleaseNotesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <b <h6 class="modal-title" id="notesModalLabel">Labor Office Notes </h6> </b>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
+
+                    </div>
+                    <div class="modal-body" >
+                      <div id="notesDiv">
+                         <label id="supeNotesLabel" class="col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </label>
+                            <textarea id="notesText" rows="2" cols="70" disabled> </textarea>
+                        <label class="col-md-4 control-label text-left" for ="laboroffice" align = "left"> Labor Office Notes: </label>
+                            <textarea id="laborNotesText" rows="2" cols="70"> </textarea>
+                      </div>
+
+
+                    <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
+              </div>
+            </div>
+          </div>
+          </div>
+        </div>
+
+    <!-- END OF MODAL -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="approverelease" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel" align="center"><b>Form(s) ready for Approval</b></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- putting info into modal using table for better viewing -->
+          <table id="classRelease" class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Student(s)</th>
+                <th scope="col">Position</th>
+                <th scope="col">Hours</th>
+                <th scope="col">Supervisor</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload()">Close</button>
+          <button id="approveModalButton" type="button" class="btn btn-primary"  data-dismiss="modal" onclick="finalApproval()" >Approve</button>
+        </div>
+      </div>
+    </div>
+    </div>
+
+      <!-- Modal -->
+    <div class="modal fade" id="denyReleaseformSModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+
+          <h5 class="modal-title" id="exampleModalLabel" align="center"><b>Deny Labor Status Form</b></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to deny the selected labor status form?
+          <table id="releaseFormsDenyTable" class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Student(s)</th>
+                <th scope="col">Position</th>
+                <th scope="col">Supervisor</th>
+                <th scope="col">Hours</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload()">Close</button>
+          <button type="button" class="btn btn-danger" onclick="finalDenial()">Deny</button>
+        </div>
+      </div>
+    </div>
+    </div>
+    <!-- END OF MODAL -->
+
+
+{% endblock %}
