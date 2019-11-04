@@ -21,19 +21,13 @@ var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
     labor_details_ids.push(this.value);
-
   })
-//  console.log(labor_details_ids,"id checking lsf")
+
   //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
   var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;
   if (!atLeastOneIsChecked){
     $("#approveSelected").prop("disabled",true);
-    $("#approvePendingForm").prop("disabled",true);
-    $("#modifiedApproval").prop("disabled",true);
-    $("#approveOverload").prop("disabled",true);
-    $("#approveRelease").prop("disabled",true);
-
-     location.reload();
+    location.reload();
        }
     data = JSON.stringify(labor_details_ids);
    $.ajax({
@@ -53,7 +47,6 @@ function insertApprovals() {
       };
 //this method adds data to each row in the approve selected Modal
 function updateApproveTableData(returned_details){
-//  console.log("inside the update approval",returned_details)
   for (var i = 0; i < returned_details.length; i++){
     var student=returned_details[i][0]
     var position= returned_details[i][1]
@@ -68,11 +61,8 @@ function updateApproveTableData(returned_details){
       else {
         hours = r_hour
       }
-      $('#laborClassTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
       $('#classTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
-      $('#modifiedClass').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
-      $('#classOverload').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
-      $('#classRelease').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
+
         }
       }
 
@@ -86,10 +76,9 @@ function finalApproval() { //this method changes the status of the lsf from pend
     contentType: 'application/json',
     success: function(response){
       if (response){
-      //  console.log('success', response["success"]);
+        console.log('success', response["success"]);
         if(response["success"]) {
             location.reload(true);
-
         }
        }
      }
@@ -125,6 +114,7 @@ function finalDenial_data(returned_details){
     var position= returned_details[i][1]
      var r_hour= returned_details[i][3]
      var c_Hours= returned_details[i][4]
+     console.log(c_Hours,"jamalito")
       var supervisor= returned_details[i][2]
       var hours = " "
       if (r_hour.length==4){
@@ -133,11 +123,7 @@ function finalDenial_data(returned_details){
       else {
         hours = r_hour
       }
-      $('#denialAllPendingForms').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>'); //populate the denial modal for all pending forms
-        $('#laborStatusDenyTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>');//populate the denial modal for labor status pending forms
-          $('#modifiedFormsTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>');//populate the denial modal for modified labor status forms
-            $('#overloadFormDenyTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>');//populate the denial modal for overload labor satus forms
-              $('#releaseFormsDenyTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>');//populate the denial modal for release labor status forms
+      $('#denyTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>');
         }
       }
 
@@ -151,7 +137,7 @@ function finalDenial_data(returned_details){
      contentType: 'application/json',
      success: function(response){
        if (response){
-         //console.log('success', response["success"]);
+         console.log('success', response["success"]);
          if(response["success"]) {
              location.reload(true);
               }
@@ -161,7 +147,8 @@ function finalDenial_data(returned_details){
       };
 
 function getNotes (formId) {
-//  console.log(formId);
+  console.log(formId);
+
   $.ajax({
     type: "GET",
     url: "/admin/getNotes/"+formId,
@@ -170,7 +157,7 @@ function getNotes (formId) {
 
       if ("Success" in response && response["Success"] == "false") {
         //Clears supervisor notes p tag and the labor notes textarea
-      //  console.log("This is why it failed: ", response);
+        console.log("This is why it failed: ", response);
         $("#notesText").empty();
         $("#laborNotesText").empty();
 
@@ -180,13 +167,13 @@ function getNotes (formId) {
 
           if ("supervisorNotes" in response) {
             $("#notesText").html(response["supervisorNotes"]);
-          //  console.log(response);
+            console.log(response);
              }
 
           if ("laborDepartmentNotes" in response) {
             $("#laborNotesText").html(response["laborDepartmentNotes"]);
-            //console.log(response);
-            //console.log(response["laborDepartmentNotes"]);
+            console.log(response);
+            console.log(response["laborDepartmentNotes"]);
             }
          }
        }

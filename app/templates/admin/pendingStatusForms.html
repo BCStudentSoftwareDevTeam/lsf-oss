@@ -23,14 +23,13 @@
         {% for statusForm in pending_labor_forms %}
         <tr id="tableData" class="tableData" align="center">
             <td> {# APPROVE #}
-              <input type='checkbox' id='chk_{{statusForm.formHistoryID}}' value= "{{statusForm.formHistoryID}}"  name="check[]" autocomplete="off"/>
+              <input type='checkbox' id='chk_{{statusForm.formID.laborStatusFormID}}' value= "{{statusForm.formID.laborStatusFormID}}" />
               <span  id="notes_{{statusForm.formID.laborStatusFormID}}" onclick="getNotes({{statusForm.formID.laborStatusFormID}})"
                      class="glyphicon glyphicon-book btn-lg
                           {% if statusForm.formID.supervisorNotes != None and statusForm.formID.laborDepartmentNotes == None %} text-success
                           {% elif statusForm.formID.laborDepartmentNotes != None and statusForm.formID.supervisorNotes == None  %} text-danger
                           {% elif statusForm.formID.supervisorNotes != None and statusForm.formID.laborDepartmentNotes != None %} text-danger
-                          {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#laborStatusFormNotesModal"> </span>
-                          <input id="dummyInput" value="{{statusForm.formID.laborStatusFormID}}" hidden/>
+                          {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
 
             </td>
             <td> {# TERM #}
@@ -63,16 +62,16 @@
           <td> {# EDIT #}
             <a href="/modifyLSF/{{statusForm.formID.laborStatusFormID}}"> <span id="edit_{{statusForm.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
             <button
-                id="reject_{{statusForm.formHistoryID}}"
-                value="{{statusForm.formHistoryID}}"
-                type="button"
-                class ="btn btn-danger"
-                name = "rejectBtn"
-                value = "Reject"
-                data-toggle="modal"
-                data-target="#denyLaborStatusFormsModal"
-                onclick="insertDenial(this.value);">
-                Deny
+                  id="reject_{{statusForm.formID.laborStatusFormID}}"
+
+                  type="button"
+                  class ="btn btn-danger"
+                  name = "rejectBtn"
+                  value = "Reject"
+                  data-toggle="modal"
+                  data-target="#denyModal"
+                  onclick="insertDenial(this.value);">
+                  Deny
             </button>
           </td>
         </tr>
@@ -81,14 +80,12 @@
       </table>
         <div class="btn-holder">
           <button
-            id="approvePendingForm"
+            id="approveSelected"
             name="approveBtn"
             type="button"
             class="btn btn-newcolor"
             onclick="insertApprovals();"
-            value="Approve Selected"
-            data-target="#approveLabor"
-            data-toggle="modal">
+            value="Approve Selected">
             Approve Selected
           </button>
         </div>
@@ -98,34 +95,37 @@
 
 
       <!-- START OF MODAL adding notes -->
-      <div class="modal fade" id="laborStatusFormNotesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <b <h6 class="modal-title" id="notesModalLabel">Labor Office Notes </h6> </b>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
+      <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="notesModalLabel">Labor Office Notes</h4>
+            </div>
+            <div class="modal-body" >
+              <p> These notes are only for the Labor Office Staff.</p>
+              <p> Pre-fill this with the notes from the supervisor
+                <div id="notesDiv">
+                   <h5> <b>Supervisor Notes  </b> </h5>
+                  <p id="notesText" class="notesText" </p>
 
-                  </div>
-                  <div class="modal-body" >
-                    <div id="notesDiv">
-                       <label id="supeNotesLabel" class="col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </label>
-                          <textarea id="notesText" rows="2" cols="70" disabled> </textarea>
-                      <label class="col-md-4 control-label text-left" for ="laboroffice" align = "left"> Labor Office Notes: </label>
-                          <textarea id="laborNotesText" rows="2" cols="70"> </textarea>
-                    </div>
-                            <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
+                <h5> <b>Labor Office Notes </b> </h5>
+
+                  <textarea id="laborNotesText" rows="5" cols="60" style="resize: none;"> </textarea>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- END OF MODAL -->
 
       <!-- Modal -->
-      <div class="modal fade" id="approveLabor" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="approvalModal" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -136,7 +136,7 @@
           </div>
           <div class="modal-body">
             <!-- putting info into modal using table for better viewing -->
-            <table id="laborClassTable" class="table table-bordered">
+            <table id="classTable" class="table table-bordered">
               <thead>
                 <tr>
                   <th scope="col">Student(s)</th>
@@ -158,7 +158,7 @@
     </div>
 
         <!-- Modal -->
-      <div class="modal fade" id="denyLaborStatusFormsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="denyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -170,7 +170,7 @@
           </div>
           <div class="modal-body">
             Are you sure you want to deny the selected labor status form?
-            <table id="laborStatusDenyTable" class="table table-bordered">
+            <table id="denyTable" class="table table-bordered">
               <thead>
                 <tr>
                   <th scope="col">Student(s)</th>
@@ -193,7 +193,7 @@
 
 
       <!-- MODAL -->
-      <!-- <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
+      <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
@@ -211,8 +211,8 @@
             </div>
           </div>
       </div>
-      </div> -->
+      </div>
       <!-- END OF MODAL -->
 
-<!-- </div> -->
+</div>
 {% endblock %}

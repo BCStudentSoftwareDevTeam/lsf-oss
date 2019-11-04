@@ -59,7 +59,7 @@ def pendingStatusForms():
             return render_template('errors/403.html')
 
         print("Test")
-        pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate)                # # Logged in & Admin
+        pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate)                # # Logged in  Admin
         print("I'm here")
         users = User.select()
 
@@ -183,7 +183,7 @@ def finalApproval():
             approving_labor_release_forms.save()
     return jsonify({"success": True})
 
-    
+
 @admin.route('/admin/finalDenial', methods=['POST'])
 def finalDenial():
     ''' This method changes labor status pending forms to approved'''

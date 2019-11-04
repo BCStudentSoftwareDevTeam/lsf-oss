@@ -30,7 +30,7 @@
           <a  href="#allPendingForms" data-toggle="tab">All Pending Forms</a>
        </li>
         <li>
-          <a href="#laborPendingForms" data-toggle="tab">Pending Labor Status Forms</a>
+          <a href="#laborPendingForms" data-toggle="tab">Pending Labor Forms</a>
         </li>
         <li>
           <a href="#modifiedPendingForms" data-toggle="tab">Pending Modified Forms</a>
@@ -42,8 +42,7 @@
           <a href="#releasedPendingForms" data-toggle="tab">Pending Release Forms</a>
         </li>
       </ul>
-      </div>
-
+      
        <br> </br>
 
       <div align="center" class="tab-content clearfix">
@@ -71,14 +70,13 @@
                 {% for allForms in all_pending_forms %}
                 <tr id="tableData" class="tableData" align="center">
                     <td> {# APPROVE #}
-                      <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" name="check[]"  autocomplete="off" />
+                      <input type='checkbox' id='chk_{{allForms.formID.laborStatusFormID}}' value= "{{allForms.formID.laborStatusFormID}}" />
                       <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
                              class="glyphicon glyphicon-book btn-lg
                                   {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
                                   {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
                                   {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
-                                  {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#allFormsNotesModal"> </span>
-                                  <input id="dummyInput" value="{{allForms.formID.laborStatusFormID}}" hidden/>
+                                  {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
 
                     </td>
                     <td> {# TERM #}
@@ -111,14 +109,12 @@
                   <td> {# EDIT #}
                     <a href="/modifyLSF/{{allForms.formID.laborStatusFormID}}"> <span id="edit_{{allForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
                     <button
-                    id="reject_{{allForms.formHistoryID}}"
-                    value="{{allForms.formHistoryID}}"
                     type="button"
                     class ="btn btn-danger"
                     name = "rejectBtn"
                     value = "Reject"
                     data-toggle="modal"
-                    data-target="#allFormsdenyModal"
+                    data-target="#denyModal"
                     onclick="insertDenial(this.value);">
                     Deny
                     </button>
@@ -136,45 +132,13 @@
                     type="button"
                     class="btn btn-newcolor"
                     onclick="insertApprovals();"
-                    value="Approve Selected"
-                    data-target="#approvalModal"
-                    data-toggle="modal">
+                    value="Approve Selected">
                     Approve Selected
                   </button>
                 </div>
-                </div> {# Check div ending here if tabbing breaks #}
 
 
-            <!-- START OF MODAL adding notes -->
-            <div class="modal fade" id="allFormsNotesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <b <h6 class="modal-title" id="notesModalLabel">Labor Office Notes </h6> </b>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
-
-                  </div>
-                  <div class="modal-body" >
-                    <div id="notesDiv">
-                       <label id="supeNotesLabel" class="col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </label>
-                          <textarea id="notesText" rows="2" cols="70" disabled> </textarea>
-                      <label class="col-md-4 control-label text-left" for ="laboroffice" align = "left"> Labor Office Notes: </label>
-                          <textarea id="laborNotesText" rows="2" cols="70"> </textarea>
-                    </div>
-
-
-                  <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> {# Move div ending here if tabbing breaks #}
-      <!-- END OF MODAL -->
-
-      {#        {% include "snips/pendingFormsModals.html" %} #}
-
+              {% include "snips/pendingFormsModals.html" %}
 
           <!-- Modal -->
           <div class="modal fade" id="approvalModal" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -206,12 +170,11 @@
                 <button id="approveModalButton" type="button" class="btn btn-primary"  data-dismiss="modal" onclick="finalApproval()" >Approve</button>
               </div>
             </div>
-
           </div>
         </div>
 
             <!-- Modal -->
-          <div class="modal fade" id="allFormsdenyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal fade" id="denyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
               <div class="modal-header">
@@ -222,8 +185,8 @@
                 </button>
               </div>
               <div class="modal-body">
-                <p> Are you sure you want to deny the selected labor status form?</p>
-                <table id="denialAllPendingForms" class="table table-bordered">
+                Are you sure you want to deny the selected labor status form?
+                <table id="denyTable" class="table table-bordered">
                   <thead>
                     <tr>
                       <th scope="col">Student(s)</th>
@@ -266,7 +229,8 @@
           </div>
               <!-- END OF MODAL -->
           </div>
-				  {#check the div here if the tabbing breaks#}
+				 </div> {#check the div here if the tabbing breaks#}
+
 
 				<div class="tab-pane" id="laborPendingForms">
           <div class="tab-content">
@@ -294,5 +258,8 @@
 
    </div>
   </div>
+ </div>
+
+
 
 {% endblock %}

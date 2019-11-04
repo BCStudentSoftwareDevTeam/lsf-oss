@@ -1059,7 +1059,7 @@ fh = [  {
             "rejectReason": None
            },
            {
-            "formID": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 3),
+            "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 3),
             "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Release Form"),
             "releaseForm": LaborReleaseForm.get(LaborReleaseForm.laborReleaseFormID == 1),
             "modifiedForm": None,
