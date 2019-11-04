@@ -329,7 +329,9 @@ function showNotesModal(glyphicon){// pops up Note Modal when notes glyphicon is
 }
 
 function saveNotes(arrayIndex){ // saves notes written in textarea when save button of modal is clicked
-  globalArrayOfStudents[arrayIndex].stuNotes = $("#modal_text").val();
+  if($("#modal_text").val() != ""){
+    globalArrayOfStudents[arrayIndex].stuNotes = $("#modal_text").val();  
+  }
 }
 
 function deleteRow(glyphicon) {
@@ -346,15 +348,21 @@ function deleteRow(glyphicon) {
 //END of glyphicons
 
 function fields_are_empty(studentDict) { // Checks if selectpickers are empty
-  for (var i in studentDict){
-    console.log(i);
-    if (i == "" || i == null) {
-      return false;
-    }
-    else {
+  var termCode = $("#selectedTerm").val();
+  var whichTerm = termCode.toString().substr(-2);
+  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+    var id_list = ["stuSupervisor", "stuDepartment","stuTermCodeSelected", "stuStartDate", "stuEndDate", "stuName", "stuPosition", "stuJobType", "stuWeeklyHours"];
+  }
+  else{
+    var id_list = ["stuSupervisor", "stuDepartment","stuTermCodeSelected", "stuStartDate", "stuEndDate", "stuName", "stuPosition", "stuJobType", "stuContractHours"];
+  }
+  for (var i = 0; i < id_list.length; i++){
+    console.log(studentDict.id_list[i]);
+    if ((studentDict.i == "" || studentDict.i == null)) {
       return true;
     }
   }
+  return false;
 }
 
 function errorFlash(){
@@ -366,21 +374,13 @@ function errorFlash(){
 
 // TABLE
 function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
-  // var termCode = $("#selectedTerm").val();
-  // var whichTerm = termCode.toString().substr(-2);
-  // if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-  //   var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedHoursPerWeek"];
-  // }
-  // else{
-  //   var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedContractHours"];
-  // }
   var studentDict = createStuDict();
-  if (fields_are_empty(studentDict) == true) {
-    errorFlash();
-  }
-  else  {
+  // if (fields_are_empty(studentDict) == true) {
+  //   errorFlash();
+  // }
+  // else  {
     checkPrimaryPosition(studentDict);
-     }
+     // }
   }
 
 function createStuDict(){
@@ -418,7 +418,7 @@ function createStuDict(){
                     stuStartDate: startDate,
                     stuEndDate: endDate,
                     stuTermCode: termCodeSelected,
-                    stuNotes: "",
+                    stuNotes: null,
                     stuSupervisor: supervisor,
                     stuDepartment: department,
                     stuSupervisorID: supervisorID
