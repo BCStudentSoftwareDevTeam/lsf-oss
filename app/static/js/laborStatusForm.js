@@ -71,7 +71,15 @@ function showOverloadOrSecondary() {
 }
 }
 
-
+// Pops up a modal for overload
+$("#selectedHoursPerWeek").change(function(){
+  //this is just getting the value that is selected
+  var hour = $(this).val();
+  if (hour == "20") {
+      $("#OverloadModal").modal("show");
+      $("#overloadModalButton").attr("data-target", ""); // prevent a Primary Modal from showing up
+    }
+});
 
 function disableTermSupervisorDept() {
   // disables term, supervisor and department select pickers when add student button is clicked
@@ -561,17 +569,14 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
     totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours;
   }
   if (totalHoursCount > (15)){
-    // // TODO: Show modal saying they have too many hours
-    // $('#OverloadModal').modal('show');
-    // $('#overloadModalButton').attr('data-target', '#PrimaryModal');
-    // // $('#OverloadModal').on('hidden.bs.modal', function() {
-    // // $('#PrimaryModal').modal('show');
-    // //return false
-      return true;
+    // TODO: Show modal saying they have too many hours
+    $('#OverloadModal').modal('show');
+    $('#overloadModalButton').attr('data-target', '#PrimaryModal');
+    // $('#OverloadModal').on('hidden.bs.modal', function() {
+    // $('#PrimaryModal').modal('show');
+    //return false
   }
-  else {
-    return false
-  }
+  return true;
 }
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
