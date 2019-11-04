@@ -27,29 +27,31 @@ $(document).on("keyup", "input[name=contractHours]", function () { // sets contr
      }
 });
 
-// $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
-//   //this is just getting the value that is selected
-//   var jobType = $(this).val();
-//   if (jobType == "Secondary") {
-//       $("#warningModal").modal("show");
-//       $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
-//       $("#warningModal").on("hidden.bs.modal", function(){
-//       $("#warningModalText").innerHTML = "";
-//       //Testing out modal stuff here
-//       });
-//     }
-//   });
+$("#jobType").change(function(){ // Pops up a modal for Seconday Postion
+  //this is just getting the value that is selected
+  var jobType = $(this).val();
+  if (jobType == "Secondary") {
+      $("#warningModal").modal("show");
+      $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
+      $("#warningModal").on("hidden.bs.modal", function(){
+      $("#warningModalText").html("");
+      //Testing out modal stuff here
+      });
+    }
+  });
 
-// Pops up a modal for overload
-// $("#selectedHoursPerWeek").change(function(){
-//   //this is just getting the value that is selected
-//   var hour = $(this).val();
-//   if (hour == "20") {
-//       $("#OverloadModal").modal("show");
-//       $("#overloadModalButton").attr("data-target", ""); // prevent a Primary Modal from showing up
-//     }
-// });
+//Pops up a modal for overload
+$("#selectedHoursPerWeek").change(function(){
+  //this is just getting the value that is selected
+  var hour = $(this).val();
+  if (hour == "20") {
+      $("#OverloadModal").modal("show");
+      $("#overloadModalButton").attr("data-target", ""); // prevent a Primary Modal from showing up
+    }
+});
 
+
+// TODO: This function does not let other modals pop up and some other one creates an infinite loop
 function showOverloadOrSecondary() {
   var hour = $("#selectedHoursPerWeek").val();
   if (hour == 20) {
@@ -63,7 +65,7 @@ function showOverloadOrSecondary() {
       $("#warningModal").modal("show");
       $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
       $("#warningModal").on("hidden.bs.modal", function(){
-      $("#warningModalText").innerHTML = ""
+      $("#warningModalText").html("");
     });
   }
 }
@@ -335,22 +337,17 @@ function deleteRow(glyphicon) {
 }
 //END of glyphicons
 
-// function fields_are_empty(id_list) { // Checks if selectpickers are empty
-//   $.each(id_list, function(id) {
-//     value = $("#"+id).val();
-//     if (value == "" || value == null) {
-//       return false;
-//     }
-//     else {
-//       return true;
-//     }
-//   });
-// }
-// function fields_are_empty(id_list) {
-//   for (var i = 0; i < id_list; i++) {
-//
-//   }
-// }
+function fields_are_empty(studentDict) { // Checks if selectpickers are empty
+  for (var i in studentDict){
+    console.log(i);
+    if (i == "" || i == null) {
+      return false;
+    }
+    else {
+      return true;
+    }
+  }
+}
 
 function errorFlash(){
   category = "danger";
@@ -361,22 +358,21 @@ function errorFlash(){
 
 // TABLE
 function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
-  var termCode = $("#selectedTerm").val();
-  var whichTerm = termCode.toString().substr(-2);
-  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-    var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedHoursPerWeek"];
-  }
-  else{
-    var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedContractHours"];
-  }
-  var studentDict = createStuDict();
-  // console.log(fields_are_empty(id_list))
-  // if (fields_are_empty(id_list) == true) {
-  //   errorFlash();
+  // var termCode = $("#selectedTerm").val();
+  // var whichTerm = termCode.toString().substr(-2);
+  // if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
+  //   var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedHoursPerWeek"];
   // }
-  // else  {
+  // else{
+  //   var id_list = ["selectedSupervisor", "selectedDepartment","selectedTerm", "dateTimePicker1", "dateTimePicker2, student, position, jobType, selectedContractHours"];
+  // }
+  var studentDict = createStuDict();
+  if (fields_are_empty(studentDict) == true) {
+    errorFlash();
+  }
+  else  {
     checkPrimaryPosition(studentDict);
-     // }
+     }
   }
 
 function createStuDict(){
