@@ -15,15 +15,15 @@ function insertApprovals() {
 
     });
 
-    var checkedIds;
-    $('#statusTest').click(function() {
-      for (checkedIds in labor_details_ids) {
-        console.log('I did it.');
-        // checkedIds.prop("checked", false);
-         // location.reload("pendingStatusForms.html")
-         // console.log("I'm here after");
-    }
-  });
+  //   // var checkedIds;
+  //   // $('#statusTest').click(function() {
+  //   //   for (checkedIds in labor_details_ids) {
+  //   //     console.log('I did it.');
+  //       // checkedIds.prop("checked", false);
+  //        // location.reload("pendingStatusForms.html")
+  //        // console.log("I'm here after");
+  //   }
+  // });
 
 //  console.log(labor_details_ids,"id checking lsf")
   //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
