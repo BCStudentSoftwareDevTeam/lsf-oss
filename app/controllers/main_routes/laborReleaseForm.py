@@ -27,7 +27,6 @@ def laborReleaseForm(laborStatusKey):
         render_template("errors/403.html")
 
     forms = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == laborStatusKey)
-    email = emailHandler()
 
     if(request.method == 'POST'):
         try:
@@ -74,9 +73,10 @@ def laborReleaseForm(laborStatusKey):
             # Once all the forms are created, the user gets redirected to the
             # home page and gets a flash message telling them the forms were
             # submited
+            print(newFormHistory.formHistoryID)
             flash("Your labor release form has been submitted.", "success")
-            email = emailHandler()
-            email.laborReleaseFormEmail(studentEmail)
+            email = emailHandler(laborStatusKey, newFormHistory.formHistoryID)
+            email.laborReleaseFormEmail()
             return redirect(url_for("main.index"))
 
         except Exception as e:
