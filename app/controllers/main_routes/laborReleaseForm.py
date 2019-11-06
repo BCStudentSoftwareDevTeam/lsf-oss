@@ -27,7 +27,7 @@ def laborReleaseForm(laborStatusKey):
         render_template("errors/403.html")
 
     forms = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == laborStatusKey)
-
+    email = emailHandler()
 
     if(request.method == 'POST'):
         try:

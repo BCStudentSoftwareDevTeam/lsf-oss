@@ -9,10 +9,6 @@ import os
 
 class emailHandler():
     def __init__(self):
-        pass
-    def laborReleaseFormEmail(self, recipient):
-        print("emails")
-
         secret_conf = get_secret_cfg()
 
         app.config.update(
@@ -26,27 +22,42 @@ class emailHandler():
 
         )
 
-        mail = Mail(app)
-        msg = Message("hi", # This is the subject of the E-mail
-            recipients=[recipient]) #FIXME: Add email of receiver
-        message_to_send = render_template("admin/emailTemplates.html")
-        # message_to_send = render_template( 'admin/emailTemplates.html')
+        self.mail = Mail(app)
 
-        emailTemplateID = EmailTemplate.select()
-        for i in emailTemplateID:
 
-            print(i)
+    def laborReleaseFormEmail(self, recipient):
+        releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.emailTemplateID == 1)
+        string = releaseEmailTemplateID.body
+        string = string.replace("Student", "Ela")
+        print(string)
+        msg = Message(releaseEmailTemplateID.subject, # This is the subject of the E-mail
+            recipients=[recipient])
+        # message_to_send = render_template("admin/emailTemplates.html")
+        # # message_to_send = render_template( 'admin/emailTemplates.html')
+        #
+        releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.emailTemplateID == 1)
+
         purpose = EmailTemplate.select()
         subject = EmailTemplate.select()
         body = EmailTemplate.select()
-        msg.html= render_template( 'admin/emailTemplates.html',
-    				            title=('Email Templates'),
-                                emailTemplateID = emailTemplateID,
-                                purpose = purpose,
-                                subject = subject,
-                                body = body
-                              )
-        mail.send(msg)
+        # msg.html= render_template( 'admin/sendEmailTemplate.html',
+    	# 			            title=('Email Templates'),
+        #                         emailTemplateID = releaseEmailTemplateID,
+        #                         purpose = purpose,
+        #                         subject = subject,
+        #                         body = body
+        #                       )
+        msg.html = string
+        # msg.body = releaseEmailTemplateID.body
+        #
+        # msg.body = render_template(releaseEmailTemplateID.body)
+        self.mail.send(msg)
         print("sent")
-    def simpleMethod(self):
-        print("hello Augazul")
+
+    def laborSratusFormEmail(self, recipient):
+        msg = Message("Labor Realease Form", # This is the subject of the E-mail
+            recipients=[recipient])
+
+    def LaborOverLoadFormEmail(self, recipient):
+        msg = Message("Labor Realease Form", # This is the subject of the E-mail
+            recipients=[recipient])
