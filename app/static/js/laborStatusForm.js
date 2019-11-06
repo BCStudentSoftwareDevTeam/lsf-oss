@@ -40,47 +40,6 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
     }
   });
 
-//Pops up a modal for overload
-$("#selectedHoursPerWeek").change(function(){
-  //this is just getting the value that is selected
-  var hour = $(this).val();
-  if (hour == "20") {
-      $("#OverloadModal").modal("show");
-      $("#overloadModalButton").attr("data-target", ""); // prevent a Primary Modal from showing up
-    }
-});
-
-
-// TODO: This function does not let other modals pop up and some other one creates an infinite loop
-function showOverloadOrSecondary() {
-  var hour = $("#selectedHoursPerWeek").val();
-  if (hour == 20) {
-    $("#OverloadModal").modal("show");
-    $("#overloadModalButton").attr("data-target", "");
-  }
-  else {
-    //$("#SecondaryModal").modal("show");
-    var jobType = $("#jobType").val();
-    if (jobType == "Secondary") {
-      $("#warningModal").modal("show");
-      $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
-      $("#warningModal").on("hidden.bs.modal", function(){
-      $("#warningModalText").html("");
-    });
-  }
-}
-}
-
-// Pops up a modal for overload
-$("#selectedHoursPerWeek").change(function(){
-  //this is just getting the value that is selected
-  var hour = $(this).val();
-  if (hour == "20") {
-      $("#OverloadModal").modal("show");
-      $("#overloadModalButton").attr("data-target", ""); // prevent a Primary Modal from showing up
-    }
-});
-
 function disableTermSupervisorDept() {
   // disables term, supervisor and department select pickers when add student button is clicked
   $("#selectedTerm").prop("disabled", "disabled");
@@ -346,24 +305,6 @@ function deleteRow(glyphicon) {
   }
 }
 //END of glyphicons
-
-function fields_are_empty(studentDict) { // Checks if selectpickers are empty
-  var termCode = $("#selectedTerm").val();
-  var whichTerm = termCode.toString().substr(-2);
-  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) {
-    var id_list = ["stuSupervisor", "stuDepartment","stuTermCodeSelected", "stuStartDate", "stuEndDate", "stuName", "stuPosition", "stuJobType", "stuWeeklyHours"];
-  }
-  else{
-    var id_list = ["stuSupervisor", "stuDepartment","stuTermCodeSelected", "stuStartDate", "stuEndDate", "stuName", "stuPosition", "stuJobType", "stuContractHours"];
-  }
-  for (var i = 0; i < id_list.length; i++){
-    console.log(studentDict.id_list[i]);
-    if ((studentDict.i == "" || studentDict.i == null)) {
-      return true;
-    }
-  }
-  return false;
-}
 
 function errorFlash(){
   category = "danger";
