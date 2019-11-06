@@ -330,7 +330,7 @@ function showNotesModal(glyphicon){// pops up Note Modal when notes glyphicon is
 
 function saveNotes(arrayIndex){ // saves notes written in textarea when save button of modal is clicked
   if($("#modal_text").val() != ""){
-    globalArrayOfStudents[arrayIndex].stuNotes = $("#modal_text").val();  
+    globalArrayOfStudents[arrayIndex].stuNotes = $("#modal_text").val();
   }
 }
 
@@ -375,12 +375,12 @@ function errorFlash(){
 // TABLE
 function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
   var studentDict = createStuDict();
-  // if (fields_are_empty(studentDict) == true) {
-  //   errorFlash();
-  // }
-  // else  {
+  if (studentDict === false) {
+    errorFlash();
+  }
+  else  {
     checkPrimaryPosition(studentDict);
-     // }
+     }
   }
 
 function createStuDict(){
@@ -390,7 +390,13 @@ function createStuDict(){
   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
   var termCodeLastTwo = termCodeSelected.slice(-2);
   var studentName = $("#student option:selected" ).text();
+  if (!studentName){
+    return false;
+  }
   var positionName = $("#position option:selected").text();
+  if (!positionName){
+    return false;
+  }
   var positionCode = $("#position").find("option:selected").attr("id");
   var wls = $("#position").find("option:selected").attr("data-wls");
   var studentBNumber = $("#student").val();
@@ -400,13 +406,19 @@ function createStuDict(){
     var jobType = $("#jobType");
     var jobTypeName = $("#jobType option:selected").text();
     var hoursPerWeek = $("#selectedHoursPerWeek");
-    var hoursPerWeekName = $("#selectedHoursPerWeek option:selected").text();
-    // var selectedContractHoursName = 0;
-  }
+    var hoursPerWeekName = $("#selectedHoursPerWeek :selected").val();
+    if (!hoursPerWeekName){
+      console.log("something is there");
+      return false;
+      }
+    }
   else {
     var jobTypeName = "Secondary";
     var selectedContractHoursName = $("#selectedContractHours").val();
-  }
+    if (selectedContractHoursName === ""){
+        return false;
+      }
+    }
   var studentDict = {stuName: studentName,
                     stuBNumber: studentBNumber,
                     stuPosition: positionName,
