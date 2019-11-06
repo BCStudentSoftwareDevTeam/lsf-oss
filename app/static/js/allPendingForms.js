@@ -5,24 +5,26 @@ $(document).ready( function(){
         'aaSorting': [[1, 'asc']], // start to sort data in second column
         pageLength: 10
         // "dom": '<"top"fl>rt<"bottom"p><"clear">'
-
     });
 });
-
-// $(document).ready( function(){
-//     $('#modifiedForms').DataTable({
-//         'columnDefs': [{ 'orderable': false, 'targets': [0,4,10]}], // hide sort icon on header of first column
-//         // 'columnDefs': [{ 'orderable': false, 'targets': 9 }],
-//         'aaSorting': [[1, 'asc']], // start to sort data in second column
-//         pageLength: 10
-
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
     labor_details_ids.push(this.value);
 
-  })
+    });
+
+  //   var checkedIds;
+  //   $('#statusTest').click(function({
+  //     for (checkedIds in labor_details_ids) {
+  //       console.log('I did it.')
+  //       checkedIds.prop("checked", false);
+  //        // location.reload("pendingStatusForms.html")
+  //        // console.log("I'm here after");
+  //   }
+  // });
+
 //  console.log(labor_details_ids,"id checking lsf")
   //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
   var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;

@@ -26,11 +26,11 @@
         <br> </br>
      <div align="center" id="pendingTabs" class="container">
      <ul  class="nav nav-pills">
-       <li class="active">
+       <li class="active" id="jamalito">
           <a  href="#allPendingForms" data-toggle="tab">All Pending Forms</a>
        </li>
         <li>
-          <a href="#laborPendingForms" data-toggle="tab">Pending Labor Status Forms</a>
+          <a href="#laborPendingForms" data-toggle="tab" id= "statusTest">Pending Labor Status Forms</a>
         </li>
         <li>
           <a href="#modifiedPendingForms" data-toggle="tab">Pending Modified Forms</a>
@@ -269,7 +269,7 @@
 				  {#check the div here if the tabbing breaks#}
 
 				<div class="tab-pane" id="laborPendingForms">
-          <div class="tab-content">
+          <div class="tab-content" id="test">
           {% include "admin/pendingStatusForms.html" %}
           </div>
 				</div>

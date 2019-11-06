@@ -1,7 +1,7 @@
 {% block app_content %}
 
 <div class="col-lg-12" align="center" >
-  <table id="pendingModifiedForms" class="table table-striped pendingModifiedForms dataTable" >
+  <table id="modifiedForms" class="table table-striped modifiedForms dataTable" >
     <!-- Made empty header tags because we need to hide the header -->
     <thead id="headTable" text-align="center" >
       <tr id="tableHeaders" class="tableHeaders"  >
@@ -23,13 +23,14 @@
       {% for modifiedForm in pending_modified_forms %}
       <tr id="tableData" class="tableData" align="center">
          <td> {# APPROVE #}
-            <input type='checkbox' id='chk_{{modifiedForm.formID.laborStatusFormID}}' value= "{{modifiedForm.formID.laborStatusFormID}}" />
+            <input type='checkbox' id='chk_{{modifiedForm.formHistoryID}}' value= "{{modifiedForm.formHistoryID}}"  name="check[]" autocomplete="off"/>
             <span  id="notes_{{modifiedForm.formID.laborStatusFormID}}" onclick="getNotes({{modifiedForm.formID.laborStatusFormID}})"
                    class="glyphicon glyphicon-book btn-lg
                         {% if modifiedForm.formID.supervisorNotes != None and modifiedForm.formID.laborDepartmentNotes == None %} text-success
                         {% elif modifiedForm.formID.laborDepartmentNotes != None and modifiedForm.formID.supervisorNotes == None  %} text-danger
                         {% elif modifiedForm.formID.supervisorNotes != None and modifiedForm.formID.laborDepartmentNotes != None %} text-danger
-                        {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#notesModal"> </span>
+                        {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#modifiedFormNotesModal"> </span>
+                        <input id="dummyInput" value="{{modifiedForm.formID.laborStatusFormID}}" hidden/>
 
           </td>
           <td> {# TERM #}
@@ -62,12 +63,15 @@
         <td> {# EDIT #}
           <a href="/modifyLSF/{{modifiedForm.formID.laborStatusFormID}}"> <span id="edit_{{modifiedForm.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
           <button
-                id="reject_{{modifiedForm.formID.laborStatusFormID}}"
+                id="reject_{{modifiedForm.formHistoryID}}"
+                value="{{modifiedForm.formHistoryID}}"
                 type="button"
                 class ="btn btn-danger"
                 name = "rejectBtn"
                 value = "Reject"
-                data-toggle="modal" data-target="#rejectModal">
+                data-toggle="modal"
+                data-target="#denyModifiedFormsModal"
+                onclick="insertDenial(this.value);">
                 Deny
           </button>
 
@@ -75,17 +79,19 @@
 
       </tr>
       {% endfor %}
-
+      </tbody>
     </table>
 
       <div class="btn-holder">
         <button
-          id="approveSelected"
+          id="modifiedApproval"
           name="approveBtn"
           type="button"
           class="btn btn-newcolor"
           onclick="insertApprovals();"
-          value="Approve Selected">
+          value="Approve Selected"
+          data-target="#approvemodified"
+          data-toggle="modal">
           Approve Selected
         </button>
       </div>
@@ -93,77 +99,96 @@
 
 
     <!-- START OF MODAL adding notes -->
-    <div class="modal fade" id="notesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
+    <div class="modal fade" id="modifiedFormNotesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
+            <b <h6 class="modal-title" id="notesModalLabel">Labor Office Notes </h6> </b>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="notesModalLabel">Labor Office Notes</h4>
+
           </div>
           <div class="modal-body" >
-            <p> These notes are only for the Labor Office Staff.</p>
-            <p> Pre-fill this with the notes from the supervisor
-              <div id="notesDiv">
-                 <h5> <b>Supervisor Notes  </b> </h5>
-                <p id="notesText" class="notesText" </p>
-
-
-              <h5> <b>Labor Office Notes </b> </h5>
-
-                <textarea id="laborNotesText" rows="5" cols="60" style="resize: none;"> </textarea>
-
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
+            <div id="notesDiv">
+               <label id="supeNotesLabel" class="col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </label>
+                  <textarea id="notesText" rows="2" cols="70" disabled> </textarea>
+              <label class="col-md-4 control-label text-left" for ="laboroffice" align = "left"> Labor Office Notes: </label>
+                  <textarea id="laborNotesText" rows="2" cols="70"> </textarea>
+            </div>
+                    <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
     </div>
     <!-- END OF MODAL -->
 
-    <!-- START OF MODAL reject pending-->
-    <div class="modal fade" id="rejectModal" tabindex="-1" role="dialog" aria-labelledby="rejectModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="rejectModalLabel">Reject Status Form</h4>
-          </div>
-          <div class="modal-body">
-            ...For Rejection #FIXME: Look at old rejection interface
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
+    <!-- Modal -->
+    <div class="modal fade" id="approvemodified" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel" align="center"><b>Form(s) ready for Approval</b></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- putting info into modal using table for better viewing -->
+          <table id="modifiedClass" class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Student(s)</th>
+                <th scope="col">Position</th>
+                <th scope="col">Hours</th>
+                <th scope="col">Supervisor</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload()">Close</button>
+          <button id="approveModalButton" type="button" class="btn btn-primary"  data-dismiss="modal" onclick="finalApproval()" >Approve</button>
         </div>
       </div>
     </div>
-    <!-- END OF MODAL-->
+  </div>
 
-    <!-- MODAL -->
-    <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-          </div>
-          <div id="SubmitModalText" class="modal-body">
-            The following Labor Status form(s) will be approved:
-          </div>
-          <div class="modal-footer">
-            <button id="submitmodalid"
-                    type="submit"
-                    class="btn btn-primary"
-                    name = "formsubmission"
-                    value = "formsubmission"
-                    onclick = "userInsert()">Submit</button>
-          </div>
+      <!-- Modal -->
+    <div class="modal fade" id="denyModifiedFormsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+
+          <h5 class="modal-title" id="exampleModalLabel" align="center"><b>Deny Labor Status Form</b></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
+        <div class="modal-body">
+          Are you sure you want to deny the selected labor status form?
+          <table id="modifiedFormsTable" class="table table-bordered">
+            <thead>
+              <tr>
+                <th scope="col">Student(s)</th>
+                <th scope="col">Position</th>
+                <th scope="col">Supervisor</th>
+                <th scope="col">Hours</th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="location.reload(true)">Close</button>
+          <button type="button" class="btn btn-danger" onclick="finalDenial()">Deny</button>
+        </div>
+      </div>
     </div>
-    </div>
-    <!-- END OF MODAL -->
 </div>
 
 {% endblock %}
