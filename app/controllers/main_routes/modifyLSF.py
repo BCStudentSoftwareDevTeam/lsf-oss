@@ -136,5 +136,5 @@ def sumbitModifiedForm(laborStatusKey):
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
     except Exception as e:
         flash("An error occured.", "danger")
-        # print(e)
+        print(e)
         return jsonify({"Success": False})

@@ -14,6 +14,7 @@ $('.glyphicon-calendar').click(function() {
 
 function fill_positions(response) {
   var selected_positions = document.getElementById("POSN_TITLE");
+  console.log(selected_positions)
     for (var key in response) {
       try{
         var options = document.createElement("option");
@@ -30,6 +31,7 @@ function fill_positions(response) {
 
 function fill_supervisor(response){
   var selected_supervisors = document.getElementById("supervisor");
+  console.log(selected_supervisors)
     for (var key in response) {
       try{
         var options = document.createElement("option");
