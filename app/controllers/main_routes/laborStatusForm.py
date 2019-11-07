@@ -62,21 +62,20 @@ def userInsert():
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     print(rspFunctional) # This turns the string into whatever structure it should be. A list of dicts in this case.
-    resultsList = []
+    failed_forms = []
     for i in rspFunctional:
+        d, created = Student.get_or_create(ID = i['stuBNumber'])
+        student = d.ID
+        d, created = User.get_or_create(UserID = i['stuSupervisorID'])
+        primarySupervisor = d.UserID
+        d, created = Department.get_or_create(DEPT_NAME = i['stuDepartment'])
+        department = d.departmentID
+        d, created = Term.get_or_create(termCode = i['stuTermCode'])
+        term = d.termCode
+        # Changes the dates into the appropriate format for the table
+        startDate = datetime.strptime(i['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
+        endDate = datetime.strptime(i['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
         try:
-            print(i)
-            d, created = Student.get_or_create(ID = i['stuBNumber'])
-            student = d.ID
-            d, created = User.get_or_create(UserID = i['stuSupervisorID'])
-            primarySupervisor = d.UserID
-            d, created = Department.get_or_create(DEPT_NAME = i['stuDepartment'])
-            department = d.departmentID
-            d, created = Term.get_or_create(termCode = i['stuTermCode'])
-            term = d.termCode
-            # Changes the dates into the appropriate format for the table
-            startDate = datetime.strptime(i['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
-            endDate = datetime.strptime(i['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
             lsf = LaborStatusForm.create(termCode_id = term,
                                          studentSupervisee_id = student,
                                          supervisor_id = primarySupervisor,
@@ -100,14 +99,16 @@ def userInsert():
                                               createdBy   = creatorID,
                                               createdDate = date.today(),
                                               status      = status.statusName)
-            #flash("Labor Status Form(s) has been created.", "success")
-            #return jsonify({"Success": True})
-            resultsList.append(True)
+            flash("Labor Status Form(s) has been created.", "success")
         except Exception as e:
-            #flash("An error occured.", "danger")
+            flash("An error occured.", "danger")
+            failed_forms.append(i)
+            print("testing failed_form", failed_forms)
             print("ERROR: " + str(e))
-            resultsList.append(False)
-    return jsonify(resultsList)
+    if failed_forms == []:
+        return jsonify({"Success":True})
+    else:
+        return jsonify(failed_forms)
 
 @main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])
 def getDates(termcode):

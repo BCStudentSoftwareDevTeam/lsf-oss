@@ -32,9 +32,11 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
   var jobType = $(this).val();
   if (jobType == "Secondary") {
       $("#warningModal").modal("show");
+      $("#warningModalTitle").html("Warning") //Maybe change the wording here.
       $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
       $("#warningModal").on("hidden.bs.modal", function(){
       $("#warningModalText").html("");
+      $("#warningModalTitle").html("Insert Rejected") //Maybe change the wording here.
       //Testing out modal stuff here
       });
     }
@@ -335,9 +337,9 @@ function createStuDict(){
     return false;
   }
   var positionName = $("#position option:selected").text();
-  if (!positionName){
-    return false;
-  }
+  // if (!positionName){
+  //   return false;
+  // }
   var positionCode = $("#position").find("option:selected").attr("id");
   var wls = $("#position").find("option:selected").attr("data-wls");
   var studentBNumber = $("#student").val();
@@ -581,6 +583,7 @@ function userInsert(){
          data: JSON.stringify(globalArrayOfStudents),
          contentType: "application/json",
          success: function(response) {
+           console.log(response)
            term = $("#selectedTerm").val();
            var whichTerm = term.toString().substr(-2);
            modalList = [];
