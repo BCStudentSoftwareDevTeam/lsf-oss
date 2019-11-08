@@ -14,6 +14,7 @@ import datetime
 from datetime import date
 from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
+from fpdf import FPDF
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
@@ -51,6 +52,20 @@ def downloadFormHistory():
         completePath = excel.makeExcelStudentHistory(historyList)
         filename = completePath.split('/').pop()
         return send_file(completePath, mimetype='text/csv', as_attachment=True, attachment_filename=filename)
+    except:
+        return render_template('errors/500.html')
+
+@main_bp.route("/laborHistory/pdf", methods=['POST'])
+def downloadPDF():
+    try:
+        print("PDF");
+        pdf = FPDF()
+        pdf.add_page()
+        pdf.set_font("Arial", size=12)
+        pdf.cell(200, 10, txt="Welcome to Python!", ln=1, align="C")
+        pdf.output("simple_demo.pdf")
+
+        return "done"
     except:
         return render_template('errors/500.html')
 
