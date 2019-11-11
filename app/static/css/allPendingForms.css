@@ -13,6 +13,8 @@
 .btn-holder {
    position: relative;
    left: 700px !important;
+   float:none;
+   text-align:left;
 }
 
 .table {
