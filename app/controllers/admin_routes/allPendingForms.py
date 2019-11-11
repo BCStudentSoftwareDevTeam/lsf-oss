@@ -15,6 +15,7 @@ from flask import Flask, redirect, url_for, flash
 
 #       ALL PENDING FORMS       #
 @admin.route('/admin/allPendingForms',  methods=['GET'])
+@admin.route('/admin/pendingForms/<formType>',  methods=['GET'])
 def allPendingForms():
     try:
         current_user = require_login()
@@ -24,6 +25,14 @@ def allPendingForms():
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
 
+        formList = None
+        historyType = None 
+        approvalTarget = ""
+        if formType  == "all":
+            formList = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
+        else:
+
+            if formType == "labor"
         pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate).distinct()
         pending_modified_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Modified Labor Form").order_by(-FormHistory.createdDate).distinct()
         pending_overload_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Overload Form").order_by(-FormHistory.createdDate).distinct()
