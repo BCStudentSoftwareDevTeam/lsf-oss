@@ -13,8 +13,7 @@ $('.glyphicon-calendar').click(function() {
 });
 
 function fill_positions(response) {
-  var selected_positions = document.getElementById("POSN_TITLE");
-  console.log(selected_positions)
+  var selected_positions = $("#POSN_TITLE")[0];
     for (var key in response) {
       try{
         var options = document.createElement("option");
@@ -23,19 +22,17 @@ function fill_positions(response) {
         selected_positions.appendChild(options);
       }
       catch(error){
-        // console.log(error)
+        console.log(error)
       }
     $('.selectpicker').selectpicker('refresh');
   }
 }
 
 function fill_supervisor(response){
-  var selected_supervisors = document.getElementById("supervisor");
-  console.log(selected_supervisors)
+  var selected_supervisors = $("#supervisor")[0];
     for (var key in response) {
       try{
         var options = document.createElement("option");
-
         options.text = response[key]["supervisorFirstName"].toString() + " " + response[key]["supervisorLastName"].toString();
         options.value = response[key]["supervisorPIDM"].toString();
         selected_supervisors.appendChild(options);
@@ -49,13 +46,13 @@ function fill_supervisor(response){
         })
       }
       catch(error){
-        // console.log(error)
+        console.log(error)
       }
   }
 }
 
 $(document).ready(function(){
-   var department = document.getElementById("Department").value;
+   var department = $("#Department")[0].val();
    var url = "/modifyLSF/getPosition/" + department;
        $.ajax({
          url: url,
@@ -69,10 +66,10 @@ $(document).ready(function(){
  });
 
 function jobPositionDisable(){
-  var termcode = document.getElementById("termCode").value;
+  var termcode = $("#termCode")[0].val();
   var specificTerm = termcode.toString().substr(-2);
   if (specificTerm != 11 && specificTerm != 12 && specificTerm != 00){
-    document.getElementById("jobType").disabled = true;
+    $("#jobType")[0].prop("disabled", true);
     $("#jobType").val("Secondary");
       WLScheck()
       $("#contractHoursDiv").show();
@@ -120,13 +117,13 @@ function WLScheck(){
     }
   }
   catch(error){
-    // console.log(error)
+    console.log(error)
   }
 }
 
 // Pops up a modal for overload
 function hourscheck(){
-  var hour = document.getElementById("weeklyHours").value;
+  var hour = $("#weeklyHours")[0].val();
   if (hour == "20") {
       $('#OverloadModal').modal('show');
       $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
@@ -134,7 +131,7 @@ function hourscheck(){
 };
 
 function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker)
- var selectedHoursPerWeek = document.getElementById("weeklyHours");
+ var selectedHoursPerWeek = $("#weeklyHours")[0];
  var jobType = $("#jobType").val();
  if (selectedHoursPerWeek){
    $("#weeklyHours").empty();
@@ -170,9 +167,9 @@ var finalDict = {};
 function checkForChange(){
   var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index
   var newValue = $("#modifyLSF").find("select.newValue, textarea.newValue, input.newValue");
-  var effectiveDate = document.getElementById("datetimepicker0").value;
-  var notesOld = document.getElementById("oldNotes").value;
-  var notesNew = document.getElementById("supervisorNotes").value;
+  var effectiveDate = $("#datetimepicker0").val();
+  var notesOld = $("#oldNotes").val();
+  var notesNew =$("#supervisorNotes").val();
   for (var i=0; i < newValue.length; i=i+1) {
     newVal = $(newValue[i]).val();
     if (oldValue[i].value != newVal && newVal != "") { //If the oldValue differs from the newValue, add it to the dictionary
