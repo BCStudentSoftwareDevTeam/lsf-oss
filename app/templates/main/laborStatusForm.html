@@ -142,8 +142,8 @@
                       data-live-search='true'
                       title="Job Type"
                       onchange="fillHoursPerWeek()">
-                <option value="Primary"{% if forms %}{% if forms.jobType == "Primary" %} selected {% endif %}{% endif %}>Primary</option>
-                <option value="Secondary"{% if forms %}{% if forms.jobType == "Secondary" %} selected {% endif %}{% endif %}>Secondary</option>
+                <option value="Primary"{% if forms %}{% if forms.jobType == "Primary" %} data-jobType={{forms.jobType}} selected {% endif %}{% endif %}>Primary</option>
+                <option value="Secondary"{% if forms %}{% if forms.jobType == "Secondary" %} data-jobType={{forms.jobType}} selected {% endif %}{% endif %}>Secondary</option>
               </select>
             {% include "snips/ReviewForm.html" %}
         </th>
