@@ -62,33 +62,33 @@ def userInsert():
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     print(rspFunctional) # This turns the string into whatever structure it should be. A list of dicts in this case.
-    failed_forms = []
-    for i in rspFunctional:
-        d, created = Student.get_or_create(ID = i['stuBNumber'])
+    all_forms = []
+    for i in range(len(rspFunctional)):
+        d, created = Student.get_or_create(ID = rspFunctional[i]['stuBNumber'])
         student = d.ID
-        d, created = User.get_or_create(UserID = i['stuSupervisorID'])
+        d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.UserID
-        d, created = Department.get_or_create(DEPT_NAME = i['stuDepartment'])
+        d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
         department = d.departmentID
-        d, created = Term.get_or_create(termCode = i['stuTermCode'])
+        d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
         term = d.termCode
         # Changes the dates into the appropriate format for the table
-        startDate = datetime.strptime(i['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
-        endDate = datetime.strptime(i['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
+        startDate = datetime.strptime(rspFunctional[i]['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
+        endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
         try:
             lsf = LaborStatusForm.create(termCode_id = term,
                                          studentSupervisee_id = student,
                                          supervisor_id = primarySupervisor,
                                          department_id  = department,
-                                         jobType = i["stuJobType"],
-                                         WLS = i["stuWLS"],
-                                         POSN_TITLE = i["stuPosition"],
-                                         POSN_CODE = i["stuPositionCode"],
-                                         contractHours = i.get("stuContractHours", None),
-                                         weeklyHours   = i.get("stuWeeklyHours", None),
+                                         jobType = rspFunctional[i]["stuJobType"],
+                                         WLS = rspFunctional[i]["stuWLS"],
+                                         POSN_TITLE = rspFunctional[i]["stuPosition"],
+                                         POSN_CODE = rspFunctional[i]["stuPositionCode"],
+                                         contractHours = rspFunctional[i].get("stuContractHours", None),
+                                         weeklyHours   = rspFunctional[i].get("stuWeeklyHours", None),
                                          startDate = startDate,
                                          endDate = endDate,
-                                         supervisorNotes = i["stuNotes"]
+                                         supervisorNotes = rspFunctional[i]["stuNotes"]
                                          )
             historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
             status = Status.get(Status.statusName == "Pending")
@@ -99,16 +99,15 @@ def userInsert():
                                               createdBy   = creatorID,
                                               createdDate = date.today(),
                                               status      = status.statusName)
+            all_forms.append(True)
             flash("Labor Status Form(s) has been created.", "success")
         except Exception as e:
             flash("An error occured.", "danger")
-            failed_forms.append(i)
-            print("testing failed_form", failed_forms)
+            all_forms.append(False)
+            # print("testing failed_form", failed_forms)
             print("ERROR: " + str(e))
-    if failed_forms == []:
-        return jsonify({"Success":True})
-    else:
-        return jsonify(failed_forms)
+
+    return jsonify(all_forms)
 
 @main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])
 def getDates(termcode):
@@ -134,7 +133,7 @@ def getPositions(department):
 def checkForPrimaryPosition(termCode, student):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
-    print("Inside the Controller")
+    print("Inside the Controller checkForPrimaryPosition")
     positionsList = []
     for item in positions:
         positionsDict = {}

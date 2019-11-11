@@ -318,10 +318,13 @@ function errorFlash(){
 // TABLE
 function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
   var studentDict = createStuDict();
+  console.log("$$$$$$ : ", studentDict)
   if (studentDict === false) {
+    console.log("studentDict returned false")
     errorFlash();
   }
   else  {
+    console.log("going into checkPrimaryPosition")
     checkPrimaryPosition(studentDict);
      }
   }
@@ -351,7 +354,6 @@ function createStuDict(){
     var hoursPerWeek = $("#selectedHoursPerWeek");
     var hoursPerWeekName = $("#selectedHoursPerWeek :selected").val();
     if (!hoursPerWeekName){
-      console.log("something is there");
       return false;
       }
     }
@@ -458,7 +460,6 @@ function checkPrimaryPosition(studentDict){
   });
 }
 function createAndFillTable(studentDict) {
-  console.log("Filling table");
   globalArrayOfStudents.push(studentDict);
   console.log(globalArrayOfStudents);
   $("#mytable").show();
@@ -583,9 +584,10 @@ function userInsert(){
          data: JSON.stringify(globalArrayOfStudents),
          contentType: "application/json",
          success: function(response) {
-           console.log(response)
+           console.log("response from userInsert : ", response)
            term = $("#selectedTerm").val();
-           var whichTerm = term.toString().substr(-2);
+           var whichTerm = parseInt(term.toString().substr(-2));
+           console.log(typeof(whichTerm));
            modalList = [];
            for(var key = 0; key < globalArrayOfStudents.length; key++){
              var studentName = globalArrayOfStudents[key].stuName;
@@ -593,9 +595,11 @@ function userInsert(){
              var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
              var jobType = globalArrayOfStudents[key].stuJobType;
              var hours = globalArrayOfStudents[key].stuWeeklyHours;
-             var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
-             if (response[key] == true){
-               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
+             var selectedContractHours = globalArrayOfStudents[key].stuWeeklyHours;
+             console.log(globalArrayOfStudents);
+             if (response[key] === true){
+               console.log("response is true")
+               if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
                  var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                }
                else {
@@ -612,8 +616,6 @@ function userInsert(){
              }
              modalList.push(bigString);
            }
-
-
 
 
          $("#SubmitModalText").html("Labor status form(s) will be submitted for:<br><br>" +
