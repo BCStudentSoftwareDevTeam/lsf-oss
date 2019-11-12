@@ -26,20 +26,20 @@
         <br> </br>
      <div align="center" id="pendingTabs" class="container">
      <ul  class="nav nav-pills">
-       <li class="active" id="jamalito">
-          <a  href="#allPendingForms" data-toggle="tab">All Pending Forms</a>
+       <li class="active">
+          <a  href="/admin/pendingForms/all" data-toggle="tab">All Pending Forms</a>
        </li>
         <li>
-          <a href="#laborPendingForms" data-toggle="tab" id= "statusTest">Pending Labor Status Forms</a>
+          <a href="/admin/pendingForms/pendingLabor" data-toggle="tab">Pending Labor Status Forms</a>
         </li>
         <li>
-          <a href="#modifiedPendingForms" data-toggle="tab">Pending Modified Forms</a>
+          <a href="/admin/pendingForms/pendingModified" data-toggle="tab">Pending Modified Forms</a>
         </li>
         <li>
-          <a href="#overloadPendingForms" data-toggle="tab">Pending Overload Forms</a>
+          <a href="/admin/pendingForms/pendingOverload" data-toggle="tab">Pending Overload Forms</a>
         </li>
         <li>
-          <a href="#releasedPendingForms" data-toggle="tab">Pending Release Forms</a>
+          <a href="/admin/pendingForms/pendingRelease" data-toggle="tab">Pending Release Forms</a>
         </li>
       </ul>
       </div>
@@ -68,16 +68,17 @@
               </thead>
 
               <tbody id="tablebody">
-                {% for allForms in all_pending_forms %}
+                {% for allForms in FormList %}
                 <tr id="tableData" class="tableData" align="center">
                     <td> {# APPROVE #}
                       <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" name="check[]"  autocomplete="off" />
+                      {% include "snips/pendingNotesModal.html" %}
                       <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
                              class="glyphicon glyphicon-book btn-lg
                                   {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
                                   {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
                                   {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
-                                  {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#allFormsNotesModal"> </span>
+                                  {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#NotesModal"> </span>
                                   <input id="dummyInput" value="{{allForms.formID.laborStatusFormID}}" hidden/>
 
                     </td>
@@ -110,6 +111,9 @@
                   </td>
                   <td> {# EDIT #}
                     <a href="/modifyLSF/{{allForms.formID.laborStatusFormID}}"> <span id="edit_{{allForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
+                    {% with modalTarget = modalTarget %}
+                      {% include "snips/FormsDeny.html" %}
+                    {% endwith %}
                     <button
                     id="reject_{{allForms.formHistoryID}}"
                     value="{{allForms.formHistoryID}}"
@@ -118,20 +122,18 @@
                     name = "rejectBtn"
                     value = "Reject"
                     data-toggle="modal"
-                    data-target="#allFormsdenyModal"
+                    data-target="#{{modalTarget}}"
                     onclick="insertDenial(this.value);">
                     Deny
                     </button>
                   </td>
-
                 </tr>
                 {% endfor %}
               </tbody>
               </table>
-
                 <div class="btn-holder">
+                  {% include "snips/pendingApprovalModal.html" %}
                   <button
-
                     id="approveSelected"
                     name="approveBtn"
                     type="button"
@@ -144,128 +146,6 @@
                   </button>
                 </div>
                 </div> {# Check div ending here if tabbing breaks #}
-
-
-            <!-- START OF MODAL adding notes -->
-            <div class="modal fade" id="allFormsNotesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <b <h6 class="modal-title" id="notesModalLabel">Labor Office Notes </h6> </b>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
-
-                  </div>
-                  <div class="modal-body" >
-                    <div id="notesDiv">
-                       <label id="supeNotesLabel" class="col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </label>
-                          <textarea id="notesText" rows="2" cols="70" disabled> </textarea>
-                      <label class="col-md-4 control-label text-left" for ="laboroffice" align = "left"> Labor Office Notes: </label>
-                          <textarea id="laborNotesText" rows="2" cols="70"> </textarea>
-                    </div>
-
-
-                  <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
-              <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> {# Move div ending here if tabbing breaks #}
-      <!-- END OF MODAL -->
-
-      {#        {% include "snips/pendingFormsModals.html" %} #}
-
-
-          <!-- Modal -->
-          <div class="modal fade" id="approvalModal" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel" align="center"><b>Form(s) ready for Approval</b></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <!-- putting info into modal using table for better viewing -->
-                <table id="classTable" class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th scope="col">Student(s)</th>
-                      <th scope="col">Position</th>
-                      <th scope="col">Hours</th>
-                      <th scope="col">Supervisor</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload()">Close</button>
-                <button id="approveModalButton" type="button" class="btn btn-primary"  data-dismiss="modal" onclick="finalApproval()" >Approve</button>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-            <!-- Modal -->
-          <div class="modal fade" id="allFormsdenyModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-
-                <h5 class="modal-title" id="exampleModalLabel" align="center"><b>Deny Labor Status Form</b></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <p> Are you sure you want to deny the selected labor status form?</p>
-                <table id="denialAllPendingForms" class="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th scope="col">Student(s)</th>
-                      <th scope="col">Position</th>
-                      <th scope="col">Supervisor</th>
-                      <th scope="col">Hours</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload()">Close</button>
-                <button type="button" class="btn btn-danger" onclick="finalDenial()">Deny</button>
-              </div>
-            </div>
-          </div>
-      </div>
-
-          <!-- MODAL -->
-          <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="SubmitModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                </div>
-                <div id="SubmitModalText" class="modal-body">
-                  The following Labor Status form(s) will be approved:
-                </div>
-                <div class="modal-footer">
-                  <button id="submitmodalid"
-                          type="submit"
-                          class="btn btn-primary"
-                          name = "formsubmission"
-                          value = "formsubmission"
-                          onclick = "userInsert()">Submit</button>
-                </div>
-              </div>
-            </div>
-          </div>
-              <!-- END OF MODAL -->
           </div>
 				  {#check the div here if the tabbing breaks#}
 
