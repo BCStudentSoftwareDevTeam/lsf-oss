@@ -30,49 +30,89 @@ class emailHandler():
 
         self.formHistory = FormHistory.get(FormHistory.formHistoryID == formHistoryKey)
         self.laborStatusForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-        self.studentName = self.laborStatusForm.studentSupervisee.FIRST_NAME + " " + self.laborStatusForm.studentSupervisee.LAST_NAME
         self.studentEmail = self.laborStatusForm.studentSupervisee.STU_EMAIL
-        self.creatorName = self.formHistory.createdBy.FIRST_NAME + " " + self.formHistory.createdBy.LAST_NAME
         self.creatorEmail = self.formHistory.createdBy.EMAIL
-        self.supervisorName = self.laborStatusForm.supervisor.FIRST_NAME + " " + self.laborStatusForm.supervisor.LAST_NAME
         self.supervisorEmail = self.laborStatusForm.supervisor.EMAIL
+        self.date = self.laborStatusForm.startDate.strftime("%m/%d/%Y")
+        self.weeklyHours = str(self.laborStatusForm.weeklyHours)
+        self.contractHours = str(self.laborStatusForm.contractHours)
+
+        self.primaryForm = LaborStatusForm.get(LaborStatusForm.jobType == "Primary" and LaborStatusForm.studentSupervisee == self.laborStatusForm.studentSupervisee and LaborStatusForm.termCode == self.laborStatusForm.termCode)
+        self.primaryEmail = primaryForm.supervisor.EMAIL
+
 
     def laborReleaseFormEmail(self):
-        '''
-        Send email to student and supervisor when a release form is created
-        '''
-        releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.emailTemplateID == 1)
+
+        releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Received For Student")
         releaseFormTemplate = releaseEmailTemplateID.body
-        releaseFormTemplate = releaseFormTemplate.replace("@@Student@@", self.studentName)
-        releaseFormTemplate = releaseFormTemplate.replace("@@Creator@@", self.creatorName)
-        releaseFormTemplate = releaseFormTemplate.replace("@@Position@@", self.laborStatusForm.POSN_CODE+ ", " + self.laborStatusForm.POSN_TITLE)
-        releaseFormTemplate = releaseFormTemplate.replace("@@Department@@", self.laborStatusForm.department.DEPT_NAME)
-
-
-
-        if self.laborStatusForm.weeklyHours != None:
-            weeklyHours = str(self.laborStatusForm.weeklyHours)
-            releaseFormTemplate = releaseFormTemplate.replace("@@Hours@@", weeklyHours)
-        else:
-            contractHours = str(self.laborStatusForm.contractHours)
-            releaseFormTemplate = releaseFormTemplate.replace("@@Hours@@", contractHours)
-
-        # date = str(self.laborStatusForm.startDate)
-        # releaseFormTemplate = releaseFormTemplate.replace("@@Date@@", date)
-
+        releaseFormTemplate = self.replaceText(releaseFormTemplate)
         studentMessage = Message(releaseEmailTemplateID.subject, # This is the subject of the E-mail
             recipients=[self.studentEmail])
         studentMessage.html = releaseFormTemplate
         self.mail.send(studentMessage)
 
 
-    def laborSratusFormEmail(self):
-        studentMessage = Message("Labor Realease Form", # This is the subject of the E-mail
+    def laborStatusFormSubmitted(self):
+        """
+        This method is for sending email to the student when a Labor Status Form has been created. The email template's keywords are replace with the LSF informations.
+        """
+        StatusFormEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Submission of Status Form to Student")
+        StatusFormTemplate = StatusFormEmailTemplateID.body
+        StatusFormTemplate = self.replaceText(StatusFormTemplate)
+
+        studentMessage = Message(StatusFormEmailTemplateID.subject, # This is the subject of the E-mail
             recipients=[self.studentEmail])
-        statusEmailTemplateID = EmailTemplate.get(EmailTemplate.emailTemplateID == 1)
-        statusFormTemplate = statusEmailTemplateID.body
-        statusFormTemplate = string.replace("@@Student@@", self.studentName)
-        self.mail.send(statusFormTemplate)
+        studentMessage.html = StatusFormTemplate
+        self.mail.send(studentMessage)
+
+        if self.laborStatusForm.jobType == "Secondary":
+            SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Supervisors, Form Received (Secondary)")
+            StatusFormTemplate = SupervisorEmailTemplateID.body
+            StatusFormTemplate = self.replaceText(StatusFormTemplate)
+            supervisorMessage = Message(SupervisorEmailTemplateID.subject, # This is the subject of the E-mail
+                recipients=[self.supervisorEmail, self.primaryEmail])
+            supervisorMessage.html = StatusFormTemplate
+            self.mail.send(supervisorMessage)
+        else:
+            SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Supervisor, Form Received")
+            StatusFormTemplate = SupervisorEmailTemplateID.body
+            StatusFormTemplate = replaceText(StatusFormTemplate)
+            supervisorMessage = Message(SupervisorEmailTemplateID.subject, # This is the subject of the E-mail
+                recipients=[self.supervisorEmail, self.primaryEmail])
+            supervisorMessage.html = StatusFormTemplate
+            self.mail.send(supervisorMessage)
+
+    def laborStatusFormApprove(self):
+        """
+        """
+        #Email for Student
+        StatusFormEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Approval of Status Form to Student")
+        StatusFormTemplate = StatusFormEmailTemplateID.body
+        StatusFormTemplate = self.replaceText(StatusFormTemplate)
+
+        studentMessage = Message(StatusFormEmailTemplateID.subject, # This is the subject of the E-mail
+            recipients=[self.studentEmail])
+        studentMessage.html = StatusFormTemplate
+        self.mail.send(studentMessage)
+
+        if self.laborStatusForm.jobType == "Secondary":
+            SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Supervisors, Form Received (Secondary)")
+            StatusFormTemplate = SupervisorEmailTemplateID.body
+            StatusFormTemplate = self.replaceText(StatusFormTemplate)
+            supervisorMessage = Message(SupervisorEmailTemplateID.subject, # This is the subject of the E-mail
+                recipients=[self.supervisorEmail, self.primaryEmail])
+            supervisorMessage.html = StatusFormTemplate
+            self.mail.send(supervisorMessage)
+        else:
+            SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Approval of Status Form to Supervisor")
+            StatusFormTemplate = SupervisorEmailTemplateID.body
+            StatusFormTemplate = replaceText(StatusFormTemplate)
+            supervisorMessage = Message(SupervisorEmailTemplateID.subject, # This is the subject of the E-mail
+                recipients=[self.supervisorEmail, self.primaryEmail])
+            supervisorMessage.html = StatusFormTemplate
+            self.mail.send(supervisorMessage)
+
+
 
     def LaborOverLoadFormEmail(self):
         studentMessage = Message("Labor Realease Form", # This is the subject of the E-mail
@@ -81,3 +121,21 @@ class emailHandler():
         overloadFormTemplate = statusEmailTemplateID.body
         overloadFormTemplate = string.replace("@@Student@@", self.studentName)
         self.mail.send(statusFormTemplate)
+    def replaceText(self, form):
+        """
+        """
+        form = form.replace("@@Creator@@", self.formHistory.createdBy.FIRST_NAME + " " + self.formHistory.createdBy.LAST_NAME)
+        form = form.replace("@@Supervisor@@", self.laborStatusForm.supervisor.FIRST_NAME + " " + self.laborStatusForm.supervisor.LAST_NAME)
+        form = form.replace("@@Primsupr@@", self.primaryForm.supervisor.FIRST_NAME + " " + primaryForm.supervisor.LAST_NAME)
+        form = form.replace("@@Student@@", self.laborStatusForm.studentSupervisee.FIRST_NAME + " " + self.laborStatusForm.studentSupervisee.LAST_NAME)
+        form = form.replace("@@StudB@@", self.laborStatusForm.studentSupervisee.ID)
+        form = form.replace("@@Position@@", self.laborStatusForm.POSN_CODE+ ", " + self.laborStatusForm.POSN_TITLE)
+        form = form.replace("@@Department@@", self.laborStatusForm.department.DEPT_NAME)
+        form = form.replace("@@WLS@@", self.laborStatusForm.WLS)
+        if self.laborStatusForm.weeklyHours != None:
+            form = form.replace("@@Hours@@", self.weeklyHours)
+        else:
+            form = form.replace("@@Hours@@", self.contractHours)
+        form = form.replace("@@Date@@", self.date)
+
+        return(form)
