@@ -13,8 +13,6 @@ from app.models.term import Term
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 
-#       ALL PENDING FORMS       #
-# @admin.route('/admin/allPendingForms',  methods=['GET'])
 @admin.route('/admin/pendingForms/<formType>',  methods=['GET'])
 def allPendingForms(formType):
     try:
@@ -24,7 +22,6 @@ def allPendingForms(formType):
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
-        print(formType)
         formList = None
         historyType = None
         pageTitle = ""
@@ -54,123 +51,18 @@ def allPendingForms(formType):
                 approvalTarget = "denyReleaseformSModal"
                 pageTitle = "Pending Release Forms"
             formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
-
-        # pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate).distinct()
-        # pending_modified_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Modified Labor Form").order_by(-FormHistory.createdDate).distinct()
-        # pending_overload_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Overload Form").order_by(-FormHistory.createdDate).distinct()
-        # pending_release_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Release Form").order_by(-FormHistory.createdDate).distinct()
-        # all_pending_forms = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
-
         users = User.select()
-
         return render_template( 'admin/allPendingForms.html',
-
                                 title=pageTitle,
                                 username=current_user.username,
                                 users=users,
                                 formList = formList,
                                 formType= formType,
                                 modalTarget = approvalTarget
-
-                                # all_pending_forms = all_pending_forms,
-                                # pending_labor_forms = pending_labor_forms,
-                                # pending_modified_forms = pending_modified_forms,
-                                # pending_overload_forms = pending_overload_forms,
-                                # pending_release_forms = pending_release_forms
                                 )
     except Exception as e:
-        print("All Pending", e)
+        print("error", e)
         return render_template('errors/500.html')
-
-#        PENDING STATUS FORMS         #
-# @admin.route('/admin/pendingStatusForms',  methods=['GET'])
-# def pendingStatusForms():
-#     try:
-#         current_user = require_login()
-#         if not current_user:                    # Not logged in
-#             return render_template('errors/403.html')
-#         if not current_user.isLaborAdmin:       # Not an admin
-#             return render_template('errors/403.html')
-#
-#         print("Test")
-#         pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate)                # # Logged in  Admin
-#         print("I'm here")
-#         users = User.select()
-#
-#         return render_template( 'admin/pendingStatusForms.html',
-#                                 username=current_user.username,
-#                                 users=users,
-#                                 pending_labor_forms = pending_labor_forms
-#                                 )
-#     except Exception as e:
-#         print("Pending Status", e)
-#         return render_template('errors/500.html')
-#
-# #        PENDING MODIFIED FORMS         #
-# @admin.route('/admin/pendingModifiedForms',  methods=['GET'])
-# def pendingModifiedForms():
-#     try:
-#         current_user = require_login()
-#         if not current_user:                    # Not logged in
-#             return render_template('errors/403.html')
-#         if not current_user.isLaborAdmin:       # Not an admin
-#             return render_template('errors/403.html')
-#
-#         pending_modified_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Modified Labor Form").order_by(-FormHistory.createdDate)                # # Logged in & Admin
-#         users = User.select()
-#
-#         return render_template( 'admin/pendingModifiedForms.html',
-#                                 username=current_user.username,
-#                                 users=users,
-#                                 pending_modified_forms = pending_modified_forms
-#                                 )
-#     except Exception as e:
-#         print("Pending Modified", e)
-#         return render_template('errors/500.html')
-#
-# #        PENDING OVERLOAD FORMS         #
-# @admin.route('/admin/pendingOverloadForms',  methods=['GET'])
-# def pendingOverloadForms():
-#     try:
-#         current_user = require_login()
-#         if not current_user:                    # Not logged in
-#             return render_template('errors/403.html')
-#         if not current_user.isLaborAdmin:       # Not an admin
-#             return render_template('errors/403.html')
-#
-#         pending_overload_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Overload Form").order_by(-FormHistory.createdDate)
-#         users = User.select()
-#
-#         return render_template( 'admin/pendingOverloadForms.html',
-#                                 username=current_user.username,
-#                                 users=users,
-#                                 pending_overload_forms = pending_overload_forms
-#                                 )
-#     except Exception as e:
-#         print("Pending Overload", e)
-#         return render_template('errors/500.html')
-#
-# #        PENDING RELEASE FORMS         #
-# @admin.route('/admin/pendingReleaseForms.html',  methods=['GET'])
-# def pendingReleaseForms():
-#     try:
-#         current_user = require_login()
-#         if not current_user:                    # Not logged in
-#             return render_template('errors/403.html')
-#         if not current_user.isLaborAdmin:       # Not an admin
-#             return render_template('errors/403.html')
-#
-#         pending_release_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Release Form").order_by(-FormHistory.createdDate)
-#         users = User.select()
-#
-#         return render_template( 'admin/pendingReleaseForms.html',
-#                                 username=current_user.username,
-#                                 users=users,
-#                                 pending_release_forms = pending_release_forms
-#                                 )
-#     except Exception as e:
-#         print("Pending Release", e)
-#         return render_template('errors/500.html')
 
 @admin.route('/admin/checkedForms', methods=['POST'])
 def approved_and_denied_Forms():
@@ -186,11 +78,10 @@ def approved_and_denied_Forms():
 
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
-            #FIXME: Update form history
             approved_details =  modal_aproval_and_denial_data(rsp)
             return jsonify(approved_details)
     except Exception as e:
-        print("This did not work", e)
+        print("error", e)
         return jsonify({"Success": False})
 
 @admin.route('/admin/finalApproval', methods=['POST'])
@@ -217,7 +108,6 @@ def finalApproval():
             approving_labor_release_forms.save()
     return jsonify({"success": True})
 
-
 @admin.route('/admin/finalDenial', methods=['POST'])
 def finalDenial():
     ''' This method changes labor status pending forms to approved'''
@@ -243,7 +133,7 @@ def finalDenial():
                 approving_labor_release_forms.save()
         return jsonify({"success": True})
     except Exception as e:
-        print("final approval of the modal did not work", e)
+        print("error", e)
         return jsonify({"success": False})
 
 #method extracts data from the data base to papulate pending form approvale modal
@@ -258,7 +148,6 @@ def modal_aproval_and_denial_data(approval_ids):
         student_pos = student_details.POSN_TITLE
         supervisor_firstname, supervisor_lastname = student_details.supervisor.FIRST_NAME, student_details.supervisor.LAST_NAME
         supervisor_name = str(supervisor_firstname) +" "+ str(supervisor_lastname)
-        print(supervisor_name)
         student_hours = student_details.weeklyHours
         student_hours_ch = student_details.contractHours
         temp_list = []
@@ -269,7 +158,6 @@ def modal_aproval_and_denial_data(approval_ids):
         temp_list.append(str(student_hours_ch))
         id_list.append(temp_list)
     return(id_list)
-
 
 @admin.route('/admin/getNotes/<formid>', methods=['GET'])
 def getNotes(formid):
@@ -282,24 +170,18 @@ def getNotes(formid):
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
-        print(formid)
         notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid)
-        #print(notes)
-
         notesDict = {}
         if notes.supervisorNotes:
             notesDict["supervisorNotes"] = notes.supervisorNotes
 
         if notes.laborDepartmentNotes:
             notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes
-        # print(notesDict["supervisorNotes"])
-        # print(notesDict["laborDepartmentNotes"])
         return jsonify(notesDict)
 
     except Exception as e:
-        print("This did not work", e)
+        print("error", e)
         return jsonify({"Success": False})
-
 
 @admin.route('/admin/notesInsert/<formId>', methods=['POST'])
 def insertNotes(formId):
@@ -314,23 +196,16 @@ def insertNotes(formId):
             return render_template('errors/403.html')
 
         rsp = eval(request.data.decode("utf-8"))
-        print(rsp)
         laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
-        # print(laborDeptNotes)
-
         if rsp:
             laborDeptNotes.laborDepartmentNotes = rsp
-            # print(type(rsp))
             laborDeptNotes.save() #Updates labor notes
-
-            print("This freggin' worked omg")
             return jsonify({"Success": True})
 
         elif rsp=="" or rsp==None:
-            # print("reached")
             flash("No changes made to notes.", "danger")
             return jsonify({"Success": False})
 
     except Exception as e:
-        print("This ain't work", e)
+        print("error", e)
         return jsonify({"Success": False})
