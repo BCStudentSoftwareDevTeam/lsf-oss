@@ -1550,7 +1550,7 @@ emailtemps= [
                 {
                 "purpose":"Labor Status Form Received For Student",
                 "subject":"Labor Status Form Received",
-                "body":'''<p>Dear <strong>@@Student@@</strong></p>
+                "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
                             <p>&nbsp;</p>
                             <p>This email is very important. Please take a moment to read carefully and review the information. A Labor Status Form has been submitted for you by <strong>@@Creator@@</strong>. Below is the position information for which you have been hired. If you do not accept the terms of this form, you will have 24 hours to contact the supervisor or the Labor Program Office. If we do not hear from you within 24 hours of this notification, it will be determined that it is accepted and the forms will be processed as submitted.</p>
                             <p>&nbsp;</p>
@@ -1575,10 +1575,10 @@ emailtemps= [
                 {
                 "purpose":"Labor Status Form Approved For Supervisor",
                 "subject":"Labor Status Form Approved",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong></p>
+                "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
                             <p>A Labor Status Form previously submitted by you for
-                            <strong>@@Student@@</strong> has been <strong>Approved</strong>.Below is the position information for the student that you have hired.</p>
+                            <strong>@@Student@@</strong> has been <strong>Approved</strong>. Below is the position information for the student that you have hired.</p>
                             <p>&nbsp;</p>
                             <p><strong>NOTICE:</strong> Please allow 24 hours for the position to become active in Tracy (Ultratime). Students should not work until time can be recorded for the position. If at any time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
                             <p>&nbsp;</p>
@@ -1604,10 +1604,9 @@ emailtemps= [
                 {
                 "purpose":"Labor Status Form Approved For Student",
                 "subject":"Labor Status Form Approved",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong></p>
+                "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
                             <p>&nbsp;</p>
-                            <p>A Labor Status Form previously submitted by you for
-                            <strong>@@Student@@</strong> has been <strong>Approved</strong>.Below is the position information for the student that you have hired.</p>
+                            <p>A Labor This email is very important. Please take a moment to read carefully and review the information. A Labor Release Form previously submitted for you by <strong>@@Student@@</strong> has been <strong>Approved</strong>. You will no longer be able to record time in this position effective of the release date below. If you have concerns, please contact the supervisor or Labor Program Office immediately.</p>
                             <p>&nbsp;</p>
                             <p><strong>NOTICE:</strong> Please allow 24 hours for the position to become active in Tracy (Ultratime). Students should not work until time can be recorded for the position. If at any time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
                             <p>&nbsp;</p>
@@ -1633,10 +1632,10 @@ emailtemps= [
                 {
                 "purpose":"Supervisor, Form Received",
                 "subject":"Labor Status Form Received",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong></p>
+                "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
                             <p>This email is confirmation that the Labor Program Office has received a Labor Status Form
-                            <strong>@@Creator@@</strong> for <strong>Student</strong>.Please take a moment to read carefully and review the information Below is the position information for the student you have requested to hire.</p>
+                            <strong>@@Creator@@</strong> for <strong>Student</strong>. Please take a moment to read carefully and review the information Below is the position information for the student you have requested to hire.</p>
                             <p>&nbsp;</p>
                             <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, the student’s job will be active to allow for time entry in 24 hours. If at that time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
                             <p>&nbsp;</p>
@@ -1691,7 +1690,7 @@ emailtemps= [
                 {
                 "purpose":"Primary Supervisor, Form Reject (Secondary)",
                 "subject":"Labor Status Form Rejected",
-                "body":'''<p>Dear <strong>@@Primsupr@@</strong></p>
+                "body":'''<p>Dear <strong>@@Primsupr@@</strong>,</p>
                             <p>&nbsp;</p>
                             <p>A Labor Status Form previously submitted by you for
                             <strong>@@Student@@</strong>,<strong>%%StuB%%</strong> hiring him/her to work in a secondary position has been Denied. This is an informational email to you as the supervisor for the primary labor position.</p>
@@ -1717,7 +1716,7 @@ emailtemps= [
                 {
                 "purpose":"Approval of Labor Release Form to Student",
                 "subject":"Labor Position Release Approved",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong></p>
+                "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
                             <p>This email is very important. Please take a moment to read carefully and review the information. A Labor Release Form previously submitted for you by <strong>@@Supervisor@@</strong> has been <strong>Approved</strong>. You will no longer be able to record time in this position effective of the release date below. If you have concerns, please contact the supervisor or Labor Program Office immediately.</p>
                             <p>&nbsp;</p>

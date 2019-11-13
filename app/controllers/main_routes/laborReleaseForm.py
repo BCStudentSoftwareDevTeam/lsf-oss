@@ -27,7 +27,7 @@ def laborReleaseForm(laborStatusKey):
         render_template("errors/403.html")
 
     forms = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == laborStatusKey)
-    
+
     if(request.method == 'POST'):
         try:
             historyForms = FormHistory.select().where((FormHistory.formID == laborStatusKey) & (FormHistory.releaseForm != None))
@@ -76,7 +76,7 @@ def laborReleaseForm(laborStatusKey):
             print(newFormHistory.formHistoryID)
             flash("Your labor release form has been submitted.", "success")
             email = emailHandler(laborStatusKey, newFormHistory.formHistoryID)
-            email.laborStatusFormSubmitted()
+            email.laborReleaseFormEmail()
             return redirect(url_for("main.index"))
 
         except Exception as e:

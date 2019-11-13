@@ -38,14 +38,16 @@ class emailHandler():
         self.contractHours = str(self.laborStatusForm.contractHours)
 
         self.primaryForm = LaborStatusForm.get(LaborStatusForm.jobType == "Primary" and LaborStatusForm.studentSupervisee == self.laborStatusForm.studentSupervisee and LaborStatusForm.termCode == self.laborStatusForm.termCode)
-        self.primaryEmail = primaryForm.supervisor.EMAIL
-
-
+        self.primaryEmail = self.primaryForm.supervisor.EMAIL
+        self.releaseReason = ""
+        self.date = ""
     def laborReleaseFormEmail(self):
-
-        releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Received For Student")
+        self.releaseDate = self.formHistory.releaseForm.releaseDate.strftime("%m/%d/%Y")
+        self.releaseReason = self.formHistory.releaseForm.reasonForRelease
+        releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Approval of Labor Release Form to Student")
         releaseFormTemplate = releaseEmailTemplateID.body
         releaseFormTemplate = self.replaceText(releaseFormTemplate)
+
         studentMessage = Message(releaseEmailTemplateID.subject, # This is the subject of the E-mail
             recipients=[self.studentEmail])
         studentMessage.html = releaseFormTemplate
@@ -76,9 +78,9 @@ class emailHandler():
         else:
             SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Supervisor, Form Received")
             StatusFormTemplate = SupervisorEmailTemplateID.body
-            StatusFormTemplate = replaceText(StatusFormTemplate)
+            StatusFormTemplate = self.replaceText(StatusFormTemplate)
             supervisorMessage = Message(SupervisorEmailTemplateID.subject, # This is the subject of the E-mail
-                recipients=[self.supervisorEmail, self.primaryEmail])
+                recipients=[self.supervisorEmail])
             supervisorMessage.html = StatusFormTemplate
             self.mail.send(supervisorMessage)
 
@@ -86,32 +88,33 @@ class emailHandler():
         """
         """
         #Email for Student
-        StatusFormEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Approval of Status Form to Student")
-        StatusFormTemplate = StatusFormEmailTemplateID.body
-        StatusFormTemplate = self.replaceText(StatusFormTemplate)
+        StatusFormEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Approved For Student")
+        approveFormTemplate = StatusFormEmailTemplateID.body
+        approveFormTemplate = self.replaceText(approveFormTemplate)
 
         studentMessage = Message(StatusFormEmailTemplateID.subject, # This is the subject of the E-mail
             recipients=[self.studentEmail])
-        studentMessage.html = StatusFormTemplate
+        studentMessage.html = approveFormTemplate
         self.mail.send(studentMessage)
 
+        # if self.laborStatusForm.jobType == "Secondary":
+        #     SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Supervisors, Form Received (Secondary)")
+        #     StatusFormTemplate = SupervisorEmailTemplateID.body
+        #     StatusFormTemplate = self.replaceText(StatusFormTemplate)
+        #     supervisorMessage = Message(SupervisorEmailTemplateID.subject, # This is the subject of the E-mail
+        #         recipients=[self.supervisorEmail, self.primaryEmail])
+        #     supervisorMessage.html = StatusFormTemplate
+        #     self.mail.send(supervisorMessage)
+        # else:
+        SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Approved For Supervisor")
+        StatusFormTemplate = SupervisorEmailTemplateID.body
         if self.laborStatusForm.jobType == "Secondary":
-            SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Supervisors, Form Received (Secondary)")
-            StatusFormTemplate = SupervisorEmailTemplateID.body
-            StatusFormTemplate = self.replaceText(StatusFormTemplate)
-            supervisorMessage = Message(SupervisorEmailTemplateID.subject, # This is the subject of the E-mail
-                recipients=[self.supervisorEmail, self.primaryEmail])
-            supervisorMessage.html = StatusFormTemplate
-            self.mail.send(supervisorMessage)
-        else:
-            SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Approval of Status Form to Supervisor")
-            StatusFormTemplate = SupervisorEmailTemplateID.body
-            StatusFormTemplate = replaceText(StatusFormTemplate)
-            supervisorMessage = Message(SupervisorEmailTemplateID.subject, # This is the subject of the E-mail
-                recipients=[self.supervisorEmail, self.primaryEmail])
-            supervisorMessage.html = StatusFormTemplate
-            self.mail.send(supervisorMessage)
-
+            StatusFormTemplate = StatusFormTemplate.replace("@@Supervisor@@", self.laborStatusForm.supervisor.FIRST_NAME + " " + self.laborStatusForm.supervisor.LAST_NAME + " and " + self.primaryForm.supervisor.FIRST_NAME + " " + self.primaryForm.supervisor.LAST_NAME)
+        StatusFormTemplate = self.replaceText(StatusFormTemplate)
+        supervisorMessage = Message(SupervisorEmailTemplateID.subject, # This is the subject of the E-mail
+            recipients=[self.supervisorEmail, self.primaryEmail])
+        supervisorMessage.html = StatusFormTemplate
+        self.mail.send(supervisorMessage)
 
 
     def LaborOverLoadFormEmail(self):
@@ -121,12 +124,13 @@ class emailHandler():
         overloadFormTemplate = statusEmailTemplateID.body
         overloadFormTemplate = string.replace("@@Student@@", self.studentName)
         self.mail.send(statusFormTemplate)
+
     def replaceText(self, form):
         """
         """
         form = form.replace("@@Creator@@", self.formHistory.createdBy.FIRST_NAME + " " + self.formHistory.createdBy.LAST_NAME)
         form = form.replace("@@Supervisor@@", self.laborStatusForm.supervisor.FIRST_NAME + " " + self.laborStatusForm.supervisor.LAST_NAME)
-        form = form.replace("@@Primsupr@@", self.primaryForm.supervisor.FIRST_NAME + " " + primaryForm.supervisor.LAST_NAME)
+        form = form.replace("@@Primsupr@@", self.primaryForm.supervisor.FIRST_NAME + " " + self.primaryForm.supervisor.LAST_NAME)
         form = form.replace("@@Student@@", self.laborStatusForm.studentSupervisee.FIRST_NAME + " " + self.laborStatusForm.studentSupervisee.LAST_NAME)
         form = form.replace("@@StudB@@", self.laborStatusForm.studentSupervisee.ID)
         form = form.replace("@@Position@@", self.laborStatusForm.POSN_CODE+ ", " + self.laborStatusForm.POSN_TITLE)
@@ -137,5 +141,7 @@ class emailHandler():
         else:
             form = form.replace("@@Hours@@", self.contractHours)
         form = form.replace("@@Date@@", self.date)
+        form = form.replace("@@ReleaseReason@@", self.releaseReason)
+        form = form.replace("@@ReleaseDate@@", self.releaseDate)
 
         return(form)
