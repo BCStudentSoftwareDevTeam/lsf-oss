@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
-{% block scripts %}
-{{super()}}
-  <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
-  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
-  <script type="text/javascript" src="{{url_for('static', filename='js/allPendingForms.js') }}"></script>
-{% endblock %}
-
 {% block styles %}
 {{super()}}
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.css"/>
   <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="{{url_for('static', filename ='css/allPendingForms.css')}}">
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/allPendingForms.js') }}"></script>
 {% endblock %}
 
 {% block title %}
@@ -27,19 +27,19 @@
      <div align="center" id="pendingTabs" class="container">
      <ul  class="nav nav-pills">
        <li class="active">
-          <a  href="/admin/pendingForms/all" data-toggle="tab">All Pending Forms</a>
+          <a  href="{{url_for('admin.allPendingForms', formType = 'all')}}">All Pending Forms</a>
        </li>
         <li>
-          <a href="/admin/pendingForms/pendingLabor" data-toggle="tab">Pending Labor Status Forms</a>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingLabor')}}"> Pending Labor Status Forms</a>
         </li>
         <li>
-          <a href="/admin/pendingForms/pendingModified" data-toggle="tab">Pending Modified Forms</a>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingModified')}}">Pending Modified Forms</a>
         </li>
         <li>
-          <a href="/admin/pendingForms/pendingOverload" data-toggle="tab">Pending Overload Forms</a>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms</a>
         </li>
         <li>
-          <a href="/admin/pendingForms/pendingRelease" data-toggle="tab">Pending Release Forms</a>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingRelease')}}">Pending Release Forms</a>
         </li>
       </ul>
       </div>
@@ -68,7 +68,7 @@
               </thead>
 
               <tbody id="tablebody">
-                {% for allForms in FormList %}
+                {% for allForms in formList %}
                 <tr id="tableData" class="tableData" align="center">
                     <td> {# APPROVE #}
                       <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" name="check[]"  autocomplete="off" />

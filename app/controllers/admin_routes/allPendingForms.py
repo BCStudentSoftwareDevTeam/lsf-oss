@@ -24,7 +24,7 @@ def allPendingForms(formType):
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
-
+        print(formType)
         formList = None
         historyType = None
         approvalTarget = ""
