@@ -27,26 +27,32 @@ def allPendingForms(formType):
         print(formType)
         formList = None
         historyType = None
+        pageTitle = ""
         approvalTarget = ""
         if formType  == "all":
             formList = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
             approvalTarget = "allFormsdenyModal"
+            pageTitle = "All Pending Fomrs"
         else:
             if formType == "pendingLabor":
                 historyType = "Labor Status Form"
                 approvalTarget = "denyLaborStatusFormsModal"
+                pageTitle = "Pending Labor Status Forms"
 
             elif formType == "pendingModified":
                 historyType = "Modified Labor Form"
                 approvalTarget = "denyModifiedFormsModal"
+                pageTitle = "Pending Modified Forms"
 
             elif formType == "pendingOverload":
                 historyType = "Labor Overload Form"
                 approvalTarget = "denyOverloadFormsModal"
+                pageTitle = "Pending Overload Forms"
 
             elif formType == "pendingRelease":
                 historyType = "Labor Release Form"
                 approvalTarget = "denyReleaseformSModal"
+                pageTitle = "Pending Release Forms"
             formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
 
         # pending_labor_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Status Form").order_by(-FormHistory.createdDate).distinct()
@@ -59,7 +65,7 @@ def allPendingForms(formType):
 
         return render_template( 'admin/allPendingForms.html',
 
-                                title=('All Pending Forms'),
+                                title=pageTitle,
                                 username=current_user.username,
                                 users=users,
                                 formList = formList,
