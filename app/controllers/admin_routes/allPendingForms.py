@@ -43,7 +43,7 @@ def allPendingForms(formType):
             elif formType == "pendingOverload":
                 historyType = "Labor Overload Form"
                 approvalTarget = "denyOverloadFormsModal"
-                
+
             elif formType == "pendingRelease":
                 historyType = "Labor Release Form"
                 approvalTarget = "denyReleaseformSModal"
@@ -64,7 +64,7 @@ def allPendingForms(formType):
                                 users=users,
                                 formList = formList,
                                 formType= formType,
-                                approvalTarget = modalTarget
+                                modalTarget = approvalTarget
 
                                 # all_pending_forms = all_pending_forms,
                                 # pending_labor_forms = pending_labor_forms,
