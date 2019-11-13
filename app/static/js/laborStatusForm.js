@@ -1,4 +1,5 @@
 var globalArrayOfStudents = [];
+var display_failed = [];
 
 $(document).ready(function(){
     $("[data-toggle=\"tooltip\"]").tooltip();
@@ -12,6 +13,7 @@ $(document).ready(function(){
       $("#selectedHoursPerWeek").val(value);
       fillHoursPerWeek("fillhours");
     }
+    console.log(display_failed.length);
 });
 
 $("laborStatusForm").submit(function(event) {
@@ -251,7 +253,7 @@ $("#hoursPerWeek").hide();
 $("#JopTypes").hide();
 $("#plus").hide();
 $("#mytable").hide();
-
+$("#failedTable").hide();
 function showAccessLevel(obj){ // Make Table labels appear
   $("#contractHours").hide();
   $("#hoursPerWeek").hide();
@@ -608,9 +610,14 @@ function userInsert(){
              }
              else {
                if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
+                 display_failed.push(key);
+                 console.log("key",key);
                  var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                }
                else {
+                 console.log("key",key);
+                 console.log("sksksk");
+                 display_failed.push(key);
                  var bigString = "<li>"+"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
                }
              }
@@ -628,6 +635,42 @@ function userInsert(){
      $("#SubmitModal").modal({backdrop: true, keyboard: false, show: true});
      $("#SubmitModal").data("bs.modal").options.backdrop = "static";
      $("#submitmodalid").html("Done");
+
+
      // $("#submitmodalid").attr("onclick", function() { window.location.replace("/laborstatusform");});
-     document.getElementById("submitmodalid").onclick = function() { window.location.replace("/laborstatusform");}; // seems to be necessary to use this line to get it to work
+       document.getElementById("submitmodalid").onclick = function() {
+         if (display_failed.length > 0){
+           $('#tbodyid').empty();
+           // $('#reviewButton').hide();
+           // $('#failedTable').show();
+           for (var i = 0; i < display_failed.length; i++){
+             // console.log('indiviual failed form', globalArrayOfStudents[display_failed[i]]);
+             if (globalArrayOfStudents[display_failed[i]].stuContractHours){
+               globalArrayOfStudents[display_failed[i]].stuWeeklyHours = '';
+             }
+             else{
+               globalArrayOfStudents[display_failed[i]].stuContractHours = '';
+             }
+             $('#mytable').append('<tr>'+
+                                      '<td>'+ globalArrayOfStudents[display_failed[i]].stuName+'</td>'+
+                                      '<td>'+ globalArrayOfStudents[display_failed[i]].stuPosition+'</td>'+
+                                      '<td>'+ globalArrayOfStudents[display_failed[i]].stuJobType+'</td>'+
+                                      '<td>'+ globalArrayOfStudents[display_failed[i]].stuWeeklyHours + globalArrayOfStudents[display_failed[i]].stuContractHours+'</td>'+
+                                      '<td>'+ globalArrayOfStudents[display_failed[i]].stuStartDate + '-'+ globalArrayOfStudents[display_failed[i]].stuEndDate+'</td>'+
+                                      '<td>'+ globalArrayOfStudents[display_failed[i]].stuNotes+'</td>'+
+                                      '</tr>');
+           }
+           $('#SubmitModal').modal("hide");
+           $("#SubmitModal").modal({backdrop: false, keyboard: true, show: false});
+           $("#SubmitModal").data("bs.modal").options.backdrop = true;
+           $("#submitmodalid").html("submit");
+         }
+         else{
+         window.location.replace("/laborstatusform");
+       }
+        }; // seems to be necessary to use this line to get it to work
+
+     // for(var key = 0; key < display_failed.length; key++){
+     //   $('#failedTable').html(globalArrayOfStudents[display_failed[key]][stuName]);
+     // }
    }
