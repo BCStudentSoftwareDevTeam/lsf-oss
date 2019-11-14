@@ -26,7 +26,7 @@ function insertApprovals() {
 
      location.reload();
        }
-    data = JSON.stringify(labor_details_ids);
+    var data = JSON.stringify(labor_details_ids);
    $.ajax({
      type: "POST",
      url: "/admin/checkedForms",
@@ -35,33 +35,33 @@ function insertApprovals() {
      contentType: 'application/json',
      success: function(response){
        if (response){
-         returned_details = response;
+         var returned_details = response;
          updateApproveTableData(returned_details);
               }
             }
-          })
-      };
+          });
+      }
 //this method adds data to each row in the approve selected Modal
 function updateApproveTableData(returned_details){
   for (var i = 0; i < returned_details.length; i++){
-    var student=returned_details[i][0]
-    var position= returned_details[i][1]
-     var r_hour= returned_details[i][3]
-     var c_Hours= returned_details[i][4]
-      var supervisor= returned_details[i][2]
-      var hours = " "
+    var student=returned_details[i][0];
+    var position= returned_details[i][1];
+     var r_hour= returned_details[i][3];
+     var c_Hours= returned_details[i][4];
+      var supervisor= returned_details[i][2];
+      var hours = " ";
       if (r_hour.length==4){
-        hours = c_Hours
+        hours = c_Hours;
       }
       else {
-        hours = r_hour
+        hours = r_hour;
       }
       $('#classTable').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+hours+'</td> <td> '+supervisor+'</td></tr>');
         }
       }
 
 function finalApproval() { //this method changes the status of the lsf from pending to approved status
-  data = JSON.stringify(labor_details_ids);
+  var data = JSON.stringify(labor_details_ids);
   $.ajax({
     type: "POST",
     url: "/admin/finalApproval",
@@ -70,19 +70,19 @@ function finalApproval() { //this method changes the status of the lsf from pend
     contentType: 'application/json',
     success: function(response){
       if (response){
-        if(response["success"]) {
+        if(response.success) {
             location.reload(true);
         }
        }
      }
-   })
- };
+   });
+ }
 
-labor_denial_id=[]; //this arrary is for insertDenial() and finalDenial() methods
+var labor_denial_id=[]; //this arrary is for insertDenial() and finalDenial() methods
 //This method calls AJAX from checkforms methods in the controller
 function insertDenial(val){
     labor_denial_id.push(val);
-    data = JSON.stringify(labor_denial_id);
+    var data = JSON.stringify(labor_denial_id);
    $.ajax({
      type: "POST",
      url: "/admin/checkedForms",
@@ -91,34 +91,34 @@ function insertDenial(val){
      contentType: 'application/json',
      success: function(response){
        if (response){
-         labor_denial_detials = response;
+         var labor_denial_detials = response;
          finalDenial_data(labor_denial_detials);
         }
       }
-    })
-};
+    });
+}
 
 // this method inserts data to the table of denial popup modal
 function finalDenial_data(returned_details){
   for (var i = 0; i < returned_details.length; i++){
-    var student=returned_details[i][0]
-    var position= returned_details[i][1]
-     var r_hour= returned_details[i][3]
-     var c_Hours= returned_details[i][4]
-      var supervisor= returned_details[i][2]
-      var hours = " "
+    var student=returned_details[i][0];
+    var position= returned_details[i][1];
+     var r_hour= returned_details[i][3];
+     var c_Hours= returned_details[i][4];
+      var supervisor= returned_details[i][2];
+      var hours = " ";
       if (r_hour.length==4){
-        hours = c_Hours
+        hours = c_Hours;
       }
       else {
-        hours = r_hour
+        hours = r_hour;
       }
       $('#denialPendingForms').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>'); //populate the denial modal for all pending forms
         }
       }
 
  function finalDenial() {// this mehod is AJAX call for the finalDenial method in python file
-   data = JSON.stringify(labor_denial_id);
+   var data = JSON.stringify(labor_denial_id);
    $.ajax({
      type: "POST",
      url: "/admin/finalDenial",
@@ -127,13 +127,13 @@ function finalDenial_data(returned_details){
      contentType: 'application/json',
      success: function(response){
        if (response){
-         if(response["success"]) {
+         if(response.success) {
              location.reload(true);
               }
             }
           }
-        })
-      };
+        });
+      }
 
 function getNotes (formId) {
   $.ajax({
@@ -142,38 +142,35 @@ function getNotes (formId) {
     datatype: "json",
     success: function (response) {
 
-      if ("Success" in response && response["Success"] == "false") {
+      if ("Success" in response && response.Success == "false") {
         //Clears supervisor notes p tag and the labor notes textarea
         $("#notesText").empty();
         $("#laborNotesText").empty();
 
        } else {
-          $("#laborNotesText").data('formId',formId) //attaches the formid data to the textarea
+          $("#laborNotesText").data('formId',formId); //attaches the formid data to the textarea
           //Populates notes value from the database
 
           if ("supervisorNotes" in response) {
-            $("#notesText").html(response["supervisorNotes"]);
+            $("#notesText").html(response.supervisorNotes);
              }
 
           if ("laborDepartmentNotes" in response) {
-            $("#laborNotesText").html(response["laborDepartmentNotes"]);
+            $("#laborNotesText").html(response.laborDepartmentNotes);
             }
          }
        }
-   })
-};
+   });
+}
 
  function notesInsert() {
    var formId = $("#laborNotesText").data('formId');
    var laborNotes = $("#laborNotesText").val(); //this is getting the id of the labor notes text area
    var notes = {'formId': formId, 'notes':laborNotes};   // {ID: textarea value} this sets the text area to what the user types in it
-
-   var formId = notes.formId; //This is how we get the ID of the form
+   formId = notes.formId; //This is how we get the ID of the form
    var note = notes.notes; //This is how we are getting the note object from the dictionary
-
-   data = JSON.stringify(note);
-
-    var notesGlyph = $("#notes_" + formId);
+   var data = JSON.stringify(note);
+   var notesGlyph = $("#notes_" + formId);
 
    $("#saveNotes").on('submit', function(e) {
      e.preventDefault();
@@ -205,18 +202,18 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
   var listDictAJAX = [];
   $('#statusForms tr').has('td').each(function() {
     /* Get the input box values first */
-      supervisor = $("#selectedSupervisor").val();
-      department = $("#selectedDepartment").val();
-      term = $("#selectedTerm").val();
+      var supervisor = $("#selectedSupervisor").val();
+      var department = $("#selectedDepartment").val();
+      var term = $("#selectedTerm").val();
       var whichTerm = term.toString().substr(-2);
-      startDate = $("#dateTimePicker1").val();
-      endDate = $("#dateTimePicker2").val();
+      var startDate = $("#dateTimePicker1").val();
+      var endDate = $("#dateTimePicker2").val();
       var positionCode = $("#position_code").attr("data-posn");
-      listDict = []
-      listDict.push(supervisor, department, term, startDate, endDate, positionCode)
-      var headersLabel = ["Supervisor", "Department", "Term", "Start Date", "End Date", "Position Code"]
+      var listDict = [];
+      listDict.push(supervisor, department, term, startDate, endDate, positionCode);
+      var headersLabel = ["Supervisor", "Department", "Term", "Start Date", "End Date", "Position Code"];
       var tableDataDict = {};
-      for (i in listDict) {
+      for (var i in listDict) {
         tableDataDict[headersLabel[i]] = listDict[i];
       }
 
@@ -233,7 +230,7 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
           }
         });
         listDictAJAX.push(tableDataDict);
-        allTableDataDict = {}
+        var allTableDataDict = {};
         for ( var key in listDictAJAX){
           allTableDataDict[key] = listDictAJAX[key];
         }
@@ -250,15 +247,15 @@ function createTabledataDictionary() { // puts all of the forms into dictionarie
             }
           });
           listDictAJAX.push(tableDataDict);
-          allTableDataDict = {} // this is the dictionary that contains all the forms
+          var allTableDataDict = {}; // this is the dictionary that contains all the forms
           for ( var key in listDictAJAX){
             allTableDataDict[key] = listDictAJAX[key];
           }
       }
      });
 
-  delete allTableDataDict["0"] // gets rid of the first dictionary that contains table labels
-  return allTableDataDict
+  delete allTableDataDict["0"]; // gets rid of the first dictionary that contains table labels
+  return allTableDataDict;
 }
 
 function clearTextArea(){ //makes sure that it empties text areas and p tags when modal is closed
