@@ -1,3 +1,5 @@
+<script type="text/javascript" src="/static/js/laborhistory.js"></script>
+
 <div class="modal fade" id="modal" role="dialog">
   <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div class="modal-content">
@@ -6,6 +8,7 @@
         {% for form1 in statusForm %}
         <div class="modal-title h2" align="center">{{form1.studentSupervisee.FIRST_NAME}} {{form1.studentSupervisee.LAST_NAME}}</div>
         {% endfor %}
+        <div align= "right"><button type="button" class="btn btn-default btn" id="print"><span class="glyphicon glyphicon-print"></span>Print</button></div>
       </div>
       <div class="modal-body" id="modalid">
         {% for form1 in statusForm %}

@@ -15,9 +15,7 @@
       <input hidden name="listOfForms" value="{{formHistoryList}}" />
       <div align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success">Download</button></div>
     </form>
-    <form method="POST" action="/laborHistory/pdf">
-      <div align= "right"><button type="submit" class="btn btn-default btn" id="print"><span class="glyphicon glyphicon-print"></span>Print</button></div>
-    </form>
+
     <div align= "center">
       <table id="positionTable" >
         {% for form in studentForms %}
