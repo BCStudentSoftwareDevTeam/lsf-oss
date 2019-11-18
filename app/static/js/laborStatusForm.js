@@ -310,9 +310,9 @@ function deleteRow(glyphicon) {
 }
 //END of glyphicons
 
-function errorFlash(){
+function errorFlash(msg){
   category = "danger";
-  msg = "Please fill out all fields before submitting.";
+  //msg = "Please fill out all fields before submitting.";
   $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+msg+"</div>");
   $("#flasher").delay(3000).fadeOut();
 }
@@ -323,7 +323,7 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
   console.log("$$$$$$ : ", studentDict)
   if (studentDict === false) {
     console.log("studentDict returned false")
-    errorFlash();
+    errorFlash("Please fill out all fields before submitting.");
   }
   else  {
     console.log("going into checkPrimaryPosition")
@@ -594,6 +594,7 @@ function userInsert(){
            var whichTerm = parseInt(term.toString().substr(-2));
            console.log(typeof(whichTerm));
            modalList = [];
+           $("#flasher").delay(3000).fadeOut();
            for(var key = 0; key < globalArrayOfStudents.length; key++){
              var studentName = globalArrayOfStudents[key].stuName;
              var position = globalArrayOfStudents[key].stuPosition;
@@ -649,7 +650,8 @@ function userInsert(){
          console.log("globalArrayOfStudents", globalArrayOfStudents);
          if (display_failed.length > 0){
            $('.modal-header').empty();
-           $('.modal-header').append('<p> <b>ERROR:</b> Please contact Labor Office if the labor status form(s) continue to fail <span style="color:darkred;" class="glyphicon glyphicon-exclamation-sign"></span> </p>')
+           $('.modal-header').append('<p> <b>ERROR:</b> Please resubmit failed forms or contact the Labor Office if the labor status form(s) continue to fail <span style="color:darkred;" class="glyphicon glyphicon-exclamation-sign"></span> </p>')
+           errorFlash("An error occured, please review your forms and resubmit.")
             var failed_students = globalArrayOfStudents.filter(function(item, indx){
              if (display_failed.includes(indx)){
                return item;
