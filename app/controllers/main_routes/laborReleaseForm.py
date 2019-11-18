@@ -76,7 +76,7 @@ def laborReleaseForm(laborStatusKey):
             print(newFormHistory.formHistoryID)
             flash("Your labor release form has been submitted.", "success")
             email = emailHandler(laborStatusKey, newFormHistory.formHistoryID)
-            email.laborReleaseFormEmail()
+            email.LaborOverLoadFormApproved()
             return redirect(url_for("main.index"))
 
         except Exception as e:
