@@ -538,6 +538,8 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
 }
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
+  $("#submitmodalid").show();
+  $("#doneButton").hide();
   disableTermSupervisorDept();
   var rowLength = document.getElementById("mytable").rows.length;
   if (rowLength > 1) {
@@ -577,6 +579,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
 
 // SEND DATA TO THE DATABASE
 function userInsert(){
+  console.log("checking userksfjklsdfjal")
   $("#laborStatusForm").on("submit", function(e) {
     e.preventDefault();
   });
@@ -632,44 +635,63 @@ function userInsert(){
          $("#SubmitModal").modal("show");
        }
      });
-     $("#SubmitModal").modal({backdrop: true, keyboard: false, show: true});
-     $("#SubmitModal").data("bs.modal").options.backdrop = "static";
-     $("#submitmodalid").html("Done");
+     // $("#SubmitModal").modal({backdrop: true, keyboard: false, show: true});
+     // $("#SubmitModal").data("bs.modal").options.backdrop = "static";
+     // $("#submitmodalid").html("Done");
+     $("#submitmodalid").hide();
+     $("#doneButton").show();
+
 
 
      // $("#submitmodalid").attr("onclick", function() { window.location.replace("/laborstatusform");});
-       document.getElementById("submitmodalid").onclick = function() {
+       document.getElementById("doneButton").onclick = function() {
+         console.log("display_failed", display_failed);
+         console.log("globalArrayOfStudents", globalArrayOfStudents);
          if (display_failed.length > 0){
+           $('.modal-header').empty();
+           $('.modal-header').append('<p> <b>ERROR:</b> Please contact Labor Office if the labor status form(s) continue to fail <span style="color:darkred;" class="glyphicon glyphicon-exclamation-sign"></span> </p>')
+            var failed_students = globalArrayOfStudents.filter(function(item, indx){
+             if (display_failed.includes(indx)){
+               return item;
+            }
+          });
+           console.log("failed_students", failed_students);
+           globalArrayOfStudents = [];
+           console.log("before forEach",globalArrayOfStudents);
            $('#tbodyid').empty();
-           // $('#reviewButton').hide();
-           // $('#failedTable').show();
-           for (var i = 0; i < display_failed.length; i++){
-             // console.log('indiviual failed form', globalArrayOfStudents[display_failed[i]]);
-             if (globalArrayOfStudents[display_failed[i]].stuContractHours){
-               globalArrayOfStudents[display_failed[i]].stuWeeklyHours = '';
-             }
-             else{
-               globalArrayOfStudents[display_failed[i]].stuContractHours = '';
-             }
-             $('#mytable').append('<tr>'+
-                                      '<td>'+ globalArrayOfStudents[display_failed[i]].stuName+'</td>'+
-                                      '<td>'+ globalArrayOfStudents[display_failed[i]].stuPosition+'</td>'+
-                                      '<td>'+ globalArrayOfStudents[display_failed[i]].stuJobType+'</td>'+
-                                      '<td>'+ globalArrayOfStudents[display_failed[i]].stuWeeklyHours + globalArrayOfStudents[display_failed[i]].stuContractHours+'</td>'+
-                                      '<td>'+ globalArrayOfStudents[display_failed[i]].stuStartDate + '-'+ globalArrayOfStudents[display_failed[i]].stuEndDate+'</td>'+
-                                      '<td>'+ globalArrayOfStudents[display_failed[i]].stuNotes+'</td>'+
-                                      '</tr>');
+           failed_students.forEach(function(item){
+             console.log("item in failed", item);
+             createAndFillTable(item);
+           });
+           $('#SubmitModal').modal('hide');
+           //$("#submitmodalid").html("Submit");
+           console.log("after filter : ", globalArrayOfStudents)
            }
-           $('#SubmitModal').modal("hide");
-           $("#SubmitModal").modal({backdrop: false, keyboard: true, show: false});
-           $("#SubmitModal").data("bs.modal").options.backdrop = true;
-           $("#submitmodalid").html("submit");
-         }
+         //   $('#tbodyid').empty();
+         //   // $('#reviewButton').hide();
+         //   // $('#failedTable').show();
+         //   for (var i = 0; i < display_failed.length; i++){
+         //     // console.log('indiviual failed form', globalArrayOfStudents[display_failed[i]]);
+         //     if (globalArrayOfStudents[display_failed[i]].stuContractHours){
+         //       globalArrayOfStudents[display_failed[i]].stuWeeklyHours = '';
+         //     }
+         //     else{
+         //       globalArrayOfStudents[display_failed[i]].stuContractHours = '';
+         //     }
+         //     $('#mytable').append('<tr>'+
+         //                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuName+'</td>'+
+         //                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuPosition+'</td>'+
+         //                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuJobType+'</td>'+
+         //                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuWeeklyHours + globalArrayOfStudents[display_failed[i]].stuContractHours+'</td>'+
+         //                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuStartDate + '-'+ globalArrayOfStudents[display_failed[i]].stuEndDate+'</td>'+
+         //                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuNotes+'</td>'+
+         //                              '</tr>');
+         //   }
+         //   $('#SubmitModal').modal("hide");
          else{
          window.location.replace("/laborstatusform");
        }
-        }; // seems to be necessary to use this line to get it to work
-
+     }; // seems to be necessary to use this line to get it to work
      // for(var key = 0; key < display_failed.length; key++){
      //   $('#failedTable').html(globalArrayOfStudents[display_failed[key]][stuName]);
      // }

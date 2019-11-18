@@ -109,3 +109,7 @@ selectpicker, label {
 #dateTimePicker2 {
   background-color: #fff;
 }
+
+#doneButton {
+  display: none;
+}
