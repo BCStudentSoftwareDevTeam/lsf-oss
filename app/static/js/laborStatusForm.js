@@ -175,10 +175,26 @@ function getDepartment(object) { // get department from select picker
   }
 }
 
-if(document.getElementById('jobType').value){// fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
+if(('#jobType').value){// fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
   var value = $('#selectedHoursPerWeek').val();
   $('#selectedHoursPerWeek').val(value);
   fillHoursPerWeek("fillhours");
+}
+
+function checkJobType() {
+  // This function checks the job type selected along with the WLS of the position.
+  // If the job type is secondary and the WLS is 5 or 6, it rejects the insert.
+  var jobTypeSelected = $('#jobType').find('option:selected').attr('data-jobType');
+  var wlsSelected = $('#position').find('option:selected').attr('data-wls');
+  if (jobTypeSelected == "Secondary" && wls >=5) {
+    $('#WLSModalTitle').html("Insert Rejected");
+    $('#WLSModalText').html("Position with WLS 5 or 6 cannot be a secondary position.");
+    $('#WLSModal').modal('show');
+    return false;
+  }
+  else {
+    return true;
+  }
 }
 
 // Check if department is in compliance.

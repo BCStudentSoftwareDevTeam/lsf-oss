@@ -7,7 +7,7 @@
   font-size: 16px;
 }
 
-#subHeader {
+.subHeader {
   text-align: center;
 }
 
@@ -17,9 +17,7 @@
 }
 
 #wrapper {
-  position: relative;
-  left: 105px;
-  top: 20px;
+  position: static;
 }
 
 .btn-link {
