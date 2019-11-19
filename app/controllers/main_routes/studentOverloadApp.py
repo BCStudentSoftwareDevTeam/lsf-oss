@@ -1,6 +1,7 @@
 from app.controllers.main_routes import *
 from app.models.user import *
 from app.login_manager import require_login
+from app.models.laborStatusForm import *
 
 @main_bp.route('/studentOverloadApp/<formId>', methods=['GET', 'POST'])
 # @login_required
