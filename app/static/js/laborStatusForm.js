@@ -310,10 +310,9 @@ function deleteRow(glyphicon) {
 }
 //END of glyphicons
 
-function errorFlash(){
+function errorFlash(flash_message){
   category = "danger";
-  msg = "Please fill out all fields before submitting.";
-  $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+msg+"</div>");
+  $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
   $("#flasher").delay(3000).fadeOut();
 }
 
@@ -323,7 +322,7 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
   console.log("$$$$$$ : ", studentDict)
   if (studentDict === false) {
     console.log("studentDict returned false")
-    errorFlash();
+    errorFlash("Please fill out all fields before submitting.");
   }
   else  {
     console.log("going into checkPrimaryPosition")
@@ -479,7 +478,7 @@ function createAndFillTable(studentDict) {
   }
   var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(this)\" id= \""+notesID2+
                                                           "\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
-  var removeIcon = "<a onclick= \"deleteRow(this)\"><span class=\"glyphicon glyphicon-remove\"></span></a>";
+  var removeIcon = "<a onclick= \"deleteRow(this)\"><span class=\"glyphicon glyphicon-remove color-red\" style=\"color:red;\"></span></a>";
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
@@ -594,6 +593,8 @@ function userInsert(){
            var whichTerm = parseInt(term.toString().substr(-2));
            console.log(typeof(whichTerm));
            modalList = [];
+           if (response.includes(false)){
+             console.log("window reload plzzzzzzzzzzzzzzzzzzz")}
            for(var key = 0; key < globalArrayOfStudents.length; key++){
              var studentName = globalArrayOfStudents[key].stuName;
              var position = globalArrayOfStudents[key].stuPosition;
@@ -648,8 +649,10 @@ function userInsert(){
          console.log("display_failed", display_failed);
          console.log("globalArrayOfStudents", globalArrayOfStudents);
          if (display_failed.length > 0){
-           $('.modal-header').empty();
-           $('.modal-header').append('<p> <b>ERROR:</b> Please contact Labor Office if the labor status form(s) continue to fail <span style="color:darkred;" class="glyphicon glyphicon-exclamation-sign"></span> </p>')
+           $('#error_modal').empty();
+           console.log("appending............")
+           $('#error_modal').append('<p style="padding-left:16px;"><b>ERROR:</b> Contact Systems Support if form(s) continue to fail <span style="color:darkred;" class="glyphicon glyphicon-exclamation-sign"></span> </p>')
+           errorFlash("Below form(s) failed to submit, please try again.")
             var failed_students = globalArrayOfStudents.filter(function(item, indx){
              if (display_failed.includes(indx)){
                return item;
@@ -666,6 +669,7 @@ function userInsert(){
            $('#SubmitModal').modal('hide');
            //$("#submitmodalid").html("Submit");
            console.log("after filter : ", globalArrayOfStudents)
+           display_failed=[];
            }
          //   $('#tbodyid').empty();
          //   // $('#reviewButton').hide();

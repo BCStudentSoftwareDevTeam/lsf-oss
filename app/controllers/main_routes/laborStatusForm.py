@@ -102,7 +102,7 @@ def userInsert():
             all_forms.append(True)
             flash("Labor Status Form(s) has been created.", "success")
         except Exception as e:
-            flash("An error occured.", "danger")
+            # flash("An error occured.", "danger")
             all_forms.append(False)
             # print("testing failed_form", failed_forms)
             print("ERROR: " + str(e))

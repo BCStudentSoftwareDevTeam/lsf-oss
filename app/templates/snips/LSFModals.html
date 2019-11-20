@@ -3,17 +3,25 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
+      <b>Attention!</b>
       </div>
       <div id="SubmitModalText" class="modal-body">
       </div>
+      <div id="error_modal">
+      </div>
       <div class="modal-footer">
-        <button id="submitmodalid"
-                type="submit"
-                class="btn btn-primary"
-                name = "formsubmission"
-                value = "formsubmission"
-                onclick = "userInsert()">Submit</button>
-        <button type="button" class="btn btn-primary" id="doneButton"data-dismiss="modal">Done</button>
+        <div class="col-sm-4">
+          <button class="btn btn-danger"type="button" name="close" data-dismiss="modal" style="margin-right:100px;">Close</button>
+        </div>
+        <div class="col-sm-8">
+          <button id="submitmodalid"
+                  type="submit"
+                  class="btn btn-primary"
+                  name = "formsubmission"
+                  value = "formsubmission"
+                  onclick = "userInsert()">Submit</button>
+          <button type="button" class="btn btn-primary" id="doneButton"data-dismiss="modal">Done</button>
+        </div>
       </div>
     </div>
 </div>
@@ -130,8 +138,13 @@
         Students shoud not work any hours within a secondary assignment until notification of approved Labor Overload.<br>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" id="overloadModalCancel">Accept</button>
-        {#<button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" id="overloadModalButton" onclick="displayTable(); disableTermSupervisorDept()">Accept</button>#}
+        <div class="col-sm-4">
+            <button class="btn btn-danger"type="button" name="close" data-dismiss="modal" style="margin-right:100px;">Close</button>
+        </div>
+        <div class="col-sm-8">
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" id="overloadModalCancel">Accept</button>
+          {#<button type="button" class="btn btn-primary" data-toggle="modal" data-dismiss="modal" id="overloadModalButton" onclick="displayTable(); disableTermSupervisorDept()">Accept</button>#}
+        </div>
       </div>
     </div>
   </div>
