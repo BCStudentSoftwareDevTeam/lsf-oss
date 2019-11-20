@@ -13,7 +13,7 @@ from app import app
 import os
 
 class emailHandler():
-    def __init__(self, laborStatusKey, formHistoryKey):
+    def __init__(self, formHistoryKey):
         secret_conf = get_secret_cfg()
 
         app.config.update(
@@ -29,7 +29,7 @@ class emailHandler():
         self.mail = Mail(app)
 
         self.formHistory = FormHistory.get(FormHistory.formHistoryID == formHistoryKey)
-        self.laborStatusForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+        self.laborStatusForm = self.formHistory.formID
         self.studentEmail = self.laborStatusForm.studentSupervisee.STU_EMAIL
         self.creatorEmail = self.formHistory.createdBy.EMAIL
         self.supervisorEmail = self.laborStatusForm.supervisor.EMAIL
@@ -41,11 +41,17 @@ class emailHandler():
         self.primaryEmail = self.primaryForm.supervisor.EMAIL
         self.releaseReason = ""
         self.releaseDate = ""
+        self.link = ""
 
+
+
+    # The methods of this class each handle a different email situation. Some of the methods need to handle
+    # "primary" and "secondary" forms differently, but a majority do not need to differentiate between the two.
+    # Every method will use the replaceText and sendEmail methods to acomplish the email sending.
+    # The email templates are stored inside of the emailHandler model, and depending on which email template
+    # is pulled from the model, and replaceText method will replace the neccesary keywords with the correct data.
+    # The sendEmail method will handle all of the email sending once the email template has been populated.
     def laborStatusFormSubmitted(self):
-        """
-        This method is for sending email to the student when a Labor Status Form has been created. The email template's keywords are replace with the LSF informations.
-        """
         StatusFormEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Submitted For Student")
         self.sendEmail(StatusFormEmailTemplateID, "student")
 
@@ -57,11 +63,9 @@ class emailHandler():
             self.sendEmail(SupervisorEmailTemplateID, "supervisor")
 
     def laborStatusFormApproved(self):
-        #Email for Student
         StatusFormEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Approved For Student")
         self.sendEmail(StatusFormEmailTemplateID, "student")
 
-        #send to supervisor
         if self.laborStatusForm.jobType == "Secondary":
             SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Approved For Secondary")
             self.sendEmail(SupervisorEmailTemplateID, "secondary")
@@ -70,11 +74,9 @@ class emailHandler():
             self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
     def laborStatusFormRejected(self):
-        #Email for Student
         StatusFormEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Rejected For Student")
         self.sendEmail(StatusFormEmailTemplateID, "student")
 
-        #send to supervisor
         if self.laborStatusForm.jobType == "Secondary":
             SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Rejected For Secondary")
             self.sendEmail(SupervisorEmailTemplateID, "secondary")
@@ -116,7 +118,8 @@ class emailHandler():
         SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Release Form Rejected For Supervisor")
         self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
-    def LaborOverLoadFormSubmitted(self):
+    def LaborOverLoadFormSubmitted(self, link):
+        self.link = link
         releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Overload Form Submitted For Student")
         self.sendEmail(releaseEmailTemplateID, "student")
 
@@ -137,9 +140,7 @@ class emailHandler():
         SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Overload Form Rejected For Supervisor")
         self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
-    def SASS(self):
-        pass
-
+    # Depending on what the paramater 'sendTo' is set equal to, this method will send the email either to the Primary, Seconday, or the Student
     def sendEmail(self, template, sendTo):
         formTemplate = template.body
         formTemplate = self.replaceText(formTemplate)
@@ -156,11 +157,12 @@ class emailHandler():
         message.html = formTemplate
         self.mail.send(message)
 
+    # This method is responsible for replacing the keyword form the templates in the database with the data in the laborStatusForm
     def replaceText(self, form):
-        """
-        """
         form = form.replace("@@Creator@@", self.formHistory.createdBy.FIRST_NAME + " " + self.formHistory.createdBy.LAST_NAME)
+        # 'Supervisor' is the supervisor on the current laborStatusForm that correspond to the formID we passed in when creating the class
         form = form.replace("@@Supervisor@@", self.laborStatusForm.supervisor.FIRST_NAME + " " + self.laborStatusForm.supervisor.LAST_NAME)
+        # 'Primary Supervisor' is the primary supervisor of the student who's laborStatusForm is passed in the initializer
         form = form.replace("@@Primsupr@@", self.primaryForm.supervisor.FIRST_NAME + " " + self.primaryForm.supervisor.LAST_NAME)
         form = form.replace("@@Student@@", self.laborStatusForm.studentSupervisee.FIRST_NAME + " " + self.laborStatusForm.studentSupervisee.LAST_NAME)
         form = form.replace("@@StudB@@", self.laborStatusForm.studentSupervisee.ID)
@@ -174,5 +176,19 @@ class emailHandler():
         form = form.replace("@@Date@@", self.date)
         form = form.replace("@@ReleaseReason@@", self.releaseReason)
         form = form.replace("@@ReleaseDate@@", self.releaseDate)
-
+        form = form.replace("@@link@@", self.link)
         return(form)
+
+    # Depending on the department specified, this method will send an email to either SASS or Financial Aid office
+    # to notify them about the overload applocation they need to approve
+    def overloadVerification(self, dept, link):
+        self.link = link
+        if dept == "SASS":
+            email = ""
+        elif dept == "Financial Aid":
+            email = ""
+        message = Message("Overload Verification",
+            recipients=[email])
+        emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "SASS and Financial Aid Office")
+        message.html = self.replaceText(emailTemplateID.body)
+        self.mail.send(message)

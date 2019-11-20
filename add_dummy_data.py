@@ -1823,7 +1823,10 @@ emailtemps= [
                 "purpose":"Labor Overload Form Submitted For Student",
                 "subject":"Labor Overload Form Submitted",
                 "body":'''
-                            ''',
+                    <p>Dear <strong>@@Student@@</strong>,</p>
+                    <p>&nbsp;</p>
+                    <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
+                    ''',
                 "audience":"student"
                 },
                 {
@@ -1863,9 +1866,10 @@ emailtemps= [
                 },
                 #SASS
                 {
-                "purpose":"SASS",
-                "subject":"SASS",
+                "purpose":"SASS and Financial Aid Office",
+                "subject":"Overload Verification",
                 "body":'''
+                    <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
                             ''',
                 "audience":"supervisor"
                 }
