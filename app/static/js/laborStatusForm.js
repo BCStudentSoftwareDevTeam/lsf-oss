@@ -310,14 +310,19 @@ function deleteRow(glyphicon) {
 }
 //END of glyphicons
 
-function errorFlash(flash_message){
-  category = "danger";
-  $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
-// function errorFlash(msg){
-//   category = "danger";
-//   //msg = "Please fill out all fields before submitting.";
-//   $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+msg+"</div>");
-  $("#flasher").delay(3000).fadeOut();
+function msgFlash(flash_message, status){
+    if (status === "success") {
+      console.log("flash success");
+        category = "success";
+        $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
+        $("#flasher").delay(3000).fadeOut();
+    }
+    else {
+        category = "danger";
+        $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
+        $("#flasher").delay(3000).fadeOut();
+    }
+
 }
 
 // TABLE
@@ -326,7 +331,7 @@ function displayTable() { // displays table when plus glyphicon is clicked and c
   console.log("$$$$$$ : ", studentDict)
   if (studentDict === false) {
     console.log("studentDict returned false")
-    errorFlash("Please fill out all fields before submitting.");
+    msgFlash("Please fill out all fields before submitting.", "fail");
   }
   else  {
     console.log("going into checkPrimaryPosition")
@@ -542,7 +547,7 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
   $("#submitmodalid").show();
-  $("#doneButton").hide();
+  $("#doneBtn").hide();
   disableTermSupervisorDept();
   var rowLength = document.getElementById("mytable").rows.length;
   if (rowLength > 1) {
@@ -580,128 +585,115 @@ function createModalContent() { // Populates Submit Modal with Student informati
   }
 }
 
-// SEND DATA TO THE DATABASE
+// userInsert() sends SubmitModal's info to controller using ajax and gets the response in array containing true(s) or/and flase(s)
 function userInsert(){
-  console.log("checking userksfjklsdfjal")
-  $("#laborStatusForm").on("submit", function(e) {
-    e.preventDefault();
-  });
-  $.ajax({
-         method: "POST",
-         url: "/laborstatusform/userInsert",
-         data: JSON.stringify(globalArrayOfStudents),
-         contentType: "application/json",
-         success: function(response) {
-           console.log("response from userInsert : ", response)
-           term = $("#selectedTerm").val();
-           var whichTerm = parseInt(term.toString().substr(-2));
-           console.log(typeof(whichTerm));
-           modalList = [];
-           if (response.includes(false)){
-             console.log("window reload plzzzzzzzzzzzzzzzzzzz")}
-           // $("#flasher").delay(3000).fadeOut();
-           for(var key = 0; key < globalArrayOfStudents.length; key++){
-             var studentName = globalArrayOfStudents[key].stuName;
-             var position = globalArrayOfStudents[key].stuPosition;
-             var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
-             var jobType = globalArrayOfStudents[key].stuJobType;
-             var hours = globalArrayOfStudents[key].stuWeeklyHours;
-             var selectedContractHours = globalArrayOfStudents[key].stuWeeklyHours;
-             console.log(globalArrayOfStudents);
-             if (response[key] === true){
-               console.log("response is true")
-               if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
-                 var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
+    $("#laborStatusForm").on("submit", function(e) {
+      e.preventDefault();
+    });
+    $.ajax({
+           method: "POST",
+           url: "/laborstatusform/userInsert",
+           data: JSON.stringify(globalArrayOfStudents),
+           contentType: "application/json",
+           success: function(response) {
+               term = $("#selectedTerm").val();
+               var whichTerm = parseInt(term.toString().substr(-2));
+               modalList = [];
+               if (response.includes(false)){ // if there is even one false value in response
+                   for(var key = 0; key < globalArrayOfStudents.length; key++){
+                       var studentName = globalArrayOfStudents[key].stuName;
+                       var position = globalArrayOfStudents[key].stuPosition;
+                       var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
+                       var jobType = globalArrayOfStudents[key].stuJobType;
+                       var hours = globalArrayOfStudents[key].stuWeeklyHours;
+                       var selectedContractHours = globalArrayOfStudents[key].stuWeeklyHours;
+                       if (response[key] === false){
+                           if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
+                              display_failed.push(key);
+                              var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
+                           }
+                           else {
+                              display_failed.push(key);
+                              var bigString = "<li>"+"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
+                           }
+                       }
+                       else{
+                            if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
+                                var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
+                            }
+                            else {
+                                var bigString = "<li>"+"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
+                            }
+                       }
+                       modalList.push(bigString);
+                   }
+                   $("#SubmitModalText").html("Some of your submitted Labor Status Form(s) did not succeed:<br><br>" +
+                                              "<ul style=\"list-style-type:none; display: inline-block;text-align:left;\">" +
+                                               modalList.join("</li>")+"</ul>"+""
+                                            );
+                   $("#closeBtn").hide();
+                   $("#SubmitModal").modal("show");
                }
-               else {
-                 var bigString = "<li>"+"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
+               else{
+                 $("#SubmitModal").modal("hide");
+                 $("#reviewButton0").prop('disabled',true);
+                 $("#addMoreStudent").prop('disabled',true);
+                 msgFlash("Form(s) submitted successfully! It will be eligible for approval in one business day", "success");
+                 setTimeout(function() { // executed after 1 second
+                    window.location.replace("/laborstatusform"); // reloads the page if every form
+                  }, 3000);
                }
              }
-             else {
-               if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
-                 display_failed.push(key);
-                 console.log("key",key);
-                 var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
-               }
-               else {
-                 console.log("key",key);
-                 console.log("sksksk");
-                 display_failed.push(key);
-                 var bigString = "<li>"+"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
-               }
-             }
-             modalList.push(bigString);
-           }
+         }); // ajax closing tag
 
+      $("#submitmodalid").hide();
+      $("#doneBtn").show();
 
-         $("#SubmitModalText").html("Labor status form(s) will be submitted for:<br><br>" +
-                                    "<ul style=\"list-style-type:none; display: inline-block;text-align:left;\">" +
-                                     modalList.join("</li>")+"</ul>"+
-                                    "<br><br>The labor status form will be eligible for approval in one business day.");
-         $("#SubmitModal").modal("show");
-       }
-     });
-     // $("#SubmitModal").modal({backdrop: true, keyboard: false, show: true});
-     // $("#SubmitModal").data("bs.modal").options.backdrop = "static";
-     // $("#submitmodalid").html("Done");
-     $("#submitmodalid").hide();
-     $("#doneButton").show();
-
-
-
-     // $("#submitmodalid").attr("onclick", function() { window.location.replace("/laborstatusform");});
-       document.getElementById("doneButton").onclick = function() {
-         console.log("display_failed", display_failed);
-         console.log("globalArrayOfStudents", globalArrayOfStudents);
-         if (display_failed.length > 0){
+      document.getElementById("doneBtn").onclick = function() { // Calls this function after failed form(s)
+       if (display_failed.length > 0){
            $('#error_modal').empty();
-           console.log("appending............")
            $('#error_modal').append('<p style="padding-left:16px;"><b>ERROR:</b> Contact Systems Support if form(s) continue to fail <span style="color:darkred;" class="glyphicon glyphicon-exclamation-sign"></span> </p>')
-           errorFlash("Below form(s) failed to submit, please try again.")
+           msgFlash("Below form(s) failed to submit, please try again.", "fail")
             var failed_students = globalArrayOfStudents.filter(function(item, indx){
-             if (display_failed.includes(indx)){
-               return item;
-            }
-          });
-           console.log("failed_students", failed_students);
+                if (display_failed.includes(indx)){
+                 return item;
+                }
+            });
            globalArrayOfStudents = [];
-           console.log("before forEach",globalArrayOfStudents);
            $('#tbodyid').empty();
            failed_students.forEach(function(item){
-             console.log("item in failed", item);
-             createAndFillTable(item);
+              createAndFillTable(item);
            });
            $('#SubmitModal').modal('hide');
-           //$("#submitmodalid").html("Submit");
-           console.log("after filter : ", globalArrayOfStudents)
            display_failed=[];
-           }
-         //   $('#tbodyid').empty();
-         //   // $('#reviewButton').hide();
-         //   // $('#failedTable').show();
-         //   for (var i = 0; i < display_failed.length; i++){
-         //     // console.log('indiviual failed form', globalArrayOfStudents[display_failed[i]]);
-         //     if (globalArrayOfStudents[display_failed[i]].stuContractHours){
-         //       globalArrayOfStudents[display_failed[i]].stuWeeklyHours = '';
-         //     }
-         //     else{
-         //       globalArrayOfStudents[display_failed[i]].stuContractHours = '';
-         //     }
-         //     $('#mytable').append('<tr>'+
-         //                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuName+'</td>'+
-         //                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuPosition+'</td>'+
-         //                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuJobType+'</td>'+
-         //                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuWeeklyHours + globalArrayOfStudents[display_failed[i]].stuContractHours+'</td>'+
-         //                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuStartDate + '-'+ globalArrayOfStudents[display_failed[i]].stuEndDate+'</td>'+
-         //                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuNotes+'</td>'+
-         //                              '</tr>');
-         //   }
-         //   $('#SubmitModal').modal("hide");
-         else{
-         window.location.replace("/laborstatusform");
-       }
-     }; // seems to be necessary to use this line to get it to work
-     // for(var key = 0; key < display_failed.length; key++){
-     //   $('#failedTable').html(globalArrayOfStudents[display_failed[key]][stuName]);
-     // }
-   }
+         }
+      }
+} // userInsert closing tag
+
+
+////////////////////////////////////////////////////////////////////////////
+//   $('#tbodyid').empty();
+//   // $('#reviewButton').hide();
+//   // $('#failedTable').show();
+//   for (var i = 0; i < display_failed.length; i++){
+//     // console.log('indiviual failed form', globalArrayOfStudents[display_failed[i]]);
+//     if (globalArrayOfStudents[display_failed[i]].stuContractHours){
+//       globalArrayOfStudents[display_failed[i]].stuWeeklyHours = '';
+//     }
+//     else{
+//       globalArrayOfStudents[display_failed[i]].stuContractHours = '';
+//     }
+//     $('#mytable').append('<tr>'+
+//                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuName+'</td>'+
+//                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuPosition+'</td>'+
+//                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuJobType+'</td>'+
+//                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuWeeklyHours + globalArrayOfStudents[display_failed[i]].stuContractHours+'</td>'+
+//                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuStartDate + '-'+ globalArrayOfStudents[display_failed[i]].stuEndDate+'</td>'+
+//                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuNotes+'</td>'+
+//                              '</tr>');
+//   }
+//   $('#SubmitModal').modal("hide");
+//   else{
+//   window.location.replace("/laborstatusform");
+// }
+// };

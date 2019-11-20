@@ -100,7 +100,7 @@ def userInsert():
                                               createdDate = date.today(),
                                               status      = status.statusName)
             all_forms.append(True)
-            flash("Labor Status Form(s) has been created.", "success")
+            # flash("Labor Status Form(s) has been created.", "success")
         except Exception as e:
             # flash("An error occured.", "danger")
             all_forms.append(False)
