@@ -36,12 +36,7 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
       $("#warningModal").modal("show");
       $("#warningModalTitle").html("Warning") //Maybe change the wording here.
       $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
-      $("#warningModal").on("hidden.bs.modal", function(){
-      $("#warningModalText").html("");
-      $("#warningModalTitle").html("Insert Rejected") //Maybe change the wording here.
-      //Testing out modal stuff here
-      });
-    }
+      }
   });
 
 function disableTermSupervisorDept() {
@@ -151,12 +146,12 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
    //this is just getting the value that is selected
    var wls = $("#position").find("option:selected").attr("data-wls");
    if (wls >= 5) {
-     $("#WLSModalTitle").html("Work-Learning-Service Levels (WLS)");
-     $("#WLSModalText").html("Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
+     $("#warningModalTitle").html("Work-Learning-Service Levels (WLS)");
+     $("#warningModalText").html("Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
                               "These positions require special authorization as specified at " +
                               "<a href=\"http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS\""+
                               "target=\"_blank\">The Labor Program Website.</a>");
-     $("#WLSModal").modal("show");
+     $("#warningModal").modal("show");
  }
 });
 
@@ -184,9 +179,9 @@ function checkWLS() {
   var hoursPerWeek = $("#selectedHoursPerWeek").val();
 
   if (wls >= 5 && hoursPerWeek < 15 ) {
-    $("#WLSModalTitle").html("Insert Rejected");  // FIXME: Maybe change Modal title (ask Scott)
-    $("#WLSModalText").html("Student requires at least a 15 hour contract with positions WLS 5 or greater."); // FIXME Maybe change modal Language (ask Scott)
-    $("#WLSModal").modal("show");
+    $("#warningModalTitle").html("Insert Rejected");  // FIXME: Maybe change Modal title (ask Scott)
+    $("#warningModalText").html("Student requires at least a 15 hour contract with positions WLS 5 or greater."); // FIXME Maybe change modal Language (ask Scott)
+    $("#warningModal").modal("show");
     return false;
   }
   else {
@@ -200,9 +195,9 @@ function checkJobType() {
   var jobTypeSelected = $('#jobType').find('option:selected').attr('data-jobType');
   var wlsSelected = $('#position').find('option:selected').attr('data-wls');
   if (jobTypeSelected == "Secondary" && wlsSelected >=5) {
-    $('#WLSModalTitle').html("Insert Rejected");
-    $('#WLSModalText').html("Position with WLS 5 or 6 cannot be a secondary position.");
-    $('#WLSModal').modal('show');
+    $('#warningModalTitle').html("Insert Rejected");
+    $('#warningModalText').html("Position with WLS 5 or 6 cannot be a secondary position.");
+    $('#warningModal').modal('show');
     return false;
   }
   else {
@@ -219,7 +214,9 @@ function checkCompliance(obj) {
         dataType: "json",
         success: function (response){
           if(response.Department["Department Compliance"] == false){
-            $("#OutofComplianceModal").modal("show");
+            $("#warningModal").modal("show");
+            $("#warningModalTitle").html("Warning")
+            $("#warningModalText").html("Department is out of compliance because position descriptions are not up to date. Please contact labor office to update your position description.")
             $(".disable").prop("disabled", true);
             $("#selectedTerm").selectpicker("refresh");
             $("#student").selectpicker("refresh");
@@ -421,6 +418,7 @@ function checkPrimaryPosition(studentDict){
       if(Object.keys(response).length > 0) {
         if (studentDict.stuJobType == "Primary"){
           console.log("Adding Primary with Primary in database");
+          $("#warningModalTitle").html("Insert Rejected")
           $("#warningModalText").html(studentDict.stuName + " already has a primary position.");
           $("#warningModal").modal("show");
         }
@@ -431,6 +429,7 @@ function checkPrimaryPosition(studentDict){
           }
           else {
             console.log("This is a duplicate");
+            $("#warningModalTitle").html("Insert Rejected")
             $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
             $("#warningModal").modal("show");
           }
@@ -444,6 +443,7 @@ function checkPrimaryPosition(studentDict){
           }
           else {
             console.log("This is a duplicate");
+            $("#warningModalTitle").html("Insert Rejected")
             $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
             $("#warningModal").modal("show");
           }
@@ -451,6 +451,7 @@ function checkPrimaryPosition(studentDict){
         else {
           if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
             console.log("Adding Secondary without Primary in database");
+            $("#warningModalTitle").html("Insert Rejected")
             $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
             $("#warningModal").modal("show");
           }
@@ -460,6 +461,7 @@ function checkPrimaryPosition(studentDict){
             }
             else {
               console.log("This is a duplicate");
+              $("#warningModalTitle").html("Insert Rejected")
               $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
               $("#warningModal").modal("show");
             }
@@ -537,12 +539,14 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
   if (totalHoursCount > (15)){
     // TODO: Show modal saying they have too many hours
     $('#OverloadModal').modal('show');
-    $('#overloadModalButton').attr('data-target', '#PrimaryModal');
+    // $('#overloadModalButton').attr('data-target', '#warningModal');
     // $('#OverloadModal').on('hidden.bs.modal', function() {
-    // $('#PrimaryModal').modal('show');
-    //return false
-  }
-  return true;
+    // $('#warningModal').modal('show');
+    // $('#warningModalTitle').html("Notifying Primary Supervisor")
+    // $('#warningModalText').html("This student's primary supervisor will be notified.")
+    // return false
+  // });
+    return true;
 }
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
@@ -697,3 +701,4 @@ function userInsert(){
 //   window.location.replace("/laborstatusform");
 // }
 // };
+}
