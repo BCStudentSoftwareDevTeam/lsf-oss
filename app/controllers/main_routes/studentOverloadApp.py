@@ -2,6 +2,8 @@ from app.controllers.main_routes import *
 from app.models.user import *
 from app.login_manager import require_login
 from app.models.laborStatusForm import *
+from datetime import date
+from app.models.formHistory import *
 
 @main_bp.route('/studentOverloadApp/<formId>', methods=['GET', 'POST'])
 # @login_required
@@ -15,12 +17,26 @@ def studentOverloadApp(formId):
     prefillStudentBnum = overloadForm.studentSupervisee.ID
     prefillStudentCPO = overloadForm.studentSupervisee.STU_CPO
     prefillStudentClass = overloadForm.studentSupervisee.CLASS_LEVEL
-    prefillStudentPrimaryPos = overloadForm.studentSupervisee.LAST_POSN
     prefillTerm = overloadForm.termCode.termName
     prefillDepartment = overloadForm.department.DEPT_NAME
     prefillPosition = overloadForm.POSN_TITLE
     prefillHoursOverload = overloadForm.weeklyHours
-
+    listOfTerms = []
+    today = date.today()
+    todayYear = today.year
+    termYear = todayYear * 100
+    currentAcademicTerm = Term.select().where(Term.termCode.between(termYear-1, termYear + 15))
+    for term in currentAcademicTerm:
+        listOfTerms.append(term)
+    print(listOfTerms)
+    studentSpecificLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee.ID == prefillStudentBnum, LaborStatusForm.jobType == "Primary")
+    for i in studentSpecificLabor:
+        print(i, "Im here")
+    studentSpecificHistory = FormHistory.select().where((FormHistory.formID == '%s' %i) for i in studentSpecificLabor)
+    studentHistory = studentSpecificHistory.where(
+                            ((studentSpecificHistory.status == "Approved") | (studentSpecificHistory.status == "Approved Reluctantly"))
+    ).get()
+    print(studentHistory)
 
     return render_template( 'main/studentOverloadApp.html',
 				            title=('student Overload Application'),
@@ -30,7 +46,6 @@ def studentOverloadApp(formId):
                             prefillStudentBnum = prefillStudentBnum,
                             prefillStudentCPO = prefillStudentCPO,
                             prefillStudentClass = prefillStudentClass,
-                            prefillStudentPrimaryPos = prefillStudentPrimaryPos,
                             prefillTerm = prefillTerm,
                             prefillDepartment = prefillDepartment,
                             prefillPosition = prefillPosition,
