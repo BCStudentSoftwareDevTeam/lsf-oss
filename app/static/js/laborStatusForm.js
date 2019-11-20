@@ -313,6 +313,10 @@ function deleteRow(glyphicon) {
 function errorFlash(flash_message){
   category = "danger";
   $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
+// function errorFlash(msg){
+//   category = "danger";
+//   //msg = "Please fill out all fields before submitting.";
+//   $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+msg+"</div>");
   $("#flasher").delay(3000).fadeOut();
 }
 
@@ -595,6 +599,7 @@ function userInsert(){
            modalList = [];
            if (response.includes(false)){
              console.log("window reload plzzzzzzzzzzzzzzzzzzz")}
+           // $("#flasher").delay(3000).fadeOut();
            for(var key = 0; key < globalArrayOfStudents.length; key++){
              var studentName = globalArrayOfStudents[key].stuName;
              var position = globalArrayOfStudents[key].stuPosition;
