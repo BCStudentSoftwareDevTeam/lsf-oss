@@ -87,7 +87,11 @@
       <div class="form-group">
         <label for="Primary">Current Primary Position:</label>
         <div>
-          <input type="Primary" class="form-control" id="Primary" disabled>
+          <select type="Primary" class="form-control" id="Primary">
+          {% for primary in currentPrimary%}
+              <option value="{{primary.POSN_TITLE}}"></option>
+          {% endfor %}
+          </select>
         </div>
       </div>
       <div class="form-group">

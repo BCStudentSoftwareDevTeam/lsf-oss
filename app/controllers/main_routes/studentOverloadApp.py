@@ -31,16 +31,25 @@ def studentOverloadApp(formId):
         listOfTerms.append(term)
     print(3)
     print(listOfTerms)
-    studentSpecificLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum, LaborStatusForm.jobType == "Primary")
+    studentSpecificLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
+                                                                                           LaborStatusForm.jobType == "Primary",
+                                                                                           LaborStatusForm.termCode.between(termYear-1, termYear + 15))
     print(4)
     for i in studentSpecificLabor:
-        print(i, "Im here")
-    print(5)
-    studentSpecificHistory = FormHistory.select().where((FormHistory.formID == '%s' %i) for i in studentSpecificLabor)
-    studentHistory = studentSpecificHistory.where(
-                            ((studentSpecificHistory.status_id == "Approved") | (studentSpecificHistory.status == "Approved Reluctantly"))
-    ).get()
-    print(studentHistory)
+        print (getattr(i, "laborStatusFormID"),"ids")
+        print(5)
+        studentSpecificHistory = FormHistory.select().where((FormHistory.formID == i) & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly")))
+        print(studentSpecificHistory)
+        if studentSpecificHistory:
+            for j in studentSpecificHistory:
+                print(j, "from history")
+        else:
+            print("empty")
+        currentPrimary = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == i)
+    # studentHistory = studentSpecificHistory.where(
+    #                         ((studentSpecificHistory.status == "Approved") | (studentSpecificHistory.status == "Approved Reluctantly"))
+    # ).get()
+    # print(studentHistory)
 
     return render_template( 'main/studentOverloadApp.html',
 				            title=('student Overload Application'),
@@ -53,5 +62,6 @@ def studentOverloadApp(formId):
                             prefillTerm = prefillTerm,
                             prefillDepartment = prefillDepartment,
                             prefillPosition = prefillPosition,
-                            prefillHoursOverload = prefillHoursOverload
+                            prefillHoursOverload = prefillHoursOverload,
+                            currentPrimary = currentPrimary
                           )
