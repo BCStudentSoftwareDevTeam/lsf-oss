@@ -119,6 +119,13 @@ class emailHandler():
         self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
     def LaborOverLoadFormSubmitted(self, link):
+        """
+        For the student email, the process will work as such:
+        First, the student UI HTML shell will be populated with the neccesary data.
+        Once populated, the HTML shell will be converted into a link. This link
+        will then be used to replace the keyword "@@link@@" in the email template.
+        Once this is finished, the email can then be sent.
+        """
         self.link = link
         releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Overload Form Submitted For Student")
         self.sendEmail(releaseEmailTemplateID, "student")
@@ -182,6 +189,13 @@ class emailHandler():
     # Depending on the department specified, this method will send an email to either SASS or Financial Aid office
     # to notify them about the overload applocation they need to approve
     def overloadVerification(self, dept, link):
+        """
+        For the departments email, the process will work as such:
+        First, the departments UI HTML shell will be populated with the neccesary data.
+        Once populated, the HTML shell will be converted into a link. This link
+        will then be used to replace the keyword "@@link@@" in the email template.
+        Once this is finished, the email can then be sent.
+        """
         self.link = link
         if dept == "SASS":
             email = "" #In the future, this(SASS email address) should be puled from the yaml file instead of being a string
