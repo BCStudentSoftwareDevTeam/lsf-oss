@@ -945,20 +945,6 @@ lsfs = [
     "endDate": datetime.date(2019,12,15)
     },
     {
-    "termCode": Term.get(Term.termCode == "201912"),
-    "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-    "jobType": "Primary",
-    "WLS":"1",
-    "POSN_TITLE":"Student Programmer",
-    "POSN_CODE":"S61407",
-    "weeklyHours": 10,
-    "contractHours": None,
-    "startDate": datetime.date(2019,8,20),
-    "endDate": datetime.date(2019,12,15)
-    },
-    {
     "termCode": Term.get(Term.termCode == "201913"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.PIDM == 1),
@@ -1685,32 +1671,6 @@ fh = [  {
                 "reviewedDate": datetime.date(2017, 2, 11),
                 "reviewedBy": None,
                 "status": Status.get(Status.statusName == "Approved"),
-                "rejectReason": None
-                },
-                {
-                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 27),
-                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
-                "releaseForm": None,
-                "modifiedForm": None,
-                "overloadForm": None,
-                "createdBy": User.get(User.PIDM == 1),
-                "createdDate": datetime.date(2017, 2, 10),
-                "reviewedDate": datetime.date(2017, 2, 11),
-                "reviewedBy": None,
-                "status": Status.get(Status.statusName == "Approved"),
-                "rejectReason": None
-                },
-                {
-                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 28),
-                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
-                "releaseForm": None,
-                "modifiedForm": None,
-                "overloadForm": None,
-                "createdBy": User.get(User.PIDM == 1),
-                "createdDate": datetime.date(2017, 2, 10),
-                "reviewedDate": datetime.date(2017, 2, 11),
-                "reviewedBy": None,
-                "status": Status.get(Status.statusName == "Approved Reluctantly"),
                 "rejectReason": None
                 },
                 {

@@ -88,8 +88,10 @@
         <label for="Primary">Current Primary Position:</label>
         <div>
           <select type="Primary" class="form-control" id="Primary">
-          {% for primary in currentPrimary%}
-              <option value="{{primary.POSN_TITLE}}"></option>
+          {% for primary in currentPrimary %}
+              {% for i in primary %}
+                <option value="{{i.POSN_TITLE}}">{{i.POSN_TITLE}}</option>
+              {% endfor %}
           {% endfor %}
           </select>
         </div>

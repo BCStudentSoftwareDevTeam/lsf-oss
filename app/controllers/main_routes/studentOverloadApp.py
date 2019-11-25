@@ -35,6 +35,7 @@ def studentOverloadApp(formId):
                                                                                            LaborStatusForm.jobType == "Primary",
                                                                                            LaborStatusForm.termCode.between(termYear-1, termYear + 15))
     print(4)
+    listofI = []
     for i in studentSpecificLabor:
         print (getattr(i, "laborStatusFormID"),"ids")
         print(5)
@@ -46,10 +47,13 @@ def studentOverloadApp(formId):
         else:
             print("empty")
         currentPrimary = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == i)
+        listofI.append(currentPrimary)
+
     # studentHistory = studentSpecificHistory.where(
     #                         ((studentSpecificHistory.status == "Approved") | (studentSpecificHistory.status == "Approved Reluctantly"))
     # ).get()
     # print(studentHistory)
+    print("thingies",currentPrimary)
 
     return render_template( 'main/studentOverloadApp.html',
 				            title=('student Overload Application'),
@@ -63,5 +67,5 @@ def studentOverloadApp(formId):
                             prefillDepartment = prefillDepartment,
                             prefillPosition = prefillPosition,
                             prefillHoursOverload = prefillHoursOverload,
-                            currentPrimary = currentPrimary
+                            currentPrimary = listofI
                           )
