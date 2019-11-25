@@ -1634,6 +1634,97 @@ fh = [  {
                  "reviewedBy": None,
                  "status": Status.get(Status.statusName == "Approved"),
                  "rejectReason": None
+                },
+                {
+                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 23),
+                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+                "releaseForm": None,
+                "modifiedForm": None,
+                "overloadForm": None,
+                "createdBy": User.get(User.PIDM == 1),
+                "createdDate": datetime.date(2017, 2, 10),
+                "reviewedDate": datetime.date(2017, 2, 11),
+                "reviewedBy": None,
+                "status": Status.get(Status.statusName == "Approved"),
+                "rejectReason": None
+                },
+                {
+                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 24),
+                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+                "releaseForm": None,
+                "modifiedForm": None,
+                "overloadForm": None,
+                "createdBy": User.get(User.PIDM == 1),
+                "createdDate": datetime.date(2017, 2, 10),
+                "reviewedDate": datetime.date(2017, 2, 11),
+                "reviewedBy": None,
+                "status": Status.get(Status.statusName == "Approved"),
+                "rejectReason": None
+                },
+                {
+                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 25),
+                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+                "releaseForm": None,
+                "modifiedForm": None,
+                "overloadForm": None,
+                "createdBy": User.get(User.PIDM == 1),
+                "createdDate": datetime.date(2017, 2, 10),
+                "reviewedDate": datetime.date(2017, 2, 11),
+                "reviewedBy": None,
+                "status": Status.get(Status.statusName == "Approved"),
+                "rejectReason": None
+                },
+                {
+                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 26),
+                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+                "releaseForm": None,
+                "modifiedForm": None,
+                "overloadForm": None,
+                "createdBy": User.get(User.PIDM == 1),
+                "createdDate": datetime.date(2017, 2, 10),
+                "reviewedDate": datetime.date(2017, 2, 11),
+                "reviewedBy": None,
+                "status": Status.get(Status.statusName == "Approved"),
+                "rejectReason": None
+                },
+                {
+                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 27),
+                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+                "releaseForm": None,
+                "modifiedForm": None,
+                "overloadForm": None,
+                "createdBy": User.get(User.PIDM == 1),
+                "createdDate": datetime.date(2017, 2, 10),
+                "reviewedDate": datetime.date(2017, 2, 11),
+                "reviewedBy": None,
+                "status": Status.get(Status.statusName == "Approved"),
+                "rejectReason": None
+                },
+                {
+                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 28),
+                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+                "releaseForm": None,
+                "modifiedForm": None,
+                "overloadForm": None,
+                "createdBy": User.get(User.PIDM == 1),
+                "createdDate": datetime.date(2017, 2, 10),
+                "reviewedDate": datetime.date(2017, 2, 11),
+                "reviewedBy": None,
+                "status": Status.get(Status.statusName == "Approved Reluctantly"),
+                "rejectReason": None
+                },
+                {
+                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 29),
+                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
+                "releaseForm": None,
+                "modifiedForm": None,
+                "overloadForm": None,
+                "createdBy": User.get(User.PIDM == 1),
+                "createdDate": datetime.date(2017, 2, 10),
+                "reviewedDate": datetime.date(2017, 2, 11),
+                "reviewedBy": None,
+                "status": Status.get(Status.statusName == "Approved"),
+                "rejectReason": None
                 }
     ]
 
