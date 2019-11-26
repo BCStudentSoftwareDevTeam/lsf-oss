@@ -10,11 +10,13 @@ function getCurrentPrimary(object) { // get current primary position from select
      })
  }
 
-function fillPrimaryHour(response){ // HAVE ERRORS
-  $("#primaryHours").attr("value", '');
-  for (var key in response) {
-    console.log("here2")
+function fillPrimaryHour(response){
+  if ($("#primaryHours").val() != ''){
+    $("#primaryHours").val("");
+  }
+  for (var key in response){
     $("#primaryHours").attr("type", "text");
-    $("#primaryHours").attr("value", response[key]["primaryHour"]);
-   }
- }
+    $("#primaryHours").val(response[key]["primaryHour"]);
+    $("#primaryHours").attr("text", response[key]["primaryHour"]);
+  }
+}
