@@ -87,10 +87,15 @@
       <div class="form-group">
         <label for="Primary">Current Primary Position:</label>
         <div>
-          <select type="Primary" class="form-control" id="Primary">
-          {% for primary in currentPrimary %}
-              {% for i in primary %}
-                <option value="{{i.POSN_TITLE}}">{{i.POSN_TITLE}}</option>
+          <select type="Primary"
+                  class="selectpicker"
+                  data-live-search='true'
+                  onchange = "getCurrentPrimary(this)"
+                  id="Primary"
+                  data-width="320px">
+          {% for listPrimary in currentPrimary %}
+              {% for primary in listPrimary %}
+                <option value="{{primary.laborStatusFormID}}">{{primary.POSN_TITLE}}</option>
               {% endfor %}
           {% endfor %}
           </select>
@@ -99,7 +104,7 @@
       <div class="form-group">
         <label for="PHours">Hours Per Week:</label>
         <div>
-          <input type="PHours" class="form-control" id="PHours" required>
+          <input type="PrimaryHours" class="form-control" id="primaryHours" required>
         </div>
       </div>
       <div class="form-group">
