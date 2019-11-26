@@ -1674,7 +1674,7 @@ fh = [  {
                 "rejectReason": None
                 },
                 {
-                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 29),
+                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 27),
                 "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
                 "releaseForm": None,
                 "modifiedForm": None,
