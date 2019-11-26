@@ -112,13 +112,25 @@
       <div class="form-group">
         <label for="Secondary">Current Secondary Position:</label>
         <div>
-          <input type="Secondary" class="form-control" id="Secondary" required>
+          <select type="Secondary"
+                  class="selectpicker"
+                  data-live-search='true'
+                  onchange = "getCurrentSecondary(this)"
+                  id="Secondary"
+                  data-width="320px" required>
+            <option disabled selected value> -- select an option -- </option>
+          {% for listSecondary in currentSecondary %}
+              {% for secondary in listSecondary %}
+                <option value="{{secondary.laborStatusFormID}}">{{secondary.POSN_TITLE}}</option>
+              {% endfor %}
+          {% endfor %}
+          </select>
         </div>
       </div>
       <div class="form-group">
         <label for="SHours">Hours Per Week:</label>
         <div>
-          <input type="SHours" class="form-control" id="SHours" required>
+          <input type="SecondaryHours" class="form-control" id="secondaryHours" value= '' disabled>
         </div>
       </div>
       <div class="form-group">

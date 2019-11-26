@@ -26,17 +26,37 @@ def studentOverloadApp(formId):
     today = date.today()
     todayYear = today.year
     termYear = todayYear * 100
-    studentSpecificLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
+    termCodeYear = Term.select(Term.termCode).where(Term.termCode.between(termYear-1, termYear + 15))
+    print(termCodeYear)
+    nonBreakTerms=[]
+    for term in termCodeYear:
+        print((str(term)))
+        print(str(term)[-2:])
+        if str(term)[-2:] == "11" or str(term)[-2:]== "12" or str(term)[-2:]== "00":
+            nonBreakTerms.append(term)
+    print(nonBreakTerms)
+    studentPrimaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
                                                                                            LaborStatusForm.jobType == "Primary",
                                                                                            LaborStatusForm.termCode.between(termYear-1, termYear + 15))
-    formIDList = []
-    for i in studentSpecificLabor:
-        print (getattr(i, "laborStatusFormID"),"ids")
-        studentSpecificHistory = FormHistory.select().where((FormHistory.formID == i) & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly")))
-        print(studentSpecificHistory)
+    studentSecondaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
+                                                                                           LaborStatusForm.jobType == "Secondary",
+                                                                                           LaborStatusForm.termCode.between(termYear-1, termYear + 15))
+    formIDPrimary = []
+    for i in studentPrimaryLabor:
+        print (getattr(i, "laborStatusFormID"),"primaryids")
+        studentPrimaryHistory = FormHistory.select().where((FormHistory.formID == i) & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly")))
+        print(studentPrimaryHistory)
         currentPrimary = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == i)
-        formIDList.append(currentPrimary)
+        formIDPrimary.append(currentPrimary)
     print(currentPrimary)
+    formIDSecondary = []
+    for i in studentSecondaryLabor:
+        print (getattr(i, "laborStatusFormID"),"secondaryids")
+        studentSecondaryHistory = FormHistory.select().where((FormHistory.formID == i) & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly")))
+        print(studentSecondaryHistory)
+        currentSecondary = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == i)
+        formIDSecondary.append(currentSecondary)
+    print(currentSecondary)
 
     return render_template( 'main/studentOverloadApp.html',
 				            title=('student Overload Application'),
@@ -50,7 +70,8 @@ def studentOverloadApp(formId):
                             prefillDepartment = prefillDepartment,
                             prefillPosition = prefillPosition,
                             prefillHoursOverload = prefillHoursOverload,
-                            currentPrimary = formIDList
+                            currentPrimary = formIDPrimary,
+                            currentSecondary = formIDSecondary
                           )
 
 @main_bp.route("/studentOverloadApp/getPrimary/<formID>", methods=['GET'])
@@ -60,5 +81,15 @@ def getPrimaryHours(formID):
     Hours = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formID)
     HourDict = {}
     HourDict[Hours.laborStatusFormID] = {"primaryHour": Hours.weeklyHours}
+    print(HourDict)
+    return json.dumps(HourDict)
+
+@main_bp.route("/studentOverloadApp/getSecondary/<formID>", methods=['GET'])
+def getSecondaryHours(formID):
+    """ Get the hour for the selected secondary position """
+    print(formID)
+    Hours = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formID)
+    HourDict = {}
+    HourDict[Hours.laborStatusFormID] = {"secondaryHour": Hours.weeklyHours}
     print(HourDict)
     return json.dumps(HourDict)
