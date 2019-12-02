@@ -4,7 +4,7 @@ from app.controllers.admin_routes import admin
 from app.models.emailTemplate import *
 
 
-@admin.route('/emailTemplates', methods=['GET', 'POST'])
+@admin.route('/admin/emailTemplates', methods=['GET', 'POST'])
 # @login_required
 def email_templates():
     emailTemplateID = EmailTemplate.select()
