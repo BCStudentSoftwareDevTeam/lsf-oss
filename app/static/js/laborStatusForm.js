@@ -673,32 +673,4 @@ function userInsert(){
          }
       }
 } // userInsert closing tag
-
-
-////////////////////////////////////////////////////////////////////////////
-//   $('#tbodyid').empty();
-//   // $('#reviewButton').hide();
-//   // $('#failedTable').show();
-//   for (var i = 0; i < display_failed.length; i++){
-//     // console.log('indiviual failed form', globalArrayOfStudents[display_failed[i]]);
-//     if (globalArrayOfStudents[display_failed[i]].stuContractHours){
-//       globalArrayOfStudents[display_failed[i]].stuWeeklyHours = '';
-//     }
-//     else{
-//       globalArrayOfStudents[display_failed[i]].stuContractHours = '';
-//     }
-//     $('#mytable').append('<tr>'+
-//                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuName+'</td>'+
-//                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuPosition+'</td>'+
-//                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuJobType+'</td>'+
-//                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuWeeklyHours + globalArrayOfStudents[display_failed[i]].stuContractHours+'</td>'+
-//                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuStartDate + '-'+ globalArrayOfStudents[display_failed[i]].stuEndDate+'</td>'+
-//                              '<td>'+ globalArrayOfStudents[display_failed[i]].stuNotes+'</td>'+
-//                              '</tr>');
-//   }
-//   $('#SubmitModal').modal("hide");
-//   else{
-//   window.location.replace("/laborstatusform");
-// }
-// };
 }
