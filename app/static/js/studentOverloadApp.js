@@ -5,8 +5,16 @@ $(document).ready(function () {
     $('#freshmanWarning').modal({
      backdrop: 'static',
      keyboard: false
- })
-  }
+  })
+ }
+ $('input[type="checkbox"]').click(function(){
+           if($(this).prop("checked") == true){
+               alert("Checkbox is checked.");
+           }
+           else if($(this).prop("checked") == false){
+               alert("Checkbox is unchecked.");
+           }
+ });
 });
 
 function getCurrentPrimary(object) { // get current primary position from select picker
@@ -76,6 +84,7 @@ function checkForEmptyFields(){
   }
 }
 
+
 function updateDatabase(){
   console.log("Inside funciton");
   var url = "/studentOverloadApp/update/" + 23;
@@ -87,3 +96,30 @@ function updateDatabase(){
      }
    })
 }
+
+// function enableDisableAll(e) {
+//         var own = e;
+//         var div = document.getElementById("checkboxes");
+//         var elements = div.elements;
+//
+//     for (var i = 0 ; i < elements.length ; i++) {
+//           if(own !== elements[i] ){
+//
+//             if(own.checked == true){
+//
+//               $("#Primary").prop("disabled", true);
+//               $("#Secondary").prop("disabled", true);
+//               $("#notes").prop("disabled", true);
+//
+//             }else{
+//
+//               $("#Primary").prop("disabled", false);
+//               $("#Secondary").prop("disabled", false);
+//               $("#notes").prop("disabled", false);
+//             }
+//
+//            }
+//
+//      }
+
+//}

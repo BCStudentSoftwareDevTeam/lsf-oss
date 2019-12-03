@@ -21,23 +21,23 @@
     </div>
   </div>
 
-<div class="container" >
+<div class="container" id="checkboxes" >
   <div class="floatleft">
     <ul class="small">
       <h6><b>Guidelines for Approval: </b></h6>
-      <input type="checkbox" name="checkbox" id="checkbox1"/> Sophomore, junior, or senior classification <br>
-      <input type="checkbox" name="checkbox" id="checkbox2"/> Not on any form of probation <br>
-      <input type="checkbox" name="checkbox" id="checkbox3"/> Enrolled in less than 5 course credits with less than 8 preparations <br>
-      <input type="checkbox" name="checkbox" id="checkbox4"/> Have a 2.50 GPA, both cumulative and for the previous full term <br>
-      <input type="checkbox" name="checkbox" id="checkbox5"/> The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term
+      <input type="checkbox" name="checkbox" id="checkbox1" /> Sophomore, junior, or senior classification <br>
+      <input type="checkbox" name="checkbox" id="checkbox2" /> Not on any form of probation <br>
+      <input type="checkbox" name="checkbox" id="checkbox3" /> Enrolled in less than 5 course credits with less than 8 preparations <br>
+      <input type="checkbox" name="checkbox" id="checkbox4" /> Have a 2.50 GPA, both cumulative and for the previous full term <br>
+      <input type="checkbox" name="checkbox" id="checkbox5" /> The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term
     </ul>
   </div>
 <div class="floatleft">
   <ul class="small">
     <h6><b>Requests for over 20 hours* are subject to the following additional guidelines:  </b></h6>
-    <input type="checkbox" name="checkbox" id="checkbox6"/> Junior or senior classification. 3.00 GPA in the major, overall, and for the previous term <br>
-    <input type="checkbox" name="checkbox" id="checkbox7"/> Submission of a letter outlining the reason for requesting more than 20 hours <br>
-    <input type="checkbox" name="checkbox" id="checkbox8"/> Approval of the Dean of Labor and the Student Admissions and Academic Standing Committee
+    <input type="checkbox" name="checkbox" id="checkbox6" /> Junior or senior classification. 3.00 GPA in the major, overall, and for the previous term <br>
+    <input type="checkbox" name="checkbox" id="checkbox7" /> Submission of a letter outlining the reason for requesting more than 20 hours <br>
+    <input type="checkbox" name="checkbox" id="checkbox8" /> Approval of the Dean of Labor and the Student Admissions and Academic Standing Committee
   </ul>
 </div>
 </div>
@@ -90,7 +90,7 @@
                   data-live-search='true'
                   onchange = "getCurrentPrimary(this)"
                   id="Primary"
-                  data-width="320px" required>
+                  data-width="320px" required disabled>
             <option disabled selected value> -- select an option -- </option>
           {% for listPrimary in currentPrimary %}
               {% for primary in listPrimary %}
@@ -115,7 +115,7 @@
                   data-live-search='true'
                   onchange = "getCurrentSecondary(this)"
                   id="Secondary"
-                  data-width="320px">
+                  data-width="320px" disabled>
             <option disabled selected value> -- select an option -- </option>
           {% for listSecondary in currentSecondary %}
               {% for secondary in listSecondary %}
@@ -173,7 +173,7 @@
       <div class="form-group">
         <label for="Reason">Reason For Overload Request:</label>
         <div>
-          <textarea id= "notes" name="notes" rows="12" cols="73" required></textarea>
+          <textarea id= "notes" name="notes" rows="12" cols="73" required disabled></textarea>
         </div>
       </div>
     </div>
