@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 {% block app_content %}
-<link rel="stylesheet" type="text/css" href="/static/css/studentOverloadApp.css" />
-
+<head>
+  <link rel="stylesheet" type="text/css" href="/static/css/studentOverloadApp.css" />
+<!-- These are the outside links for the datepicker-->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!-- These are the outside links for the effective date calendar-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+{% include "snips/freshmanWarning.html" %}
   <div align="center" >
     <h1>Labor Overload Application</h1>
 
@@ -12,29 +21,29 @@
     </div>
   </div>
 
-<div class="container">
+<div class="container" >
   <div class="floatleft">
     <ul class="small">
       <h6><b>Guidelines for Approval: </b></h6>
-      <li>Sophomore, junior, or senior classification</li>
-      <li>Not on any form of probation</li>
-      <li>Enrolled in less than 5 course credits with less than 8 preparations</li>
-      <li>Have a 2.50 GPA, both cumulative and for the previous full term</li>
-      <li>The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term</li>
+      <input type="checkbox" name="checkbox" id="checkbox1"/> Sophomore, junior, or senior classification <br>
+      <input type="checkbox" name="checkbox" id="checkbox2"/> Not on any form of probation <br>
+      <input type="checkbox" name="checkbox" id="checkbox3"/> Enrolled in less than 5 course credits with less than 8 preparations <br>
+      <input type="checkbox" name="checkbox" id="checkbox4"/> Have a 2.50 GPA, both cumulative and for the previous full term <br>
+      <input type="checkbox" name="checkbox" id="checkbox5"/> The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term
     </ul>
   </div>
 <div class="floatleft">
   <ul class="small">
     <h6><b>Requests for over 20 hours* are subject to the following additional guidelines:  </b></h6>
-    <li>Junior or senior classification. 3.00 GPA in the major, overall, and for the previous term</li>
-    <li>Submission of a letter outlining the reason for requesting more than 20 hours</li>
-    <li>Approval of the Dean of Labor and the Student Admissions and Academic Standing Committee</li>
+    <input type="checkbox" name="checkbox" id="checkbox6"/> Junior or senior classification. 3.00 GPA in the major, overall, and for the previous term <br>
+    <input type="checkbox" name="checkbox" id="checkbox7"/> Submission of a letter outlining the reason for requesting more than 20 hours <br>
+    <input type="checkbox" name="checkbox" id="checkbox8"/> Approval of the Dean of Labor and the Student Admissions and Academic Standing Committee
   </ul>
 </div>
 </div>
 
 <div class="container">
-<form {#action="https://www.berea.edu/"#}> 
+<form>
     <div align="center">
       <h3>Current Job Information</h3>
     </div>
@@ -169,7 +178,7 @@
       </div>
     </div>
   </div>
-
+</form>
 <div class="container">
   <div align="center">
     <button id="submit" type="submit" class="btn btn-success" onclick ="checkForEmptyFields()">Submit Changes</button>

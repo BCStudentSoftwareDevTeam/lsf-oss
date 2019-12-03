@@ -1,3 +1,14 @@
+// checking the classification of student on page load
+$(document).ready(function () {
+  console.log($("#Classification").val())
+  if ($("#Classification").val() == "Freshman"){
+    $('#freshmanWarning').modal({
+     backdrop: 'static',
+     keyboard: false
+ })
+  }
+});
+
 function getCurrentPrimary(object) { // get current primary position from select picker
   var primary = $("#Primary").val();
   var url = "/studentOverloadApp/getPrimary/" + primary;
