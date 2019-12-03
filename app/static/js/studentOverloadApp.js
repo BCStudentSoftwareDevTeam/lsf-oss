@@ -75,3 +75,15 @@ function checkForEmptyFields(){
     $('#submitModal').modal('show');
   }
 }
+
+function updateDatabase(){
+  console.log("Inside funciton");
+  var url = "/studentOverloadApp/update/" + 23;
+   $.ajax({
+     url: url,
+     dataType: "json",
+     success: function (response){
+        console.log(response);
+     }
+   })
+}
