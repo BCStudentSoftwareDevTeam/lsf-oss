@@ -1,5 +1,10 @@
 {% extends "base.html" %}
 
+​{% block scripts %}
+{{super()}}
+<script type=text/javascript src="{{url_for('static', filename='js/emailTemplates.js')}}"></script>
+{% endblock %}
+
 {% block app_content %}
 
 <head>
@@ -15,6 +20,7 @@
     <meta charset="utf-8">
     <title>CKEditor</title>
     <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
+    <script src="emailTemplates.js"></script>
 </head>
 <h1 class="col-md-12">Email Templates</h1>
 
@@ -29,7 +35,8 @@
         id='recipient'
         data-live-search='true'
         title="Recipient"
-        data-width="100%">
+        data-width="100%"
+        onchange="populatePurpose()">
            <option value="student">Student</option>
            <option value="supervisor">Staff</option>
      </select>
@@ -43,9 +50,8 @@
       data-live-search='true'
       title="Purpose"
       data-width="100%">
-      {% for user in users %}     <!-- placeholder for emailTemplate table database -->
-         <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.username}} {{user.firstname}}</option>
-      {% endfor %}
+        <option value="student">Student</option>
+        <option value="supervisor">Staff</option>
    </select>
   </div>
 
@@ -57,9 +63,8 @@
       data-live-search='true'
       title="Subject"
       data-width="100%">
-      {% for user in users %}     <!-- placeholder for emailTemplate table database -->
-         <option value="{{user.ID}}" data-subtext="{{user.ID}}">{{user.username}} {{user.firstname}}</option>
-      {% endfor %}
+        <option value="student">Student</option>
+        <option value="supervisor">Staff</option>
    </select>
   </div>
 
@@ -73,7 +78,7 @@
 
   <div style="text-align:right;">
     <!-- <input type="submit" value="Save Changes" align="right"> -->
-    <button type="button" class="btn btn-primary" align="right">Save Changes</button>
+    <button type="button" class="btn btn-primary" align="right" onclick="world()">Save Changes</button>
   </div>
 </div>
 
