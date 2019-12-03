@@ -19,6 +19,7 @@ function fillPrimaryHour(response){
     $("#primaryHours").val(response[key]["primaryHour"]);
     $("#primaryHours").attr("text", response[key]["primaryHour"]);
   }
+  updateSum()
 }
 
 function getCurrentSecondary(object) { // get current secondary position from select picker
@@ -41,5 +42,25 @@ function fillSecondaryHour(response){
     $("#secondaryHours").attr("type", "text");
     $("#secondaryHours").val(response[key]["secondaryHour"]);
     $("#secondaryHours").attr("text", response[key]["secondaryHour"]);
+  }
+  updateSum()
+}
+
+function updateSum(){
+  var primaryHours = (isNaN(parseInt($("#primaryHours").val()))) ? 0 : parseInt($("#primaryHours").val());
+  var secondaryHours = (isNaN(parseInt($("#secondaryHours").val()))) ? 0 : parseInt($("#secondaryHours").val());
+  var overloadHours = (isNaN(parseInt($("#overloadHours").val()))) ? 0 : parseInt($("#overloadHours").val());
+  $("#currentTotal").val(primaryHours + secondaryHours)
+  $("#overloadTotal").val(primaryHours + secondaryHours + overloadHours)
+  console.log(primaryHours)
+  console.log(secondaryHours)
+}
+
+function checkForEmptyFields(){
+  console.log("here2")
+  console.log($("#notes").val())
+  if($("#Primary").val() != null && $("#notes").val() != "") {
+    console.log("here1")
+    $('#submitModal').modal('show');
   }
 }

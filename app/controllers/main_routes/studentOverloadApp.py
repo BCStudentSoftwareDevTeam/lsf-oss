@@ -35,12 +35,15 @@ def studentOverloadApp(formId):
         if str(term)[-2:] == "11" or str(term)[-2:]== "12" or str(term)[-2:]== "00":
             nonBreakTerms.append(term)
     print(nonBreakTerms)
+
+    studentSecondaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
+                                                                                               LaborStatusForm.jobType == "Secondary",
+                                                                                               LaborStatusForm.termCode.in_(nonBreakTerms))
+
     studentPrimaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
                                                                                            LaborStatusForm.jobType == "Primary",
                                                                                            LaborStatusForm.termCode.between(termYear-1, termYear + 15))
-    studentSecondaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
-                                                                                           LaborStatusForm.jobType == "Secondary",
-                                                                                           LaborStatusForm.termCode.between(termYear-1, termYear + 15))
+
     formIDPrimary = []
     for i in studentPrimaryLabor:
         print (getattr(i, "laborStatusFormID"),"primaryids")

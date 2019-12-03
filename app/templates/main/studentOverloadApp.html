@@ -2,7 +2,6 @@
 {% block app_content %}
 <link rel="stylesheet" type="text/css" href="/static/css/studentOverloadApp.css" />
 
-
   <div align="center" >
     <h1>Labor Overload Application</h1>
 
@@ -11,8 +10,8 @@
          Approval may be revoked if primary labor hours, labor performance, or academic performance become less than satisfactory.
       </h5>
     </div>
-
   </div>
+
 <div class="container">
   <div class="floatleft">
     <ul class="small">
@@ -23,11 +22,7 @@
       <li>Have a 2.50 GPA, both cumulative and for the previous full term</li>
       <li>The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term</li>
     </ul>
-
   </div>
-
-
-
 <div class="floatleft">
   <ul class="small">
     <h6><b>Requests for over 20 hours* are subject to the following additional guidelines:  </b></h6>
@@ -35,17 +30,14 @@
     <li>Submission of a letter outlining the reason for requesting more than 20 hours</li>
     <li>Approval of the Dean of Labor and the Student Admissions and Academic Standing Committee</li>
   </ul>
-
 </div>
-
 </div>
 
 <div class="container">
-  <form action="https://www.berea.edu/">
+<form {#action="https://www.berea.edu/"#}> 
     <div align="center">
       <h3>Current Job Information</h3>
     </div>
-
     <!-- current job information on the left side -->
     <div class="floatleft">
       <div class="form-group">
@@ -78,10 +70,7 @@
           <input type="Term" class="form-control" id="Term" value="{{prefillTerm}}" disabled>
         </div>
       </div>
-
-    </div>
-
-
+    </div
     <!-- current job information on the right side -->
     <div class="floatright">
       <div class="form-group">
@@ -96,7 +85,7 @@
             <option disabled selected value> -- select an option -- </option>
           {% for listPrimary in currentPrimary %}
               {% for primary in listPrimary %}
-                <option value="{{primary.laborStatusFormID}}">{{primary.POSN_TITLE}}</option>
+                <option value="{{primary.laborStatusFormID}}">{{primary.POSN_TITLE}} ({{primary.termCode.termName}})</option>
               {% endfor %}
           {% endfor %}
           </select>
@@ -105,7 +94,7 @@
       <div class="form-group">
         <label for="PHours">Hours Per Week:</label>
         <div >
-          <input type="PrimaryHours" class="form-control" id="primaryHours" value= '' disabled>
+          <input type="PrimaryHours" class="form-control" id="primaryHours" disabled>
           </input>
         </div>
       </div>
@@ -117,11 +106,11 @@
                   data-live-search='true'
                   onchange = "getCurrentSecondary(this)"
                   id="Secondary"
-                  data-width="320px" required>
+                  data-width="320px">
             <option disabled selected value> -- select an option -- </option>
           {% for listSecondary in currentSecondary %}
               {% for secondary in listSecondary %}
-                <option value="{{secondary.laborStatusFormID}}">{{secondary.POSN_TITLE}}</option>
+                <option value="{{secondary.laborStatusFormID}}">{{secondary.POSN_TITLE}} ({{secondary.termCode.termName}})</option>
               {% endfor %}
           {% endfor %}
           </select>
@@ -130,23 +119,19 @@
       <div class="form-group">
         <label for="SHours">Hours Per Week:</label>
         <div>
-          <input type="SecondaryHours" class="form-control" id="secondaryHours" value= '' disabled>
+          <input type="SecondaryHours" class="form-control" id="secondaryHours" disabled>
         </div>
       </div>
       <div class="form-group">
         <label for="TPSHours">Total Primary and Secondary Hours:</label>
         <div>
-          <input type="TPSHours" class="form-control" id="TPSHours" required>
+          <input type="TPSHours" class="form-control" id="currentTotal" disabled>
         </div>
       </div>
-
-
     </div>
-
     <div align="center" class="spacing">
       <h3>Overload Assignment Request</h3>
     </div>
-
     <!-- overload request information on the left side -->
     <div class="floatleft">
       <div class="form-group">
@@ -164,65 +149,33 @@
       <div class="form-group">
         <label for="OHours">Hours Per Week:</label>
         <div>
-          <input type="OHours" class="form-control" id="OHours" value="{{prefillHoursOverload}}" disabled>
+          <input type="OHours" class="form-control" id="overloadHours" value="{{prefillHoursOverload}}" disabled>
         </div>
       </div>
       <div class="form-group">
         <label for="Total">Total Hours Per Week:</label>
         <div>
-          <input type="Total" class="form-control" id="Total" required>
+          <input type="Total" class="form-control" id="overloadTotal" disabled>
         </div>
       </div>
-
     </div>
-
-
     <!-- overload request information on the right side -->
     <div class="floatright">
-
       <div class="form-group">
         <label for="Reason">Reason For Overload Request:</label>
         <div>
-          <textarea name="notes" rows="12" cols="73"></textarea>
+          <textarea id= "notes" name="notes" rows="12" cols="73" required></textarea>
         </div>
       </div>
-
     </div>
   </div>
 
-
-<div align="center">
-  <h5><b>Student should not work any hours in this assignment until notification of approved labor overload.</b></h5>
-</div>
-
-
 <div class="container">
   <div align="center">
-    <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal">Submit Changes</button>
+    <button id="submit" type="submit" class="btn btn-success" onclick ="checkForEmptyFields()">Submit Changes</button>
+    {% include "snips/studentOverloadSubmit.html" %}
   </div>
 </div>
-
-
-<!-- start of modal -->
-   <div class="modal fade" id="submitModal" role="dialog">
-       <div class="modal-dialog">
-
-         <div class="modal-content">
-           <div class="modal-header">
-             <button type="button" class="close" data-dismiss="modal">&times;</button>
-             <h4 class="modal-title">Are you sure you want to submit?</h4>
-           </div>
-           <div class="modal-footer">
-             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-             <button type="submit" class="btn btn-success" id="modal">Submit</button>
-           </div>
-         </div>
-
-       </div>
-     </div>
-
-</form>
-
 
 <script language="JavaScript" type="text/javascript" src="/static/js/studentOverloadApp.js"></script>
 {% endblock %}
