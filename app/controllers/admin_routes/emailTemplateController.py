@@ -22,7 +22,7 @@ def email_templates():
 
 
 
-@admin.route('/admin/emailTemplates/<recipient>', methods=['GET', 'POST'])
+@admin.route('/admin/emailTemplates/getPurpose/<recipient>', methods=['GET', 'POST'])
 
 def getPurpose(recipient):
     try:
@@ -34,6 +34,23 @@ def getPurpose(recipient):
             purposeList.append({"Purpose":i.purpose})
         return json.dumps(purposeList)
         # return (jsonify({"Success": True}))
+    except Exception as e:
+        print(e)
+        return jsonify({"Success": False})
+
+@admin.route('/admin/emailTemplates/getEmail/<purpose>', methods=['GET', 'POST'])
+
+def getEmail(purpose):
+    try:
+        print("Made it here")
+        print(purpose)
+        email = EmailTemplate.get(EmailTemplate.purpose == purpose)
+        print(email.body)
+        print(email.subject)
+        purposeList = {"emailBody": email.body, "emailSubject": email.subject}
+        print(purposeList)
+        return json.dumps(purposeList)
+        return (jsonify({"Success": True}))
     except Exception as e:
         print(e)
         return jsonify({"Success": False})
