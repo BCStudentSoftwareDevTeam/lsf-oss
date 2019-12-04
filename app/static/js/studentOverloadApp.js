@@ -1,21 +1,50 @@
 // checking the classification of student on page load
 $(document).ready(function () {
   console.log($("#Classification").val())
+  $("#Primary").attr("disabled", true);
+  $("#Secondary").attr("disabled", true);
+  $("#notes").prop("disabled", true);
+  $("#submit").hide();
   if ($("#Classification").val() == "Freshman"){
     $('#freshmanWarning').modal({
      backdrop: 'static',
      keyboard: false
   })
  }
- $('input[type="checkbox"]').click(function(){
-           if($(this).prop("checked") == true){
-               alert("Checkbox is checked.");
-           }
-           else if($(this).prop("checked") == false){
-               alert("Checkbox is unchecked.");
-           }
- });
 });
+
+checkboxCounter = 0; //keeps track of how many checkboxes are checked
+function checkBoxCheck(obj){
+  if(obj.checked == true){
+      checkboxCounter = checkboxCounter + 1;
+  }
+  else if(obj.checked == false){
+      checkboxCounter = checkboxCounter - 1;
+  }
+  if(checkboxCounter >= 8){
+    $("#Primary").attr("disabled", false);
+    $("#Secondary").attr("disabled", false);
+    $("#notes").prop("disabled", false);
+    $("#Primary").selectpicker("refresh");
+    $("#Secondary").selectpicker("refresh");
+  }
+  else{
+    $("#Primary").attr("disabled", true);
+    $("#Secondary").attr("disabled", true);
+    $("#notes").prop("disabled", true);
+    $("#Primary").selectpicker("refresh");
+    $("#Secondary").selectpicker("refresh");
+  }
+}
+
+function primaryCheck(){
+  if(($("#Primary").val() != null) && ($("#notes").val() != "")){
+    $("#submit").show();
+  }
+  else{
+    $("#submit").hide();
+  }
+}
 
 function getCurrentPrimary(object) { // get current primary position from select picker
   var primary = $("#Primary").val();
