@@ -442,6 +442,9 @@ function checkPrimaryPosition(studentDict){
             createAndFillTable(studentDict);
           }
           else {
+            console.log("We're right here.")
+            console.log(checkDuplicate(studentDict))
+            console.log(checkTotalHours(studentDict, response));
             console.log("This is a duplicate");
             $("#warningModalTitle").html("Insert Rejected")
             $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
@@ -539,14 +542,8 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
   if (totalHoursCount > (15)){
     // TODO: Show modal saying they have too many hours
     $('#OverloadModal').modal('show');
-    // $('#overloadModalButton').attr('data-target', '#warningModal');
-    // $('#OverloadModal').on('hidden.bs.modal', function() {
-    // $('#warningModal').modal('show');
-    // $('#warningModalTitle').html("Notifying Primary Supervisor")
-    // $('#warningModalText').html("This student's primary supervisor will be notified.")
-    // return false
-  // });
     return true;
+  }
 }
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
@@ -673,4 +670,3 @@ function userInsert(){
          }
       }
 } // userInsert closing tag
-}
