@@ -114,41 +114,24 @@ function checkForEmptyFields(){
 }
 
 
-function updateDatabase(){
+function updateDatabase(formID){
   console.log("Inside funciton");
-  var url = "/studentOverloadApp/update/" + 23;
+  var currentPrimary = $("#Primary").val()
+  var currentSecondary = $("#Secondary").val()
+  var notes = $("#notes").val()
+  var dataDict = {}
+  dataDict[formID] = {"Current Primary": currentPrimary, "Current Secondary": currentSecondary, "Notes": notes}
+  console.log(dataDict)
+  var url = "/studentOverloadApp/update/" + formID;
+  //var data
    $.ajax({
      url: url,
+     method: "POST",
+     data: dataDict,
      dataType: "json",
+     contentType: 'application/json',
      success: function (response){
         console.log(response);
      }
    })
 }
-
-// function enableDisableAll(e) {
-//         var own = e;
-//         var div = document.getElementById("checkboxes");
-//         var elements = div.elements;
-//
-//     for (var i = 0 ; i < elements.length ; i++) {
-//           if(own !== elements[i] ){
-//
-//             if(own.checked == true){
-//
-//               $("#Primary").prop("disabled", true);
-//               $("#Secondary").prop("disabled", true);
-//               $("#notes").prop("disabled", true);
-//
-//             }else{
-//
-//               $("#Primary").prop("disabled", false);
-//               $("#Secondary").prop("disabled", false);
-//               $("#notes").prop("disabled", false);
-//             }
-//
-//            }
-//
-//      }
-
-//}

@@ -182,7 +182,9 @@
 <div class="container">
   <div align="center">
     <button id="submit" type="submit" class="btn btn-success" onclick ="checkForEmptyFields()">Submit Changes</button>
-    {% include "snips/studentOverloadSubmit.html" %}
+    {% with overloadForm=overloadForm %}
+      {% include "snips/studentOverloadSubmit.html" %}
+    {% endwith %}
   </div>
 </div>
 

@@ -98,7 +98,5 @@ def getSecondaryHours(formID):
     return json.dumps(HourDict)
 
 @main_bp.route('/studentOverloadApp/update/<formId>', methods=['POST'])
-def updateDatabase():
-    print("Nonsense")
+def updateDatabase(formId):
     print(formId)
-    return formId
