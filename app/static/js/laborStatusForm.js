@@ -337,13 +337,13 @@ function msgFlash(flash_message, status){
 }
 
 // TABLE
-function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
+function searchDataToPrepareToCheckPrimaryPosition() { // displays table when plus glyphicon is clicked and check if fields are filled out
   var studentDict = createStuDict();
   if (studentDict === false) {
     msgFlash("Please fill out all fields before submitting.", "fail");
   }
   else  {
-    checkPrimaryPosition(studentDict);
+    checkPrimaryPositionToCreateTheTable(studentDict);
      }
   }
 
@@ -414,7 +414,7 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
   return true;
 }
 
-function checkPrimaryPosition(studentDict){
+function checkPrimaryPositionToCreateTheTable(studentDict){
   var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
   var term = $("#selectedTerm").val();
   var url = "/laborstatusform/getstudents/" + term +"/" +studentDict.stuBNumber;
