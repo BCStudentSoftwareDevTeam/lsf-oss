@@ -465,14 +465,13 @@ function createAndFillTable(studentDict) {
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00") {
     var notesID0 = String((studentDict).stuName + (studentDict).stuJobType + (studentDict).stuPosition);
     var notesID1 = notesID0.replace(/ /g, "");
-    var notesID2 = notesID1.substring(0, notesID1.indexOf("("));
+    //var notesID2 = notesID1.substring(0, notesID1.indexOf("("));
   }
   else {
     var selectedContractHoursName = $("#selectedContractHours").val();// For whatever reason this is undefined
   }
-  var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(this)\" id= \""+notesID2+
-                                                          "\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
-  var removeIcon = "<a onclick= \"deleteRow(this)\"><span class=\"glyphicon glyphicon-remove color-red\" style=\"color:red;\"></span></a>";
+  var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(this)\" id= \"nGlyphicon\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
+  var removeIcon = "<a onclick= \"deleteRow(this)\" id=\"rGlyphicon\"><span class=\"glyphicon glyphicon-remove color-red\" style=\"color:red;\"></span></a>";
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
@@ -620,6 +619,9 @@ function userInsert(){
                  $("#SubmitModal").modal("hide");
                  $("#reviewButton0").prop('disabled',true);
                  $("#addMoreStudent").prop('disabled',true);
+                 $("a").attr("onclick", "").unbind("click");
+                 $(".glyphicon-edit").css("color", "grey");
+                 $(".glyphicon-remove").css("color", "grey");
                  msgFlash("Form(s) submitted successfully! It will be eligible for approval in one business day. (Please wait...)", "success");
                  setTimeout(function() { // executed after 1 second
                     window.location.replace("/laborstatusform"); // reloads the page if every form
