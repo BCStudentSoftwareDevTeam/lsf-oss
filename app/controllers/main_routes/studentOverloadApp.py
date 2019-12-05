@@ -5,6 +5,8 @@ from app.models.laborStatusForm import *
 from datetime import date
 from app.models.formHistory import *
 from flask import json, jsonify
+from flask import request
+from app.models.overloadForm import *
 
 @main_bp.route('/studentOverloadApp/<formId>', methods=['GET', 'POST'])
 # @login_required
@@ -97,6 +99,17 @@ def getSecondaryHours(formID):
     print(HourDict)
     return json.dumps(HourDict)
 
-@main_bp.route('/studentOverloadApp/update/<formId>', methods=['POST'])
-def updateDatabase(formId):
-    print(formId)
+@main_bp.route('/studentOverloadApp/update', methods=['POST'])
+def updateDatabase():
+    try:
+        # NEED TO ADD CURRENT PRIMARY AND CURRENT SECONDARY AFTER THE MIGRATION
+        rsp = eval(request.data.decode("utf-8"))
+        if rsp:
+            formId = rsp.keys()
+            for data in rsp.values():
+                print(data)
+                overloadform = OverloadForm.create(overloadReason = data["Notes"])
+        return jsonify({"Success": True})
+    except Exception as e:
+        print("ERROR: " + str(e))
+        return jsonify({"Success": False})

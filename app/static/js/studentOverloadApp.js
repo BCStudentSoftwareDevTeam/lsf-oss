@@ -121,17 +121,21 @@ function updateDatabase(formID){
   var notes = $("#notes").val()
   var dataDict = {}
   dataDict[formID] = {"Current Primary": currentPrimary, "Current Secondary": currentSecondary, "Notes": notes}
-  console.log(dataDict)
-  var url = "/studentOverloadApp/update/" + formID;
-  //var data
+  if (dataDict[formID]["Current Secondary"] == null){
+    delete dataDict[formID]["Current Secondary"];
+    dataDict[formID]["Current Secondary"]="None";
+  }
+  data = JSON.stringify(dataDict)
+  console.log(data)
+  var url = "/studentOverloadApp/update";
    $.ajax({
      url: url,
      method: "POST",
-     data: dataDict,
+     data: data,
      dataType: "json",
      contentType: 'application/json',
-     success: function (response){
-        console.log(response);
+     success: function (){
+        console.log("successful response");
      }
    })
 }
