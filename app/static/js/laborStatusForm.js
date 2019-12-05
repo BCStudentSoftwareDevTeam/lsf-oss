@@ -13,7 +13,6 @@ $(document).ready(function(){
       $("#selectedHoursPerWeek").val(value);
       fillHoursPerWeek("fillhours");
     }
-    console.log(display_failed.length);
 });
 
 $("laborStatusForm").submit(function(event) {
@@ -309,7 +308,6 @@ function deleteRow(glyphicon) {
 
 function msgFlash(flash_message, status){
     if (status === "success") {
-      console.log("flash success");
         category = "success";
         $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
         $("#flasher").delay(3000).fadeOut();
@@ -325,13 +323,10 @@ function msgFlash(flash_message, status){
 // TABLE
 function displayTable() { // displays table when plus glyphicon is clicked and check if fields are filled out
   var studentDict = createStuDict();
-  console.log("$$$$$$ : ", studentDict)
   if (studentDict === false) {
-    console.log("studentDict returned false")
     msgFlash("Please fill out all fields before submitting.", "fail");
   }
   else  {
-    console.log("going into checkPrimaryPosition")
     checkPrimaryPosition(studentDict);
      }
   }
@@ -411,24 +406,17 @@ function checkPrimaryPosition(studentDict){
     url: url,
     dataType: "json",
     success: function (response){
-      console.log(response);
-      console.log("post response");
-      console.log(studentDict);
-      console.log(Object.keys(response).length);
       if(Object.keys(response).length > 0) {
         if (studentDict.stuJobType == "Primary"){
-          console.log("Adding Primary with Primary in database");
           $("#warningModalTitle").html("Insert Rejected")
           $("#warningModalText").html(studentDict.stuName + " already has a primary position.");
           $("#warningModal").modal("show");
         }
         else if(studentDict.stuJobType == "Secondary"){
-          console.log("Adding Secondary with Primary in database");
           if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true) {
             createAndFillTable(studentDict);
           }
           else {
-            console.log("This is a duplicate");
             $("#warningModalTitle").html("Insert Rejected")
             $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
             $("#warningModal").modal("show");
@@ -437,15 +425,10 @@ function checkPrimaryPosition(studentDict){
       }
       else {
         if(studentDict.stuJobType == "Primary"){
-          console.log("Adding Primary without Primary in database");
           if (checkDuplicate(studentDict) == true  && checkTotalHours(studentDict, response) == true){
             createAndFillTable(studentDict);
           }
           else {
-            console.log("We're right here.")
-            console.log(checkDuplicate(studentDict))
-            console.log(checkTotalHours(studentDict, response));
-            console.log("This is a duplicate");
             $("#warningModalTitle").html("Insert Rejected")
             $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
             $("#warningModal").modal("show");
@@ -453,7 +436,6 @@ function checkPrimaryPosition(studentDict){
         }
         else {
           if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
-            console.log("Adding Secondary without Primary in database");
             $("#warningModalTitle").html("Insert Rejected")
             $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
             $("#warningModal").modal("show");
@@ -463,7 +445,6 @@ function checkPrimaryPosition(studentDict){
               createAndFillTable(studentDict);
             }
             else {
-              console.log("This is a duplicate");
               $("#warningModalTitle").html("Insert Rejected")
               $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
               $("#warningModal").modal("show");
@@ -476,7 +457,6 @@ function checkPrimaryPosition(studentDict){
 }
 function createAndFillTable(studentDict) {
   globalArrayOfStudents.push(studentDict);
-  console.log(globalArrayOfStudents);
   $("#mytable").show();
   $("#jobTable").show();
   $("#hoursTable").show();
@@ -514,7 +494,6 @@ function createAndFillTable(studentDict) {
     $(cell7).html(removeIcon);
   }
   else {
-    console.log(selectedContractHoursName);
     $(cell3).html("Secondary");
     $(cell4).html(selectedContractHoursName);
     $(cell5).html((studentDict).stuStartDate + " - " + (studentDict).stuEndDate);
@@ -532,7 +511,6 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
   totalHoursCount = studentDict.stuWeeklyHours;
   for (i = 0; i < globalArrayOfStudents.length; i++){
     if (globalArrayOfStudents[i].stuName == studentDict.stuName){
-      console.log(totalHoursCount);
       totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
     }
   }
@@ -542,6 +520,9 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
   if (totalHoursCount > (15)){
     // TODO: Show modal saying they have too many hours
     $('#OverloadModal').modal('show');
+    return true;
+  }
+  else {
     return true;
   }
 }
@@ -639,7 +620,7 @@ function userInsert(){
                  $("#SubmitModal").modal("hide");
                  $("#reviewButton0").prop('disabled',true);
                  $("#addMoreStudent").prop('disabled',true);
-                 msgFlash("Form(s) submitted successfully! It will be eligible for approval in one business day", "success");
+                 msgFlash("Form(s) submitted successfully! It will be eligible for approval in one business day. (Please wait...)", "success");
                  setTimeout(function() { // executed after 1 second
                     window.location.replace("/laborstatusform"); // reloads the page if every form
                   }, 3000);

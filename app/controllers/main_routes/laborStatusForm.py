@@ -58,10 +58,8 @@ def laborStatusForm(laborStatusKey = None):
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
     """ Create labor status form. Create labor history form."""
-    print("We in here homies!")
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
-    print(rspFunctional) # This turns the string into whatever structure it should be. A list of dicts in this case.
     all_forms = []
     for i in range(len(rspFunctional)):
         d, created = Student.get_or_create(ID = rspFunctional[i]['stuBNumber'])
@@ -100,12 +98,9 @@ def userInsert():
                                               createdDate = date.today(),
                                               status      = status.statusName)
             all_forms.append(True)
-            # flash("Labor Status Form(s) has been created.", "success")
         except Exception as e:
-            # flash("An error occured.", "danger")
             all_forms.append(False)
-            # print("testing failed_form", failed_forms)
-            print("ERROR: " + str(e))
+            #print("ERROR: " + str(e))
 
     return jsonify(all_forms)
 
@@ -133,7 +128,6 @@ def getPositions(department):
 def checkForPrimaryPosition(termCode, student):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
-    print("Inside the Controller checkForPrimaryPosition")
     positionsList = []
     for item in positions:
         positionsDict = {}
@@ -146,7 +140,6 @@ def checkForPrimaryPosition(termCode, student):
         positionsDict["primarySupervisorLastName"] = item.supervisor.LAST_NAME
         # positionsDict["primarySupervisorUserName"] = item.supervisor.username #Passes Primary Supervisor's username if necessary
         positionsList.append(positionsDict)
-    # print(positionsList)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
 
 @main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
