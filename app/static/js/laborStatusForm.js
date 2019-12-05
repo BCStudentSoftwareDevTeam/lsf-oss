@@ -358,9 +358,9 @@ function createStuDict(){
     return false;
   }
   var positionName = $("#position option:selected").text();
-  // if (!positionName){
-  //   return false;
-  // }
+  if (!positionName){
+    return false;
+  }
   var positionCode = $("#position").find("option:selected").attr("id");
   var wls = $("#position").find("option:selected").attr("data-wls");
   var studentBNumber = $("#student").val();
