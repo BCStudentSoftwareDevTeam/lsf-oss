@@ -8,22 +8,23 @@ from flask import json, jsonify
 from flask import request
 from app.models.overloadForm import *
 
-@main_bp.route('/studentOverloadApp/<formId>', methods=['GET', 'POST'])
+@main_bp.route('/studentOverloadApp/<formId>', methods=['GET', 'POST']) # the form ID here is the ID from formHistory table
 # @login_required
 def studentOverloadApp(formId):
     current_user = require_login()
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
     print(1)
-    overloadForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
-    prefillStudentName = overloadForm.studentSupervisee.FIRST_NAME + " "+ overloadForm.studentSupervisee.LAST_NAME
-    prefillStudentBnum = overloadForm.studentSupervisee.ID
-    prefillStudentCPO = overloadForm.studentSupervisee.STU_CPO
-    prefillStudentClass = overloadForm.studentSupervisee.CLASS_LEVEL
-    prefillTerm = overloadForm.termCode.termName
-    prefillDepartment = overloadForm.department.DEPT_NAME
-    prefillPosition = overloadForm.POSN_TITLE
-    prefillHoursOverload = overloadForm.weeklyHours
+    overloadForm = FormHistory.get(FormHistory.formHistoryID == formId)
+    lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
+    prefillStudentName = lsfForm.studentSupervisee.FIRST_NAME + " "+ lsfForm.studentSupervisee.LAST_NAME
+    prefillStudentBnum = lsfForm.studentSupervisee.ID
+    prefillStudentCPO = lsfForm.studentSupervisee.STU_CPO
+    prefillStudentClass = lsfForm.studentSupervisee.CLASS_LEVEL
+    prefillTerm = lsfForm.termCode.termName
+    prefillDepartment = lsfForm.department.DEPT_NAME
+    prefillPosition = lsfForm.POSN_TITLE
+    prefillHoursOverload = lsfForm.weeklyHours
     listOfTerms = []
     today = date.today()
     todayYear = today.year
@@ -54,6 +55,7 @@ def studentOverloadApp(formId):
         currentPrimary = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == i)
         formIDPrimary.append(currentPrimary)
     print(currentPrimary)
+    print(formIDPrimary)
     formIDSecondary = []
     for i in studentSecondaryLabor:
         print (getattr(i, "laborStatusFormID"),"secondaryids")

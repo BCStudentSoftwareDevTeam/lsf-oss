@@ -113,7 +113,6 @@ function checkForEmptyFields(){
   }
 }
 
-
 function updateDatabase(formID){
   console.log("Inside funciton");
   var currentPrimary = $("#Primary").val()
