@@ -69,6 +69,7 @@ def studentOverloadApp(formId):
             if str(j.status) != "Pending":
                 totalCurrentHours += j.formID.weeklyHours
     print(totalCurrentHours)
+    totalFormHours = totalCurrentHours + prefillHoursOverload
     return render_template( 'main/studentOverloadApp.html',
 				            title=('student Overload Application'),
                             username = current_user,
@@ -83,7 +84,8 @@ def studentOverloadApp(formId):
                             prefillHoursOverload = prefillHoursOverload,
                             currentPrimary = formIDPrimary,
                             currentSecondary = formIDSecondary,
-                            totalCurrentHours = totalCurrentHours
+                            totalCurrentHours = totalCurrentHours,
+                            totalFormHours = totalFormHours
                           )
 
 @main_bp.route("/studentOverloadApp/getPrimary/<formID>", methods=['GET'])
