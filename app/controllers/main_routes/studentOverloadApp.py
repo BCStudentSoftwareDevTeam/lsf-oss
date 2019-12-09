@@ -88,26 +88,6 @@ def studentOverloadApp(formId):
                             totalFormHours = totalFormHours
                           )
 
-@main_bp.route("/studentOverloadApp/getPrimary/<formID>", methods=['GET'])
-def getPrimaryHours(formID):
-    """ Get the hour for the selected primary position """
-    print(formID)
-    Hours = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formID)
-    HourDict = {}
-    HourDict[Hours.laborStatusFormID] = {"primaryHour": Hours.weeklyHours}
-    print(HourDict)
-    return json.dumps(HourDict)
-
-@main_bp.route("/studentOverloadApp/getSecondary/<formID>", methods=['GET'])
-def getSecondaryHours(formID):
-    """ Get the hour for the selected secondary position """
-    print(formID)
-    Hours = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formID)
-    HourDict = {}
-    HourDict[Hours.laborStatusFormID] = {"secondaryHour": Hours.weeklyHours}
-    print(HourDict)
-    return json.dumps(HourDict)
-
 @main_bp.route('/studentOverloadApp/update', methods=['POST'])
 def updateDatabase():
     try:
