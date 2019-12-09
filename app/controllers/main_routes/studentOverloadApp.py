@@ -54,10 +54,21 @@ def studentOverloadApp(formId):
     formIDSecondary = []
     print(studentSecondaryLabor ,"student secondary labor")
     for i in studentSecondaryLabor:
-        studentSecondaryHistory = FormHistory.select().where((FormHistory.formID == i) & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly")))
+        studentSecondaryHistory = FormHistory.select().where((FormHistory.formID == i) & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly") | (FormHistory.status == "Pending")))
         print(studentSecondaryHistory, "form History")
         formIDSecondary.append(studentSecondaryHistory)
     print(formIDSecondary, "the end result")
+    totalCurrentHours = 0
+    for i in formIDPrimary:
+        for j in i:
+            if str(j.status) != "Pending":
+                totalCurrentHours += j.formID.weeklyHours
+    print(totalCurrentHours)
+    for i in formIDSecondary:
+        for j in i:
+            if str(j.status) != "Pending":
+                totalCurrentHours += j.formID.weeklyHours
+    print(totalCurrentHours)
     return render_template( 'main/studentOverloadApp.html',
 				            title=('student Overload Application'),
                             username = current_user,
@@ -71,7 +82,8 @@ def studentOverloadApp(formId):
                             prefillPosition = prefillPosition,
                             prefillHoursOverload = prefillHoursOverload,
                             currentPrimary = formIDPrimary,
-                            currentSecondary = formIDSecondary
+                            currentSecondary = formIDSecondary,
+                            totalCurrentHours = totalCurrentHours
                           )
 
 @main_bp.route("/studentOverloadApp/getPrimary/<formID>", methods=['GET'])
