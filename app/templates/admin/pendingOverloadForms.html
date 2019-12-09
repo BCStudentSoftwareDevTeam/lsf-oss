@@ -1,0 +1,236 @@
+<div class="col-lg-12" align="center" >
+  <table id="overloadForms" class="table table-striped overloadForm dataTable" >
+    <!-- Made empty header tags because we need to hide the header -->
+    <thead id="headTable" text-align="center" >
+      <tr id="tableHeaders" class="tableHeaders"  >
+        <th> Notes </th>
+        <th>Term</th>
+        <th>Department</th>
+        <th>Supervisor</th>
+        <th></th>
+        <th>Students</th>
+        <th> Position (WLS)</th>
+        <th>Hours</th>
+        <th>Created</th>
+        <th>Contract Dates</th>
+
+      </tr>
+    </thead>
+
+    <tbody id="tablebody">
+      {% for overloadForm in pending_overload_forms %}
+      <tr id="tableData_{{overloadForm.formHistoryID}}" value= "{{overloadForm.formHistoryID}}" class="tableData" align="center">
+          <td> {#Admin Notes #}
+            <span  id="notes_{{overloadForm.formID.laborStatusFormID}}" onclick="getNotes({{overloadForm.formID.laborStatusFormID}})"
+                   class="glyphicon glyphicon-book btn-lg
+                        {% if overloadForm.formID.supervisorNotes != None and overloadForm.formID.laborDepartmentNotes == None %} text-success
+                        {% elif overloadForm.formID.laborDepartmentNotes != None and overloadForm.formID.supervisorNotes == None  %} text-danger
+                        {% elif overloadForm.formID.supervisorNotes != None and overloadForm.formID.laborDepartmentNotes != None %} text-danger
+                        {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#overloadFormNotesModal"
+                   value="{{overloadForm.formID.termCode.termName}} {{overloadForm.formID.studentSupervisee.FIRST_NAME}}  {{overloadForm.formID.studentSupervisee.LAST_NAME}}
+                   ({{overloadForm.formID.studentSupervisee.ID}} {{overloadForm.formID.POSN_TITLE}} ({{overloadForm.formID.WLS}})" class="noteModelClose">
+
+                        </span>
+                        <input id="dummyInput" value="{{overloadForm.formID.laborStatusFormID}}" hidden/>
+
+          </td>
+          <td> {# TERM #}
+            {{overloadForm.formID.termCode.termName}}
+          </td>
+          <td> {# DEPARTMENT #}
+            {{overloadForm.formID.department.DEPT_NAME}} ({{overloadForm.formID.department.ORG}}-{{overloadForm.formID.department.ACCOUNT}})
+          </td>
+          <td> {# SUPERVISOR #}
+            {{overloadForm.formID.supervisor.FIRST_NAME}} {{overloadForm.formID.supervisor.LAST_NAME}}
+          </td>
+          <td>
+            |
+          </td>
+          <td> {# STUDENT #}
+            {{overloadForm.formID.studentSupervisee.FIRST_NAME}}  {{overloadForm.formID.studentSupervisee.LAST_NAME}}  ({{overloadForm.formID.studentSupervisee.ID}})
+          </td>
+          <td> {# POSITON AND WLS #}
+            {{overloadForm.formID.POSN_TITLE}} ({{overloadForm.formID.WLS}})
+          </td>
+          <td> {# HOURS #}
+          {% if overloadForm.formID.weeklyHours != None%} {{overloadForm.formID.weeklyHours}} {% else %}   {{overloadForm.formID.contractHours}} {% endif %}
+        </td>
+        <td> {# CREATED BY #}
+          {{overloadForm.createdBy.username}}  <br/> {{overloadForm.createdDate.strftime('%m/%d/%y')}}
+        </td>
+        <td> {# CREATED DATE #}
+           {{overloadForm.formID.startDate.strftime('%m/%d/%y')}} -  {{overloadForm.formID.endDate.strftime('%m/%d/%y')}}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+
+    </div>
+
+<!-- Modal -->
+<div class="modal fade" id="adminOverload" tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="window.location.reload()">
+        <span aria-hidden="true">&times;</span>
+        </button>
+          <div class="modal-title h2" id="studentName" ></div>
+      </div>
+        <div class="modal-body">
+          <div class="col-sm-5">
+            <div class="form-group">
+              <label> Position (WLS): </label>
+                <div>
+                  <input type="text" class="form-control" id="positionWls" value="" readonly></input>
+                </div>
+            </div>
+          <div class="form-group">
+            <label>Hours per Week</label>
+              <div>
+                <input type="text" class="form-control" id="hours" value="" readonly></input>
+              </div>
+          </div>
+
+          <div class="form-group">
+            <label>Contract Date</label>
+              <div>
+                <input type="text" class="form-control" id="contractDate" value="" readonly></input>
+              </div>
+          </div>
+
+          <div class="form-group">
+            <label>Supervisor</label>
+              <div>
+                <input type="text" class="form-control" id="Supervisor" value="" readonly></input>
+              </div>
+          </div>
+
+          <div class="form-group">
+            <label>Department</label>
+              <div>
+                <input type="text" class="form-control" id="Department" value="" readonly></input>
+              </div>
+          </div>
+      </div>
+
+      <div class="col-sm-6" >
+        <div class="form-group">
+          <label for="Reason">Reason for Release:</label>
+          <div>
+            <textarea id="overloadText" name="notes" rows="6" cols="20" id="reason" disabled> </textarea>
+          </div>
+        </div>
+
+          <div class="form-group">
+            <label for="Notes">Notes</label>
+            <div>
+              <textarea name="notes" rows="6" cols="20" id="notes"></textarea>
+            </div>
+         </div>
+
+         <input type='checkbox' id='findIid'  class="check[]"  autocomplete="off" > Send to Financial Aid for Approval </input>
+         <br>
+         <input type='checkbox' id='saas'  class="check[]"  autocomplete="off" onclick="checkboxSend()"> Send to SAAS for Approval </input>
+         <br>
+         <button type="button" class="btn btn-newcolor" id="send_button" value="Send" data-dismiss="modal">Send</button>
+
+
+          </div>
+        </div>
+
+
+          <div class="modal-footer">
+              <div class="col-sm-5" align="left">
+                <button type="button" class="btn btn-secondary floatleft" id="close"
+                data-dismiss="modal"  onclick="location.reload()">Close</button>
+              </div>
+              <div class="col-sm-7" align="right" >
+                <button type="button" class="btn btn-success" id="approving"  data-target="approvingModal" >Approve</button>
+
+                <button type="button" class="btn btn-danger" data-target="denyingModal" id="denying">Deny</button>
+              </div>
+
+          </div>
+          </div>
+        </div>
+      </div>
+
+
+    <!-- START OF MODAL adding notes -->
+    <div class="modal fade" id="overloadFormNotesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <b <h6 class="modal-title" id="notesModalLabel">Labor Office Notes </h6> </b>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
+
+              </div>
+              <div class="modal-body" >
+                <div id="notesDiv">
+                   <label id="supeNotesLabel" class="col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </label>
+                      <textarea id="notesText" rows="2" cols="70" disabled> </textarea>
+                  <label class="col-md-4 control-label text-left" for ="laboroffice" align = "left"> Labor Office Notes: </label>
+                      <textarea id="laborNotesText" rows="2" cols="70"> </textarea>
+                </div>
+              <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveNotes" onclick="notesInsert()">Save Notes</button>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+
+
+<!-- Modal approving modal here-->
+<div class="modal fade" id="approvingModal" tabindex="-1" role="dialog" aria-labelledby="approvingModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="approvingModal">Approve Overload</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="studentInfo">  </p>
+        <p id="nothingChecked"> </p>
+        <br>
+
+        <p class="text-justify"> <strong> Are you sure you would like to approve this request?</strong></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary approvingclose" style="float: left;" data-dismiss="modal" onclick="location.reload()" >close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="finalOverloadApproval()" >Yes</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="location.reload()">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- denying modal -->
+<div class="modal fade" id="denyingModal" tabindex="-1" role="dialog" aria-labelledby="denyingModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="denyingModal">Deny Overload</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="denystudentInfo">  </p>
+        <br>
+
+        <p class="text-justify"> <strong> Are you sure you would like to deny this form?</strong></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary approvingclose" style="float: left;" data-dismiss="modal" onclick="location.reload()" >close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="finalOverloadDenial()">Yes</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="location.reload()">No</button>
+      </div>
+    </div>
+  </div>
+</div>
