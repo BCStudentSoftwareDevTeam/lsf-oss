@@ -85,56 +85,26 @@
       <div class="form-group">
         <label for="Primary">Current Positions:</label>
         <div>
-          <select type="Primary"
-                  class="selectpicker"
-                  data-live-search='true'
-                  onchange = "getCurrentPrimary(this); primaryCheck()"
-                  id="Primary"
-                  data-width="320px" required>
-            <option disabled selected value> -- select an option -- </option>
-          {% for listPrimary in currentPrimary %}
-              {% for primary in listPrimary %}
-                <option value="{{primary.laborStatusFormID}}">{{primary.POSN_TITLE}} ({{primary.termCode.termName}})</option>
-              {% endfor %}
-          {% endfor %}
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="PHours">Hours Per Week:</label>
-        <div >
-          <input type="PrimaryHours" class="form-control" id="primaryHours" disabled>
-          </input>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="Secondary">Current Secondary Position:</label>
-        <div>
-          <select type="Secondary"
-                  class="selectpicker"
-                  data-live-search='true'
-                  onchange = "getCurrentSecondary(this)"
-                  id="Secondary"
-                  data-width="320px">
-            <option disabled selected value> -- select an option -- </option>
-          {% for listSecondary in currentSecondary %}
-              {% for secondary in listSecondary %}
-                <option value="{{secondary.laborStatusFormID}}">{{secondary.POSN_TITLE}} ({{secondary.termCode.termName}})</option>
-              {% endfor %}
-          {% endfor %}
-          </select>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="SHours">Hours Per Week:</label>
-        <div>
-          <input type="SecondaryHours" class="form-control" id="secondaryHours" disabled>
+          <ul class="list-group" type="currentPositions">
+            {% for listPrimary in currentPrimary %}
+                {% for primary in listPrimary %}
+                  <li class="list-group-item" id="Primary" value="{{primary.formHistoryID}}">{{primary.formID.termCode.termName}} | {{primary.formID.department.DEPT_NAME}} Dept. |
+                  {{primary.formID.jobType}} | {{primary.formID.POSN_TITLE}} | {{primary.formID.weeklyHours}} Hours Per Week | {{primary.status}}</li>
+                {% endfor %}
+            {% endfor %}
+            {% for listSecondary in currentSecondary %}
+                {% for secondary in listSecondary %}
+                <li class="list-group-item" id="Secondary" value="{{secondary.formHistoryID}}">{{secondary.formID.termCode.termName}} | {{secondary.formID.department.DEPT_NAME}} Dept. |
+                {{secondary.formID.jobType}} | {{secondary.formID.POSN_TITLE}} | {{secondary.formID.weeklyHours}} Hours Per Week | {{secondary.status}}</li>
+                {% endfor %}
+            {% endfor %}
+          </ul>
         </div>
       </div>
       <div class="form-group">
         <label for="TPSHours">Total Primary and Secondary Hours:</label>
         <div>
-          <input type="TPSHours" class="form-control" id="currentTotal" disabled>
+          <p type="TPSHours" id="currentTotal"></p>
         </div>
       </div>
     </div>

@@ -1631,7 +1631,7 @@ fh = [  {
                 "createdDate": datetime.date(2017, 2, 10),
                 "reviewedDate": datetime.date(2017, 2, 11),
                 "reviewedBy": None,
-                "status": Status.get(Status.statusName == "Approved"),
+                "status": Status.get(Status.statusName == "Pending"),
                 "rejectReason": None
                 },
                 {

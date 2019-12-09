@@ -14,8 +14,8 @@ def studentOverloadApp(formId):
     current_user = require_login()
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
-    print(1)
     overloadForm = FormHistory.get(FormHistory.formHistoryID == formId)
+
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
     prefillStudentName = lsfForm.studentSupervisee.FIRST_NAME + " "+ lsfForm.studentSupervisee.LAST_NAME
     prefillStudentBnum = lsfForm.studentSupervisee.ID
@@ -30,41 +30,34 @@ def studentOverloadApp(formId):
     todayYear = today.year
     termYear = todayYear * 100
     termCodeYear = Term.select(Term.termCode).where(Term.termCode.between(termYear-1, termYear + 15))
-    print(termCodeYear)
-    nonBreakTerms=[]
+    currentTerm = str(lsfForm.termCode.termCode)[-2:]
+    TermsNeeded=[]
     for term in termCodeYear:
-        print((str(term)))
-        print(str(term)[-2:])
-        if str(term)[-2:] == "11" or str(term)[-2:]== "12" or str(term)[-2:]== "00":
-            nonBreakTerms.append(term)
-    print(nonBreakTerms)
+        if str(term)[-2:] == currentTerm or str(term)[-2:]== "00":
+            TermsNeeded.append(term)
+    print(TermsNeeded,"terms needed")
 
     studentSecondaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
                                                                                                LaborStatusForm.jobType == "Secondary",
-                                                                                               LaborStatusForm.termCode.in_(nonBreakTerms))
+                                                                                               LaborStatusForm.termCode.in_(TermsNeeded))
 
     studentPrimaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
                                                                                            LaborStatusForm.jobType == "Primary",
-                                                                                           LaborStatusForm.termCode.between(termYear-1, termYear + 15))
-
+                                                                                           LaborStatusForm.termCode.in_(TermsNeeded))
+    print(studentPrimaryLabor ,"student primary labor")
     formIDPrimary = []
     for i in studentPrimaryLabor:
-        print (getattr(i, "laborStatusFormID"),"primaryids")
-        studentPrimaryHistory = FormHistory.select().where((FormHistory.formID == i) & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly")))
-        print(studentPrimaryHistory)
-        currentPrimary = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == i)
-        formIDPrimary.append(currentPrimary)
-    print(currentPrimary)
-    print(formIDPrimary)
+        studentPrimaryHistory = FormHistory.select().where((FormHistory.formID == i) & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly") | (FormHistory.status == "Pending")))
+        print(studentPrimaryHistory, "form History")
+        formIDPrimary.append(studentPrimaryHistory)
+    print(formIDPrimary, "the end result")
     formIDSecondary = []
+    print(studentSecondaryLabor ,"student secondary labor")
     for i in studentSecondaryLabor:
-        print (getattr(i, "laborStatusFormID"),"secondaryids")
         studentSecondaryHistory = FormHistory.select().where((FormHistory.formID == i) & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly")))
-        print(studentSecondaryHistory)
-        currentSecondary = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == i)
-        formIDSecondary.append(currentSecondary)
-    print(currentSecondary)
-
+        print(studentSecondaryHistory, "form History")
+        formIDSecondary.append(studentSecondaryHistory)
+    print(formIDSecondary, "the end result")
     return render_template( 'main/studentOverloadApp.html',
 				            title=('student Overload Application'),
                             username = current_user,
