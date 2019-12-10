@@ -96,8 +96,10 @@ def updateDatabase():
         if rsp:
             formId = rsp.keys()
             for data in rsp.values():
-                print(data)
-                overloadform = OverloadForm.create(overloadReason = data["Notes"])
+                overloadForm = OverloadForm.create(overloadReason = data["Notes"])
+                formHistoryForm = FormHistory.get(FormHistory.formHistoryID == data["formID"])
+                formHistoryForm.overloadForm = overloadForm.overloadFormID
+                formHistoryForm.save()
         return jsonify({"Success": True})
     except Exception as e:
         print("ERROR: " + str(e))
