@@ -53,14 +53,14 @@
     <div align="center">
       <font size="2">
       <table class="table table-striped" style="width:100%;">
-        <tr>
+        <tr align="center">
           <th>Name:</th>
           <th>B#:</th>
           <th>CPO:</th>
           <th>Classification:</th>
           <th>Term:</th>
         </tr>
-        <tr>
+        <tr align="center">
           <td>{{prefillStudentName}}</td>
           <td>{{prefillStudentBnum}}</td>
           <td>{{prefillStudentCPO}}</td>
@@ -77,31 +77,51 @@
         <div class="form-group">
           <p>   </p>
         </div>
-        <div>
-          <ul class="list-group" type="currentPositions">
-            {% for listPrimary in currentPrimary %}
-                {% for primary in listPrimary %}
-                  <li class="list-group-item" id="Primary" value="{{primary.formHistoryID}}">{{primary.formID.termCode.termName}} | {{primary.formID.department.DEPT_NAME}} Dept. |
-                  {{primary.formID.jobType}} | {{primary.formID.POSN_TITLE}} | {{primary.formID.weeklyHours}} Hours Per Week | {{primary.status}}</li>
-                {% endfor %}
-            {% endfor %}
-            {% for listSecondary in currentSecondary %}
-                {% for secondary in listSecondary %}
-                <li class="list-group-item" id="Secondary" value="{{secondary.formHistoryID}}">{{secondary.formID.termCode.termName}} | {{secondary.formID.department.DEPT_NAME}} Dept. |
-                {{secondary.formID.jobType}} | {{secondary.formID.POSN_TITLE}} | {{secondary.formID.weeklyHours}} Hours Per Week | {{secondary.status}}</li>
-                {% endfor %}
-            {% endfor %}
-          </ul>
-        </div>
+        <font size="2">
+        <table class="table table-striped" style="width:100%;" align="center">
+          <tr>
+            <th>Term</th>
+            <th>Department</th>
+            <th>Position Type</th>
+            <th>Postion Title</th>
+            <th>Hours Per Week</th>
+            <th>Status</th>
+          </tr>
+          {% for listPrimary in currentPrimary %}
+              {% for primary in listPrimary %}
+              <tr id="Primary" value="{{primary.formHistoryID}}">
+                <td>{{primary.formID.termCode.termName}}</td>
+                <td>{{primary.formID.department.DEPT_NAME}}</td>
+                <td>{{primary.formID.jobType}}</td>
+                <td>{{primary.formID.POSN_TITLE}}</td>
+                <td>{{primary.formID.weeklyHours}}</td>
+                <td>{{primary.status}}</td>
+              </tr>
+              {% endfor %}
+          {% endfor %}
+          {% for listSecondary in currentSecondary %}
+              {% for secondary in listSecondary %}
+              <tr id="Secondary" value="{{secondary.formHistoryID}}">
+                <td>{{secondary.formID.termCode.termName}}</td>
+                <td>{{secondary.formID.department.DEPT_NAME}}</td>
+                <td>{{secondary.formID.jobType}}</td>
+                <td>{{secondary.formID.POSN_TITLE}}</td>
+                <td>{{secondary.formID.weeklyHours}}</td>
+                <td>{{secondary.status}}</td>
+              </tr>
+              {% endfor %}
+          {% endfor %}
+        </table>
+        </font>
       </div>
       <div class="col-md-4">
       </div>
       <div class="col-md-4">
         <table class="table table-striped">
-          <tr>
+          <tr align="center">
             <th>Total Primary and Secondary Hours:</th>
           </tr>
-          <tr>
+          <tr align="center">
             <td>{{totalCurrentHours}}</td>
           </tr>
         </table>
@@ -121,13 +141,13 @@
       <div align="center">
         <font size="2">
         <table class="table table-striped" style="width:100%;" align="center">
-          <tr>
+          <tr align="center">
             <th>Department:</th>
             <th>Position:</th>
             <th>Hours Per Week:</th>
             <th>Total Hours Per Week:</th>
           </tr>
-          <tr>
+          <tr align="center">
             <td>{{prefillDepartment}}</td>
             <td>{{prefillPosition}}</td>
             <td>{{prefillHoursOverload}}</td>
