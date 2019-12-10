@@ -49,7 +49,7 @@ function updateDatabase(formID){
   console.log("Inside funciton");
   var notes = $("#notes").val()
   var dataDict = {}
-  dataDict[formID] = {"Notes": notes}
+  dataDict[formID] = {"Notes": notes, "formID": formID}
   data = JSON.stringify(dataDict)
   console.log(data)
   var url = "/studentOverloadApp/update";
