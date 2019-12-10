@@ -178,41 +178,9 @@ function checkWLS() {
   var hoursPerWeek = $("#selectedHoursPerWeek").val();
 
   if (wls >= 5 && hoursPerWeek < 15 ) {
-    $("#warningModalTitle").html("Insert Rejected");  // FIXME: Maybe change Modal title (ask Scott)
-    $("#warningModalText").html("Student requires at least a 15 hour contract with positions WLS 5 or greater."); // FIXME Maybe change modal Language (ask Scott)
+    $("#warningModalTitle").html("Insert Rejected");
+    $("#warningModalText").html("Student requires at least a 15 hour contract with positions that are WLS 5 or greater.  Please also make sure that job type is not secondary for positions that are WLS 5 or greater.");
     $("#warningModal").modal("show");
-    return false;
-  }
-  else {
-    return true;
-  }
-}
-
-function checkJobType() {
-  // This function checks the job type selected along with the WLS of the position.
-  // If the job type is secondary and the WLS is 5 or 6, it rejects the insert.
-  var jobTypeSelected = $('#jobType').find('option:selected').attr('data-jobType');
-  var wlsSelected = $('#position').find('option:selected').attr('data-wls');
-  if (jobTypeSelected == "Secondary" && wlsSelected >=5) {
-    $('#warningModalTitle').html("Insert Rejected");
-    $('#warningModalText').html("Position with WLS 5 or 6 cannot be a secondary position.");
-    $('#warningModal').modal('show');
-    return false;
-  }
-  else {
-    return true;
-  }
-}
-
-function checkJobType() {
-  // This function checks the job type selected along with the WLS of the position.
-  // If the job type is secondary and the WLS is 5 or 6, it rejects the insert.
-  var jobTypeSelected = $('#jobType').find('option:selected').attr('data-jobType');
-  var wlsSelected = $('#position').find('option:selected').attr('data-wls');
-  if (jobTypeSelected == "Secondary" && wls >=5) {
-    $('#WLSModalTitle').html("Insert Rejected");
-    $('#WLSModalText').html("Position with WLS 5 or 6 cannot be a secondary position.");
-    $('#WLSModal').modal('show');
     return false;
   }
   else {
@@ -326,12 +294,12 @@ function msgFlash(flash_message, status){
     if (status === "success") {
         category = "success";
         $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
-        $("#flasher").delay(3000).fadeOut();
+        $("#flasher").delay(5000).fadeOut();
     }
     else {
         category = "danger";
         $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
-        $("#flasher").delay(3000).fadeOut();
+        $("#flasher").delay(5000).fadeOut();
     }
 
 }
@@ -341,6 +309,9 @@ function searchDataToPrepareToCheckPrimaryPosition() { // displays table when pl
   var studentDict = createStuDict();
   if (studentDict === false) {
     msgFlash("Please fill out all fields before submitting.", "fail");
+  }
+  else if (checkWLS() === false) {
+    checkWLS();
   }
   else  {
     checkPrimaryPositionToCreateTheTable(studentDict);
@@ -632,16 +603,23 @@ function userInsert(){
                    $("#SubmitModal").modal("show");
                }
                else{
+                    if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
+                    var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
+                  }
+                    else{
+                    var bigString = "<li>"+"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
+                  }
+                 modalList.push(bigString);
                  $("#SubmitModal").modal("hide");
                  $("#reviewButton0").prop('disabled',true);
                  $("#addMoreStudent").prop('disabled',true);
                  $("a").attr("onclick", "").unbind("click");
                  $(".glyphicon-edit").css("color", "grey");
                  $(".glyphicon-remove").css("color", "grey");
-                 msgFlash("Form(s) submitted successfully! It will be eligible for approval in one business day. (Please wait...)", "success");
+                 msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait...)", "success");
                  setTimeout(function() { // executed after 1 second
                     window.location.replace("/laborstatusform"); // reloads the page if every form
-                  }, 3000);
+                  }, 5000);
                }
              }
          }); // ajax closing tag
@@ -669,3 +647,9 @@ function userInsert(){
          }
       }
 } // userInsert closing tag
+
+$("#submitmodalid").click(function() {
+    $('html,body').animate({
+        scrollTop: $(".col-lg-11").offset().top}, //This makes the screen scroll to the top if it is not already so the user can see the flash message.
+        'slow');
+});
