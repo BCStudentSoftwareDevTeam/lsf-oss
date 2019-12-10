@@ -33,7 +33,7 @@ def studentOverloadApp(formId):
     currentTerm = str(lsfForm.termCode.termCode)[-2:]
     TermsNeeded=[]
     for term in termCodeYear:
-        if str(term)[-2:] == currentTerm or str(term)[-2:]== "00":
+        if str(term)[-2:] == "11" or str(term)[-2:] == "12" or str(term)[-2:]== "00":
             TermsNeeded.append(term)
     print(TermsNeeded,"terms needed")
 
@@ -47,14 +47,14 @@ def studentOverloadApp(formId):
     print(studentPrimaryLabor ,"student primary labor")
     formIDPrimary = []
     for i in studentPrimaryLabor:
-        studentPrimaryHistory = FormHistory.select().where((FormHistory.formID == i) & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly") | (FormHistory.status == "Pending")))
+        studentPrimaryHistory = FormHistory.select().where((FormHistory.formID == i) & (FormHistory.historyType == "Labor Status Form") & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly") | (FormHistory.status == "Pending")))
         print(studentPrimaryHistory, "form History")
         formIDPrimary.append(studentPrimaryHistory)
     print(formIDPrimary, "the end result")
     formIDSecondary = []
     print(studentSecondaryLabor ,"student secondary labor")
     for i in studentSecondaryLabor:
-        studentSecondaryHistory = FormHistory.select().where((FormHistory.formID == i) & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly") | (FormHistory.status == "Pending")))
+        studentSecondaryHistory = FormHistory.select().where((FormHistory.formID == i) & (FormHistory.historyType == "Labor Status Form") & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly") | (FormHistory.status == "Pending")))
         print(studentSecondaryHistory, "form History")
         formIDSecondary.append(studentSecondaryHistory)
     print(formIDSecondary, "the end result")
