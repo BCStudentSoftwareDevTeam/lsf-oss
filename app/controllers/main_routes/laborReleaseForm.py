@@ -51,18 +51,16 @@ def laborReleaseForm(laborStatusKey):
                                         releaseDate = releaseDate,
                                         reasonForRelease = releaseReason
                                         )
-
             historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Release Form")
             status = Status.get(Status.statusName == "Pending")
             laborStatusForiegnKey = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-
             newFormHistory = FormHistory.create(
                                         formID = laborStatusForiegnKey.laborStatusFormID,
                                         historyType = historytype.historyTypeName,
                                         releaseForm = newLaborReleaseForm.laborReleaseFormID,
                                         modifiedForm = None,
                                         overloadForm = None,
-                                        createdBy = current_user.username,
+                                        createdBy = current_user.UserID,
                                         createdDate = date.today(),
                                         reviewedDate = None,
                                         reviewedBy = None,
