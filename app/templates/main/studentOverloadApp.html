@@ -47,43 +47,42 @@
     <div align="center">
       <h3>Current Job Information</h3>
     </div>
+    <div class="form-group">
+      <p>   </p>
+    </div>
     <!-- current job information on the left side -->
-    <div class="floatleft">
-      <div class="form-group">
-        <label for="Name">Name:</label>
-        <div>
-          <p type="Name" id="Name" value="{{prefillStudentName}}"> {{prefillStudentName}} </p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="BNum">B#:</label>
-        <div>
-          <p type="BNum" id="BNum" value="{{prefillStudentBnum}}"> {{prefillStudentBnum}} </p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="CPO">CPO:</label>
-        <div>
-          <p type="CPO" id="CPO" value="{{prefillStudentCPO}}"> {{prefillStudentCPO}} </p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="Classification">Classification:</label>
-        <div>
-          <p type="Classification" id="Classification" value="{{prefillStudentClass}}"> {{prefillStudentClass}} </p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="Term">Term:</label>
-        <div>
-          <p type="Term" id="Term" value="{{prefillTerm}}"> {{prefillTerm}} </p>
-        </div>
-      </div>
-    </div
+    <div align="center">
+      <font size="2">
+      <table style="width:100%;">
+        <tr>
+          <th>Name:</th>
+          <th>B#:</th>
+          <th>CPO:</th>
+          <th>Classification:</th>
+          <th>Term:</th>
+        </tr>
+        <tr>
+        </tr>
+        <tr>
+          <td>{{prefillStudentName}}</td>
+          <td>{{prefillStudentBnum}}</td>
+          <td>{{prefillStudentCPO}}</td>
+          <td>{{prefillStudentClass}}</td>
+          <td>{{prefillTerm}}</td>
+        </tr>
+      </table>
+      </font>
+    <!-- </div> -->
     <!-- current job information on the right side -->
-    <div class="floatright">
+    <!-- <div class="floatright"> -->
+    <div class="form-group">
+      <p>   </p>
+    </div>
       <div class="form-group">
         <label for="Primary">Current Positions:</label>
+        <div class="form-group">
+          <p>   </p>
+        </div>
         <div>
           <ul class="list-group" type="currentPositions">
             {% for listPrimary in currentPrimary %}
@@ -108,45 +107,52 @@
         </div>
       </div>
     </div>
-    <div align="center" class="spacing">
+    <div class="form-group">
+      <p>   </p>
+    </div>
+
+    <div align="center">
       <h3>Overload Assignment Request</h3>
     </div>
+    <div class="form-group">
+      <p>   </p>
+    </div>
     <!-- overload request information on the left side -->
-    <div class="floatleft">
-      <div class="form-group">
-        <label for="Dept">Department:</label>
-        <div>
-          <p type="Dept" id="Dept" value="{{prefillDepartment}}"> {{prefillDepartment}} </p>
-        </div>
+    <!-- <div class="floatleft"> -->
+      <div align="center">
+        <font size="2">
+        <table style="width:100%;">
+          <tr>
+            <th>Department:</th>
+            <th>Position:</th>
+            <th>Hours Per Week:</th>
+            <th>Total Hours Per Week:</th>
+          </tr>
+          <tr>
+          </tr>
+          <tr>
+            <td>{{prefillDepartment}}</td>
+            <td>{{prefillPosition}}</td>
+            <td>{{prefillHoursOverload}}</td>
+            <td>{{totalFormHours}}</td>
+          </tr>
+        </table>
+        </font>
       </div>
       <div class="form-group">
-        <label for="Overload">Position:</label>
-        <div>
-          <p type="OverloadOverload" id="Overload" value="{{prefillPosition}}"> {{prefillPosition}} </p>
-        </div>
+        <p>   </p>
       </div>
-      <div class="form-group">
-        <label for="OHours">Hours Per Week:</label>
-        <div>
-          <p type="OHours" id="overloadHours" value="{{prefillHoursOverload}}"> {{prefillHoursOverload}} </p>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="Total">Total Hours Per Week:</label>
-        <div>
-          <p type="Total" id="overloadTotal"> {{totalFormHours}} </p>
-        </div>
-      </div>
-    </div>
+    <!-- </div> -->
     <!-- overload request information on the right side -->
-    <div class="floatright">
-      <div class="form-group">
+    <!-- <div class="floatright"> -->
+      <div align="center">
         <label for="Reason">Reason For Overload Request:</label>
+        <p>   </p>
         <div>
-          <textarea id= "notes" name="notes" rows="12" cols="73" onchange="primaryCheck()"required></textarea>
+          <textarea id= "notes" name="notes" rows="12" cols="160" onchange="primaryCheck()"required></textarea>
         </div>
       </div>
-    </div>
+    <!-- </div> -->
   </div>
 </form>
 <div class="container">
