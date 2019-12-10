@@ -47,9 +47,6 @@
     <div align="center">
       <h3>Current Job Information</h3>
     </div>
-    <div class="form-group">
-      <p>   </p>
-    </div>
     <div align="center">
       <font size="2">
       <table class="table table-striped" style="width:100%;">
@@ -69,14 +66,8 @@
         </tr>
       </table>
       </font>
-    <div class="form-group">
-      <p>   </p>
-    </div>
       <div class="form-group">
         <label for="Primary">Current Positions:</label>
-        <div class="form-group">
-          <p>   </p>
-        </div>
         <div>
           <ul class="list-group" type="currentPositions">
             {% for listPrimary in currentPrimary %}
@@ -94,30 +85,22 @@
           </ul>
         </div>
       </div>
-      <div class="col-md-4">
-      </div>
-      <div class="col-md-4">
-        <table class="table table-striped">
-          <tr>
-            <th>Total Primary and Secondary Hours:</th>
-          </tr>
-          <tr>
-            <td>{{totalCurrentHours}}</td>
-          </tr>
-        </table>
-
+      <div class="col-md-4 col-md-offset-4">
+        <font size="2">
+          <table class="table table-striped">
+            <tr>
+              <th class="text-center">Total Primary and Secondary Hours:</th>
+            </tr>
+            <tr align="center">
+              <td>{{totalCurrentHours}}</td>
+            </tr>
+          </table>
+        </font>
       </div>
     </div>
-    <div class="col-md-4">
-    </div>
-
-    <div align="center">
+    <div align="center" class="col-md-12" >
       <h3>Overload Assignment Request</h3>
     </div>
-    <div class="form-group">
-      <p>   </p>
-    </div>
-
       <div align="center">
         <font size="2">
         <table class="table table-striped" style="width:100%;" align="center">
@@ -136,12 +119,8 @@
         </table>
         </font>
       </div>
-      <div class="form-group">
-        <p>   </p>
-      </div>
       <div align="center">
         <label for="Reason">Reason For Overload Request:</label>
-        <p>   </p>
         <div>
           <textarea id="notes" name="notes" rows="8" cols="80" onchange="primaryCheck()" style="resize:none;"required></textarea>
         </div>
