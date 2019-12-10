@@ -2,6 +2,7 @@
 
 ​{% block scripts %}
 {{super()}}
+<!-- <script type="text/javascript" src="{{url_for('static', filename='js/dropdownCK.js')}}"></script> -->
 <script type=text/javascript src="{{url_for('static', filename='js/emailTemplates.js')}}"></script>
 {% endblock %}
 
@@ -19,8 +20,10 @@
     </style>
     <meta charset="utf-8">
     <title>CKEditor</title>
-    <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script>
-    <script src="emailTemplates.js"></script>
+    <!-- <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script> -->
+    <script src="/static/js/ckeditor/ckeditor.js"></script>
+    <script src="/static/js/ckeditor/plugin.js"></script>
+    <!-- <script type="text/javascript" src="{{url_for('static', filename='js/dropdownCK.js')}}"></script> -->
 </head>
 <h1 class="col-md-12">Email Templates</h1>
 
@@ -83,7 +86,7 @@
 
   <div style="text-align:right;">
     <!-- <input type="submit" value="Save Changes" align="right"> -->
-    <button type="button" class="btn btn-primary" align="right" onclick="world()">Save Changes</button>
+    <button type="button" class="btn btn-primary" align="right" onclick="postEmailTemplate()">Save Changes</button>
   </div>
 </div>
 

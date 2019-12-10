@@ -2,7 +2,7 @@ from app.controllers.admin_routes import *
 from app.models.user import *
 from app.controllers.admin_routes import admin
 from app.models.emailTemplate import *
-from flask import Flask, redirect, url_for, flash, jsonify, json
+from flask import Flask, redirect, url_for, flash, jsonify, json, request, flash
 
 
 @admin.route('/admin/emailTemplates', methods=['GET', 'POST'])
@@ -42,14 +42,32 @@ def getPurpose(recipient):
 
 def getEmail(purpose):
     try:
-        print("Made it here")
-        print(purpose)
+        # print("Made it here")
+        # print(purpose)
         email = EmailTemplate.get(EmailTemplate.purpose == purpose)
-        print(email.body)
-        print(email.subject)
+        # print(email.body)
+        # print(email.subject)
         purposeList = {"emailBody": email.body, "emailSubject": email.subject}
-        print(purposeList)
+        # print(purposeList)
         return json.dumps(purposeList)
+        return (jsonify({"Success": True}))
+    except Exception as e:
+        print(e)
+        return jsonify({"Success": False})
+
+@admin.route('/admin/emailTemplates/postEmail/', methods=['POST'])
+
+def postEmail():
+    try:
+        # body = request.form['body']
+        # purpose = request.form['purpose']
+        # print(body)
+        # print(purpose)
+        # print("Hello")
+        email = EmailTemplate.get(EmailTemplate.purpose == request.form['purpose'])
+        email.body = request.form['body']
+        email.save()
+        flash("The email template has been successfully updated.", "success")
         return (jsonify({"Success": True}))
     except Exception as e:
         print(e)
