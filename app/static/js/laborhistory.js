@@ -3,6 +3,7 @@ function openModal(laborStatusKey) {
     This function gets a response from the controller function: populateModal() in laborHistory.py.  The response is the data for the modal that pops up
     when the position is clicked.
   */
+
   $.ajax({
     type: "GET",
     url: '/laborHistory/modal/' + laborStatusKey,

@@ -188,7 +188,39 @@ positions = [
             {
             "POSN_CODE": "S61420",
             "POSN_TITLE": "TA",
+            "WLS": "5",
+            "ORG" : "2115",
+            "ACCOUNT":"123455",
+            "DEPT_NAME":"Computer Science"
+            },
+            {
+            "POSN_CODE": "S61421",
+            "POSN_TITLE": "TA",
+            "WLS": "6",
+            "ORG" : "2115",
+            "ACCOUNT":"123455",
+            "DEPT_NAME":"Computer Science"
+            },
+            {
+            "POSN_CODE": "S61427",
+            "POSN_TITLE": "TA",
             "WLS": "1",
+            "ORG" : "2115",
+            "ACCOUNT":"123455",
+            "DEPT_NAME":"Biology"
+            },
+            {
+            "POSN_CODE": "S61430",
+            "POSN_TITLE": "TA",
+            "WLS": "5",
+            "ORG" : "2115",
+            "ACCOUNT":"123455",
+            "DEPT_NAME":"Biology"
+            },
+            {
+            "POSN_CODE": "S61443",
+            "POSN_TITLE": "TA",
+            "WLS": "6",
             "ORG" : "2115",
             "ACCOUNT":"123455",
             "DEPT_NAME":"Biology"
@@ -455,7 +487,7 @@ staffs = [
             "EMAIL"  :"heggens@berea.edu",
             "CPO":"6300",
             "ORG":"Berea College",
-            "DEPT_NAME": "CS"
+            "DEPT_NAME": "Computer Science"
             },
 
             {
@@ -466,7 +498,7 @@ staffs = [
             "EMAIL"  :"pearcej@berea.edu",
             "CPO":"6301",
             "ORG":"Berea College",
-            "DEPT_NAME": "CS"
+            "DEPT_NAME": "Computer Science"
             },
 
             {
@@ -477,7 +509,7 @@ staffs = [
             "EMAIL"  :"nakazawam@berea.edu",
             "CPO":"6300",
             "ORG":"Berea College",
-            "DEPT_NAME": "CS"
+            "DEPT_NAME": "Computer Science"
             }
 
         ]
