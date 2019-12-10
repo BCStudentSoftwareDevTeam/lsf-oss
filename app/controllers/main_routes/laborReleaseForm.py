@@ -55,8 +55,6 @@ def laborReleaseForm(laborStatusKey):
             historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Release Form")
             status = Status.get(Status.statusName == "Pending")
             laborStatusForiegnKey = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-            for form in forms:
-                studentEmail = form.studentSupervisee.STU_EMAIL
             newFormHistory = FormHistory.create(
                                         formID = laborStatusForiegnKey.laborStatusFormID,
                                         historyType = historytype.historyTypeName,
