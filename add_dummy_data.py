@@ -188,7 +188,39 @@ positions = [
             {
             "POSN_CODE": "S61420",
             "POSN_TITLE": "TA",
+            "WLS": "5",
+            "ORG" : "2115",
+            "ACCOUNT":"123455",
+            "DEPT_NAME":"Computer Science"
+            },
+            {
+            "POSN_CODE": "S61421",
+            "POSN_TITLE": "TA",
+            "WLS": "6",
+            "ORG" : "2115",
+            "ACCOUNT":"123455",
+            "DEPT_NAME":"Computer Science"
+            },
+            {
+            "POSN_CODE": "S61427",
+            "POSN_TITLE": "TA",
             "WLS": "1",
+            "ORG" : "2115",
+            "ACCOUNT":"123455",
+            "DEPT_NAME":"Biology"
+            },
+            {
+            "POSN_CODE": "S61430",
+            "POSN_TITLE": "TA",
+            "WLS": "5",
+            "ORG" : "2115",
+            "ACCOUNT":"123455",
+            "DEPT_NAME":"Biology"
+            },
+            {
+            "POSN_CODE": "S61443",
+            "POSN_TITLE": "TA",
+            "WLS": "6",
             "ORG" : "2115",
             "ACCOUNT":"123455",
             "DEPT_NAME":"Biology"
@@ -322,15 +354,14 @@ terms = [
     {
     "termCode":"201903",
     "termName" :"Spring Break 2020",
-    "termStart":datetime.date(2020, 4, 12),
-    "termEnd": datetime.date(2020, 4, 19)
+    "termStart":datetime.date(2020, 3, 2),
+    "termEnd": datetime.date(2020, 3, 8)
     },
-
     {
     "termCode":"201913",
     "termName" :"Summer 2020",
-    "termStart":datetime.date(2020, 5, 4),
-    "termEnd": datetime.date(2020, 8, 16)
+    "termStart":datetime.date(2020, 5, 10),
+    "termEnd": datetime.date(2020, 8, 9)
     },
 
     {
@@ -455,7 +486,7 @@ staffs = [
             "EMAIL"  :"heggens@berea.edu",
             "CPO":"6300",
             "ORG":"Berea College",
-            "DEPT_NAME": "CS"
+            "DEPT_NAME": "Computer Science"
             },
 
             {
@@ -466,7 +497,7 @@ staffs = [
             "EMAIL"  :"pearcej@berea.edu",
             "CPO":"6301",
             "ORG":"Berea College",
-            "DEPT_NAME": "CS"
+            "DEPT_NAME": "Computer Science"
             },
 
             {
@@ -477,7 +508,7 @@ staffs = [
             "EMAIL"  :"nakazawam@berea.edu",
             "CPO":"6300",
             "ORG":"Berea College",
-            "DEPT_NAME": "CS"
+            "DEPT_NAME": "Computer Science"
             }
 
         ]
@@ -504,6 +535,12 @@ depts = [
             "DEPT_NAME":"Biology",
             "ACCOUNT":"9101",
             "ORG":"1019",
+            "departmentCompliance":"True"
+            },
+            {
+            "DEPT_NAME":"Technology and Applied Design",
+            "ACCOUNT":"9102",
+            "ORG":"1020",
             "departmentCompliance":"True"
             }
         ]
@@ -539,10 +576,10 @@ from datetime import date
 lsfs = [
 
     {
-    "termCode": Term.get(Term.termCode == "201911"),
+    "termCode": Term.get(Term.termCode == "201711"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "department": Department.get(Department.DEPT_NAME == "Mathematics"),
     "jobType": "Primary",
     "WLS":"1",
     "POSN_TITLE":"Student Programmer",
@@ -553,7 +590,7 @@ lsfs = [
     "endDate": datetime.date(2019,12,15)
     },
     {
-    "termCode": Term.get(Term.termCode == "201912"),
+    "termCode": Term.get(Term.termCode == "201712"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -567,7 +604,7 @@ lsfs = [
     "endDate": datetime.date(2020,5,4)
     },
     {
-    "termCode": Term.get(Term.termCode == "201913"),
+    "termCode": Term.get(Term.termCode == "201813"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -581,7 +618,7 @@ lsfs = [
     "endDate": datetime.date(2020,8,9)
     },
     {
-    "termCode": Term.get(Term.termCode == "201901"),
+    "termCode": Term.get(Term.termCode == "201911"),
     "studentSupervisee": Student.get(Student.ID == "B00730361"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -595,7 +632,7 @@ lsfs = [
     "endDate": datetime.date(2020,11,30)
     },
     {
-    "termCode": Term.get(Term.termCode == "201911"),
+    "termCode": Term.get(Term.termCode == "201711"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -609,7 +646,7 @@ lsfs = [
     "endDate": datetime.date(2019,12,15)
     },
     {
-    "termCode": Term.get(Term.termCode == "201912"),
+    "termCode": Term.get(Term.termCode == "201712"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -623,7 +660,7 @@ lsfs = [
     "endDate": datetime.date(2020,5,4)
     },
     {
-    "termCode": Term.get(Term.termCode == "201913"),
+    "termCode": Term.get(Term.termCode == "201813"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -637,7 +674,7 @@ lsfs = [
     "endDate": datetime.date(2020,8,9)
     },
     {
-    "termCode": Term.get(Term.termCode == "201901"),
+    "termCode": Term.get(Term.termCode == "201911"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.PIDM == 1),
     "department": Department.get(Department.DEPT_NAME == "Computer Science"),
@@ -737,134 +774,50 @@ lsfs = [
     {
     "termCode": Term.get(Term.termCode == "202011"),
     "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "supervisor": User.get(User.username == "heggens"),
+    "department": Department.get(Department.DEPT_NAME == "Technology and Applied Design"),
     "jobType": "Primary",
     "WLS":"2",
     "POSN_TITLE":"TA",
     "POSN_CODE":"S61419",
     "weeklyHours": 10,
     "contractHours": None,
-    "startDate": datetime.date(2020,1,5),
-    "endDate": datetime.date(2020,5,4)
-    },
-    {
-    "termCode": Term.get(Term.termCode == "202011"),
-    "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-    "jobType": "Secondary",
-    "WLS":"2",
-    "POSN_TITLE":"TA",
-    "POSN_CODE":"S61419",
-    "weeklyHours": 10,
-    "contractHours": None,
-    "startDate": datetime.date(2020,1,5),
-    "endDate": datetime.date(2020,5,4)
-    },
-    {
-    "termCode": Term.get(Term.termCode == "202012"),
-    "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-    "jobType": "Primary",
-    "WLS":"2",
-    "POSN_TITLE":"TA",
-    "POSN_CODE":"S61419",
-    "weeklyHours": 10,
-    "contractHours": None,
-    "startDate": datetime.date(2021,2,10),
-    "endDate": datetime.date(2021,5,20)
-    },
-    {
-    "termCode": Term.get(Term.termCode == "202012"),
-    "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-    "jobType": "Secondary",
-    "WLS":"2",
-    "POSN_TITLE":"TA",
-    "POSN_CODE":"S61419",
-    "weeklyHours": 5,
-    "contractHours": None,
-    "startDate": datetime.date(2021,2,25),
-    "endDate": datetime.date(2021,5,22)
-    },
-    {
-    "termCode": Term.get(Term.termCode == "202111"),
-    "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-    "jobType": "Primary",
-    "WLS":"2",
-    "POSN_TITLE":"TA",
-    "POSN_CODE":"S61419",
-    "weeklyHours": 10,
-    "contractHours": None,
-    "startDate": datetime.date(2021,1,5),
-    "endDate": datetime.date(2021,5,5)
-    },
-    {
-    "termCode": Term.get(Term.termCode == "202111"),
-    "studentSupervisee": Student.get(Student.ID == "B00841417"),
-    "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
-    "jobType": "Secondary",
-    "WLS":"2",
-    "POSN_TITLE":"TA",
-    "POSN_CODE":"S61419",
-    "weeklyHours": 10,
-    "contractHours": None,
-    "startDate": datetime.date(2021,1,12),
-    "endDate": datetime.date(2021,5,5)
-    },
-    {
-    "termCode": Term.get(Term.termCode == "201711"),
-    "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Biology"),
-    "jobType": "Secondary",
-    "WLS":"2",
-    "POSN_TITLE":"TA",
-    "POSN_CODE":"S61420",
-    "weeklyHours": 10,
-    "contractHours": None,
-    "startDate": datetime.date(2017,8,25),
-    "endDate": datetime.date(2017,12,14)
-    },
-    {
-    "termCode": Term.get(Term.termCode == "201811"),
-    "studentSupervisee": Student.get(Student.ID == "B00734292"),
-    "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Biology"),
-    "jobType": "Primary",
-    "WLS":"2",
-    "POSN_TITLE":"TA",
-    "POSN_CODE":"S61420",
-    "weeklyHours": 10,
-    "contractHours": None,
-    "startDate": datetime.date(2018,8,25),
-    "endDate": datetime.date(2018,12,14)
+    "startDate": datetime.date(2020,8,20),
+    "endDate": datetime.date(2020,12,15)
     },
     {
     "termCode": Term.get(Term.termCode == "201712"),
-    "studentSupervisee": Student.get(Student.ID == "B00734292"),
+    "studentSupervisee": Student.get(Student.ID == "B00841417"),
     "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Biology"),
-    "jobType": "Primary",
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "jobType": "Secondary",
     "WLS":"2",
     "POSN_TITLE":"TA",
-    "POSN_CODE":"S61420",
-    "weeklyHours": 20,
+    "POSN_CODE":"S61419",
+    "weeklyHours": 10,
     "contractHours": None,
-    "startDate": datetime.date(2018,1,7),
-    "endDate": datetime.date(2018,5,4)
+    "startDate": datetime.date(2020,1,5),
+    "endDate": datetime.date(2020,5,4)
     },
     {
     "termCode": Term.get(Term.termCode == "201612"),
     "studentSupervisee": Student.get(Student.ID == "B00734292"),
     "supervisor": User.get(User.PIDM == 1),
-    "department": Department.get(Department.DEPT_NAME == "Biology"),
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
+    "jobType": "Primary",
+    "WLS":"2",
+    "POSN_TITLE":"TA",
+    "POSN_CODE":"S61420",
+    "weeklyHours": 10,
+    "contractHours": None,
+    "startDate": datetime.date(2017,1,7),
+    "endDate": datetime.date(2017,5,4)
+    },
+    {
+    "termCode": Term.get(Term.termCode == "201612"),
+    "studentSupervisee": Student.get(Student.ID == "B00711232"),
+    "supervisor": User.get(User.PIDM == 1),
+    "department": Department.get(Department.DEPT_NAME == "Computer Science"),
     "jobType": "Primary",
     "WLS":"2",
     "POSN_TITLE":"TA",
@@ -989,6 +942,11 @@ lrfs=[
         "conditionAtRelease":"Unsatisfactory",
         "releaseDate":"2017/2/10",
         "reasonForRelease":"He STOLE fizzy lifting drinks."
+    },
+    {
+        "conditionAtRelease":"Unsatisfactory",
+        "releaseDate":"2019/2/10",
+        "reasonForRelease":"May was spelling 'dawg' as 'dog'."
     }
 ]
 LaborReleaseForm.insert_many(lrfs).on_conflict_replace().execute()
