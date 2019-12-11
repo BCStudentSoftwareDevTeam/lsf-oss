@@ -1,6 +1,5 @@
 // checking the classification of student on page load
 $(document).ready(function () {
-  console.log($("#Classification").val())
   $("#notes").prop("disabled", true);
   $("#submit").hide();
   if ($("#Classification").val() == "Freshman"){
@@ -37,30 +36,22 @@ function primaryCheck(){
 }
 
 function checkForEmptyFields(){
-  console.log("here2")
-  console.log($("#notes").val())
   if($("#notes").val() != "") {
-    console.log("here1")
     $('#submitModal').modal('show');
   }
 }
 
 function updateDatabase(formID){
-  console.log("Inside funciton");
   var notes = $("#notes").val()
   var dataDict = {}
   dataDict[formID] = {"Notes": notes, "formID": formID}
   data = JSON.stringify(dataDict)
-  console.log(data)
   var url = "/studentOverloadApp/update";
    $.ajax({
      url: url,
      method: "POST",
      data: data,
      dataType: "json",
-     contentType: 'application/json',
-     success: function (){
-        console.log("successful response");
-     }
+     contentType: 'application/json'
    })
 }

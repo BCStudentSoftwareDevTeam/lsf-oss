@@ -35,8 +35,6 @@ def studentOverloadApp(formId):
     for term in termCodeYear:
         if str(term)[-2:] == "11" or str(term)[-2:] == "12" or str(term)[-2:]== "00":
             TermsNeeded.append(term)
-    print(TermsNeeded,"terms needed")
-
     studentSecondaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
                                                                                                LaborStatusForm.jobType == "Secondary",
                                                                                                LaborStatusForm.termCode.in_(TermsNeeded))
@@ -44,31 +42,23 @@ def studentOverloadApp(formId):
     studentPrimaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
                                                                                            LaborStatusForm.jobType == "Primary",
                                                                                            LaborStatusForm.termCode.in_(TermsNeeded))
-    print(studentPrimaryLabor ,"student primary labor")
     formIDPrimary = []
     for i in studentPrimaryLabor:
         studentPrimaryHistory = FormHistory.select().where((FormHistory.formID == i) & (FormHistory.historyType == "Labor Status Form") & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly") | (FormHistory.status == "Pending")))
-        print(studentPrimaryHistory, "form History")
         formIDPrimary.append(studentPrimaryHistory)
-    print(formIDPrimary, "the end result")
     formIDSecondary = []
-    print(studentSecondaryLabor ,"student secondary labor")
     for i in studentSecondaryLabor:
         studentSecondaryHistory = FormHistory.select().where((FormHistory.formID == i) & (FormHistory.historyType == "Labor Status Form") & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly") | (FormHistory.status == "Pending")))
-        print(studentSecondaryHistory, "form History")
         formIDSecondary.append(studentSecondaryHistory)
-    print(formIDSecondary, "the end result")
     totalCurrentHours = 0
     for i in formIDPrimary:
         for j in i:
             if str(j.status) != "Pending":
                 totalCurrentHours += j.formID.weeklyHours
-    print(totalCurrentHours)
     for i in formIDSecondary:
         for j in i:
             if str(j.status) != "Pending":
                 totalCurrentHours += j.formID.weeklyHours
-    print(totalCurrentHours)
     totalFormHours = totalCurrentHours + prefillHoursOverload
     return render_template( 'main/studentOverloadApp.html',
 				            title=('student Overload Application'),
@@ -98,7 +88,6 @@ def updateDatabase():
             for data in rsp.values():
                 overloadForm = OverloadForm.create(overloadReason = data["Notes"])
                 formHistoryForm = FormHistory.get(FormHistory.formHistoryID == data["formID"])
-                print(formHistoryForm)
                 formHistoryForm.overloadForm = overloadForm.overloadFormID
                 formHistoryForm.save()
         return jsonify({"Success": True})
