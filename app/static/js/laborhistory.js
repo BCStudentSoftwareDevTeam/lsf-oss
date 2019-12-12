@@ -17,16 +17,15 @@ function openModal(laborStatusKey) {
     }
   });
 }
-// prevent a second click for 1 second.
+// prevent a second click for 2 second.
 function preventDoubleClick(id){
   onclick_attr = $("#" + id).attr("onclick");
   $("#" + id).attr("onclick","");
   setTimeout(function(){
     $("#" + id).attr("onclick",onclick_attr);
-  }, 1000);
+  }, 2000);
   return false;
 }
-
 
 function withdrawform(formID){
   /*
