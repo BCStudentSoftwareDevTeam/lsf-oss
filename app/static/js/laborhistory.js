@@ -8,7 +8,7 @@ function openModal(laborStatusKey) {
     type: "GET",
     url: '/laborHistory/modal/' + laborStatusKey,
     success: function(response) {
-      console.log(response);
+      //console.log(response);
       $("#holdModal").empty().append(response);
       $("#modal").modal("show");
       $("#modify").attr("href", "/modifyLSF/" + laborStatusKey); // will go to the modifyLSF controller
@@ -17,6 +17,16 @@ function openModal(laborStatusKey) {
     }
   });
 }
+// prevent a second click for 1 second.
+function preventDoubleClick(id){
+  onclick_attr = $("#" + id).attr("onclick");
+  $("#" + id).attr("onclick","");
+  setTimeout(function(){
+    $("#" + id).attr("onclick",onclick_attr);
+  }, 1000);
+  return false;
+}
+
 
 function withdrawform(formID){
   /*
