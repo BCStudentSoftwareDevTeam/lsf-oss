@@ -1,41 +1,51 @@
-<!DOCTYPE html>
-<html>
-{# <head> #}
-{#<picture>
-  <source media="(min-width: 650px)" srcset="img_pink_flowers.jpg">
-  <source media="(min-width: 465px)" srcset="img_white_flower.jpg">
-  <img src="img_orange_flowers.jpg" alt="Flowers" style="width:auto;">
-</picture> #}
+<link rel="stylesheet" href="{{url_for('static', filename='css/pdfTemplate.css')}}">
 <script type="text/javascript" src="/static/js/laborhistory.js"></script>
-<h2> STATUS FORM </h2>
-<p> </p>
-<h3> Labor Position Participation Agreement </h3>
-<p></p>
-<p> The purpose of this form is to establish student work status during an academic term (Fall, Spring, or Summer), during a break period (Thanksgiving, Christmas, Spring Break), or for a summer practicume assginment. </p>
 
-<table>
+<style>
+body {
+  color: #005A8B;
+}
+p {
+  font-size: 15px;
+  color: #005A8B;
+}
+ul li{
+  font-size: 15px;
+  color: #005A8B;
+}
+</style>
+
+<html>
+<body>
+<h3>STATUS FORM</h3>
+<p> </p>
+<h3>Labor Position Participation Agreement</h3>
+<p></p>
+<p>The purpose of this form is to establish student work status during an academic term (Fall, Spring, or Summer), during a break period (Thanksgiving, Christmas, Spring Break), or for a summer practicume assginment. </p>
+
+<table width="100%" style="font-size:9px;">
 <thead>
-  <th> STUDENT ID </th>
-  <th> STUDENT NAME </th>
-  <th> TERM/YEAR </th>
+  <th>STUDENT ID</th>
+  <th>STUDENT NAME</th>
+  <th>TERM/YEAR</th>
 </thead>
 <tbody>
-  {%for form in forms%}
-  <td>{{form.ID}} </td>
+  {% for form in statusForm %}
+  <td>{{form.studentSupervisee.ID}} </td>
   <td>{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}</td>
   <td>{{form.termCode.termName}}</td>
-  {%endfor%}
+  {% endfor %}
 </tbody>
 </table>
 
 
 <p> </p>
 
-<h2> Primary Contract </h2>
+<h3> Primary Contract </h3>
 
 <p> </p>
 
-<table>
+<table width="100%" style="font-size:9px;">
 <thead>
   <th> POSITON #</th>
   <th> TITLE </th>
@@ -46,29 +56,38 @@
   <th> START </th>
 </thead>
 <tbody>
-  {%for form in forms%}
+  {% for form in statusForm %}
   <td> {{form.POSN_CODE}} </td>
   <td> {{form.POSN_TITLE}} </td>
-  <td>{% if form1.weeklyHours == None %}
-      {{form1.contractHours}}
+  <td>{% if form.weeklyHours == None %}
+      {{form.contractHours}}
       {% else %}
-      {{form1.weeklyHours}}
+      {{form.weeklyHours}}
       {% endif %}
   </td>
   <td>{{form.WLS}} </td>
-  <td>{{form1.department.ACCOUNT}} </td>
-  <td>{{form1.department.ACCOUNT}} </td>
+  <td>{{form.department.ACCOUNT}} </td>
+  <td>{{form.department.DEPT_NAME}} </td>
   <td>{{form.startDate.strftime('%m-%d-%Y')}}</td>
   {% endfor %}
 </tbody>
 </table>
 
 <br>
-{%for form in forms%}
-<p> Primary Supervisor: {{form.supervisor.FIRST_NAME}} {{form.supervisor.LAST_NAME}} </p>
-<p> Submitted by: </p>
+<div style="display: inline-block; width: 47%;padding: 1%;">
+{% for form in statusForm %}
+<p><b> Primary Supervisor:</b> <u>{{form.supervisor.FIRST_NAME}} {{form.supervisor.LAST_NAME}} </u> </p>
+{% endfor %}
+{% for form1 in forms %}
+{% if form1.status.statusName == "Approved" %}
+<p><b>Submitted by:</b> <u> {{form1.createdBy.username}} </u></p>
+{% endif %}
+{% endfor %}
+</div>
 
-<h2> Guildlines </h2>
+
+
+<h3> Guildlines </h3>
 <br>
 <p>Primary: </p>
 <p>  Positions through which a student meets the primary labor requirement during an academic term or working a summer practicum assignment. All students sign a Labor Enrollment Agreement upon admission to Berea College. In signing this form, each student agrees to: </p>
@@ -78,17 +97,23 @@
   <li>secure approval for working continuously more than 15 hours per week as specified in the Labor overload approval process. </li>
 </ul>
 
-<p>Secondary </p>
+<p>Secondary: </p>
 <p>  Positon taken by a student in addition to his/her primary position. Students may take secondary jobs as a means of earning extra income, learning a new skill, participating in a desired program, or providing an important service. Primary supervisors must approve secondary positions and they may not interfere with the student's primary performance. </p>
 
 <p> </p>
 
-<h3> SUPERVISOR CHECKLIST: </h3>
+<h4> SUPERVISOR CHECKLIST: </h4>
 <ul>
   <li>All applicable fields have been entered, including: ID, student name, position #, position title, contract hours, WLS Level, department # and title, printed supervisor name, and start date</li>
   <li>You have provided the name of the student's primary staff supervisor and indicated if this is a one term, academic year, or summer practicum position. This is extremely important for web-based time reporting and evaluation purposes</li>
   <li>You have reviewed the requirements of the position and of the labor department with the student</li>
   <li>You have signed the form (now that forms are electronic, your signature is the existence of this document)</li>
 </ul>
-
 </html>
+</body>
+
+{#<picture>
+  <source media="(min-width: 650px)" srcset="img_pink_flowers.jpg">
+  <source media="(min-width: 465px)" srcset="img_white_flower.jpg">
+  <img src="img_orange_flowers.jpg" alt="Flowers" style="width:auto;">
+</picture> #}
