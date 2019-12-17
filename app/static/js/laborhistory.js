@@ -22,7 +22,7 @@ function fillPDF(laborStatusKey){
       doc.addImage(logo, 'JPEG', 15, 50, 125, 125) // first integer moves along x axis. Second alog y-axis
       doc.text('Labor Program Office', 565, 120,'right')
       doc.setFontType("normal");
-      doc.text('Fairchild Hall', 565, 130,'right')
+      doc.text('Hafer-Gibson Building', 565, 130,'right')
       doc.text('CPO 2180', 565, 140,'right')
       doc.text('Berea, KY 40404', 565, 150,'right')
       doc.text('Phone: (859) 985-3611', 570, 160,'right')

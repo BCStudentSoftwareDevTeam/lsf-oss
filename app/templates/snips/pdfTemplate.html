@@ -1,6 +1,5 @@
 <link rel="stylesheet" href="{{url_for('static', filename='css/pdfTemplate.css')}}">
 <script type="text/javascript" src="/static/js/laborhistory.js"></script>
-
 <style>
 p {
   font-size: 12px;
@@ -10,70 +9,69 @@ ul li{
   font-size: 12px;
   /* color: #304766; */
 }
-</style>
 
+/* table {
+   table-layout: fixed;
+ } */
+
+</style>
 <html>
 <body style="line-height:20%;">
 <h3>STATUS FORM</h3>
 <h3 style="padding:0px; margin:0px;">Labor Position Participation Agreement</h3>
 <p>The purpose of this form is to establish student work status during an academic term (Fall, Spring, or Summer), during a break period (Thanksgiving, Christmas, Spring Break), or for a summer practicume assginment. </p>
-
 <table width="100%" style="font-size:8px;">
-<thead>
+<tr>
   <th>STUDENT ID</th>
   <th>STUDENT NAME</th>
   <th>TERM/YEAR</th>
-</thead>
-<tbody>
+</tr>
+<tr>
   {% for form in statusForm %}
   <td>{{form.studentSupervisee.ID}} </td>
   <td>{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}</td>
   <td>{{form.termCode.termName}}</td>
   {% endfor %}
-</tbody>
+</tr>
 </table>
-
 <h3 style="padding:0px; margin:0px;"> Primary Contract </h3>
-
-<table width="100%" style="font-size:8px;">
-<thead>
-  <th> POSITON #</th>
+<table width="100%" style="font-size:8px; padding:0px; margin:0px;">
+<tr>
+  <th> POSITION CODE </th>
   <th> TITLE </th>
   <th> HOURS </th>
   <th> WLS </th>
-  <th> DEPT.# </th>
-  <th> DEPT. </th>
-  <th> START </th>
-</thead>
-<tbody>
+  <th> DEPT.ORG</th>
+  <th> DEPT.NAME </th>
+  <th> START DATE </th>
+  <th> END DATE </th>
+</tr>
+<tr>
   {% for form in statusForm %}
-  <td> {{form.POSN_CODE}} </td>
-  <td> {{form.POSN_TITLE}} </td>
-  <td>{% if form.weeklyHours == None %}
+  <td> {{form.POSN_CODE}}</td>
+  <td> {{form.POSN_TITLE}}</td>
+  <td>{%- if form.weeklyHours == None %}
       {{form.contractHours}}
       {% else %}
       {{form.weeklyHours}}
-      {% endif %}
+      {% endif -%}
   </td>
   <td>{{form.WLS}} </td>
-  <td>{{form.department.ACCOUNT}} </td>
+  <td>{{form.department.ORG}} </td>
   <td>{{form.department.DEPT_NAME}} </td>
   <td>{{form.startDate.strftime('%m/%d/%Y')}}</td>
+  <td>{{form.endDate.strftime('%m/%d/%Y')}}</td>
   {% endfor %}
-</tbody>
+</tr>
 </table>
-
-<div style="display: inline-block; width: 47%;padding: 1%;">
 {% for form in statusForm %}
-<p><b> Primary Supervisor:</b> <u>{{form.supervisor.FIRST_NAME}} {{form.supervisor.LAST_NAME}} </u> </p>
+<p><b> Primary Supervisor:</b> {{form.supervisor.FIRST_NAME}} {{form.supervisor.LAST_NAME}}</p>
 {% endfor %}
 {% for form1 in forms %}
-{% if form1.status.statusName == "Approved" %}
-<p><b>Submitted by:</b> <u> {{form1.createdBy.username}} </u></p>
+{% if form1.historyType.historyTypeName == "Labor Status Form" %}
+<p><b>Submitted by:</b> {{form1.createdBy.FIRST_NAME}} {{form1.createdBy.LAST_NAME}}</p>
 {% endif %}
 {% endfor %}
-</div>
-
 <h3 style="padding:0px; margin:0px;"> Guidelines </h3>
 <p style="font-size:16px;">Primary: </p>
 <p>  Positions through which a student meets the primary labor requirement during an academic term or working a summer practicum assignment. All students sign a Labor Enrollment Agreement upon admission to Berea College. In signing this form, each student agrees to: </p>
@@ -82,10 +80,8 @@ ul li{
   <li>work any additional hours as defined in this status form including adhering to the work schedule as required by the position. </li>
   <li>secure approval for working continuously more than 15 hours per week as specified in the Labor overload approval process. </li>
 </ul>
-
 <p style="font-size:16px; margin:0px; padding:0px;">Secondary: </p>
 <p>  Positon taken by a student in addition to his/her primary position. Students may take secondary jobs as a means of earning extra income, learning a new skill, participating in a desired program, or providing an important service. Primary supervisors must approve secondary positions and they may not interfere with the student's primary performance. </p>
-
 <h4 style="padding:5px; margin:0px;"> SUPERVISOR CHECKLIST: </h4>
 <ul>
   <li>All applicable fields have been entered, including: ID, student name, position #, position title, contract hours, WLS Level, department # and title, printed supervisor name, and start date</li>
