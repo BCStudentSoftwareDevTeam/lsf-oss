@@ -36,7 +36,7 @@
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingModified')}}">Pending Modified Forms</a>
         </li>
         <li {% if formType == "pendingOverload" %} class="active" {% endif %}>
-          <a href="#overloadPendingForms" data-toggle="tab">  Pending Overload Forms </a>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">  Pending Overload Forms </a>
         </li>
         <li {% if formType == "pendingRelease" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingRelease')}}">Pending Release Forms</a>
@@ -149,11 +149,11 @@
                 </div>
           </div>
 
-      {#    <div class="tab-pane" id="overloadPendingForms">
+          <div class="tab-pane" id="overloadPendingForms">
               <div class="tab-content">
              {% include "admin/pendingOverloadForms.html" %}
   				   </div>
-          </div> #}
+          </div>
    </div>
   </div>
 
