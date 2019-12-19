@@ -1,11 +1,58 @@
 $(document).ready( function(){
-    $('#pendingForms, #statusForms, #modifiedForms, #overloadForms, #releaseForms').DataTable({
+    var overloadTable = $('#pendingForms, #overloadForms').DataTable({
         'columnDefs': [{ 'orderable': false, 'targets': [0,4,10]}], // hide sort icon on header of first column
         // 'columnDefs': [{ 'orderable': false, 'targets': 9 }],
         'aaSorting': [[1, 'asc']], // start to sort data in second column
         pageLength: 10
         // "dom": '<"top"fl>rt<"bottom"p><"clear">'
     });
+  $('#overloadForms').on('click', 'tbody tr', function (evt) {
+      event.preventDefault();
+      jQuery.noConflict();
+      var $cell=$(evt.target).closest('td');
+      if( $cell.index()>0){
+          var firstElement = $('tbody > tr').first();
+          var data = overloadTable.row(firstElement.nextAll('tr')).data()
+          var term= data[1]
+          var department= data[2]
+          var supervisor= data[3]
+          var student= data[5]
+          var position= data[6]
+          var hoursPerWeek= data[7]
+          var created= data[8]
+          var constractedDates=data[9]
+          $('#studentName').append(student);
+          $('#positionWls').val(position);
+          $('#hours').val(hoursPerWeek);
+          $('#contractDate').val(constractedDates);
+          $('#Supervisor').val(supervisor);
+          $('#Department').val(department);
+          $('#adminOverload').modal('show');
+      }
+    });
+});
+
+$("#send_button").hide()
+$('input').on('click',function () {
+    if ($('#saas').is(':checked') || $('#findIid').is(':checked')) {
+        $("#send_button").show();
+        $("#approving").hide()
+        $("#denying").hide()
+    } else {
+        $("#send_button").hide()
+        $("#approving").show()
+        $("#denying").show()
+    }
+});
+
+$('#approving').on('click', function() {
+  $('#approvingModal').modal('show');
+  $('#adminOverload').modal('hide');
+});
+
+$('#denying').on('click', function() {
+  $('#denyingModal').modal('show');
+  $('#adminOverload').modal('hide');
 });
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only

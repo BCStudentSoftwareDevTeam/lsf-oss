@@ -44,13 +44,18 @@ def allPendingForms(formType):
                 pageTitle = "Pending Modified Forms"
 
             elif formType == "pendingOverload":
+                approvalTarget = "adminOverload"
                 pageTitle = "Pending Overload Forms"
                 pending_overload_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Overload Form").order_by(-FormHistory.createdDate).distinct()
                 users = User.select()
                 return render_template( 'admin/pendingOverloadForms.html',
+                                        title=pageTitle,
                                         username=current_user.username,
                                         users=users,
-                                        pending_overload_forms = pending_overload_forms
+                                        pending_overload_forms = pending_overload_forms,
+                                        formList = formList,
+                                        formType= formType,
+                                        modalTarget = approvalTarget
                                         )
 
             elif formType == "pendingRelease":
