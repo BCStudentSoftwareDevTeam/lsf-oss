@@ -6,13 +6,13 @@ $(document).ready( function(){
         pageLength: 10
         // "dom": '<"top"fl>rt<"bottom"p><"clear">'
     });
-  $('#overloadForms').on('click', 'tbody tr', function (evt) {
+  $('#overloadForms').on('click', 'tbody tr', function (evt) { // Fills the adminOverload modal with correct data and prevents notes column from opening adminOverload modal. 
       event.preventDefault();
       jQuery.noConflict();
       var $cell=$(evt.target).closest('td');
-      if( $cell.index()>0){
-          var firstElement = $('tbody > tr').first();
-          var data = overloadTable.row(firstElement.nextAll('tr')).data()
+      if( $cell.index()>0){ // Apply the following to all td's except the first one that contains notes.
+          var firstElement = $('tbody > tr').first(); // getting the first td in the row
+          var data = overloadTable.row(firstElement.nextAll('tr')).data() // get the data of all td's in row except first td in the row
           var term= data[1]
           var department= data[2]
           var supervisor= data[3]
@@ -34,6 +34,7 @@ $(document).ready( function(){
 
 $("#send_button").hide()
 $('input').on('click',function () {
+// if SAAS or Financial Aid checkboxes on adminOverload modal are checked it shows the send button and hides Approve/ Deny Buttons
     if ($('#saas').is(':checked') || $('#findIid').is(':checked')) {
         $("#send_button").show();
         $("#approving").hide()
@@ -45,14 +46,15 @@ $('input').on('click',function () {
     }
 });
 
-$('#approving').on('click', function() {
-  $('#approvingModal').modal('show');
-  $('#adminOverload').modal('hide');
+
+$('#approving').on('click', function() { // When Approve button on adminOverload modal is clicked:
+  $('#adminOverload').modal('hide');    // hides the adminoverload modal
+  $('#approvingModal').modal('show');   // opens the overloadApproveModal
 });
 
-$('#denying').on('click', function() {
-  $('#denyingModal').modal('show');
-  $('#adminOverload').modal('hide');
+$('#denying').on('click', function() { // When Deny button on adminOverload modal is clicked:
+  $('#adminOverload').modal('hide');   // hides the adminOverload modal
+  $('#denyingModal').modal('show');   // opens the overloadDenyModal
 });
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
