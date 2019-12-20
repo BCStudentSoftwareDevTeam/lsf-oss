@@ -6,7 +6,7 @@ $(document).ready( function(){
         pageLength: 10
         // "dom": '<"top"fl>rt<"bottom"p><"clear">'
     });
-  $('#overloadForms').on('click', 'tbody tr', function (evt) { // Fills the adminOverload modal with correct data and prevents notes column from opening adminOverload modal. 
+  $('#overloadForms').on('click', 'tbody tr', function (evt) { // Fills the adminOverload modal with correct data and prevents notes column from opening adminOverload modal.
       event.preventDefault();
       jQuery.noConflict();
       var $cell=$(evt.target).closest('td');
