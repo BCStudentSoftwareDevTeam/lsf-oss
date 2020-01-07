@@ -15,7 +15,7 @@ function openModal(laborStatusKey) {
     success: function(response) {
       //console.log(response);
       $("#holdModal").empty().append(response);
-      // $("#modal").modal({backdrop: "false"});
+      $("#modal").modal("show");
     //   angular.run(function($rootScope) {
     //   $rootScope.$on('$routeChangeStart', destroyTheBackdrop);
     //
@@ -31,12 +31,18 @@ function openModal(laborStatusKey) {
 }
 // prevent a second click for 2 second.
 function preventDoubleClick(id){
-  console.log("I am clicked")
-  $("#positionTable").off('click'); //disables click event
-  $("#modal").modal("show");
+  onclick_attr = $("#" + id).attr("onclick");
+  $("#" + id).attr("onclick","");
+  // console.log("I am clicked")
+  // $("#positionTable").off('click'); //disables click event
+  // $("#modal").modal("show");
+  // setTimeout(function(){
+  //   //To re-enable:
+  //   $("#positionTable").bind("click",eventhandler);}, 1000);
   setTimeout(function(){
-    //To re-enable:
-    $("#positionTable").bind("click",eventhandler);}, 1000);
+     $("#" + id).attr("onclick",onclick_attr);
+   }, 2000);
+   return false;
 }
 
 
