@@ -12,6 +12,7 @@ function openModal(laborStatusKey) {
   $.ajax({
     type: "GET",
     url: '/laborHistory/modal/' + laborStatusKey,
+    // async: false,
     success: function(response) {
       //console.log(response);
       $("#holdModal").empty().append(response);
