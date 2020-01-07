@@ -12,10 +12,9 @@ function openModal(laborStatusKey) {
   $.ajax({
     type: "GET",
     url: '/laborHistory/modal/' + laborStatusKey,
-    // async: false,
     success: function(response) {
-      //console.log(response);
-      $("#holdModal").empty().append(response);
+      console.log(response);
+      $("#content").load(response);
       $("#modal").modal("show");
     //   angular.run(function($rootScope) {
     //   $rootScope.$on('$routeChangeStart', destroyTheBackdrop);
