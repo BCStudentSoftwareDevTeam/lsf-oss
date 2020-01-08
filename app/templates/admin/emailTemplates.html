@@ -85,12 +85,30 @@
   </div>
 
   <div class="col-md-6">
-      <button type="button" class="btn btn-danger" align="right" onclick="postEmailTemplate()">Discard Changes</button>
+      <button type="button" class="btn btn-danger" align="right" onclick="discard()" location.reload()>Discard Changes</button>
   </div>
 
 
   <div class="col-md-6" style="text-align:right;">
-      <button type="button" class="btn btn-success" onclick="postEmailTemplate()">Save Changes</button>
+      <button type="button" id="submit" class="btn btn-success">Save Changes</button>
+  </div>
+
+  <div class="modal fade" id="modal" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Are you sure you want to save?</h4>
+        </div>
+        <div class="modal-body">
+          <p>Saving these changes will change the selected email template.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal" style="float:left">Close</button>
+          <button type="submit" name="submit" value="submit" class="btn btn-success" id="submitModal" onclick="postEmailTemplate()">Save Changes</button>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>

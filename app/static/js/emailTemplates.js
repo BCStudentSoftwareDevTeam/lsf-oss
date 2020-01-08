@@ -57,4 +57,26 @@ function postEmailTemplate(){
     }
 
   })
+  // msg = "The email template has been successfully updated.";
+  // category = "success";
+  // $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
+  // $("#flasher").delay(3000).fadeOut();
 }
+
+function discard(){
+  $("#recipient").val('default').selectpicker("refresh");
+  $("#purpose").val('default').selectpicker("refresh");
+  $("#purpose").empty();
+  $("#subject").val("Subject")
+  CKEDITOR.instances["editor1"].setData('');
+  msg = "The email template changes have been discarded.";
+  category = "info";
+  $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
+  $("#flasher").delay(3000).fadeOut();
+}
+
+$(function() {
+   $("#submit").click(function() {
+      $("#modal").modal("show");
+   });
+});
