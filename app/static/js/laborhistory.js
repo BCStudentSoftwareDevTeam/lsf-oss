@@ -2,6 +2,19 @@
 //      $(".modal-fade").modal("hide");
 //      $(".modal-backdrop").remove();
 //  });
+
+$('#modal').on('show.bs.modal', function (e) {
+
+    var button = $(e.relatedTarget);
+    var modal = $(this);
+
+    // load content from HTML string
+    //modal.find('.modal-body').html("Nice modal body baby...");
+
+    // or, load content from value of data-remote url
+    modal.find('.modal-body').load(button.data("remote"));
+
+});
 function openModal(laborStatusKey) {
   /*
     This function gets a response from the controller function: populateModal() in laborHistory.py.  The response is the data for the modal that pops up
@@ -13,8 +26,9 @@ function openModal(laborStatusKey) {
     type: "GET",
     url: '/laborHistory/modal/' + laborStatusKey,
     success: function(response) {
-      console.log(response);
-      $("#content").load(response);
+      // console.log(response);
+      var content = response.toString();
+      $("#modal").find(".modal-content").empty().append(content);
       $("#modal").modal("show");
     //   angular.run(function($rootScope) {
     //   $rootScope.$on('$routeChangeStart', destroyTheBackdrop);
