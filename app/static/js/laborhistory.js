@@ -7,7 +7,8 @@ $('#modal').on('show.bs.modal', function (e) {
 
     var button = $(e.relatedTarget);
     var modal = $(this);
-
+    console.log("button", button)
+    console.log("modal", modal)
     // load content from HTML string
     //modal.find('.modal-body').html("Nice modal body baby...");
 
