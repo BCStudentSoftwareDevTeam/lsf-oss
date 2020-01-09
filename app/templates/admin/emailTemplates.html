@@ -2,30 +2,16 @@
 
 ​{% block scripts %}
 {{super()}}
-<!-- <script type="text/javascript" src="{{url_for('static', filename='js/dropdownCK.js')}}"></script> -->
 <script type=text/javascript src="{{url_for('static', filename='js/emailTemplates.js')}}"></script>
 {% endblock %}
 
 {% block app_content %}
 
 <head>
-  <!-- <link rel="stylesheet" href="emailTemplates.css"> -->
-    <style>
-      h1 {
-        text-align: center;
-      }
-      p {
-        text-align: center;
-      }
-    </style>
-    <meta charset="utf-8">
-    <title>CKEditor</title>
-    <!-- <script src="https://cdn.ckeditor.com/4.12.1/standard/ckeditor.js"></script> -->
-    <script src="/static/js/ckeditor/ckeditor.js"></script>
-    <script src="/static/js/ckeditor/plugin.js"></script>
-    <!-- <script type="text/javascript" src="{{url_for('static', filename='js/dropdownCK.js')}}"></script> -->
+  <script src="/static/js/ckeditor/ckeditor.js"></script>
+  <script src="/static/js/ckeditor/plugin.js"></script>
 </head>
-<h1 class="col-md-12">Email Templates</h1>
+<h1 class="col-md-12" style="text-align:center">Email Templates</h1>
 
 <div class="form-group col-md-3">    <!-- This is a blank div so our select pickers would move to the right -->
 
@@ -36,8 +22,8 @@
       <select class="selectpicker"
         name='recipient'
         id='recipient'
-        data-live-search='true'
-        title="Recipient"
+        data-live-search='false'
+        title="Select Recipient"
         data-width="100%"
         onchange="populatePurpose()">
            <option value="student">Student</option>
@@ -51,7 +37,7 @@
       name='purpose'
       id='purpose'
       data-live-search='true'
-      title="Purpose"
+      title="Select Purpose of Email"
       data-width="100%"
       onchange="getEmailTemplate()">
    </select>
@@ -59,15 +45,6 @@
 
   <div class="form-group col-md-12">
   <label for="Subject">Subject</label>
-    <!-- <select class="selectpicker"
-      name='subject'
-      id='subject'
-      data-live-search='true'
-      title="Subject"
-      data-width="100%"
-      style="background-color: red;"
-      disabled>
-   </select> -->
      <input type="text"
      class="form-control"
      id="subject"
@@ -85,12 +62,11 @@
   </div>
 
   <div class="col-md-6">
-      <button type="button" class="btn btn-danger" align="right" onclick="discard()" location.reload()>Discard Changes</button>
+      <button type="button" class="btn btn-danger" align="right" onclick="discard()">Discard Changes</button>
   </div>
 
-
   <div class="col-md-6" style="text-align:right;">
-      <button type="button" id="submit" class="btn btn-success">Save Changes</button>
+      <button type="button" id="submit" class="btn btn-success" onclick="saveChanges()">Save Changes</button>
   </div>
 
   <div class="modal fade" id="modal" role="dialog">
@@ -101,7 +77,8 @@
           <h4 class="modal-title">Are you sure you want to save?</h4>
         </div>
         <div class="modal-body">
-          <p>Saving these changes will change the selected email template.</p>
+          <p>Saving these changes will override the selected email template.</p>
+          <p>You will not be able to revert back to the previous email template once the changes have been saved.</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal" style="float:left">Close</button>
