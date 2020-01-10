@@ -14,6 +14,7 @@ from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 
 @admin.route('/admin/pendingForms/<formType>',  methods=['GET'])
+@admin.route('/admin/pendingOverloadForms',  methods=['GET'])
 def allPendingForms(formType):
     try:
         current_user = require_login()
@@ -26,10 +27,11 @@ def allPendingForms(formType):
         historyType = None
         pageTitle = ""
         approvalTarget = ""
+
         if formType  == "all":
             formList = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
             approvalTarget = "allFormsdenyModal"
-            pageTitle = "All Pending Fomrs"
+            pageTitle = "All Pending Forms"
         else:
             if formType == "pendingLabor":
                 historyType = "Labor Status Form"
@@ -42,9 +44,19 @@ def allPendingForms(formType):
                 pageTitle = "Pending Modified Forms"
 
             elif formType == "pendingOverload":
-                historyType = "Labor Overload Form"
-                approvalTarget = "denyOverloadFormsModal"
+                approvalTarget = "adminOverload"
                 pageTitle = "Pending Overload Forms"
+                pending_overload_forms = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == "Labor Overload Form").order_by(-FormHistory.createdDate).distinct()
+                users = User.select()
+                return render_template( 'admin/pendingOverloadForms.html',
+                                        title=pageTitle,
+                                        username=current_user.username,
+                                        users=users,
+                                        pending_overload_forms = pending_overload_forms,
+                                        formList = formList,
+                                        formType= formType,
+                                        modalTarget = approvalTarget
+                                        )
 
             elif formType == "pendingRelease":
                 historyType = "Labor Release Form"
@@ -60,6 +72,7 @@ def allPendingForms(formType):
                                 formType= formType,
                                 modalTarget = approvalTarget
                                 )
+
     except Exception as e:
         print("error", e)
         return render_template('errors/500.html')

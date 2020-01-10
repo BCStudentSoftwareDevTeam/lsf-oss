@@ -1,11 +1,60 @@
 $(document).ready( function(){
-    $('#pendingForms, #statusForms, #modifiedForms, #overloadForms, #releaseForms').DataTable({
+    var overloadTable = $('#pendingForms, #overloadForms').DataTable({
         'columnDefs': [{ 'orderable': false, 'targets': [0,4,10]}], // hide sort icon on header of first column
         // 'columnDefs': [{ 'orderable': false, 'targets': 9 }],
         'aaSorting': [[1, 'asc']], // start to sort data in second column
         pageLength: 10
         // "dom": '<"top"fl>rt<"bottom"p><"clear">'
     });
+  $('#overloadForms').on('click', 'tbody tr', function (evt) { // Fills the adminOverload modal with correct data and prevents notes column from opening adminOverload modal.
+      event.preventDefault();
+      jQuery.noConflict();
+      var $cell=$(evt.target).closest('td');
+      if( $cell.index()>0){ // Apply the following to all td's except the first one that contains notes.
+          var firstElement = $('tbody > tr').first(); // getting the first td in the row
+          var data = overloadTable.row(firstElement.nextAll('tr')).data() // get the data of all td's in row except first td in the row
+          var term= data[1]
+          var department= data[2]
+          var supervisor= data[3]
+          var student= data[5]
+          var position= data[6]
+          var hoursPerWeek= data[7]
+          var created= data[8]
+          var constractedDates=data[9]
+          $('#studentName').append(student);
+          $('#positionWls').val(position);
+          $('#hours').val(hoursPerWeek);
+          $('#contractDate').val(constractedDates);
+          $('#Supervisor').val(supervisor);
+          $('#Department').val(department);
+          $('#adminOverload').modal('show');
+      }
+    });
+});
+
+$("#send_button").hide()
+$('input').on('click',function () {
+// if SAAS or Financial Aid checkboxes on adminOverload modal are checked it shows the send button and hides Approve/ Deny Buttons
+    if ($('#saas').is(':checked') || $('#findIid').is(':checked')) {
+        $("#send_button").show();
+        $("#approving").hide()
+        $("#denying").hide()
+    } else {
+        $("#send_button").hide()
+        $("#approving").show()
+        $("#denying").show()
+    }
+});
+
+
+$('#approving').on('click', function() { // When Approve button on adminOverload modal is clicked:
+  $('#adminOverload').modal('hide');    // hides the adminoverload modal
+  $('#approvingModal').modal('show');   // opens the overloadApproveModal
+});
+
+$('#denying').on('click', function() { // When Deny button on adminOverload modal is clicked:
+  $('#adminOverload').modal('hide');   // hides the adminOverload modal
+  $('#denyingModal').modal('show');   // opens the overloadDenyModal
 });
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
