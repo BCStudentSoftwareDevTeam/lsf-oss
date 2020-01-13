@@ -1,8 +1,7 @@
 $('#positionTable tbody tr  td').on('click',function(){
-    // TODO: Add a load icon
-    $("#modal").modal("show");
-    $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id)
-
+     $("#modal").modal("show");
+     $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id)
+     setTimeout(function(){ $(".loader").fadeOut("slow"); }, 1000);
 });
 
 
