@@ -9,7 +9,7 @@
 {% endblock %}
 {% block app_content %}
 
-<a href="#modal" data-remote="/snips/studentHistoryModal.html" data-toggle="modal" data-target="#modal">Modal</a>
+<a href="/snips/studentHistoryModal.html" data-toggle="modal" data-target="#modal" data-remote='false'>Modal</a>
 <div align= "center">
   <h1>Labor History</h1>
     <h3>{{student.FIRST_NAME}} {{student.LAST_NAME}}</h3>
@@ -21,7 +21,7 @@
       <table id="positionTable" >
         {% for form in studentForms %}
         <tr>
-          <td onclick="openModal({{form.laborStatusFormID}}); preventDoubleClick({{form.laborStatusFormID}})" id="{{form.laborStatusFormID}}"class="modalLink">
+          <td id="{{form.laborStatusFormID}}" class="modalLink">
             <a><span class="h4">{{form.termCode.termName}} - {{form.department.DEPT_NAME}} Dept.</span></a>
             <p class="h6" id="second-line">{{form.jobType}} - {{form.POSN_TITLE}} ({{form.POSN_CODE}})</p>
           </td>
@@ -30,15 +30,14 @@
       </table>
     </div>
 </div>
-{#<div id="holdModal">
-</div> #}
-
-<div class="modal fade" id="modal" role="dialog" data-backdrop="false">
+<!-- Modal -->
+<div class="modal fade" id="modal" role="dialog" data-backdrop="true">
   <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div id="content" class="modal-content">
     </div>
   </div>
 </div>
+<!-- Modal End -->
 
   <div align= "left"><a type='button' class='btn btn-danger' id="returnbutton" onclick="window.history.back()">Return</a></div>
 {% endblock %}
