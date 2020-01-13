@@ -13,6 +13,7 @@ from app.login_manager import require_login
 from flask import Flask, redirect, url_for, flash
 from flask import request
 from datetime import datetime, date
+from app.logic.emailHandler import*
 
 @main_bp.route('/laborReleaseForm/<laborStatusKey>', methods=['GET', 'POST'])
 # @main_bp.route('/laborReleaseForm', methods=['GET', 'POST'])
@@ -26,7 +27,6 @@ def laborReleaseForm(laborStatusKey):
         render_template("errors/403.html")
 
     forms = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == laborStatusKey)
-
 
     if(request.method == 'POST'):
         try:
