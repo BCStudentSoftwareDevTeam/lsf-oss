@@ -1,7 +1,7 @@
 $('#positionTable tbody tr  td').on('click',function(){
      $("#modal").modal("show");
      $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id)
-     setTimeout(function(){ $(".loader").fadeOut("slow"); }, 1000);
+     setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
 });
 
 
