@@ -5,10 +5,10 @@ class EmailTemplate (baseModel):
     emailTemplateID                 = PrimaryKeyField()
     purpose                         = CharField()
     subject                         = CharField()
-    body                            = CharField()
+    body                            = TextField()
     audience                        = CharField()
- 
- 
+
+
 #since idk where to store this information-Kat:
 #Emails in labor status form:
 #LSF
