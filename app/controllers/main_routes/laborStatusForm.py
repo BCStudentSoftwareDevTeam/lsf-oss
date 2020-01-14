@@ -124,14 +124,14 @@ def getPositions(department):
         positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
     return json.dumps(positionDict)
 
-@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
-def checkForPrimaryPosition(termCode, student):
+@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<totalHoursCount>", methods=["GET"])
+def checkForPrimaryPosition(termCode, student, totalHoursCount):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
     positionsList = []
     for item in positions:
         positionsDict = {}
-        positionsDict["weeklyHours"] = item.weeklyHours
+        positionsDict["weeklyHours"] = item.weeklyHours + int(totalHoursCount)
         positionsDict["contractHours"] = item.contractHours
         positionsDict["jobType"] = item.jobType
         positionsDict["POSN_TITLE"] = item.POSN_TITLE
@@ -140,6 +140,9 @@ def checkForPrimaryPosition(termCode, student):
         positionsDict["primarySupervisorLastName"] = item.supervisor.LAST_NAME
         # positionsDict["primarySupervisorUserName"] = item.supervisor.username #Passes Primary Supervisor's username if necessary
         positionsList.append(positionsDict)
+    print("table",totalHoursCount)
+    print("database", item.weeklyHours)
+    print("total",item.weeklyHours + int(totalHoursCount))
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
 
 @main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
