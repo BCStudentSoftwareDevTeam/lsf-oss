@@ -46,7 +46,9 @@ class emailHandler():
 
         except Exception as e:
             # print type(e)
+            print("Above")
             print (e)
+            print("Below")
             self.releaseReason = ""
             self.releaseDate = ""
         self.link = ""

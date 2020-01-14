@@ -13,6 +13,7 @@ from flask import json, jsonify
 from flask import request
 from flask import flash
 import base64
+from app.logic.emailHandler import*
 
 
 @main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
@@ -43,6 +44,7 @@ def modifyLSF(laborStatusKey):
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
+    print("We're rendering the template")
     return render_template( 'main/modifyLSF.html',
 				            title=('Modify LSF'),
                             username = current_user,
@@ -77,15 +79,21 @@ def getPosition(department):
 def sumbitModifiedForm(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
+        print("Top of the Try statement")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
+        print("After rsp")
         rsp = dict(rsp)
+        print("After second rsp")
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
+        print("Outside of the loop")
         for k in rsp:
+            print("Inside the top of the loop")
             modifiedforms = ModifiedForm.create(fieldModified = k,
                                             oldValue      =  rsp[k]['oldValue'],
                                             newValue      =  rsp[k]['newValue'],
                                             effectiveDate =  datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d')
                                             )
+            print("New form history form")
             historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
             status = Status.get(Status.statusName == "Pending")
             username = cfg['user']['debug']
@@ -96,6 +104,9 @@ def sumbitModifiedForm(laborStatusKey):
                                              createdBy   = createdbyid.UserID,
                                              createdDate = date.today(),
                                              status      = status.statusName)
+            print("Form should have been created here")
+            # email = emailHandler(formhistorys.formHistoryID)
+            # email.laborStatusFormSubmitted()
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if k == "supervisor":
                 d, created = User.get_or_create(PIDM = rsp[k]['newValue'])
