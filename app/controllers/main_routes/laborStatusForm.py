@@ -91,6 +91,9 @@ def userInsert():
                                                   createdBy   = cfg['user']['debug'],
                                                   createdDate = date.today(),
                                                   status      = status.statusName)
+
+                # email = emailHandler(formHistroy.formHistoryID)
+                # email.laborStatusFormSubmitted()
             flash("Labor Status Form(s) has been created.", "success")
             return jsonify({"Success": True})
     except Exception as e:

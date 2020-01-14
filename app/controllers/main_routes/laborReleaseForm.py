@@ -45,7 +45,6 @@ def laborReleaseForm(laborStatusKey):
             releaseDate = datetime.strptime(datepickerDate, "%m/%d/%Y").strftime("%Y-%m-%d")
             releaseReason = request.form.get("notes")
             releaseCondition = request.form.get("condition")
-
             newLaborReleaseForm = LaborReleaseForm.create(
                                         conditionAtRelease = releaseCondition,
                                         releaseDate = releaseDate,
@@ -70,6 +69,11 @@ def laborReleaseForm(laborStatusKey):
             # Once all the forms are created, the user gets redirected to the
             # home page and gets a flash message telling them the forms were
             # submited
+            print("First")
+            email = emailHandler(newFormHistory.formHistoryID)
+            print("Second")
+            email.LaborOverLoadFormSubmitted("https://www.google.com/")
+            print("Third")
             flash("Your labor release form has been submitted.", "success")
             return redirect(url_for("main.index"))
 
