@@ -62,6 +62,7 @@ def userInsert():
     rspFunctional = json.loads(rsp)
     all_forms = []
     for i in range(len(rspFunctional)):
+        print(rspFunctional[i])
         d, created = Student.get_or_create(ID = rspFunctional[i]['stuBNumber'])
         student = d.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
@@ -98,6 +99,9 @@ def userInsert():
                                               createdDate = date.today(),
                                               status      = status.statusName)
             all_forms.append(True)
+            print(rspFunctional[i]["studentTotalHours"])
+            if rspFunctional[i]["studentTotalHours"] > 15:
+                print("OverloadEmail")
         except Exception as e:
             all_forms.append(False)
             #print("ERROR: " + str(e))

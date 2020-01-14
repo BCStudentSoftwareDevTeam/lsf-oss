@@ -367,7 +367,8 @@ function createStuDict(){
                     stuNotes: null,
                     stuSupervisor: supervisor,
                     stuDepartment: department,
-                    stuSupervisorID: supervisorID
+                    stuSupervisorID: supervisorID,
+                    stuTotalHours: null,
                     };
     return studentDict;
   }
@@ -506,6 +507,10 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
     totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
   }
   test["hours"] = {totalHoursCount}
+  for (var i = 0; i < globalArrayOfStudents.length; i++) {
+    globalArrayOfStudents[i].stuTotalHours = totalHoursCount
+  }
+  test['globalarray'] = {globalArrayOfStudents}
   if (totalHoursCount > (15)){
     // TODO: Show modal saying they have too many hours
     $('#OverloadModal').modal('show');
@@ -518,6 +523,7 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
   console.log(test['hours']);
+  console.log(test['globalarray']);
   $("#submitmodalid").show();
   $("#doneBtn").hide();
   disableTermSupervisorDept();
