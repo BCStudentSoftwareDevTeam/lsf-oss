@@ -10,7 +10,7 @@ def getMySQLDB():
     if os.environ.get("USING_CONTAINER", False):
         cfg['lsfdb']['host'] = 'db'
     else:
-        cfg['lsfdb']['host'] = 'localhost'
+        cfg["lsfdb"]["host"] = "localhost"
     theDB = MySQLDatabase(cfg['lsfdb']['db_name'], host = cfg['lsfdb']['host'], user = cfg['lsfdb']['username'], passwd = cfg['lsfdb']['password'])
     return theDB
 
