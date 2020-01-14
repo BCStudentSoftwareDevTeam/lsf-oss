@@ -3,8 +3,6 @@ $('#positionTable tbody tr  td').on('click',function(){
      $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id)
      setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
 });
-
-
 function withdrawform(formID){
   /*
   This funciton gets a response from the controller function: updatestatus_post() in laborHistory.py.  It reloads the page when the forms from the
