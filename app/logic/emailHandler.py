@@ -39,21 +39,20 @@ class emailHandler():
 
         self.primaryForm = LaborStatusForm.get(LaborStatusForm.jobType == "Primary" and LaborStatusForm.studentSupervisee == self.laborStatusForm.studentSupervisee and LaborStatusForm.termCode == self.laborStatusForm.termCode)
         self.primaryEmail = self.primaryForm.supervisor.EMAIL
+        self.link = ""
+        self.releaseReason = ""
+        self.releaseDate = ""
 
         try:
             self.releaseDate = self.formHistory.releaseForm.releaseDate.strftime("%m/%d/%Y")
             self.releaseReason = self.formHistory.releaseForm.reasonForRelease
 
         except Exception as e:
-            # print type(e)
-            print("Above")
-            print (e)
-            print("Below")
-            self.releaseReason = ""
-            self.releaseDate = ""
-        self.link = ""
-
-
+            # The error you should get when the form is not a release form
+            # is the 'AttributeError' error. We expect to get the 'AttributeError',
+            # but if we get anything else then we want to print the error
+            if e.__class__.__name__ != "AttributeError":
+                print (e)
 
     # The methods of this class each handle a different email situation. Some of the methods need to handle
     # "primary" and "secondary" forms differently, but a majority do not need to differentiate between the two.
@@ -62,110 +61,35 @@ class emailHandler():
     # is pulled from the model, and replaceText method will replace the neccesary keywords with the correct data.
     # The sendEmail method will handle all of the email sending once the email template has been populated.
     def laborStatusFormSubmitted(self):
-        self.template("Labor Status Form Submitted For Student",
+        self.checkRecipient("Labor Status Form Submitted For Student",
                       "Labor Status Form Submitted For Primary",
                       "Labor Status Form Submitted For Secondary")
 
-        # var1 = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Submitted For Student")
-        # var2 = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Submitted For Primary")
-        # var3 = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Submitted For Secondary")
-        # self.template(var1, var2, var3)
-        #
-        # StatusFormEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Submitted For Student")
-        # self.sendEmail(StatusFormEmailTemplateID, "student")
-        #
-        # if self.laborStatusForm.jobType == "Secondary":
-        #     SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Submitted For Secondary")
-        #     self.sendEmail(SupervisorEmailTemplateID, "secondary")
-        # else:
-        #     SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Submitted For Primary")
-        #     self.sendEmail(SupervisorEmailTemplateID, "supervisor")
-
-    def template(self, studentEmailPurpose, primaryEmailPurpose, secondaryEmailPurpose = False):
-        studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
-        self.sendEmail(studentEmail, "student")
-
-        if secondaryEmailPurpose == False:
-            primaryEmail = EmailTemplate.get(EmailTemplate.purpose == primaryEmailPurpose)
-            self.sendEmail(primaryEmail, "supervisor")
-        else:
-            if self.laborStatusForm.jobType == "Secondary":
-                secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
-                self.sendEmail(secondaryEmail, "secondary")
-            else:
-                primaryEmail = EmailTemplate.get(EmailTemplate.purpose == primaryEmailPurpose)
-                self.sendEmail(primaryEmail, "supervisor")
-
-
     def laborStatusFormApproved(self):
-        self.template("Labor Status Form Approved For Student",
+        self.checkRecipient("Labor Status Form Approved For Student",
                       "Labor Status Form Approved For Primary",
                       "Labor Status Form Approved For Secondary")
-        # StatusFormEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Approved For Student")
-        # self.sendEmail(StatusFormEmailTemplateID, "student")
-        #
-        # if self.laborStatusForm.jobType == "Secondary":
-        #     SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Approved For Secondary")
-        #     self.sendEmail(SupervisorEmailTemplateID, "secondary")
-        # else:
-        #     SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Approved For Primary")
-        #     self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
     def laborStatusFormRejected(self):
-        self.template("Labor Status Form Rejected For Student",
+        self.checkRecipient("Labor Status Form Rejected For Student",
                       "Labor Status Form Rejected For Primary",
                       "Labor Status Form Rejected For Secondary")
-        # StatusFormEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Rejected For Student")
-        # self.sendEmail(StatusFormEmailTemplateID, "student")
-        #
-        # if self.laborStatusForm.jobType == "Secondary":
-        #     SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Rejected For Secondary")
-        #     self.sendEmail(SupervisorEmailTemplateID, "secondary")
-        # else:
-        #     SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Rejected For Primary")
-        #     self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
     def laborStatusFormModified(self):
-        self.template("Labor Status Form Modified For Student",
+        self.checkRecipient("Labor Status Form Modified For Student",
                       "Labor Status Form Modified For Supervisor")
-        # StatusFormEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Modified For Student")
-        # self.sendEmail(StatusFormEmailTemplateID, "student")
-        #
-        # SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Status Form Modified For Supervisor")
-        # self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
     def laborReleaseFormSubmitted(self):
-        self.releaseDate = self.formHistory.releaseForm.releaseDate.strftime("%m/%d/%Y")
-        self.releaseReason = self.formHistory.releaseForm.reasonForRelease
-        self.template("Labor Release Form Submitted For Student",
+        self.checkRecipient("Labor Release Form Submitted For Student",
                       "Labor Release Form Submitted For Supervisor")
-        # releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Release Form Submitted For Student")
-        # self.sendEmail(releaseEmailTemplateID, "student")
-        #
-        # SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Release Form Submitted For Supervisor")
-        # self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
     def laborReleaseFormApproved(self):
-        self.releaseDate = self.formHistory.releaseForm.releaseDate.strftime("%m/%d/%Y")
-        self.releaseReason = self.formHistory.releaseForm.reasonForRelease
-        self.template("Labor Release Form Approved For Student",
+        self.checkRecipient("Labor Release Form Approved For Student",
                       "Labor Release Form Approved For Supervisor")
-        # releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Release Form Approved For Student")
-        # self.sendEmail(releaseEmailTemplateID, "student")
-        #
-        # SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Release Form Approved For Supervisor")
-        # self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
     def laborReleaseFormRejected(self):
-        self.releaseDate = self.formHistory.releaseForm.releaseDate.strftime("%m/%d/%Y")
-        self.releaseReason = self.formHistory.releaseForm.reasonForRelease
-        self.template("Labor Release Form Rejected For Student",
+        self.checkRecipient("Labor Release Form Rejected For Student",
                       "Labor Release Form Rejected For Supervisor")
-        # releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Release Form Rejected For Student")
-        # self.sendEmail(releaseEmailTemplateID, "student")
-        #
-        # SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Release Form Rejected For Supervisor")
-        # self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
     def LaborOverLoadFormSubmitted(self, link):
         """
@@ -176,31 +100,16 @@ class emailHandler():
         Once this is finished, the email can then be sent.
         """
         self.link = link
-        self.template("Labor Overload Form Submitted For Student",
+        self.checkRecipient("Labor Overload Form Submitted For Student",
                       "Labor Overload Form Submitted For Supervisor")
-        # releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Overload Form Submitted For Student")
-        # self.sendEmail(releaseEmailTemplateID, "student")
-        #
-        # SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Overload Form Submitted For Supervisor")
-        # self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
     def LaborOverLoadFormApproved(self):
-        self.template("Labor Overload Form Approved For Student",
+        self.checkRecipient("Labor Overload Form Approved For Student",
                       "Labor Overload Form Approved For Supervisor")
-        # releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Overload Form Approved For Student")
-        # self.sendEmail(releaseEmailTemplateID, "student")
-        #
-        # SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Overload Form Approved For Supervisor")
-        # self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
     def LaborOverLoadFormRejected(self):
-        self.template("Labor Overload Form Rejected For Student",
+        self.checkRecipient("Labor Overload Form Rejected For Student",
                       "Labor Overload Form Rejected For Supervisor")
-        # releaseEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Overload Form Rejected For Student")
-        # self.sendEmail(releaseEmailTemplateID, "student")
-        #
-        # SupervisorEmailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Overload Form Rejected For Supervisor")
-        # self.sendEmail(SupervisorEmailTemplateID, 'supervisor')
 
     # Depending on what the paramater 'sendTo' is set equal to, this method will send the email either to the Primary, Seconday, or the Student
     def sendEmail(self, template, sendTo):
@@ -261,3 +170,24 @@ class emailHandler():
         emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "SASS and Financial Aid Office")
         message.html = self.replaceText(emailTemplateID.body)
         self.mail.send(message)
+
+
+    def checkRecipient(self, studentEmailPurpose, primaryEmailPurpose, secondaryEmailPurpose = False):
+        """
+        This method will take in two to three inputs of email purposes. An email to the student is always sent.
+        The method then checks whether to send the email to only the primary or both the primary and secondary supervisors.
+        The method sendEmail is then called to handle the actual sending of the emails.
+        """
+        studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
+        self.sendEmail(studentEmail, "student")
+
+        if secondaryEmailPurpose == False:
+            primaryEmail = EmailTemplate.get(EmailTemplate.purpose == primaryEmailPurpose)
+            self.sendEmail(primaryEmail, "supervisor")
+        else:
+            if self.laborStatusForm.jobType == "Secondary":
+                secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
+                self.sendEmail(secondaryEmail, "secondary")
+            else:
+                primaryEmail = EmailTemplate.get(EmailTemplate.purpose == primaryEmailPurpose)
+                self.sendEmail(primaryEmail, "supervisor")
