@@ -12,25 +12,25 @@ $(document).ready( function(){
       var $cell=$(evt.target).closest('td');
       if( $cell.index()>0){ // Apply the following to all td's except the first one that contains notes.
           var firstElement = $('tbody > tr').first(); // getting the first td in the row
-          console.log("Here is the first element:" + firstElement);
+          //console.log("Here is the first element:" + firstElement); Prints [object Object]
           // var data = overloadTable.row(firstElement.nextAll('tr')).data() // get the data of all td's in row except first td in the row
           var data = overloadTable.row().data();
           console.log("Here is the data:" + data);
           console.log("Here is a piece of data:" + data[1]);
-          // var term = data[1];
-          // var department = data[2];
-          // var supervisor = data[3];
-          // var student = data[5];
-          // var position = data[6];
-          // var hoursPerWeek = data[7];
-          // var created = data[8];
-          // // var constractedDates=data[9];
-          // $('#studentName').append(student);
-          // $('#positionWls').val(position);
-          // $('#hours').val(hoursPerWeek);
-          // $('#contractDate').val(constractedDates);
-          // $('#Supervisor').val(supervisor);
-          // $('#Department').val(department);
+          var term = data[1];
+          var department = data[2];
+          var supervisor = data[3];
+          var student = data[5];
+          var position = data[6];
+          var hoursPerWeek = data[7];
+          var created = data[8];
+          var contractedDates=data[9];
+          $('#studentName').html(student);
+          $('#positionWls').val(position);
+          $('#hours').val(hoursPerWeek);
+          $('#contractDate').val(contractedDates);
+          $('#Supervisor').val(supervisor);
+          $('#Department').val(department);
           $('#adminOverload').modal('show');
       }
     });
