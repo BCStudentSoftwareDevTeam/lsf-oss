@@ -2,11 +2,16 @@ $(document).ready(function() {
 });
 
 function populatePurpose(){
-  $("#purpose").val('default').selectpicker("refresh");
-  $("#purpose").empty();
+  // This function will begin by refreshing the 'Purpose' select picker everytime,
+  // in order to correctly update it everytime. The function then checks what
+  // recipient was choosen from the select picker, and queries all the purposes from
+  // the database that correspond to that recipient, and finally appends the purposes
+  // into the 'Purpose' selectpicker.
+  $("#purpose").val('default').selectpicker("refresh")
+  $("#purpose").empty()
   $("#subject").val("Subject")
-  CKEDITOR.instances["editor1"].setData('');
-  var recipient = $("#recipient").val();
+  CKEDITOR.instances["editor1"].setData('')
+  var recipient = $("#recipient").val()
   $.ajax({
     url: "/admin/emailTemplates/getPurpose/" + recipient,
     dataType: "json",
@@ -21,6 +26,7 @@ function populatePurpose(){
 }
 
 function getEmailTemplate(){
+  // This method
   $("#subject").val("Subject")
   CKEDITOR.instances["editor1"].setData('');
   var purpose = $("#purpose").val();
