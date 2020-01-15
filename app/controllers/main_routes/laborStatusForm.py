@@ -4,6 +4,7 @@ from app.login_manager import require_login
 from app.models.user import *
 from app.models.status import *
 from app.models.laborStatusForm import *
+from app.models.overloadForm import *
 from app.models.formHistory import *
 from app.models.historyType import *
 from app.models.term import *
@@ -62,7 +63,6 @@ def userInsert():
     rspFunctional = json.loads(rsp)
     all_forms = []
     for i in range(len(rspFunctional)):
-        print(rspFunctional[i])
         d, created = Student.get_or_create(ID = rspFunctional[i]['stuBNumber'])
         student = d.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
@@ -98,10 +98,29 @@ def userInsert():
                                               createdBy   = creatorID,
                                               createdDate = date.today(),
                                               status      = status.statusName)
+
+            newLaborOverloadForm = OverloadForm.create( overloadReason = None,
+                                                        financialAidApproved = None,
+                                                        financialAidApprover = None,
+                                                        financialAidReviewDate = None,
+                                                        SAASApproved = None,
+                                                        SAASApprover = None,
+                                                        SAASReviewDate = None,
+                                                        laborApproved = None,
+                                                        laborApprover = None,
+                                                        laborReviewDate = None)
+            historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
+            status = Status.get(Status.statusName == "Pending")
+            d, created = User.get_or_create(username = cfg['user']['debug'])
+            creatorID = d.UserID
+            if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
+                formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
+                                                  historyType = historyType.historyTypeName,
+                                                  overloadForm = newLaborOverloadForm.overloadFormID,
+                                                  createdBy   = creatorID,
+                                                  createdDate = date.today(),
+                                                  status      = status.statusName)
             all_forms.append(True)
-            print(rspFunctional[i]["studentTotalHours"])
-            if rspFunctional[i]["studentTotalHours"] > 15:
-                print("OverloadEmail")
         except Exception as e:
             all_forms.append(False)
             #print("ERROR: " + str(e))

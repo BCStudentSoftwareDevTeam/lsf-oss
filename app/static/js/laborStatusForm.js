@@ -494,7 +494,7 @@ function createAndFillTable(studentDict) {
   }
 }
 
-test = {}
+storeTotalHours = {}
 function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
   totalHoursCount = studentDict.stuWeeklyHours;
   for (i = 0; i < globalArrayOfStudents.length; i++){
@@ -506,11 +506,7 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
   for (i = 0; i < databasePositions.length; i++){
     totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
   }
-  test["hours"] = {totalHoursCount}
-  for (var i = 0; i < globalArrayOfStudents.length; i++) {
-    globalArrayOfStudents[i].stuTotalHours = totalHoursCount
-  }
-  test['globalarray'] = {globalArrayOfStudents}
+  storeTotalHours["Hours"] = {"totalHours": totalHoursCount}
   if (totalHoursCount > (15)){
     // TODO: Show modal saying they have too many hours
     $('#OverloadModal').modal('show');
@@ -522,8 +518,6 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
 }
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
-  console.log(test['hours']);
-  console.log(test['globalarray']);
   $("#submitmodalid").show();
   $("#doneBtn").hide();
   disableTermSupervisorDept();
@@ -568,6 +562,10 @@ function userInsert(){
     $("#laborStatusForm").on("submit", function(e) {
       e.preventDefault();
     });
+    for (var i = 0; i <globalArrayOfStudents.length; i++){
+      globalArrayOfStudents[i].stuTotalHours = storeTotalHours['Hours']['totalHours']
+    }
+    console.log(globalArrayOfStudents);
     $.ajax({
            method: "POST",
            url: "/laborstatusform/userInsert",
