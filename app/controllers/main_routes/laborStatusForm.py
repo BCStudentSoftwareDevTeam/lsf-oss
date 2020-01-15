@@ -18,6 +18,7 @@ from flask import request
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 from app import cfg
+from app.logic.emailHandler import*
 
 @main_bp.route('/laborstatusform', methods=['GET'])
 @main_bp.route('/laborstatusform/<laborStatusKey>', methods=['GET'])
@@ -99,7 +100,7 @@ def userInsert():
                                               createdDate = date.today(),
                                               status      = status.statusName)
 
-            newLaborOverloadForm = OverloadForm.create( overloadReason = None,
+            newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
                                                         financialAidApproved = None,
                                                         financialAidApprover = None,
                                                         financialAidReviewDate = None,
@@ -121,12 +122,12 @@ def userInsert():
                                                   createdDate = date.today(),
                                                   status      = status.statusName)
                 email = emailHandler(formOverload.formHistoryID) # FIXME : I think this code is causing the error. It probably is not be the way of getting formhistoryid.
-                email.LaborOverLoadFormSubmitted()
+                email.LaborOverLoadFormSubmitted('/studentOverloadApp/<email>')
                 print("Submitted?")
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
-            #print("ERROR: " + str(e))
+            print("ERROR: " + str(e))
 
     return jsonify(all_forms)
 
