@@ -26,7 +26,10 @@ function populatePurpose(){
 }
 
 function getEmailTemplate(){
-  // This method
+  // This method starts by clearing the subject and the body on the UI. Once that
+  // is completed, this method will call the purpose. The purpose is used to pull
+  // the subject and body from the appropriate template in the database and
+  // fill them in the purpose selectpicker and the CKEditor body.
   $("#subject").val("Subject")
   CKEDITOR.instances["editor1"].setData('');
   var purpose = $("#purpose").val();
@@ -43,6 +46,10 @@ function getEmailTemplate(){
 }
 
 function postEmailTemplate(){
+  // This method will check what purpose is selected and what is currently
+  // selected in the CKEditor body. Then on an AJAX call we send that to the
+  // database to override the current body of the email template that was
+  // selected. On success, we reload the page and give a python success flash message.
   var body = CKEDITOR.instances.editor1.getData();
   var purpose = $("#purpose").val();
   $.ajax({
@@ -57,6 +64,10 @@ function postEmailTemplate(){
 }
 
 function discard(){
+  // This method first checks to see if a purpose was selected or not. If no
+  // purpose was selected, it will flash an error message saying there were no
+  // changes to be discarded. If a purpose was selected, the method will clear all
+  // three selectpickers and the CKEditor body.
   if ( !$("#purpose").val() ) {
     msg = "There are no changes to be discarded.";
     category = "danger";
@@ -75,6 +86,10 @@ function discard(){
 }
 
 function saveChanges() {
+  // This method checks to see if a purpose was selected or not. If no purpose
+  // was selected, it will flash an error message saying there were no changes
+  // to be discarded. If a purpose was selected, the method will call a modal that
+  // will ask the user if they are sure they want to save their changes.
   if ( !$("#purpose").val() ) {
     msg = "There are no changes to be saved.";
     category = "danger";
