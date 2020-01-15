@@ -26,8 +26,6 @@ def email_templates():
 
 def getPurpose(recipient):
     try:
-        print("Made it here")
-        print(recipient)
         emailPurposes = EmailTemplate.select(EmailTemplate.purpose).where(EmailTemplate.audience == recipient)
         purposeList = []
         for i in emailPurposes:

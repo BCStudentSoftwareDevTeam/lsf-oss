@@ -7,8 +7,8 @@ function populatePurpose(){
   // recipient was choosen from the select picker, and queries all the purposes from
   // the database that correspond to that recipient, and finally appends the purposes
   // into the 'Purpose' selectpicker.
-  $("#purpose").val('default').selectpicker("refresh")
   $("#purpose").empty()
+  $("#purpose").val('default').selectpicker("refresh")
   $("#subject").val("Subject")
   CKEDITOR.instances["editor1"].setData('')
   var recipient = $("#recipient").val()
@@ -73,13 +73,17 @@ function discard(){
     category = "danger";
   }
   else {
-    $("#recipient").val('default').selectpicker("refresh");
-    $("#purpose").val('default').selectpicker("refresh");
-    $("#purpose").empty();
+    $("#recipient").val('default').selectpicker("refresh")
+    $("#purpose").empty()
+    $("#purpose").val('default').selectpicker("refresh")
+    // $("#purpose").empty()
+    // $("#purpose").remove()
+    // $("#purpose").selectpicker('destroy')
     $("#subject").val("Subject")
-    CKEDITOR.instances["editor1"].setData('');
+    CKEDITOR.instances["editor1"].setData('')
     msg = "The email template changes have been discarded.";
     category = "info";
+    console.log($("#recipient").val());
   }
   $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
   $("#flasher").delay(3000).fadeOut();
