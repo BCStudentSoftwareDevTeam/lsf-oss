@@ -62,7 +62,9 @@ def userInsert():
     rspFunctional = json.loads(rsp)
     all_forms = []
     for i in range(len(rspFunctional)):
-        tracyStudent = STUDATA.get(ID = rspFunctional[i]['stuBNumber'])
+        tracyStudent = STUDATA.get(ID = rspFunctional[i]['stuBNumber']) #Gets student info from Tracy
+        #Tries to get a student with the followin information from the database
+        #if the student doesn't exist, it tries to create a student with that same information
         try:
             d, created = Student.get_or_create(ID = tracyStudent.ID,
                                                 FIRST_NAME = tracyStudent.FIRST_NAME,
@@ -78,6 +80,7 @@ def userInsert():
                                                 LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
         except Exception as e:
             print("ERROR: ", e)
+            d, created = Student.get(ID = tracyStudent.ID)
         student = d.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.UserID
