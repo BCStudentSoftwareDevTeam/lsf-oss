@@ -1,4 +1,7 @@
+var loading = false; // Global variable used to keep more than one modal from popping up
 function openModal(laborStatusKey) {
+  if (loading) return;
+  loading = true;
   /*
     This function gets a response from the controller function: populateModal() in laborHistory.py.  The response is the data for the modal that pops up
     when the position is clicked.
@@ -8,6 +11,7 @@ function openModal(laborStatusKey) {
     type: "GET",
     url: '/laborHistory/modal/' + laborStatusKey,
     success: function(response) {
+      loading = false;
       console.log(response);
       $("#holdModal").empty().append(response);
       $("#modal").modal("show");
