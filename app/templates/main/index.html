@@ -22,10 +22,20 @@
   <h3 id="portalTitle" >Current Students</h3>
 </div>
 
-<div class="col-md-2"></div>
-  <div class="col-md-8" align= "right">
-    <button class="btn btn-success" id="download" data-toggle="modal" data-target="#downloadModal">Download</button>
-  </div>
+<!-- This section of Div tags is used to keep the formatting for when we show
+and hide the department select picker. -->
+<div class="col-md-5"></div>
+<div class="col-md-2" id="placeholder"></div>
+<div class="col-md-2" align="center" id="userDepartments">
+  <select class="selectpicker" id="departmentDropDown" onchange="populateTable()" title="Department" data-width="100%">
+    {% for formHistory in currentUserDepartments %}
+    <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
+    {% endfor %}
+  </select>
+</div>
+<div class="col-md-3" align= "right">
+  <button class="btn btn-success" id="download" data-toggle="modal" data-target="#downloadModal">Download</button>
+</div>
 <div class="col-md-2"></div>
 
 
@@ -37,7 +47,7 @@
        <div class="modal-header" align="center">
          <h4 class="modal-title">Please select what you would like to download.</h4>
        </div>
-       <div class="modal-body">
+       <div id="downloadModalText" class="modal-body">
           <input type="checkbox" name="student" id="select-all"> <b>Select all</b>
 
           <!-- Populate the modal with the current students of user -->
@@ -70,24 +80,14 @@
           {% endfor %}
           </div>
 
-          <!-- Populate the modal with the all students of the user's department -->
-          <div class="allDeptStu" style="display:none">
-          {% for form in allDepartmentStudents %}
-          <label class="container">
-            <input class="allDepartmentModal" type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}' disabled>
-              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.termCode.termName}})
-          </label>
-          {% endfor %}
+          <!-- Leaving this Div empty because it will be populated dynamically in the JS file -->
+          <div id="allDepartmentStudentsDiv" class="allDeptStu">
+
           </div>
 
-          <!-- Populate the modal with the current students of the user's department -->
-          <div class="currentDeptStu" style="display:none">
-          {% for form in currentDepartmentStudents %}
-          <label class="container">
-            <input class="currentDepartmentModal" type="checkbox" id= '{{form.laborStatusFormID}}' name='{{form.laborStatusFormID}}' value='{{form.laborStatusFormID}}' disabled>
-              {{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.termCode.termName}})
-          </label>
-          {% endfor %}
+          <!-- Leaving this Div empty because it will be populated dynamically in the JS file -->
+          <div id="currentDepartmentStudentsDiv" class="currentDeptStu">
+
           </div>
        </div>
        <div class="modal-footer" align="center">
@@ -163,39 +163,6 @@
       <td style="display:none">My Past Students</td>
     </tr>
 
-    <!--Populate the datatable with all the students from the currents users department -->
-    {% for student in allDepartmentStudents %}
-      <tr>
-        <td><a href="/laborHistory/{{student.studentSupervisee.ID}}">
-          <span class="h4">{{student.studentSupervisee.FIRST_NAME}} {{student.studentSupervisee.LAST_NAME}} ({{student.studentSupervisee.ID}})</span></a>
-          <br />
-          <span class="pushLeft h6"> {{student.termCode.termName}} - {{student.POSN_TITLE}} - {{student.department.DEPT_NAME}}</span>
-        </td>
-        <td style="display:none">All Department Students</td>
-      </tr>
-    {% endfor %}
-    <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
-    <tr class="allDepartmentStudents" style="display:none">
-      <td style="display:none"></td>
-      <td style="display:none">All Department Students</td>
-    </tr>
-
-    <!-- Populate the datatable with all the students currently employed by the department -->
-    {% for student in currentDepartmentStudents %}
-      <tr>
-        <td><a href="/laborHistory/{{student.studentSupervisee.ID}}">
-          <span class="h4">{{student.studentSupervisee.FIRST_NAME}} {{student.studentSupervisee.LAST_NAME}} ({{student.studentSupervisee.ID}})</span></a>
-          <br />
-          <span class="pushLeft h6"> {{student.termCode.termName}} - {{student.POSN_TITLE}} - {{student.department.DEPT_NAME}}</span>
-        </td>
-      <td style="display:none">Current Department Students</td>
-      </tr>
-    {% endfor %}
-    <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
-    <tr class="currentDepartmentStudents" style="display:none">
-      <td style="display:none"></td>
-      <td style="display:none">Current Department Students</td>
-    </tr>
   </table>
 </div>
 <div class="col-md-2"></div>
