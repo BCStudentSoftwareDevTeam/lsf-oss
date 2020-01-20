@@ -88,7 +88,6 @@ def updateDatabase():
             for data in rsp.values():
                 formHistoryForm = FormHistory.get(FormHistory.formHistoryID == data["formID"])
                 d, created = OverloadForm.get_or_create(overloadFormID = formHistoryForm.overloadForm)
-                print(d.overloadReason )
                 d.overloadReason = data["Notes"]
                 d.save()
         return jsonify({"Success": True})
