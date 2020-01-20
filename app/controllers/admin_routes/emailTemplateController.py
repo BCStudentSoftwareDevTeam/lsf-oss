@@ -5,7 +5,7 @@ from app.models.emailTemplate import *
 from flask import Flask, redirect, url_for, flash, jsonify, json, request, flash
 
 
-@admin.route('/admin/emailTemplates', methods=['GET', 'POST'])
+@admin.route('/admin/emailTemplates', methods=['GET'])
 # @login_required
 def email_templates():
     emailTemplateID = EmailTemplate.select()
@@ -20,9 +20,7 @@ def email_templates():
                             body = body
                           )
 
-
-
-@admin.route('/admin/emailTemplates/getPurpose/<recipient>', methods=['GET', 'POST'])
+@admin.route('/admin/emailTemplates/getPurpose/<recipient>', methods=['GET'])
 
 def getPurpose(recipient):
     try:
@@ -31,24 +29,17 @@ def getPurpose(recipient):
         for i in emailPurposes:
             purposeList.append({"Purpose":i.purpose})
         return json.dumps(purposeList)
-        # return (jsonify({"Success": True}))
     except Exception as e:
         print(e)
         return jsonify({"Success": False})
 
-@admin.route('/admin/emailTemplates/getEmail/<purpose>', methods=['GET', 'POST'])
+@admin.route('/admin/emailTemplates/getEmail/<purpose>', methods=['GET'])
 
 def getEmail(purpose):
     try:
-        # print("Made it here")
-        # print(purpose)
         email = EmailTemplate.get(EmailTemplate.purpose == purpose)
-        # print(email.body)
-        # print(email.subject)
         purposeList = {"emailBody": email.body, "emailSubject": email.subject}
-        # print(purposeList)
         return json.dumps(purposeList)
-        return (jsonify({"Success": True}))
     except Exception as e:
         print(e)
         return jsonify({"Success": False})
@@ -57,11 +48,6 @@ def getEmail(purpose):
 
 def postEmail():
     try:
-        # body = request.form['body']
-        # purpose = request.form['purpose']
-        # print(body)
-        # print(purpose)
-        # print("Hello")
         email = EmailTemplate.get(EmailTemplate.purpose == request.form['purpose'])
         email.body = request.form['body']
         email.save()
