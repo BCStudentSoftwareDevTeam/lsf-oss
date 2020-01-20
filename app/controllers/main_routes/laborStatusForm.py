@@ -122,8 +122,7 @@ def userInsert():
                                                   createdDate = date.today(),
                                                   status      = status.statusName)
                 email = emailHandler(formOverload.formHistoryID) # FIXME : I think this code is causing the error. It probably is not be the way of getting formhistoryid.
-                print("I AM EMAIL", email)
-                email.LaborOverLoadFormSubmitted('http://172.31.3.216:8080/studentOverloadApp/' + str(formOverload.formHistoryID))
+                email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
                 print("Submitted?")
             all_forms.append(True)
         except Exception as e:
