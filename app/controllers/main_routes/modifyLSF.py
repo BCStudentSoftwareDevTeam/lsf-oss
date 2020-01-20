@@ -129,9 +129,6 @@ def sumbitModifiedForm(laborStatusKey):
             if k == "weeklyHours":
                 LSF.weeklyHours = rsp[k]['newValue']
                 LSF.save()
-            if k == "jobType":
-                LSF.jobType = rsp[k]['newValue']
-                LSF.save()
         flash("Your labor status form has been modified.", "success")
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
     except Exception as e:
