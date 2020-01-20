@@ -8,7 +8,7 @@ from flask import json, jsonify
 from flask import request
 from app.models.overloadForm import *
 
-@main_bp.route('/studentOverloadApp/<formId>', methods=['GET', 'POST']) # the form ID here is the ID from formHistory table
+@main_bp.route('/studentOverloadApp/<formId>', methods=['GET']) # the form ID here is the ID from formHistory table
 # @login_required
 def studentOverloadApp(formId):
     current_user = require_login()
@@ -86,10 +86,11 @@ def updateDatabase():
         if rsp:
             formId = rsp.keys()
             for data in rsp.values():
-                overloadForm = OverloadForm.create(overloadReason = data["Notes"])
                 formHistoryForm = FormHistory.get(FormHistory.formHistoryID == data["formID"])
-                formHistoryForm.overloadForm = overloadForm.overloadFormID
-                formHistoryForm.save()
+                d, created = OverloadForm.get_or_create(overloadFormID = formHistoryForm.overloadForm)
+                print(d.overloadReason )
+                d.overloadReason = data["Notes"]
+                d.save()
         return jsonify({"Success": True})
     except Exception as e:
         print("ERROR: " + str(e))
