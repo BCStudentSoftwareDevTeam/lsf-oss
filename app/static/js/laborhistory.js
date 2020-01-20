@@ -1,22 +1,9 @@
-function openModal(laborStatusKey) {
-  /*
-    This function gets a response from the controller function: populateModal() in laborHistory.py.  The response is the data for the modal that pops up
-    when the position is clicked.
-  */
+$('#positionTable tbody tr  td').on('click',function(){
+     $("#modal").modal("show");
+     $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id)
+     setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
+});
 
-  $.ajax({
-    type: "GET",
-    url: '/laborHistory/modal/' + laborStatusKey,
-    success: function(response) {
-      console.log(response);
-      $("#holdModal").empty().append(response);
-      $("#modal").modal("show");
-      $("#modify").attr("href", "/modifyLSF/" + laborStatusKey); // will go to the modifyLSF controller
-      $("#rehire").attr("href", "/laborstatusform/" + laborStatusKey); // will go to the lsf controller
-      $("#release").attr("href", "/laborReleaseForm/" + laborStatusKey); // will go to labor release form controller
-    }
-  });
-}
 
 function withdrawform(formID){
   /*
