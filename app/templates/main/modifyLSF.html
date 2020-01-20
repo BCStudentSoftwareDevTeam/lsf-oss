@@ -58,19 +58,9 @@
        </div>
        <!-- This selectpicker will be disabled if term is for a break, since jobtype is always Secondary-->
        <div class="form-group">
-         <label for="jobType">Job Type</label>
-         <div  class="change">
-           <select type="jobType"
-                            class="selectpicker form-control newValue"
-                            id="jobType"
-                            data-live-search="true"
-                            value = {{prefilljobtype}}
-                            title = {{prefilljobtype}}
-                            onchange="fillHoursPerWeek(); WLScheck()">
-                <option title="Primary" value="Primary">Primary</option>
-                <option title="Secondary" value="Secondary">Secondary</option>
-           </select>
-           <input hidden class = "oldValue"  id= "{{prefilljobtype}}" value="{{prefilljobtype}}"> </input>
+         <label for="jobType">Job Type:</label> <!--User CANNOT edit-->
+         <div>
+           <input type="jobType" class="form-control" id="jobType" value="{{prefilljobtype}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
    </div>
