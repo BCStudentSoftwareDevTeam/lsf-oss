@@ -14,6 +14,7 @@ import datetime
 from datetime import date
 from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
+from fpdf import FPDF
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
@@ -134,6 +135,24 @@ def populateModal(statusKey):
         # print(e)
         return render_template('errors/500.html')
         return (jsonify({"Success": False}))
+
+@main_bp.route('/laborHistory/modal/printPdf/<statusKey>', methods=['GET'])
+def ConvertToPDF(statusKey):
+    """
+    This function returns
+    """
+    try:
+        forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
+        statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
+        pdf = make_response(render_template('main/pdfTemplate.html',
+                        forms = forms,
+                        statusForm = statusForm
+                        ))
+        return (pdf)
+    except Exception as e:
+        return render_template('errors/500.html')
+        return(jsonify({"Success": False}))
+
 
 @main_bp.route('/laborHistory/modal/updatestatus', methods=['POST'])
 def updatestatus_post():

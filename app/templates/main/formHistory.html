@@ -13,13 +13,14 @@
     <h3>{{student.FIRST_NAME}} {{student.LAST_NAME}}</h3>
     <form method="POST" action="/laborHistory/download">
       <input hidden name="listOfForms" value="{{formHistoryList}}" />
-      <div align= "right"><button  type="submit" value="Submit" class="btn btn-success">Download</button></div>
+      <div align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success">Download</button></div>
     </form>
+
     <div align= "center">
       <table id="positionTable" >
         {% for form in studentForms %}
         <tr>
-          <td onclick="openModal({{form.laborStatusFormID}})" id="{{form.laborStatusFormID}}">
+          <td id="{{form.laborStatusFormID}}" class="modalLink">
             <a><span class="h4">{{form.termCode.termName}} - {{form.department.DEPT_NAME}} Dept.</span></a>
             <p class="h6" id="second-line">{{form.jobType}} - {{form.POSN_TITLE}} ({{form.POSN_CODE}})</p>
           </td>
@@ -28,7 +29,14 @@
       </table>
     </div>
 </div>
-<div id="holdModal">
+<!-- Modal -->
+<div class="modal fade" id="modal" role="dialog" data-backdrop="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div id="content" class="modal-content">
+    </div>
+  </div>
 </div>
+<!-- Modal End -->
+
   <div align= "left"><a type='button' class='btn btn-danger' id="returnbutton" onclick="window.history.back()">Return</a></div>
 {% endblock %}

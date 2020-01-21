@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 '''
 app.py is the starting point of the application; to run the app, in the console, you run "python app.py"
 '''

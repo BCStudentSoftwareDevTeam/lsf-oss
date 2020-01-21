@@ -16,14 +16,11 @@ function getDate(obj, termCode) {
   then this will trigger the ajax call and send the dictionary to termManagement.py */
   var termStart = obj.value; // You need to get the value of this object otherwise it will show "object Object"
   var termID = obj.id.split("_")[1] // This is how we format the term code
-  // console.log(termID)
   var dateType = obj.id.split("_")[0] // This variable stores whether the value is a start date or an end date
-  // console.log(dateType)
   var tabledata_dict = {};
   tabledata_dict[dateType] = obj.value;
   tabledata_dict["termCode"] = termID;
   data = JSON.stringify(tabledata_dict); // need to do this in order for the python to recognize it
-//  console.log(data)
     $.ajax({
       type: "POST",
       url: "/termManagement/setDate/",
@@ -31,19 +28,15 @@ function getDate(obj, termCode) {
       data: data,
       contentType: 'application/json',
       success: function(response){
-        // console.log(response)
-        if(response) 
+
+        if(response)
         stateBtnValue = $("#term_btn_" + termCode).val();
         start = $("#start_" + termCode).val();
-        // console.log(start)
         end = $("#end_" +termCode).val();
 
-        // console.log(end)
         if (start != "" && end != "") {
           $('#term_btn_' + termCode).prop('disabled', false)
-          // console.log("It worked!!")
         }
-        // console.log("js success")
       }
 
     });
@@ -75,7 +68,6 @@ function termStatus(term) {
   var endID = $("#end_" + term);
   var termBtnID = $("#term_btn_" + term);
   var inactiveBtnID = $("#inactive_btn_" + term);
-  // console.log(term)
     $.ajax({
       method: "POST",
       url: "/termManagement/manageStatus ",
@@ -84,11 +76,8 @@ function termStatus(term) {
       data: JSON.stringify({"termBtn": term}),
       processData: false,
       success: function(response) {
-      console.log(response);
       if(response["Success"]) {
         //category = "info"
-        console.log("Hello, this works")
-        console.log(termBtnID);
          if ($(termBtnID).hasClass("btn-success")) {
             $(termBtnID).removeClass("btn-success");
             $(termBtnID).addClass("btn-danger");

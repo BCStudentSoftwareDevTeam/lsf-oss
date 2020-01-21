@@ -1,8 +1,16 @@
 {% extends "base.html" %}
 {% block app_content %}
-<link rel="stylesheet" type="text/css" href="/static/css/studentOverloadApp.css" />
-
-
+<head>
+  <link rel="stylesheet" type="text/css" href="/static/css/studentOverloadApp.css" />
+<!-- These are the outside links for the datepicker-->
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <!-- These are the outside links for the effective date calendar-->
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+{% include "snips/freshmanWarning.html" %}
   <div align="center" >
     <h1>Labor Overload Application</h1>
 
@@ -11,193 +19,142 @@
          Approval may be revoked if primary labor hours, labor performance, or academic performance become less than satisfactory.
       </h5>
     </div>
-
   </div>
-<div class="container">
+
+<div class="container" id="checkboxes" >
   <div class="floatleft">
     <ul class="small">
       <h6><b>Guidelines for Approval: </b></h6>
-      <li>Sophomore, junior, or senior classification</li>
-      <li>Not on any form of probation</li>
-      <li>Enrolled in less than 5 course credits with less than 8 preparations</li>
-      <li>Have a 2.50 GPA, both cumulative and for the previous full term</li>
-      <li>The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term</li>
+      <input type="checkbox" name="checkbox" id="checkbox1" onclick="checkBoxCheck(this)" /> Sophomore, junior, or senior classification <br>
+      <input type="checkbox" name="checkbox" id="checkbox2" onclick="checkBoxCheck(this)" /> Not on any form of probation <br>
+      <input type="checkbox" name="checkbox" id="checkbox3" onclick="checkBoxCheck(this)" /> Enrolled in less than 5 course credits with less than 8 preparations <br>
+      <input type="checkbox" name="checkbox" id="checkbox4" onclick="checkBoxCheck(this)" /> Have a 2.50 GPA, both cumulative and for the previous full term <br>
+      <input type="checkbox" name="checkbox" id="checkbox5" onclick="checkBoxCheck(this)" /> The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term
     </ul>
-
   </div>
-
-
-
 <div class="floatleft">
   <ul class="small">
     <h6><b>Requests for over 20 hours* are subject to the following additional guidelines:  </b></h6>
-    <li>Junior or senior classification. 3.00 GPA in the major, overall, and for the previous term</li>
-    <li>Submission of a letter outlining the reason for requesting more than 20 hours</li>
-    <li>Approval of the Dean of Labor and the Student Admissions and Academic Standing Committee</li>
+    <input type="checkbox" name="checkbox" id="checkbox6" onclick="checkBoxCheck(this)" /> Junior or senior classification. 3.00 GPA in the major, overall, and for the previous term <br>
+    <input type="checkbox" name="checkbox" id="checkbox7" onclick="checkBoxCheck(this)" /> Submission of a letter outlining the reason for requesting more than 20 hours <br>
+    <input type="checkbox" name="checkbox" id="checkbox8" onclick="checkBoxCheck(this)" /> Approval of the Dean of Labor and the Student Admissions and Academic Standing Committee
   </ul>
-
 </div>
-
 </div>
 
 <div class="container">
-  <form action="https://www.berea.edu/">
+<form>
     <div align="center">
       <h3>Current Job Information</h3>
     </div>
-
-    <!-- current job information on the left side -->
-    <div class="floatleft">
+    <div align="center">
+      <font size="2">
+      <table class="table table-striped" style="width:100%;">
+        <tr align="center">
+          <th>Name:</th>
+          <th>B#:</th>
+          <th>CPO:</th>
+          <th>Classification:</th>
+          <th>Term:</th>
+        </tr>
+        <tr>
+          <td>{{prefillStudentName}}</td>
+          <td>{{prefillStudentBnum}}</td>
+          <td>{{prefillStudentCPO}}</td>
+          <td>{{prefillStudentClass}}</td>
+          <td>{{prefillTerm}}</td>
+        </tr>
+      </table>
+      </font>
       <div class="form-group">
-        <label for="Name">Name:</label>
-        <div>
-          <input type="Name" class="form-control" id="Name" required>
-        </div>
+        <label for="Primary">Current Positions:</label>
+        <font size="2">
+        <table class="table table-striped" style="width:100%;" align="center">
+          <tr>
+            <th>Term</th>
+            <th>Department</th>
+            <th>Position Type</th>
+            <th>Postion Title</th>
+            <th>Hours Per Week</th>
+            <th>Status</th>
+          </tr>
+          {% for listPrimary in currentPrimary %}
+              {% for primary in listPrimary %}
+              <tr id="Primary" value="{{primary.formHistoryID}}">
+                <td>{{primary.formID.termCode.termName}}</td>
+                <td>{{primary.formID.department.DEPT_NAME}}</td>
+                <td>{{primary.formID.jobType}}</td>
+                <td>{{primary.formID.POSN_TITLE}}</td>
+                <td>{{primary.formID.weeklyHours}}</td>
+                <td>{{primary.status}}</td>
+              </tr>
+              {% endfor %}
+          {% endfor %}
+          {% for listSecondary in currentSecondary %}
+              {% for secondary in listSecondary %}
+              <tr id="Secondary" value="{{secondary.formHistoryID}}">
+                <td>{{secondary.formID.termCode.termName}}</td>
+                <td>{{secondary.formID.department.DEPT_NAME}}</td>
+                <td>{{secondary.formID.jobType}}</td>
+                <td>{{secondary.formID.POSN_TITLE}}</td>
+                <td>{{secondary.formID.weeklyHours}}</td>
+                <td>{{secondary.status}}</td>
+              </tr>
+              {% endfor %}
+          {% endfor %}
+        </table>
+        </font>
       </div>
-      <div class="form-group">
-        <label for="BNum">B#:</label>
-        <div>
-          <input type="BNum" class="form-control" id="BNum" required>
-        </div>
+      <div class="col-md-4 col-md-offset-4">
+        <font size="2">
+          <table class="table table-striped">
+            <tr>
+              <th class="text-center">Total Primary and Secondary Hours:</th>
+            </tr>
+            <tr align="center">
+              <td>{{totalCurrentHours}}</td>
+            </tr>
+          </table>
+        </font>
       </div>
-      <div class="form-group">
-        <label for="CPO">CPO:</label>
-        <div>
-          <input type="CPO" class="form-control" id="CPO" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="Classification">Classification:</label>
-        <div>
-          <input type="Classification" class="form-control" id="Classification" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="Term">Term:</label>
-        <div>
-          <input type="Term" class="form-control" id="Term" required>
-        </div>
-      </div>
-
     </div>
-
-
-    <!-- current job information on the right side -->
-    <div class="floatright">
-      <div class="form-group">
-        <label for="Primary">Current Primary Position:</label>
-        <div>
-          <input type="Primary" class="form-control" id="Primary" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="PHours">Hours Per Week:</label>
-        <div>
-          <input type="PHours" class="form-control" id="PHours" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="Secondary">Current Secondary Position:</label>
-        <div>
-          <input type="Secondary" class="form-control" id="Secondary" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="SHours">Hours Per Week:</label>
-        <div>
-          <input type="SHours" class="form-control" id="SHours" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="TPSHours">Total Primary and Secondary Hours:</label>
-        <div>
-          <input type="TPSHours" class="form-control" id="TPSHours" required>
-        </div>
-      </div>
-
-
-    </div>
-
-    <div align="center" class="spacing">
+    <div align="center" class="col-md-12" >
       <h3>Overload Assignment Request</h3>
     </div>
-
-    <!-- overload request information on the left side -->
-    <div class="floatleft">
-      <div class="form-group">
-        <label for="Dept">Department:</label>
-        <div>
-          <input type="Dept" class="form-control" id="Dept" required>
-        </div>
+      <div align="center">
+        <font size="2">
+        <table class="table table-striped" style="width:100%;" align="center">
+          <tr align="center">
+            <th>Department:</th>
+            <th>Position:</th>
+            <th>Hours Per Week:</th>
+            <th>Total Hours Per Week:</th>
+          </tr>
+          <tr align="center">
+            <td>{{prefillDepartment}}</td>
+            <td>{{prefillPosition}}</td>
+            <td>{{prefillHoursOverload}}</td>
+            <td>{{totalFormHours}}</td>
+          </tr>
+        </table>
+        </font>
       </div>
-      <div class="form-group">
-        <label for="Overload">Position:</label>
-        <div>
-          <input type="OverloadOverload" class="form-control" id="Overload" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="OHours">Hours Per Week:</label>
-        <div>
-          <input type="OHours" class="form-control" id="OHours" required>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="Total">Total Hours Per Week:</label>
-        <div>
-          <input type="Total" class="form-control" id="Total" required>
-        </div>
-      </div>
-
-    </div>
-
-
-    <!-- overload request information on the right side -->
-    <div class="floatright">
-
-      <div class="form-group">
+      <div align="center">
         <label for="Reason">Reason For Overload Request:</label>
         <div>
-          <textarea name="notes" rows="12" cols="73"></textarea>
+          <textarea id="notes" name="notes" rows="8" cols="80" onchange="primaryCheck()" style="resize:none;"required></textarea>
         </div>
       </div>
-
-    </div>
   </div>
-
-
-<div align="center">
-  <h5><b>Student should not work any hours in this assignment until notification of approved labor overload.</b></h5>
-</div>
-
-
+</form>
 <div class="container">
   <div align="center">
-    <button id="submit" type="button" class="btn btn-success" data-toggle="modal" data-target="#submitModal">Submit Changes</button>
+    <button id="submit" type="submit" class="btn btn-success" onclick ="checkForEmptyFields()">Submit Changes</button>
+    {% with overloadForm=overloadForm %}
+      {% include "snips/studentOverloadSubmit.html" %}
+    {% endwith %}
   </div>
 </div>
-
-
-<!-- start of modal -->
-   <div class="modal fade" id="submitModal" role="dialog">
-       <div class="modal-dialog">
-
-         <div class="modal-content">
-           <div class="modal-header">
-             <button type="button" class="close" data-dismiss="modal">&times;</button>
-             <h4 class="modal-title">Are you sure you want to submit?</h4>
-           </div>
-           <div class="modal-footer">
-             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-             <button type="submit" class="btn btn-success" id="modal">Submit</button>
-           </div>
-         </div>
-
-       </div>
-     </div>
-
-</form>
-
 
 <script language="JavaScript" type="text/javascript" src="/static/js/studentOverloadApp.js"></script>
 {% endblock %}
