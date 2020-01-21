@@ -5,7 +5,7 @@ from app.models.status import Status
 
 class OverloadForm(baseModel):
     overloadFormID          = PrimaryKeyField()
-    overloadReason          = CharField()
+    overloadReason          = CharField(null=True)
     financialAidApproved    = ForeignKeyField(Status, null=True, on_delete="cascade") #Foreign key to status
     financialAidApprover    = ForeignKeyField(User, null=True, on_delete="cascade")#Foreign key to USERS
     financialAidReviewDate  = DateField(null=True)
@@ -15,4 +15,3 @@ class OverloadForm(baseModel):
     laborApproved           = ForeignKeyField(Status, null=True, on_delete="cascade") #Foreign key to status
     laborApprover           = ForeignKeyField(User, null=True, on_delete="cascade")#Foreign key to USERS
     laborReviewDate         = DateField(null=True)
-

@@ -1,32 +1,84 @@
+@media(min-width:970px) and (max-width:2500px) {
+  .container {
+    width: 83%;
+    }
+}
+
+.bootstrap-select>.dropdown-toggle.bs-placeholder,
+.bootstrap-select>.dropdown-toggle.bs-placeholder:active,
+.bootstrap-select>.dropdown-toggle.bs-placeholder:focus,
+.bootstrap-select>.dropdown-toggle.bs-placeholder:hover {
+    color: #757575;
+}
+
+.dropdown-menu>.disabled>a,
+.dropdown-menu>.disabled>a:focus,
+.dropdown-menu>.disabled>a:hover {
+  color: #000;
+}
+
+.floatleft {
+float: left;
+width: 47%;
+height: 310px;
+}
+
+.floatright {
+float: right;
+width: 47%;
+height: 310px;
+}
+
+#mytable {
+  table-layout: fixed;
+  border-collapse: collapse;
+  border: 1px solid #ddd;
+  width: 100%;
+}
+
+tr:nth-of-type(odd) {
+  background-color: #f2f2f2
+}
+
+#mytable th, #mytable td {
+  text-align: center;
+  word-wrap: break-word;
+}
+
 selectpicker, label {
   display: block;
 }
-.tableContent {
-  float:left;
-  padding-right: 5px;
-  width: 225px;
-  height: 59px;
+
+.col-xs-12 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+#endDateStyle {
+  padding-left: 7px;
+  padding-right: 0px;
+  width: 50%;
+}
+
+#startDateStyle {
+  padding-right: 7px;
+  padding-left: 0px;
+  width: 50%;
+
 }
 
 #plus {
-  margin-top: 18px;
-  width: 0px;
+  text-align: center;
+  padding-bottom: 30px;
 }
 
-#datepicker {
-  padding-right: 0px;
+#addMoreStudent {
+  width: 200px;
 }
 
-#glyphicon{
+#titleGlyphicon{
       font-size: 29px;
       color: #337ab7;
-}
-
-#glyphicon_2{
-  font-size: 29px;
-  color: #337ab7;
-  padding-right: 0px;
-  padding-left: 26px;
 }
 
 #glyphicon_note{
@@ -36,7 +88,28 @@ selectpicker, label {
   padding-left: 26px;
 }
 
-#review-button {
-    text-align: center;
-    padding-bottom: 10px;
+#reviewButton0 {
+  float: right;
+}
+
+.glyphicon-question-sign  {
+  display: none;
+  color: #2d6a9f;
+}
+
+#flash_container {
+  width: 87%;
+  height: 55px;
+}
+
+#dateTimePicker1 {
+  background-color: #fff;
+}
+
+#dateTimePicker2 {
+  background-color: #fff;
+}
+
+#doneButton {
+  display: none;
 }
