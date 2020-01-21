@@ -7,6 +7,7 @@ from app.models.formHistory import *
 from flask import json, jsonify
 from flask import request
 from app.models.overloadForm import *
+from app.logic.emailHandler import*
 
 @main_bp.route('/studentOverloadApp/<formId>', methods=['GET']) # the form ID here is the ID from formHistory table
 # @login_required
@@ -90,6 +91,8 @@ def updateDatabase():
                 d, created = OverloadForm.get_or_create(overloadFormID = formHistoryForm.overloadForm)
                 d.overloadReason = data["Notes"]
                 d.save()
+                email = emailHandler(d.overloadFormID)
+                email.LaborOverLoadFormSubmittedNotification('http://{0}/'.format(request.host) + '/admin/pendingForms/pendingOverload')
         return jsonify({"Success": True})
     except Exception as e:
         print("ERROR: " + str(e))
