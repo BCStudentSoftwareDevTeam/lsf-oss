@@ -367,7 +367,8 @@ function createStuDict(){
                     stuNotes: null,
                     stuSupervisor: supervisor,
                     stuDepartment: department,
-                    stuSupervisorID: supervisorID
+                    stuSupervisorID: supervisorID,
+                    stuTotalHours: null,
                     };
     return studentDict;
   }
@@ -386,15 +387,9 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
 }
 
 function checkPrimaryPositionToCreateTheTable(studentDict){
-  totalHoursCount = studentDict.stuWeeklyHours;
-  for (i = 0; i < globalArrayOfStudents.length; i++){
-    if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
-      totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
-    }
-  }
   var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
   var term = $("#selectedTerm").val();
-  var url = "/laborstatusform/getstudents/" + term +"/" +studentDict.stuBNumber +"/" +totalHoursCount;
+  var url = "/laborstatusform/getstudents/" + term +"/" +studentDict.stuBNumber;
   $.ajax({
     url: url,
     dataType: "json",
@@ -406,7 +401,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
           $("#warningModal").modal("show");
         }
         else if(studentDict.stuJobType == "Secondary"){
-          if (checkDuplicate(studentDict) == true && checkTotalHours(response) == true) {
+          if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true) {
             createAndFillTable(studentDict);
           }
           else {
@@ -418,7 +413,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
       }
       else {
         if(studentDict.stuJobType == "Primary"){
-          if (checkDuplicate(studentDict) == true  && checkTotalHours(response) == true){
+          if (checkDuplicate(studentDict) == true  && checkTotalHours(studentDict, response) == true){
             createAndFillTable(studentDict);
           }
           else {
@@ -434,7 +429,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
             $("#warningModal").modal("show");
           }
           else {
-            if (checkDuplicate(studentDict) == true && checkTotalHours(response) == true){
+            if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true){
               createAndFillTable(studentDict);
             }
             else {
@@ -499,11 +494,19 @@ function createAndFillTable(studentDict) {
   }
 }
 
-
-function checkTotalHours(databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
-  for (i = 0; i < databasePositions.length; i++){
-    totalHoursCount = databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
+storeTotalHours = {}
+function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
+  totalHoursCount = studentDict.stuWeeklyHours;
+  for (i = 0; i < globalArrayOfStudents.length; i++){
+    if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
+      totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
+    }
   }
+
+  for (i = 0; i < databasePositions.length; i++){
+    totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
+  }
+  storeTotalHours["Hours"] = {"totalHours": totalHoursCount}
   if (totalHoursCount > (15)){
     // TODO: Show modal saying they have too many hours
     $('#OverloadModal').modal('show');
@@ -559,6 +562,10 @@ function userInsert(){
     $("#laborStatusForm").on("submit", function(e) {
       e.preventDefault();
     });
+    for (var i = 0; i <globalArrayOfStudents.length; i++){
+      globalArrayOfStudents[i].stuTotalHours = storeTotalHours['Hours']['totalHours']
+    }
+    console.log(globalArrayOfStudents);
     $.ajax({
            method: "POST",
            url: "/laborstatusform/userInsert",

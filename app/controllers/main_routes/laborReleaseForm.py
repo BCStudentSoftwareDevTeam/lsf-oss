@@ -45,7 +45,6 @@ def laborReleaseForm(laborStatusKey):
             releaseDate = datetime.strptime(datepickerDate, "%m/%d/%Y").strftime("%Y-%m-%d")
             releaseReason = request.form.get("notes")
             releaseCondition = request.form.get("condition")
-
             newLaborReleaseForm = LaborReleaseForm.create(
                                         conditionAtRelease = releaseCondition,
                                         releaseDate = releaseDate,

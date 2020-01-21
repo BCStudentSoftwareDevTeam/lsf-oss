@@ -15,6 +15,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script src="{{url_for('static', filename='js/bootstrap-select.js') }}"></script>
     <script type=text/javascript src="{{url_for('static', filename='js/base.js') }}"></script>
+    <script  type="text/javascript" src="https://unpkg.com/jspdf@latest/dist/jspdf.min.js"></script>
 {% endblock %}
 
 {% block title %}
@@ -34,7 +35,7 @@
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                    <div class="alert  alert-{{category}} alert-dismissible" role="alert" id="flasher">{{ message }}<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                    <div class="alert  alert-{{category}} alert-dismissible" role="alert" id="flasher" style="width:87%">{{ message }}<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
                 {% endfor %}
             {% endif %}
         {% endwith %}
