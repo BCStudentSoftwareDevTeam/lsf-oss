@@ -13,6 +13,7 @@ from app.login_manager import require_login
 from flask import Flask, redirect, url_for, flash
 from flask import request
 from datetime import datetime, date
+from app.logic.emailHandler import*
 
 @main_bp.route('/laborReleaseForm/<laborStatusKey>', methods=['GET', 'POST'])
 # @main_bp.route('/laborReleaseForm', methods=['GET', 'POST'])
@@ -26,7 +27,6 @@ def laborReleaseForm(laborStatusKey):
         render_template("errors/403.html")
 
     forms = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == laborStatusKey)
-
 
     if(request.method == 'POST'):
         try:
@@ -45,24 +45,21 @@ def laborReleaseForm(laborStatusKey):
             releaseDate = datetime.strptime(datepickerDate, "%m/%d/%Y").strftime("%Y-%m-%d")
             releaseReason = request.form.get("notes")
             releaseCondition = request.form.get("condition")
-
             newLaborReleaseForm = LaborReleaseForm.create(
                                         conditionAtRelease = releaseCondition,
                                         releaseDate = releaseDate,
                                         reasonForRelease = releaseReason
                                         )
-
             historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Release Form")
             status = Status.get(Status.statusName == "Pending")
             laborStatusForiegnKey = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-
             newFormHistory = FormHistory.create(
                                         formID = laborStatusForiegnKey.laborStatusFormID,
                                         historyType = historytype.historyTypeName,
                                         releaseForm = newLaborReleaseForm.laborReleaseFormID,
                                         modifiedForm = None,
                                         overloadForm = None,
-                                        createdBy = current_user.username,
+                                        createdBy = current_user.UserID,
                                         createdDate = date.today(),
                                         reviewedDate = None,
                                         reviewedBy = None,

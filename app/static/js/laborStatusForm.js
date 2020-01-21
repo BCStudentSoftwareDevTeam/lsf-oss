@@ -368,7 +368,8 @@ function createStuDict(){
                     stuSupervisor: supervisor,
                     stuDepartment: department,
                     stuSupervisorID: supervisorID,
-                    isItOverloadForm: "False"
+                    isItOverloadForm: "False",
+                    stuTotalHours: null
                     };
     return studentDict;
   }
@@ -494,16 +495,19 @@ function createAndFillTable(studentDict) {
   }
 }
 
-function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours from the database and add it to the ones in the table.
+storeTotalHours = {}
+function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
   totalHoursCount = studentDict.stuWeeklyHours;
   for (i = 0; i < globalArrayOfStudents.length; i++){
-    if (globalArrayOfStudents[i].stuName == studentDict.stuName){
+    if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
       totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
     }
   }
+
   for (i = 0; i < databasePositions.length; i++){
-    totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours;
+    totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
   }
+  storeTotalHours["Hours"] = {"totalHours": totalHoursCount}
   if (totalHoursCount > (15)){
     studentDict.isItOverloadForm = "True";
     $('#OverloadModal').modal('show');
@@ -559,6 +563,10 @@ function userInsert(){
     $("#laborStatusForm").on("submit", function(e) {
       e.preventDefault();
     });
+    for (var i = 0; i <globalArrayOfStudents.length; i++){
+      globalArrayOfStudents[i].stuTotalHours = storeTotalHours['Hours']['totalHours']
+    }
+    console.log(globalArrayOfStudents);
     $.ajax({
            method: "POST",
            url: "/laborstatusform/userInsert",
