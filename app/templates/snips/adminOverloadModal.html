@@ -1,0 +1,79 @@
+<div class="modal fade" id={{modalTarget}} tabindex="-1" role="dialog" aria-labelledby="modalTitle" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="location.reload()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="modal-title h2" id="studentName" ></div>
+      </div>
+      <div class="modal-body" style="height: 420px; max-height: 100%;">
+        <div class="col-sm-5" align="left">
+          <div class="form-group">
+            <label> Position (WLS): </label>
+            <div>
+            <input type="text" class="form-control" id="positionWls" value="" readonly></input>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Hours per Week</label>
+              <div>
+                <input type="text" class="form-control" id="hours" value="" readonly></input>
+              </div>
+          </div>
+          <div class="form-group">
+            <label>Contract Date</label>
+              <div>
+                <input type="text" class="form-control" id="contractDate" value="" readonly></input>
+              </div>
+          </div>
+          <div class="form-group">
+            <label>Supervisor</label>
+              <div>
+                <input type="text" class="form-control" id="Supervisor" value="" readonly></input>
+              </div>
+          </div>
+          <div class="form-group">
+            <label>Department</label>
+              <div>
+                <input type="text" class="form-control" id="Department" value="" disabled></input>
+              </div>
+          </div>
+        </div>
+        <div class="col-sm-6" align="left">
+            <div class="form-group">
+              <label for="Reason"> Student's Reason for Overload:</label>
+              <div>
+                <textarea id="overloadText" name="notes" rows="6" cols="20" id="reason" disabled> </textarea>
+              </div>
+            </div>
+            <div class="form-group">
+                <label for="Notes">Notes</label>
+                <div>
+                  <textarea id="overloadLaborNotes" name="notes" rows="6" cols="20" id="notes"></textarea>
+                </div>
+             </div>
+             <input type='checkbox' id='findIid'  class="check[]"  autocomplete="off" > Send to Financial Aid for Approval </input
+             <input type='checkbox' id='saas'  class="check[]"  autocomplete="off" > Send to SAAS for Approval </input>
+
+             <div class="col-sm-3" align="vertical">
+                 <button type="button" class="btn btn-newcolor floatright" id="send_button" value="Send" title="Send for Approval" data-dismiss="modal">Send</button>
+               </div>
+             <br><br>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="col-sm-2" align="left">
+          <button type="button" class="btn btn-secondary floatleft" id="close"
+          data-dismiss="modal"  onclick="location.reload()">Close</button>
+        </div>
+
+        <div class="col-sm-7" align="right" >
+          <button type="button" class="btn btn-success" id="approving">Approve</button>
+          <button type="button" class="btn btn-danger"  id="denying">Deny</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

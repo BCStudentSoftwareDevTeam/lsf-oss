@@ -23,7 +23,7 @@ class EmailTemplate(peewee.Model):
     emailTemplateID = PrimaryKeyField(primary_key=True)
     purpose = CharField(max_length=255)
     subject = CharField(max_length=255)
-    body = CharField(max_length=255)
+    body = TextField()
     audience = CharField(max_length=255)
     class Meta:
         table_name = "emailtemplate"
@@ -166,5 +166,18 @@ class FormHistory(peewee.Model):
     rejectReason = CharField(max_length=255, null=True)
     class Meta:
         table_name = "formhistory"
+
+
+@snapshot.append
+class VisitTracker(peewee.Model):
+    officeVisitID = PrimaryKeyField(primary_key=True)
+    ID = CharField(max_length=255, null=True)
+    FIRST_NAME = CharField(max_length=255, null=True)
+    LAST_NAME = CharField(max_length=255, null=True)
+    reason = CharField(max_length=255, null=True)
+    isStudent = BooleanField(null=True)
+    comments = CharField(max_length=255, null=True)
+    class Meta:
+        table_name = "visittracker"
 
 
