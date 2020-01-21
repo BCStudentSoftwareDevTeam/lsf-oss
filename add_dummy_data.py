@@ -77,6 +77,21 @@ studentsTracy = [
                 "STU_CPO":"300",
                 "LAST_POSN":"TA",
                 "LAST_SUP_PIDM":"7"
+                },
+                {
+                "PIDM":"4",
+                "ID":"B00785329",
+                "FIRST_NAME":"Kat",
+                "LAST_NAME":"Adams",
+                "CLASS_LEVEL":"Senior",
+                "ACADEMIC_FOCUS":"Computer Science",
+                "MAJOR":"Computer Science",
+                "PROBATION":"0",
+                "ADVISOR":"Scott Heggen",
+                "STU_EMAIL":"adamskg@berea.edu",
+                "STU_CPO":"420",
+                "LAST_POSN":"TA",
+                "LAST_SUP_PIDM":"7"
                 }
 ]
 STUDATA.insert_many(studentsTracy).on_conflict_replace().execute()
@@ -175,6 +190,14 @@ positions = [
             "WLS": "1",
             "ORG" : "2114",
             "ACCOUNT":"123456",
+            "DEPT_NAME":"Computer Science"
+            },
+            {
+            "POSN_CODE": "S61408",
+            "POSN_TITLE": "Teaching Assistant",
+            "WLS": "5",
+            "ORG" : "2134",
+            "ACCOUNT":"123786",
             "DEPT_NAME":"Computer Science"
             },
             {
