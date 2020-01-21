@@ -160,37 +160,42 @@
       </div>
 
       <div class="modal-footer" id="modalFooter">
-
-        {% if buttonState == 0 %}
-        <div class = "col-sm-12">
-        <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success">Rehire</button></a>
-        </div>
-        {% elif buttonState == 1 %}
         {% for form1 in statusForm %}
+        {% if buttonState == 0 %}
+        <!-- {% for form1 in statusForm %} -->
+        <div class = "col-sm-12">
+        <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success" onclick="redirection({{form1.laborStatusFormID}})">Rehire</button></a>
+        </div>
+        <!-- {% endfor %} -->
+        {% elif buttonState == 1 %}
+        <!-- {% for form1 in statusForm %} -->
           <div class = "col-sm-12">
           <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form1.laborStatusFormID}})">Withdraw</button>
           </div>
-        {% endfor %}
+        <!-- {% endfor %} -->
         {% elif buttonState == 2 %}
-        {% for form1 in statusForm %}
+        <!-- {% for form1 in statusForm %} -->
         <div class = "col-sm-6">
         <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form1.laborStatusFormID}})">Withdraw</button>
         </div>
-        {% endfor %}
         <div class = "col-sm-6">
-        <a id="modify" href="#"><button type="button" class="btn btn-info">Modify</button></a>
+        <a id="modify" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Modify</button></a>
         </div>
+        <!-- {% endfor %} -->
         {% elif buttonState == 3 %}
+        <!-- {% for form1 in statusForm %} -->
         <div class = "col-sm-4" style="text-align: right">
-        <a id="release" href="#"><button type="button" class="btn btn-danger">Release</button></a>
+        <a id="release" href="#"><button type="button" class="btn btn-danger" onclick="redirection({{form1.laborStatusFormID}})">Release</button></a>
         </div>
         <div class = "col-sm-4">
-        <a id="modify" href="#"><button type="button" class="btn btn-info">Modify</button></a>
+        <a id="modify" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Modify</button></a>
         </div>
         <div class = "col-sm-4" style="text-align:left">
-        <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success">Rehire</button></a>
+        <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success" onclick="redirection({{form1.laborStatusFormID}})">Rehire</button></a>
         </div>
+        <!-- {% endfor %} -->
         {% endif %}
+        {% endfor %}
       </div>
 
 

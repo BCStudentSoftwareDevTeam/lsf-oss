@@ -164,7 +164,7 @@ class emailHandler():
         self.link = link
         newEmailTracker = EmailTracker.create(
                         formID = self.laborStatusForm,
-                        date = today.strftime("%Y-%m-%d"),
+                        date = datetime.today().strftime('%Y-%m-%d'),
                         recipient = dept
                         )
         if dept == "SASS":
