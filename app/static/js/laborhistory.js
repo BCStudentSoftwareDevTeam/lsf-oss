@@ -1,3 +1,9 @@
+$('#positionTable tbody tr  td').on('click',function(){
+     $("#modal").modal("show");
+     $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id)
+     setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
+});
+
 function fillPDF(laborStatusKey){
   /* This function gets a response from controller function: ConvertToPDF() in laborHistory.py. The response is an HTML Template
      that is converted to pdf using jsPDF*/
@@ -37,12 +43,10 @@ function openModal(laborStatusKey) {
     This function gets a response from the controller function: populateModal() in laborHistory.py.  The response is the data for the modal that pops up
     when the position is clicked.
   */
-
   $.ajax({
     type: "GET",
     url: '/laborHistory/modal/' + laborStatusKey,
     success: function(response) {
-      console.log(response);
       $("#holdModal").empty().append(response);
       $("#modal").modal("show");
       $("#modify").attr("href", "/modifyLSF/" + laborStatusKey); // will go to the modifyLSF controller
