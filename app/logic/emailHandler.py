@@ -195,14 +195,14 @@ class emailHandler():
 
         if secondaryEmailPurpose == False:
             primaryEmail = EmailTemplate.get(EmailTemplate.purpose == primaryEmailPurpose)
-            self.sendEmail(primaryEmail, "supervisor")
+            if primaryEmail.audience == "Labor Office":
+                self.sendEmail(primaryEmail, "Labor Office")
+            else:
+                self.sendEmail(primaryEmail, "supervisor")
         else:
             if self.laborStatusForm.jobType == "Secondary":
                 secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
                 self.sendEmail(secondaryEmail, "secondary")
             else:
                 primaryEmail = EmailTemplate.get(EmailTemplate.purpose == primaryEmailPurpose)
-                if primaryEmail.audience == "Labor Office":
-                    self.sendEmail(primaryEmail, "Labor Office")
-                else:
-                    self.sendEmail(primaryEmail, "supervisor")
+                self.sendEmail(primaryEmail, "supervisor")

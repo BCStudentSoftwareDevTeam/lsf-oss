@@ -2225,7 +2225,7 @@ emailtemps= [
                         <p>Dear <strong>Labor Administrator</strong>,</p>
                         <p>&nbsp;</p>
                         <p>There has been an overload form request submitted by <strong>@@Student@@</strong> that needs your attention</p>
-                        <p>Please folloe this link to check all pending labor overload forms: <a href="@@link@@">@@link@@</a></p>
+                        <p>Please follow this link to check all pending labor overload forms: <a href="@@link@@">@@link@@</a></p>
                             ''',
                 "audience":"Labor Office"
                 },
