@@ -8,6 +8,8 @@ $(document).ready(function() {
 
   $("#currentDepartmentStudents").hide()
   $("#allDepartmentStudents").hide()
+  $("#userDepartments").hide()
+  $("#placeholder").show()
 
   $(".currentStu").show();
   $(".allDeptStu").hide();
@@ -18,14 +20,17 @@ $(document).ready(function() {
   $(".currentDepartmentModal").attr("disabled", true);
   $(".currentStudentModal").removeAttr("disabled");
   $('#portalTitle').text("Current Students");
-  $("#myCurrentStudents").removeClass("btn-primary");
-  $("#myCurrentStudents").addClass("btn-light");
+  $("#myCurrentStudents").removeClass("btn-light");
+  $("#myCurrentStudents").addClass("btn-primary");
 
 });
 
 var table = $("#studentList").DataTable({
   "drawCallback": function( settings ) {
     $("#studentList thead").remove(); } , // Used to hide the data table header
+  "columnDefs":[
+    {"visable": false, "target": [1]}
+  ],
    "order": [[0, "desc"]], //display order on column
    "pagingType": "simple_numbers",
    "ordering": false,
@@ -49,8 +54,6 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".currentStudentModal").removeAttr("disabled");
           $('#portalTitle').text("Current Students");
-          $("#myCurrentStudents").removeClass("btn-primary");
-          $("#myCurrentStudents").addClass("btn-light");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -74,8 +77,6 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".pastStudentModal").removeAttr("disabled");
           $('#portalTitle').text("Past Students");
-          $("#myPastStudents").removeClass("btn-primary");
-          $("#myPastStudents").addClass("btn-light");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -99,8 +100,6 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".currentStudentModal").removeAttr("disabled");
           $('#portalTitle').text("All Students");
-          $("#allMyStudents").removeClass("btn-primary");
-          $("#allMyStudents").addClass("btn-light");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -124,8 +123,6 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").removeAttr("disabled");
           $(".pastStudentModal").attr("disabled", true);
           $('#portalTitle').text("Current Department Students");
-          $("#currentDepartmentStudents").removeClass("btn-primary");
-          $("#currentDepartmentStudents").addClass("btn-light");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -149,8 +146,6 @@ var table = $("#studentList").DataTable({
           $(".currentDepartmentModal").attr("disabled", true);
           $(".pastStudentModal").attr("disabled", true);
           $('#portalTitle').text("All Department Students");
-          $("#allDepartmentStudents").removeClass("btn-primary");
-          $("#allDepartmentStudents").addClass("btn-light");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
@@ -164,7 +159,7 @@ var table = $("#studentList").DataTable({
     // Function used to remove the default class given to datatable buttons, and
     // give buttons bootstrap classes instead
     var btns = $('.dt-button');
-    btns.addClass('btn btn-primary');
+    btns.addClass('btn btn-light');
     btns.removeClass('dt-button');
 
     }
@@ -173,30 +168,15 @@ var table = $("#studentList").DataTable({
 
 function changeButtonColor(ID) {
   var buttonID = ID
-  if ($("#myPastStudents").hasClass("btn btn-light")){
-    $("#myPastStudents").removeClass("btn btn-light");
-    $("#myPastStudents").addClass("btn btn-primary");
+  var buttonIDList = ["#myPastStudents", "#myCurrentStudents", "#allMyStudents",
+    "#currentDepartmentStudents", "#allDepartmentStudents"]
+  for (i = 0; i < buttonIDList.length; i++){
+    $(buttonIDList[i]).removeClass("btn btn-primary");
+    $(buttonIDList[i]).addClass("btn btn-light");
   }
-  if ($("#myCurrentStudents").hasClass("btn btn-light")){
-    $("#myCurrentStudents").removeClass("btn btn-light");
-    $("#myCurrentStudents").addClass("btn btn-primary");
-  }
-  if ($("#allMyStudents").hasClass("btn btn-light")){
-    $("#allMyStudents").removeClass("btn btn-light");
-    $("#allMyStudents").addClass("btn btn-primary");
-  }
-  if ($("#currentDepartmentStudents").hasClass("btn btn-light")){
-    $("#currentDepartmentStudents").removeClass("btn btn-light");
-    $("#currentDepartmentStudents").addClass("btn btn-primary");
-  }
-  if ($("#allDepartmentStudents").hasClass("btn btn-light")){
-    $("#allDepartmentStudents").removeClass("btn btn-light");
-    $("#allDepartmentStudents").addClass("btn btn-primary");
-  }
-  if ($(buttonID).hasClass("btn btn-light")){
-    $(buttonID).addClass('btn btn-primary');
-    $(buttonID).removeClass('btn btn-light');
-  }
+
+  $(buttonID).removeClass('btn btn-light');
+  $(buttonID).addClass('btn btn-primary');
 }
 
 // show the sub-sidebar only on this page
@@ -206,14 +186,18 @@ document.getElementById("myStudents").addEventListener("click",function(){
   // When the 'My Students' tab in the sidebar is clicked, this Function
   // hides and shows the correct buttons for that page, filter the datatable,
   // and shows the correct checkboxes that should show in the modal
+  changeButtonColor("#myCurrentStudents")
+  $("#userDepartments").hide()
+  $("#placeholder").show()
   $("#currentDepartmentStudents").hide()
   $("#allDepartmentStudents").hide()
   $("#myCurrentStudents").show()
   $("#myPastStudents").show()
   $("#allMyStudents").show()
   $('#portalTitle').text("Current Students");
-  $("#myCurrentStudents").removeClass("btn-primary");
-  $("#myCurrentStudents").addClass("btn-light");
+  $("#myCurrentStudents").removeClass("btn-light");
+  $("#myCurrentStudents").addClass("btn-primary");
+
 
   table
     .columns( 1 )
@@ -235,6 +219,9 @@ document.getElementById("department").addEventListener("click",function(){
   // When the 'My Department' tab in the sidebar is clicked, this Function
   // hides and shows the correct buttons for that page, filter the datatable,
   // and shows the correct checkboxes that should show in the modal
+  changeButtonColor("#currentDepartmentStudents")
+  $("#userDepartments").show()
+  $("#placeholder").hide()
   $(".currentStu").hide();
   $(".allDeptStu").hide();
   $(".currentDeptStu").show();
@@ -244,8 +231,8 @@ document.getElementById("department").addEventListener("click",function(){
   $(".currentDepartmentModal").removeAttr("disabled");
   $(".pastStudentModal").attr("disabled", true);
   $('#portalTitle').text("Current Department Students");
-  $("#currentDepartmentStudents").removeClass("btn-primary");
-  $("#currentDepartmentStudents").addClass("btn-light");
+  $("#currentDepartmentStudents").removeClass("btn-light");
+  $("#currentDepartmentStudents").addClass("btn-primary");
 
   table
     .columns( 1 )
@@ -283,4 +270,109 @@ $('.openBtn').on('click',function(){
 
 function downloadHistory(){
   $('input[type="checkbox"]:checked').prop('checked',false);
+}
+
+function populateTable(){
+  // This function will take input from the department select picker, and based
+  // off of what department is choosen, the function will populate both the data table
+  // and the modal with the correct data from that department
+
+  // This grabs the department selected from the select picker
+  var departmentDropDown = document.getElementById("departmentDropDown");
+  var departmentSelected = departmentDropDown.options[departmentDropDown.selectedIndex].value;
+
+  // AJAX call sends our controller the department choosen, and the controller
+  // should send back the data we need as JSON
+  $.ajax({
+    method: "GET",
+    url: "/main/department/" + departmentSelected,
+    datatype: "json",
+    success: function(response) {
+
+      // This section checks to see which button is currently pressed, and filters
+      // the data table based off that button so that the data is filtered correctly
+      // when we append the new data into the data table.
+      // Before we append the new department data into the data table, this section will
+      // first delete all of the current department data that we have in the data table.
+      if ($("#currentDepartmentStudents").hasClass('btn-primary')){
+        table
+        .columns( 1 )
+        .search("All Department Students")
+        .draw();
+        table
+        .rows({ filter : 'applied'}).remove().draw();
+
+        table
+        .columns( 1 )
+        .search("Current Department Students")
+        .draw();
+        table
+        .rows({ filter : 'applied'}).remove().draw();
+      }
+      else{
+        table
+        .columns( 1 )
+        .search("Current Department Students")
+        .draw();
+        table
+        .rows({ filter : 'applied'}).remove().draw();
+
+        table
+        .columns( 1 )
+        .search("All Department Students")
+        .draw();
+        table
+        .rows({ filter : 'applied'}).remove().draw();
+      }
+
+      // This section will clear any data currently in the Div's because we will
+      // be repopulating them with new department data
+      $("#currentDepartmentStudentsDiv").empty()
+      $("#allDepartmentStudentsDiv").empty()
+
+      // Parse the JSON we get back from the controller
+      response = JSON.parse(response)
+      // This section will iterate through the JSON data, and access the values
+      // from the key-value pairs that we will need to populate both the modal and the
+      // data table
+      for (var key in response){
+        var bNumber = response[key]["BNumber"]
+        var student = response[key]["Student"]
+        var term = response[key]["Term"]
+        var position = response[key]["Position"]
+        var department = response[key]["Department"]
+        var status = response[key]["Status"]
+        var divClass = response[key]["checkboxModalClass"]
+        var formID = response[key]["formID"]
+        var activeStatus = response[key]["activeStatus"]
+
+        // The first "If" statment will populate both the data table and modal if the student's activeStatus == 'True', meaning that the
+        // student is currently still a student at Berea
+        if (activeStatus == "True") {
+          table.row.add(["<a href='/laborHistory/" + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>" +
+          "<br />" + "<span class='pushLeft h6'>" + term + " - " + position + " - " + department + "</span>",
+          "<span style='display:none'>" + status + "</span>"])
+          .draw()
+
+          if (divClass == "currentDepartmentModal"){
+            $("#currentDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +'</label><br/>')
+          }
+          else{
+            $("#allDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +'</label><br/>')
+          }
+        }
+        // The "Else" statment will populate both the data table and modal if the student's activeStatus == 'False', meaning that the
+        // student is no longer a student at Berea
+        else{
+          table.row.add(["<a href='/laborHistory/" + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>" +
+          "<br />" + "<span class='pushLeft h6'>No longer a student.</span>",
+          "<span style='display:none'>" + status + "</span>"])
+          .draw()
+
+          $("#allDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +' <strong>(No longer a student.)</strong></label><br/>')
+        }
+
+      }
+    }
+  })
 }
