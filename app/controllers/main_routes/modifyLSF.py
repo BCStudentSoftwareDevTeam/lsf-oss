@@ -13,6 +13,7 @@ from flask import json, jsonify
 from flask import request
 from flask import flash
 import base64
+from app.logic.emailHandler import*
 
 
 @main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
@@ -128,9 +129,6 @@ def sumbitModifiedForm(laborStatusKey):
                 LSF.save()
             if k == "weeklyHours":
                 LSF.weeklyHours = rsp[k]['newValue']
-                LSF.save()
-            if k == "jobType":
-                LSF.jobType = rsp[k]['newValue']
                 LSF.save()
         flash("Your labor status form has been modified.", "success")
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
