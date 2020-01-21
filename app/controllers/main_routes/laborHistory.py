@@ -139,12 +139,12 @@ def populateModal(statusKey):
 @main_bp.route('/laborHistory/modal/printPdf/<statusKey>', methods=['GET'])
 def ConvertToPDF(statusKey):
     """
-    This function returns 
+    This function returns
     """
     try:
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
-        pdf = make_response(render_template('snips/pdfTemplate.html',
+        pdf = make_response(render_template('main/pdfTemplate.html',
                         forms = forms,
                         statusForm = statusForm
                         ))
