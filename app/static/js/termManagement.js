@@ -28,14 +28,17 @@ function getDate(obj, termCode) {
       data: data,
       contentType: 'application/json',
       success: function(response){
+
         if(response)
         stateBtnValue = $("#term_btn_" + termCode).val();
         start = $("#start_" + termCode).val();
         end = $("#end_" +termCode).val();
+
         if (start != "" && end != "") {
           $('#term_btn_' + termCode).prop('disabled', false)
         }
       }
+
     });
 }
 

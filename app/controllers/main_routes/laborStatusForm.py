@@ -64,7 +64,25 @@ def userInsert():
     rspFunctional = json.loads(rsp)
     all_forms = []
     for i in range(len(rspFunctional)):
-        d, created = Student.get_or_create(ID = rspFunctional[i]['stuBNumber'])
+        tracyStudent = STUDATA.get(ID = rspFunctional[i]['stuBNumber']) #Gets student info from Tracy
+        #Tries to get a student with the followin information from the database
+        #if the student doesn't exist, it tries to create a student with that same information
+        try:
+            d, created = Student.get_or_create(ID = tracyStudent.ID,
+                                                FIRST_NAME = tracyStudent.FIRST_NAME,
+                                                LAST_NAME = tracyStudent.LAST_NAME,
+                                                CLASS_LEVEL = tracyStudent.CLASS_LEVEL,
+                                                ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS,
+                                                MAJOR = tracyStudent.MAJOR,
+                                                PROBATION = tracyStudent.PROBATION,
+                                                ADVISOR = tracyStudent.ADVISOR,
+                                                STU_EMAIL = tracyStudent.STU_EMAIL,
+                                                STU_CPO = tracyStudent.STU_CPO,
+                                                LAST_POSN = tracyStudent.LAST_POSN,
+                                                LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
+        except Exception as e:
+            print("ERROR: ", e)
+            d, created = Student.get(ID = tracyStudent.ID)
         student = d.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.UserID
@@ -90,7 +108,10 @@ def userInsert():
                                          endDate = endDate,
                                          supervisorNotes = rspFunctional[i]["stuNotes"]
                                          )
-            historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
+            if rspFunctional[i].get("isItOverloadForm") == "True":
+                historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
+            else:
+                historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
             status = Status.get(Status.statusName == "Pending")
             d, created = User.get_or_create(username = cfg['user']['debug'])
             creatorID = d.UserID
@@ -121,7 +142,7 @@ def userInsert():
                                                   createdBy   = creatorID,
                                                   createdDate = date.today(),
                                                   status      = status.statusName)
-                email = emailHandler(formOverload.formHistoryID) 
+                email = emailHandler(formOverload.formHistoryID)
                 email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
             all_forms.append(True)
         except Exception as e:

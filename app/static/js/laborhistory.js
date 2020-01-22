@@ -47,6 +47,7 @@ function fillPDF(laborStatusKey){
     }
   });
 
+
 function withdrawform(formID){
   /*
   This funciton gets a response from the controller function: updatestatus_post() in laborHistory.py.  It reloads the page when the forms from the
