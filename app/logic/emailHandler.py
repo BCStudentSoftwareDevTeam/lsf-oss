@@ -161,6 +161,9 @@ class emailHandler():
         will then be used to replace the keyword "@@link@@" in the email template.
         Once this is finished, the email can then be sent.
         """
+        # In order to keep track of when emails to 'SAAS' and 'Financial Aid'
+        # are sent, the EmailTracker will create a new entry that points back to
+        # the LSF form the email is being created for. 
         self.link = link
         newEmailTracker = EmailTracker.create(
                         formID = self.laborStatusForm,
