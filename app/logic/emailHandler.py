@@ -133,7 +133,7 @@ class emailHandler():
                 recipients=[self.supervisorEmail, self.primaryEmail])
         elif sendTo == "Labor Office":
             message = Message(template.subject,
-                recipients=["ela.jamali09@gmail.com"])
+                recipients=[""]) #TODO: Email for the Labor Office 
         else:
             message = Message(template.subject,
                 recipients=[self.supervisorEmail])
