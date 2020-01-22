@@ -154,12 +154,18 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
      // NOTE!!! This code disables the secondary option in the jobtype selectpicker
      // $('#jobType').find('option:contains("Secondary")').attr('disabled', 'disabled');
      // NOTE!!! This code hides the secondary option from selectpicker
+     $('#jobType').val("");
      $('#jobType').find('option:contains("Secondary")').hide();
      $("#jobType").selectpicker("refresh");
+     $("#selectedHoursPerWeek").val("");
+     $("#selectedHoursPerWeek").selectpicker("refresh");
  }
  else{
+      $('#jobType').val("");
       $('#jobType').find('option:contains("Secondary")').show();
       $("#jobType").selectpicker("refresh");
+      $("#selectedHoursPerWeek").val("");
+      $("#selectedHoursPerWeek").selectpicker("refresh");
     }
 });
 
