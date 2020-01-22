@@ -151,15 +151,28 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
                               "<a href=\"http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS\""+
                               "target=\"_blank\">The Labor Program Website.</a>");
      $("#warningModal").modal("show");
+     // NOTE!!! This code disables the secondary option in the jobtype selectpicker
+     // $('#jobType').find('option:contains("Secondary")').attr('disabled', 'disabled');
+     // NOTE!!! This code hides the secondary option from selectpicker
+     $('#jobType').find('option:contains("Secondary")').hide();
+     $("#jobType").selectpicker("refresh");
  }
+ else{
+      $('#jobType').find('option:contains("Secondary")').show();
+      $("#jobType").selectpicker("refresh");
+    }
 });
 
  function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker
+   var wls = $("#position").find("option:selected").attr("data-wls");
   var selectedHoursPerWeek = $("#selectedHoursPerWeek");
   var jobType = $("#jobType").val();
   if (selectedHoursPerWeek){
     $("#selectedHoursPerWeek").empty();
     var list = ["10", "15", "20"];
+    if (wls>=5){
+      list = ["15", "20"]
+    }
     if (jobType == "Secondary"){
        list = ["5", "10"];
     }
