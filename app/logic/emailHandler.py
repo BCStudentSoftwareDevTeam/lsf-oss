@@ -7,10 +7,11 @@ from app.models.laborStatusForm import*
 from app.models.overloadForm import*
 from app.models.formHistory import*
 from datetime import datetime
-# import app.config
+from app.models.emailTracker import *
 import string
 from app import app
 import os
+from datetime import datetime, date
 
 class emailHandler():
     def __init__(self, formHistoryKey):
@@ -133,7 +134,7 @@ class emailHandler():
                 recipients=[self.supervisorEmail, self.primaryEmail])
         elif sendTo == "Labor Office":
             message = Message(template.subject,
-                recipients=[""]) #TODO: Email for the Labor Office 
+                recipients=[""]) #TODO: Email for the Labor Office
         else:
             message = Message(template.subject,
                 recipients=[self.supervisorEmail])
@@ -172,9 +173,17 @@ class emailHandler():
         will then be used to replace the keyword "@@link@@" in the email template.
         Once this is finished, the email can then be sent.
         """
+        # In order to keep track of when emails to 'SAAS' and 'Financial Aid'
+        # are sent, the EmailTracker will create a new entry that points back to
+        # the LSF form the email is being created for.
         self.link = link
+        newEmailTracker = EmailTracker.create(
+                        formID = self.laborStatusForm,
+                        date = datetime.today().strftime('%Y-%m-%d'),
+                        recipient = dept
+                        )
         if dept == "SAAS":
-            email = "" #In the future, this(SAAS email address) should be puled from the yaml file instead of being a string
+            email = "" #In the future, this(SASS email address) should be puled from the yaml file instead of being a string
         elif dept == "Financial Aid":
             email = "" #This(financial Aid email) address should also be pull from the yaml file
         message = Message("Overload Verification",

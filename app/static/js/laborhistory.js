@@ -1,12 +1,18 @@
-
-var loading = false; // Global variable used to keep more than one modal from popping up
-
-
 $('#positionTable tbody tr  td').on('click',function(){
      $("#modal").modal("show");
      $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id)
      setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
 });
+
+function redirection(laborStatusKey){
+  /*
+  When any of the three buttons is clicked, this function will append the 'href' attribute with the
+  correct redirection link and LSF primary key to each button.
+  */
+  $("#modify").attr("href", "/modifyLSF/" + laborStatusKey); // will go to the modifyLSF controller
+  $("#rehire").attr("href", "/laborstatusform/" + laborStatusKey); // will go to the lsf controller
+  $("#release").attr("href", "/laborReleaseForm/" + laborStatusKey); // will go to labor release form controller
+}
 
 function fillPDF(laborStatusKey){
   /* This function gets a response from controller function: ConvertToPDF() in laborHistory.py. The response is an HTML Template
@@ -40,29 +46,6 @@ function fillPDF(laborStatusKey){
       doc.save();
     }
   });
-}
-
-function openModal(laborStatusKey) {
-  if (loading) return;
-  loading = true;
-  /*
-    This function gets a response from the controller function: populateModal() in laborHistory.py.  The response is the data for the modal that pops up
-    when the position is clicked.
-  */
-  $.ajax({
-    type: "GET",
-    url: '/laborHistory/modal/' + laborStatusKey,
-    success: function(response) {
-      loading = false;
-      console.log(response);
-      $("#holdModal").empty().append(response);
-      $("#modal").modal("show");
-      $("#modify").attr("href", "/modifyLSF/" + laborStatusKey); // will go to the modifyLSF controller
-      $("#rehire").attr("href", "/laborstatusform/" + laborStatusKey); // will go to the lsf controller
-      $("#release").attr("href", "/laborReleaseForm/" + laborStatusKey); // will go to labor release form controller
-    }
-  });
-}
 
 
 function withdrawform(formID){
