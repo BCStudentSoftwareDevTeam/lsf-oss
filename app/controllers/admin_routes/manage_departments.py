@@ -26,12 +26,12 @@ def manage_departments():
         render_template("errors/403.html")
 
     users = User.select()
-    departmentTracy = STUPOSN.select(STUPOSN.DEPT_NAME).distinct()
+    departmentTracy = STUPOSN.select(STUPOSN.DEPT_NAME, STUPOSN.ORG, STUPOSN.ACCOUNT).distinct()
     # tracyDepartmentList = []
     for dept in departmentTracy:
-        d, created = Department.get_or_create(DEPT_NAME = dept.DEPT_NAME)
-        d.ACCOUNT = dept.ACCOUNT
-        d.ORG = dept.ORG
+        d, created = Department.get_or_create(DEPT_NAME = dept.DEPT_NAME, ACCOUNT=dept.ACCOUNT, ORG = dept.ORG)
+        #d.ACCOUNT = dept.ACCOUNT
+        #d.ORG = dept.ORG
         d.save()
     department = Department.select()
     return render_template( 'admin/manageDepartments.html',

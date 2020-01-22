@@ -18,9 +18,8 @@
   <div class="col-md-1"></div>
   <div class="col-md-9">
     <h1> Manage Departments </h1>
-    <p class="text-center"><button class="btn btn-success btn-xs direction" id="exampleButton1" disabled></button> In compliance means the position descriptions are up to date.</p>
-    <p class="text-center"><button class="btn btn-danger btn-xs direction" id="exampleButton2" disabled></button> Not in compliance means the position descriptions are not up to date</p>
-
+    <p class="text-center"><button class="btn btn-success btn-xs" id="exampleButton1" disabled>In Compliance</button> Position descriptions are up to date.</p>
+    <p class="text-center"><button class="btn btn-danger btn-xs" id="exampleButton2" disabled>Not in Compliance</button> Position descriptions are not up to date</p>
     <br />
   </div>
   <div class="col-md-1"></div>
@@ -39,7 +38,7 @@
         <tbody>
           {% for department in department %}
           <tr>
-            <td scope="row">{{department.DEPT_NAME}}</td>
+            <td scope="row">{{department.DEPT_NAME}} <small>({{department.ORG}}, {{department.ACCOUNT}})</small></td>
             <td id="dept_{{department.departmentID}}" scope="row" data-order="{% if department.departmentCompliance == True %}1{% else %}-1{% endif %}">
               <button id="dept_btn_{{department.departmentID}}"
                       name="deptName"

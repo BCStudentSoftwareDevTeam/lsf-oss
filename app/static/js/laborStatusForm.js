@@ -368,7 +368,8 @@ function createStuDict(){
                     stuSupervisor: supervisor,
                     stuDepartment: department,
                     stuSupervisorID: supervisorID,
-                    stuTotalHours: null,
+                    isItOverloadForm: "False",
+                    stuTotalHours: null
                     };
     return studentDict;
   }
@@ -508,7 +509,7 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
   }
   storeTotalHours["Hours"] = {"totalHours": totalHoursCount}
   if (totalHoursCount > (15)){
-    // TODO: Show modal saying they have too many hours
+    studentDict.isItOverloadForm = "True";
     $('#OverloadModal').modal('show');
     return true;
   }
