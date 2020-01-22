@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{{super()}}
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.css"/>
+  <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="{{url_for('static', filename ='css/allPendingForms.css')}}">
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/allPendingForms.js') }}"></script>
+{% endblock %}
+
+{% block title %}
+{{super()}}
+    Pending Forms
+{% endblock %}
+
+{% block app_content %}
+
+<div class="container" id="wrapper" align="center">
+    <b><h1 id="header"> Pending Forms </h1></b>
+        <br> </br>
+     <div align="center" id="pendingTabs" class="container">
+     <ul  class="nav nav-pills">
+       <li {% if formType == "all" %} class="active" {% endif %}>
+          <a  href="{{url_for('admin.allPendingForms', formType = 'all')}}">All Pending Forms</a>
+       </li>
+        <li {% if formType == "pendingLabor" %} class="active" {% endif %}>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingLabor')}}"> Pending Labor Status Forms</a>
+        </li>
+        <li {% if formType == "pendingModified" %} class="active" {% endif %}>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingModified')}}">Pending Modified Forms</a>
+        </li>
+        <li {% if formType == "pendingOverload" %} class="active" {% endif %}>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms</a>
+        </li>
+        <li {% if formType == "pendingRelease" %} class="active" {% endif %}>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingRelease')}}">Pending Release Forms</a>
+        </li>
+      </ul>
+      </div>
+       <br> </br>
+      <div align="center" class="tab-content clearfix">
+			  <div class="tab-pane active" id="allPendingForms">
+          <div class="col-lg-12" align="center" >
+            <table id="pendingForms" class="table table-striped pendingForms dataTable" >
+              <!-- Made empty header tags because we need to hide the header -->
+              <thead id="headTable" text-align="center" >
+                <tr id="tableHeaders" class="tableHeaders" >
+                  <th> Approve </th>
+                  <th>Term</th>
+                  <th>Department</th>
+                  <th>Supervisor</th>
+                  <th> </th>
+                  <th>Students</th>
+                  <th> Position (WLS)</th>
+                  <th>Hours</th>
+                  <th>Created</th>
+                  <th>Contract Dates</th>
+                  <th> Edit </th>
+                </tr>
+              </thead>
+              <tbody id="tablebody">
+                {% for allForms in formList %}
+                <tr id="tableData" class="tableData" align="center">
+                    <td> {# APPROVE #}
+                      <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" name="check[]"  autocomplete="off" />
+                      {% include "snips/pendingNotesModal.html" %}
+                      <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
+                             class="glyphicon glyphicon-book btn-lg
+                                  {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
+                                  {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
+                                  {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
+                                  {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#NotesModal"> </span>
+                                  <input id="dummyInput" value="{{allForms.formID.laborStatusFormID}}" hidden/>
+
+                    </td>
+                    <td> {# TERM #}
+                      {{allForms.formID.termCode.termName}}
+                    </td>
+                    <td> {# DEPARTMENT #}
+                      {{allForms.formID.department.DEPT_NAME}} ({{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}})
+                    </td>
+                    <td> {# SUPERVISOR #}
+                      {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
+                    </td>
+                    <td>
+                      |
+                    </td>
+                    <td> {# STUDENT #}
+                      {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}  ({{allForms.formID.studentSupervisee.ID}})
+                    </td>
+                    <td> {# POSITON AND WLS #}
+                      {{allForms.formID.POSN_TITLE}} ({{allForms.formID.WLS}})
+                    </td>
+                    <td> {# HOURS #}
+                    {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}
+                  </td>
+                  <td> {# CREATED BY #}
+                    {{allForms.createdBy.username}}  <br/> {{allForms.createdDate.strftime('%m/%d/%y')}}
+                  </td>
+                  <td> {# CREATED DATE #}
+                     {{allForms.formID.startDate.strftime('%m/%d/%y')}} -  {{allForms.formID.endDate.strftime('%m/%d/%y')}}
+                  </td>
+                  <td> {# EDIT #}
+                    <a href="/modifyLSF/{{allForms.formID.laborStatusFormID}}"> <span id="edit_{{allForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
+                    {% with modalTarget = modalTarget %}
+                      {% include "snips/FormsDeny.html" %}
+                    {% endwith %}
+                    <button
+                    id="reject_{{allForms.formHistoryID}}"
+                    value="{{allForms.formHistoryID}}"
+                    type="button"
+                    class ="btn btn-danger"
+                    name = "rejectBtn"
+                    value = "Reject"
+                    data-toggle="modal"
+                    data-target="#{{modalTarget}}"
+                    onclick="insertDenial(this.value);">
+                    Deny
+                    </button>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              </table>
+                <div class="btn-holder">
+                  {% include "snips/pendingApprovalModal.html" %}
+                  <button
+                    id="approveSelected"
+                    name="approveBtn"
+                    type="button"
+                    class="btn btn-newcolor"
+                    onclick="insertApprovals();"
+                    value="Approve Selected"
+                    data-target="#approvalModal"
+                    data-toggle="modal">
+                    Approve Selected
+                  </button>
+                </div>
+                </div>
+          </div>
+   </div>
+  </div>
+
+{% endblock %}

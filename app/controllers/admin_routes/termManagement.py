@@ -12,7 +12,14 @@ import datetime
 
 @admin.route('/admin/termManagement', methods=['GET', 'POST'])
 # @login_required
+
 def term_Management():
+    # FIXME: Add user and admin checks to this route and all others on this page
+    # current_user = require_login()
+    # if not current_user:                    # Not logged in
+    #     return render_template('errors/403.html')
+    # if not current_user.isLaborAdmin:       # Not an admin
+    #     return render_template('errors/403.html')
     terms = Term.select()
     listOfTerms = Term.select()
     for i in range(5):
@@ -105,13 +112,15 @@ def termStatusCheck():
         print(rsp)
         if rsp:
             term = Term.get(rsp['termBtn'])
-            # print("this is the term " + str(term))
             # print(term.termState)
+
             if term.termState == True:
                 term.termState = False
             elif term.termState == False:
                 term.termState = True
+
             # print(term.termState)
+
             term.save()
             # print("worked")
             return jsonify({"Success": True})
