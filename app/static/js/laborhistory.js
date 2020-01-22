@@ -1,4 +1,6 @@
+
 var loading = false; // Global variable used to keep more than one modal from popping up
+
 
 $('#positionTable tbody tr  td').on('click',function(){
      $("#modal").modal("show");
@@ -61,6 +63,7 @@ function openModal(laborStatusKey) {
     }
   });
 }
+
 
 function withdrawform(formID){
   /*

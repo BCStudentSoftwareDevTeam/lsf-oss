@@ -1601,72 +1601,8 @@ fh = [  {
                  "reviewedBy": None,
                  "status": Status.get(Status.statusName == "Approved"),
                  "rejectReason": None
-                },
-                {
-                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 23),
-                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
-                "releaseForm": None,
-                "modifiedForm": None,
-                "overloadForm": None,
-                "createdBy": User.get(User.PIDM == 1),
-                "createdDate": datetime.date(2017, 2, 10),
-                "reviewedDate": datetime.date(2017, 2, 11),
-                "reviewedBy": None,
-                "status": Status.get(Status.statusName == "Pending"),
-                "rejectReason": None
-                },
-                {
-                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 24),
-                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
-                "releaseForm": None,
-                "modifiedForm": None,
-                "overloadForm": None,
-                "createdBy": User.get(User.PIDM == 1),
-                "createdDate": datetime.date(2017, 2, 10),
-                "reviewedDate": datetime.date(2017, 2, 11),
-                "reviewedBy": None,
-                "status": Status.get(Status.statusName == "Approved"),
-                "rejectReason": None
-                },
-                {
-                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 25),
-                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
-                "releaseForm": None,
-                "modifiedForm": None,
-                "overloadForm": None,
-                "createdBy": User.get(User.PIDM == 1),
-                "createdDate": datetime.date(2017, 2, 10),
-                "reviewedDate": datetime.date(2017, 2, 11),
-                "reviewedBy": None,
-                "status": Status.get(Status.statusName == "Approved"),
-                "rejectReason": None
-                },
-                {
-                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 26),
-                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
-                "releaseForm": None,
-                "modifiedForm": None,
-                "overloadForm": None,
-                "createdBy": User.get(User.PIDM == 1),
-                "createdDate": datetime.date(2017, 2, 10),
-                "reviewedDate": datetime.date(2017, 2, 11),
-                "reviewedBy": None,
-                "status": Status.get(Status.statusName == "Approved"),
-                "rejectReason": None
-                },
-                {
-                "formID": LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 27),
-                "historyType": HistoryType.get(HistoryType.historyTypeName == "Labor Status Form"),
-                "releaseForm": None,
-                "modifiedForm": None,
-                "overloadForm": None,
-                "createdBy": User.get(User.PIDM == 1),
-                "createdDate": datetime.date(2017, 2, 10),
-                "reviewedDate": datetime.date(2017, 2, 11),
-                "reviewedBy": None,
-                "status": Status.get(Status.statusName == "Approved"),
-                "rejectReason": None
                 }
+
     ]
 
 FormHistory.insert_many(fh).on_conflict_replace().execute()
@@ -2271,6 +2207,27 @@ emailtemps= [
                 "body":'''
                             ''',
                 "audience":"supervisor"
+                },
+                {
+                "purpose":"Labor Overload Form Submitted Notification For Student",
+                "subject":"Labor Overload Form Submitted Notification",
+                "body":'''
+                    <p>Dear <strong>@@Student@@</strong>,</p>
+                    <p>&nbsp;</p>
+                    <p>This is a confiramtion that you submitted a reason for the overload form requested for you.</p>
+                    ''',
+                "audience":"student"
+                },
+                {
+                "purpose":"Labor Overload Form Submitted Notification For Labor Office",
+                "subject":"Labor Overload Form Submitted Notification",
+                "body":'''
+                        <p>Dear <strong>Labor Administrator</strong>,</p>
+                        <p>&nbsp;</p>
+                        <p>There has been an overload form request submitted by <strong>@@Student@@</strong> that needs your attention</p>
+                        <p>Please follow this link to check all pending labor overload forms: <a href="@@link@@">@@link@@</a></p>
+                            ''',
+                "audience":"Labor Office"
                 },
                 {
                 "purpose":"Labor Overload Form Approved For Student",
