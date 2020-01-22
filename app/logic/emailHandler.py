@@ -102,6 +102,15 @@ class emailHandler():
         self.link = link
         self.checkRecipient("Labor Overload Form Submitted For Student",
                       "Labor Overload Form Submitted For Supervisor")
+    def LaborOverLoadFormSubmittedNotification(self, link):
+        """
+        Emails that will be sent after the student has submitted their
+        reason for the overload form; One email will be just a confirmation
+        email to the student and the other one will be for the labor office.
+        """
+        self.link = link
+        self.checkRecipient("Labor Overload Form Submitted Notification For Student",
+                            "Labor Overload Form Submitted Notification For Labor Office")
 
     def LaborOverLoadFormApproved(self):
         self.checkRecipient("Labor Overload Form Approved For Student",
@@ -122,6 +131,9 @@ class emailHandler():
         elif sendTo == "secondary":
             message = Message(template.subject,
                 recipients=[self.supervisorEmail, self.primaryEmail])
+        elif sendTo == "Labor Office":
+            message = Message(template.subject,
+                recipients=[""]) #TODO: Email for the Labor Office 
         else:
             message = Message(template.subject,
                 recipients=[self.supervisorEmail])
@@ -161,13 +173,13 @@ class emailHandler():
         Once this is finished, the email can then be sent.
         """
         self.link = link
-        if dept == "SASS":
-            email = "" #In the future, this(SASS email address) should be puled from the yaml file instead of being a string
+        if dept == "SAAS":
+            email = "" #In the future, this(SAAS email address) should be puled from the yaml file instead of being a string
         elif dept == "Financial Aid":
             email = "" #This(financial Aid email) address should also be pull from the yaml file
         message = Message("Overload Verification",
             recipients=[email])
-        emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "SASS and Financial Aid Office")
+        emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "SAAS and Financial Aid Office")
         message.html = self.replaceText(emailTemplateID.body)
         self.mail.send(message)
 
@@ -183,7 +195,10 @@ class emailHandler():
 
         if secondaryEmailPurpose == False:
             primaryEmail = EmailTemplate.get(EmailTemplate.purpose == primaryEmailPurpose)
-            self.sendEmail(primaryEmail, "supervisor")
+            if primaryEmail.audience == "Labor Office":
+                self.sendEmail(primaryEmail, "Labor Office")
+            else:
+                self.sendEmail(primaryEmail, "supervisor")
         else:
             if self.laborStatusForm.jobType == "Secondary":
                 secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
