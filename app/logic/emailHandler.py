@@ -163,17 +163,17 @@ class emailHandler():
         """
         # In order to keep track of when emails to 'SAAS' and 'Financial Aid'
         # are sent, the EmailTracker will create a new entry that points back to
-        # the LSF form the email is being created for. 
+        # the LSF form the email is being created for.
         self.link = link
         newEmailTracker = EmailTracker.create(
                         formID = self.laborStatusForm,
                         date = datetime.today().strftime('%Y-%m-%d'),
                         recipient = dept
                         )
-        if dept == "SASS":
-            email = "cruzg@berea.edu" #In the future, this(SASS email address) should be puled from the yaml file instead of being a string
+        if dept == "SAAS":
+            email = "" #In the future, this(SASS email address) should be puled from the yaml file instead of being a string
         elif dept == "Financial Aid":
-            email = "cruzg@berea.edu" #This(financial Aid email) address should also be pull from the yaml file
+            email = "" #This(financial Aid email) address should also be pull from the yaml file
         message = Message("Overload Verification",
             recipients=[email])
         emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "SASS and Financial Aid Office")
