@@ -66,8 +66,6 @@ def laborReleaseForm(laborStatusKey):
                                         status = status.statusName,
                                         rejectReason = None
                                         )
-            email = emailHandler(newFormHistory.formHistoryID)
-            email.overloadVerification("SASS", "https://www.google.com/")
             # Once all the forms are created, the user gets redirected to the
             # home page and gets a flash message telling them the forms were
             # submited
