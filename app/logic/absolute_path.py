@@ -6,8 +6,8 @@ Also creates the directories in path if they are not found.
 @param {string} filename - the name of the file that should be in that directory
 @return {string} filepath -returns the absolute path of the directory'''
 '''TODO: ADD @PARAm for make dirs'''
-def getAbsolutePath(relaitivePath,filename=None,makeDirs=False):
-    filepath = os.path.join(sys.path[0],relaitivePath)
+def getAbsolutePath(relativePath,filename=None,makeDirs=False):
+    filepath = os.path.join(sys.path[0],relativePath)
     if makeDirs == True:
         try:
             os.makedirs(filepath)

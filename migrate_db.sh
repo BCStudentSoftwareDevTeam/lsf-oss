@@ -28,6 +28,6 @@ pem add app.models.status.Status
 pem add app.models.student.Student
 pem add app.models.historyType.HistoryType
 pem add app.models.visitTracker.VisitTracker
-
+pem add app.models.emailTracker.EmailTracker
 pem watch
 pem migrate

@@ -18,8 +18,10 @@
   <div class="col-md-1"></div>
   <div class="col-md-9">
     <h1> Manage Departments </h1>
-    <p class="text-center"><button class="btn btn-success btn-xs" id="exampleButton1" style="height:10px;width:20px" disabled></button> Inompliance means the position descriptions are up to date.</p>
-    <p class="text-center"><button class="btn btn-danger btn-xs" id="exampleButton2" style="height:10px;width:20px" disabled></button> Not Incompliance means the position descriptions are not up to date</p>
+
+    <p class="text-center"><button class="btn btn-success btn-xs" id="exampleButton1" disabled>In Compliance</button> Position descriptions are up to date.</p>
+    <p class="text-center"><button class="btn btn-danger btn-xs" id="exampleButton2" disabled>Not in Compliance</button> Position descriptions are not up to date</p>
+
     <br />
   </div>
   <div class="col-md-1"></div>
@@ -38,12 +40,11 @@
         <tbody>
           {% for department in department %}
           <tr>
-            <td scope="row">{{department.DEPT_NAME}}</td>
+            <td scope="row">{{department.DEPT_NAME}} <small>({{department.ORG}}, {{department.ACCOUNT}})</small></td>
             <td id="dept_{{department.departmentID}}" scope="row" data-order="{% if department.departmentCompliance == True %}1{% else %}-1{% endif %}">
               <button id="dept_btn_{{department.departmentID}}"
                       name="deptName"
-                      class="{% if department.departmentCompliance == True %} btn btn-success {% else %} btn btn-danger {% endif %}"
-                      style="width:150px"
+                      class="{% if department.departmentCompliance == True %} btn btn-success {% else %} btn btn-danger {% endif %} complianceBtn"
                       onclick="status({{department.departmentID}}, '{{department.DEPT_NAME}}')"
                       value="{{department.departmentID}}">{% if department.departmentCompliance == True %}In Compliance{% else %}Not in Compliance{% endif %}</button>
             </td>
