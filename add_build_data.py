@@ -143,7 +143,7 @@ positions = [
             },
             {
             "POSN_CODE": "S61408",
-            "POSN_TITLE": "Teaching Assistant",
+            "POSN_TITLE": "Teaching Associate",
             "WLS": "5",
             "ORG" : "2134",
             "ACCOUNT":"123786",

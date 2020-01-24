@@ -23,7 +23,7 @@ class EmailTemplate(peewee.Model):
     emailTemplateID = PrimaryKeyField(primary_key=True)
     purpose = CharField(max_length=255)
     subject = CharField(max_length=255)
-    body = CharField(max_length=255)
+    body = TextField()
     audience = CharField(max_length=255)
     class Meta:
         table_name = "emailtemplate"
@@ -60,9 +60,12 @@ class Student(peewee.Model):
 
 @snapshot.append
 class User(peewee.Model):
-    username = CharField(max_length=255, primary_key=True)
+    UserID = PrimaryKeyField(primary_key=True)
+    PIDM = IntegerField()
+    username = CharField(max_length=255, null=True)
     FIRST_NAME = CharField(max_length=255, null=True)
     LAST_NAME = CharField(max_length=255, null=True)
+    ID = CharField(max_length=255, null=True)
     EMAIL = CharField(max_length=255, null=True)
     CPO = CharField(max_length=255, null=True)
     ORG = CharField(max_length=255, null=True)
@@ -93,6 +96,16 @@ class LaborStatusForm(peewee.Model):
     laborDepartmentNotes = CharField(max_length=255, null=True)
     class Meta:
         table_name = "laborstatusform"
+
+
+@snapshot.append
+class EmailTracker(peewee.Model):
+    formHistoryID = PrimaryKeyField(primary_key=True)
+    formID = snapshot.ForeignKeyField(index=True, model='laborstatusform', on_delete='cascade')
+    date = DateField()
+    recipient = CharField(max_length=255)
+    class Meta:
+        table_name = "emailtracker"
 
 
 @snapshot.append
@@ -133,7 +146,7 @@ class Status(peewee.Model):
 @snapshot.append
 class OverloadForm(peewee.Model):
     overloadFormID = PrimaryKeyField(primary_key=True)
-    overloadReason = CharField(max_length=255)
+    overloadReason = CharField(max_length=255, null=True)
     financialAidApproved = snapshot.ForeignKeyField(index=True, model='status', null=True, on_delete='cascade')
     financialAidApprover = snapshot.ForeignKeyField(index=True, model='user', null=True, on_delete='cascade')
     financialAidReviewDate = DateField(null=True)
@@ -163,5 +176,18 @@ class FormHistory(peewee.Model):
     rejectReason = CharField(max_length=255, null=True)
     class Meta:
         table_name = "formhistory"
+
+
+@snapshot.append
+class VisitTracker(peewee.Model):
+    officeVisitID = PrimaryKeyField(primary_key=True)
+    ID = CharField(max_length=255, null=True)
+    FIRST_NAME = CharField(max_length=255, null=True)
+    LAST_NAME = CharField(max_length=255, null=True)
+    reason = CharField(max_length=255, null=True)
+    isStudent = BooleanField(null=True)
+    comments = CharField(max_length=255, null=True)
+    class Meta:
+        table_name = "visittracker"
 
 
