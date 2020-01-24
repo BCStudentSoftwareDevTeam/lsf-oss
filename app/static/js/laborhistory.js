@@ -46,6 +46,8 @@ function fillPDF(laborStatusKey){
       doc.save();
     }
   });
+}
+
 
 
 function withdrawform(formID){
