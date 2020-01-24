@@ -3,12 +3,19 @@ from app.models.user import User
 from app.models.user import *
 from app.controllers.admin_routes import admin
 from flask import request
+from app.login_manager import require_login
 from flask import Flask, redirect, url_for
 
 @admin.route('/admin/adminManagement', methods=['GET'])
 # @login_required
 def admin_Management():
    # username = load_user('heggens')
+   current_user = require_login()
+   if not current_user:                    # Not logged in
+       return render_template('errors/403.html')
+   if not current_user.isLaborAdmin:       # Not an admin
+       return render_template('errors/403.html')
+
    users = User.select()
    return render_template( 'admin/adminManagement.html',
                             title=('Admin Management'),

@@ -19,25 +19,30 @@ def manage_departments():
     Updates the Labor Status Forms database with any new departments in the Tracy database on page load.
     Returns the departments to be used in the HTML for the manage departments page.
     """
-    current_user = require_login()
-    if not current_user:
-        render_template("errors/403.html")
-    if not current_user.isLaborAdmin:
-        render_template("errors/403.html")
+    try:
+        current_user = require_login()
 
-    users = User.select()
-    departmentTracy = STUPOSN.select(STUPOSN.DEPT_NAME, STUPOSN.ORG, STUPOSN.ACCOUNT).distinct()
-    # tracyDepartmentList = []
-    for dept in departmentTracy:
-        d, created = Department.get_or_create(DEPT_NAME = dept.DEPT_NAME, ACCOUNT=dept.ACCOUNT, ORG = dept.ORG)
-        #d.ACCOUNT = dept.ACCOUNT
-        #d.ORG = dept.ORG
-        d.save()
-    department = Department.select()
-    return render_template( 'admin/manageDepartments.html',
-    title = ("Manage departments"),
-    username = users,
-    department = department)
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
+        # users = User.select()
+        departmentTracy = STUPOSN.select(STUPOSN.DEPT_NAME, STUPOSN.ORG, STUPOSN.ACCOUNT).distinct()
+        # tracyDepartmentList = []
+        for dept in departmentTracy:
+            d, created = Department.get_or_create(DEPT_NAME = dept.DEPT_NAME, ACCOUNT=dept.ACCOUNT, ORG = dept.ORG)
+            #d.ACCOUNT = dept.ACCOUNT
+            #d.ORG = dept.ORG
+            d.save()
+        department = Department.select()
+        return render_template( 'admin/manageDepartments.html',
+                                title = ("Manage departments"),
+                                department = department
+                                )
+    except Exception as e:
+        print("error", e)
+        return render_template('errors/500.html')
 
 
 @admin.route('/admin/complianceStatus', methods=['POST'])
