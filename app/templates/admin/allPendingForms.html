@@ -14,17 +14,14 @@
   <script type="text/javascript" src="{{url_for('static', filename='js/allPendingForms.js') }}"></script>
 {% endblock %}
 
-{% block title %}
-{{super()}}
-    Pending Forms
-{% endblock %}
 
 {% block app_content %}
+<div align="center">
+  <h1>Pending Forms</h1>
+</div>
 
 <div class="container" id="wrapper" align="center">
-    <b><h1 id="header"> Pending Forms </h1></b>
-        <br> </br>
-     <div align="center" id="pendingTabs" class="container">
+   <div align="center" id="pendingTabs" class="container">
      <ul  class="nav nav-pills">
        <li {% if formType == "all" %} class="active" {% endif %}>
           <a  href="{{url_for('admin.allPendingForms', formType = 'all')}}">All Pending Forms</a>

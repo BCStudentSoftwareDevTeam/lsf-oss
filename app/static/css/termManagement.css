@@ -1,6 +1,5 @@
 #termHeader {
   text-align: center;
-  font-weight: 650;
 }
 
 #tableHeaders {
@@ -49,7 +48,7 @@
   outline-color: none;
   color: black;
   font-size: 18px;
-  font-weight: 550;
+  font-weight: 525;
 }
 
 .active, .btn-link:focus {
