@@ -28,9 +28,10 @@ def modifyLSF(laborStatusKey):
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
+    prefillsupervisorID = form.supervisor.ID
     superviser_id = form.supervisor.UserID
     prefilldepartment = form.department.DEPT_NAME
-    prefillposition = form.POSN_TITLE + " " +"("+ form.WLS + ")"
+    prefillposition = form.POSN_TITLE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
     prefillterm = form.termCode.termName
     if form.weeklyHours != None:
@@ -50,6 +51,7 @@ def modifyLSF(laborStatusKey):
                             superviser_id = superviser_id,
                             prefillstudent = prefillstudent,
                             prefillsupervisor = prefillsupervisor,
+                            prefillsupervisorID = prefillsupervisorID,
                             prefilldepartment = prefilldepartment,
                             prefillposition = prefillposition,
                             prefilljobtype = prefilljobtype,

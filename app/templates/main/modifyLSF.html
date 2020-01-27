@@ -32,7 +32,9 @@
                             id="supervisor"
                             data-live-search="true"
                             >
-                <option title="{{prefillsupervisor}}" value="{{superviser_id}}">{{prefillsupervisor}}</option> <!-- not showing up fam-->
+                {% for sup in supervisors %}
+                    <option title="{{sup.FIRST_NAME}} {{sup.LAST_NAME}}" value="{{sup.ID}}" {% if sup.ID == prefillsupervisorID %} selected {% endif %} == prefillsupervisor%} >{{sup.FIRST_NAME}} {{sup.LAST_NAME}}</option> <!-- not showing up fam-->
+                {% endfor %}
            </select>
             <input hidden class = "oldValue"  id= "{{prefillsupervisor}}"value="{{oldSupervisor.PIDM}}" > </input> <!-- stores value of original-->
          </div>

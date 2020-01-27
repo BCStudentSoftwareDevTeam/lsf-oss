@@ -625,7 +625,7 @@ function userInsert(){
                  $("a").attr("onclick", "").unbind("click");
                  $(".glyphicon-edit").css("color", "grey");
                  $(".glyphicon-remove").css("color", "grey");
-                 msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait...)", "success");
+                 msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait for page reload.)", "success");
                  setTimeout(function() { // executed after 1 second
                     window.location.replace("/laborstatusform"); // reloads the page if every form
                   }, 5000);
@@ -640,7 +640,7 @@ function userInsert(){
        if (display_failed.length > 0){
            $('#error_modal').empty();
            $('#error_modal').append('<p style="padding-left:16px;"><b>ERROR:</b> Contact Systems Support if form(s) continue to fail <span style="color:darkred;" class="glyphicon glyphicon-exclamation-sign"></span> </p>')
-           msgFlash("Below form(s) failed to submit, please try again.", "fail")
+           msgFlash("The form(s) below failed to submit, please try again.", "fail")
             var failed_students = globalArrayOfStudents.filter(function(item, indx){
                 if (display_failed.includes(indx)){
                  return item;
