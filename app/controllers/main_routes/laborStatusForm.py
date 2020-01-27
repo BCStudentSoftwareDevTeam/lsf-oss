@@ -27,6 +27,10 @@ def laborStatusForm(laborStatusKey = None):
     currentUser = require_login()
     if not currentUser:        # Not logged in
         return render_template('errors/403.html')
+    if not currentUser.isLaborAdmin:       # Not an admin
+        isLaborAdmin = False
+    else:
+        isLaborAdmin = True
     # Logged in
     wls = STUPOSN.select(STUPOSN.WLS).distinct() # getting WLS from TRACY
     posnCode = STUPOSN.select(STUPOSN.POSN_CODE).distinct() # getting position code from TRACY
@@ -55,7 +59,8 @@ def laborStatusForm(laborStatusKey = None):
                             students = students,
                             terms = terms,
                             staffs = staffs,
-                            departments = departments)
+                            departments = departments,
+                            isLaborAdmin = isLaborAdmin)
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
