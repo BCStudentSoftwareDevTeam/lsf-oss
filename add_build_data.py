@@ -137,64 +137,64 @@ positions = [
             "POSN_CODE": "S61407",
             "POSN_TITLE": "Student Programmer",
             "WLS": "1",
-            "ORG" : "2114",
-            "ACCOUNT":"123456",
+            "ORG" : "4321",
+            "ACCOUNT":"1234",
             "DEPT_NAME":"Computer Science"
             },
             {
             "POSN_CODE": "S61408",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "5",
-            "ORG" : "2134",
-            "ACCOUNT":"123786",
+            "ORG" : "4321",
+            "ACCOUNT":"1234",
             "DEPT_NAME":"Computer Science"
             },
             {
             "POSN_CODE": "S61419",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "1",
-            "ORG" : "2115",
-            "ACCOUNT":"123455",
+            "ORG" : "4321",
+            "ACCOUNT":"1234",
             "DEPT_NAME":"Computer Science"
             },
             {
             "POSN_CODE": "S61420",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "5",
-            "ORG" : "2115",
-            "ACCOUNT":"123455",
+            "ORG" : "4321",
+            "ACCOUNT":"1234",
             "DEPT_NAME":"Computer Science"
             },
             {
             "POSN_CODE": "S61421",
             "POSN_TITLE": "TA",
             "WLS": "6",
-            "ORG" : "2115",
-            "ACCOUNT":"123455",
+            "ORG" : "4321",
+            "ACCOUNT":"1234",
             "DEPT_NAME":"Computer Science"
             },
             {
             "POSN_CODE": "S61427",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "1",
-            "ORG" : "2115",
-            "ACCOUNT":"123455",
+            "ORG" : "1019",
+            "ACCOUNT":"9101",
             "DEPT_NAME":"Biology"
             },
             {
             "POSN_CODE": "S61430",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "5",
-            "ORG" : "2115",
-            "ACCOUNT":"123455",
+            "ORG" : "1019",
+            "ACCOUNT":"9101",
             "DEPT_NAME":"Biology"
             },
             {
             "POSN_CODE": "S61443",
             "POSN_TITLE": "Lab Assistant",
             "WLS": "6",
-            "ORG" : "2115",
-            "ACCOUNT":"123455",
+            "ORG" : "1019",
+            "ACCOUNT":"9101",
             "DEPT_NAME":"Biology"
             }
 ]
@@ -243,15 +243,13 @@ staffs = [
 
             {
             "ID": "B1236236",
-            "FIRST_NAME":"Matt",
-            "LAST_NAME" : "Jadud",
-            "EMAIL"  :"jadudm@berea.edu",
+            "FIRST_NAME":"Megan",
+            "LAST_NAME" : "Hoffman",
+            "EMAIL"  :"hoffmanm@berea.edu",
             "CPO":"6303",
             "ORG":"2144",
             "DEPT_NAME": "Geology"
             }
-
-
         ]
 stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
 print(stustaff)
@@ -271,7 +269,6 @@ def insert_to_users(staffs):
         u.save()
 
 insert_to_users(STUSTAFF.select())
-
 
 #############################
 # Terms
@@ -394,7 +391,7 @@ staffs = [
             "LAST_NAME" : "Heggen",
             "EMAIL"  :"heggens@berea.edu",
             "CPO":"6300",
-            "ORG":"Berea College",
+            "ORG":"4321",
             "DEPT_NAME": "Computer Science"
             },
 
@@ -405,7 +402,7 @@ staffs = [
             "LAST_NAME" : "Pearce",
             "EMAIL"  :"pearcej@berea.edu",
             "CPO":"6301",
-            "ORG":"Berea College",
+            "ORG":"4321",
             "DEPT_NAME": "Computer Science"
             },
 
@@ -416,7 +413,7 @@ staffs = [
             "LAST_NAME" : "Nakazawa",
             "EMAIL"  :"nakazawam@berea.edu",
             "CPO":"6300",
-            "ORG":"Berea College",
+            "ORG":"4321",
             "DEPT_NAME": "Computer Science"
             }
         ]
