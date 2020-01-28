@@ -132,7 +132,8 @@ def finalDenial():
                 approving_labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Status Form')
                 approving_labor_forms.status = Status.get(Status.statusName == "Denied")
                 approving_labor_forms.reviewedDate = date.today()
-                approving_labor_forms.reviewedBy = cfg['user']['debug']
+                createdUser = User.get(username = cfg['user']['debug'])
+                approving_labor_forms.reviewedBy = createdUser.UserID
                 approving_labor_forms.save()
             elif str(history_type.historyType) == 'Modified Labor Form':
                 approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
