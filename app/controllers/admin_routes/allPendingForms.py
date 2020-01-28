@@ -10,6 +10,7 @@ from app.models.modifiedForm import ModifiedForm
 from app.models.overloadForm import OverloadForm
 from app.models.formHistory import *
 from app.models.term import Term
+from app import cfg
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 
@@ -93,6 +94,9 @@ def finalApproval():
         if str(history_type.historyType) == 'Labor Status Form':
             approving_labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Status Form')
             approving_labor_forms.status = Status.get(Status.statusName == "Approved")
+            approving_labor_forms.reviewedDate = date.today()
+            createdUser = User.get(username = cfg['user']['debug'])
+            approving_labor_forms.reviewedBy = createdUser.UserID
             approving_labor_forms.save()
         elif str(history_type.historyType) == 'Modified Labor Form':
             approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
@@ -118,6 +122,8 @@ def finalDenial():
             if str(history_type.historyType) == 'Labor Status Form':
                 approving_labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Status Form')
                 approving_labor_forms.status = Status.get(Status.statusName == "Denied")
+                approving_labor_forms.reviewedDate = date.today()
+                approving_labor_forms.reviewedBy = cfg['user']['debug']
                 approving_labor_forms.save()
             elif str(history_type.historyType) == 'Modified Labor Form':
                 approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
