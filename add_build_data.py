@@ -143,7 +143,7 @@ positions = [
             },
             {
             "POSN_CODE": "S61408",
-            "POSN_TITLE": "Teaching Associate",
+            "POSN_TITLE": "Research Associate",
             "WLS": "5",
             "ORG" : "4321",
             "ACCOUNT":"1234",
@@ -161,9 +161,9 @@ positions = [
             "POSN_CODE": "S61420",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "5",
-            "ORG" : "4321",
-            "ACCOUNT":"1234",
-            "DEPT_NAME":"Computer Science"
+            "ORG" : "9102",
+            "ACCOUNT":"1020",
+            "DEPT_NAME":"Technology and Applied Design"
             },
             {
             "POSN_CODE": "S61421",
@@ -177,9 +177,9 @@ positions = [
             "POSN_CODE": "S61427",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "2",
-            "ORG" : "1019",
-            "ACCOUNT":"9101",
-            "DEPT_NAME":"Biology"
+            "ORG" : "5678",
+            "ACCOUNT":"8765",
+            "DEPT_NAME":"Mathematics"
             },
             {
             "POSN_CODE": "S61430",
@@ -223,7 +223,7 @@ staffs = [
             },
 
             {
-            "ID": "B12365892",
+            "ID": "B1236582",
             "FIRST_NAME":"Jan",
             "LAST_NAME" : "Pearce",
             "EMAIL"  :"pearcej@berea.edu",
@@ -233,7 +233,7 @@ staffs = [
             },
 
             {
-            "ID": "B1236236",
+            "ID": "B1236736",
             "FIRST_NAME":"Mario",
             "LAST_NAME" : "Nakazawa",
             "EMAIL"  :"nakazawam@berea.edu",
@@ -249,10 +249,10 @@ staffs = [
             "EMAIL"  :"hoffmanm@berea.edu",
             "CPO":"6303",
             "ORG":"2144",
-            "DEPT_NAME": "Geology"
+            "DEPT_NAME": "Biology"
             },
             {
-            "ID": "B12365892",
+            "ID": "B1236892",
             "FIRST_NAME":"Jasmine",
             "LAST_NAME" : "Jones",
             "EMAIL"  :"jonesj@berea.edu",
@@ -266,7 +266,7 @@ print(stustaff)
 print("staff added")
 
 def insert_to_users(staffs):
-    for sta in staffs[0:3]: #insert staff members into stustaff
+    for sta in staffs: #insert staff members into stustaff
         u = User()
         u.PIDM = sta.PIDM
         u.FIRST_NAME = sta.FIRST_NAME
@@ -401,8 +401,8 @@ staffs = [
             "LAST_NAME" : "Heggen",
             "EMAIL"  :"heggens@berea.edu",
             "CPO":"6300",
-            "ORG":"4321",
-            "DEPT_NAME": "Computer Science"
+            "ORG":"1019",
+            "DEPT_NAME": "Biology"
             },
 
             {
@@ -424,7 +424,7 @@ staffs = [
             "EMAIL"  :"nakazawam@berea.edu",
             "CPO":"6300",
             "ORG":"4321",
-            "DEPT_NAME": "Computer Science"
+            "DEPT_NAME": "Mathematics"
             }
         ]
 STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
