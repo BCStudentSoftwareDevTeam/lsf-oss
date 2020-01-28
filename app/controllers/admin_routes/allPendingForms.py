@@ -101,14 +101,23 @@ def finalApproval():
         elif str(history_type.historyType) == 'Modified Labor Form':
             approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
             approving_labor_modified_forms.status = Status.get(Status.statusName == "Approved")
+            approving_labor_modified_forms.reviewedDate = date.today()
+            createdUser = User.get(username = cfg['user']['debug'])
+            approving_labor_modified_forms.reviewedBy = createdUser.UserID
             approving_labor_modified_forms.save()
         elif str(history_type.historyType) == 'Labor Overload Form':
             approving_labor_overload_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Overload Form')
             approving_labor_overload_forms.status = Status.get(Status.statusName == "Approved")
+            approving_labor_overload_forms.reviewedDate = date.today()
+            createdUser = User.get(username = cfg['user']['debug'])
+            approving_labor_overload_forms.reviewedBy = createdUser.UserID
             approving_labor_overload_forms.save()
         elif str(history_type.historyType) == 'Labor Release Form':
             approving_labor_release_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Release Form')
             approving_labor_release_forms.status = Status.get(Status.statusName == "Approved")
+            approving_labor_release_forms.reviewedDate = date.today()
+            createdUser = User.get(username = cfg['user']['debug'])
+            approving_labor_release_forms.reviewedBy = createdUser.UserID
             approving_labor_release_forms.save()
     return jsonify({"success": True})
 
@@ -128,14 +137,23 @@ def finalDenial():
             elif str(history_type.historyType) == 'Modified Labor Form':
                 approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
                 approving_labor_modified_forms.status = Status.get(Status.statusName == "Denied")
+                approving_labor_modified_forms.reviewedDate = date.today()
+                createdUser = User.get(username = cfg['user']['debug'])
+                approving_labor_modified_forms.reviewedBy = createdUser.UserID
                 approving_labor_modified_forms.save()
             elif str(history_type.historyType) == 'Labor Overload Form':
                 approving_labor_overload_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Overload Form')
                 approving_labor_overload_forms.status = Status.get(Status.statusName == "Denied")
+                approving_labor_overload_forms.reviewedDate = date.today()
+                createdUser = User.get(username = cfg['user']['debug'])
+                approving_labor_overload_forms.reviewedBy = createdUser.UserID
                 approving_labor_overload_forms.save()
             elif str(history_type.historyType) == 'Labor Release Form':
                 approving_labor_release_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Release Form')
                 approving_labor_release_forms.status = Status.get(Status.statusName == "Denied")
+                approving_labor_release_forms.reviewedDate = date.today()
+                createdUser = User.get(username = cfg['user']['debug'])
+                approving_labor_release_forms.reviewedBy = createdUser.UserID
                 approving_labor_release_forms.save()
         return jsonify({"success": True})
     except Exception as e:
