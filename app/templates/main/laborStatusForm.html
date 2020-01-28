@@ -129,7 +129,7 @@
                 data-width="100%"
                 title="Position" >
                 <option value = "" disabled selected>Select a Position</option>
-                {% if forms %} <option id="{{forms.POSN_CODE}}" value="{{forms.POSN_TITLE, forms.WLS}}" data-wls={{forms.WLS}} {% if forms %} selected {% endif %}>{{forms.POSN_TITLE}} ({{forms.WLS}})</option>{% endif %}
+                {% if forms %} <option id="{{forms.POSN_CODE}}" value="{{forms.POSN_TITLE}}" data-wls={{forms.WLS}} {% if forms %} selected {% endif %}>{{forms.POSN_TITLE}} ({{forms.WLS}})</option>{% endif %}
         </select>
     </div>
     <div id="JopTypes" class= "form-group ">
