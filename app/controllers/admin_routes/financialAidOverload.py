@@ -8,34 +8,11 @@ from flask import json, jsonify
 from flask import request, render_template
 from app.models.overloadForm import *
 
-@admin.route('/admin/financialAidOverloadApproval')
-def financialAidOverload():
+@admin.route('/admin/financialAidOverloadApproval/<overloadFormID>')
+def financialAidOverload(overloadFormID):
     return render_template('admin/financialAidOverload.html')
-    # overloadForm = FormHistory.get(FormHistory.formHistoryID == formId)
 
-    # lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
-    # prefillStudentName = lsfForm.studentSupervisee.FIRST_NAME + " "+ lsfForm.studentSupervisee.LAST_NAME
-    # prefillStudentBnum = lsfForm.studentSupervisee.ID
-    # prefillStudentCPO = lsfForm.studentSupervisee.STU_CPO
-    # prefillStudentClass = lsfForm.studentSupervisee.CLASS_LEVEL
-    # prefillTerm = lsfForm.termCode.termName
-    # prefillDepartment = lsfForm.department.DEPT_NAME
-    # prefillPosition = lsfForm.POSN_TITLE
-    # prefillHoursOverload = lsfForm.weeklyHours
-    # listOfTerms = []
-    # today = date.today()
-    # todayYear = today.year
-    # termYear = todayYear * 100
-    # termCodeYear = Term.select(Term.termCode).where(Term.termCode.between(termYear-1, termYear + 15))
-    # currentTerm = str(lsfForm.termCode.termCode)[-2:]
-    # TermsNeeded=[]
-    # for term in termCodeYear:
-    #     if str(term)[-2:] == "11" or str(term)[-2:] == "12" or str(term)[-2:]== "00":
-    #         TermsNeeded.append(term)
-    # studentSecondaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
-    #                                                                                            LaborStatusForm.jobType == "Secondary",
-    #                                                                                            LaborStatusForm.termCode.in_(TermsNeeded))
-    #
+
     # studentPrimaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
     #                                                                                        LaborStatusForm.jobType == "Primary",
     #                                                                                        LaborStatusForm.termCode.in_(TermsNeeded))
