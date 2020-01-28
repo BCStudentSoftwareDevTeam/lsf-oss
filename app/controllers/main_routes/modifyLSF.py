@@ -41,10 +41,13 @@ def modifyLSF(laborStatusKey):
     prefillnotes = form.supervisorNotes
     #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
     supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
-    positions = STUPOSN.select(STUPOSN.POSN_CODE).distinct()
+    positions = STUPOSN.select().distinct()
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
+
+    for pos in positions:
+        print(pos.POSN_TITLE)
     return render_template( 'main/modifyLSF.html',
 				            title=('Modify LSF'),
                             username = current_user,
