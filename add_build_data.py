@@ -212,6 +212,7 @@ staffs = [
 
     #TODO: Ask Scott about isLaborAdmin field
             {
+            "PIDM":1,
             "ID": "B12361006",
             "FIRST_NAME":"Scott",
             "LAST_NAME" : "Heggen",
@@ -223,6 +224,7 @@ staffs = [
             },
 
             {
+            "PIDM":2,
             "ID": "B12365892",
             "FIRST_NAME":"Jan",
             "LAST_NAME" : "Pearce",
@@ -233,6 +235,7 @@ staffs = [
             },
 
             {
+            "PIDM":3,
             "ID": "B1236236",
             "FIRST_NAME":"Mario",
             "LAST_NAME" : "Nakazawa",
@@ -243,7 +246,8 @@ staffs = [
             },
 
             {
-            "ID": "B1236236",
+            "PIDM":4,
+            "ID": "B1236237",
             "FIRST_NAME":"Megan",
             "LAST_NAME" : "Hoffman",
             "EMAIL"  :"hoffmanm@berea.edu",
@@ -252,7 +256,8 @@ staffs = [
             "DEPT_NAME": "Geology"
             },
             {
-            "ID": "B12365892",
+            "PIDM":5,
+            "ID": "B12365893",
             "FIRST_NAME":"Jasmine",
             "LAST_NAME" : "Jones",
             "EMAIL"  :"jonesj@berea.edu",
@@ -266,18 +271,19 @@ print(stustaff)
 print("staff added")
 
 def insert_to_users(staffs):
-    for sta in staffs[0:3]: #insert staff members into stustaff
-        u = User()
-        u.PIDM = sta.PIDM
-        u.FIRST_NAME = sta.FIRST_NAME
-        u.LAST_NAME = sta.LAST_NAME
-        u.username = sta.EMAIL.split("@")[0]
-        u.EMAIL = sta.EMAIL
-        u.CPO = sta.CPO
-        u.ORG = sta.ORG
-        u.DEPT_NAME = sta.DEPT_NAME
-        u.save()
-
+    for sta in staffs: #insert staff members into stustaff
+        try:
+            u = User()
+            u.FIRST_NAME = sta.FIRST_NAME
+            u.LAST_NAME = sta.LAST_NAME
+            u.username = sta.EMAIL.split("@")[0]
+            u.EMAIL = sta.EMAIL
+            u.CPO = sta.CPO
+            u.ORG = sta.ORG
+            u.DEPT_NAME = sta.DEPT_NAME
+            u.save()
+        except Exception as e:
+            pass
 insert_to_users(STUSTAFF.select())
 
 #############################
