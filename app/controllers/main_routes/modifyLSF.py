@@ -47,7 +47,6 @@ def modifyLSF(laborStatusKey):
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
 
     for pos in positions:
-        print(pos.POSN_TITLE)
     return render_template( 'main/modifyLSF.html',
 				            title=('Modify LSF'),
                             username = current_user,
