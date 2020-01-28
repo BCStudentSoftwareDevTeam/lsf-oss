@@ -146,8 +146,7 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
    var wls = $("#position").find("option:selected").attr("data-wls");
    var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
    var termCodeLastTwo = termCodeSelected.slice(-2);
-   //We only want to show the modal if the last two digits of the 'Term' code are of the
-   // three numbers below.
+   //We only want to show the modal if the selected term is 'Spring', 'Fall', or 'AY'
    if (termCodeLastTwo == 00 || termCodeLastTwo == 11 || termCodeLastTwo == 12) {
      if (wls >= 5) {
        $("#warningModalTitle").html("Work-Learning-Service Levels (WLS)");
@@ -184,8 +183,7 @@ function checkWLS() {
   var hoursPerWeek = $("#selectedHoursPerWeek").val();
   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
   var termCodeLastTwo = termCodeSelected.slice(-2);
-  //We only want to show the modal if the last two digits of the 'Term' code are of the
-  // three numbers below.
+  //We only want to show the modal if the selected term is 'Spring', 'Fall', or 'AY'
   if (termCodeLastTwo == 00 || termCodeLastTwo == 11 || termCodeLastTwo == 12) {
     if (wls >= 5 && hoursPerWeek < 15 ) {
       $("#warningModalTitle").html("Insert Rejected");
