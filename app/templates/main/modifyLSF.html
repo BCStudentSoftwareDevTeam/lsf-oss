@@ -54,9 +54,10 @@
                             data-live-search="true"
                             >
 
-                  {%for pos in positions%}
-                    {%%}
-                      <option title="{{pos.POSN_TITLE}}" value="{{prefillposition}}">{{pos.POSN_TITLE}} ({{pos.WLS}})</option>
+                  {% for pos in positions %}
+                    {% if pos.DEPT_NAME == prefilldepartment %}
+                      <option title="{{pos.POSN_TITLE}} ({{pos.WLS}})" value="{{prefillposition}}">{{pos.POSN_TITLE}} ({{pos.WLS}})</option>
+                    {% endif %}
                   {%endfor%}
            </select>
            <input hidden class = "oldValue"  id= "prefillposition" value="{{prefillposition}}"></input>
