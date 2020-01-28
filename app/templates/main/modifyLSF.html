@@ -53,7 +53,11 @@
                             id="POSN_TITLE"
                             data-live-search="true"
                             >
-                <option title="{{prefillposition}}" value="{{prefillposition}}">{{prefillposition}}</option>
+
+                  {%for pos in positions%}
+                    {%%}
+                      <option title="{{pos.POSN_TITLE}}" value="{{prefillposition}}">{{pos.POSN_TITLE}} ({{pos.WLS}})</option>
+                  {%endfor%}
            </select>
            <input hidden class = "oldValue"  id= "prefillposition" value="{{prefillposition}}"></input>
          </div>

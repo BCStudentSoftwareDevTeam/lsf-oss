@@ -143,7 +143,7 @@ positions = [
             },
             {
             "POSN_CODE": "S61408",
-            "POSN_TITLE": "Teaching Associate",
+            "POSN_TITLE": "Research Associate",
             "WLS": "5",
             "ORG" : "4321",
             "ACCOUNT":"1234",
@@ -161,9 +161,9 @@ positions = [
             "POSN_CODE": "S61420",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "5",
-            "ORG" : "4321",
-            "ACCOUNT":"1234",
-            "DEPT_NAME":"Computer Science"
+            "ORG" : "9102",
+            "ACCOUNT":"1020",
+            "DEPT_NAME":"Technology and Applied Design"
             },
             {
             "POSN_CODE": "S61421",
@@ -177,9 +177,9 @@ positions = [
             "POSN_CODE": "S61427",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "2",
-            "ORG" : "1019",
-            "ACCOUNT":"9101",
-            "DEPT_NAME":"Biology"
+            "ORG" : "5678",
+            "ACCOUNT":"8765",
+            "DEPT_NAME":"Mathematics"
             },
             {
             "POSN_CODE": "S61430",
@@ -253,7 +253,7 @@ staffs = [
             "EMAIL"  :"hoffmanm@berea.edu",
             "CPO":"6303",
             "ORG":"2144",
-            "DEPT_NAME": "Geology"
+            "DEPT_NAME": "Biology"
             },
             {
             "PIDM":5,
@@ -407,8 +407,8 @@ staffs = [
             "LAST_NAME" : "Heggen",
             "EMAIL"  :"heggens@berea.edu",
             "CPO":"6300",
-            "ORG":"4321",
-            "DEPT_NAME": "Computer Science"
+            "ORG":"1019",
+            "DEPT_NAME": "Biology"
             },
 
             {
@@ -430,7 +430,7 @@ staffs = [
             "EMAIL"  :"nakazawam@berea.edu",
             "CPO":"6300",
             "ORG":"4321",
-            "DEPT_NAME": "Computer Science"
+            "DEPT_NAME": "Mathematics"
             }
         ]
 STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
