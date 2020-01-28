@@ -84,64 +84,64 @@ positions = [
             "POSN_CODE": "S61407",
             "POSN_TITLE": "Student Programmer",
             "WLS": "1",
-            "ORG" : "4321",
-            "ACCOUNT":"1234",
+            "ORG" : "2114",
+            "ACCOUNT":"6740",
             "DEPT_NAME":"Computer Science"
             },
             {
             "POSN_CODE": "S61408",
             "POSN_TITLE": "Research Associate",
             "WLS": "5",
-            "ORG" : "4321",
-            "ACCOUNT":"1234",
+            "ORG" : "2114",
+            "ACCOUNT":"6740",
             "DEPT_NAME":"Computer Science"
             },
             {
             "POSN_CODE": "S61419",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "3",
-            "ORG" : "4321",
-            "ACCOUNT":"1234",
+            "ORG" : "2114",
+            "ACCOUNT":"6740",
             "DEPT_NAME":"Computer Science"
             },
             {
             "POSN_CODE": "S61420",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "5",
-            "ORG" : "9102",
-            "ACCOUNT":"1020",
+            "ORG" : "2147",
+            "ACCOUNT":"6740",
             "DEPT_NAME":"Technology and Applied Design"
             },
             {
             "POSN_CODE": "S61421",
             "POSN_TITLE": "TA",
             "WLS": "6",
-            "ORG" : "4321",
-            "ACCOUNT":"1234",
+            "ORG" : "2114",
+            "ACCOUNT":"6740",
             "DEPT_NAME":"Computer Science"
             },
             {
             "POSN_CODE": "S61427",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "2",
-            "ORG" : "5678",
-            "ACCOUNT":"8765",
+            "ORG" : "2150",
+            "ACCOUNT":"6740",
             "DEPT_NAME":"Mathematics"
             },
             {
             "POSN_CODE": "S61430",
             "POSN_TITLE": "Teaching Associate",
             "WLS": "5",
-            "ORG" : "1019",
-            "ACCOUNT":"9101",
+            "ORG" : "2107",
+            "ACCOUNT":"6740",
             "DEPT_NAME":"Biology"
             },
             {
             "POSN_CODE": "S61443",
             "POSN_TITLE": "Lab Assistant",
             "WLS": "6",
-            "ORG" : "1019",
-            "ACCOUNT":"9101",
+            "ORG" : "2107",
+            "ACCOUNT":"6740",
             "DEPT_NAME":"Biology"
             }
 ]
@@ -163,7 +163,7 @@ staffs = [
             "LAST_NAME" : "Heggen",
             "EMAIL"  :"heggens@berea.edu",
             "CPO":"6300",
-            "ORG":"2142",
+            "ORG":"2114",
             "DEPT_NAME": "Computer Science"
             },
 
@@ -174,7 +174,7 @@ staffs = [
             "LAST_NAME" : "Pearce",
             "EMAIL"  :"pearcej@berea.edu",
             "CPO":"6301",
-            "ORG":"2142",
+            "ORG":"2114",
             "DEPT_NAME": "Computer Science"
             },
 
@@ -185,7 +185,7 @@ staffs = [
             "LAST_NAME" : "Nakazawa",
             "EMAIL"  :"nakazawam@berea.edu",
             "CPO":"6302",
-            "ORG":"2143",
+            "ORG":"2150",
             "DEPT_NAME": "Mathematics"
             },
 
@@ -196,7 +196,7 @@ staffs = [
             "LAST_NAME" : "Hoffman",
             "EMAIL"  :"hoffmanm@berea.edu",
             "CPO":"6303",
-            "ORG":"2144",
+            "ORG":"2107",
             "DEPT_NAME": "Biology"
             },
             {
@@ -206,7 +206,7 @@ staffs = [
             "LAST_NAME" : "Jones",
             "EMAIL"  :"jonesj@berea.edu",
             "CPO":"6301",
-            "ORG":"2142",
+            "ORG":"2114",
             "DEPT_NAME": "Computer Science"
             }
         ]
