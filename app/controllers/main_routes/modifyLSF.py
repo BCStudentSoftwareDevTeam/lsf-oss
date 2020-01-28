@@ -45,8 +45,6 @@ def modifyLSF(laborStatusKey):
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
-    print(positions)
-    print(supervisor)
     return render_template( 'main/modifyLSF.html',
 				            title=('Modify LSF'),
                             username = current_user,
