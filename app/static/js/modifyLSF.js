@@ -177,12 +177,12 @@ function checkForChange(){
     finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor, "date": date}
   }
   if(oldPostition != newPostition){
-    finalDict["POSN_TITLE"] = {"oldPostition": oldPostition, "newPostition": newPostition, "date": date}
+    finalDict["POSN_TITLE"] = {"oldValue": oldPostition, "newValue": newPostition, "date": date}
   }
   if(oldNotes != newNotes){
-    finalDict["supervisor"] = {"oldNotes": oldNotes, "newNotes": newNotes, "date": date}
+    finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes, "date": date}
   }
-  
+
   if (JSON.stringify(finalDict) !== '{}'){
     $('#submitModal').modal('show');
     return finalDict

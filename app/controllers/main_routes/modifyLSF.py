@@ -47,25 +47,25 @@ def modifyLSF(laborStatusKey):
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
 
     for pos in positions:
-    return render_template( 'main/modifyLSF.html',
-				            title=('Modify LSF'),
-                            username = current_user,
-                            superviser_id = superviser_id,
-                            prefillstudent = prefillstudent,
-                            prefillsupervisor = prefillsupervisor,
-                            prefillsupervisorID = prefillsupervisorID,
-                            prefilldepartment = prefilldepartment,
-                            prefillposition = prefillposition,
-                            prefilljobtype = prefilljobtype,
-                            prefillterm = prefillterm,
-                            prefillhours = prefillhours,
-                            prefillnotes = prefillnotes,
-                            supervisors = supervisors,
-                            positions = positions,
-                            wls = wls,
-                            form = form,
-                            oldSupervisor = oldSupervisor
-                          )
+        return render_template( 'main/modifyLSF.html',
+    				            title=('Modify LSF'),
+                                username = current_user,
+                                superviser_id = superviser_id,
+                                prefillstudent = prefillstudent,
+                                prefillsupervisor = prefillsupervisor,
+                                prefillsupervisorID = prefillsupervisorID,
+                                prefilldepartment = prefilldepartment,
+                                prefillposition = prefillposition,
+                                prefilljobtype = prefilljobtype,
+                                prefillterm = prefillterm,
+                                prefillhours = prefillhours,
+                                prefillnotes = prefillnotes,
+                                supervisors = supervisors,
+                                positions = positions,
+                                wls = wls,
+                                form = form,
+                                oldSupervisor = oldSupervisor
+                              )
 
 @main_bp.route("/modifyLSF/getPosition/<department>", methods=['GET'])
 def getPosition(department):
@@ -84,6 +84,7 @@ def sumbitModifiedForm(laborStatusKey):
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
+        print(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
         for k in rsp:
             modifiedforms = ModifiedForm.create(fieldModified = k,

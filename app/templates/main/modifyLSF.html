@@ -36,7 +36,7 @@
                     <option title="{{sup.FIRST_NAME}} {{sup.LAST_NAME}}" value="{{sup.PIDM}}" {% if sup.PIDM == prefillsupervisorID %} selected {% endif %} == prefillsupervisor%} >{{sup.FIRST_NAME}} {{sup.LAST_NAME}}</option> <!-- not showing up fam-->
                 {% endfor %}
            </select>
-            <input hidden class = "oldValue"  id= "{{prefillsupervisor}}"value="{{oldSupervisor.PIDM}}" > </input> <!-- stores value of original-->
+            <input hidden class = "oldValue"  id= "prefillsupervisor"value="{{oldSupervisor.PIDM}}" > </input> <!-- stores value of original-->
          </div>
        </div>
        <div class="form-group">
