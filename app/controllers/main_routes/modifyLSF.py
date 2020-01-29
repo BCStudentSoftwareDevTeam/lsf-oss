@@ -47,7 +47,8 @@ def modifyLSF(laborStatusKey):
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
 
     for pos in positions:
-        return render_template('main/modifyLSF.html',
+
+        return render_template( 'main/modifyLSF.html',
     				            title=('Modify LSF'),
                                 username = current_user,
                                 superviser_id = superviser_id,
@@ -84,6 +85,7 @@ def sumbitModifiedForm(laborStatusKey):
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
+        print(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
         for k in rsp:
             modifiedforms = ModifiedForm.create(fieldModified = k,
