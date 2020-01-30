@@ -24,6 +24,7 @@ def financialAidOverload(overloadFormID):
     studentBnum = lsfForm.studentSupervisee.ID
     department = lsfForm.department.DEPT_NAME
     position = lsfForm.POSN_TITLE
+    supervisor = lsfForm.supervisor.FIRST_NAME +" "+ lsfForm.supervisor.LAST_NAME
     overloadHours= lsfForm.weeklyHours
     today = date.today()
     termYear = today.year

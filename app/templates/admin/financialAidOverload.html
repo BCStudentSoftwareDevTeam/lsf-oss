@@ -6,74 +6,97 @@
 
 {% block app_content %}
 <!-- ?holds the heading and the student name -->
-<div id="wrapper" align="center">
-  <b><h2 id="header"> Financial Aid (SAS) Labor Overload Approval </h2></b>
-      <br> </br>
-    <h3 id = "student"> Anne Otieno: B00716979 <h3>
+<div align="center">
+  <h2>Financial Aid (SAAS) Overload Approval</h2>
+    <h3 id = "student"> {{studentName}}: {{studentBnum}} <h3>
 </div>
+ <form action="/index" id="modifyLSF">
+   <div class="container">
+   <div class="floatleft">
+       <div class="form-group">
+         <h2> Current Position </h2>
+         <label for="Student">Student:</label> <!--User CANNOT edit-->
+         <div>
+           <input type="Student" class="form-control" id="Student" value="{{studentName}}" disabled> <!--User CANNOT edit-->
+         </div>
+       </div>
 
-<!-- a two column layout for the student labor information -->
-<div class = "container" align = "center">
-<div class="row" align = "center">
-  <div class = "column" align = "left">
-    <h4>Current Position (s)</h4> <br>
-      <p>Position:</p> <br>
-      <p>Total Hours:</p> <br>
-      <p>Supervisor:</p> <br>
-      <p>Department:</p>
+       <div class="form-group">
+         <label for="supervisor" class="field">Position:</label>
+         <div>
+            <input type = "Position" class="form-control" id= "position"value="{{position}}" disabled> </input> <!-- stores value of original-->
+        </div>
+       </div>
+
+       <div class="form-group">
+         <label for="Department">Total Hours:</label> <!--User CANNOT edit-->
+         <div>
+           <input type="Department" class="form-control" id="department" value="{{totalCurrentHours}}" disabled> <!--User CANNOT edit-->
+         </div>
+       </div>
+
+       <div class="form-group">
+         <label for="supervisor" class="field">Supervisor:</label>
+         <div>
+            <input  type="supervisor"class="form-control" id= "position"value="{{supervisor}}" disabled> </input> <!-- stores value of original-->
+        </div>
+       </div>
+       <!-- This selectpicker will be disabled if term is for a break, since jobtype is always Secondary-->
+       <div class="form-group">
+         <label for="jobType">Department:</label> <!--User CANNOT edit-->
+         <div>
+           <input type="jobType" class="form-control" id="jobType" value="{{department}}" disabled> <!--User CANNOT edit-->
+         </div>
+       </div>
+   </div>
+
+  <div class= "floatright" >
+     <div class="form-group">
+       <h2> Overload Request Info </h2>
+       <label for="Term">Position:</label> <!--User CANNOT edit-->
+       <div >
+         <input type="Term" class="form-control" id="Term" value= "TA" disabled> <!--User CANNOT edit-->
+       </div>
+     </div>
+
+     <div class="form-group">
+       <label for="jobType">Hours:</label> <!--User CANNOT edit-->
+       <div>
+         <input type="jobType" class="form-control" id="jobType" value= 20 disabled> <!--User CANNOT edit-->
+       </div>
+     </div>
+
+     <div class="form-group">
+       <label for="jobType">Contract Date:</label> <!--User CANNOT edit-->
+       <div>
+         <input type="jobType" class="form-control" id="jobType" value= "May 10" disabled> <!--User CANNOT edit-->
+       </div>
+     </div>
+
+     <div class="form-group">
+       <h4>Student's Overload Reason:</h4>
+       <div>
+         <textarea type="text" class="form-control" id="jobType" value="" disabled></textarea>
+       </div>
+     </div>
+     <div class="form-group">
+       <h4>Labor Office Notes:</h4>
+       <div>
+         <textarea type="text" class="form-control" id="jobType" value="" disabled></textarea>
+       </div>
+     </div>
   </div>
-  <div class = "column" align = "left">
-    <h4>Overload Request Info</h4>
-      <p>Position:</p>
-      <p>Hours:</p>
-      <p>Contract Date:</p>
-      <p>Supervisor:</p>
-      <p>Department:</p>
-      <p>Total Hours with Overload:</p> <br>
-      <div class="form-group">
-        <h4>Student's Overload Reason:</h4>
-        <div>
-          <textarea type="text" class="form-control" id="jobType" value="" readonly></textarea>
-        </div>
+  </div>
+
+    <div class="container">
+      <div class="floatleft">
+        <button type="button" id = "approve" class="btn btn-success" onclick="window.history.go(-1); return false;">Approve</button>
       </div>
-      <div class="form-group">
-        <h4>Labor Office Notes:</h4>
-        <div>
-          <textarea type="text" class="form-control" id="jobType" value="" readonly></textarea>
-        </div>
-      </div>
-      <div class="btn-holder" align = "center">
+      <div class="floatright">
+        <button id="deny" type="button" class="btn btn-primary" onclick="checkForChange()">Deny</button>
         {% include "snips/financialAidOverloadModals.html" %}
-        <button
-          id="Approve"
-          name="approveBtn"
-          type="button"
-          class="btn btn-success"
-          value="Approve Selected"
-          data-target="#finOverloadModal1"
-          data-toggle="modal">
-          Approve
-        </button>
-        <button
-          id="Approve"
-          name="denyBtn"
-          type="button"
-          class="btn btn-danger"
-          value="Deny Student"
-          data-target="#finOverloadModal"
-          data-toggle="modal">
-          Deny
-        </button>
       </div>
-  </div>
+    </div>
 
-</div>
-</div>
-
-
-
-
-
-
-
+ </form>
 {% endblock %}
