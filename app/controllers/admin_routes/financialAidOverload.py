@@ -10,6 +10,12 @@ from app.models.overloadForm import *
 
 @admin.route('/admin/financialAidOverloadApproval/<overloadFormID>', methods=['GET']) # the form ID here is the ID from overloadForm table
 def financialAidOverload(overloadFormID):
+    current_user = require_login()
+
+    if not current_user:                    # Not logged in
+        return render_template('errors/403.html')
+    if not (current_user.isFinancialAidAdmin or current_user.isSaasAdmin):       # Not an admin
+        return render_template('errors/403.html')
 
     overloadForm = FormHistory.get(FormHistory.formHistoryID == overloadFormID)
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
@@ -19,6 +25,8 @@ def financialAidOverload(overloadFormID):
     department = lsfForm.department.DEPT_NAME
     position = lsfForm.POSN_TITLE
     overloadHours= lsfForm.weeklyHours
+    today = date.today()
+    termYear = today.year
     termCodeYear = Term.select(Term.termCode).where(Term.termCode.between(termYear-1, termYear + 15))
     currentTerm = str(lsfForm.termCode.termCode)[-2:]
     TermsNeeded=[]
