@@ -444,7 +444,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
             }
             else {
               $("#warningModalTitle").html("Insert Rejected")
-              $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
+              $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
               $("#warningModal").modal("show");
             }
           }
