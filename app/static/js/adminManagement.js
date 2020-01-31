@@ -1,4 +1,4 @@
-$(document).ready(function());
+// $(document).ready(function());
 function modal(button) {
   if(button == "add" && $("#addlaborAdmin").val() != "") {
     $("p").html("Are you sure you want to add " + $("#addlaborAdmin option:selected").text() + " as an admin?");
