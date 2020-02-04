@@ -2,12 +2,19 @@ from app.controllers.admin_routes import *
 from app.models.user import *
 from app.controllers.admin_routes import admin
 from app.models.emailTemplate import *
+from app.login_manager import require_login
 from flask import Flask, redirect, url_for, flash, jsonify, json, request, flash
 
 
 @admin.route('/admin/emailTemplates', methods=['GET'])
 # @login_required
 def email_templates():
+    current_user = require_login()
+    if not current_user:                    # Not logged in
+        return render_template('errors/403.html')
+    if not current_user.isLaborAdmin:       # Not an admin
+        return render_template('errors/403.html')
+
     emailTemplateID = EmailTemplate.select()
     purpose = EmailTemplate.select()
     subject = EmailTemplate.select()

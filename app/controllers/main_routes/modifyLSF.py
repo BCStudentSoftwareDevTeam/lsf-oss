@@ -28,9 +28,10 @@ def modifyLSF(laborStatusKey):
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
+    prefillsupervisorID = form.supervisor.PIDM
     superviser_id = form.supervisor.UserID
     prefilldepartment = form.department.DEPT_NAME
-    prefillposition = form.POSN_TITLE + " " +"("+ form.WLS + ")"
+    prefillposition = form.POSN_TITLE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
     prefillterm = form.termCode.termName
     if form.weeklyHours != None:
@@ -40,28 +41,32 @@ def modifyLSF(laborStatusKey):
     prefillnotes = form.supervisorNotes
     #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
     supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
-    positions = STUPOSN.select(STUPOSN.POSN_CODE).distinct()
+    positions = STUPOSN.select().distinct()
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
-    return render_template( 'main/modifyLSF.html',
-				            title=('Modify LSF'),
-                            username = current_user,
-                            superviser_id = superviser_id,
-                            prefillstudent = prefillstudent,
-                            prefillsupervisor = prefillsupervisor,
-                            prefilldepartment = prefilldepartment,
-                            prefillposition = prefillposition,
-                            prefilljobtype = prefilljobtype,
-                            prefillterm = prefillterm,
-                            prefillhours = prefillhours,
-                            prefillnotes = prefillnotes,
-                            supervisors = supervisors,
-                            positions = positions,
-                            wls = wls,
-                            form = form,
-                            oldSupervisor = oldSupervisor
-                          )
+
+    for pos in positions:
+
+        return render_template( 'main/modifyLSF.html',
+    				            title=('Modify LSF'),
+                                username = current_user,
+                                superviser_id = superviser_id,
+                                prefillstudent = prefillstudent,
+                                prefillsupervisor = prefillsupervisor,
+                                prefillsupervisorID = prefillsupervisorID,
+                                prefilldepartment = prefilldepartment,
+                                prefillposition = prefillposition,
+                                prefilljobtype = prefilljobtype,
+                                prefillterm = prefillterm,
+                                prefillhours = prefillhours,
+                                prefillnotes = prefillnotes,
+                                supervisors = supervisors,
+                                positions = positions,
+                                wls = wls,
+                                form = form,
+                                oldSupervisor = oldSupervisor
+                              )
 
 @main_bp.route("/modifyLSF/getPosition/<department>", methods=['GET'])
 def getPosition(department):
@@ -80,6 +85,7 @@ def sumbitModifiedForm(laborStatusKey):
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
+        print(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
         for k in rsp:
             modifiedforms = ModifiedForm.create(fieldModified = k,
