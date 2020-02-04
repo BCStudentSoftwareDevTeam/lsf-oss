@@ -5,7 +5,7 @@ class EmailTemplate (baseModel):
     emailTemplateID                 = PrimaryKeyField()
     purpose                         = CharField()
     subject                         = CharField()
-    body                            = TextField()
+    body                            = CharField(max_length=10000)
     audience                        = CharField()
 
 

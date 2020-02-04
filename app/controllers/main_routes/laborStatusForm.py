@@ -120,7 +120,7 @@ def userInsert():
             status = Status.get(Status.statusName == "Pending")
             d, created = User.get_or_create(username = cfg['user']['debug'])
             creatorID = d.UserID
-            formHistroy = FormHistory.create( formID = lsf.laborStatusFormID,
+            formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
                                               historyType = historyType.historyTypeName,
                                               createdBy   = creatorID,
                                               createdDate = date.today(),
@@ -140,15 +140,16 @@ def userInsert():
             status = Status.get(Status.statusName == "Pending")
             d, created = User.get_or_create(username = cfg['user']['debug'])
             creatorID = d.UserID
-            if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
-                formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
-                                                  historyType = historyType.historyTypeName,
-                                                  overloadForm = newLaborOverloadForm.overloadFormID,
-                                                  createdBy   = creatorID,
-                                                  createdDate = date.today(),
-                                                  status      = status.statusName)
-                email = emailHandler(formOverload.formHistoryID)
-                email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+            if(rspFunctional[i]["stuTotalHours"]) != None:
+                if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
+                    formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
+                                                      historyType = historyType.historyTypeName,
+                                                      overloadForm = newLaborOverloadForm.overloadFormID,
+                                                      createdBy   = creatorID,
+                                                      createdDate = date.today(),
+                                                      status      = status.statusName)
+                    email = emailHandler(formOverload.formHistoryID)
+                    email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)

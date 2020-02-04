@@ -132,7 +132,7 @@ var table = $("#studentList").DataTable({
         attr: { id: "currentDepartmentStudents"}
       },
       {
-        text: 'All',
+        text: 'Current and Past',
         action: function ( e, dt, node, config ) {
           // Used to enable and disable the correct checkboxes inside the modal
           // depending on the button pressed
@@ -145,7 +145,7 @@ var table = $("#studentList").DataTable({
           $(".allDepartmentModal").removeAttr("disabled");
           $(".currentDepartmentModal").attr("disabled", true);
           $(".pastStudentModal").attr("disabled", true);
-          $('#portalTitle').text("All Department Students");
+          $('#portalTitle').text("Current and Past Department Students");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )

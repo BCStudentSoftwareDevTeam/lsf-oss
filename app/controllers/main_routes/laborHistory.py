@@ -22,6 +22,10 @@ def laborhistory(id):
         current_user = require_login()
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            isLaborAdmin = False
+        else:
+            isLaborAdmin = True
 
         student = Student.get(Student.ID == id)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
@@ -34,7 +38,8 @@ def laborhistory(id):
                                 student = student,
                                 username=current_user.username,
                                 studentForms = studentForms,
-                                formHistoryList = formHistoryList
+                                formHistoryList = formHistoryList,
+                                isLaborAdmin = isLaborAdmin
                               )
     except:
         return render_template('errors/500.html')

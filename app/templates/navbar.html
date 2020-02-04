@@ -35,14 +35,9 @@
                     </div>
                 </a>
             </div>
-            {% if( (isLaborAdmin is defined) and (isLaborAdmin == False) ) %}
-            <!-- If the variable 'isLaborAdmin' exists in the controller and the value
-                  is equal to 'False', then the 'Administration' tab in the navigation
-                  bar should not be created.-->
-            {% else %}
-            <!-- If the variable 'isLaborAdmin' does not exist or the value is equal
-                 to 'True', then the 'Administration' tab in the navigation
-                 bar should be created.-->
+            {% if isLaborAdmin == True %}
+            <!-- If the current user is an admin, then we want to
+                create the 'Administration' tab in the navbar for them.-->
               <div class="panel-group" id="accordion">
                   <div class="panel panel-default">
                       <a data-toggle="collapse" data-parent="#accordion" href="#admin">
@@ -51,17 +46,16 @@
                           </div>
                       </a>
                       <div id="admin" class="panel-collapse collapse">
-                          <ul id="admindropdown" class="panel panel-default">
 
-                              <a href="/admin/pendingForms/all"><li class="panel-heading"><h4>Pending Forms</h4></li></a>
-                            {#  <a href="/admin/adminOverload"><li class="panel-heading"><h4>Overload Forms</h4></li></a> #}
-
-                              <a href="/"><li class="panel-heading"><h4>Past Forms</h4></li></a>
-                              <a href="/admin/termManagement"><li class="panel-heading"><h4>Manage Terms</h4></li></a>
-                              <a href="/admin/manageDepartments"><li class="panel-heading"><h4>Manage Departments</h4></li></a>
-                              <a href="/admin/adminManagement"><li class="panel-heading"><h4>Manage Users</h4></li></a>
-                              <a href="/admin/emailTemplates"><li class="panel-heading"><h4>Manage Email Templates</h4></li></a>
-                          </ul>
+                        <ul id="admindropdown" class="panel panel-default">
+                          <a href="/admin/pendingForms/all"><li class="panel-heading"><h4>Pending Forms</h4></li></a>
+                          {#  <a href="/admin/adminOverload"><li class="panel-heading"><h4>Overload Forms</h4></li></a> #}
+                          {#  <a href="/"><li class="panel-heading"><h4>Past Forms</h4></li></a> #}
+                          <a href="/admin/termManagement"><li class="panel-heading"><h4>Manage Terms</h4></li></a>
+                          <a href="/admin/manageDepartments"><li class="panel-heading"><h4>Manage Departments</h4></li></a>
+                          <a href="/admin/adminManagement"><li class="panel-heading"><h4>Manage Administrators</h4></li></a>
+                          <a href="/admin/emailTemplates"><li class="panel-heading"><h4>Manage Email Templates</h4></li></a>
+                        </ul>
 
                       </div>
 
