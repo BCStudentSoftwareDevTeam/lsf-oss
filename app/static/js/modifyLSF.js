@@ -29,13 +29,13 @@ function fill_positions(response) {
 }
 
 function fill_supervisor(response){
-  var selected_supervisors = $("#supervisor")[0];
+  var selected_supervisors = $("#supervisor");
     for (var key in response) {
       try{
         var options = document.createElement("option");
         options.text = response[key]["supervisorFirstName"].toString() + " " + response[key]["supervisorLastName"].toString();
-        options.value = response[key]["supervisorPIDM"].toString();
-        selected_supervisors.appendChild(options);
+        options.value =response[key]["supervisorPIDM"].toString();
+        selected_supervisors[0].appendChild(options);
         $('.selectpicker').selectpicker('refresh');
         var map = {};
         $('select option').each(function () {
@@ -52,7 +52,7 @@ function fill_supervisor(response){
 }
 
 $(document).ready(function(){
-   var department = $("#Department")[0].val();
+   var department = $("#Department").eq(0).val();
    var url = "/modifyLSF/getPosition/" + department;
        $.ajax({
          url: url,
@@ -66,7 +66,7 @@ $(document).ready(function(){
  });
 
 function jobPositionDisable(){
-  var termcode = $("#termCode")[0].val();
+  var termcode = $("#termCode").eq(0).val();
   var specificTerm = termcode.toString().substr(-2);
   if (specificTerm != 11 && specificTerm != 12 && specificTerm != 00){
     $("#jobType")[0].prop("disabled", true);
