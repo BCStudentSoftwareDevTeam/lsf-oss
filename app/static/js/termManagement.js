@@ -20,6 +20,7 @@ function getDate(obj, termCode) {
   var tabledata_dict = {};
   tabledata_dict[dateType] = obj.value;
   tabledata_dict["termCode"] = termID;
+  console.log(tabledata_dict)
   data = JSON.stringify(tabledata_dict); // need to do this in order for the python to recognize it
     $.ajax({
       type: "POST",
