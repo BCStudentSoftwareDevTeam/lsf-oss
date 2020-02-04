@@ -1,8 +1,8 @@
 .idea/
 *.pyc
 venv/
-migrations/
-migrations.json
+*migrations/
+*migrations.json
 *.swp
 old/
 secret_config.yaml
