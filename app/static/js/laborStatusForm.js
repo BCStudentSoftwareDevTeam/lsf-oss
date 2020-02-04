@@ -1,7 +1,18 @@
 var globalArrayOfStudents = [];
 var display_failed = [];
-
+// document.cookie = '=""; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 $(document).ready(function(){
+    var cookies = document.cookie;
+    console.log(cookies, "");
+    if (cookies){
+      parsedArrayOfStudentCookies = JSON.parse(cookies);
+      console.log(JSON.parse(cookies));
+      for (i in parsedArrayOfStudentCookies) {
+        console.log(i);
+        createAndFillTable(parsedArrayOfStudentCookies[i]);
+      }
+    }
+
     $("[data-toggle=\"tooltip\"]").tooltip();
     $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
     if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
@@ -455,6 +466,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
 }
 function createAndFillTable(studentDict) {
   globalArrayOfStudents.push(studentDict);
+  document.cookie = ("cookieArrayOfStudents", JSON.stringify(globalArrayOfStudents));
   $("#mytable").show();
   $("#jobTable").show();
   $("#hoursTable").show();
