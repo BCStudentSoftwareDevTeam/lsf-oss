@@ -62,12 +62,12 @@
      <div class="form-group">
        <label for="jobType">Hours:</label> <!--User CANNOT edit-->
        <div>
-         <input type="jobType" class="form-control" id="jobType" value= 20 disabled> <!--User CANNOT edit-->
+         <input type="jobType" class="form-control" id="jobType" value= "{{overloadHours}}" disabled> <!--User CANNOT edit-->
        </div>
      </div>
 
      <div class="form-group">
-       <label for="jobType">Contract Date:</label> <!--User CANNOT edit-->
+       <label for="jobType">Contract Date:</label> <!--User CANNOT edit--> <!--- TODO Is connected to Labor Status form Start Date -->
        <div>
          <input type="jobType" class="form-control" id="jobType" value= "May 10" disabled> <!--User CANNOT edit-->
        </div>
@@ -76,13 +76,13 @@
      <div class="form-group">
        <h4>Student's Overload Reason:</h4>
        <div>
-         <textarea type="text" class="form-control" id="jobType" value="" disabled></textarea>
+         <textarea type="text" class="form-control" id="jobType" value="{{overloadReason}}" disabled></textarea>
        </div>
      </div>
      <div class="form-group">
        <h4>Labor Office Notes:</h4>
        <div>
-         <textarea type="text" class="form-control" id="jobType" value="" disabled></textarea>
+         <textarea type="text" class="form-control" id="jobType" value="{{laborOfficeNotes}}" disabled></textarea>
        </div>
      </div>
   </div>

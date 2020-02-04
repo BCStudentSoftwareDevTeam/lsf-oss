@@ -10,6 +10,9 @@ from app.models.overloadForm import *
 
 @admin.route('/admin/financialAidOverloadApproval/<overloadFormID>', methods=['GET']) # the form ID here is the ID from overloadForm table
 def financialAidOverload(overloadFormID):
+    '''
+    This function prefills all the information for a student's current job and overload request
+    '''
     current_user = require_login()
 
     if not current_user:                    # Not logged in
@@ -19,6 +22,8 @@ def financialAidOverload(overloadFormID):
 
     overloadForm = FormHistory.get(FormHistory.formHistoryID == overloadFormID)
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
+
+
     # the following lines prefills the information for student
     studentName = lsfForm.studentSupervisee.FIRST_NAME + " "+ lsfForm.studentSupervisee.LAST_NAME
     studentBnum = lsfForm.studentSupervisee.ID
@@ -26,6 +31,8 @@ def financialAidOverload(overloadFormID):
     position = lsfForm.POSN_TITLE
     supervisor = lsfForm.supervisor.FIRST_NAME +" "+ lsfForm.supervisor.LAST_NAME
     overloadHours= lsfForm.weeklyHours
+    overloadReason=lsfForm.overloadReason
+    laborOfficeNotes=lsf.laborDepartmentNotes
     today = date.today()
     termYear = today.year
     termCodeYear = Term.select(Term.termCode).where(Term.termCode.between(termYear-1, termYear + 15))
@@ -76,5 +83,31 @@ def financialAidOverload(overloadFormID):
                         currentPrimary = formIDPrimary,
                         currentSecondary = formIDSecondary,
                         totalCurrentHours = totalCurrentHours,
-                        totalFormHours = totalFormHours
+                        totalFormHours = totalFormHours,
+                        overloadReason = overloadReason,
+                        laborOfficeNotes = laborOfficeNotes
                       )
+
+@admin.route('/admin/getNotes/<formid>', methods=['GET'])
+def getNotes(formid):
+    '''
+    This function retrieves the supervisor and labor department notes.
+    '''
+    try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+        notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid)
+        notesDict = {}
+        if notes.supervisorNotes:
+            notesDict["supervisorNotes"] = notes.supervisorNotes
+
+        if notes.laborDepartmentNotes:
+            notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes
+        return jsonify(notesDict)
+
+    except Exception as e:
+        print("error", e)
+        return jsonify({"Success": False})
