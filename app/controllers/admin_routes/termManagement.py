@@ -86,8 +86,8 @@ def ourDate():
             print("success")
             termCode = rsp['termCode']
             termToChange = Term.get(Term.termCode == termCode)
-            date_value = rsp.get("start", rsp.get("end", None))
-            # print(date_value)
+            date_value = rsp.get("start", rsp.get("end", rsp.get("primaryCutOff", None)))
+            print(date_value)
             if rsp.get('start', None):
                 startDate = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.termStart = startDate
@@ -96,10 +96,14 @@ def ourDate():
                 endDate = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.termEnd = endDate
                 # print("endDate saved")
+            if rsp.get('primaryCutOff', None):
+                primaryCutOff = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
+                termToChange.primaryCutOff = primaryCutOff
+                print("primaryCutOff saved")
             termToChange.save()
             return jsonify({"Success": True})
     except Exception as e:
-        # print("You have failed to update the date.", e)
+        print("You have failed to update the date.", e)
         return jsonify({"Success": False})
 
 

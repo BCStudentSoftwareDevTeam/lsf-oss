@@ -100,11 +100,11 @@
                     <td>
                       <div class="input-group date">
                         <input id="primaryCutOff_{{term.termCode}}"
-                            onchange="getDate(this, {{term.termCode}}); updateStart(this, {{term.termCode}});"
+                            onchange="getDate(this, {{term.termCode}});"
                             type="text"
-                            class="form-control datepicker emptyEnd"
+                            class="form-control datepicker primaryCutOff"
                             placeholder="MM/DD/YYYY"
-                            value="{% if term.termEnd != None %}{{term.termEnd.strftime('%m/%d/%Y')}}{% endif %}"
+                            value="{% if term.primaryCutOff != None %}{{term.primaryCutOff.strftime('%m/%d/%Y')}}{% endif %}"
                         />
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>

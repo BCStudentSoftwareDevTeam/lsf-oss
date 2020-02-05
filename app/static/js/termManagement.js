@@ -34,8 +34,9 @@ function getDate(obj, termCode) {
         stateBtnValue = $("#term_btn_" + termCode).val();
         start = $("#start_" + termCode).val();
         end = $("#end_" +termCode).val();
+        primaryCutOff = $("#primaryCutOff_" + termCode).val();
 
-        if (start != "" && end != "") {
+        if (start != "" && end != "" && primaryCutOff != "") {
           $('#term_btn_' + termCode).prop('disabled', false)
         }
       }
@@ -51,6 +52,9 @@ function updateStart(obj, termCode){
   var yearNewEnd = newEnd.getFullYear();
   $('#start_' + termCode).datepicker({maxDate: new Date(yearNewEnd, monthNewEnd, dayNewEnd)});
   $('#start_' + termCode).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
+  $('#primaryCutOff_' + termCode).datepicker({maxDate: new Date(yearNewEnd, monthNewEnd, dayNewEnd)});
+  $('#primaryCutOff_' + termCode).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
+
 }
 
 function updateEnd(obj, termCode){
@@ -61,6 +65,8 @@ function updateEnd(obj, termCode){
   var yearNewStart = newStart.getFullYear();
   $('#end_' + termCode).datepicker({minDate: new Date(yearNewStart, monthNewStart, dayNewStart)});
   $("#end_" + termCode).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
+  $('#primaryCutOff_' + termCode).datepicker({minDate: new Date(yearNewStart, monthNewStart, dayNewStart)});
+  $("#primaryCutOff_" + termCode).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
 }
 
 function termStatus(term) {
