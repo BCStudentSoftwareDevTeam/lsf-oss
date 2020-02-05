@@ -73,6 +73,7 @@ function termStatus(term) {
   /* this function changes the buttons from close and open whenever they are clicked */
   var startID = $("#start_" + term); // This is how we get the unique ID, term is the term code
   var endID = $("#end_" + term);
+  var primaryCutOffID = $("#primaryCutOff_" + term);
   var termBtnID = $("#term_btn_" + term);
   var inactiveBtnID = $("#inactive_btn_" + term);
     $.ajax({

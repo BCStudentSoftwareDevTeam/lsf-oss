@@ -66,6 +66,17 @@ function fillDates(response) { // prefill term start and term end
   for (var key in response){
     var start = response[key]["Start Date"];
     var end = response[key]["End Date"];
+    var primaryCutOff = response[key]["Primary Cut Off"]
+    // disabling primary position if cut off date is before today's date
+    console.log(primaryCutOff, "cutoff date")
+    var today = new Date()
+    var date = ("0"+(today.getMonth()+1)).slice(-2)+"/"+("0"+today.getDate()).slice(-2)+"/"+today.getFullYear();
+    console.log(date,"today's date")
+    if (date > primaryCutOff){
+      console.log("i'm here");
+      $("#jobType")[0].attr("disabled", true );
+      $('.selectpicker').selectpicker('refresh');
+    }
     // Start Date
     var startd = new Date(start);
     var dayStart1 = startd.getDate();
@@ -256,6 +267,7 @@ function showAccessLevel(obj){ // Make Table labels appear
   }
   else{ // normal semester like Fall or Spring table labels
     $("#hoursPerWeek").show();
+
     $("#JopTypes").show();
     $("#plus").show();
   }

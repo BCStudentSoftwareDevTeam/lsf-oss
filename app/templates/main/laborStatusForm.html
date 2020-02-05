@@ -143,7 +143,7 @@
                   data-width="100%"
                   onchange="fillHoursPerWeek()">
             <option value = "" disabled selected>Select a Job Type</option>
-            <option value="Primary"{% if forms %}{% if forms.jobType == "Primary" %} data-jobType={{forms.jobType}} selected {% endif %}{% endif %}>Primary</option>
+            <option id = "primary" value="Primary"{% if forms %}{% if forms.jobType == "Primary" %} data-jobType={{forms.jobType}} selected {% endif %}{% endif %}>Primary</option>
             <option value="Secondary"{% if forms %}{% if forms.jobType == "Secondary" %} data-jobType={{forms.jobType}} selected {% endif %}{% endif %}>Secondary</option>
           </select>
         {% include "snips/LSFModals.html" %}
