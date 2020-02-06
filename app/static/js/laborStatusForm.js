@@ -11,6 +11,11 @@ $(document).ready(function(){
         console.log(i);
         createAndFillTable(parsedArrayOfStudentCookies[i]);
       }
+      console.log(parsedArrayOfStudentCookies[0].stuTermCode);
+      $("#selectedTerm option[value=" + parsedArrayOfStudentCookies[0].stuTermCode + "]").attr('selected', 'selected');
+      $("#selectedSupervisor option[value=" + parsedArrayOfStudentCookies[0].stuSupervisorID + "]").attr('selected', 'selected');
+      $("#selectedDepartment option[value=\"" + parsedArrayOfStudentCookies[0].stuDepartment + "\"]").attr('selected', 'selected');
+
     }
 
     $("[data-toggle=\"tooltip\"]").tooltip();
