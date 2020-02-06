@@ -12,9 +12,20 @@ $(document).ready(function(){
         createAndFillTable(parsedArrayOfStudentCookies[i]);
       }
       console.log(parsedArrayOfStudentCookies[0].stuTermCode);
+      // var termCodeLastTwo = parsedArrayOfStudentCookies[0].stuTermCode.slice(-2);
+      // if (termCodeLastTwo == 00 || termCodeLastTwo == 11 || termCodeLastTwo == 12) {
+      $("#selectedHoursPerWeek option[value=\"" + parsedArrayOfStudentCookies[0].stuWeeklyHours + "]").attr('selected', 'selected');
+      //   }
+      // else {
+      //   $("#selectedHoursPerWeek option[value=\"" + parsedArrayOfStudentCookies[0].stuContractHours + "]").attr('selected', 'selected');
+      // }
       $("#selectedTerm option[value=" + parsedArrayOfStudentCookies[0].stuTermCode + "]").attr('selected', 'selected');
       $("#selectedSupervisor option[value=" + parsedArrayOfStudentCookies[0].stuSupervisorID + "]").attr('selected', 'selected');
       $("#selectedDepartment option[value=\"" + parsedArrayOfStudentCookies[0].stuDepartment + "\"]").attr('selected', 'selected');
+      preFilledDate($("#selectedTerm"));
+      showAccessLevel($("#selectedTerm"));
+      disableTermSupervisorDept();
+      parsedArrayOfStudentCookies.push(globalArrayOfStudents);
 
     }
 
@@ -591,7 +602,7 @@ function userInsert(){
         globalArrayOfStudents[i].stuTotalHours = storeTotalHours['Hours']['totalHours']
       }
     }
-    console.log(globalArrayOfStudents);
+    //console.log(globalArrayOfStudents);
     $.ajax({
            method: "POST",
            url: "/laborstatusform/userInsert",
