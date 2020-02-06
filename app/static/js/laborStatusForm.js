@@ -74,8 +74,9 @@ function fillDates(response) { // prefill term start and term end
     console.log(date,"today's date")
     if (date > primaryCutOff){
       console.log("i'm here");
-      $("#jobType")[0].attr("disabled", true );
+      $("#jobType option[value='Primary']").attr("disabled", true );
       $('.selectpicker').selectpicker('refresh');
+      msgFlash("Diabling primary positon because cut off date is before today's date", "fail");
     }
     // Start Date
     var startd = new Date(start);
