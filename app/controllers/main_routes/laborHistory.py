@@ -37,7 +37,7 @@ def laborhistory(id):
                         authorizedUser = True
                         break
             if authorizedUser == False:
-                return render_template('errors/500.html')
+                return render_template('errors/403.html')
 
         student = Student.get(Student.ID == id)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
