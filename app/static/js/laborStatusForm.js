@@ -26,7 +26,10 @@ $(document).ready(function(){
       showAccessLevel($("#selectedTerm"));
       disableTermSupervisorDept();
       parsedArrayOfStudentCookies.push(globalArrayOfStudents);
-
+      console.log(globalArrayOfStudents);
+      parsedArrayOfStudentCookies.length = 0;
+      console.log(parsedArrayOfStudentCookies);
+      // $.removeCookie("cookies", { path: '/' });
     }
 
     $("[data-toggle=\"tooltip\"]").tooltip();
@@ -661,7 +664,7 @@ function userInsert(){
                  $("a").attr("onclick", "").unbind("click");
                  $(".glyphicon-edit").css("color", "grey");
                  $(".glyphicon-remove").css("color", "grey");
-                 msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait for page reload.)", "success");
+                 msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait for page to reload.)", "success");
                  setTimeout(function() { // executed after 1 second
                     window.location.replace("/laborstatusform"); // reloads the page if every form
                   }, 5000);
