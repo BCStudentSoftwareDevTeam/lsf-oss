@@ -5,6 +5,7 @@ from app.models.user import *
 from app.models.laborStatusForm import *
 from app.models.formHistory import *
 from app.models.overloadForm import *
+from app.models.department import *
 from app.models.student import *
 from app.controllers.errors_routes.handlers import *
 from app.login_manager import require_login
@@ -24,7 +25,36 @@ def laborhistory(id):
             return render_template('errors/403.html')
 
         student = Student.get(Student.ID == id)
-        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
+        if not current_user.isLaborAdmin:
+            # If the current user is not an admin, then we can only allow them to see the labor history of a
+            # given BNumber if the BNumber is tied to a labor status form that is tied to a department where the
+            # current user is a supervisor or created a labor status form for the department
+            authorizedUser = False
+            allStudentDepartments = LaborStatusForm.select(LaborStatusForm.department).where(LaborStatusForm.studentSupervisee == id).distinct()
+            allUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).distinct()
+            for userDepartment in allUserDepartments:
+                for studentDepartment in allStudentDepartments:
+                    if userDepartment.formID.department == studentDepartment.department:
+                        authorizedUser = True
+                        break
+            if authorizedUser == False:
+                return render_template('errors/500.html')
+            # We need to query where the student == student, and where department is equal to all the departments the user is tied to
+            # print("Im here")
+            # for i in allUserDepartments:
+            #     print(i.formID.department)
+            departmentsList = []
+            for i in allUserDepartments:
+                departmentsList.append(i.formID.department.departmentID)
+            print(departmentsList)
+            studentForms = LaborStatusForm.select().where((LaborStatusForm.studentSupervisee == student) & (LaborStatusForm.department in departmentsList)).order_by(LaborStatusForm.startDate.desc())
+            for form in studentForms:
+                print(form.laborStatusFormID)
+            print("Not an admin")
+            # studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
+        else:
+            print("I'm an admin and can see everything")
+            studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         formHistoryList = ""
         for form in studentForms:
             formHistoryList = formHistoryList + str(form.laborStatusFormID) + ","
@@ -36,7 +66,8 @@ def laborhistory(id):
                                 studentForms = studentForms,
                                 formHistoryList = formHistoryList
                               )
-    except:
+    except Exception as e:
+        print(e)
         return render_template('errors/500.html')
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
