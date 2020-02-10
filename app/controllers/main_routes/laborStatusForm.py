@@ -161,7 +161,10 @@ def getDates(termcode):
         start = date.termStart
         end  = date.termEnd
         primaryCutOff = date.primaryCutOff
-        datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y")}
+        if primaryCutOff is None:
+            datesDict[date.termCode] = {"Term Code": date.termCode,"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
+        else:
+            datesDict[date.termCode] = {"Term Code": date.termCode, "Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y")}
     return json.dumps(datesDict)
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])

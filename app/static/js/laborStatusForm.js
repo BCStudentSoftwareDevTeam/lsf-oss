@@ -63,20 +63,43 @@ function preFilledDate(obj){ // get term start date and end date
 }
 
 function fillDates(response) { // prefill term start and term end
+  $("#primary-cutoff-warning").hide();
+  $("#break-cutoff-warning").hide();
+  $("#primary-cutoff-date").text("");
+  $("#addMoreStudent").show();
+
+  $("#selectedTerm").on("change", function(){
+    $("#jobType").val('')
+  });
   for (var key in response){
     var start = response[key]["Start Date"];
     var end = response[key]["End Date"];
     var primaryCutOff = response[key]["Primary Cut Off"]
     // disabling primary position if cut off date is before today's date
-    console.log(primaryCutOff, "cutoff date")
     var today = new Date()
     var date = ("0"+(today.getMonth()+1)).slice(-2)+"/"+("0"+today.getDate()).slice(-2)+"/"+today.getFullYear();
-    console.log(date,"today's date")
-    if (date > primaryCutOff){
-      console.log("i'm here");
-      $("#jobType option[value='Primary']").attr("disabled", true );
-      $('.selectpicker').selectpicker('refresh');
-      msgFlash("Diabling primary positon because cut off date is before today's date", "fail");
+    var termCode = (response[key]["Term Code"]).toString().slice(-2);
+    if (primaryCutOff){
+      if (termCode != "00" && termCode != "11" && termCode != "12"){ // Checking to see if the termcode is a break one
+        msgFlash("The deadline to add break positions has ended.", "fail");
+        $("#break-cutoff-warning").show();
+        $("#break-cutoff-date").text(primaryCutOff);
+        $("#addMoreStudent").hide();
+      }
+      else{
+        if (date > primaryCutOff){
+          $("#jobType option[value='Primary']").attr("disabled", true );
+          $('.selectpicker').selectpicker('refresh');
+          msgFlash("Disabling primary position because cut off date is before today's date", "fail");
+          $("#primary-cutoff-warning").show();
+          $("#primary-cutoff-date").text(primaryCutOff);
+        }
+        else{
+          $("#jobType option[value='Primary']").attr("disabled", false );
+          $('.selectpicker').selectpicker('refresh');
+        }
+      }
+
     }
     // Start Date
     var startd = new Date(start);
