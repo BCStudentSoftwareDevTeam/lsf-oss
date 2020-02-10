@@ -3,7 +3,7 @@ var display_failed = [];
 // document.cookie = '=""; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 $(document).ready(function(){
     var cookies = document.cookie;
-    console.log(cookies, "");
+    console.log("Cookies: ", cookies);
     if (cookies){
       parsedArrayOfStudentCookies = JSON.parse(cookies);
       console.log(JSON.parse(cookies));
@@ -24,7 +24,9 @@ $(document).ready(function(){
       preFilledDate($("#selectedTerm"));
       showAccessLevel($("#selectedTerm"));
       disableTermSupervisorDept();
-      parsedArrayOfStudentCookies.push(globalArrayOfStudents);
+      $("#selectedTerm").selectpicker().attr("disabled", true);
+      $("#selectedTerm").selectpicker("refresh");
+      // parsedArrayOfStudentCookies.push(globalArrayOfStudents);
       console.log("1)",globalArrayOfStudents);
       // parsedArrayOfStudentCookies.length = 0;
       console.log("2)",parsedArrayOfStudentCookies);
