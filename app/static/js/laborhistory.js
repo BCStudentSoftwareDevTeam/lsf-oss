@@ -1,7 +1,18 @@
-$('#positionTable tbody tr  td').on('click',function(){
-     $("#modal").modal("show");
-     $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id)
-     setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
+$('#positionTable tbody tr td').on('click',function(){
+     // if (this.id == None) {
+     //
+     // }
+     console.log(this.class);
+     console.log(this.id);
+     console.log(this.getAttribute('value'));
+     if (this.getAttribute('value')) {
+       alert("You do not have access to this data");
+     }
+     else {
+       $("#modal").modal("show");
+       $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id);
+       setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
+     }
 });
 
 function redirection(laborStatusKey){

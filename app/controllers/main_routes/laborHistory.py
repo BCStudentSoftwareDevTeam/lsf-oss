@@ -29,6 +29,7 @@ def laborhistory(id):
             # If the current user is not an admin, then we can only allow them to see the labor history of a
             # given BNumber if the BNumber is tied to a labor status form that is tied to a department where the
             # current user is a supervisor or created a labor status form for the department
+            isLaborAdmin = False
             authorizedUser = False
             allStudentDepartments = LaborStatusForm.select(LaborStatusForm.department).where(LaborStatusForm.studentSupervisee == id).distinct()
             allUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).distinct()
@@ -38,23 +39,17 @@ def laborhistory(id):
                         authorizedUser = True
                         break
             if authorizedUser == False:
-                return render_template('errors/500.html')
-            # We need to query where the student == student, and where department is equal to all the departments the user is tied to
-            # print("Im here")
-            # for i in allUserDepartments:
-            #     print(i.formID.department)
+                return render_template('errors/403.html')
+
             departmentsList = []
             for i in allUserDepartments:
                 departmentsList.append(i.formID.department.departmentID)
             print(departmentsList)
-            studentForms = LaborStatusForm.select().where((LaborStatusForm.studentSupervisee == student) & (LaborStatusForm.department in departmentsList)).order_by(LaborStatusForm.startDate.desc())
-            for form in studentForms:
-                print(form.laborStatusFormID)
             print("Not an admin")
-            # studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         else:
             print("I'm an admin and can see everything")
-            studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
+            isLaborAdmin = True
+        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         formHistoryList = ""
         for form in studentForms:
             formHistoryList = formHistoryList + str(form.laborStatusFormID) + ","
@@ -64,7 +59,9 @@ def laborhistory(id):
                                 student = student,
                                 username=current_user.username,
                                 studentForms = studentForms,
-                                formHistoryList = formHistoryList
+                                formHistoryList = formHistoryList,
+                                departmentsList = departmentsList,
+                                isLaborAdmin = isLaborAdmin
                               )
     except Exception as e:
         print(e)
