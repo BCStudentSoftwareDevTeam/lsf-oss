@@ -10,13 +10,25 @@ $(document).ready(function(){
       for (i in parsedArrayOfStudentCookies) {
         createAndFillTable(parsedArrayOfStudentCookies[i]);
       }
-      // console.log(parsedArrayOfStudentCookies[0].stuTermCode);
+      console.log(parsedArrayOfStudentCookies[0].stuTermCode);
+      // var termCodeLastTwo = parsedArrayOfStudentCookies[0].stuTermCode.slice(-2);
+      // if (termCodeLastTwo == 00 || termCodeLastTwo == 11 || termCodeLastTwo == 12) {
+      $("#selectedHoursPerWeek option[value=\"" + parsedArrayOfStudentCookies[0].stuWeeklyHours + "]").attr('selected', 'selected');
+      //   }
+      // else {
+      //   $("#selectedHoursPerWeek option[value=\"" + parsedArrayOfStudentCookies[0].stuContractHours + "]").attr('selected', 'selected');
+      // }
       $("#selectedTerm option[value=" + parsedArrayOfStudentCookies[0].stuTermCode + "]").attr('selected', 'selected');
       $("#selectedSupervisor option[value=" + parsedArrayOfStudentCookies[0].stuSupervisorID + "]").attr('selected', 'selected');
       $("#selectedDepartment option[value=\"" + parsedArrayOfStudentCookies[0].stuDepartment + "\"]").attr('selected', 'selected');
       preFilledDate($("#selectedTerm"));
       showAccessLevel($("#selectedTerm"));
-      disableTermSupervisorDept()
+      disableTermSupervisorDept();
+      parsedArrayOfStudentCookies.push(globalArrayOfStudents);
+      console.log("1)",globalArrayOfStudents);
+      // parsedArrayOfStudentCookies.length = 0;
+      console.log("2)",parsedArrayOfStudentCookies);
+      // $.removeCookie("cookies", { path: '/' });
     }
 
     $("[data-toggle=\"tooltip\"]").tooltip();
@@ -594,7 +606,7 @@ function userInsert(){
         globalArrayOfStudents[i].stuTotalHours = storeTotalHours['Hours']['totalHours']
       }
     }
-    console.log(globalArrayOfStudents);
+    //console.log(globalArrayOfStudents);
     $.ajax({
            method: "POST",
            url: "/laborstatusform/userInsert",
@@ -653,7 +665,7 @@ function userInsert(){
                  $("a").attr("onclick", "").unbind("click");
                  $(".glyphicon-edit").css("color", "grey");
                  $(".glyphicon-remove").css("color", "grey");
-                 msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait for page reload.)", "success");
+                 msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait for page to reload.)", "success");
                  setTimeout(function() { // executed after 1 second
                     window.location.replace("/laborstatusform"); // reloads the page if every form
                   }, 5000);
