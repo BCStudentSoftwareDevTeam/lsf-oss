@@ -175,7 +175,7 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
   var jobType = $("#jobType").val();
   if (selectedHoursPerWeek){
     $("#selectedHoursPerWeek").empty();
-    var list = ["10", "15", "20"];
+    var list = ["10", "12", "15", "20"];
     if (jobType == "Secondary"){
        list = ["5", "10"];
     }
