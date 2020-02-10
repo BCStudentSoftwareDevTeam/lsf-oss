@@ -8,21 +8,22 @@ $(document).ready(function(){
       parsedArrayOfStudentCookies = JSON.parse(cookies);
       console.log(JSON.parse(cookies));
       for (i in parsedArrayOfStudentCookies) {
-        console.log(i);
         createAndFillTable(parsedArrayOfStudentCookies[i]);
       }
-      console.log(parsedArrayOfStudentCookies[0].stuTermCode);
+      // console.log(parsedArrayOfStudentCookies[0].stuTermCode);
       $("#selectedTerm option[value=" + parsedArrayOfStudentCookies[0].stuTermCode + "]").attr('selected', 'selected');
       $("#selectedSupervisor option[value=" + parsedArrayOfStudentCookies[0].stuSupervisorID + "]").attr('selected', 'selected');
       $("#selectedDepartment option[value=\"" + parsedArrayOfStudentCookies[0].stuDepartment + "\"]").attr('selected', 'selected');
-
+      preFilledDate($("#selectedTerm"));
+      showAccessLevel($("#selectedTerm"));
+      disableTermSupervisorDept()
     }
 
     $("[data-toggle=\"tooltip\"]").tooltip();
     $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
     if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
       checkCompliance($("#selectedDepartment"));
-      getDepartment($("#selectedDepartment"), "stopSelectRefresh");
+      getDepartment($("#selectedDepartment"));
     }
     if($("#jobType").val()){ // fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
       var value = $("#selectedHoursPerWeek").val();
@@ -131,7 +132,8 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
          url: url,
          dataType: "json",
          success: function (response){
-            fillPositions(response, stopSelectRefresh);
+           console.log(response);
+           fillPositions(response, stopSelectRefresh);
           }
         });
   }
@@ -146,6 +148,7 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
           .attr("id", key)
           .attr("data-wls", response[key].WLS)
      );
+
    }
    if (stopSelectRefresh== "") {
      $(".selectpicker").selectpicker("refresh");
