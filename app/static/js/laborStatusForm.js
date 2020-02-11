@@ -2,48 +2,33 @@ var globalArrayOfStudents = [];
 var display_failed = [];
 // document.cookie = '=""; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 $(document).ready(function(){
-    var cookies = document.cookie;
-    console.log("Cookies: ", cookies);
-    if (cookies){
-      parsedArrayOfStudentCookies = JSON.parse(cookies);
-      console.log(JSON.parse(cookies));
-      for (i in parsedArrayOfStudentCookies) {
-        createAndFillTable(parsedArrayOfStudentCookies[i]);
-      }
-      console.log(parsedArrayOfStudentCookies[0].stuTermCode);
-      // var termCodeLastTwo = parsedArrayOfStudentCookies[0].stuTermCode.slice(-2);
-      // if (termCodeLastTwo == 00 || termCodeLastTwo == 11 || termCodeLastTwo == 12) {
-      $("#selectedHoursPerWeek option[value=\"" + parsedArrayOfStudentCookies[0].stuWeeklyHours + "]").attr('selected', 'selected');
-      //   }
-      // else {
-      //   $("#selectedHoursPerWeek option[value=\"" + parsedArrayOfStudentCookies[0].stuContractHours + "]").attr('selected', 'selected');
-      // }
-      $("#selectedTerm option[value=" + parsedArrayOfStudentCookies[0].stuTermCode + "]").attr('selected', 'selected');
-      $("#selectedSupervisor option[value=" + parsedArrayOfStudentCookies[0].stuSupervisorID + "]").attr('selected', 'selected');
-      $("#selectedDepartment option[value=\"" + parsedArrayOfStudentCookies[0].stuDepartment + "\"]").attr('selected', 'selected');
-      preFilledDate($("#selectedTerm"));
-      showAccessLevel($("#selectedTerm"));
-      disableTermSupervisorDept();
-      $("#selectedTerm").selectpicker().attr("disabled", true);
-      $("#selectedTerm").selectpicker("refresh");
-      // parsedArrayOfStudentCookies.push(globalArrayOfStudents);
-      console.log("1)",globalArrayOfStudents);
-      // parsedArrayOfStudentCookies.length = 0;
-      console.log("2)",parsedArrayOfStudentCookies);
-      // $.removeCookie("cookies", { path: '/' });
+  $("[data-toggle=\"tooltip\"]").tooltip();
+  $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
+  if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
+    checkCompliance($("#selectedDepartment"));
+    getDepartment($("#selectedDepartment"));
+  }
+  if($("#jobType").val()){ // fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
+    var value = $("#selectedHoursPerWeek").val();
+    $("#selectedHoursPerWeek").val(value);
+    fillHoursPerWeek("fillhours");
+  }
+  var cookies = document.cookie;
+  console.log("Cookies: ", cookies);
+  if (cookies){
+    parsedArrayOfStudentCookies = JSON.parse(cookies);
+    for (i in parsedArrayOfStudentCookies) {
+      createAndFillTable(parsedArrayOfStudentCookies[i]);
     }
+    $("#selectedTerm option[value=" + parsedArrayOfStudentCookies[0].stuTermCode + "]").attr('selected', 'selected');
+    $("#selectedSupervisor option[value=" + parsedArrayOfStudentCookies[0].stuSupervisorID + "]").attr('selected', 'selected');
+    $("#selectedDepartment option[value=\"" + parsedArrayOfStudentCookies[0].stuDepartment + "\"]").attr('selected', 'selected');
+    preFilledDate($("#selectedTerm"));
+    showAccessLevel($("#selectedTerm"));
+    disableTermSupervisorDept();
+  }
 
-    $("[data-toggle=\"tooltip\"]").tooltip();
-    $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
-    if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
-      checkCompliance($("#selectedDepartment"));
-      getDepartment($("#selectedDepartment"));
-    }
-    if($("#jobType").val()){ // fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
-      var value = $("#selectedHoursPerWeek").val();
-      $("#selectedHoursPerWeek").val(value);
-      fillHoursPerWeek("fillhours");
-    }
+
 });
 
 $("laborStatusForm").submit(function(event) {
@@ -353,7 +338,7 @@ function searchDataToPrepareToCheckPrimaryPosition() { // displays table when pl
     msgFlash("Please fill out all fields before submitting.", "fail");
   }
   else if (checkWLS() === false) {
-    checkWLS();
+    // checkWLS();
   }
   else  {
     checkPrimaryPositionToCreateTheTable(studentDict);
@@ -444,7 +429,8 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
           $("#warningModal").modal("show");
         }
         else if(studentDict.stuJobType == "Secondary"){
-          if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true) {
+          if (checkDuplicate(studentDict) == true) {
+            checkTotalHours(studentDict, response);
             createAndFillTable(studentDict);
           }
           else {
@@ -456,7 +442,8 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
       }
       else {
         if(studentDict.stuJobType == "Primary"){
-          if (checkDuplicate(studentDict) == true  && checkTotalHours(studentDict, response) == true){
+          if (checkDuplicate(studentDict) == true){
+            checkTotalHours(studentDict, response);
             createAndFillTable(studentDict);
           }
           else {
@@ -472,7 +459,8 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
             $("#warningModal").modal("show");
           }
           else {
-            if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true){
+            if (checkDuplicate(studentDict) == true){
+              checkTotalHours(studentDict, response);
               createAndFillTable(studentDict);
             }
             else {
@@ -535,7 +523,6 @@ function createAndFillTable(studentDict) {
   }
 }
 
-storeTotalHours = {}
 function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
   totalHoursCount = studentDict.stuWeeklyHours;
   for (i = 0; i < globalArrayOfStudents.length; i++){
@@ -547,15 +534,11 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
   for (i = 0; i < databasePositions.length; i++){
     totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
   }
-  storeTotalHours["Hours"] = {"totalHours": totalHoursCount}
   if (totalHoursCount > (15)){
     studentDict.isItOverloadForm = "True";
     $('#OverloadModal').modal('show');
-    return true;
   }
-  else {
-    return true;
-  }
+  return true;
 }
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
@@ -603,11 +586,7 @@ function userInsert(){
     $("#laborStatusForm").on("submit", function(e) {
       e.preventDefault();
     });
-    if (storeTotalHours['Hours']['totalHours']){
-      for (var i = 0; i <globalArrayOfStudents.length; i++){
-        globalArrayOfStudents[i].stuTotalHours = storeTotalHours['Hours']['totalHours']
-      }
-    }
+
     //console.log(globalArrayOfStudents);
     $.ajax({
            method: "POST",
@@ -667,6 +646,7 @@ function userInsert(){
                  $("a").attr("onclick", "").unbind("click");
                  $(".glyphicon-edit").css("color", "grey");
                  $(".glyphicon-remove").css("color", "grey");
+                 document.cookie = null;
                  msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait for page to reload.)", "success");
                  setTimeout(function() { // executed after 1 second
                     window.location.replace("/laborstatusform"); // reloads the page if every form
