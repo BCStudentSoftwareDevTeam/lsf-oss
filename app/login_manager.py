@@ -23,7 +23,6 @@ def require_login():
     try:
         user = User.get(User.username == username)
         print(user.username)
-        print("Hello")
         return user
     except Exception as e:
         print(e)
