@@ -610,7 +610,6 @@ function userInsert(){
         globalArrayOfStudents[i].stuTotalHours = storeTotalHours['Hours']['totalHours']
       }
     }
-    console.log(globalArrayOfStudents);
     $.ajax({
            method: "POST",
            url: "/laborstatusform/userInsert",
