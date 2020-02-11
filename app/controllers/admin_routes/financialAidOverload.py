@@ -20,9 +20,12 @@ def financialAidOverload(overloadFormID):
     if not (current_user.isFinancialAidAdmin or current_user.isSaasAdmin):       # Not an admin
         return render_template('errors/403.html')
 
+
     overloadForm = FormHistory.get(FormHistory.formHistoryID == overloadFormID)
+
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
 
+    getOverloadReason = FormHistory.select().join(OverloadForm).where(FormHistory.overloadForm == rsp["FormID"]).where(FormHistory.status.statusName == "Pending").order_by(FormHistory.historyType.asc())
 
     # the following lines prefills the information for student
     studentName = lsfForm.studentSupervisee.FIRST_NAME + " "+ lsfForm.studentSupervisee.LAST_NAME
@@ -31,14 +34,16 @@ def financialAidOverload(overloadFormID):
     position = lsfForm.POSN_TITLE
     supervisor = lsfForm.supervisor.FIRST_NAME +" "+ lsfForm.supervisor.LAST_NAME
     overloadHours= lsfForm.weeklyHours
-    overloadReason=lsfForm.overloadReason
-    laborOfficeNotes=lsf.laborDepartmentNotes
+    overloadForm = getOverloadReason.overloadReason
+    totalCurrentHours = lsfForm.weeklyHours
+    laborOfficeNotes=lsfForm.laborDepartmentNotes
     today = date.today()
     termYear = today.year
     termCodeYear = Term.select(Term.termCode).where(Term.termCode.between(termYear-1, termYear + 15))
     currentTerm = str(lsfForm.termCode.termCode)[-2:]
-    TermsNeeded=[]
+    #overloadReason = OverloadForm.select(OverloadForm.overloadFormID)
 
+    TermsNeeded=[]
     for term in termCodeYear:
         if str(term)[-2:] == "11" or str(term)[-2:] == "12" or str(term)[-2:]== "00":
             TermsNeeded.append(term)
@@ -79,6 +84,7 @@ def financialAidOverload(overloadFormID):
                         studentBnum = studentBnum,
                         department = department,
                         position = position,
+                        supervisor=supervisor,
                         overloadHours = overloadHours,
                         currentPrimary = formIDPrimary,
                         currentSecondary = formIDSecondary,
@@ -87,27 +93,3 @@ def financialAidOverload(overloadFormID):
                         overloadReason = overloadReason,
                         laborOfficeNotes = laborOfficeNotes
                       )
-
-@admin.route('/admin/getNotes/<formid>', methods=['GET'])
-def getNotes(formid):
-    '''
-    This function retrieves the supervisor and labor department notes.
-    '''
-    try:
-        current_user = require_login()
-        if not current_user:                    # Not logged in
-            return render_template('errors/403.html')
-        if not current_user.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html')
-        notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid)
-        notesDict = {}
-        if notes.supervisorNotes:
-            notesDict["supervisorNotes"] = notes.supervisorNotes
-
-        if notes.laborDepartmentNotes:
-            notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes
-        return jsonify(notesDict)
-
-    except Exception as e:
-        print("error", e)
-        return jsonify({"Success": False})
