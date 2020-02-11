@@ -90,6 +90,7 @@ def userInsert():
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
         term = d.termCode
+        print(term)
         # Changes the dates into the appropriate format for the table
         startDate = datetime.strptime(rspFunctional[i]['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
         endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
@@ -135,7 +136,8 @@ def userInsert():
             status = Status.get(Status.statusName == "Pending")
             d, created = User.get_or_create(username = cfg['user']['debug'])
             creatorID = d.UserID
-            if(rspFunctional[i]["stuTotalHours"]) != None:
+            termCode = str(term)[-2:]
+            if(rspFunctional[i]["stuTotalHours"]) != None and termCode in ["11", "12", "00"]:
                 if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
                     formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
                                                       historyType = historyType.historyTypeName,
@@ -145,6 +147,9 @@ def userInsert():
                                                       status      = status.statusName)
                     email = emailHandler(formOverload.formHistoryID)
                     email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+            elif (rspFunctional[i]["stuTotalHours"]) != None:
+                if rspFunctional[i]["stuTotalHours"] > 40:
+                    print("email sent to supervisor and student about overload in break")
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)

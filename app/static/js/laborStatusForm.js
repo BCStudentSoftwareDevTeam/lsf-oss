@@ -483,10 +483,13 @@ function createAndFillTable(studentDict) {
   $(cell2).attr("data-posn", (studentDict).stuPositionCode);
   $(cell2).attr("data-wls", (studentDict).stuWLS);
   cell2.id="position_code";
-  hours = studentDict.stuContractHours;
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00") {
     hours = studentDict.stuWeeklyHours;
     studentDict.stuContractHours = null;
+  }
+  else{
+    hours = studentDict.stuContractHours;
+    studentDict.stuWeeklyHours = null;
   }
   $(cell3).html(studentDict.stuJobType);
   $(cell4).html(hours);
@@ -501,26 +504,55 @@ function createAndFillTable(studentDict) {
   }
 }
 
+function isOneLaborStatusForm(){
+  // check whether student has multiple labor status forms over the break period.
+  // if they already have one then send an email to the student and supervisor reminding them of 40 hour mark rule.
+  // return true if there is only one and false for multiple
+}
+
 storeTotalHours = {}
 function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
-  totalHoursCount = studentDict.stuWeeklyHours;
-  for (i = 0; i < globalArrayOfStudents.length; i++){
-    if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
-      totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
+  var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
+  if (termCodeLastTwo != "11" || termCodeLastTwo != "12" || termCodeLastTwo != "00"){
+    totalHoursCount = studentDict.stuContractHours;
+    for (i = 0; i < globalArrayOfStudents.length; i++){
+      if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
+        totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuContractHours;
+      }
+    }
+    for (i = 0; i < databasePositions.length; i++){
+      totalHoursCount = totalHoursCount + databasePositions[i].contractHours; // gets the total hours a student have both in database and in the table
+    }
+    storeTotalHours["Hours"] = {"totalHours": totalHoursCount}
+    console.log(totalHoursCount);
+    if (totalHoursCount > (40)){
+      studentDict.isItOverloadForm = "True";
+      $('#OverloadModal').modal('show');
+      return true;
+    }
+    else {
+      return true;
     }
   }
-
-  for (i = 0; i < databasePositions.length; i++){
-    totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
-  }
-  storeTotalHours["Hours"] = {"totalHours": totalHoursCount}
-  if (totalHoursCount > (15)){
-    studentDict.isItOverloadForm = "True";
-    $('#OverloadModal').modal('show');
-    return true;
-  }
-  else {
-    return true;
+  else{
+    totalHoursCount = studentDict.stuWeeklyHours;
+    for (i = 0; i < globalArrayOfStudents.length; i++){
+      if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
+        totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
+      }
+    }
+    for (i = 0; i < databasePositions.length; i++){
+      totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
+    }
+    storeTotalHours["Hours"] = {"totalHours": totalHoursCount}
+    if (totalHoursCount > (15)){
+      studentDict.isItOverloadForm = "True";
+      $('#OverloadModal').modal('show');
+      return true;
+    }
+    else {
+      return true;
+    }
   }
 }
 
