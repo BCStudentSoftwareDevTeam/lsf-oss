@@ -12,14 +12,12 @@ $('.glyphicon-calendar').click(function() {
  });
 
 // This sets the min date you can choose on the
-// date picker as tomorrows date, and also
-// pre-populate the date picker with tomorrows date
+// date picker as tomorrows date
 var date = new Date();
 date.setDate(date.getDate()+1);
 $("#datepicker0").datepicker({
   minDate: date
 });
-$("#datepicker0").datepicker("setDate", "date");
 
 // This function checks to see if all the fields have been filled before
 // rendering the submit modal. If the submit button is clicked before all
