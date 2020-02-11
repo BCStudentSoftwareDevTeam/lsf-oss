@@ -24,23 +24,6 @@ def laborhistory(id):
         current_user = require_login()
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
-
-        if not current_user.isLaborAdmin:
-            # If the current user is not an admin, then we can only allow them to see the labor history of a
-            # given BNumber if the BNumber is tied to a labor status form that is tied to a department where the
-            # current user is a supervisor or created a labor status form for the department
-            authorizedUser = False
-            allStudentDepartments = LaborStatusForm.select(LaborStatusForm.department).where(LaborStatusForm.studentSupervisee == id).distinct()
-            allUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).distinct()
-            for userDepartment in allUserDepartments:
-                for studentDepartment in allStudentDepartments:
-                    if userDepartment.formID.department == studentDepartment.department:
-                        authorizedUser = True
-                        break
-            if authorizedUser == False:
-                return render_template('errors/403.html')
-
-        student = Student.get(Student.ID == id)
         if not current_user.isLaborAdmin:
             # If the current user is not an admin, then we can only allow them to see the labor history of a
             # given BNumber if the BNumber is tied to a labor status form that is tied to a department where the
