@@ -40,15 +40,12 @@ def laborhistory(id):
                         break
             if authorizedUser == False:
                 return render_template('errors/403.html')
-
             departmentsList = []
             for i in allUserDepartments:
                 departmentsList.append(i.formID.department.departmentID)
-            print(departmentsList)
-            print("Not an admin")
         else:
-            print("I'm an admin and can see everything")
             isLaborAdmin = True
+            departmentsList = []
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         formHistoryList = ""
         for form in studentForms:
@@ -64,7 +61,6 @@ def laborhistory(id):
                                 isLaborAdmin = isLaborAdmin
                               )
     except Exception as e:
-        print(e)
         return render_template('errors/500.html')
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
