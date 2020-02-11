@@ -25,7 +25,11 @@ def manage_departments():
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html')
+            isLaborAdmin = False
+            return render_template('errors/403.html',
+                                    isLaborAdmin = isLaborAdmin)
+        else:
+            isLaborAdmin = True
 
         # users = User.select()
         departmentTracy = STUPOSN.select(STUPOSN.DEPT_NAME, STUPOSN.ORG, STUPOSN.ACCOUNT).distinct()
@@ -38,7 +42,8 @@ def manage_departments():
         department = Department.select()
         return render_template( 'admin/manageDepartments.html',
                                 title = ("Manage departments"),
-                                department = department
+                                department = department,
+                                isLaborAdmin = isLaborAdmin
                                 )
     except Exception as e:
         print("error", e)

@@ -23,8 +23,11 @@ def laborReleaseForm(laborStatusKey):
     current_user = require_login()
     if not current_user:
         render_template("errors/403.html")
-    if not current_user.isLaborAdmin:
-        render_template("errors/403.html")
+    if not current_user.isLaborAdmin:       # Not an admin
+        isLaborAdmin = False
+        # return render_template('errors/403.html')
+    else:
+        isLaborAdmin = True
 
     forms = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == laborStatusKey)
 
@@ -79,5 +82,6 @@ def laborReleaseForm(laborStatusKey):
 
     return render_template('main/laborReleaseForm.html',
 				            title=('Labor Release Form'),
-                            forms = forms
+                            forms = forms,
+                            isLaborAdmin = isLaborAdmin
                           )

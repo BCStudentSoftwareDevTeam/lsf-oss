@@ -19,7 +19,11 @@ def term_Management():
     if not current_user:                    # Not logged in
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:       # Not an admin
-        return render_template('errors/403.html')
+        isLaborAdmin = False
+        return render_template('errors/403.html',
+                                isLaborAdmin = isLaborAdmin)
+    else:
+        isLaborAdmin = True
 
     terms = Term.select()
     listOfTerms = Term.select()
@@ -29,6 +33,7 @@ def term_Management():
     return render_template( 'admin/termManagement.html',
                              title=('Admin Management'),
                              terms = terms,
+                             isLaborAdmin = isLaborAdmin,
                              listOfTerms = accordionTerms()
                           )
 
