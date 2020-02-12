@@ -529,7 +529,9 @@ function isOneLaborStatusForm(studentDict){
         if(response["Status"] == false){
           console.log(response["primarySupervisorName"]);
         // if they already have one (response if false) then show modal reminding supervisor of 40 hour mark rule.
-          alert("modal")
+        $("#warningModalTitle").text("Warning");
+        $("#warningModalText").text("Rules for Break LSF");
+        $("#warningModal").modal('show');
         }
       }
 

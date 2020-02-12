@@ -187,15 +187,16 @@ def getPositions(department):
 def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
-    isOneLSF_dict = {}
+    isMoreLSF_dict = {}
     if isOneLSF !=None:
         if len(list(positions)) > 1:
-            isOneLSF_dict["Status"] = True
+            isMoreLSF_dict["Status"] = True
             return jsonify(isOneLSF_dict)
-        isOneLSF_dict["Status"] = False
+        isMoreLSF_dict["Status"] = False
         for item in positions:
             isOneLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME
             isOneLSF_dict["primarySupervisorLastName"] = item.supervisor.LAST_NAME
+            isOneLSF_
         # Send email to both supervisors and
         return jsonify(isOneLSF_dict)
     positionsList = []
