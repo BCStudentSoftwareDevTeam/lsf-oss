@@ -22,6 +22,10 @@ def modifyLSF(laborStatusKey):
     current_user = require_login()
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
+    if not current_user.isLaborAdmin:       # Not an admin
+        isLaborAdmin = False
+    else:
+        isLaborAdmin = True
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
     form = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
@@ -65,7 +69,8 @@ def modifyLSF(laborStatusKey):
                                 positions = positions,
                                 wls = wls,
                                 form = form,
-                                oldSupervisor = oldSupervisor
+                                oldSupervisor = oldSupervisor,
+                                isLaborAdmin = isLaborAdmin
                               )
 
 @main_bp.route("/modifyLSF/getPosition/<department>", methods=['GET'])
