@@ -178,9 +178,21 @@ def getPositions(department):
     return json.dumps(positionDict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
-def checkForPrimaryPosition(termCode, student):
+@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
+def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    isOneLSF_dict = {}
+    if isOneLSF !=None:
+        if len(list(positions)) > 1:
+            isOneLSF_dict["Status"] = True
+            return jsonify(isOneLSF_dict)
+        isOneLSF_dict["Status"] = False
+        for item in positions:
+            isOneLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME
+            isOneLSF_dict["primarySupervisorLastName"] = item.supervisor.LAST_NAME
+        # Send email to both supervisors and
+        return jsonify(isOneLSF_dict)
     positionsList = []
     for item in positions:
         positionsDict = {}
