@@ -176,13 +176,13 @@
     </div>
 </div>
 <br>
-<div id="plus" class= "col-md-12 ">
+<div id="plus" class= "col-md-12">
   <button type="button"
-          class="btn btn-primary"
+          class="btn btn-primary disable"
           name = "addStudent"
           id="addMoreStudent"
           value = "formSubmission"
-          onclick="searchDataToPrepareToCheckPrimaryPosition(); disableTermSupervisorDept()">Add Student
+          onclick="checkCompliance(this); searchDataToPrepareToCheckPrimaryPosition(); disableTermSupervisorDept()">Add Student
   </button>
 </div>
   <br />
@@ -202,12 +202,12 @@
       <tbody id='tbodyid'></tbody>
     </table>
   <div class="col-md-12 " id="reviewButton">
-    <button type="button"
+    <button type="button disable"
             class="btn btn-primary"
             name = "formSubmission"
             id="reviewButton0"
             value = "formSubmission"
-            onclick="reviewButtonFunctionality()">Review</button>
+            onclick="checkCompliance(this); reviewButtonFunctionality()">Review</button>
       {% include "snips/LSFModals.html" %}
   </div>
 </div>

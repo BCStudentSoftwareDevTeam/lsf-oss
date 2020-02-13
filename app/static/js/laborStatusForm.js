@@ -228,11 +228,18 @@ function checkCompliance(obj) {
             $("#warningModalTitle").html("Warning")
             $("#warningModalText").html("Department is out of compliance because position descriptions are not up to date. Please contact labor office to update your position description.")
             $(".disable").prop("disabled", true);
+            $("#addMoreStudent").prop("disabled", true);
+            $("#reviewButton0").prop("disabled", true);
+            $("#submitmodalid").prop("disabled", true);
+            $("#addMoreStudent").button("refresh");
+            $("#reviewButton0").button("refresh");
+            $("#submitmodalid").button("refresh");
             $("#selectedTerm").selectpicker("refresh");
             $("#student").selectpicker("refresh");
             $("#position").selectpicker("refresh");
             $("#selectedSupervisor").selectpicker("refresh");
             $("#selectedDepartment").selectpicker("refresh");
+
           }
           else{
             $(".disable").prop("disabled", false);
