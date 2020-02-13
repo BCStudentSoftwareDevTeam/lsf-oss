@@ -25,7 +25,13 @@ def financialAidOverload(overloadFormID):
 
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
 
-    getOverloadReason = FormHistory.select().join(OverloadForm).where(FormHistory.overloadForm == rsp["FormID"]).where(FormHistory.status.statusName == "Pending").order_by(FormHistory.historyType.asc())
+
+
+    getOverloadReason = FormHistory.select().join(OverloadForm).where(FormHistory.overloadForm == overloadFormID).where(FormHistory.status == "Pending").count()
+    print(getOverloadReason)
+    # for reason in getOverloadReason:
+    #     print(reason.overloadFormID.overloadReason)
+
 
     # the following lines prefills the information for student
     studentName = lsfForm.studentSupervisee.FIRST_NAME + " "+ lsfForm.studentSupervisee.LAST_NAME
@@ -34,14 +40,14 @@ def financialAidOverload(overloadFormID):
     position = lsfForm.POSN_TITLE
     supervisor = lsfForm.supervisor.FIRST_NAME +" "+ lsfForm.supervisor.LAST_NAME
     overloadHours= lsfForm.weeklyHours
-    overloadForm = getOverloadReason.overloadReason
+    # overloadReason = getOverloadReason.overloadReason
     totalCurrentHours = lsfForm.weeklyHours
     laborOfficeNotes=lsfForm.laborDepartmentNotes
     today = date.today()
     termYear = today.year
     termCodeYear = Term.select(Term.termCode).where(Term.termCode.between(termYear-1, termYear + 15))
     currentTerm = str(lsfForm.termCode.termCode)[-2:]
-    #overloadReason = OverloadForm.select(OverloadForm.overloadFormID)
+
 
     TermsNeeded=[]
     for term in termCodeYear:
@@ -90,6 +96,6 @@ def financialAidOverload(overloadFormID):
                         currentSecondary = formIDSecondary,
                         totalCurrentHours = totalCurrentHours,
                         totalFormHours = totalFormHours,
-                        overloadReason = overloadReason,
+                        # overloadReason = overloadReason,
                         laborOfficeNotes = laborOfficeNotes
                       )

@@ -1,4 +1,3 @@
-$(document).ready(function() { console.log("Howdy") });
 function modal(button) {
   if(button == "add" && $("#addlaborAdmin").val() != "") {
     $("p").html("Are you sure you want to add " + $("#addlaborAdmin option:selected").text() + " as an admin?");
@@ -41,5 +40,5 @@ function modal(button) {
     msg = "Please select a user";
     $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
     $("#flasher").delay(3000).fadeOut()
-}
+      }
 };

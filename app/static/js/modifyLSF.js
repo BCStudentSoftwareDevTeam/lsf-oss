@@ -29,13 +29,13 @@ function fill_positions(response) {
 }
 
 function fill_supervisor(response){
-  var selected_supervisors = $("#supervisor")[0];
+  var selected_supervisors = $("#supervisor");
     for (var key in response) {
       try{
         var options = document.createElement("option");
         options.text = response[key]["supervisorFirstName"].toString() + " " + response[key]["supervisorLastName"].toString();
-        options.value = response[key]["supervisorPIDM"].toString();
-        selected_supervisors.appendChild(options);
+        options.value =response[key]["supervisorPIDM"].toString();
+        selected_supervisors[0].appendChild(options);
         $('.selectpicker').selectpicker('refresh');
         var map = {};
         $('select option').each(function () {
@@ -52,7 +52,7 @@ function fill_supervisor(response){
 }
 
 $(document).ready(function(){
-   var department = $("#Department")[0].val();
+   var department = $("#Department").eq(0).val();
    var url = "/modifyLSF/getPosition/" + department;
        $.ajax({
          url: url,
@@ -66,7 +66,7 @@ $(document).ready(function(){
  });
 
 function jobPositionDisable(){
-  var termcode = $("#termCode")[0].val();
+  var termcode = $("#termCode").eq(0).val();
   var specificTerm = termcode.toString().substr(-2);
   if (specificTerm != 11 && specificTerm != 12 && specificTerm != 00){
     $("#jobType")[0].prop("disabled", true);
@@ -165,26 +165,24 @@ var effectiveDate = $("#datetimepicker0").datepicker('getDate');
 var finalDict = {};
 
 function checkForChange(){
-  var oldValue = $("#modifyLSF").find(".oldValue"); //returns a nodeList where you need to access by index
-  var newValue = $("#modifyLSF").find("select.newValue, textarea.newValue, input.newValue");
-  var effectiveDate = $("#datetimepicker0").val();
-  var notesOld = $("#oldNotes").val();
-  var notesNew =$("#supervisorNotes").val();
-  for (var i=0; i < newValue.length; i=i+1) {
-    newVal = $(newValue[i]).val();
-    if (oldValue[i].value != newVal && newVal != "") { //If the oldValue differs from the newValue, add it to the dictionary
-      finalDict[newValue[i].id] = {"oldValue": oldValue[i].value,
-                                     "newValue": newVal,
-                                     "date": effectiveDate
-                                  }
-      }
+  var oldSupervisor = $("#prefillsupervisor").val();
+  var newSupervisor = $("#supervisor").val();
+  var oldPostition = $("#prefillposition").val();
+  var newPostition = $("#POSN_TITLE").val();
+  var date = $("#datetimepicker0").val();
+  var oldNotes = $("#oldNotes").val();
+  var newNotes = $("#supervisorNotes").val();
+
+  if(oldSupervisor != newSupervisor){
+    finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor, "date": date}
   }
-  if (notesOld != notesNew) { //Adds notes to dictionary if theyre different
-    finalDict["supervisorNotes"] = {"oldValue": notesOld,
-                                   "newValue": notesNew,
-                                   "date": effectiveDate
-                                  }
+  if(oldPostition != newPostition){
+    finalDict["POSN_TITLE"] = {"oldValue": oldPostition, "newValue": newPostition, "date": date}
   }
+  if(oldNotes != newNotes){
+    finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes, "date": date}
+  }
+
   if (JSON.stringify(finalDict) !== '{}'){
     $('#submitModal').modal('show');
     return finalDict

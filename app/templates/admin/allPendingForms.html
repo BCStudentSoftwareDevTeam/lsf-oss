@@ -14,17 +14,14 @@
   <script type="text/javascript" src="{{url_for('static', filename='js/allPendingForms.js') }}"></script>
 {% endblock %}
 
-{% block title %}
-{{super()}}
-    Pending Forms
-{% endblock %}
 
 {% block app_content %}
+<div align="center">
+  <h1>Pending Forms</h1>
+</div>
 
 <div class="container" id="wrapper" align="center">
-    <b><h1 id="header"> Pending Forms </h1></b>
-        <br> </br>
-     <div align="center" id="pendingTabs" class="container">
+   <div align="center" id="pendingTabs" class="container">
      <ul  class="nav nav-pills">
        <li {% if formType == "all" %} class="active" {% endif %}>
           <a  href="{{url_for('admin.allPendingForms', formType = 'all')}}">All Pending Forms</a>
@@ -75,7 +72,7 @@
                       <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" name="check[]"  autocomplete="off" />
                       {% include "snips/pendingNotesModal.html" %}
                       <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
-                             class="glyphicon glyphicon-book btn-lg
+                             class="glyphicon glyphicon-edit btn-lg
                                   {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
                                   {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
                                   {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
@@ -99,7 +96,7 @@
                       {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}  ({{allForms.formID.studentSupervisee.ID}})
                     </td>
                     <td> {# POSITON AND WLS #}
-                      {{allForms.formID.POSN_TITLE}} ({{allForms.formID.WLS}})
+                      {{allForms.formID.POSN_TITLE}}
                     </td>
                     <td> {# HOURS #}
                     {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}

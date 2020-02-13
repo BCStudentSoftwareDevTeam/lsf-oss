@@ -10,6 +10,7 @@ from app.models.modifiedForm import ModifiedForm
 from app.models.overloadForm import OverloadForm
 from app.models.formHistory import *
 from app.models.term import Term
+from app import cfg
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 
@@ -22,7 +23,11 @@ def allPendingForms(formType):
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html')
+            isLaborAdmin = False
+            return render_template('errors/403.html',
+                                    isLaborAdmin = isLaborAdmin)
+        else:
+            isLaborAdmin = True
         formList = None
         historyType = None
         pageTitle = ""
@@ -70,7 +75,8 @@ def allPendingForms(formType):
                                 users=users,
                                 formList = formList,
                                 formType= formType,
-                                modalTarget = approvalTarget
+                                modalTarget = approvalTarget,
+                                isLaborAdmin = isLaborAdmin
                                 )
 
     except Exception as e:
@@ -106,18 +112,30 @@ def finalApproval():
         if str(history_type.historyType) == 'Labor Status Form':
             approving_labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Status Form')
             approving_labor_forms.status = Status.get(Status.statusName == "Approved")
+            approving_labor_forms.reviewedDate = date.today()
+            createdUser = User.get(username = cfg['user']['debug'])
+            approving_labor_forms.reviewedBy = createdUser.UserID
             approving_labor_forms.save()
         elif str(history_type.historyType) == 'Modified Labor Form':
             approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
             approving_labor_modified_forms.status = Status.get(Status.statusName == "Approved")
+            approving_labor_modified_forms.reviewedDate = date.today()
+            createdUser = User.get(username = cfg['user']['debug'])
+            approving_labor_modified_forms.reviewedBy = createdUser.UserID
             approving_labor_modified_forms.save()
         elif str(history_type.historyType) == 'Labor Overload Form':
             approving_labor_overload_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Overload Form')
             approving_labor_overload_forms.status = Status.get(Status.statusName == "Approved")
+            approving_labor_overload_forms.reviewedDate = date.today()
+            createdUser = User.get(username = cfg['user']['debug'])
+            approving_labor_overload_forms.reviewedBy = createdUser.UserID
             approving_labor_overload_forms.save()
         elif str(history_type.historyType) == 'Labor Release Form':
             approving_labor_release_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Release Form')
             approving_labor_release_forms.status = Status.get(Status.statusName == "Approved")
+            approving_labor_release_forms.reviewedDate = date.today()
+            createdUser = User.get(username = cfg['user']['debug'])
+            approving_labor_release_forms.reviewedBy = createdUser.UserID
             approving_labor_release_forms.save()
     return jsonify({"success": True})
 
@@ -131,18 +149,30 @@ def finalDenial():
             if str(history_type.historyType) == 'Labor Status Form':
                 approving_labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Status Form')
                 approving_labor_forms.status = Status.get(Status.statusName == "Denied")
+                approving_labor_forms.reviewedDate = date.today()
+                createdUser = User.get(username = cfg['user']['debug'])
+                approving_labor_forms.reviewedBy = createdUser.UserID
                 approving_labor_forms.save()
             elif str(history_type.historyType) == 'Modified Labor Form':
                 approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
                 approving_labor_modified_forms.status = Status.get(Status.statusName == "Denied")
+                approving_labor_modified_forms.reviewedDate = date.today()
+                createdUser = User.get(username = cfg['user']['debug'])
+                approving_labor_modified_forms.reviewedBy = createdUser.UserID
                 approving_labor_modified_forms.save()
             elif str(history_type.historyType) == 'Labor Overload Form':
                 approving_labor_overload_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Overload Form')
                 approving_labor_overload_forms.status = Status.get(Status.statusName == "Denied")
+                approving_labor_overload_forms.reviewedDate = date.today()
+                createdUser = User.get(username = cfg['user']['debug'])
+                approving_labor_overload_forms.reviewedBy = createdUser.UserID
                 approving_labor_overload_forms.save()
             elif str(history_type.historyType) == 'Labor Release Form':
                 approving_labor_release_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Release Form')
                 approving_labor_release_forms.status = Status.get(Status.statusName == "Denied")
+                approving_labor_release_forms.reviewedDate = date.today()
+                createdUser = User.get(username = cfg['user']['debug'])
+                approving_labor_release_forms.reviewedBy = createdUser.UserID
                 approving_labor_release_forms.save()
         return jsonify({"success": True})
     except Exception as e:

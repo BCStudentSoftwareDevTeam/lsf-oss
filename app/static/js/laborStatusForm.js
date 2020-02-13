@@ -144,38 +144,27 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
  $("#position").change(function(){
    //this is just getting the value that is selected
    var wls = $("#position").find("option:selected").attr("data-wls");
-   if (wls >= 5) {
-     $("#warningModalTitle").html("Work-Learning-Service Levels (WLS)");
-     $("#warningModalText").html("Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
-                              "These positions require special authorization as specified at " +
-                              "<a href=\"http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS\""+
-                              "target=\"_blank\">The Labor Program Website.</a>");
-     $("#warningModal").modal("show");
-     // NOTE!!! This code hides the secondary option from selectpicker
-     $('#jobType').val("");
-     $('#jobType').find('option:contains("Secondary")').hide();
-     $("#jobType").selectpicker("refresh");
-     $("#selectedHoursPerWeek").val("");
-     $("#selectedHoursPerWeek").selectpicker("refresh");
+   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
+   var termCodeLastTwo = termCodeSelected.slice(-2);
+   //We only want to show the modal if the selected term is 'Spring', 'Fall', or 'AY'
+   if (termCodeLastTwo == 00 || termCodeLastTwo == 11 || termCodeLastTwo == 12) {
+     if (wls >= 5) {
+       $("#warningModalTitle").html("Work-Learning-Service Levels (WLS)");
+       $("#warningModalText").html("Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
+                                "These positions require special authorization as specified at " +
+                                "<a href=\"http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS\""+
+                                "target=\"_blank\">The Labor Program Website.</a>");
+       $("#warningModal").modal("show");
+   }
  }
- else{
-      $('#jobType').val("");
-      $('#jobType').find('option:contains("Secondary")').show();
-      $("#jobType").selectpicker("refresh");
-      $("#selectedHoursPerWeek").val("");
-      $("#selectedHoursPerWeek").selectpicker("refresh");    }
 });
 
  function fillHoursPerWeek(fillhours=""){ // prefill hours per week select picker
-   var wls = $("#position").find("option:selected").attr("data-wls");
   var selectedHoursPerWeek = $("#selectedHoursPerWeek");
   var jobType = $("#jobType").val();
   if (selectedHoursPerWeek){
     $("#selectedHoursPerWeek").empty();
-    var list = ["10", "15", "20"];
-    if (wls>=5){
-      list = ["15", "20"]
-    }
+    var list = ["10", "12", "15", "20"];
     if (jobType == "Secondary"){
        list = ["5", "10"];
     }
@@ -192,12 +181,16 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
 function checkWLS() {
   var wls = $("#position").find("option:selected").attr("data-wls");
   var hoursPerWeek = $("#selectedHoursPerWeek").val();
-
-  if (wls >= 5 && hoursPerWeek < 15 ) {
-    $("#warningModalTitle").html("Insert Rejected");
-    $("#warningModalText").html("Student requires at least a 15 hour contract with positions that are WLS 5 or greater.  Please also make sure that job type is not secondary for positions that are WLS 5 or greater.");
-    $("#warningModal").modal("show");
-    return false;
+  var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
+  var termCodeLastTwo = termCodeSelected.slice(-2);
+  //We only want to show the modal if the selected term is 'Spring', 'Fall', or 'AY'
+  if (termCodeLastTwo == 00 || termCodeLastTwo == 11 || termCodeLastTwo == 12) {
+    if (wls >= 5 && hoursPerWeek < 15 ) {
+      $("#warningModalTitle").html("Insert Rejected");
+      $("#warningModalText").html("Student requires at least a 15 hour contract with positions that are WLS 5 or greater.  Please also make sure that job type is not secondary for positions that are WLS 5 or greater.");
+      $("#warningModal").modal("show");
+      return false;
+    }
   }
   else {
     return true;
@@ -395,7 +388,7 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
     if(globalArrayOfStudents[i].stuName == studentDict.stuName &&
       globalArrayOfStudents[i].stuJobType == studentDict.stuJobType &&
       (studentDict.stuJobType == "Primary" || globalArrayOfStudents[i].stuPosition == studentDict.stuPosition)){
-      $("#warningModalText").html("Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position.");
+      $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
       $("#warningModal").modal("show");
       return false;
     }
@@ -414,7 +407,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
       if(Object.keys(response).length > 0) {
         if (studentDict.stuJobType == "Primary"){
           $("#warningModalTitle").html("Insert Rejected")
-          $("#warningModalText").html(studentDict.stuName + " already has a primary position.");
+          $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
           $("#warningModal").modal("show");
         }
         else if(studentDict.stuJobType == "Secondary"){
@@ -423,7 +416,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
           }
           else {
             $("#warningModalTitle").html("Insert Rejected")
-            $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
+            $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
             $("#warningModal").modal("show");
           }
         }
@@ -435,7 +428,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
           }
           else {
             $("#warningModalTitle").html("Insert Rejected")
-            $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
+            $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
             $("#warningModal").modal("show");
           }
         }
@@ -451,7 +444,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
             }
             else {
               $("#warningModalTitle").html("Insert Rejected")
-              $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
+              $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
               $("#warningModal").modal("show");
             }
           }
@@ -490,20 +483,17 @@ function createAndFillTable(studentDict) {
   $(cell2).attr("data-posn", (studentDict).stuPositionCode);
   $(cell2).attr("data-wls", (studentDict).stuWLS);
   cell2.id="position_code";
+  hours = studentDict.stuContractHours;
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00") {
-    $(cell3).html((studentDict).stuJobType);
-    $(cell4).html((studentDict).stuWeeklyHours);
-    $(cell5).html((studentDict).stuStartDate + " - " + (studentDict).stuEndDate);
-    $(cell6).html(notesGlyphicon);
-    $(cell7).html(removeIcon);
+    hours = studentDict.stuWeeklyHours;
+    studentDict.stuContractHours = null;
   }
-  else {
-    $(cell3).html("Secondary");
-    $(cell4).html(selectedContractHoursName);
-    $(cell5).html((studentDict).stuStartDate + " - " + (studentDict).stuEndDate);
-    $(cell6).html(notesGlyphicon);
-    $(cell7).html(removeIcon);
-  }
+  $(cell3).html(studentDict.stuJobType);
+  $(cell4).html(hours);
+  $(cell5).html((studentDict).stuStartDate + " - " + (studentDict).stuEndDate);
+  $(cell6).html(notesGlyphicon);
+  $(cell7).html(removeIcon);
+
   refreshSelectPickers();
   var rowLength = document.getElementById("mytable").rows.length;
   if (rowLength > 1) {
@@ -579,8 +569,10 @@ function userInsert(){
     $("#laborStatusForm").on("submit", function(e) {
       e.preventDefault();
     });
-    for (var i = 0; i <globalArrayOfStudents.length; i++){
-      globalArrayOfStudents[i].stuTotalHours = storeTotalHours['Hours']['totalHours']
+    if (storeTotalHours['Hours']['totalHours']){
+      for (var i = 0; i <globalArrayOfStudents.length; i++){
+        globalArrayOfStudents[i].stuTotalHours = storeTotalHours['Hours']['totalHours']
+      }
     }
     console.log(globalArrayOfStudents);
     $.ajax({
@@ -599,7 +591,7 @@ function userInsert(){
                        var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
                        var jobType = globalArrayOfStudents[key].stuJobType;
                        var hours = globalArrayOfStudents[key].stuWeeklyHours;
-                       var selectedContractHours = globalArrayOfStudents[key].stuWeeklyHours;
+                       // var selectedContractHours = globalArrayOfStudents[key].stuWeeklyHours;
                        if (response[key] === false){
                            if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
                               display_failed.push(key);
@@ -641,7 +633,7 @@ function userInsert(){
                  $("a").attr("onclick", "").unbind("click");
                  $(".glyphicon-edit").css("color", "grey");
                  $(".glyphicon-remove").css("color", "grey");
-                 msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait...)", "success");
+                 msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait for page reload.)", "success");
                  setTimeout(function() { // executed after 1 second
                     window.location.replace("/laborstatusform"); // reloads the page if every form
                   }, 5000);
@@ -656,7 +648,7 @@ function userInsert(){
        if (display_failed.length > 0){
            $('#error_modal').empty();
            $('#error_modal').append('<p style="padding-left:16px;"><b>ERROR:</b> Contact Systems Support if form(s) continue to fail <span style="color:darkred;" class="glyphicon glyphicon-exclamation-sign"></span> </p>')
-           msgFlash("Below form(s) failed to submit, please try again.", "fail")
+           msgFlash("The form(s) below failed to submit, please try again.", "fail")
             var failed_students = globalArrayOfStudents.filter(function(item, indx){
                 if (display_failed.includes(indx)){
                  return item;

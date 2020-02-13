@@ -1,6 +1,7 @@
 from app.controllers.admin_routes import *
 from app.models.user import *
 from app.controllers.admin_routes import admin
+from app.login_manager import require_login
 from app.models.term import *
 import datetime
 from app.models.term import *
@@ -14,12 +15,16 @@ import datetime
 # @login_required
 
 def term_Management():
-    # FIXME: Add user and admin checks to this route and all others on this page
-    # current_user = require_login()
-    # if not current_user:                    # Not logged in
-    #     return render_template('errors/403.html')
-    # if not current_user.isLaborAdmin:       # Not an admin
-    #     return render_template('errors/403.html')
+    current_user = require_login()
+    if not current_user:                    # Not logged in
+        return render_template('errors/403.html')
+    if not current_user.isLaborAdmin:       # Not an admin
+        isLaborAdmin = False
+        return render_template('errors/403.html',
+                                isLaborAdmin = isLaborAdmin)
+    else:
+        isLaborAdmin = True
+
     terms = Term.select()
     listOfTerms = Term.select()
     for i in range(5):
@@ -28,6 +33,7 @@ def term_Management():
     return render_template( 'admin/termManagement.html',
                              title=('Admin Management'),
                              terms = terms,
+                             isLaborAdmin = isLaborAdmin,
                              listOfTerms = accordionTerms()
                           )
 

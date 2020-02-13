@@ -3,7 +3,7 @@ $(document).ready( function(){
         'columnDefs': [{ 'orderable': false, 'targets': [0,4,10]}], // hide sort icon on header of first column
         // 'columnDefs': [{ 'orderable': false, 'targets': 9 }],
         'aaSorting': [[1, 'asc']], // start to sort data in second column
-        pageLength: 10
+        pageLength: 50
         // "dom": '<"top"fl>rt<"bottom"p><"clear">'
     });
   $('#overloadForms').on('click', 'tbody tr', function (evt) { // Fills the adminOverload modal with correct data and prevents notes column from opening adminOverload modal.
