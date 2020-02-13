@@ -244,6 +244,10 @@ document.getElementById("department").addEventListener("click",function(){
   $("#myCurrentStudents").hide()
   $("#myPastStudents").hide()
   $("#allMyStudents").hide()
+  // $('#departmentDropDown').val('Computer Science');
+  // $('#departmentDropDown').selectpicker('val', 'Computer Science');
+  populateTable('Computer Science')
+  // var departmentDropDown = document.getElementById("departmentDropDown");
 }, false);
 
 // Listen for click on toggle checkbox
@@ -279,6 +283,7 @@ function populateTable(){
 
   // This grabs the department selected from the select picker
   var departmentDropDown = document.getElementById("departmentDropDown");
+  console.log(departmentDropDown);
   var departmentSelected = departmentDropDown.options[departmentDropDown.selectedIndex].value;
 
   // AJAX call sends our controller the department choosen, and the controller
