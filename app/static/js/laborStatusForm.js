@@ -311,8 +311,23 @@ function deleteRow(glyphicon) {
     if (rowParent === table.rows[i]) {
       $(glyphicon).parents("tr").remove();
       globalArrayOfStudents.splice(i, 1);
+      if(globalArrayOfStudents.length > 1){
+        document.cookie = ("cookieArrayOfStudents", JSON.stringify(globalArrayOfStudents));
+      }
+      else {
+        parsedArrayOfStudentCookies = document.cookie;
+        document.cookie = parsedArrayOfStudentCookies + ";max-age=0;";
+      }
       break;
     }
+  }
+  if (globalArrayOfStudents.length <= 0) {
+    $("#selectedTerm").prop("disabled", false);
+    $("#selectedTerm").selectpicker("refresh");
+    $("#selectedSupervisor").prop("disabled", false);
+    $("#selectedSupervisor").selectpicker("refresh");
+    $("#selectedDepartment").prop("disabled", false);
+    $("#selectedDepartment").selectpicker("refresh");
   }
 }
 //END of glyphicons
@@ -395,8 +410,7 @@ function createStuDict(){
                     stuSupervisor: supervisor,
                     stuDepartment: department,
                     stuSupervisorID: supervisorID,
-                    isItOverloadForm: "False",
-                    stuTotalHours: null
+                    isItOverloadForm: "False"
                     };
     return studentDict;
   }
@@ -517,8 +531,7 @@ function createAndFillTable(studentDict) {
   $(cell7).html(removeIcon);
 
   refreshSelectPickers();
-  var rowLength = document.getElementById("mytable").rows.length;
-  if (rowLength > 1) {
+  if (globalArrayOfStudents.length >= 1) {
     $("#reviewButton").show();
   }
 }
@@ -542,12 +555,13 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
 }
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
-  $("#submitmodalid").show();
-  $("#doneBtn").hide();
-  disableTermSupervisorDept();
-  var rowLength = document.getElementById("mytable").rows.length;
-  if (rowLength > 1) {
-     createModalContent();
+
+
+  if (globalArrayOfStudents.length >= 1) {
+    $("#submitmodalid").show();
+    $("#doneBtn").hide();
+    disableTermSupervisorDept();
+    createModalContent();
   }
 }
 
@@ -646,7 +660,8 @@ function userInsert(){
                  $("a").attr("onclick", "").unbind("click");
                  $(".glyphicon-edit").css("color", "grey");
                  $(".glyphicon-remove").css("color", "grey");
-                 document.cookie = null;
+                 parsedArrayOfStudentCookies = document.cookie;
+                 document.cookie = parsedArrayOfStudentCookies +";max-age=0";
                  msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait for page to reload.)", "success");
                  setTimeout(function() { // executed after 1 second
                     window.location.replace("/laborstatusform"); // reloads the page if every form
