@@ -135,7 +135,7 @@ def userInsert():
                 historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
                 FormHistory.create( formID = lsf.laborStatusFormID,
                                                     historyType = historyType.historyTypeName,
-                                                    overloadForm = newLaborOverloadForm.overloadFormID,
+                                                    overloadForm = None,
                                                     createdBy   = creatorID,
                                                     createdDate = date.today(),
                                                     status      = status.statusName)
