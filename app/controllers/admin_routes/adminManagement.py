@@ -9,17 +9,22 @@ from flask import Flask, redirect, url_for
 @admin.route('/admin/adminManagement', methods=['GET'])
 # @login_required
 def admin_Management():
-   # username = load_user('heggens')
-   current_user = require_login()
-   if not current_user:                    # Not logged in
-       return render_template('errors/403.html')
-   if not current_user.isLaborAdmin:       # Not an admin
-       return render_template('errors/403.html')
+# username = load_user('heggens')
+    current_user = require_login()
+    if not current_user:                    # Not logged in
+        return render_template('errors/403.html')
+    if not current_user.isLaborAdmin:       # Not an admin
+        isLaborAdmin = False
+        return render_template('errors/403.html',
+                                isLaborAdmin = isLaborAdmin)
+    else:
+        isLaborAdmin = True
 
-   users = User.select()
-   return render_template( 'admin/adminManagement.html',
+    users = User.select()
+    return render_template( 'admin/adminManagement.html',
                             title=('Admin Management'),
                            # username = username,
+                           isLaborAdmin = isLaborAdmin,
                            users = users
                          )
 

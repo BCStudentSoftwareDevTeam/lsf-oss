@@ -3,8 +3,10 @@ from flask_login import current_user, login_required
 from app.controllers.main_routes import *
 from app.models.user import *
 from app.models.laborStatusForm import *
+# from app.models.formHistory import FormHistory
 from app.models.formHistory import *
 from app.models.overloadForm import *
+from app.models.department import *
 from app.models.student import *
 from app.controllers.errors_routes.handlers import *
 from app.login_manager import require_login
@@ -22,8 +24,27 @@ def laborhistory(id):
         current_user = require_login()
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
-
-        student = Student.get(Student.ID == id)
+        if not current_user.isLaborAdmin:
+            # If the current user is not an admin, then we can only allow them to see the labor history of a
+            # given BNumber if the BNumber is tied to a labor status form that is tied to a department where the
+            # current user is a supervisor or created a labor status form for the department
+            isLaborAdmin = False
+            authorizedUser = False
+            allStudentDepartments = LaborStatusForm.select(LaborStatusForm.department).where(LaborStatusForm.studentSupervisee == id).distinct()
+            allUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).distinct()
+            for userDepartment in allUserDepartments:
+                for studentDepartment in allStudentDepartments:
+                    if userDepartment.formID.department == studentDepartment.department:
+                        authorizedUser = True
+                        break
+            if authorizedUser == False:
+                return render_template('errors/403.html')
+            departmentsList = []
+            for i in allUserDepartments:
+                departmentsList.append(i.formID.department.departmentID)
+        else:
+            isLaborAdmin = True
+            departmentsList = []
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         formHistoryList = ""
         for form in studentForms:
@@ -34,9 +55,11 @@ def laborhistory(id):
                                 student = student,
                                 username=current_user.username,
                                 studentForms = studentForms,
-                                formHistoryList = formHistoryList
+                                formHistoryList = formHistoryList,
+                                departmentsList = departmentsList,
+                                isLaborAdmin = isLaborAdmin
                               )
-    except:
+    except Exception as e:
         return render_template('errors/500.html')
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
