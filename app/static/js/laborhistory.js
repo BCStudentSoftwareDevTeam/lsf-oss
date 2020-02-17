@@ -1,7 +1,15 @@
-$('#positionTable tbody tr  td').on('click',function(){
-     $("#modal").modal("show");
-     $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id)
-     setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
+$('#positionTable tbody tr td').on('click',function(){
+  /*If boolean value is false, flash container letting user know that they do not
+  have access. Else, load student labor history modal.*/
+ if (this.getAttribute('value') == 'false') {
+   $("#flash_container").prepend('<div class="alert alert-danger" role="alert" id="flasher">You do not have access to this department\'s information.</div>');
+   $("#flasher").delay(3000).fadeOut();
+ }
+ else {
+   $("#modal").modal("show");
+   $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id);
+   setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
+ }
 });
 
 function redirection(laborStatusKey){
