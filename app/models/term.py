@@ -6,4 +6,5 @@ class Term(baseModel):
     termName            = CharField(null=False)                                 # Spring 2020 only, Summer, Chsirtmas Break, AY 2020-2021
     termStart           = DateField(null=True, default=None)                    # start date
     termEnd             = DateField(null=True, default=None)                    # end date
+    primaryCutOff       = DateField(null=True, default=None)                    # Cut off date for primary position submission
     termState           = BooleanField(default=False)             #open, closed, inactive
