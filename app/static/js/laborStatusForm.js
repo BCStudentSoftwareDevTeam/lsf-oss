@@ -547,7 +547,7 @@ $('#selectedTerm').on('change', function(){ // Shows a modal containing all the 
   var termCodeLastTwo = $(this).val().slice(-2);
   if(["00", "11", "12"].includes(termCodeLastTwo) == false){ // if it is not AY, Fall or Spring, otherwise it is break time
     $("#warningModalTitle").text("Warning");
-    $("#warningModalText").text("Rules for Break LSF");
+    $("#warningModalText").html("Rules for Break LSF");
     $("#warningModal").modal('show');
   }
 });
@@ -563,14 +563,13 @@ function isOneLaborStatusForm(studentDict){
       dataType: "json",
       success: function (response){
         if(response["Status"] == false){
-          console.log(response["primarySupervisorName"]);
-        // if they already have one (response if false) then show modal reminding supervisor of 40 hour mark rule.
-        $("#warningModalTitle").text("Warning");
-        $("#warningModalText").text("Rules for Break LSF");
-        $("#warningModal").modal('show');
+        // if they already have one lsf or multiple (response if false) then show modal reminding the new supervisor of 40 hour mark rule.
+          $("#warningModalTitle").text("Warning");
+          $("#warningModalText").html(response["studentName"] +" "+ "is already working with" +" "+ response["primarySupervisorName"] +
+                                      "<br><br> " + "Rules for Break LSF");
+          $("#warningModal").modal('show');
         }
       }
-
     });
   }
 }
