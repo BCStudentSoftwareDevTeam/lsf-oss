@@ -122,8 +122,8 @@ class emailHandler():
                       "Labor Overload Form Rejected For Supervisor")
 
     def laborStatusFormSubmittedForBreak(self):
-        self.checkRecipient("Labor Status Form Submitted For Student",
-                            "Labor Status Form Submitted For Supervisor")
+        self.checkRecipient("Break Labor Status Form Submitted For Student",
+                            "Break Labor Status Form Submitted For Supervisor ")
 
     # Depending on what the paramater 'sendTo' is set equal to, this method will send the email either to the Primary, Seconday, or the Student
     def sendEmail(self, template, sendTo):
