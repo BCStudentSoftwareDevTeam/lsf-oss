@@ -27,6 +27,10 @@ def laborStatusForm(laborStatusKey = None):
     currentUser = require_login()
     if not currentUser:        # Not logged in
         return render_template('errors/403.html')
+    if not currentUser.isLaborAdmin:       # Not an admin
+        isLaborAdmin = False
+    else:
+        isLaborAdmin = True
     # Logged in
     wls = STUPOSN.select(STUPOSN.WLS).distinct() # getting WLS from TRACY
     posnCode = STUPOSN.select(STUPOSN.POSN_CODE).distinct() # getting position code from TRACY
@@ -55,7 +59,8 @@ def laborStatusForm(laborStatusKey = None):
                             students = students,
                             terms = terms,
                             staffs = staffs,
-                            departments = departments)
+                            departments = departments,
+                            isLaborAdmin = isLaborAdmin)
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
@@ -90,6 +95,7 @@ def userInsert():
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
         term = d.termCode
+        print(term)
         # Changes the dates into the appropriate format for the table
         startDate = datetime.strptime(rspFunctional[i]['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
         endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
@@ -135,7 +141,8 @@ def userInsert():
             status = Status.get(Status.statusName == "Pending")
             d, created = User.get_or_create(username = cfg['user']['debug'])
             creatorID = d.UserID
-            if(rspFunctional[i]["stuTotalHours"]) != None:
+            termCode = str(term)[-2:]
+            if(rspFunctional[i]["stuTotalHours"]) != None and termCode in ["11", "12", "00"]:
                 if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
                     formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
                                                       historyType = historyType.historyTypeName,
@@ -145,6 +152,10 @@ def userInsert():
                                                       status      = status.statusName)
                     email = emailHandler(formOverload.formHistoryID)
                     email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+            elif (rspFunctional[i]["stuTotalHours"]) != None:
+                if rspFunctional[i]["stuTotalHours"] > 40:
+                    print("email sent to supervisor and student about overload in break")
+                    email = emailHandler(formHistory.formHistoryID)
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
@@ -160,7 +171,11 @@ def getDates(termcode):
     for date in dates:
         start = date.termStart
         end  = date.termEnd
-        datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
+        primaryCutOff = date.primaryCutOff
+        if primaryCutOff is None:
+            datesDict[date.termCode] = {"Term Code": date.termCode,"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
+        else:
+            datesDict[date.termCode] = {"Term Code": date.termCode, "Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y")}
     return json.dumps(datesDict)
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
@@ -173,9 +188,28 @@ def getPositions(department):
     return json.dumps(positionDict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
-def checkForPrimaryPosition(termCode, student):
+@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
+def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    isMoreLSF_dict = {}
+    if isOneLSF !=None:
+        isMoreLSF_dict["Status"] = True # student does not have any previous lsf's
+        if len(list(positions)) > 1: # If student has one or more than one lsf
+            isMoreLSF_dict["Status"] = False
+            for item in positions:
+                isMoreLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME
+                isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
+                # FIXME: Send email to both supervisors and student (for more than one lsf). Send it to all supervisors.
+                # laborStatusKey = item.laborStatusFormID
+                # # print(" Labor Status Forms for Break", item.laborStatusFormID)
+                # selectedFormHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
+                # # print("Form History", selectedFormHistory.formHistoryID)
+                # email = emailHandler(selectedFormHistory.formHistoryID)
+                # email.laborStatusFormSubmittedForBreak()
+        # FIXME: Send email to the supervisor and student (for the first lsf)
+        return jsonify(isMoreLSF_dict)
+
     positionsList = []
     for item in positions:
         positionsDict = {}
