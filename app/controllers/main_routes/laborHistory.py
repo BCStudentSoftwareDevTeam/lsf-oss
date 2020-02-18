@@ -45,6 +45,7 @@ def laborhistory(id):
         else:
             isLaborAdmin = True
             departmentsList = []
+        student = Student.get(Student.ID == id)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         formHistoryList = ""
         for form in studentForms:
