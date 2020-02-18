@@ -23,6 +23,7 @@ $(document).ready(function(){
     $("#selectedTerm option[value=" + parsedArrayOfStudentCookies[0].stuTermCode + "]").attr('selected', 'selected');
     $("#selectedSupervisor option[value=" + parsedArrayOfStudentCookies[0].stuSupervisorID + "]").attr('selected', 'selected');
     $("#selectedDepartment option[value=\"" + parsedArrayOfStudentCookies[0].stuDepartment + "\"]").attr('selected', 'selected');
+    getDepartment($("#selectedDepartment"));
     preFilledDate($("#selectedTerm"));
     showAccessLevel($("#selectedTerm"));
     disableTermSupervisorDept();
@@ -303,6 +304,7 @@ $("#JopTypes").hide();
 $("#plus").hide();
 $("#mytable").hide();
 $("#failedTable").hide();
+
 function showAccessLevel(obj){ // Make Table labels appear
   $("#contractHours").hide();
   $("#hoursPerWeek").hide();
@@ -598,8 +600,9 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
 }
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
-
-
+  $("#laborStatusForm").on("submit", function(e) {
+    e.preventDefault();
+  });
   if (globalArrayOfStudents.length >= 1) {
     $("#submitmodalid").show();
     $("#doneBtn").hide();
