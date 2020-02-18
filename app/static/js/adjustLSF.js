@@ -1,7 +1,7 @@
 $(document).ready(function(){
   fillHoursPerWeek();
    var department = $("#Department").eq(0).val();
-   var url = "/modifyLSF/getPendingPosition/" + department;
+   var url = "/adjustLSF/getPosition/" + department;
        $.ajax({
          url: url,
          dataType: "json",
@@ -16,16 +16,16 @@ $(document).ready(function(){
 $("#contractHoursDiv").hide();
 $("#weeklyHoursDiv").hide();
 //adds a contstraint that does not allow user to set date before today's date
-// var date = new Date();
-// date.setDate(date.getDate());
-// $("#datetimepicker0").datepicker({
-//   minDate: date
-// });
-// $("#datetimepicker0").datepicker("setDate", "date");
-//
-// $('.glyphicon-calendar').click(function() {
-//     $("#datetimepicker0").focus();
-// });
+var date = new Date();
+date.setDate(date.getDate());
+$("#datetimepicker0").datepicker({
+  minDate: date
+});
+$("#datetimepicker0").datepicker("setDate", "date");
+
+$('.glyphicon-calendar').click(function() {
+    $("#datetimepicker0").focus();
+});
 
 function fill_positions(response) {
   var selected_positions = $("#POSN_TITLE")[0];
@@ -122,7 +122,7 @@ function fillHoursPerWeek(){ // prefill hours per week select picker)
  }
 }
 
-// var effectiveDate = $("#datetimepicker0").datepicker('getDate');
+var effectiveDate = $("#datetimepicker0").datepicker('getDate');
 var finalDict = {};
 
 function checkForChange(){
@@ -139,20 +139,20 @@ function checkForChange(){
   var newWeeklyHours = $('#weeklyHours').val();
 
   if(oldSupervisor != newSupervisor){
-    finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor}
+    finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor, "date": date}
   }
   if(oldPostition != newPostition){
-    finalDict["POSN_TITLE"] = {"oldValue": oldPostition, "newValue": newPostition}
+    finalDict["POSN_TITLE"] = {"oldValue": oldPostition, "newValue": newPostition, "date": date}
   }
   if(oldNotes != newNotes){
-    finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes}
+    finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes, "date": date}
   }
   //FIXME: when only weeklyhours is shows either just send weeklyhours dict or maybe make the contract hours null. and vice versa.
   if(oldContractHours != newContractHours){
-    finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours}
+    finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours, "date": date}
   }
   if(oldWeeklyHours != newWeeklyHours){
-    finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours}
+    finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours, "date": date}
   }
 
   if (JSON.stringify(finalDict) !== '{}'){
@@ -165,7 +165,7 @@ function checkForChange(){
 }
 
 function buttonListener(laborStatusKey) {
-  var url = "/modifyLSF/updateLSF/" + laborStatusKey;
+  var url = "/adjustLSF/submitModifiedForm/" + laborStatusKey;
   modifiedDict = JSON.stringify(finalDict)
       $.ajax({
         url: url,

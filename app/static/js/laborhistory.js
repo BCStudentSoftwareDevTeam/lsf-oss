@@ -15,9 +15,10 @@ $('#positionTable tbody tr td').on('click',function(){
 function redirection(laborStatusKey){
   /*
   When any of the three buttons is clicked, this function will append the 'href' attribute with the
-  correct redirection link and LSF primary key to each button.
+  correct redirection link and LSF primary key to each button
   */
   $("#modify").attr("href", "/modifyLSF/" + laborStatusKey); // will go to the modifyLSF controller
+  $("#adjust").attr("href", "/adjustLSF/" + laborStatusKey); // will go to the modifyLSF controller
   $("#rehire").attr("href", "/laborstatusform/" + laborStatusKey); // will go to the lsf controller
   $("#release").attr("href", "/laborReleaseForm/" + laborStatusKey); // will go to labor release form controller
 }

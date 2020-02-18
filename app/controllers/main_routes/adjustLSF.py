@@ -16,8 +16,8 @@ import base64
 from app.logic.emailHandler import*
 
 
-@main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
-def modifyLSF(laborStatusKey):
+@main_bp.route('/adjustLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
+def adjustLSF(laborStatusKey):
     ''' This function gets all the form's data and populates the front end with it'''
     current_user = require_login()
     if not current_user:        # Not logged in
@@ -52,8 +52,8 @@ def modifyLSF(laborStatusKey):
 
     for pos in positions:
 
-        return render_template( 'main/modifyLSF.html',
-    				            title=('modify LSF'),
+        return render_template( 'main/adjustLSF.html',
+    				            title=('adjust LSF'),
                                 username = current_user,
                                 superviser_id = superviser_id,
                                 prefillstudent = prefillstudent,
@@ -73,8 +73,8 @@ def modifyLSF(laborStatusKey):
                                 isLaborAdmin = isLaborAdmin
                               )
 
-@main_bp.route("/modifyLSF/getPendingPosition/<department>", methods=['GET'])
-def getPendingPosition(department):
+@main_bp.route("/adjustLSF/getPosition/<department>", methods=['GET'])
+def getPosition(department):
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
     supervisors = STUSTAFF.select().where(STUSTAFF.DEPT_NAME == department)
     position_dict = {}
@@ -84,66 +84,67 @@ def getPendingPosition(department):
         position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
     return json.dumps(position_dict)
 
-@main_bp.route("/modifyLSF/updateLSF/<laborStatusKey>", methods=['POST'])
-def updateLSF(laborStatusKey):
+@main_bp.route("/adjustLSF/submitModifiedForm/<laborStatusKey>", methods=['POST'])
+def sumbitModifiedForm(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
         print(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
+        print(student)
         for k in rsp:
-            # print("Inside while loop")
-            # modifiedforms = ModifiedForm.create(fieldModified = k,
-            #                                 oldValue      =  rsp[k]['oldValue'],
-            #                                 newValue      =  rsp[k]['newValue'],
-            #                                 effectiveDate =  datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d')
-            #                                 )
-            # historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
-            # status = Status.get(Status.statusName == "Pending")
-            # username = cfg['user']['debug']
-            # createdbyid = User.get(User.username == username)
-            # formhistorys = FormHistory.create( formID = laborStatusKey,
-            #                                  historyType = historyType.historyTypeName,
-            #                                  modifiedForm = modifiedforms.modifiedFormID,
-            #                                  createdBy   = createdbyid.UserID,
-            #                                  createdDate = date.today(),
-            #                                  status      = status.statusName)
-            LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-            if k == "supervisor":
-                d, created = User.get_or_create(PIDM = rsp[k]['newValue'])
-                if not created:
-                    LSF.supervisor = d.UserID
-                LSF.save()
-                print("I'm above issue")
-                if created:
-                    tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
-                    tracyEmail = tracyUser.EMAIL
-                    tracyUsername = tracyEmail.find('@')
-                    user = User.get(User.PIDM == rsp[k]['newValue'])
-                    user.username   = tracyEmail[:tracyUsername]
-                    user.FIRST_NAME = tracyUser.FIRST_NAME
-                    user.LAST_NAME  = tracyUser.LAST_NAME
-                    user.EMAIL      = tracyUser.EMAIL
-                    user.CPO        = tracyUser.CPO
-                    user.ORG        = tracyUser.ORG
-                    user.DEPT_NAME  = tracyUser.DEPT_NAME
-                    user.save()
-                    LSF.supervisor = d.PIDM
-                    LSF.save()
-                print("I'm below issue")
-            if k == "POSN_TITLE":
-                LSF.POSN_TITLE = rsp[k]['newValue']
-                LSF.save()
-            if k == "supervisorNotes":
-                LSF.supervisorNotes = rsp[k]['newValue']
-                LSF.save()
-            if k == "contractHours":
-                LSF.contractHours = rsp[k]['newValue']
-                LSF.save()
-            if k == "weeklyHours":
-                LSF.weeklyHours = rsp[k]['newValue']
-                LSF.save()
+            print("Inside while loop")
+            modifiedforms = ModifiedForm.create(fieldModified = k,
+                                            oldValue      =  rsp[k]['oldValue'],
+                                            newValue      =  rsp[k]['newValue'],
+                                            effectiveDate =  datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d')
+                                            )
+            historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
+            status = Status.get(Status.statusName == "Pending")
+            username = cfg['user']['debug']
+            createdbyid = User.get(User.username == username)
+            formhistorys = FormHistory.create( formID = laborStatusKey,
+                                             historyType = historyType.historyTypeName,
+                                             modifiedForm = modifiedforms.modifiedFormID,
+                                             createdBy   = createdbyid.UserID,
+                                             createdDate = date.today(),
+                                             status      = status.statusName)
+            # LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+            # print("Above k check")
+            # if k == "supervisor":
+            #     d, created = User.get_or_create(PIDM = rsp[k]['newValue'])
+            #     if not created:
+            #         LSF.supervisor = d.PIDM
+            #     LSF.save()
+            #     print("Above first if")
+            #     if created:
+            #         tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
+            #         tracyEmail = tracyUser.EMAIL
+            #         tracyUsername = tracyEmail.find('@')
+            #         user = User.get(User.PIDM == rsp[k]['newValue'])
+            #         user.username   = tracyEmail[:tracyUsername]
+            #         user.FIRST_NAME = tracyUser.FIRST_NAME
+            #         user.LAST_NAME  = tracyUser.LAST_NAME
+            #         user.EMAIL      = tracyUser.EMAIL
+            #         user.CPO        = tracyUser.CPO
+            #         user.ORG        = tracyUser.ORG
+            #         user.DEPT_NAME  = tracyUser.DEPT_NAME
+            #         user.save()
+            #         LSF.supervisor = d.PIDM
+            #         LSF.save()
+            # if k == "POSN_TITLE":
+            #     LSF.POSN_TITLE = rsp[k]['newValue']
+            #     LSF.save()
+            # if k == "supervisorNotes":
+            #     LSF.supervisorNotes = rsp[k]['newValue']
+            #     LSF.save()
+            # if k == "contractHours":
+            #     LSF.contractHours = rsp[k]['newValue']
+            #     LSF.save()
+            # if k == "weeklyHours":
+            #     LSF.weeklyHours = rsp[k]['newValue']
+            #     LSF.save()
         flash("Your labor status form has been modified.", "success")
 
         return jsonify({"Success":True, "url":"/laborHistory/" + student})

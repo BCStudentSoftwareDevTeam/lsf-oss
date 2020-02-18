@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block app_content %}
 <head>
-  <link rel="stylesheet" type="text/css" href="/static/css/modifyLSF.css" /> <!--jquery and js file called in code below-->
+  <link rel="stylesheet" type="text/css" href="/static/css/adjustLSF.css" /> <!--jquery and js file called in code below-->
 <!-- These are the outside links for the datepicker-->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
@@ -9,10 +9,11 @@
   <!-- These are the outside links for the effective date calendar-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> --> <!--I commented these out and it still worked -Kat 7/26-->
 </head>
 <div align="center">
-  <h2>Modify Labor Status Form</h2>
+  <h2>Adjust Labor Status Form</h2>
 </div>
  <form action="/index" id="modifyLSF">
    <div class="container">
@@ -109,15 +110,15 @@
             </div>
           </div>
 
-    <!-- <div class="form-group" id= "dateDiv">
+    <div class="form-group" id= "dateDiv">
     <label for="datetimepicker" class="required-asterisk">Date Needed:</label>
       <div class="input-group date"  class="change">
-        <input type="text" class="form-control effectiveDate" id="datetimepicker0" placeholder="MM/DD/YYYY" required >
+        <input type="text" class="form-control effectiveDate" id="datetimepicker0" placeholder="MM/DD/YYYY" required > <!--Should prefill with todays date though// effective date does not have old/new value comparison-->
         <span class="input-group-addon">
         <span class="glyphicon glyphicon-calendar"></span>
         </span>
       </div>
-     </div> -->
+     </div>
      <div class="form-group" >
        <label for="supervisorNotes">Notes:</label>
        <div class ="change">
@@ -141,5 +142,5 @@
 
  </form>
 
-<script language="JavaScript" type="text/javascript" src="/static/js/modifyLSF.js"></script>
+<script language="JavaScript" type="text/javascript" src="/static/js/adjustLSF.js"></script>
 {% endblock %}
