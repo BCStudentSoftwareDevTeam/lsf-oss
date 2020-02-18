@@ -87,8 +87,10 @@ def userInsert():
                                                 LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
         except Exception as e:
             print("ERROR: ", e)
-            d, created = Student.get(ID = tracyStudent.ID)
-        student = d.ID
+        student = Student.get(ID = tracyStudent.ID)
+        studentID = student.ID
+        print(studentID)
+        print(type(studentID))
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.UserID
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
@@ -101,7 +103,7 @@ def userInsert():
         endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
         try:
             lsf = LaborStatusForm.create(termCode_id = term,
-                                         studentSupervisee_id = student,
+                                         studentSupervisee_id = studentID,
                                          supervisor_id = primarySupervisor,
                                          department_id  = department,
                                          jobType = rspFunctional[i]["stuJobType"],
@@ -152,9 +154,11 @@ def userInsert():
                                                       status      = status.statusName)
                     email = emailHandler(formOverload.formHistoryID)
                     email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
-            # elif (rspFunctional[i]["stuTotalHours"]) != None:
-            #     if rspFunctional[i]["stuTotalHours"] > 40:
-            #         print("email sent to supervisor and student about overload in break")
+            test = json.loads(checkForSecondLSFBreak(term, studentID, "lsf"))
+            if(test["Status"] == False)
+            email = emailHandler(formHistory.formHistoryID)
+            email.laborStatusFormSubmittedForBreak()
+            print("email sent to supervisor and student about overload in break")
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
@@ -187,28 +191,9 @@ def getPositions(department):
     return json.dumps(positionDict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
-@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
-def checkForPrimaryPosition(termCode, student, isOneLSF=None):
+def checkForPrimaryPosition(termCode, student):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
-    isMoreLSF_dict = {}
-    if isOneLSF !=None:
-        isMoreLSF_dict["Status"] = True # student does not have any previous lsf's
-        if len(list(positions)) > 1: # If student has one or more than one lsf
-            isMoreLSF_dict["Status"] = False
-            for item in positions:
-                isMoreLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME
-                isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
-                # FIXME: Send email to both supervisors and student (for more than one lsf). Send it to all supervisors.
-                # laborStatusKey = item.laborStatusFormID
-                # print(" Labor Status Forms for Break", item.laborStatusFormID)
-                # selectedFormHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
-                # print("Form History", selectedFormHistory.formHistoryID)
-                # email = emailHandler(selectedFormHistory.formHistoryID)
-                # email.laborStatusFormSubmittedForBreak()
-        # FIXME: Send email to the supervisor and student (for the first lsf)
-        return jsonify(isMoreLSF_dict)
-
     positionsList = []
     for item in positions:
         positionsDict = {}
@@ -222,6 +207,20 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
         # positionsDict["primarySupervisorUserName"] = item.supervisor.username #Passes Primary Supervisor's username if necessary
         positionsList.append(positionsDict)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
+
+@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
+def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
+    print(type(student))
+    positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    isMoreLSF_dict = {}
+    if isOneLSF != None:
+        isMoreLSF_dict["Status"] = True # student does not have any previous lsf's
+        if len(list(positions)) > 1: # If student has one or more than one lsf
+            isMoreLSF_dict["Status"] = False
+            for item in positions:
+                isMoreLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME
+                isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
+        return json.dumps(isMoreLSF_dict)
 
 @main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
 def checkCompliance(department):

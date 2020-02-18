@@ -81,13 +81,19 @@ function fillDates(response) { // prefill term start and term end
     var termCode = (response[key]["Term Code"]).toString().slice(-2);
     if (primaryCutOff){
       if (termCode != "00" && termCode != "11" && termCode != "12"){ // Checking to see if the termcode is a break one
+        if (date > primaryCutOff){
+        console.log(date);
+        console.log(primaryCutOff);
         msgFlash("The deadline to add break positions has ended.", "fail");
         $("#break-cutoff-warning").show();
         $("#break-cutoff-date").text(primaryCutOff);
         $("#addMoreStudent").hide();
+        }
       }
       else{
         if (date > primaryCutOff){
+          console.log(date);
+          console.log(primaryCutOff);
           $("#jobType option[value='Primary']").attr("disabled", true );
           $('.selectpicker').selectpicker('refresh');
           msgFlash("Disabling primary position because cut off date is before today's date", "fail");
