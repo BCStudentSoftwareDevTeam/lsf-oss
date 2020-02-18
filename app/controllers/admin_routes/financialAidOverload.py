@@ -21,14 +21,17 @@ def financialAidOverload(overloadFormID):
         return render_template('errors/403.html')
 
 
+    # overloadForm = FormHistory.get(FormHistory.formHistoryID == overloadFormID) # Gets the overload form through formHistory foreign key relationship
     overloadForm = FormHistory.get(FormHistory.formHistoryID == overloadFormID)
 
+    # lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
-
+    # print(overloadForm.formID)
+    # print(lsfForm.laborStatusFormID)
 
 
     getOverloadReason = FormHistory.select().join(OverloadForm).where(FormHistory.overloadForm == overloadFormID).where(FormHistory.status == "Pending").count()
-    print(getOverloadReason)
+    # print(getOverloadReason)
     # for reason in getOverloadReason:
     #     print(reason.overloadFormID.overloadReason)
 
@@ -40,6 +43,7 @@ def financialAidOverload(overloadFormID):
     position = lsfForm.POSN_TITLE
     supervisor = lsfForm.supervisor.FIRST_NAME +" "+ lsfForm.supervisor.LAST_NAME
     overloadHours= lsfForm.weeklyHours
+    print(overloadHours)
     # overloadReason = getOverloadReason.overloadReason
     totalCurrentHours = lsfForm.weeklyHours
     laborOfficeNotes=lsfForm.laborDepartmentNotes
