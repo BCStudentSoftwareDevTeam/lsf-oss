@@ -154,11 +154,16 @@ def userInsert():
                                                       status      = status.statusName)
                     email = emailHandler(formOverload.formHistoryID)
                     email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
-            test = json.loads(checkForSecondLSFBreak(term, studentID, "lsf"))
-            if(test["Status"] == False)
-            email = emailHandler(formHistory.formHistoryID)
-            email.laborStatusFormSubmittedForBreak()
-            print("email sent to supervisor and student about overload in break")
+            isOneLSF = json.loads(checkForSecondLSFBreak(term, studentID, "lsf"))
+            primaryFormHistory = formHistory.get(formHistory.formHistoryID == isOneLSF["lsfFormID"])
+            print("primaryFormHistoryID", primaryFormHistory)
+            if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
+                print("FormHistoryID",formHistory.formHistoryID)
+                email = emailHandler(formHistory.formHistoryID, primaryFormHistory)
+                email.secondLaborStatusFormSubmittedForBreak()
+            else: # Student has only one lsf, send email to student and supervisor
+                email = emailHandler(formHistory.formHistoryID)
+                email.laborStatusFormSubmittedForBreak()
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
@@ -210,7 +215,6 @@ def checkForPrimaryPosition(termCode, student):
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
 def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
-    print(type(student))
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
     isMoreLSF_dict = {}
     if isOneLSF != None:
@@ -218,6 +222,7 @@ def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
         if len(list(positions)) > 1: # If student has one or more than one lsf
             isMoreLSF_dict["Status"] = False
             for item in positions:
+                isMoreLSF_dict["lsfFormID"] = item.laborStatusFormID
                 isMoreLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME
                 isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
         return json.dumps(isMoreLSF_dict)

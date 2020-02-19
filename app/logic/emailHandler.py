@@ -14,7 +14,7 @@ import os
 from datetime import datetime, date
 
 class emailHandler():
-    def __init__(self, formHistoryKey):
+    def __init__(self, formHistoryKey, primaryFormHistory=None):
         secret_conf = get_secret_cfg()
 
         app.config.update(
@@ -43,6 +43,11 @@ class emailHandler():
         self.link = ""
         self.releaseReason = ""
         self.releaseDate = ""
+
+        if primaryFormHistory != None:
+            self.primaryFormHistory = FormHistory.get(FormHistory.formHistoryID == primaryFormHistory)
+            self.primaryLaborStatusForm = self.primaryFormHistory.formID
+            self.primarySupervisorEmail = self.primaryLaborStatusForm.supervisor.EMAIL
 
         try:
             self.releaseDate = self.formHistory.releaseForm.releaseDate.strftime("%m/%d/%Y")
@@ -125,6 +130,11 @@ class emailHandler():
         self.checkRecipient("Break Labor Status Form Submitted For Student",
                             "Break Labor Status Form Submitted For Supervisor")
 
+    def secondLaborStatusFormSubmittedForBreak(self):
+        self.checkRecipient("Break Labor Status Form Submitted For Student",
+                            "Break Labor Status Form Submitted For Supervisor",
+                            "Break Labor Status Form Submitted For Second Supervisor")
+
     # Depending on what the paramater 'sendTo' is set equal to, this method will send the email either to the Primary, Seconday, or the Student
     def sendEmail(self, template, sendTo):
         formTemplate = template.body
@@ -161,6 +171,8 @@ class emailHandler():
             form = form.replace("@@Hours@@", self.weeklyHours)
         else:
             form = form.replace("@@Hours@@", self.contractHours)
+        if primaryFormHistory != None:
+            form = form.replace("@@PrimarySupervisor@@", self.primaryLaborStatusForm.supervisor.FIRST_NAME +" "+ self.primaryLaborStatusForm.supervisor.LAST_NAME)
         form = form.replace("@@Date@@", self.date)
         form = form.replace("@@ReleaseReason@@", self.releaseReason)
         form = form.replace("@@ReleaseDate@@", self.releaseDate)
