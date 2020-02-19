@@ -96,28 +96,19 @@
      <div id="weeklyHoursDiv" class="form-group">
             <label for="weeklyHours">Hours Per Week</label>
             <div  class="change">
-              <select  type="weeklyHours"
+              <input  type="number"
                        class="selectpicker form-control newValue"
                        id="weeklyHours"
                        name='selectedHoursPerWeek'
                        data-live-search="true"
-                       title = {{prefillhours}}
-                       value = {{prefillhours}}>
-              </select>
+                       title = "{{prefillhours}}"
+                       value = "{{prefillhours}}">
+              </input>
               <input hidden class = "oldValue"  id= "oldWeeklyHours" value="{{prefillhours}}">  </input>
               {% include "snips/ReviewForm.html" %}
             </div>
           </div>
 
-    <!-- <div class="form-group" id= "dateDiv">
-    <label for="datetimepicker" class="required-asterisk">Date Needed:</label>
-      <div class="input-group date"  class="change">
-        <input type="text" class="form-control effectiveDate" id="datetimepicker0" placeholder="MM/DD/YYYY" required >
-        <span class="input-group-addon">
-        <span class="glyphicon glyphicon-calendar"></span>
-        </span>
-      </div>
-     </div> -->
      <div class="form-group" >
        <label for="supervisorNotes">Notes:</label>
        <div class ="change">

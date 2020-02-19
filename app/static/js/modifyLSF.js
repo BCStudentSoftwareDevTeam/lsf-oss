@@ -1,4 +1,14 @@
 $(document).ready(function(){
+  var oldWeeklyHours = $('#oldWeeklyHours').val();
+  var newWeeklyHours = $('#weeklyHours').val();
+  var oldContractHours = $('#oldContractHours').val();
+  var newContractHours = $('#contractHours').val();
+
+  console.log(newWeeklyHours);
+  console.log(oldWeeklyHours);
+
+  // console.log(oldContractHours);
+  // console.log(contractHours);
   fillHoursPerWeek();
    var department = $("#Department").eq(0).val();
    var url = "/modifyLSF/getPendingPosition/" + department;
@@ -15,17 +25,6 @@ $(document).ready(function(){
 
 $("#contractHoursDiv").hide();
 $("#weeklyHoursDiv").hide();
-//adds a contstraint that does not allow user to set date before today's date
-// var date = new Date();
-// date.setDate(date.getDate());
-// $("#datetimepicker0").datepicker({
-//   minDate: date
-// });
-// $("#datetimepicker0").datepicker("setDate", "date");
-//
-// $('.glyphicon-calendar').click(function() {
-//     $("#datetimepicker0").focus();
-// });
 
 function fill_positions(response) {
   var selected_positions = $("#POSN_TITLE")[0];
@@ -107,7 +106,7 @@ function fillHoursPerWeek(){ // prefill hours per week select picker)
    $("#weeklyHours").empty();
    var list = ["10", "15", "20"];
    if (jobType == "Secondary") {
-     list = ["6","10"] // FIXME: I have put 6 for testing. When I put 5 it doesn't show up in the options
+     list = ["5","10"] // FIXME: I have put 6 for testing. When I put 5 it doesn't show up in the options
    }
    if(wls>5){
      list = ["15", "20"]
@@ -137,6 +136,9 @@ function checkForChange(){
   var newContractHours = $('#contractHours').val();
   var oldWeeklyHours = $('#oldWeeklyHours').val();
   var newWeeklyHours = $('#weeklyHours').val();
+
+  console.log(newWeeklyHours);
+  console.log(oldWeeklyHours);
 
   if(oldSupervisor != newSupervisor){
     finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor}
@@ -174,6 +176,7 @@ function buttonListener(laborStatusKey) {
         data: modifiedDict,
         success: function(response) {
             if (response["Success"]) {
+              console.log(window.location.href = response["url"]);
               window.location.href = response["url"]
             }
           }

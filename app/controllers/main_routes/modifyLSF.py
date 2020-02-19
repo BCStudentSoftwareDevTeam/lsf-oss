@@ -92,6 +92,7 @@ def updateLSF(laborStatusKey):
         rsp = dict(rsp)
         print(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
+        print(student)
         for k in rsp:
             # print("Inside while loop")
             # modifiedforms = ModifiedForm.create(fieldModified = k,
@@ -110,8 +111,9 @@ def updateLSF(laborStatusKey):
             #                                  createdDate = date.today(),
             #                                  status      = status.statusName)
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+            print("I'm above first check")
             if k == "supervisor":
-                d, created = User.get_or_create(PIDM = rsp[k]['newValue'])
+                d, created = User.get_or_create(PIDM = int(rsp[k]['newValue']))
                 if not created:
                     LSF.supervisor = d.UserID
                 LSF.save()
@@ -120,6 +122,7 @@ def updateLSF(laborStatusKey):
                     tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
                     tracyEmail = tracyUser.EMAIL
                     tracyUsername = tracyEmail.find('@')
+                    print(rsp[k]['newValue'], "NEW VALUEEE")
                     user = User.get(User.PIDM == rsp[k]['newValue'])
                     user.username   = tracyEmail[:tracyUsername]
                     user.FIRST_NAME = tracyUser.FIRST_NAME
@@ -133,17 +136,20 @@ def updateLSF(laborStatusKey):
                     LSF.save()
                 print("I'm below issue")
             if k == "POSN_TITLE":
+                print(rsp[k]['newValue'])
                 LSF.POSN_TITLE = rsp[k]['newValue']
                 LSF.save()
             if k == "supervisorNotes":
                 LSF.supervisorNotes = rsp[k]['newValue']
                 LSF.save()
             if k == "contractHours":
-                LSF.contractHours = rsp[k]['newValue']
+                LSF.contractHours = int(rsp[k]['newValue'])
                 LSF.save()
             if k == "weeklyHours":
-                LSF.weeklyHours = rsp[k]['newValue']
+                LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
+        print(student, "studeeeennt")
+        # print(type(student),"typee")
         flash("Your labor status form has been modified.", "success")
 
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
