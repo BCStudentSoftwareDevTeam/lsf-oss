@@ -14,7 +14,6 @@ $(document).ready(function(){
     fillHoursPerWeek("fillhours");
   }
   var cookies = document.cookie;
-  console.log("Cookies: ", cookies);
   if (cookies){
     parsedArrayOfStudentCookies = JSON.parse(cookies);
     document.cookie = parsedArrayOfStudentCookies + ";max-age=28800;";
@@ -168,7 +167,7 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
          url: url,
          dataType: "json",
          success: function (response){
-           console.log(response);
+
            fillPositions(response, stopSelectRefresh);
           }
         });
