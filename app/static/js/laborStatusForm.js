@@ -17,6 +17,7 @@ $(document).ready(function(){
   console.log("Cookies: ", cookies);
   if (cookies){
     parsedArrayOfStudentCookies = JSON.parse(cookies);
+    document.cookie = parsedArrayOfStudentCookies + ";max-age=28800;";
     for (i in parsedArrayOfStudentCookies) {
       createAndFillTable(parsedArrayOfStudentCookies[i]);
     }
@@ -50,7 +51,7 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
   var jobType = $(this).val();
   if (jobType == "Secondary") {
       $("#warningModal").modal("show");
-      $("#warningModalTitle").html("Warning") //Maybe change the wording here.
+      $("#warningModalTitle").html("Warning"); //Maybe change the wording here.
       $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
       }
   });
@@ -86,14 +87,14 @@ function fillDates(response) { // prefill term start and term end
   $("#addMoreStudent").show();
 
   $("#selectedTerm").on("change", function(){
-    $("#jobType").val('')
+    $("#jobType").val('');
   });
   for (var key in response){
     var start = response[key]["Start Date"];
     var end = response[key]["End Date"];
-    var primaryCutOff = response[key]["Primary Cut Off"]
+    var primaryCutOff = response[key]["Primary Cut Off"];
     // disabling primary position if cut off date is before today's date
-    var today = new Date()
+    var today = new Date();
     var date = ("0"+(today.getMonth()+1)).slice(-2)+"/"+("0"+today.getDate()).slice(-2)+"/"+today.getFullYear();
     var termCode = (response[key]["Term Code"]).toString().slice(-2);
     if (primaryCutOff){
@@ -261,8 +262,8 @@ function checkCompliance(obj) {
         success: function (response){
           if(response.Department["Department Compliance"] == false){
             $("#warningModal").modal("show");
-            $("#warningModalTitle").html("Warning")
-            $("#warningModalText").html("Department is out of compliance because position descriptions are not up to date. Please contact labor office to update your position description.")
+            $("#warningModalTitle").html("Warning");
+            $("#warningModalText").html("Department is out of compliance because position descriptions are not up to date. Please contact labor office to update your position description.");
             $(".disable").prop("disabled", true);
             $("#addMoreStudent").prop("disabled", true);
             $("#reviewButton0").prop("disabled", true);
@@ -318,7 +319,6 @@ function showAccessLevel(obj){ // Make Table labels appear
   }
   else{ // normal semester like Fall or Spring table labels
     $("#hoursPerWeek").show();
-
     $("#JopTypes").show();
     $("#plus").show();
   }
@@ -357,7 +357,7 @@ function deleteRow(glyphicon) {
       $(glyphicon).parents("tr").remove();
       globalArrayOfStudents.splice(i, 1);
       if(globalArrayOfStudents.length > 1){
-        document.cookie = ("cookieArrayOfStudents", JSON.stringify(globalArrayOfStudents));
+        document.cookie = JSON.stringify(globalArrayOfStudents) + ";max-age=28800;";
       }
       else {
         parsedArrayOfStudentCookies = document.cookie;
@@ -401,6 +401,7 @@ function searchDataToPrepareToCheckPrimaryPosition() { // displays table when pl
     // checkWLS();
   }
   else  {
+    disableTermSupervisorDept();
     checkPrimaryPositionToCreateTheTable(studentDict);
      }
   }
@@ -483,7 +484,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
     success: function (response){
       if(Object.keys(response).length > 0) {
         if (studentDict.stuJobType == "Primary"){
-          $("#warningModalTitle").html("Insert Rejected")
+          $("#warningModalTitle").html("Insert Rejected");
           $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
           $("#warningModal").modal("show");
         }
@@ -493,7 +494,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
             createAndFillTable(studentDict);
           }
           else {
-            $("#warningModalTitle").html("Insert Rejected")
+            $("#warningModalTitle").html("Insert Rejected");
             $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
             $("#warningModal").modal("show");
           }
@@ -506,14 +507,14 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
             createAndFillTable(studentDict);
           }
           else {
-            $("#warningModalTitle").html("Insert Rejected")
-            $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
+            $("#warningModalTitle").html("Insert Rejected");
+            $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the  below.");
             $("#warningModal").modal("show");
           }
         }
         else {
           if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
-            $("#warningModalTitle").html("Insert Rejected")
+            $("#warningModalTitle").html("Insert Rejected");
             $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
             $("#warningModal").modal("show");
           }
@@ -523,7 +524,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
               createAndFillTable(studentDict);
             }
             else {
-              $("#warningModalTitle").html("Insert Rejected")
+              $("#warningModalTitle").html("Insert Rejected");
               $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
               $("#warningModal").modal("show");
             }
@@ -535,7 +536,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
 }
 function createAndFillTable(studentDict) {
   globalArrayOfStudents.push(studentDict);
-  document.cookie = ("cookieArrayOfStudents", JSON.stringify(globalArrayOfStudents));
+  document.cookie = JSON.stringify(globalArrayOfStudents) + ";max-age=28800;";
   $("#mytable").show();
   $("#jobTable").show();
   $("#hoursTable").show();
@@ -647,12 +648,6 @@ function userInsert(){
       e.preventDefault();
     });
 
-    //console.log(globalArrayOfStudents);
-    // if (storeTotalHours['Hours']['totalHours']){
-    //   for (var i = 0; i <globalArrayOfStudents.length; i++){
-    //     globalArrayOfStudents[i].stuTotalHours = storeTotalHours['Hours']['totalHours']
-    //   }
-    // }
     $.ajax({
            method: "POST",
            url: "/laborstatusform/userInsert",
@@ -727,8 +722,8 @@ function userInsert(){
       document.getElementById("doneBtn").onclick = function() { // Calls this function after failed form(s)
        if (display_failed.length > 0){
            $('#error_modal').empty();
-           $('#error_modal').append('<p style="padding-left:16px;"><b>ERROR:</b> Contact Systems Support if form(s) continue to fail <span style="color:darkred;" class="glyphicon glyphicon-exclamation-sign"></span> </p>')
-           msgFlash("The form(s) below failed to submit, please try again.", "fail")
+           $('#error_modal').append('<p style="padding-left:16px;"><b>ERROR:</b> Contact Systems Support if form(s) continue to fail <span style="color:darkred;" class="glyphicon glyphicon-exclamation-sign"></span> </p>');
+           msgFlash("The form(s) below failed to submit, please try again.", "fail");
             var failed_students = globalArrayOfStudents.filter(function(item, indx){
                 if (display_failed.includes(indx)){
                  return item;
