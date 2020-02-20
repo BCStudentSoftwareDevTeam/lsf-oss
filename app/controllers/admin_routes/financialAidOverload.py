@@ -8,8 +8,8 @@ from flask import json, jsonify
 from flask import request, render_template
 from app.models.overloadForm import *
 
-@admin.route('/admin/financialAidOverloadApproval/<overloadFormID>', methods=['GET']) # the form ID here is the ID from overloadForm table
-def financialAidOverload(overloadFormID):
+@admin.route('/admin/financialAidOverloadApproval/<overloadKey>', methods=['GET']) # the form ID here is the ID from overloadForm table
+def financialAidOverload(overloadKey):
     '''
     This function prefills all the information for a student's current job and overload request
     '''
@@ -21,16 +21,20 @@ def financialAidOverload(overloadFormID):
         return render_template('errors/403.html')
 
 
-    # overloadForm = FormHistory.get(FormHistory.formHistoryID == overloadFormID) # Gets the overload form through formHistory foreign key relationship
-    overloadForm = FormHistory.get(FormHistory.formHistoryID == overloadFormID)
 
+    overload = FormHistory.get(FormHistory.formHistoryID == overloadKey)
+    print(overloadForm)
+
+    lsfForm = LaborStatusForm.select(). where(LaborStatusForm.laborStatusFormID == overloadForm.formID)
+    print(lsfForm)
     # lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
-    lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
+    # getOverloadReason = FormHistory.select().where((FormHistory.overloadForm == overloadForm.formID) & (FormHistory.status == "Pending"))
+
     # print(overloadForm.formID)
+
     # print(lsfForm.laborStatusFormID)
 
-
-    getOverloadReason = FormHistory.select().join(OverloadForm).where(FormHistory.overloadForm == overloadFormID).where(FormHistory.status == "Pending").count()
+    # getOverloadReason = FormHistory.select().join(OverloadForm).where(FormHistory.overloadForm == overloadFormID).where(FormHistory.status == "Pending").count()
     # print(getOverloadReason)
     # for reason in getOverloadReason:
     #     print(reason.overloadFormID.overloadReason)
@@ -43,7 +47,7 @@ def financialAidOverload(overloadFormID):
     position = lsfForm.POSN_TITLE
     supervisor = lsfForm.supervisor.FIRST_NAME +" "+ lsfForm.supervisor.LAST_NAME
     overloadHours= lsfForm.weeklyHours
-    print(overloadHours)
+    # print(overloadHours)
     # overloadReason = getOverloadReason.overloadReason
     totalCurrentHours = lsfForm.weeklyHours
     laborOfficeNotes=lsfForm.laborDepartmentNotes
