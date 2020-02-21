@@ -1,9 +1,8 @@
 $(document).ready(function(){
   var oldWeeklyHours = $('#oldWeeklyHours').val();
   var newWeeklyHours = $('#weeklyHours').val();
-  var oldContractHours = $('#oldContractHours').val();
-  var newContractHours = $('#contractHours').val();
 
+  console.log("Initial values");
   console.log(newWeeklyHours);
   console.log(oldWeeklyHours);
 
@@ -25,6 +24,7 @@ $(document).ready(function(){
 
 $("#contractHoursDiv").hide();
 $("#weeklyHoursDiv").hide();
+
 
 function fill_positions(response) {
   var selected_positions = $("#POSN_TITLE")[0];
@@ -103,7 +103,14 @@ function fillHoursPerWeek(){ // prefill hours per week select picker)
  var weeklyHours = $("#weeklyHours option:selected")
  var jobType = $("#jobType").val();
  if (selectedHoursPerWeek){
+   console.log("Before the empty");
+   console.log($('#weeklyHours').val());
    $("#weeklyHours").empty();
+   console.log("After the empty");
+   console.log($('#weeklyHours').val());
+   $('#weeklyHours').selectpicker("val", '10');
+   console.log("After the reset");
+   console.log($('#weeklyHours').val());
    var list = ["10", "15", "20"];
    if (jobType == "Secondary") {
      list = ["5","10"] // FIXME: I have put 6 for testing. When I put 5 it doesn't show up in the options
@@ -140,6 +147,8 @@ function checkForChange(){
   console.log(newWeeklyHours);
   console.log(oldWeeklyHours);
 
+
+
   if(oldSupervisor != newSupervisor){
     finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor}
   }
@@ -154,9 +163,11 @@ function checkForChange(){
     finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours}
   }
   if(oldWeeklyHours != newWeeklyHours){
+    console.log("Don't match")
     finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours}
   }
 
+  alert("Stay put")
   if (JSON.stringify(finalDict) !== '{}'){
     $('#submitModal').modal('show');
     return finalDict

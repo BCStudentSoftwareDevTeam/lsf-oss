@@ -96,14 +96,14 @@
      <div id="weeklyHoursDiv" class="form-group">
             <label for="weeklyHours">Hours Per Week</label>
             <div  class="change">
-              <input  type="number"
+              <select  type="number"
                        class="selectpicker form-control newValue"
                        id="weeklyHours"
                        name='selectedHoursPerWeek'
                        data-live-search="true"
-                       title = "{{prefillhours}}"
-                       value = "{{prefillhours}}">
-              </input>
+                       title = "{{prefillhours}}">
+                       <option value="{{prefillhours}}"></option>
+              </select>
               <input hidden class = "oldValue"  id= "oldWeeklyHours" value="{{prefillhours}}">  </input>
               {% include "snips/ReviewForm.html" %}
             </div>
