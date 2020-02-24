@@ -1269,7 +1269,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>''',
 
-                "audience":"students"
+                "audience":"student"
                 },
                 {
                 "purpose":"Break Labor Status Form Submitted For Supervisor",
@@ -1332,7 +1332,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"primarySupervisor"
+                "audience":"breakPrimary"
                 }
             ]
 EmailTemplate.insert_many(emailtemps).on_conflict_replace().execute()

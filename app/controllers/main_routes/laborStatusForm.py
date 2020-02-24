@@ -87,7 +87,7 @@ def userInsert():
                                                 LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
         except Exception as e:
             print("ERROR: ", e)
-            student = Student.get(ID = tracyStudent.ID)
+        student = Student.get(ID = tracyStudent.ID)
         studentID = student.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.UserID
@@ -154,17 +154,19 @@ def userInsert():
             try:
                 # sending emails during break period
                 isOneLSF = json.loads(checkForSecondLSFBreak(term, studentID, "lsf"))
-                for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
-                    primaryFormHistories = FormHistory.select().where(FormHistory.formID == lsfID)
-                    primaryFormHistoryID = ""
-                    for primaryFormHistory in primaryFormHistories:
-                        primaryFormHistoryID = primaryFormHistory.formHistoryID
-                    if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
-                        email = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
-                        email.secondLaborStatusFormSubmittedForBreak()
-                    else: # Student has only one lsf, send email to student and supervisor
-                        email = emailHandler(formHistory.formHistoryID)
-                        email.laborStatusFormSubmittedForBreak()
+                if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
+                    emailForFirstBreakLSF = emailHandler(formHistory.formHistoryID)
+                    emailForFirstBreakLSF.laborStatusFormSubmittedForBreak() #send email to student and supervisor for the current lsf break form
+                    for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
+                        primaryFormHistories = FormHistory.select().where(FormHistory.formID == lsfID)
+                        primaryFormHistoryID = ""
+                        for primaryFormHistory in primaryFormHistories:
+                            primaryFormHistoryID = primaryFormHistory.formHistoryID
+                        emailForMultipleBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
+                        emailForMultipleBreakLSF.secondLaborStatusFormSubmittedForBreak()
+                else: # Student has only one lsf, send email to student and supervisor
+                    email = emailHandler(formHistory.formHistoryID)
+                    email.laborStatusFormSubmittedForBreak()
             except Exception as e:
                 print("Error on sending emails during break: " + str(e))
             all_forms.append(True)
