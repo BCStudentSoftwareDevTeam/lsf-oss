@@ -44,45 +44,32 @@ def modifyLSF(laborStatusKey):
         prefillhours = form.contractHours
     prefillnotes = form.supervisorNotes
     #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
-    supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
-    positions = STUPOSN.select().distinct()
+    supervisors = STUSTAFF.select().where(STUSTAFF.DEPT_NAME == prefilldepartment).order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
+    positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == prefilldepartment)
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
 
-    for pos in positions:
-
-        return render_template( 'main/modifyLSF.html',
-    				            title=('modify LSF'),
-                                username = current_user,
-                                superviser_id = superviser_id,
-                                prefillstudent = prefillstudent,
-                                prefillsupervisor = prefillsupervisor,
-                                prefillsupervisorID = prefillsupervisorID,
-                                prefilldepartment = prefilldepartment,
-                                prefillposition = prefillposition,
-                                prefilljobtype = prefilljobtype,
-                                prefillterm = prefillterm,
-                                prefillhours = prefillhours,
-                                prefillnotes = prefillnotes,
-                                supervisors = supervisors,
-                                positions = positions,
-                                wls = wls,
-                                form = form,
-                                oldSupervisor = oldSupervisor,
-                                isLaborAdmin = isLaborAdmin
-                              )
-
-@main_bp.route("/modifyLSF/getPendingPosition/<department>", methods=['GET'])
-def getPendingPosition(department):
-    positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
-    supervisors = STUSTAFF.select().where(STUSTAFF.DEPT_NAME == department)
-    position_dict = {}
-    for supervisor in supervisors:
-        position_dict[str(supervisor.PIDM)] = {"supervisorFirstName":supervisor.FIRST_NAME, "supervisorLastName":supervisor.LAST_NAME, "supervisorPIDM":supervisor.PIDM}
-    for position in positions:
-        position_dict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
-    return json.dumps(position_dict)
+    return render_template( 'main/modifyLSF.html',
+				            title=('modify LSF'),
+                            username = current_user,
+                            superviser_id = superviser_id,
+                            prefillstudent = prefillstudent,
+                            prefillsupervisor = prefillsupervisor,
+                            prefillsupervisorID = prefillsupervisorID,
+                            prefilldepartment = prefilldepartment,
+                            prefillposition = prefillposition,
+                            prefilljobtype = prefilljobtype,
+                            prefillterm = prefillterm,
+                            prefillhours = prefillhours,
+                            prefillnotes = prefillnotes,
+                            supervisors = supervisors,
+                            positions = positions,
+                            wls = wls,
+                            form = form,
+                            oldSupervisor = oldSupervisor,
+                            isLaborAdmin = isLaborAdmin
+                          )
 
 @main_bp.route("/modifyLSF/updateLSF/<laborStatusKey>", methods=['POST'])
 def updateLSF(laborStatusKey):
@@ -90,39 +77,18 @@ def updateLSF(laborStatusKey):
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
-        print(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
-        print(student)
         for k in rsp:
-            # print("Inside while loop")
-            # modifiedforms = ModifiedForm.create(fieldModified = k,
-            #                                 oldValue      =  rsp[k]['oldValue'],
-            #                                 newValue      =  rsp[k]['newValue'],
-            #                                 effectiveDate =  datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d')
-            #                                 )
-            # historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
-            # status = Status.get(Status.statusName == "Pending")
-            # username = cfg['user']['debug']
-            # createdbyid = User.get(User.username == username)
-            # formhistorys = FormHistory.create( formID = laborStatusKey,
-            #                                  historyType = historyType.historyTypeName,
-            #                                  modifiedForm = modifiedforms.modifiedFormID,
-            #                                  createdBy   = createdbyid.UserID,
-            #                                  createdDate = date.today(),
-            #                                  status      = status.statusName)
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-            print("I'm above first check")
             if k == "supervisor":
                 d, created = User.get_or_create(PIDM = int(rsp[k]['newValue']))
                 if not created:
                     LSF.supervisor = d.UserID
                 LSF.save()
-                print("I'm above issue")
                 if created:
                     tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
                     tracyEmail = tracyUser.EMAIL
                     tracyUsername = tracyEmail.find('@')
-                    print(rsp[k]['newValue'], "NEW VALUEEE")
                     user = User.get(User.PIDM == rsp[k]['newValue'])
                     user.username   = tracyEmail[:tracyUsername]
                     user.FIRST_NAME = tracyUser.FIRST_NAME
@@ -134,9 +100,7 @@ def updateLSF(laborStatusKey):
                     user.save()
                     LSF.supervisor = d.PIDM
                     LSF.save()
-                print("I'm below issue")
             if k == "POSN_TITLE":
-                print(rsp[k]['newValue'])
                 LSF.POSN_TITLE = rsp[k]['newValue']
                 LSF.save()
             if k == "supervisorNotes":
@@ -148,12 +112,10 @@ def updateLSF(laborStatusKey):
             if k == "weeklyHours":
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
-        print(student, "studeeeennt")
-        # print(type(student),"typee")
         flash("Your labor status form has been modified.", "success")
 
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
     except Exception as e:
         flash("An error occured.", "danger")
-        print(e)
+        # print(e)
         return jsonify({"Success": False})

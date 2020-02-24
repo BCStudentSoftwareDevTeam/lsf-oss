@@ -1,69 +1,10 @@
 $(document).ready(function(){
-  var oldWeeklyHours = $('#oldWeeklyHours').val();
-  var newWeeklyHours = $('#weeklyHours').val();
-
-  console.log("Initial values");
-  console.log(newWeeklyHours);
-  console.log(oldWeeklyHours);
-
-  // console.log(oldContractHours);
-  // console.log(contractHours);
   fillHoursPerWeek();
-   var department = $("#Department").eq(0).val();
-   var url = "/modifyLSF/getPendingPosition/" + department;
-       $.ajax({
-         url: url,
-         dataType: "json",
-         success: function (response){
-            fill_supervisor(response);
-            fill_positions(response);
-            jobPositionDisable();
-         }
-       })
+  jobPositionDisable();
  });
 
 $("#contractHoursDiv").hide();
 $("#weeklyHoursDiv").hide();
-
-
-function fill_positions(response) {
-  var selected_positions = $("#POSN_TITLE")[0];
-    for (var key in response) {
-      try{
-        var options = document.createElement("option");
-        options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
-        options.value = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")";
-        selected_positions.appendChild(options);
-      }
-      catch(error){
-        console.log(error)
-      }
-    $('.selectpicker').selectpicker('refresh');
-  }
-}
-
-function fill_supervisor(response){
-  var selected_supervisors = $("#supervisor");
-    for (var key in response) {
-      try{
-        var options = document.createElement("option");
-        options.text = response[key]["supervisorFirstName"].toString() + " " + response[key]["supervisorLastName"].toString();
-        options.value =response[key]["supervisorPIDM"].toString();
-        selected_supervisors[0].appendChild(options);
-        $('.selectpicker').selectpicker('refresh');
-        var map = {};
-        $('select option').each(function () {
-            if (map[this.value]) {
-                $(this).remove()
-            }
-            map[this.value] = true;
-        })
-      }
-      catch(error){
-        console.log(error)
-      }
-  }
-}
 
 function jobPositionDisable(){
   var termcode = $("#termCode").eq(0).val();
@@ -78,54 +19,34 @@ function jobPositionDisable(){
   }
 }
 
-// function WLScheck(){
-//   try{
-//     var jobType = $("#jobType").val();
-//     var wls = $("#POSN_TITLE").find("option:selected").attr("data-wls");
-//   }
-//   catch(error){
-//     console.log(error)
-//   }
-// }
-
-// Pops up a modal for overload
-// function hourscheck(){
-//   var hour = $("#weeklyHours").val();
-//   if (hour == "20") {
-//       $('#OverloadModal').modal('show');
-//       $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
-//     }
-// };
-
 function fillHoursPerWeek(){ // prefill hours per week select picker)
- var wls = $("#POSN_TITLE option:selected").attr("data-wls"); // FIXME: find another way to get WLS when they change select another position
- var selectedHoursPerWeek = $("#weeklyHours");
- var weeklyHours = $("#weeklyHours option:selected")
- var jobType = $("#jobType").val();
- if (selectedHoursPerWeek){
-   console.log("Before the empty");
-   console.log($('#weeklyHours').val());
-   $("#weeklyHours").empty();
-   console.log("After the empty");
-   console.log($('#weeklyHours').val());
-   $('#weeklyHours').selectpicker("val", '10');
-   console.log("After the reset");
-   console.log($('#weeklyHours').val());
-   var list = ["10", "15", "20"];
-   if (jobType == "Secondary") {
-     list = ["5","10"] // FIXME: I have put 6 for testing. When I put 5 it doesn't show up in the options
-   }
-   if(wls>5){
-     list = ["15", "20"]
-   }
-   if( weeklyHours == "20"){ // FIXME: Doesn't work
-     $('#OverloadModal').modal('show');
-     $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
-   }
-   $(list).each(function(i,hours) {
-     selectedHoursPerWeek.append($("<option />").text(hours));
-   });
- }
+  var defaultValue = $("#oldWeeklyHours").val();
+  var selectedHoursPerWeek = $("#weeklyHours");
+  var jobType = $("#jobType").val();
+  var wls = $("#POSN_TITLE option:selected").attr("data-wls");
+  if (selectedHoursPerWeek){
+       var list = ["10", "12", "15", "20"];
+       if (jobType == "Secondary") {
+         list = ["5","10"]
+       }
+       if(wls>=5){
+         list = ["15", "20"]
+       }
+       $("#weeklyHours").empty();
+       $(list).each(function(i,hours) {
+         selectedHoursPerWeek.append($("<option />").text(hours).val(hours));
+       });
+       $("#weeklyHours").val(defaultValue);
+       $("#weeklyHours").selectpicker("refresh");
+  }
+}
+
+function checkWLS20(){
+  weeklyHours = $("#weeklyHours").val();
+  if( weeklyHours == "20"){
+    $('#OverloadModal').modal('show');
+    $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
+  }
 }
 
 // var effectiveDate = $("#datetimepicker0").datepicker('getDate');
@@ -144,11 +65,6 @@ function checkForChange(){
   var oldWeeklyHours = $('#oldWeeklyHours').val();
   var newWeeklyHours = $('#weeklyHours').val();
 
-  console.log(newWeeklyHours);
-  console.log(oldWeeklyHours);
-
-
-
   if(oldSupervisor != newSupervisor){
     finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor}
   }
@@ -163,11 +79,8 @@ function checkForChange(){
     finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours}
   }
   if(oldWeeklyHours != newWeeklyHours){
-    console.log("Don't match")
     finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours}
   }
-
-  alert("Stay put")
   if (JSON.stringify(finalDict) !== '{}'){
     $('#submitModal').modal('show');
     return finalDict
@@ -187,7 +100,6 @@ function buttonListener(laborStatusKey) {
         data: modifiedDict,
         success: function(response) {
             if (response["Success"]) {
-              console.log(window.location.href = response["url"]);
               window.location.href = response["url"]
             }
           }
