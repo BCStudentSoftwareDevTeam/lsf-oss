@@ -44,7 +44,8 @@ class emailHandler():
         self.releaseReason = ""
         self.releaseDate = ""
 
-        if primaryFormHistory != None:
+        self.primaryLaborStatusForm = None
+        if primaryFormHistory is not None:
             self.primaryFormHistory = FormHistory.get(FormHistory.formHistoryID == primaryFormHistory)
             self.primaryLaborStatusForm = self.primaryFormHistory.formID
             self.primarySupervisorEmail = self.primaryLaborStatusForm.supervisor.EMAIL
@@ -171,7 +172,7 @@ class emailHandler():
             form = form.replace("@@Hours@@", self.weeklyHours)
         else:
             form = form.replace("@@Hours@@", self.contractHours)
-        if primaryFormHistory != None:
+        if self.primaryLaborStatusForm != None:
             form = form.replace("@@PrimarySupervisor@@", self.primaryLaborStatusForm.supervisor.FIRST_NAME +" "+ self.primaryLaborStatusForm.supervisor.LAST_NAME)
         form = form.replace("@@Date@@", self.date)
         form = form.replace("@@ReleaseReason@@", self.releaseReason)
