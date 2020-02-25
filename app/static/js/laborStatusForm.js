@@ -258,19 +258,6 @@ function checkCompliance(obj) {
       });
 }
 
-//refresh select pickers
-function refreshSelectPickers() {
-  $("#selectedContractHours").val("");
-  $("#selectedHoursPerWeek").val("default");
-  $("#selectedHoursPerWeek").selectpicker("refresh");
-  $("#jobType").val("default");
-  $("#jobType").selectpicker("refresh");
-  $("#student").val("default");
-  $("#student").selectpicker("refresh");
-  $("#position").val("default");
-  $("#position").selectpicker("refresh");
-}
-
 // TABLE LABELS
 $("#contractHours").hide();
 $("#hoursPerWeek").hide();
@@ -528,7 +515,8 @@ function createAndFillTable(studentDict) {
   $(cell6).html(notesGlyphicon);
   $(cell7).html(removeIcon);
 
-  refreshSelectPickers();
+  $("#student").val("default");
+  $("#student").selectpicker("refresh");
   var rowLength = document.getElementById("mytable").rows.length;
   if (rowLength > 1) {
     $("#reviewButton").show();
