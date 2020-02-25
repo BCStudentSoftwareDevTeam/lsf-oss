@@ -132,7 +132,11 @@ class emailHandler():
         self.checkRecipient("Break Labor Status Form Submitted For Student",
                             "Break Labor Status Form Submitted For Supervisor")
 
-    def secondLaborStatusFormSubmittedForBreak(self):
+    def notifySecondLaborStatusFormSubmittedForBreak(self):
+        self.checkRecipient("Break Labor Status Form Submitted For Student",
+                            "Break Labor Status Form Submitted For Supervisor on Second LSF")
+
+    def notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak(self):
         self.checkRecipient("Break Labor Status Form Submitted For Second Supervisor")
 
     # Depending on what the paramater 'sendTo' is set equal to, this method will send the email either to the Primary, Seconday, or the Student
@@ -218,7 +222,7 @@ class emailHandler():
         The method then checks whether to send the email to only the primary or both the primary and secondary supervisors.
         The method sendEmail is then called to handle the actual sending of the emails.
         """
-        if secondaryEmailPurpose != False:
+        if studentEmailPurpose != False:
             studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
             self.sendEmail(studentEmail, "student")
 
@@ -235,6 +239,7 @@ class emailHandler():
             elif self.primaryFormHistory is not None:
                 secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
                 self.sendEmail(secondaryEmail, "breakPrimary")
+                self.sendEmail(primaryEmail, "supervisor")
             else:
                 primaryEmail = EmailTemplate.get(EmailTemplate.purpose == primaryEmailPurpose)
                 self.sendEmail(primaryEmail, "supervisor")

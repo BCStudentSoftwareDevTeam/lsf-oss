@@ -1251,8 +1251,7 @@ emailtemps= [
                             to await approval. Once this position has been approved, your job will be active to allow for time entry in 24 hours. I
                             f at that time, you cannot clock in, please contact the Labor Program Office immediately.</p>
                             <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> You are already working as (Their other Position????) for (their number of hours perweek???).
-                            Please note that you are only allowed to work for a maximum of 40 hours per week.</p>
+                            <p>Please note that you are only allowed to work for a maximum of 40 hours per week.</p>
                             <p>&nbsp;</p>
                             <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
                             <p>&nbsp;</p>
@@ -1276,12 +1275,45 @@ emailtemps= [
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
-                            <p>This email is confirmation that the Labor Program Office has received a Labor Status Form
+                            <p>This email is confirmation that the Labor Program Office has received a Labor Status Form</p>
+                            <p>&nbsp;</p>
                             <strong>@@Creator@@</strong> for <strong>Student</strong>. Please take a moment to read carefully and review the information Below is the position information for the student you have requested to hire.</p>
                             <p>&nbsp;</p>
                             <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, the student’s job will be active to allow for time entry in 24 hours. If at that time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
                             <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> <strong>@@Student@@</strong>.
+                            Please note that students are only allowed to work for a maximum of 40 hours per week.</p>
+                            <p>&nbsp;</p>
+                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
+                            <p>&nbsp;</p>
+                            <p>&nbsp;</p>
+                            <p><strong>Labor Status Form Information:</strong></p>
+                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
+                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
+                            <p>WLS Level: <strong>@@WLS@@</strong></p>
+                            <p>Department Name: <strong>@@Department@@</strong></p>
+                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
+                            <p>Begin Date: <strong>@@Date@@</strong></p>
+                            <p>&nbsp;</p>
+                            <p>&nbsp;</p>
+                            <p>Sincerely,</p>
+                            <p>Labor Program Office</p>
+                            <p>labor_program@berea.edu</p>
+                            <p>859-985-3611</p>
+                            ''',
+                "audience":"supervisor"
+                },
+                {
+                "purpose":"Break Labor Status Form Submitted For Supervisor on Second LSF",
+                "subject":"Labor Status Form Received",
+                "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
+                            <p>&nbsp;</p>
+                            <p>This email is confirmation that the Labor Program Office has received a Labor Status Form</p>
+                            <p>&nbsp;</p>
+                            <strong>@@Creator@@</strong> for <strong>Student</strong>. Please take a moment to read carefully and review the information Below is the position information for the student you have requested to hire.</p>
+                            <p>&nbsp;</p>
+                            <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, the student’s job will be active to allow for time entry in 24 hours. If at that time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
+                            <p>&nbsp;</p>
+                            <p><strong>NOTICE:</strong> <strong>@@Student@@ is already working with @@PrimarySupervisor@@</strong>.
                             Please note that students are only allowed to work for a maximum of 40 hours per week.</p>
                             <p>&nbsp;</p>
                             <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
@@ -1305,14 +1337,10 @@ emailtemps= [
                 },
                 {"purpose":"Break Labor Status Form Submitted For Second Supervisor",
                 "subject":"Labor Status Form Received",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
+                "body":'''<p>Dear <strong>@@PrimarySupervisor@@</strong>,</p>
                             <p>&nbsp;</p>
-                            <p>This email is confirmation that the Labor Program Office has received a Labor Status Form
-                            <strong>@@Creator@@</strong> for <strong>Student</strong>. Please take a moment to read carefully and review the information Below is the position information for the student you have requested to hire.</p>
+                            <p>This email is confirmation that @@Supervisor@@ has submitted a labor status form for @@Student@@</p>
                             <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, the student’s job will be active to allow for time entry in 24 hours. If at that time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> <strong>@@Student@@</strong> is already working with <strong>@@PrimarySupervisor@@</strong>.</p>
                             Please note that students are only allowed to work for a maximum of 40 hours per week.</p>
                             <p>&nbsp;</p>
                             <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>

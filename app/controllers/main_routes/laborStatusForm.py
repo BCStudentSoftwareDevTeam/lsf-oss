@@ -155,15 +155,15 @@ def userInsert():
                 # sending emails during break period
                 isOneLSF = json.loads(checkForSecondLSFBreak(term, studentID, "lsf"))
                 if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
-                    emailForFirstBreakLSF = emailHandler(formHistory.formHistoryID)
-                    emailForFirstBreakLSF.laborStatusFormSubmittedForBreak() #send email to student and supervisor for the current lsf break form
+                    primaryFormHistoryID = ""
                     for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
                         primaryFormHistories = FormHistory.select().where(FormHistory.formID == lsfID)
-                        primaryFormHistoryID = ""
                         for primaryFormHistory in primaryFormHistories:
                             primaryFormHistoryID = primaryFormHistory.formHistoryID
-                        emailForMultipleBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
-                        emailForMultipleBreakLSF.secondLaborStatusFormSubmittedForBreak()
+                        emailPrimSupBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
+                        emailPrimSupBreakLSF.notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak() #send email to all of the previous supervisors
+                    emailForBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
+                    emailForBreakLSF.notifySecondLaborStatusFormSubmittedForBreak() #send email to student and supervisor for the current lsf break form
                 else: # Student has only one lsf, send email to student and supervisor
                     email = emailHandler(formHistory.formHistoryID)
                     email.laborStatusFormSubmittedForBreak()
