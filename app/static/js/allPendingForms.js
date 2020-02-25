@@ -163,7 +163,7 @@ function getNotes (formId) {
            }
 
           if ("laborDepartmentNotes" in response) {
-            $("#laborNotesText").html(response.laborDepartmentNotes);
+            $("#notesLogArea").html(response.laborDepartmentNotes);
             }
          }
        }
@@ -176,7 +176,12 @@ function getNotes (formId) {
    var notes = {'formId': formId, 'notes':laborNotes};   // {ID: textarea value} this sets the text area to what the user types in it
    formId = notes.formId; //This is how we get the ID of the form
    var note = notes.notes; //This is how we are getting the note object from the dictionary
-   var data = JSON.stringify(note);
+   var noteDate = new Date();
+   var day = noteDate.getUTCDate();
+   var month = noteDate.getUTCMonth() + 1;
+   var year = noteDate.getUTCFullYear();
+   var noteDate = month + "-" + day + "-" + year;
+   var data = JSON.stringify(noteDate + " " + note);
    var notesGlyph = $("#notes_" + formId);
 
    $("#saveNotes").on('submit', function(e) {
