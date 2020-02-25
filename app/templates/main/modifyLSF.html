@@ -51,13 +51,10 @@
            <select required type="POSN_TITLE"
                             class="selectpicker form-control newValue"
                             id="POSN_TITLE"
-                            data-live-search="true"
-                            >
-
-
+                            data-live-search="true">
                   {% for pos in positions %}
                     {% if pos.DEPT_NAME == prefilldepartment %}
-                      <option title="{{pos.POSN_TITLE}} ({{pos.WLS}})" value="{{prefillposition}}">{{pos.POSN_TITLE}} ({{pos.WLS}})</option>
+                      <option value="{{prefillposition}}" data-wls={{pos.WLS}}>{{pos.POSN_TITLE}} ({{pos.WLS}})</option>
                     {% endif %}
                   {%endfor%}
            </select>
@@ -106,17 +103,7 @@
                        name='selectedHoursPerWeek'
                        data-live-search="true"
                        title = {{prefillhours}}
-                       value = {{prefillhours}}
-                       onchange = "hourscheck()">
-              {% if prefilljobtype == "Secondary"%}
-                <option title="5" value="5">5</option>
-                <option title="10" value="10">10</option>
-              {% else %}
-                <option title="10" value="10">10</option>
-                <option title="12" value="12">12</option>
-                <option title="15" value="15">15</option>
-                <option title="20" value="20">20</option>
-              {% endif %}
+                       value = {{prefillhours}}>
               </select>
               <input hidden class = "oldValue"  id= "oldWeeklyHours" value="{{prefillhours}}">  </input>
               {% include "snips/ReviewForm.html" %}
