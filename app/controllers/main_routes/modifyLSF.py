@@ -49,6 +49,13 @@ def modifyLSF(laborStatusKey):
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
+    allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == form.termCode) & (LaborStatusForm.laborStatusFormID != laborStatusKey) & (LaborStatusForm.studentSupervisee.ID == form.studentSupervisee.ID))
+    totalHours = 0
+    if allTermForms:
+        for i in allTermForms:
+            print(i.weeklyHours)
+            totalHours += i.weeklyHours
+    print(totalHours)
 
     return render_template( 'main/modifyLSF.html',
 				            title=('modify LSF'),
@@ -68,7 +75,8 @@ def modifyLSF(laborStatusKey):
                             wls = wls,
                             form = form,
                             oldSupervisor = oldSupervisor,
-                            isLaborAdmin = isLaborAdmin
+                            isLaborAdmin = isLaborAdmin,
+                            totalHours = totalHours
                           )
 
 @main_bp.route("/modifyLSF/updateLSF/<laborStatusKey>", methods=['POST'])
@@ -110,6 +118,17 @@ def updateLSF(laborStatusKey):
                 LSF.contractHours = int(rsp[k]['newValue'])
                 LSF.save()
             if k == "weeklyHours":
+                allTermForms = LaborStatusForm.select().join_from(
+                LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID !=form.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
+                preHours = 0
+                if allTermForms:
+                    for i in allTermForms:
+                        preHours += i.weeklyHours
+                print(preHours)
+                previousTotalHours = preHours + int(rsp[k]['oldValue'])
+                print(previousTotalHours)
+                newTotalHours = preHours + int(rsp[k]['newValue'])
+                print(newTotalHours)
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
         flash("Your labor status form has been modified.", "success")

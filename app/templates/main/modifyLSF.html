@@ -89,7 +89,7 @@
                      value = "{{prefillhours}}"
                      oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0">
              </input>
-             <input hidden class = "oldValue"  id= "oldContractHours" value="{{prefillhours}}">  </input>
+             <input hidden class = "oldValue"  id= "oldContractHours" value="{{prefillhours}}"></input>
           </div>
         </div>
      <div id="weeklyHoursDiv" class="form-group">
@@ -104,6 +104,7 @@
                        onchange="checkWLS20()">
               </select>
               <input hidden class = "oldValue"  id= "oldWeeklyHours" value="{{prefillhours}}">  </input>
+              <input hidden class = "totalHours"  id= "totalHours" value="{{totalHours}}"></input>
               {% include "snips/ReviewForm.html" %}
             </div>
           </div>
