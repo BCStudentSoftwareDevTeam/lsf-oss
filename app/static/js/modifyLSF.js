@@ -1,7 +1,6 @@
 $(document).ready(function(){
   fillHoursPerWeek();
   jobPositionDisable();
-  console.log($("#totalHours").val());
  });
 
 $("#contractHoursDiv").hide();
@@ -45,14 +44,13 @@ function fillHoursPerWeek(){ // prefill hours per week select picker
 function checkWLS20(){
   totalhours = $("#totalHours").val();
   weeklyHours = $("#weeklyHours").val();
-  console.log(Number(totalhours) + Number(weeklyHours));
-  console.log(typeof(Number(totalhours) + Number(weeklyHours)));
+  console.log("Current hours", totalhours);
+  console.log("New total hours", Number(totalhours) + Number(weeklyHours));
   if(weeklyHours == "20"){
     $('#OverloadModal').modal('show');
     $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
   }
   else if(Number(totalhours) + Number(weeklyHours) > 15) {
-    console.log("Estoy here");
     $('#OverloadModal').modal('show');
     $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
   }

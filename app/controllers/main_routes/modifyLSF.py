@@ -85,6 +85,7 @@ def updateLSF(laborStatusKey):
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
+        print(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
@@ -118,17 +119,19 @@ def updateLSF(laborStatusKey):
                 LSF.contractHours = int(rsp[k]['newValue'])
                 LSF.save()
             if k == "weeklyHours":
-                allTermForms = LaborStatusForm.select().join_from(
-                LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID !=form.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
-                preHours = 0
+                print("Should make it here")
+                allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
+                totalHours = 0
                 if allTermForms:
                     for i in allTermForms:
-                        preHours += i.weeklyHours
-                print(preHours)
-                previousTotalHours = preHours + int(rsp[k]['oldValue'])
-                print(previousTotalHours)
-                newTotalHours = preHours + int(rsp[k]['newValue'])
-                print(newTotalHours)
+                        totalHours += i.weeklyHours
+
+                print("Old total hours", totalHours)
+                previousTotalHours = totalHours + int(rsp[k]['oldValue'])
+                print("Previous total hours", previousTotalHours)
+                newTotalHours = totalHours + int(rsp[k]['newValue'])
+                print("New total hours", newTotalHours)
+                
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
         flash("Your labor status form has been modified.", "success")
