@@ -244,6 +244,14 @@ document.getElementById("department").addEventListener("click",function(){
   $("#myCurrentStudents").hide()
   $("#myPastStudents").hide()
   $("#allMyStudents").hide()
+
+  // If the select picker already has a department selected when the page is loaded,
+  // then we want to populate the data table with the selected department
+  var departmentDropDown = document.getElementById("departmentDropDown");
+  var departmentSelected = departmentDropDown.options[departmentDropDown.selectedIndex].value;
+  if (departmentSelected) {
+    populateTable()
+  }
 }, false);
 
 // Listen for click on toggle checkbox
