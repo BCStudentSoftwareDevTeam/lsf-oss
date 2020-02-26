@@ -180,6 +180,7 @@ class emailHandler():
             form = form.replace("@@Hours@@", self.contractHours)
         if self.primaryFormHistory != None:
             form = form.replace("@@PrimarySupervisor@@", self.primaryLaborStatusForm.supervisor.FIRST_NAME +" "+ self.primaryLaborStatusForm.supervisor.LAST_NAME)
+            form = form.replace("@@SupervisorEmail@@", self.supervisorEmail)
         form = form.replace("@@Date@@", self.date)
         form = form.replace("@@ReleaseReason@@", self.releaseReason)
         form = form.replace("@@ReleaseDate@@", self.releaseDate)
@@ -226,13 +227,13 @@ class emailHandler():
             studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
             self.sendEmail(studentEmail, "student")
 
-        if secondaryEmailPurpose == False:
+        if primaryEmailPurpose != False:
             primaryEmail = EmailTemplate.get(EmailTemplate.purpose == primaryEmailPurpose)
             if primaryEmail.audience == "Labor Office":
                 self.sendEmail(primaryEmail, "Labor Office")
             else:
                 self.sendEmail(primaryEmail, "supervisor")
-        else:
+        elif secondaryEmailPurpose != False:
             if self.laborStatusForm.jobType == "Secondary":
                 secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
                 self.sendEmail(secondaryEmail, "secondary")
