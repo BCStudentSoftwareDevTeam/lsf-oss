@@ -8,11 +8,12 @@ from app.models.Tracy.stuposn import *
 from app.models.modifiedForm import *
 from flask_bootstrap import bootstrap_find_resource
 from app.login_manager import require_login
-from datetime import *
+from datetime import date, datetime
 from flask import json, jsonify
 from flask import request
 from flask import flash
 import base64
+from app import cfg
 from app.logic.emailHandler import*
 
 
@@ -131,13 +132,25 @@ def updateLSF(laborStatusKey):
                 print("Previous total hours", previousTotalHours)
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 print("New total hours", newTotalHours)
-                
+                if previousTotalHours <= 15 and newTotalHours > 15:
+                    newLaborOverloadForm = OverloadForm.create(overloadReason = "None")
+                    print(cfg["user"]["debug"])
+                    user = User.get(User.username == cfg["user"]["debug"])
+                    newFormHistory = FormHistory.create( formID = laborStatusKey,
+                                                        historyType = "Labor Overload Form",
+                                                        createdBy = user.UserID,
+                                                        overloadForm = newLaborOverloadForm.overloadFormID,
+                                                        createdDate = date.today(),
+                                                        status = "Pending")
+                    email = emailHandler(newFormHistory.formHistoryID)
+                    # email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+                    email.laborStatusFormModified()
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
-        flash("Your labor status form has been modified.", "success")
-
+        print("Right before we save flash", "=============================")
+        # flash("Your labor status form has been modified.", "success")
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
     except Exception as e:
         flash("An error occured.", "danger")
-        # print(e)
+        print(e,"ERRROOOORRRRRR")
         return jsonify({"Success": False})

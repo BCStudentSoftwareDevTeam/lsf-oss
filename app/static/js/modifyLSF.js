@@ -106,8 +106,10 @@ function buttonListener(laborStatusKey) {
         contentType: 'application/json',
         data: modifiedDict,
         success: function(response) {
+            console.log(response,"resonseeeeee");
             if (response["Success"]) {
-              window.location.href = response["url"]
+              // window.location.href = response["url"];
+              window.location.replace(response["url"]);
             }
           }
       })
