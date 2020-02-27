@@ -234,6 +234,12 @@ def insertNotes(formId):
         laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
         if rsp:
             listOfNotes = [rsp]
+            print(listOfNotes)
+            current_user_string = str(current_user.FIRST_NAME + " " + current_user.LAST_NAME)
+            print(current_user_string)
+            for i in listOfNotes:
+                i = current_user_string + i
+            print(listOfNotes)
             if notes.laborDepartmentNotes != None:
                 listOfNotesJson = json.loads(notes.laborDepartmentNotes)
                 for i in listOfNotesJson:
