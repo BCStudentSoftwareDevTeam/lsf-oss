@@ -22,33 +22,21 @@ def financialAidOverload(overloadKey):
 
 
 
-    overload = FormHistory.get(FormHistory.formHistoryID == overloadKey)
-    print(overloadForm)
+    overload = FormHistory.get(FormHistory.overloadForm == overloadKey)
+    # print(overload)
 
-    lsfForm = LaborStatusForm.select(). where(LaborStatusForm.laborStatusFormID == overloadForm.formID)
-    print(lsfForm)
-    # lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
-    # getOverloadReason = FormHistory.select().where((FormHistory.overloadForm == overloadForm.formID) & (FormHistory.status == "Pending"))
+    lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overload.formID)
+    # print(lsfForm)
 
-    # print(overloadForm.formID)
-
-    # print(lsfForm.laborStatusFormID)
-
-    # getOverloadReason = FormHistory.select().join(OverloadForm).where(FormHistory.overloadForm == overloadFormID).where(FormHistory.status == "Pending").count()
-    # print(getOverloadReason)
-    # for reason in getOverloadReason:
-    #     print(reason.overloadFormID.overloadReason)
-
-
+    getoverloadReason = OverloadForm.get(OverloadForm.overloadFormID = overload.formID)
     # the following lines prefills the information for student
     studentName = lsfForm.studentSupervisee.FIRST_NAME + " "+ lsfForm.studentSupervisee.LAST_NAME
     studentBnum = lsfForm.studentSupervisee.ID
     department = lsfForm.department.DEPT_NAME
     position = lsfForm.POSN_TITLE
     supervisor = lsfForm.supervisor.FIRST_NAME +" "+ lsfForm.supervisor.LAST_NAME
-    overloadHours= lsfForm.weeklyHours
-    # print(overloadHours)
-    # overloadReason = getOverloadReason.overloadReason
+    overloadHours = lsfForm.weeklyHours
+    overloadReason = getoverloadReason.overloadReason
     totalCurrentHours = lsfForm.weeklyHours
     laborOfficeNotes=lsfForm.laborDepartmentNotes
     today = date.today()
@@ -87,19 +75,18 @@ def financialAidOverload(overloadKey):
             if str(j.status) != "Pending":
                 totalCurrentHours += j.formID.weeklyHours
     totalFormHours = totalCurrentHours + overloadHours
-
+    print ("total form hours", totalFormHours)
 
 
 # will need to add term to the interface and then have a prefill variable
     return render_template( 'admin/financialAidOverload.html',
                         username = current_user,
-                        overloadForm = overloadForm,
+                        overload = overload,
                         studentName = studentName,
                         studentBnum = studentBnum,
                         department = department,
                         position = position,
-                        supervisor=supervisor,
-                        overloadHours = overloadHours,
+                        supervisor= supervisor,
                         currentPrimary = formIDPrimary,
                         currentSecondary = formIDSecondary,
                         totalCurrentHours = totalCurrentHours,
