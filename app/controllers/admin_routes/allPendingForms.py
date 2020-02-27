@@ -226,9 +226,10 @@ def insertNotes(formId):
             return render_template('errors/403.html')
 
         rsp = eval(request.data.decode("utf-8"))
+        notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
         laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
         if rsp:
-            laborDeptNotes.laborDepartmentNotes = rsp
+            laborDeptNotes.laborDepartmentNotes = rsp + "\n" + notes.laborDepartmentNotes
             laborDeptNotes.save() #Updates labor notes
             return jsonify({"Success": True})
 

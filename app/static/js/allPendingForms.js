@@ -147,26 +147,24 @@ function getNotes (formId) {
         $("#notesText").empty();
         $("#laborNotesText").empty();
 
-       } else {
-          $("#laborNotesText").data('formId',formId); //attaches the formid data to the textarea
-          //Populates notes value from the database
-
-          if ("supervisorNotes" in response) {
-            $("#supeNotesLabel").show()
-            $("#notesText").show()
-            $("#notesText").html(response.supervisorNotes);
-             }
-
-             if (!("supervisorNotes" in response)) {
-              $("#supeNotesLabel").hide()
-              $("#notesText").hide()
-           }
-
-          if ("laborDepartmentNotes" in response) {
-            $("#notesLogArea").html(response.laborDepartmentNotes);
-            }
+       }
+       else {
+         $("#laborNotesText").data('formId',formId); //attaches the formid data to the textarea
+         //Populates notes value from the database
+         if ("supervisorNotes" in response) {
+          $("#supeNotesLabel").show()
+          $("#notesText").show()
+          $("#notesText").html(response.supervisorNotes);
+         }
+         if (!("supervisorNotes" in response)) {
+          $("#supeNotesLabel").hide()
+          $("#notesText").hide()
+         }
+         if ("laborDepartmentNotes" in response) {
+           $("#notesLogArea").html(response.laborDepartmentNotes);
          }
        }
+     }
    });
 }
 
