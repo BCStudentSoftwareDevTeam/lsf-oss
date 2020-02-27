@@ -206,7 +206,11 @@ def getNotes(formid):
             notesDict["supervisorNotes"] = notes.supervisorNotes
 
         if notes.laborDepartmentNotes:
-            notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes
+            listOfNotes = json.loads(notes.laborDepartmentNotes)
+            notesDict["laborDepartmentNotes"] = ""
+            for i in listOfNotes:
+                singleNote = "<p>" + i + "</p>"
+                notesDict["laborDepartmentNotes"] = notesDict["laborDepartmentNotes"] + singleNote
         return jsonify(notesDict)
 
     except Exception as e:
@@ -229,7 +233,13 @@ def insertNotes(formId):
         notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
         laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
         if rsp:
-            laborDeptNotes.laborDepartmentNotes = rsp + "\n" + notes.laborDepartmentNotes
+            listOfNotes = [rsp]
+            if notes.laborDepartmentNotes != None:
+                listOfNotesJson = json.loads(notes.laborDepartmentNotes)
+                for i in listOfNotesJson:
+                    listOfNotes.append(i)
+            listOfNotesJson = json.dumps(listOfNotes)
+            laborDeptNotes.laborDepartmentNotes = listOfNotesJson
             laborDeptNotes.save() #Updates labor notes
             return jsonify({"Success": True})
 
