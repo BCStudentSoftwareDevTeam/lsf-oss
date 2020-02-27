@@ -68,7 +68,7 @@
                       <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" name="check[]"  autocomplete="off" />
                       {% include "snips/pendingNotesModal.html" %}
                       <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
-                             class="glyphicon glyphicon-book btn-lg
+                             class="glyphicon glyphicon-edit btn-lg
                                   {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
                                   {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
                                   {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
@@ -92,7 +92,7 @@
                       {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}  ({{allForms.formID.studentSupervisee.ID}})
                     </td>
                     <td> {# POSITON AND WLS #}
-                      {{allForms.formID.POSN_TITLE}} 
+                      {{allForms.formID.POSN_TITLE}}
                     </td>
                     <td> {# HOURS #}
                     {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}

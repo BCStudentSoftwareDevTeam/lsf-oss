@@ -388,7 +388,7 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
     if(globalArrayOfStudents[i].stuName == studentDict.stuName &&
       globalArrayOfStudents[i].stuJobType == studentDict.stuJobType &&
       (studentDict.stuJobType == "Primary" || globalArrayOfStudents[i].stuPosition == studentDict.stuPosition)){
-      $("#warningModalText").html("Match found for " + studentDict.stuName +"'s " + studentDict.stuJobType +" position.");
+      $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
       $("#warningModal").modal("show");
       return false;
     }
@@ -407,7 +407,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
       if(Object.keys(response).length > 0) {
         if (studentDict.stuJobType == "Primary"){
           $("#warningModalTitle").html("Insert Rejected")
-          $("#warningModalText").html(studentDict.stuName + " already has a primary position.");
+          $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
           $("#warningModal").modal("show");
         }
         else if(studentDict.stuJobType == "Secondary"){
@@ -416,7 +416,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
           }
           else {
             $("#warningModalTitle").html("Insert Rejected")
-            $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
+            $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
             $("#warningModal").modal("show");
           }
         }
@@ -428,7 +428,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
           }
           else {
             $("#warningModalTitle").html("Insert Rejected")
-            $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
+            $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
             $("#warningModal").modal("show");
           }
         }
@@ -444,7 +444,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
             }
             else {
               $("#warningModalTitle").html("Insert Rejected")
-              $("#warningModalText").html("Match found for " + studentDict.stuName + "'s " + studentDict.stuJobType + " position.");
+              $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
               $("#warningModal").modal("show");
             }
           }
