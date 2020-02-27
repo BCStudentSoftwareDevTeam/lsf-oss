@@ -1,0 +1,7 @@
+#notesLogArea{
+    overflow-y: initial !important
+}
+#notesLogArea{
+    height: 250px;
+    overflow-y: auto;
+}
