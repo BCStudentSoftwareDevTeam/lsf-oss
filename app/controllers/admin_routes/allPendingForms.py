@@ -228,28 +228,34 @@ def insertNotes(formId):
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
-
+        current_user_string = str(" - From: " + current_user.FIRST_NAME[0] + "." + " " + current_user.LAST_NAME) #Getting the name of the current user in a string and formatting it for the note.  Up for change, we'll demo it
         rsp = eval(request.data.decode("utf-8"))
+        #print(rsp)
         notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
+        #print(notes)
         laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
+        #print(laborDeptNotes)
+        print(rsp)
         if rsp:
+            rsp = rsp + current_user_string #adding the name of the user to the rsp that is the note.
             listOfNotes = [rsp]
-            print(listOfNotes)
-            current_user_string = str(current_user.FIRST_NAME + " " + current_user.LAST_NAME)
-            print(current_user_string)
+            #print(listOfNotes)
+            #print(current_user_string)
             for i in listOfNotes:
-                i = current_user_string + i
+                i = i + current_user_string
             print(listOfNotes)
             if notes.laborDepartmentNotes != None:
                 listOfNotesJson = json.loads(notes.laborDepartmentNotes)
                 for i in listOfNotesJson:
                     listOfNotes.append(i)
             listOfNotesJson = json.dumps(listOfNotes)
+            #print(listOfNotesJson)
             laborDeptNotes.laborDepartmentNotes = listOfNotesJson
+            #print(laborDeptNotes)
             laborDeptNotes.save() #Updates labor notes
             return jsonify({"Success": True})
 
-        elif rsp=="" or rsp==None:
+        elif rsp=="" or rsp==None or " -    " in rsp:
             flash("No changes made to notes.", "danger")
             return jsonify({"Success": False})
 

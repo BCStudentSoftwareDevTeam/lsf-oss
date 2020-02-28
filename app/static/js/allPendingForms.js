@@ -178,7 +178,7 @@ function getNotes (formId) {
    var day = noteDate.getUTCDate();
    var month = noteDate.getUTCMonth() + 1;
    var year = noteDate.getUTCFullYear();
-   var noteDate = month + "-" + day + "-" + year;
+   var noteDate = month + "/" + day + "/" + year + " -  ";
    var data = JSON.stringify(noteDate + " " + note);
    var notesGlyph = $("#notes_" + formId);
 
