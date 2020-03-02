@@ -141,15 +141,14 @@ function getNotes (formId) {
     url: "/admin/getNotes/"+formId,
     datatype: "json",
     success: function (response) {
-
       if ("Success" in response && response.Success == "false") {
         //Clears supervisor notes p tag and the labor notes textarea
         $("#notesText").empty();
         $("#laborNotesText").empty();
-
        }
        else {
          $("#laborNotesText").data('formId',formId); //attaches the formid data to the textarea
+
          //Populates notes value from the database
          if ("supervisorNotes" in response) {
           $("#supeNotesLabel").show()
@@ -163,6 +162,9 @@ function getNotes (formId) {
          if ("laborDepartmentNotes" in response) {
            $("#notesLogArea").html(response.laborDepartmentNotes);
          }
+         else if (!("laborDepartmentNotes" in response)) {
+           $("#notesLogArea").html("No notes to show")
+        }
        }
      }
    });
@@ -174,12 +176,7 @@ function getNotes (formId) {
    var notes = {'formId': formId, 'notes':laborNotes};   // {ID: textarea value} this sets the text area to what the user types in it
    formId = notes.formId; //This is how we get the ID of the form
    var note = notes.notes; //This is how we are getting the note object from the dictionary
-   var noteDate = new Date();
-   var day = noteDate.getUTCDate();
-   var month = noteDate.getUTCMonth() + 1;
-   var year = noteDate.getUTCFullYear();
-   var noteDate = month + "/" + day + "/" + year + " -  ";
-   var data = JSON.stringify(noteDate + " " + note);
+   var data = JSON.stringify(note);
    var notesGlyph = $("#notes_" + formId);
 
    $("#saveNotes").on('submit', function(e) {

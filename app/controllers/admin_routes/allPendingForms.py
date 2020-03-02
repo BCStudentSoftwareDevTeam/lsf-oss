@@ -209,7 +209,7 @@ def getNotes(formid):
             listOfNotes = json.loads(notes.laborDepartmentNotes)
             notesDict["laborDepartmentNotes"] = ""
             for i in listOfNotes:
-                singleNote = "<p>" + i + "</p>"
+                singleNote = "<dl class='dl-horizontal text-left'>" + i + "</dl>"
                 notesDict["laborDepartmentNotes"] = notesDict["laborDepartmentNotes"] + singleNote
         return jsonify(notesDict)
 
@@ -228,34 +228,26 @@ def insertNotes(formId):
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
-        current_user_string = str(" - From: " + current_user.FIRST_NAME[0] + "." + " " + current_user.LAST_NAME) #Getting the name of the current user in a string and formatting it for the note.  Up for change, we'll demo it
+        current_user_string = str(current_user.FIRST_NAME[0] + "." + " " + current_user.LAST_NAME) #Getting the name of the current user in a string and formatting it for the note.  Up for change, we'll demo it
         rsp = eval(request.data.decode("utf-8"))
-        #print(rsp)
+        stripresponse = rsp.strip()
+        currentDate = datetime.now().strftime("%m/%d/%y")
         notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
-        #print(notes)
         laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
-        #print(laborDeptNotes)
-        print(rsp)
-        if rsp:
-            rsp = rsp + current_user_string #adding the name of the user to the rsp that is the note.
-            listOfNotes = [rsp]
-            #print(listOfNotes)
-            #print(current_user_string)
-            for i in listOfNotes:
-                i = i + current_user_string
-            print(listOfNotes)
+
+        if stripresponse:
+            stripresponse = "<dt>" + str(currentDate) + " - " + current_user_string + ":" + "</dt>" + "<dd>" + stripresponse + "</dd>" #adding the name of the user to the stripresponse that is the note.
+            listOfNotes = [stripresponse]
             if notes.laborDepartmentNotes != None:
                 listOfNotesJson = json.loads(notes.laborDepartmentNotes)
                 for i in listOfNotesJson:
                     listOfNotes.append(i)
             listOfNotesJson = json.dumps(listOfNotes)
-            #print(listOfNotesJson)
             laborDeptNotes.laborDepartmentNotes = listOfNotesJson
-            #print(laborDeptNotes)
             laborDeptNotes.save() #Updates labor notes
             return jsonify({"Success": True})
 
-        elif rsp=="" or rsp==None or " -    " in rsp:
+        elif stripresponse=="" or stripresponse==None:
             flash("No changes made to notes.", "danger")
             return jsonify({"Success": False})
 
