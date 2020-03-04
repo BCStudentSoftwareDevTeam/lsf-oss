@@ -287,11 +287,14 @@ function showAccessLevel(){ // Make Table labels appear
     if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) { // Summer term or any other break period table labels
       $("#contractHours").show();
       $("#plus").show();
+      $("#jobType").hide();
+      $("#hoursPerWeek").hide();
     }
     else{ // normal semester like Fall or Spring table labels
       $("#hoursPerWeek").show();
       $("#JopTypes").show();
       $("#plus").show();
+      $("#contractHours").hide();
     }
   }
 }
