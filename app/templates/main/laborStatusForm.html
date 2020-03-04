@@ -122,7 +122,7 @@
                 title="Student" >
               <option value = "" disabled selected>Select a Student</option>
           {% for student in students %}
-              <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %} data-subtext="({{student.ID}})">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
+              <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %} data-subtext="({{student.ID}})" data-stuCL="{{student.CLASS_LEVEL}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
           {% endfor %}
         </select>
   </div>
@@ -189,7 +189,7 @@
           name = "addStudent"
           id="addMoreStudent"
           value = "formSubmission"
-          onclick="checkCompliance(this); searchDataToPrepareToCheckPrimaryPosition(); disableTermSupervisorDept()">Add Student
+          onclick="checkCompliance(this); checkIfFreshman(); searchDataToPrepareToCheckPrimaryPosition(); disableTermSupervisorDept()">Add Student
   </button>
 </div>
   <br />

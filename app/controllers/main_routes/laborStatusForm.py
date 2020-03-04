@@ -111,7 +111,8 @@ def userInsert():
                                          weeklyHours   = rspFunctional[i].get("stuWeeklyHours", None),
                                          startDate = startDate,
                                          endDate = endDate,
-                                         supervisorNotes = rspFunctional[i]["stuNotes"]
+                                         supervisorNotes = rspFunctional[i]["stuNotes"],
+                                         laborDepartmentNotes = rspFunctional[i]["stuLaborNotes"]
                                          )
             if rspFunctional[i].get("isItOverloadForm") == "True":
                 historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")

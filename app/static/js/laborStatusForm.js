@@ -1,5 +1,6 @@
 var globalArrayOfStudents = [];
 var display_failed = [];
+var laborStatusFormNote = null;
 
 $(document).ready(function(){
     $("[data-toggle=\"tooltip\"]").tooltip();
@@ -33,10 +34,23 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
   var jobType = $(this).val();
   if (jobType == "Secondary") {
       $("#warningModal").modal("show");
-      $("#warningModalTitle").html("Warning") //Maybe change the wording here.
+      $("#warningModalTitle").html("Warning"); //Maybe change the wording here.
       $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
       }
   });
+
+function checkIfFreshman() {
+  var jobType = $("#jobType").val();
+  console.log(jobType);
+  var classLevel = $("#student :selected").attr("data-stuCL");
+  console.log(classLevel);
+  if (classLevel == "Freshman" && jobType == "Secondary") {
+    laborStatusFormNote = "For the Labor Office: This student has Freshman classification with a secondary position.";
+  }
+  else {
+    laborStatusFormNote = null;
+  }
+}
 
 function disableTermSupervisorDept() {
   // disables term, supervisor and department select pickers when add student button is clicked
@@ -395,6 +409,7 @@ function createStuDict(){
                     stuEndDate: endDate,
                     stuTermCode: termCodeSelected,
                     stuNotes: null,
+                    stuLaborNotes: laborStatusFormNote,
                     stuSupervisor: supervisor,
                     stuDepartment: department,
                     stuSupervisorID: supervisorID,

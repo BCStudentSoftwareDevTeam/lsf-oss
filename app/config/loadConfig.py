@@ -4,7 +4,7 @@ import logging
 
 def load_config(file):
     with open(file, 'r') as ymlfile:
-        cfg = yaml.load(ymlfile)
+        cfg = yaml.load(ymlfile, Loader=yaml.FullLoader)
     return cfg
 
 def get_secret_cfg():
