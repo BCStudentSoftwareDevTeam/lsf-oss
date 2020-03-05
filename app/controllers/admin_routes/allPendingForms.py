@@ -10,6 +10,7 @@ from app.models.modifiedForm import ModifiedForm
 from app.models.overloadForm import OverloadForm
 from app.models.formHistory import *
 from app.models.term import Term
+from app.logic import Banner
 from app import cfg
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
@@ -85,81 +86,44 @@ def approved_and_denied_Forms():
         print("error", e)
         return jsonify({"Success": False})
 
-@admin.route('/admin/finalApproval', methods=['POST'])
-def finalApproval():
+@admin.route('/admin/updateStatus/<raw_status>', methods=['POST'])
+def finalUpdateStatus(raw_status):
     ''' This method changes the status of the pending forms to approved '''
-    rsp = eval(request.data.decode("utf-8"))
-    for id in rsp:
-        history_type = FormHistory.get(FormHistory.formHistoryID == int(id))
-        if str(history_type.historyType) == 'Labor Status Form':
-            approving_labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Status Form')
-            approving_labor_forms.status = Status.get(Status.statusName == "Approved")
-            approving_labor_forms.reviewedDate = date.today()
-            createdUser = User.get(username = cfg['user']['debug'])
-            approving_labor_forms.reviewedBy = createdUser.UserID
-            approving_labor_forms.save()
-        elif str(history_type.historyType) == 'Modified Labor Form':
-            approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
-            approving_labor_modified_forms.status = Status.get(Status.statusName == "Approved")
-            approving_labor_modified_forms.reviewedDate = date.today()
-            createdUser = User.get(username = cfg['user']['debug'])
-            approving_labor_modified_forms.reviewedBy = createdUser.UserID
-            approving_labor_modified_forms.save()
-        elif str(history_type.historyType) == 'Labor Overload Form':
-            approving_labor_overload_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Overload Form')
-            approving_labor_overload_forms.status = Status.get(Status.statusName == "Approved")
-            approving_labor_overload_forms.reviewedDate = date.today()
-            createdUser = User.get(username = cfg['user']['debug'])
-            approving_labor_overload_forms.reviewedBy = createdUser.UserID
-            approving_labor_overload_forms.save()
-        elif str(history_type.historyType) == 'Labor Release Form':
-            approving_labor_release_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Release Form')
-            approving_labor_release_forms.status = Status.get(Status.statusName == "Approved")
-            approving_labor_release_forms.reviewedDate = date.today()
-            createdUser = User.get(username = cfg['user']['debug'])
-            approving_labor_release_forms.reviewedBy = createdUser.UserID
-            approving_labor_release_forms.save()
-    return jsonify({"success": True})
 
-@admin.route('/admin/finalDenial', methods=['POST'])
-def finalDenial():
-    ''' This method changes labor status pending forms to approved'''
+    if raw_status == 'approved':
+        new_status = "Approved"
+    elif raw_status == 'denied':
+        new_status = "Denied"
+    else:
+        print("Unknown status: ", raw_status)
+        return jsonify({"success": False})
+
     try:
+        createdUser = User.get(username = cfg['user']['debug'])
         rsp = eval(request.data.decode("utf-8"))
         for id in rsp:
-            history_type = FormHistory.get(FormHistory.formHistoryID == int(id))
-            if str(history_type.historyType) == 'Labor Status Form':
-                approving_labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Status Form')
-                approving_labor_forms.status = Status.get(Status.statusName == "Denied")
-                approving_labor_forms.reviewedDate = date.today()
-                createdUser = User.get(username = cfg['user']['debug'])
-                approving_labor_forms.reviewedBy = createdUser.UserID
-                approving_labor_forms.save()
-            elif str(history_type.historyType) == 'Modified Labor Form':
-                approving_labor_modified_forms = FormHistory.get(FormHistory.formHistoryID== int(id), FormHistory.historyType == 'Modified Labor Form')
-                approving_labor_modified_forms.status = Status.get(Status.statusName == "Denied")
-                approving_labor_modified_forms.reviewedDate = date.today()
-                createdUser = User.get(username = cfg['user']['debug'])
-                approving_labor_modified_forms.reviewedBy = createdUser.UserID
-                approving_labor_modified_forms.save()
-            elif str(history_type.historyType) == 'Labor Overload Form':
-                approving_labor_overload_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Overload Form')
-                approving_labor_overload_forms.status = Status.get(Status.statusName == "Denied")
-                approving_labor_overload_forms.reviewedDate = date.today()
-                createdUser = User.get(username = cfg['user']['debug'])
-                approving_labor_overload_forms.reviewedBy = createdUser.UserID
-                approving_labor_overload_forms.save()
-            elif str(history_type.historyType) == 'Labor Release Form':
-                approving_labor_release_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == 'Labor Release Form')
-                approving_labor_release_forms.status = Status.get(Status.statusName == "Denied")
-                approving_labor_release_forms.reviewedDate = date.today()
-                createdUser = User.get(username = cfg['user']['debug'])
-                approving_labor_release_forms.reviewedBy = createdUser.UserID
-                approving_labor_release_forms.save()
-        return jsonify({"success": True})
+            history_type_data = str(FormHistory.get(FormHistory.formHistoryID == int(id))
+            history_type = str(history_type_data.historyType)
+
+            labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == history_type)
+            labor_forms.status = Status.get(Status.statusName == new_status)
+            labor_forms.reviewedDate = date.today()
+            labor_forms.reviewedBy = createdUser.UserID
+            labor_forms.save()
     except Exception as e:
         print("error", e)
         return jsonify({"success": False})
+
+    # TODO if approval, update BANNER
+    try:
+        if new_status == 'Approved':
+           conn = Banner() 
+    except Exception as e:
+        print("Unable to update BANNER. ", e)
+        return jsonify({"success": False})
+        
+
+    return jsonify({"success": True})
 
 #method extracts data from the data base to papulate pending form approvale modal
 def modal_aproval_and_denial_data(approval_ids):

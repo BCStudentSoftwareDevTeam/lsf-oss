@@ -64,7 +64,7 @@ function finalApproval() { //this method changes the status of the lsf from pend
   var data = JSON.stringify(labor_details_ids);
   $.ajax({
     type: "POST",
-    url: "/admin/finalApproval",
+    url: "/admin/updateStatus/approved",
     datatype: "json",
     data: data,
     contentType: 'application/json',
@@ -121,7 +121,7 @@ function finalDenial_data(returned_details){
    var data = JSON.stringify(labor_denial_id);
    $.ajax({
      type: "POST",
-     url: "/admin/finalDenial",
+     url: "/admin/updateStatus/denied",
      datatype: "json",
      data: data,
      contentType: 'application/json',
