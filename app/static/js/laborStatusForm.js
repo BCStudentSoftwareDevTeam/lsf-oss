@@ -41,11 +41,16 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
 
 function checkIfFreshman() {
   var jobType = $("#jobType").val();
+  var wls = $("#position :selected").attr("data-wls")
+  console.log(wls)
   console.log(jobType);
   var classLevel = $("#student :selected").attr("data-stuCL");
   console.log(classLevel);
   if (classLevel == "Freshman" && jobType == "Secondary") {
-    laborStatusFormNote = "For the Labor Office: This student has Freshman classification with a secondary position.";
+    laborStatusFormNote = "Warning! This student has freshman classification with either a secondary position or a primary position with a WLS greater than 1. Make sure they meet the requirements for these positions.";
+  }
+  if (classLevel == "Freshman" && wls > 1) {
+    laborStatusFormNote = "Warning! This student has freshman classification with either a secondary position or a primary position with a WLS greater than 1. Make sure they meet the requirements for these positions.";
   }
   else {
     laborStatusFormNote = null;

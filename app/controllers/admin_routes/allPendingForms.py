@@ -34,7 +34,7 @@ def allPendingForms(formType):
         if formType  == "all":
             formList = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
             approvalTarget = "allFormsdenyModal"
-            pageTitle = "All Pending Fomrs"
+            pageTitle = "All Pending Forms"
         else:
             if formType == "pendingLabor":
                 historyType = "Labor Status Form"
