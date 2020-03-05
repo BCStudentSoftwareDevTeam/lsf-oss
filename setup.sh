@@ -5,8 +5,7 @@ mkdir -p data
 # Create a virtual machine virtual environment
 if [ ! -d venv ]
 then
-  #virtualenv venv
-  virtualenv --python=/usr/bin/python3 venv #Used this because source setup.sh was stuck on python 2
+  python3 -m venv venv 
 fi
 
 . venv/bin/activate
