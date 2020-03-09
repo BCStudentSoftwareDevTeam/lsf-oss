@@ -40,7 +40,8 @@
                 name='supervisor'
                 id='selectedSupervisor'
                 data-live-search='true'
-                title="Supervisor">
+                title="Supervisor"
+                onchange = "showAccessLevel()">
             <option value = "" disabled selected>Select a Supervisor</option>
           {% for staff in staffs %}
             <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.ID == staff.ID %} selected {% endif %}{% endif %} data-subtext="({{staff.ID}})">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
@@ -56,7 +57,7 @@
                 data-live-search='true'
                 title="Department"
                 data-width="100%"
-                onchange = "checkCompliance(this); getDepartment(this)">
+                onchange = "checkCompliance(this); getDepartment(this); showAccessLevel()">
           <option value = "" disabled selected>Select a Department</option>
           {% for department in departments %}
             <option value="{{department.DEPT_NAME}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-subtext = "({{department.ORG}}-{{department.ACCOUNT}})">{{department.DEPT_NAME}}</option>
@@ -74,7 +75,7 @@
                     data-toggle="tooltip"
                     title="Term"
                     data-width="100%"
-                    onchange = "showAccessLevel(this); preFilledDate(this)">
+                    onchange = "showAccessLevel(); preFilledDate(this)">
                 <option value = "" disabled selected>Select a Term</option>
             {% for term in terms %}
                 <option value = "{{term.termCode}}" data-termCode = "{{term.termCode}}">{{term.termName}}</option>
@@ -188,7 +189,11 @@
           name = "addStudent"
           id="addMoreStudent"
           value = "formSubmission"
+<<<<<<< HEAD
           onclick="searchDataToPrepareToCheckPrimaryPosition();">Add Student
+=======
+          onclick="checkCompliance(this); searchDataToPrepareToCheckPrimaryPosition(); disableTermSupervisorDept()">Add Student
+>>>>>>> development
   </button>
 </div>
   <br />

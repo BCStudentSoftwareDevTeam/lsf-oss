@@ -57,15 +57,15 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
 
 function disableTermSupervisorDept() {
   // disables term, supervisor and department select pickers when add student button is clicked
-  $("#selectedTerm").prop("disabled", "disabled");
-  $("#termInfo").show();
-  $("#selectedTerm").selectpicker("refresh");
-  $("#selectedSupervisor").prop("disabled", "disabled");
-  $("#supervisorInfo").show();
-  $("#selectedSupervisor").selectpicker("refresh");
-  $("#selectedDepartment").prop("disabled", "disabled");
-  $("#departmentInfo").show();
-  $("#selectedDepartment").selectpicker("refresh");
+    $("#selectedTerm").prop("disabled", "disabled");
+    $("#termInfo").show();
+    $("#selectedTerm").selectpicker("refresh");
+    $("#selectedSupervisor").prop("disabled", "disabled");
+    $("#supervisorInfo").show();
+    $("#selectedSupervisor").selectpicker("refresh");
+    $("#selectedDepartment").prop("disabled", "disabled");
+    $("#departmentInfo").show();
+    $("#selectedDepartment").selectpicker("refresh");
 }
 
 function preFilledDate(obj){ // get term start date and end date
@@ -284,19 +284,6 @@ function checkCompliance(obj) {
       });
 }
 
-//refresh select pickers
-function refreshSelectPickers() {
-  $("#selectedContractHours").val("");
-  $("#selectedHoursPerWeek").val("default");
-  $("#selectedHoursPerWeek").selectpicker("refresh");
-  $("#jobType").val("default");
-  $("#jobType").selectpicker("refresh");
-  $("#student").val("default");
-  $("#student").selectpicker("refresh");
-  $("#position").val("default");
-  $("#position").selectpicker("refresh");
-}
-
 // TABLE LABELS
 $("#contractHours").hide();
 $("#hoursPerWeek").hide();
@@ -305,21 +292,20 @@ $("#plus").hide();
 $("#mytable").hide();
 $("#failedTable").hide();
 
-function showAccessLevel(obj){ // Make Table labels appear
-  $("#contractHours").hide();
-  $("#hoursPerWeek").hide();
-  $("#JopTypes").hide();
-  $("#plus").hide();
-  var termCode = $(obj).val();
-  var whichTerm = termCode.substr(-2);
-  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) { // Summer term or any other break period table labels
-    $("#contractHours").show();
-    $("#plus").show();
-  }
-  else{ // normal semester like Fall or Spring table labels
-    $("#hoursPerWeek").show();
-    $("#JopTypes").show();
-    $("#plus").show();
+
+function showAccessLevel(){ // Make Table labels appear
+  if ($("#selectedSupervisor").val() && $("#selectedDepartment").val() && $("#selectedTerm").val()){
+    var termCode = $("#selectedTerm").val();
+    var whichTerm = termCode.substr(-2);
+    if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) { // Summer term or any other break period table labels
+      $("#contractHours").show();
+      $("#plus").show();
+    }
+    else{ // normal semester like Fall or Spring table labels
+      $("#hoursPerWeek").show();
+      $("#JopTypes").show();
+      $("#plus").show();
+    }
   }
 }
 // TABLE LABELS
@@ -575,7 +561,9 @@ function createAndFillTable(studentDict) {
   $(cell6).html(notesGlyphicon);
   $(cell7).html(removeIcon);
 
-  refreshSelectPickers();
+
+  $("#student").val("default");
+  $("#student").selectpicker("refresh");
   if (globalArrayOfStudents.length >= 1) {
     $("#reviewButton").show();
   }
