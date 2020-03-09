@@ -148,8 +148,10 @@ def userInsert():
                                                       createdBy   = creatorID,
                                                       createdDate = date.today(),
                                                       status      = status.statusName)
+                    print("Email was created")
                     email = emailHandler(formOverload.formHistoryID)
                     email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+                    print("Email was sent")
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
