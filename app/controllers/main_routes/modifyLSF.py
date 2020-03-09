@@ -8,11 +8,12 @@ from app.models.Tracy.stuposn import *
 from app.models.modifiedForm import *
 from flask_bootstrap import bootstrap_find_resource
 from app.login_manager import require_login
-from datetime import *
+from datetime import date, datetime
 from flask import json, jsonify
 from flask import request
 from flask import flash
 import base64
+from app import cfg
 from app.logic.emailHandler import*
 
 
@@ -119,25 +120,33 @@ def updateLSF(laborStatusKey):
                 LSF.contractHours = int(rsp[k]['newValue'])
                 LSF.save()
             if k == "weeklyHours":
-                print("Should make it here")
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
                 totalHours = 0
                 if allTermForms:
                     for i in allTermForms:
                         totalHours += i.weeklyHours
-
-                print("Old total hours", totalHours)
                 previousTotalHours = totalHours + int(rsp[k]['oldValue'])
-                print("Previous total hours", previousTotalHours)
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
-                print("New total hours", newTotalHours)
-                
+                if previousTotalHours <= 15 and newTotalHours > 15:
+                    newLaborOverloadForm = OverloadForm.create(overloadReason = "None")
+                    user = User.get(User.username == cfg["user"]["debug"])
+                    newFormHistory = FormHistory.create( formID = laborStatusKey,
+                                                        historyType = "Labor Overload Form",
+                                                        createdBy = user.UserID,
+                                                        overloadForm = newLaborOverloadForm.overloadFormID,
+                                                        createdDate = date.today(),
+                                                        status = "Pending")
+                    email = emailHandler(newFormHistory.formHistoryID)
+                    email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+                    email.laborStatusFormModified()
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
-        flash("Your labor status form has been modified.", "success")
-
+                print("We saved")
+        # print("Right before we save flash", "=============================")
+        # flash("Your labor status form has been modified.", "success")
+        print("After the flash")
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
     except Exception as e:
         flash("An error occured.", "danger")
-        # print(e)
+        print(e,"ERRROOOORRRRRR")
         return jsonify({"Success": False})

@@ -106,9 +106,13 @@ function buttonListener(laborStatusKey) {
         contentType: 'application/json',
         data: modifiedDict,
         success: function(response) {
-            if (response["Success"]) {
-              window.location.href = response["url"]
-            }
+              setTimeout(function() { // executed after 1 second
+                 window.location.replace("/laborstatusform"); // reloads the page if every form
+               }, 5000);
+              // console.log("After success");
+              // console.log(response["url"]);
+              // window.location.href = response["url"];
+              // window.location.replace(response["url"]);
           }
       })
 }
