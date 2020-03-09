@@ -107,8 +107,9 @@ function buttonListener(laborStatusKey) {
         data: modifiedDict,
         success: function(response) {
               setTimeout(function() { // executed after 1 second
-                 window.location.replace("/laborstatusform"); // reloads the page if every form
-               }, 5000);
+                console.log("we succeed")
+                 window.location.replace(response["url"]); // reloads the page if every form
+               }, 60000);
               // console.log("After success");
               // console.log(response["url"]);
               // window.location.href = response["url"];

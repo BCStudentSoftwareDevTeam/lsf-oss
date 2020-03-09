@@ -655,9 +655,9 @@ function userInsert(){
                  $(".glyphicon-edit").css("color", "grey");
                  $(".glyphicon-remove").css("color", "grey");
                  msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait for page reload.)", "success");
-                 setTimeout(function() { // executed after 1 second
-                    window.location.replace("/laborstatusform"); // reloads the page if every form
-                  }, 5000);
+                 // setTimeout(function() { // executed after 1 second
+                 //    window.location.replace("/laborstatusform"); // reloads the page if every form
+                 //  }, 5000);
                }
              }
          }); // ajax closing tag
