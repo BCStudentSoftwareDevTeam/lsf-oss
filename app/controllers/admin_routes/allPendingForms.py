@@ -10,7 +10,7 @@ from app.models.modifiedForm import ModifiedForm
 from app.models.overloadForm import OverloadForm
 from app.models.formHistory import *
 from app.models.term import Term
-from app.logic import Banner
+from app.logic.banner import Banner
 from app import cfg
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
@@ -31,7 +31,7 @@ def allPendingForms(formType):
         if formType  == "all":
             formList = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
             approvalTarget = "allFormsdenyModal"
-            pageTitle = "All Pending Fomrs"
+            pageTitle = "All Pending Forms"
         else:
             if formType == "pendingLabor":
                 historyType = "Labor Status Form"
@@ -80,7 +80,7 @@ def approved_and_denied_Forms():
 
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
-            approved_details =  modal_aproval_and_denial_data(rsp)
+            approved_details =  modal_approval_and_denial_data(rsp)
             return jsonify(approved_details)
     except Exception as e:
         print("error", e)
@@ -102,31 +102,44 @@ def finalUpdateStatus(raw_status):
         createdUser = User.get(username = cfg['user']['debug'])
         rsp = eval(request.data.decode("utf-8"))
         for id in rsp:
-            history_type_data = str(FormHistory.get(FormHistory.formHistoryID == int(id))
+            history_type_data = FormHistory.get(FormHistory.formHistoryID == int(id))
             history_type = str(history_type_data.historyType)
 
             labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == history_type)
             labor_forms.status = Status.get(Status.statusName == new_status)
             labor_forms.reviewedDate = date.today()
             labor_forms.reviewedBy = createdUser.UserID
-            labor_forms.save()
     except Exception as e:
-        print("error", e)
+        print("Error preparing form for status update:", e)
         return jsonify({"success": False})
 
-    # TODO if approval, update BANNER
-    try:
-        if new_status == 'Approved':
-           conn = Banner() 
-    except Exception as e:
-        print("Unable to update BANNER. ", e)
-        return jsonify({"success": False})
+    # BANNER
+    save_status = True # default true so that we will save in the Deny case
+    if new_status == 'Approved':
+        banner_data = prep_banner_data()
+        try:
+            conn = Banner() 
+            result = conn.insert()
+            save_status = (result == None)
+
+        except Exception as e:
+            print("Unable to update BANNER:", e)
+            save_status = False
+
+        else:
+            save_status = True
         
+    if save_status:
+        labor_forms.save()
+        return jsonify({"success": True})
+        
+    return jsonify({"success": False})
 
-    return jsonify({"success": True})
+def prep_banner_data():
+    return []
 
 #method extracts data from the data base to papulate pending form approvale modal
-def modal_aproval_and_denial_data(approval_ids):
+def modal_approval_and_denial_data(approval_ids):
     ''' This method grabs the data that populated the on approve modal for lsf'''
     id_list = []
     for form_history_id in approval_ids:

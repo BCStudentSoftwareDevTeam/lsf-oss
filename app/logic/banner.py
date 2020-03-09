@@ -6,9 +6,9 @@ from app import app
 
 class Banner():
     def __init__(self):
-        secret_conf = get_secret_cfg()
+        #secret_conf = get_secret_cfg()
 
-        app.config["banner"]["password"] = secret_conf['BANNER_PASSWORD']
+        #app.config["banner"]["password"] = secret_conf['BANNER_PASSWORD']
         banner_cfg = app.config["banner"]
 
         self.database_exists = False
@@ -25,10 +25,10 @@ class Banner():
                 print("BANNER connection failed: {}".format(err))
                 self.database_exists = False
 
-    def canConnect:
+    def canConnect(self):
         return self.database_exists
 
-    def query(sql):
+    def query(self, sql):
         if self.conn:
             try:
                 cursor = self.conn.cursor()
@@ -39,7 +39,7 @@ class Banner():
                 return []
         return []
 
-    def insert(data):
+    def insert(self, data):
         if self.conn:
             try:
 		# https://bitbucket.org/laborstudents/labor-status-forms/raw/bdcbaae27a2a13b8ff4351b1e63327c52151edf5/Admin/PendingLaborStatusForms.aspx.cs

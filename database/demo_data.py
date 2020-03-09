@@ -216,7 +216,7 @@ print("staff added")
 
 def insert_to_users(staffs):
     from app.models.user import User
-    for sta in staffs[0:2]: #insert staff members into stustaff; Currently just Scott (admin) and Jan (fac/staff)
+    for sta in staffs:
         try:
             u = User()
             u.PIDM = sta.PIDM
