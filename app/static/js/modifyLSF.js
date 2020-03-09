@@ -98,22 +98,25 @@ function checkForChange(){
 }
 
 function buttonListener(laborStatusKey) {
-  var url = "/modifyLSF/updateLSF/" + laborStatusKey;
-  modifiedDict = JSON.stringify(finalDict)
-      $.ajax({
-        url: url,
-        method: "POST",
-        contentType: 'application/json',
-        data: modifiedDict,
-        success: function(response) {
-              setTimeout(function() { // executed after 1 second
-                console.log("we succeed")
-                 window.location.replace(response["url"]); // reloads the page if every form
-               }, 60000);
-              // console.log("After success");
-              // console.log(response["url"]);
-              // window.location.href = response["url"];
-              // window.location.replace(response["url"]);
-          }
-      })
+  // var url = "/modifyLSF/updateLSF/" + laborStatusKey;
+  // modifiedDict = JSON.stringify(finalDict)
+  $.ajax({
+    url: "/modifyLSF/updateLSF/" + laborStatusKey,
+    method: "POST",
+    contentType: 'application/json',
+    data: JSON.stringify(finalDict),
+    success: function(response) {
+      console.log("inside the success");
+      console.log(response["url"]);
+      window.location.href = response["url"];
+      // setTimeout(function() { // executed after 1 second
+      //   console.log("we succeed");
+      //   window.location.href(response["url"]); // reloads the page if every form
+      //  }, 1000);
+      // console.log("After success");
+      // console.log(response["url"]);
+      // window.location.href = response["url"];
+      // window.location.replace(response["url"]);
+    }
+  })
 }

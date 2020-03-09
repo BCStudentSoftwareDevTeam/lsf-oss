@@ -136,16 +136,20 @@ def updateLSF(laborStatusKey):
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
-                    email = emailHandler(newFormHistory.formHistoryID)
-                    email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
-                    email.laborStatusFormModified()
+                    overloadEmail = emailHandler(newFormHistory.formHistoryID)
+                    overloadEmail.laborStatusFormModified()
+                    overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
                 print("We saved")
+        changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
+        email = emailHandler(changedForm.formHistoryID)
+        email.laborStatusFormModified()
         # print("Right before we save flash", "=============================")
-        # flash("Your labor status form has been modified.", "success")
+        flash("Your labor status form has been modified.", "success")
         print("After the flash")
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
+
     except Exception as e:
         flash("An error occured.", "danger")
         print(e,"ERRROOOORRRRRR")
