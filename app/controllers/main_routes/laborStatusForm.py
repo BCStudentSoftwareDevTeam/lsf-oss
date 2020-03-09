@@ -224,20 +224,18 @@ def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
     isMoreLSF_dict = {}
     storeLsfFormsID = []
     if isOneLSF != None:
-        isMoreLSF_dict["Status"] = True # student does not have any previous lsf's
-        if len(list(positions)) > 0 : # If student has one or more than one lsf
+        if len(list(positions)) > 1 : # If student has one or more than one lsf
             isMoreLSF_dict["Status"] = False
             for item in positions:
                 storeLsfFormsID.append(item.laborStatusFormID) # store all of the previous labor status forms for break
                 isMoreLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME
                 isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
-
-            #FIXME: We have to pop the last lsf ID because the supervisor who currently added the student will get the wrong email.
-            # However, the pop() gives error when there are no other lsfs
             if (len(storeLsfFormsID) > 0):
                 storeLsfFormsID.pop() #save all the previous lsf ID's except the one currently created. Pop removes the one created right now.
-            isMoreLSF_dict["lsfFormID"] = storeLsfFormsID
-        return json.dumps(isMoreLSF_dict)
+                isMoreLSF_dict["lsfFormID"] = storeLsfFormsID
+        else:
+            isMoreLSF_dict["Status"] = True # student does not have any previous lsf's
+    return json.dumps(isMoreLSF_dict)
 
 @main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
 def checkCompliance(department):
