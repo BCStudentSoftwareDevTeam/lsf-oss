@@ -569,7 +569,7 @@ function isOneLaborStatusForm(studentDict){
       dataType: "json",
       success: function (response){
         console.log(response["Status"]);
-        if(response["Status"] == false){
+        if(response["ShowModal"] == true){
         // if they already have one lsf or multiple (response if false) then show modal reminding the new supervisor of 40 hour mark rule.
           $("#warningModalTitle").text("Warning");
           $("#warningModalText").html(response["studentName"] +" "+ "is already working with" +" "+ response["primarySupervisorName"] +
