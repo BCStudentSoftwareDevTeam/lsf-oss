@@ -23,12 +23,19 @@ def financialAidOverload(overloadKey):
 
 
     overload = FormHistory.get(FormHistory.overloadForm == overloadKey)
-    print(overload)
+    print("overload form", overload)
 
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overload.formID)
-    # print(lsfForm)
+    print("lsf form",lsfForm.laborStatusFormID)
 
-    getoverloadReason = OverloadForm.get(OverloadForm.overloadFormID = overload.formID)
+    totalCurrentHours = FormHistory.get(FormHistory.formID == lsfForm, overload.status == "Approved", lsfForm.jobType == "Primary")
+    # when the status is approved it shows that the form do not exist. Which makes studentSecondaryLabor
+    # rThe column on weekly hours is confusing, I think we need to create an extra column for overload hours separate
+    # how do I tell which labor status form id in the form history table was for Primary?
+
+
+    getoverloadReason = OverloadForm.get(OverloadForm.overloadFormID == overload.formID)
+    print("this is overload reason: ", getoverloadReason)
     # the following lines prefills the information for student
     studentName = lsfForm.studentSupervisee.FIRST_NAME + " "+ lsfForm.studentSupervisee.LAST_NAME
     studentBnum = lsfForm.studentSupervisee.ID
@@ -37,7 +44,8 @@ def financialAidOverload(overloadKey):
     supervisor = lsfForm.supervisor.FIRST_NAME +" "+ lsfForm.supervisor.LAST_NAME
     overloadHours = lsfForm.weeklyHours
     overloadReason = getoverloadReason.overloadReason
-    totalCurrentHours = lsfForm.weeklyHours
+    print("here", overloadReason)
+    totalCurrentHours = totalCurrentHours.weeklyHours
     laborOfficeNotes=lsfForm.laborDepartmentNotes
     today = date.today()
     termYear = today.year
@@ -65,16 +73,16 @@ def financialAidOverload(overloadKey):
     for i in studentSecondaryLabor:
         studentSecondaryHistory = FormHistory.select().where((FormHistory.formID == i) & (FormHistory.historyType == "Labor Status Form") & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly") | (FormHistory.status == "Pending")))
         formIDSecondary.append(studentSecondaryHistory)
-    totalCurrentHours = 0
+    currentHours = 0
     for i in formIDPrimary:
         for j in i:
             if str(j.status) != "Pending":
-                totalCurrentHours += j.formID.weeklyHours
+                currentHours += j.formID.weeklyHours
     for i in formIDSecondary:
         for j in i:
             if str(j.status) != "Pending":
-                totalCurrentHours += j.formID.weeklyHours
-    totalFormHours = totalCurrentHours + overloadHours
+                currentHours += j.formID.weeklyHours
+    totalFormHours = currentHours + overloadHours
     print ("total form hours", totalFormHours)
 
 
@@ -91,6 +99,6 @@ def financialAidOverload(overloadKey):
                         currentSecondary = formIDSecondary,
                         totalCurrentHours = totalCurrentHours,
                         totalFormHours = totalFormHours,
-                        # overloadReason = overloadReason,
+                        overloadReason = overloadReason,
                         laborOfficeNotes = laborOfficeNotes
                       )
