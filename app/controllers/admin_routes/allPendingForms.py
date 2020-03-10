@@ -110,20 +110,20 @@ def finalUpdateStatus(raw_status):
             labor_forms.reviewedDate = date.today()
             labor_forms.reviewedBy = createdUser.UserID
     except Exception as e:
-        print("Error preparing form for status update:", e)
+        print("Error preparing form for status update:",type(e).__name__ + ":", e)
         return jsonify({"success": False})
 
     # BANNER
     save_status = True # default true so that we will save in the Deny case
     if new_status == 'Approved':
-        banner_data = prep_banner_data()
         try:
+            banner_data = prep_banner_data(labor_forms)
             conn = Banner() 
-            result = conn.insert()
+            result = conn.insert(banner_data)
             save_status = (result == None)
 
         except Exception as e:
-            print("Unable to update BANNER:", e)
+            print("Unable to update BANNER:",type(e).__name__ + ":", e)
             save_status = False
 
         else:
@@ -132,10 +132,11 @@ def finalUpdateStatus(raw_status):
     if save_status:
         labor_forms.save()
         return jsonify({"success": True})
-        
-    return jsonify({"success": False})
+    else:
+        print("Unable to update form status.")
+        return jsonify({"success": False})
 
-def prep_banner_data():
+def prep_banner_data(form):
     return []
 
 #method extracts data from the data base to papulate pending form approvale modal

@@ -8,6 +8,6 @@ def load_config(file):
     return cfg
 
 def get_secret_cfg():
-    secret_abs_path = getAbsolutePath('app/config','example_secret_config.yaml')
+    secret_abs_path = getAbsolutePath('app/config','secret_config.yaml')
     secret_cfg      = load_config(secret_abs_path)
     return secret_cfg
