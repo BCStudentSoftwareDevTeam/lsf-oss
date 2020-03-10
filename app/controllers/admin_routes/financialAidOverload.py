@@ -23,7 +23,7 @@ def financialAidOverload(overloadKey):
 
 
     overload = FormHistory.get(FormHistory.overloadForm == overloadKey)
-    # print(overload)
+    print(overload)
 
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overload.formID)
     # print(lsfForm)
