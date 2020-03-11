@@ -345,6 +345,7 @@ function searchDataToPrepareToCheckPrimaryPosition() { // displays table when pl
   }
   else  {
     checkPrimaryPositionToCreateTheTable(studentDict);
+    isOneLaborStatusForm(studentDict);
      }
   }
 
@@ -474,6 +475,8 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
     }
   });
 }
+
+
 function createAndFillTable(studentDict) {
   globalArrayOfStudents.push(studentDict);
   $("#mytable").show();
@@ -504,10 +507,13 @@ function createAndFillTable(studentDict) {
   $(cell2).attr("data-posn", (studentDict).stuPositionCode);
   $(cell2).attr("data-wls", (studentDict).stuWLS);
   cell2.id="position_code";
-  hours = studentDict.stuContractHours;
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00") {
     hours = studentDict.stuWeeklyHours;
     studentDict.stuContractHours = null;
+  }
+  else{
+    hours = studentDict.stuContractHours;
+    studentDict.stuWeeklyHours = null;
   }
   $(cell3).html(studentDict.stuJobType);
   $(cell4).html(hours);
@@ -523,28 +529,59 @@ function createAndFillTable(studentDict) {
   }
 }
 
+$('#selectedTerm').on('change', function(){ // Shows a modal containing all the rules for submitting lsf form for a break period.
+  var termCodeLastTwo = $(this).val().slice(-2);
+  if(["00", "11", "12"].includes(termCodeLastTwo) == false){ // if it is not AY, Fall or Spring, otherwise it is break time
+    $("#warningModalTitle").text("Warning");
+    $("#warningModalText").html("Rules for Break LSF");
+    $("#warningModal").modal('show');
+  }
+});
+
+function isOneLaborStatusForm(studentDict){
+  var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
+  var term = $("#selectedTerm").val();
+  if(["00", "11", "12"].includes(termCodeLastTwo) == false){
+    url = "/laborstatusform/getstudents/" + term + "/"+ studentDict.stuBNumber+ "/"+ 'isOneLSF';
+    // check whether student has multiple labor status forms over the break period.
+    $.ajax({
+      url: url,
+      dataType: "json",
+      success: function (response){
+        if(response["Status"] == false){
+        // if they already have one lsf or multiple (response if false) then show modal reminding the new supervisor of 40 hour mark rule.
+          $("#warningModalTitle").text("Warning");
+          $("#warningModalText").html(response["studentName"] +" "+ "is already working with" +" "+ response["primarySupervisorName"] +
+                                      "<br><br> " + "Rules for Break LSF");
+          $("#warningModal").modal('show');
+        }
+      }
+    });
+  }
+}
+
 storeTotalHours = {}
 function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
-  totalHoursCount = studentDict.stuWeeklyHours;
-  for (i = 0; i < globalArrayOfStudents.length; i++){
-    if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
-      totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
+    totalHoursCount = studentDict.stuWeeklyHours;
+    for (i = 0; i < globalArrayOfStudents.length; i++){
+      if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
+        totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
+      }
+    }
+    for (i = 0; i < databasePositions.length; i++){
+      totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
+    }
+    storeTotalHours["Hours"] = {"totalHours": totalHoursCount}
+    if (totalHoursCount > (15)){
+      studentDict.isItOverloadForm = "True";
+      $('#OverloadModal').modal('show');
+      return true;
+    }
+    else {
+      return true;
     }
   }
 
-  for (i = 0; i < databasePositions.length; i++){
-    totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
-  }
-  storeTotalHours["Hours"] = {"totalHours": totalHoursCount}
-  if (totalHoursCount > (15)){
-    studentDict.isItOverloadForm = "True";
-    $('#OverloadModal').modal('show');
-    return true;
-  }
-  else {
-    return true;
-  }
-}
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
   $("#submitmodalid").show();
