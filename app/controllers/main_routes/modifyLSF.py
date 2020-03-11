@@ -134,7 +134,6 @@ def updateLSF(laborStatusKey):
                                                         createdDate = date.today(),
                                                         status = "Pending")
                     overloadEmail = emailHandler(newFormHistory.formHistoryID)
-                    overloadEmail.laborStatusFormModified()
                     overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
