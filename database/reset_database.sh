@@ -1,12 +1,12 @@
 #!/bin/bash
 
 echo "Dropping databases"
-mysql -u root --execute="DROP DATABASE \`lsf\`"
-mysql -u root --execute="DROP DATABASE \`UTE\`"
+mysql -u root -proot --execute="DROP DATABASE \`lsf\`; DROP USER 'lsf_user';"
+mysql -u root -proot --execute="DROP DATABASE \`UTE\`; DROP USER 'tracy_user';"
 
 echo "Recreating databases and users"
-mysql -u root --execute="CREATE DATABASE IF NOT EXISTS \`lsf\`; CREATE USER IF NOT EXISTS 'lsf_user'@'%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON *.* TO 'lsf_user'@'%';"
-mysql -u root --execute="CREATE DATABASE IF NOT EXISTS \`UTE\`; CREATE USER IF NOT EXISTS 'tracy_user'@'%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON *.* TO 'tracy_user'@'%';"
+mysql -u root -proot --execute="CREATE DATABASE IF NOT EXISTS \`lsf\`; CREATE USER IF NOT EXISTS 'lsf_user'@'%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON *.* TO 'lsf_user'@'%';"
+mysql -u root -proot --execute="CREATE DATABASE IF NOT EXISTS \`UTE\`; CREATE USER IF NOT EXISTS 'tracy_user'@'%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON *.* TO 'tracy_user'@'%';"
 
 echo "Creating database schema"
 ./migrate_db.sh

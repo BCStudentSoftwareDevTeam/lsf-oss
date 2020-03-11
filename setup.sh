@@ -24,3 +24,4 @@ if [[ ! -e app/config/secret_config.yaml ]]; then
 fi
 
 export FLASK_ENV=development
+export FLASK_RUN_PORT=8080
