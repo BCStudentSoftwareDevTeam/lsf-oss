@@ -44,8 +44,6 @@ function fillHoursPerWeek(){ // prefill hours per week select picker
 function checkWLS20(){
   totalhours = $("#totalHours").val();
   weeklyHours = $("#weeklyHours").val();
-  console.log("Current hours", totalhours);
-  console.log("New total hours", Number(totalhours) + Number(weeklyHours));
   if(weeklyHours == "20"){
     $('#OverloadModal').modal('show');
     $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
@@ -56,7 +54,6 @@ function checkWLS20(){
   }
 }
 
-// var effectiveDate = $("#datetimepicker0").datepicker('getDate');
 var finalDict = {};
 
 function checkForChange(){
@@ -81,7 +78,6 @@ function checkForChange(){
   if(oldNotes != newNotes){
     finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes}
   }
-  //FIXME: when only weeklyhours is shows either just send weeklyhours dict or maybe make the contract hours null. and vice versa.
   if(oldContractHours != newContractHours){
     finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours}
   }
@@ -97,26 +93,28 @@ function checkForChange(){
   }
 }
 
+function msgFlash(flash_message, status){
+    if (status === "success") {
+        category = "success";
+        $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
+        $("#flasher").delay(5000).fadeOut();
+    }
+    else {
+        category = "danger";
+        $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
+        $("#flasher").delay(5000).fadeOut();
+    }
+
+}
+
 function buttonListener(laborStatusKey) {
-  // var url = "/modifyLSF/updateLSF/" + laborStatusKey;
-  // modifiedDict = JSON.stringify(finalDict)
   $.ajax({
     url: "/modifyLSF/updateLSF/" + laborStatusKey,
     method: "POST",
     contentType: 'application/json',
     data: JSON.stringify(finalDict),
     success: function(response) {
-      console.log("inside the success");
-      console.log(response["url"]);
       window.location.href = response["url"];
-      // setTimeout(function() { // executed after 1 second
-      //   console.log("we succeed");
-      //   window.location.href(response["url"]); // reloads the page if every form
-      //  }, 1000);
-      // console.log("After success");
-      // console.log(response["url"]);
-      // window.location.href = response["url"];
-      // window.location.replace(response["url"]);
     }
   })
 }

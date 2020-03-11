@@ -54,9 +54,7 @@ def modifyLSF(laborStatusKey):
     totalHours = 0
     if allTermForms:
         for i in allTermForms:
-            print(i.weeklyHours)
             totalHours += i.weeklyHours
-    print(totalHours)
 
     return render_template( 'main/modifyLSF.html',
 				            title=('modify LSF'),
@@ -86,7 +84,6 @@ def updateLSF(laborStatusKey):
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
-        print(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
@@ -141,16 +138,13 @@ def updateLSF(laborStatusKey):
                     overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
-                print("We saved")
         changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
         email = emailHandler(changedForm.formHistoryID)
         email.laborStatusFormModified()
-        # print("Right before we save flash", "=============================")
         flash("Your labor status form has been modified.", "success")
-        print("After the flash")
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
 
     except Exception as e:
         flash("An error occured.", "danger")
-        print(e,"ERRROOOORRRRRR")
+        # print(e)
         return jsonify({"Success": False})
