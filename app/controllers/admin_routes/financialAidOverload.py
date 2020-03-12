@@ -28,7 +28,7 @@ def financialAidOverload(overloadKey):
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overload.formID)
     print("lsf form",lsfForm.laborStatusFormID)
 
-    totalCurrentHours = FormHistory.get(FormHistory.formID == lsfForm, overload.status == "Approved", lsfForm.jobType == "Primary")
+    #totalCurrentHours = FormHistory.get(FormHistory.formID == overload, FormHistory.status == "Approved", lsfForm.jobType == "Primary")
     # when the status is approved it shows that the form do not exist. Which makes studentSecondaryLabor
     # rThe column on weekly hours is confusing, I think we need to create an extra column for overload hours separate
     # how do I tell which labor status form id in the form history table was for Primary?
@@ -45,12 +45,13 @@ def financialAidOverload(overloadKey):
     overloadHours = lsfForm.weeklyHours
     overloadReason = getoverloadReason.overloadReason
     print("here", overloadReason)
-    totalCurrentHours = totalCurrentHours.weeklyHours
+    #totalCurrentHours = totalCurrentHours.weeklyHours
     laborOfficeNotes=lsfForm.laborDepartmentNotes
     today = date.today()
     termYear = today.year
     termCodeYear = Term.select(Term.termCode).where(Term.termCode.between(termYear-1, termYear + 15))
     currentTerm = str(lsfForm.termCode.termCode)[-2:]
+    contractDate = "{} - {}".format(lsfForm.startDate.strftime('%m/%d/%y'), lsfForm.endDate.strftime('%m/%d/%y'))
 
 
     TermsNeeded=[]
@@ -97,8 +98,9 @@ def financialAidOverload(overloadKey):
                         supervisor= supervisor,
                         currentPrimary = formIDPrimary,
                         currentSecondary = formIDSecondary,
-                        totalCurrentHours = totalCurrentHours,
+                        #totalCurrentHours = totalCurrentHours,
                         totalFormHours = totalFormHours,
                         overloadReason = overloadReason,
-                        laborOfficeNotes = laborOfficeNotes
+                        laborOfficeNotes = laborOfficeNotes,
+                        contractDate = contractDate
                       )

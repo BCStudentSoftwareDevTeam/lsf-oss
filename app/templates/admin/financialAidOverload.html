@@ -15,28 +15,28 @@
    <div class="floatleft">
        <div class="form-group">
          <h2> Current Position </h2>
-         <label for="Student">Student:</label> <!--User CANNOT edit-->
+         <label for="Student">Student Name:</label> <!--User CANNOT edit-->
          <div>
            <input type="Student" class="form-control" id="Student" value="{{studentName}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
 
        <div class="form-group">
-         <label for="supervisor" class="field">Position:</label>
+         <label for="supervisor" class="field">Primary Position:</label>
          <div>
             <input type = "Position" class="form-control" id= "position"value="{{position}}" disabled> </input> <!-- stores value of original-->
         </div>
        </div>
 
        <div class="form-group">
-         <label for="Department">Total Hours:</label> <!--User CANNOT edit-->
+         <label for="Department">Total Primary Position Hours:</label> <!--User CANNOT edit-->
          <div>
            <input type="Department" class="form-control" id="department" value="{{totalCurrentHours}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
 
        <div class="form-group">
-         <label for="supervisor" class="field">Supervisor:</label>
+         <label for="supervisor" class="field">Primary Supervisor:</label>
          <div>
             <input  type="supervisor"class="form-control" id= "position"value="{{supervisor}}" disabled> </input> <!-- stores value of original-->
         </div>
@@ -69,7 +69,7 @@
      <div class="form-group">
        <label for="jobType">Contract Date:</label> <!--User CANNOT edit--> <!--- TODO Is connected to Labor Status form Start Date -->
        <div>
-         <input type="jobType" class="form-control" id="jobType" value= "May 10" disabled> <!--User CANNOT edit-->
+         <input type="jobType" class="form-control" id="jobType" value= "{{contractDate}}" disabled> <!--User CANNOT edit-->
        </div>
      </div>
 
