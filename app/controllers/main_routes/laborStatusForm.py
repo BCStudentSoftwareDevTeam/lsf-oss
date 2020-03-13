@@ -114,43 +114,37 @@ def userInsert():
                                          supervisorNotes = rspFunctional[i]["stuNotes"],
                                          laborDepartmentNotes = rspFunctional[i]["stuLaborNotes"]
                                          )
-            if rspFunctional[i].get("isItOverloadForm") == "True":
+            status = Status.get(Status.statusName == "Pending")
+            d, created = User.get_or_create(username = cfg['user']['debug'])
+            creatorID = d.UserID
+            if rspFunctional[i]["isItOverloadForm"] == "True":
                 historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
+                newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
+                                                            financialAidApproved = None,
+                                                            financialAidApprover = None,
+                                                            financialAidReviewDate = None,
+                                                            SAASApproved = None,
+                                                            SAASApprover = None,
+                                                            SAASReviewDate = None,
+                                                            laborApproved = None,
+                                                            laborApprover = None,
+                                                            laborReviewDate = None)
+                formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
+                                                    historyType = historyType.historyTypeName,
+                                                    overloadForm = newLaborOverloadForm.overloadFormID,
+                                                    createdBy   = creatorID,
+                                                    createdDate = date.today(),
+                                                    status      = status.statusName)
+                # email = emailHandler(formOverload.formHistoryID)
+                # email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
             else:
                 historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-            status = Status.get(Status.statusName == "Pending")
-            d, created = User.get_or_create(username = cfg['user']['debug'])
-            creatorID = d.UserID
-            formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
-                                              historyType = historyType.historyTypeName,
-                                              createdBy   = creatorID,
-                                              createdDate = date.today(),
-                                              status      = status.statusName)
-
-            newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
-                                                        financialAidApproved = None,
-                                                        financialAidApprover = None,
-                                                        financialAidReviewDate = None,
-                                                        SAASApproved = None,
-                                                        SAASApprover = None,
-                                                        SAASReviewDate = None,
-                                                        laborApproved = None,
-                                                        laborApprover = None,
-                                                        laborReviewDate = None)
-            historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
-            status = Status.get(Status.statusName == "Pending")
-            d, created = User.get_or_create(username = cfg['user']['debug'])
-            creatorID = d.UserID
-            if(rspFunctional[i]["stuTotalHours"]) != None:
-                if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
-                    formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
-                                                      historyType = historyType.historyTypeName,
-                                                      overloadForm = newLaborOverloadForm.overloadFormID,
-                                                      createdBy   = creatorID,
-                                                      createdDate = date.today(),
-                                                      status      = status.statusName)
-                    email = emailHandler(formOverload.formHistoryID)
-                    email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+                FormHistory.create( formID = lsf.laborStatusFormID,
+                                                    historyType = historyType.historyTypeName,
+                                                    overloadForm = None,
+                                                    createdBy   = creatorID,
+                                                    createdDate = date.today(),
+                                                    status      = status.statusName)
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
