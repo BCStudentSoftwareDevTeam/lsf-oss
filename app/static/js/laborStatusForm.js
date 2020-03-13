@@ -1,5 +1,6 @@
 var globalArrayOfStudents = [];
 var display_failed = [];
+var laborStatusFormNote = null;
 
 $(document).ready(function(){
     $("[data-toggle=\"tooltip\"]").tooltip();
@@ -33,10 +34,28 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
   var jobType = $(this).val();
   if (jobType == "Secondary") {
       $("#warningModal").modal("show");
-      $("#warningModalTitle").html("Warning") //Maybe change the wording here.
+      $("#warningModalTitle").html("Warning"); //Maybe change the wording here.
       $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
       }
   });
+
+function checkIfFreshman() {
+  var jobType = $("#jobType").val();
+  var wls = $("#position :selected").attr("data-wls")
+  console.log(wls)
+  console.log(jobType);
+  var classLevel = $("#student :selected").attr("data-stuCL");
+  console.log(classLevel);
+  if (classLevel == "Freshman" && jobType == "Secondary") {
+    laborStatusFormNote = "Warning! This student has freshman classification with either a secondary position or a primary position with a WLS greater than 1. Make sure they meet the requirements for these positions.";
+  }
+  if (classLevel == "Freshman" && wls > 1) {
+    laborStatusFormNote = "Warning! This student has freshman classification with either a secondary position or a primary position with a WLS greater than 1. Make sure they meet the requirements for these positions.";
+  }
+  else {
+    laborStatusFormNote = null;
+  }
+}
 
 function disableTermSupervisorDept() {
   // disables term, supervisor and department select pickers when add student button is clicked
@@ -273,11 +292,14 @@ function showAccessLevel(){ // Make Table labels appear
     if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) { // Summer term or any other break period table labels
       $("#contractHours").show();
       $("#plus").show();
+      $("#jobType").hide();
+      $("#hoursPerWeek").hide();
     }
     else{ // normal semester like Fall or Spring table labels
       $("#hoursPerWeek").show();
       $("#JopTypes").show();
       $("#plus").show();
+      $("#contractHours").hide();
     }
   }
 }
@@ -395,6 +417,7 @@ function createStuDict(){
                     stuEndDate: endDate,
                     stuTermCode: termCodeSelected,
                     stuNotes: null,
+                    stuLaborNotes: laborStatusFormNote,
                     stuSupervisor: supervisor,
                     stuDepartment: department,
                     stuSupervisorID: supervisorID,
