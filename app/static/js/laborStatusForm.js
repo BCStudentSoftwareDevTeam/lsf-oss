@@ -15,7 +15,7 @@ $(document).ready(function(){
     }
 });
 
-$("laborStatusForm").submit(function(event) {
+$("#laborStatusForm").submit(function(event) {
   event.preventDefault();
 });
 
