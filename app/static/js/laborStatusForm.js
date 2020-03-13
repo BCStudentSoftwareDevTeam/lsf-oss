@@ -568,7 +568,25 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
     return true;
   }
 }
-
+//Triggered when summer labor is clicked when making a New Labor Status Form
+function summerLaborWarning(){
+  var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
+  var termCodeLastTwo = termCodeSelected.slice(-2);
+  //term code 13 is summer
+  if (termCodeLastTwo == 13){
+    $("#SummerContract").modal('show');
+    return true;
+  } else if ( 
+      //checks if any break has been clicked and generates a modal
+      termCodeLastTwo == 01 || termCodeLastTwo == 02 || termCodeLastTwo == 03){
+      $("#warningModalTitle").html("Reminder");
+      $("#warningModalText").html("Students may only work up to 40 hours a week during break periods.");
+      $("#warningModal").modal('show');
+      return true;
+  } else {
+      return true;
+        }
+}
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
   $("#submitmodalid").show();
   $("#doneBtn").hide();
