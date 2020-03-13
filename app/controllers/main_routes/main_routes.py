@@ -134,9 +134,14 @@ def index():
                     inactiveSupervisees = inactiveSupervisees,
                     UserID = current_user,
                     currentUserDepartments = allDepartments,
-                    isLaborAdmin = isLaborAdmin
+                    isLaborAdmin = isLaborAdmin,
+                    multiDepartments = True
                           )
     # If the user is not an admin, then we will only load in the departments the user is tied to
+    if currentUserDepartments.count() > 1:
+        multiDepartments = True
+    else:
+        multiDepartments = False
     return render_template( 'main/index.html',
 				    title=('Home'),
                     currentSupervisees = currentSupervisees,
@@ -144,7 +149,8 @@ def index():
                     inactiveSupervisees = inactiveSupervisees,
                     UserID = current_user,
                     currentUserDepartments = currentUserDepartments,
-                    isLaborAdmin = isLaborAdmin
+                    isLaborAdmin = isLaborAdmin,
+                    multiDepartments = multiDepartments
                           )
 
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
