@@ -44,6 +44,15 @@
             <th>Term Name</th>
             <th>Start Date</th>
             <th>End Date</th>
+            <th>Primary Labor Status Forms Due
+              <span data-toggle="tooltip"
+                    data-tooltip="true"
+                    title="After this day, labor supervisor will not be able
+                    to submit any primary positions for students"
+                    data-placement="right"
+                    class="glyphicon glyphicon-bookmark">
+             </span>
+            </th>
             <th>Term State
                   <span data-toggle="tooltip"
                     data-tooltip="true"
@@ -88,6 +97,20 @@
                       </span>
                       </div>
                     </td>
+                    <td>
+                      <div class="input-group date">
+                        <input id="primaryCutOff_{{term.termCode}}"
+                            onchange="getDate(this, {{term.termCode}});"
+                            type="text"
+                            class="form-control datepicker primaryCutOff"
+                            placeholder="MM/DD/YYYY"
+                            value="{% if term.primaryCutOff != None %}{{term.primaryCutOff.strftime('%m/%d/%Y')}}{% endif %}"
+                        />
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        </div>
+                      </td>
                     <td>
                        <button
                          {% if term.termStart == None or term.termEnd == None or term.termState == None %} disabled {% endif %}

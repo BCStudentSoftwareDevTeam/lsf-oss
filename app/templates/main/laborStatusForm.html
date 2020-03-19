@@ -13,7 +13,7 @@
 {% block app_content %}
 <div align="center" style="margin-bottom: 50px;">
   <h1 id ="title">Labor Status Form
-    <span class="glyphicon glyphicon-bookmark"
+	  <span class="glyphicon glyphicon-bookmark">
       <a  data-toggle="tooltip" data-tooltip="true"
           title="This online labor status form is used to
           establish a student's work status in the Labor Program."
@@ -21,6 +21,12 @@
       </a>
     </span>
   </h1>
+  <div id="primary-cutoff-warning" style="color:red;" hidden>
+    The last date to add <b>Primary</b> positions was <span id="primary-cutoff-date"></span>
+  </div>
+  <div id="break-cutoff-warning" style="color:red;" hidden>
+    The last date to add <b>Break</b> positions was <span id="break-cutoff-date"></span>
+  </div>
 </div>
 
 <form id="laborStatusForm">
@@ -34,7 +40,8 @@
                 name='supervisor'
                 id='selectedSupervisor'
                 data-live-search='true'
-                title="Supervisor">
+                title="Supervisor"
+                onchange = "showAccessLevel()">
             <option value = "" disabled selected>Select a Supervisor</option>
           {% for staff in staffs %}
             <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.ID == staff.ID %} selected {% endif %}{% endif %} data-subtext="({{staff.ID}})">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
@@ -50,7 +57,7 @@
                 data-live-search='true'
                 title="Department"
                 data-width="100%"
-                onchange = "checkCompliance(this); getDepartment(this)">
+                onchange = "checkCompliance(this); getDepartment(this); showAccessLevel()">
           <option value = "" disabled selected>Select a Department</option>
           {% for department in departments %}
             <option value="{{department.DEPT_NAME}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-subtext = "({{department.ORG}}-{{department.ACCOUNT}})">{{department.DEPT_NAME}}</option>
@@ -68,7 +75,7 @@
                     data-toggle="tooltip"
                     title="Term"
                     data-width="100%"
-                    onchange = "showAccessLevel(this); preFilledDate(this)">
+                    onchange = "showAccessLevel(); preFilledDate(this); summerLaborWarning()">
                 <option value = "" disabled selected>Select a Term</option>
             {% for term in terms %}
                 <option value = "{{term.termCode}}" data-termCode = "{{term.termCode}}">{{term.termName}}</option>
@@ -115,7 +122,7 @@
                 title="Student" >
               <option value = "" disabled selected>Select a Student</option>
           {% for student in students %}
-              <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %} data-subtext="({{student.ID}})">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
+              <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %} data-subtext="({{student.ID}})" data-stuCL="{{student.CLASS_LEVEL}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
           {% endfor %}
         </select>
   </div>
@@ -143,7 +150,7 @@
                   data-width="100%"
                   onchange="fillHoursPerWeek()">
             <option value = "" disabled selected>Select a Job Type</option>
-            <option value="Primary"{% if forms %}{% if forms.jobType == "Primary" %} data-jobType={{forms.jobType}} selected {% endif %}{% endif %}>Primary</option>
+            <option id = "primary" value="Primary"{% if forms %}{% if forms.jobType == "Primary" %} data-jobType={{forms.jobType}} selected {% endif %}{% endif %}>Primary</option>
             <option value="Secondary"{% if forms %}{% if forms.jobType == "Secondary" %} data-jobType={{forms.jobType}} selected {% endif %}{% endif %}>Secondary</option>
           </select>
         {% include "snips/LSFModals.html" %}
@@ -176,13 +183,13 @@
     </div>
 </div>
 <br>
-<div id="plus" class= "col-md-12 ">
+<div id="plus" class= "col-md-12">
   <button type="button"
-          class="btn btn-primary"
+          class="btn btn-primary disable"
           name = "addStudent"
           id="addMoreStudent"
           value = "formSubmission"
-          onclick="searchDataToPrepareToCheckPrimaryPosition(); disableTermSupervisorDept()">Add Student
+          onclick="checkCompliance(this); checkIfFreshman(); searchDataToPrepareToCheckPrimaryPosition(); disableTermSupervisorDept()">Add Student
   </button>
 </div>
   <br />
@@ -202,7 +209,7 @@
       <tbody id='tbodyid'></tbody>
     </table>
   <div class="col-md-12 " id="reviewButton">
-    <button type="button"
+    <button type="button disable"
             class="btn btn-primary"
             name = "formSubmission"
             id="reviewButton0"

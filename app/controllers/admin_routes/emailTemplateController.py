@@ -13,8 +13,11 @@ def email_templates():
     if not current_user:                    # Not logged in
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:       # Not an admin
-        return render_template('errors/403.html')
-
+        isLaborAdmin = False
+        return render_template('errors/403.html',
+                                isLaborAdmin = isLaborAdmin)
+    else:
+        isLaborAdmin = True
     emailTemplateID = EmailTemplate.select()
     purpose = EmailTemplate.select()
     subject = EmailTemplate.select()
@@ -24,7 +27,8 @@ def email_templates():
                             emailTemplateID = emailTemplateID,
                             purpose = purpose,
                             subject = subject,
-                            body = body
+                            body = body,
+                            isLaborAdmin = isLaborAdmin
                           )
 
 @admin.route('/admin/emailTemplates/getPurpose/<recipient>', methods=['GET'])

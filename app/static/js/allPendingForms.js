@@ -141,32 +141,32 @@ function getNotes (formId) {
     url: "/admin/getNotes/"+formId,
     datatype: "json",
     success: function (response) {
-
       if ("Success" in response && response.Success == "false") {
         //Clears supervisor notes p tag and the labor notes textarea
         $("#notesText").empty();
         $("#laborNotesText").empty();
-
-       } else {
-          $("#laborNotesText").data('formId',formId); //attaches the formid data to the textarea
-          //Populates notes value from the database
-
-          if ("supervisorNotes" in response) {
-            $("#supeNotesLabel").show()
-            $("#notesText").show()
-            $("#notesText").html(response.supervisorNotes);
-             }
-
-             if (!("supervisorNotes" in response)) {
-              $("#supeNotesLabel").hide()
-              $("#notesText").hide()
-           }
-
-          if ("laborDepartmentNotes" in response) {
-            $("#laborNotesText").html(response.laborDepartmentNotes);
-            }
-         }
        }
+       else {
+         $("#laborNotesText").data('formId',formId); //attaches the formid data to the textarea
+
+         //Populates notes value from the database
+         if ("supervisorNotes" in response) {
+          $("#supeNotesLabel").show()
+          $("#notesText").show()
+          $("#notesText").html(response.supervisorNotes);
+         }
+         if (!("supervisorNotes" in response)) {
+          $("#supeNotesLabel").hide()
+          $("#notesText").hide()
+         }
+         if ("laborDepartmentNotes" in response) {
+           $("#notesLogArea").html(response.laborDepartmentNotes);
+         }
+         else if (!("laborDepartmentNotes" in response)) {
+           $("#notesLogArea").html("No notes to show")
+        }
+       }
+     }
    });
 }
 

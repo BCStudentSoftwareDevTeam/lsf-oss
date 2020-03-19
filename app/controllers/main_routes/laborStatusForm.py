@@ -27,6 +27,10 @@ def laborStatusForm(laborStatusKey = None):
     currentUser = require_login()
     if not currentUser:        # Not logged in
         return render_template('errors/403.html')
+    if not currentUser.isLaborAdmin:       # Not an admin
+        isLaborAdmin = False
+    else:
+        isLaborAdmin = True
     # Logged in
     wls = STUPOSN.select(STUPOSN.WLS).distinct() # getting WLS from TRACY
     posnCode = STUPOSN.select(STUPOSN.POSN_CODE).distinct() # getting position code from TRACY
@@ -55,7 +59,8 @@ def laborStatusForm(laborStatusKey = None):
                             students = students,
                             terms = terms,
                             staffs = staffs,
-                            departments = departments)
+                            departments = departments,
+                            isLaborAdmin = isLaborAdmin)
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
@@ -106,45 +111,40 @@ def userInsert():
                                          weeklyHours   = rspFunctional[i].get("stuWeeklyHours", None),
                                          startDate = startDate,
                                          endDate = endDate,
-                                         supervisorNotes = rspFunctional[i]["stuNotes"]
+                                         supervisorNotes = rspFunctional[i]["stuNotes"],
+                                         laborDepartmentNotes = rspFunctional[i]["stuLaborNotes"]
                                          )
-            if rspFunctional[i].get("isItOverloadForm") == "True":
+            status = Status.get(Status.statusName == "Pending")
+            d, created = User.get_or_create(username = cfg['user']['debug'])
+            creatorID = d.UserID
+            if rspFunctional[i]["isItOverloadForm"] == "True":
                 historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
+                newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
+                                                            financialAidApproved = None,
+                                                            financialAidApprover = None,
+                                                            financialAidReviewDate = None,
+                                                            SAASApproved = None,
+                                                            SAASApprover = None,
+                                                            SAASReviewDate = None,
+                                                            laborApproved = None,
+                                                            laborApprover = None,
+                                                            laborReviewDate = None)
+                formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
+                                                    historyType = historyType.historyTypeName,
+                                                    overloadForm = newLaborOverloadForm.overloadFormID,
+                                                    createdBy   = creatorID,
+                                                    createdDate = date.today(),
+                                                    status      = status.statusName)
+                # email = emailHandler(formOverload.formHistoryID)
+                # email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
             else:
                 historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-            status = Status.get(Status.statusName == "Pending")
-            d, created = User.get_or_create(username = cfg['user']['debug'])
-            creatorID = d.UserID
-            formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
-                                              historyType = historyType.historyTypeName,
-                                              createdBy   = creatorID,
-                                              createdDate = date.today(),
-                                              status      = status.statusName)
-
-            newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
-                                                        financialAidApproved = None,
-                                                        financialAidApprover = None,
-                                                        financialAidReviewDate = None,
-                                                        SAASApproved = None,
-                                                        SAASApprover = None,
-                                                        SAASReviewDate = None,
-                                                        laborApproved = None,
-                                                        laborApprover = None,
-                                                        laborReviewDate = None)
-            historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
-            status = Status.get(Status.statusName == "Pending")
-            d, created = User.get_or_create(username = cfg['user']['debug'])
-            creatorID = d.UserID
-            if(rspFunctional[i]["stuTotalHours"]) != None:
-                if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
-                    formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
-                                                      historyType = historyType.historyTypeName,
-                                                      overloadForm = newLaborOverloadForm.overloadFormID,
-                                                      createdBy   = creatorID,
-                                                      createdDate = date.today(),
-                                                      status      = status.statusName)
-                    email = emailHandler(formOverload.formHistoryID)
-                    email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+                FormHistory.create( formID = lsf.laborStatusFormID,
+                                                    historyType = historyType.historyTypeName,
+                                                    overloadForm = None,
+                                                    createdBy   = creatorID,
+                                                    createdDate = date.today(),
+                                                    status      = status.statusName)
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
@@ -160,7 +160,11 @@ def getDates(termcode):
     for date in dates:
         start = date.termStart
         end  = date.termEnd
-        datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
+        primaryCutOff = date.primaryCutOff
+        if primaryCutOff is None:
+            datesDict[date.termCode] = {"Term Code": date.termCode,"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
+        else:
+            datesDict[date.termCode] = {"Term Code": date.termCode, "Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y")}
     return json.dumps(datesDict)
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])

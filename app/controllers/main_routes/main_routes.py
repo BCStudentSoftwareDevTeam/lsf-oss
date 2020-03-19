@@ -22,6 +22,10 @@ def index():
     current_user = require_login()
     if not current_user:
         return render_template('errors/403.html')
+    if not current_user.isLaborAdmin:       # Not an admin
+        isLaborAdmin = False
+    else:
+        isLaborAdmin = True
 
     todayDate = date.today()
     # Grabs all the labor status forms where the current user is the supervisor
@@ -129,16 +133,24 @@ def index():
                     pastSupervisees = pastSupervisees,
                     inactiveSupervisees = inactiveSupervisees,
                     UserID = current_user,
-                    currentUserDepartments = allDepartments
+                    currentUserDepartments = allDepartments,
+                    isLaborAdmin = isLaborAdmin,
+                    multiDepartments = True
                           )
     # If the user is not an admin, then we will only load in the departments the user is tied to
+    if currentUserDepartments.count() > 1:
+        multiDepartments = True
+    else:
+        multiDepartments = False
     return render_template( 'main/index.html',
 				    title=('Home'),
                     currentSupervisees = currentSupervisees,
                     pastSupervisees = pastSupervisees,
                     inactiveSupervisees = inactiveSupervisees,
                     UserID = current_user,
-                    currentUserDepartments = currentUserDepartments
+                    currentUserDepartments = currentUserDepartments,
+                    isLaborAdmin = isLaborAdmin,
+                    multiDepartments = multiDepartments
                           )
 
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])

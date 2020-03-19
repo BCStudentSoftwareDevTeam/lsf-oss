@@ -23,7 +23,11 @@ def allPendingForms(formType):
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html')
+            isLaborAdmin = False
+            return render_template('errors/403.html',
+                                    isLaborAdmin = isLaborAdmin)
+        else:
+            isLaborAdmin = True
         formList = None
         historyType = None
         pageTitle = ""
@@ -60,7 +64,8 @@ def allPendingForms(formType):
                                 users=users,
                                 formList = formList,
                                 formType= formType,
-                                modalTarget = approvalTarget
+                                modalTarget = approvalTarget,
+                                isLaborAdmin = isLaborAdmin
                                 )
     except Exception as e:
         print("error", e)
@@ -179,7 +184,11 @@ def getNotes(formid):
             notesDict["supervisorNotes"] = notes.supervisorNotes
 
         if notes.laborDepartmentNotes:
-            notesDict["laborDepartmentNotes"] = notes.laborDepartmentNotes
+            listOfNotes = json.loads(notes.laborDepartmentNotes)
+            notesDict["laborDepartmentNotes"] = ""
+            for i in listOfNotes:
+                singleNote = "<dl class='dl-horizontal text-left'>" + i + "</dl>"
+                notesDict["laborDepartmentNotes"] = notesDict["laborDepartmentNotes"] + singleNote
         return jsonify(notesDict)
 
     except Exception as e:
@@ -197,15 +206,26 @@ def insertNotes(formId):
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
-
+        current_user_string = str(current_user.FIRST_NAME[0] + "." + " " + current_user.LAST_NAME) #Getting the name of the current user in a string and formatting it for the note.  Up for change, we'll demo it
         rsp = eval(request.data.decode("utf-8"))
+        stripresponse = rsp.strip()
+        currentDate = datetime.now().strftime("%m/%d/%y")
+        notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
         laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
-        if rsp:
-            laborDeptNotes.laborDepartmentNotes = rsp
+
+        if stripresponse:
+            stripresponse = "<dt>" + str(currentDate) + " - " + current_user_string + ":" + "</dt>" + "<dd>" + stripresponse + "</dd>" #adding the name of the user to the stripresponse that is the note.
+            listOfNotes = [stripresponse]
+            if notes.laborDepartmentNotes != None:
+                listOfNotesJson = json.loads(notes.laborDepartmentNotes)
+                for i in listOfNotesJson:
+                    listOfNotes.append(i)
+            listOfNotesJson = json.dumps(listOfNotes)
+            laborDeptNotes.laborDepartmentNotes = listOfNotesJson
             laborDeptNotes.save() #Updates labor notes
             return jsonify({"Success": True})
 
-        elif rsp=="" or rsp==None:
+        elif stripresponse=="" or stripresponse==None:
             flash("No changes made to notes.", "danger")
             return jsonify({"Success": False})
 
