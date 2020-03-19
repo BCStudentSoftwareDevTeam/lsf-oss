@@ -180,8 +180,6 @@ def userInsert():
                     email.laborStatusFormSubmittedForBreak()
             except Exception as e:
                 print("Error on sending emails during break: " + str(e))
-=======
->>>>>>> development
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
@@ -213,8 +211,8 @@ def getPositions(department):
         positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
     return json.dumps(positionDict)
 
-@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
-def checkForPrimaryPosition(termCode, student):
+@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
+def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
     isMoreLSF_dict = {}
