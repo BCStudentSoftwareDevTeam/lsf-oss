@@ -216,7 +216,7 @@ print("staff added")
 
 def insert_to_users(staffs):
     from app.models.user import User
-    for sta in staffs[0:2]: #insert staff members into stustaff; Currently just Scott (admin) and Jan (fac/staff)
+    for sta in staffs:
         try:
             u = User()
             u.PIDM = sta.PIDM
@@ -1247,11 +1247,10 @@ emailtemps= [
                             <p>&nbsp;</p>
                             <p>This email is very important. Please take a moment to read carefully and review the information. A Labor Status Form has been submitted for you by <strong>@@Creator@@</strong>. Below is the position information for which you have been hired. If you do not accept the terms of this form, you will have 24 hours to contact the supervisor or the Labor Program Office. If we do not hear from you within 24 hours of this notification, it will be determined that it is accepted and the forms will be processed as submitted.</p>
                             <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted
-                            to await approval. Once this position has been approved, your job will be active to allow for time entry in 24 hours. I
-                            f at that time, you cannot clock in, please contact the Labor Program Office immediately.</p>
+                            <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, your job will be active to allow for time entry in 24 hours. If at that time, you cannot clock in, please contact the Labor Program Office immediately.</p>
                             <p>&nbsp;</p>
-                            <p>Please note that you are only allowed to work for a maximum of 40 hours per week.</p>
+                            <p><strong>NOTICE:</strong> There is already another labor position submitted for you. (put position and x hrs/week???)
+                             Please be aware that you are only allowed to work maximum of 40 hours per week if you are not taking any classes.</p>
                             <p>&nbsp;</p>
                             <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
                             <p>&nbsp;</p>
@@ -1267,7 +1266,6 @@ emailtemps= [
                             <p>Labor Program Office</p>
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>''',
-
                 "audience":"student"
                 },
                 {

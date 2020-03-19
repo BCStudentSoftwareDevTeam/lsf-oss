@@ -64,7 +64,7 @@ function finalApproval() { //this method changes the status of the lsf from pend
   var data = JSON.stringify(labor_details_ids);
   $.ajax({
     type: "POST",
-    url: "/admin/finalApproval",
+    url: "/admin/updateStatus/approved",
     datatype: "json",
     data: data,
     contentType: 'application/json',
@@ -121,7 +121,7 @@ function finalDenial_data(returned_details){
    var data = JSON.stringify(labor_denial_id);
    $.ajax({
      type: "POST",
-     url: "/admin/finalDenial",
+     url: "/admin/updateStatus/denied",
      datatype: "json",
      data: data,
      contentType: 'application/json',
@@ -141,32 +141,32 @@ function getNotes (formId) {
     url: "/admin/getNotes/"+formId,
     datatype: "json",
     success: function (response) {
-
       if ("Success" in response && response.Success == "false") {
         //Clears supervisor notes p tag and the labor notes textarea
         $("#notesText").empty();
         $("#laborNotesText").empty();
-
-       } else {
-          $("#laborNotesText").data('formId',formId); //attaches the formid data to the textarea
-          //Populates notes value from the database
-
-          if ("supervisorNotes" in response) {
-            $("#supeNotesLabel").show()
-            $("#notesText").show()
-            $("#notesText").html(response.supervisorNotes);
-             }
-
-             if (!("supervisorNotes" in response)) {
-              $("#supeNotesLabel").hide()
-              $("#notesText").hide()
-           }
-
-          if ("laborDepartmentNotes" in response) {
-            $("#laborNotesText").html(response.laborDepartmentNotes);
-            }
-         }
        }
+       else {
+         $("#laborNotesText").data('formId',formId); //attaches the formid data to the textarea
+
+         //Populates notes value from the database
+         if ("supervisorNotes" in response) {
+          $("#supeNotesLabel").show()
+          $("#notesText").show()
+          $("#notesText").html(response.supervisorNotes);
+         }
+         if (!("supervisorNotes" in response)) {
+          $("#supeNotesLabel").hide()
+          $("#notesText").hide()
+         }
+         if ("laborDepartmentNotes" in response) {
+           $("#notesLogArea").html(response.laborDepartmentNotes);
+         }
+         else if (!("laborDepartmentNotes" in response)) {
+           $("#notesLogArea").html("No notes to show")
+        }
+       }
+     }
    });
 }
 

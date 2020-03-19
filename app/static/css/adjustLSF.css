@@ -1,0 +1,18 @@
+.floatleft {
+  float: left;
+  width: 47%;
+}
+.floatright {
+  float: right;
+  width: 47%;
+}
+.submitbutton {
+  float: right;
+}
+.modal-content{
+  margin-top: 250px;
+}
+.filter-option-inner-inner{
+  /* Makes titles black instead of gray */
+  color: #000000 !important;
+}

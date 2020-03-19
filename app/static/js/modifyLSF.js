@@ -1,70 +1,10 @@
 $(document).ready(function(){
   fillHoursPerWeek();
-   var department = $("#Department").eq(0).val();
-   var url = "/modifyLSF/getPosition/" + department;
-       $.ajax({
-         url: url,
-         dataType: "json",
-         success: function (response){
-            fill_supervisor(response);
-            fill_positions(response);
-            jobPositionDisable();
-         }
-       })
+  jobPositionDisable();
  });
 
 $("#contractHoursDiv").hide();
 $("#weeklyHoursDiv").hide();
-//adds a contstraint that does not allow user to set date before today's date
-var date = new Date();
-date.setDate(date.getDate());
-$("#datetimepicker0").datepicker({
-  minDate: date
-});
-$("#datetimepicker0").datepicker("setDate", "date");
-
-$('.glyphicon-calendar').click(function() {
-    $("#datetimepicker0").focus();
-});
-
-function fill_positions(response) {
-  var selected_positions = $("#POSN_TITLE")[0];
-    for (var key in response) {
-      try{
-        var options = document.createElement("option");
-        options.text = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")"
-        options.value = response[key]["position"].toString() + " " + "(" + response[key]["WLS"].toString() + ")";
-        selected_positions.appendChild(options);
-      }
-      catch(error){
-        console.log(error)
-      }
-    $('.selectpicker').selectpicker('refresh');
-  }
-}
-
-function fill_supervisor(response){
-  var selected_supervisors = $("#supervisor");
-    for (var key in response) {
-      try{
-        var options = document.createElement("option");
-        options.text = response[key]["supervisorFirstName"].toString() + " " + response[key]["supervisorLastName"].toString();
-        options.value =response[key]["supervisorPIDM"].toString();
-        selected_supervisors[0].appendChild(options);
-        $('.selectpicker').selectpicker('refresh');
-        var map = {};
-        $('select option').each(function () {
-            if (map[this.value]) {
-                $(this).remove()
-            }
-            map[this.value] = true;
-        })
-      }
-      catch(error){
-        console.log(error)
-      }
-  }
-}
 
 function jobPositionDisable(){
   var termcode = $("#termCode").eq(0).val();
@@ -79,50 +19,41 @@ function jobPositionDisable(){
   }
 }
 
-// function WLScheck(){
-//   try{
-//     var jobType = $("#jobType").val();
-//     var wls = $("#POSN_TITLE").find("option:selected").attr("data-wls");
-//   }
-//   catch(error){
-//     console.log(error)
-//   }
-// }
-
-// Pops up a modal for overload
-// function hourscheck(){
-//   var hour = $("#weeklyHours").val();
-//   if (hour == "20") {
-//       $('#OverloadModal').modal('show');
-//       $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
-//     }
-// };
-
-function fillHoursPerWeek(){ // prefill hours per week select picker)
- var wls = $("#POSN_TITLE option:selected").attr("data-wls"); // FIXME: find another way to get WLS when they change select another position
- var selectedHoursPerWeek = $("#weeklyHours");
- var weeklyHours = $("#weeklyHours option:selected")
- var jobType = $("#jobType").val();
- if (selectedHoursPerWeek){
-   $("#weeklyHours").empty();
-   var list = ["10", "15", "20"];
-   if (jobType == "Secondary") {
-     list = ["6","10"] // FIXME: I have put 6 for testing. When I put 5 it doesn't show up in the options
-   }
-   if(wls>5){
-     list = ["15", "20"]
-   }
-   if( weeklyHours == "20"){ // FIXME: Doesn't work
-     $('#OverloadModal').modal('show');
-     $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
-   }
-   $(list).each(function(i,hours) {
-     selectedHoursPerWeek.append($("<option />").text(hours));
-   });
- }
+function fillHoursPerWeek(){ // prefill hours per week select picker
+  var defaultValue = $("#oldWeeklyHours").val();
+  var selectedHoursPerWeek = $("#weeklyHours");
+  var jobType = $("#jobType").val();
+  var wls = $("#POSN_TITLE option:selected").attr("data-wls");
+  if (selectedHoursPerWeek){
+       var list = ["10", "12", "15", "20"];
+       if (jobType == "Secondary") {
+         list = ["5","10"]
+       }
+       if(wls>=5){
+         list = ["15", "20"]
+       }
+       $("#weeklyHours").empty();
+       $(list).each(function(i,hours) {
+         selectedHoursPerWeek.append($("<option />").text(hours).val(hours));
+       });
+       $("#weeklyHours").val(defaultValue);
+       $("#weeklyHours").selectpicker("refresh");
+  }
 }
 
-var effectiveDate = $("#datetimepicker0").datepicker('getDate');
+function checkWLS20(){
+  totalhours = $("#totalHours").val();
+  weeklyHours = $("#weeklyHours").val();
+  if(weeklyHours == "20"){
+    $('#OverloadModal').modal('show');
+    $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
+  }
+  else if(Number(totalhours) + Number(weeklyHours) > 15) {
+    $('#OverloadModal').modal('show');
+    $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
+  }
+}
+
 var finalDict = {};
 
 function checkForChange(){
@@ -139,22 +70,20 @@ function checkForChange(){
   var newWeeklyHours = $('#weeklyHours').val();
 
   if(oldSupervisor != newSupervisor){
-    finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor, "date": date}
+    finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor}
   }
   if(oldPostition != newPostition){
-    finalDict["POSN_TITLE"] = {"oldValue": oldPostition, "newValue": newPostition, "date": date}
+    finalDict["POSN_TITLE"] = {"oldValue": oldPostition, "newValue": newPostition}
   }
   if(oldNotes != newNotes){
-    finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes, "date": date}
+    finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes}
   }
-  //FIXME: when only weeklyhours is shows either just send weeklyhours dict or maybe make the contract hours null. and vice versa.
   if(oldContractHours != newContractHours){
-    finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours, "date": date}
+    finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours}
   }
   if(oldWeeklyHours != newWeeklyHours){
-    finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours, "date": date}
+    finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours}
   }
-
   if (JSON.stringify(finalDict) !== '{}'){
     $('#submitModal').modal('show');
     return finalDict
@@ -164,18 +93,28 @@ function checkForChange(){
   }
 }
 
+function msgFlash(flash_message, status){
+    if (status === "success") {
+        category = "success";
+        $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
+        $("#flasher").delay(5000).fadeOut();
+    }
+    else {
+        category = "danger";
+        $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
+        $("#flasher").delay(5000).fadeOut();
+    }
+
+}
+
 function buttonListener(laborStatusKey) {
-  var url = "/modifyLSF/submitModifiedForm/" + laborStatusKey;
-  modifiedDict = JSON.stringify(finalDict)
-      $.ajax({
-        url: url,
-        method: "POST",
-        contentType: 'application/json',
-        data: modifiedDict,
-        success: function(response) {
-            if (response["Success"]) {
-              window.location.href = response["url"]
-            }
-          }
-      })
+  $.ajax({
+    url: "/modifyLSF/updateLSF/" + laborStatusKey,
+    method: "POST",
+    contentType: 'application/json',
+    data: JSON.stringify(finalDict),
+    success: function(response) {
+      window.location.href = response["url"];
+    }
+  })
 }

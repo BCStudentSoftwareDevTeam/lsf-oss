@@ -95,6 +95,7 @@ def userInsert():
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
         term = d.termCode
+
         # Changes the dates into the appropriate format for the table
         startDate = datetime.strptime(rspFunctional[i]['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
         endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
@@ -111,35 +112,41 @@ def userInsert():
                                          weeklyHours   = rspFunctional[i].get("stuWeeklyHours", None),
                                          startDate = startDate,
                                          endDate = endDate,
-                                         supervisorNotes = rspFunctional[i]["stuNotes"]
+                                         supervisorNotes = rspFunctional[i]["stuNotes"],
+                                         laborDepartmentNotes = rspFunctional[i]["stuLaborNotes"]
                                          )
-            if rspFunctional[i].get("isItOverloadForm") == "True":
+            status = Status.get(Status.statusName == "Pending")
+            d, created = User.get_or_create(username = cfg['user']['debug'])
+            creatorID = d.UserID
+            if rspFunctional[i]["isItOverloadForm"] == "True":
                 historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
+                newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
+                                                            financialAidApproved = None,
+                                                            financialAidApprover = None,
+                                                            financialAidReviewDate = None,
+                                                            SAASApproved = None,
+                                                            SAASApprover = None,
+                                                            SAASReviewDate = None,
+                                                            laborApproved = None,
+                                                            laborApprover = None,
+                                                            laborReviewDate = None)
+                formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
+                                                    historyType = historyType.historyTypeName,
+                                                    overloadForm = newLaborOverloadForm.overloadFormID,
+                                                    createdBy   = creatorID,
+                                                    createdDate = date.today(),
+                                                    status      = status.statusName)
+                # email = emailHandler(formOverload.formHistoryID)
+                # email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
             else:
                 historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-            status = Status.get(Status.statusName == "Pending")
-            d, created = User.get_or_create(username = cfg['user']['debug'])
-            creatorID = d.UserID
-            formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
-                                              historyType = historyType.historyTypeName,
-                                              createdBy   = creatorID,
-                                              createdDate = date.today(),
-                                              status      = status.statusName)
+                FormHistory.create( formID = lsf.laborStatusFormID,
+                                                    historyType = historyType.historyTypeName,
+                                                    overloadForm = None,
+                                                    createdBy   = creatorID,
+                                                    createdDate = date.today(),
+                                                    status      = status.statusName)
 
-            newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
-                                                        financialAidApproved = None,
-                                                        financialAidApprover = None,
-                                                        financialAidReviewDate = None,
-                                                        SAASApproved = None,
-                                                        SAASApprover = None,
-                                                        SAASReviewDate = None,
-                                                        laborApproved = None,
-                                                        laborApprover = None,
-                                                        laborReviewDate = None)
-            historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
-            status = Status.get(Status.statusName == "Pending")
-            d, created = User.get_or_create(username = cfg['user']['debug'])
-            creatorID = d.UserID
             termCode = str(term)[-2:]
             if(rspFunctional[i]["stuTotalHours"]) != None and termCode in ["11", "12", "00"]:
                 if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
@@ -173,6 +180,8 @@ def userInsert():
                     email.laborStatusFormSubmittedForBreak()
             except Exception as e:
                 print("Error on sending emails during break: " + str(e))
+=======
+>>>>>>> development
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
@@ -208,6 +217,24 @@ def getPositions(department):
 def checkForPrimaryPosition(termCode, student):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    isMoreLSF_dict = {}
+    if isOneLSF !=None:
+        isMoreLSF_dict["Status"] = True # student does not have any previous lsf's
+        if len(list(positions)) > 1: # If student has one or more than one lsf
+            isMoreLSF_dict["Status"] = False
+            for item in positions:
+                isMoreLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME
+                isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
+                # FIXME: Send email to both supervisors and student (for more than one lsf). Send it to all supervisors.
+                # laborStatusKey = item.laborStatusFormID
+                # # print(" Labor Status Forms for Break", item.laborStatusFormID)
+                # selectedFormHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
+                # # print("Form History", selectedFormHistory.formHistoryID)
+                # email = emailHandler(selectedFormHistory.formHistoryID)
+                # email.laborStatusFormSubmittedForBreak()
+        # FIXME: Send email to the supervisor and student (for the first lsf)
+        return jsonify(isMoreLSF_dict)
+
     positionsList = []
     for item in positions:
         positionsDict = {}
