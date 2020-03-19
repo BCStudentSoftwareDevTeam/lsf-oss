@@ -211,6 +211,7 @@ def getPositions(department):
         positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
     return json.dumps(positionDict)
 
+@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
 def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
