@@ -1238,7 +1238,37 @@ emailtemps= [
                     <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
                             ''',
                 "audience":"supervisor"
-                }
+                },
+                # LSF Submission Over the break
+                {
+                "purpose":"Break Labor Status Form Submitted For Student",
+                "subject":"Labor Status Form Received",
+                "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
+                            <p>&nbsp;</p>
+                            <p>This email is very important. Please take a moment to read carefully and review the information. A Labor Status Form has been submitted for you by <strong>@@Creator@@</strong>. Below is the position information for which you have been hired. If you do not accept the terms of this form, you will have 24 hours to contact the supervisor or the Labor Program Office. If we do not hear from you within 24 hours of this notification, it will be determined that it is accepted and the forms will be processed as submitted.</p>
+                            <p>&nbsp;</p>
+                            <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, your job will be active to allow for time entry in 24 hours. If at that time, you cannot clock in, please contact the Labor Program Office immediately.</p>
+                            <p>&nbsp;</p>
+                            <p><strong>NOTICE:</strong> There is already another labor position submitted for you. (put position and x hrs/week???)
+                             Please be aware that you are only allowed to work maximum of 40 hours perweek if you are not taking any classes.</p>
+                            <p>&nbsp;</p>
+                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
+                            <p>&nbsp;</p>
+                            <p>&nbsp;</p>
+                            <p><strong>Labor Status Form Information:</strong></p>
+                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
+                            <p>Department Name: <strong>@@Department@@</strong></p>
+                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
+                            <p>Begin Date: <strong>@@Date@@</strong></p>
+                            <p>&nbsp;</p>
+                            <p>&nbsp;</p>
+                            <p>Sincerely,</p>
+                            <p>Labor Program Office</p>
+                            <p>labor_program@berea.edu</p>
+                            <p>859-985-3611</p>''',
+
+                "audience":"students"
+                 }
             ]
 EmailTemplate.insert_many(emailtemps).on_conflict_replace().execute()
 print("emailtemplates added")

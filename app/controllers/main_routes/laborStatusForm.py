@@ -95,6 +95,7 @@ def userInsert():
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
         term = d.termCode
+
         # Changes the dates into the appropriate format for the table
         startDate = datetime.strptime(rspFunctional[i]['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
         endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
@@ -145,6 +146,18 @@ def userInsert():
                                                     createdBy   = creatorID,
                                                     createdDate = date.today(),
                                                     status      = status.statusName)
+
+            termCode = str(term)[-2:]
+            if(rspFunctional[i]["stuTotalHours"]) != None and termCode in ["11", "12", "00"]:
+                if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
+                    formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
+                                                      historyType = historyType.historyTypeName,
+                                                      overloadForm = newLaborOverloadForm.overloadFormID,
+                                                      createdBy   = creatorID,
+                                                      createdDate = date.today(),
+                                                      status      = status.statusName)
+                    email = emailHandler(formOverload.formHistoryID)
+                    email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
@@ -177,9 +190,28 @@ def getPositions(department):
     return json.dumps(positionDict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
-def checkForPrimaryPosition(termCode, student):
+@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
+def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    isMoreLSF_dict = {}
+    if isOneLSF !=None:
+        isMoreLSF_dict["Status"] = True # student does not have any previous lsf's
+        if len(list(positions)) > 1: # If student has one or more than one lsf
+            isMoreLSF_dict["Status"] = False
+            for item in positions:
+                isMoreLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME
+                isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
+                # FIXME: Send email to both supervisors and student (for more than one lsf). Send it to all supervisors.
+                # laborStatusKey = item.laborStatusFormID
+                # # print(" Labor Status Forms for Break", item.laborStatusFormID)
+                # selectedFormHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
+                # # print("Form History", selectedFormHistory.formHistoryID)
+                # email = emailHandler(selectedFormHistory.formHistoryID)
+                # email.laborStatusFormSubmittedForBreak()
+        # FIXME: Send email to the supervisor and student (for the first lsf)
+        return jsonify(isMoreLSF_dict)
+
     positionsList = []
     for item in positions:
         positionsDict = {}
