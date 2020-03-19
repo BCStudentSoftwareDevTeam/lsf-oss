@@ -117,13 +117,19 @@ function fillDates(response) { // prefill term start and term end
     var termCode = (response[key]["Term Code"]).toString().slice(-2);
     if (primaryCutOff){
       if (termCode != "00" && termCode != "11" && termCode != "12"){ // Checking to see if the termcode is a break one
+        if (date > primaryCutOff){
+        console.log(date);
+        console.log(primaryCutOff);
         msgFlash("The deadline to add break positions has ended.", "fail");
         $("#break-cutoff-warning").show();
         $("#break-cutoff-date").text(primaryCutOff);
         $("#addMoreStudent").hide();
+        }
       }
       else{
         if (date > primaryCutOff){
+          console.log(date);
+          console.log(primaryCutOff);
           $("#jobType option[value='Primary']").attr("disabled", true );
           $('.selectpicker').selectpicker('refresh');
           msgFlash("Disabling primary position because cut off date is before today's date", "fail");
@@ -617,7 +623,8 @@ function isOneLaborStatusForm(studentDict){
       url: url,
       dataType: "json",
       success: function (response){
-        if(response["Status"] == false){
+        console.log(response["Status"]);
+        if(response["ShowModal"] == true){
         // if they already have one lsf or multiple (response if false) then show modal reminding the new supervisor of 40 hour mark rule.
           $("#warningModalTitle").text("Warning");
           $("#warningModalText").html(response["studentName"] +" "+ "is already working with" +" "+ response["primarySupervisorName"] +

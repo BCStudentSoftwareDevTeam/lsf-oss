@@ -87,8 +87,8 @@ def userInsert():
                                                 LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
         except Exception as e:
             print("ERROR: ", e)
-            d, created = Student.get(ID = tracyStudent.ID)
-        student = d.ID
+        student = Student.get(ID = tracyStudent.ID)
+        studentID = student.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.UserID
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
@@ -101,7 +101,7 @@ def userInsert():
         endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
         try:
             lsf = LaborStatusForm.create(termCode_id = term,
-                                         studentSupervisee_id = student,
+                                         studentSupervisee_id = studentID,
                                          supervisor_id = primarySupervisor,
                                          department_id  = department,
                                          jobType = rspFunctional[i]["stuJobType"],
@@ -158,6 +158,28 @@ def userInsert():
                                                       status      = status.statusName)
                     email = emailHandler(formOverload.formHistoryID)
                     email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+            try:
+                # sending emails during break period
+                isOneLSF = json.loads(checkForSecondLSFBreak(term, studentID, "lsf"))
+                if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
+                    print("Before the list")
+                    primaryFormHistoryID = ""
+                    if(isOneLSF["lsfFormID"] != []): # if there is only one labor status form, do nothing. Otherwise, send emails to the previous supervisors
+                        print("False")
+                        for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
+                            primaryFormHistories = FormHistory.select().where(FormHistory.formID == lsfID)
+                            for primaryFormHistory in primaryFormHistories:
+                                primaryFormHistoryID = primaryFormHistory.formHistoryID
+                            emailPrimSupBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
+                            emailPrimSupBreakLSF.notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak() #send email to all of the previous supervisors
+                        emailForBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
+                        emailForBreakLSF.notifySecondLaborStatusFormSubmittedForBreak() #send email to student and supervisor for the current lsf break form
+                else: # Student has only one lsf, send email to student and supervisor
+                    print("True")
+                    email = emailHandler(formHistory.formHistoryID)
+                    email.laborStatusFormSubmittedForBreak()
+            except Exception as e:
+                print("Error on sending emails during break: " + str(e))
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
@@ -225,6 +247,30 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
         # positionsDict["primarySupervisorUserName"] = item.supervisor.username #Passes Primary Supervisor's username if necessary
         positionsList.append(positionsDict)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
+
+@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
+def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
+    positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    isMoreLSF_dict = {}
+    storeLsfFormsID = []
+    if isOneLSF != None:
+        if len(list(positions)) >= 1 : # If student has one or more than one lsf
+            isMoreLSF_dict["ShowModal"] = True # show modal when the student has one or more than one lsf
+            for item in positions:
+                isMoreLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME
+                isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
+            if len(list(positions)) == 1: # if there is only one labor status form then send email to the supervisor and student
+                isMoreLSF_dict["Status"] = True
+            else: # if there are more lsfs then send email to student, supervisor and all previous supervisors
+                isMoreLSF_dict["Status"] = False
+                for item in positions: # add all the previous lsf ID's
+                    storeLsfFormsID.append(item.laborStatusFormID) # store all of the previous labor status forms for break
+                storeLsfFormsID.pop() #save all the previous lsf ID's except the one currently created. Pop removes the one created right now.
+                isMoreLSF_dict["lsfFormID"] = storeLsfFormsID
+        else:
+            isMoreLSF_dict["ShowModal"] = False # Do not show the modal when there's not previous lsf
+            isMoreLSF_dict["Status"] = True # student does not have any previous lsf's.
+    return json.dumps(isMoreLSF_dict)
 
 @main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
 def checkCompliance(department):
