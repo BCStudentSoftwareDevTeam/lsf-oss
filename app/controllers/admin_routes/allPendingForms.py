@@ -123,7 +123,7 @@ def finalUpdateStatus(raw_status):
     if new_status == 'Approved':
         try:
             banner_data = prep_banner_data(labor_forms)
-            conn = Banner() 
+            conn = Banner()
             result = conn.insert(banner_data)
             save_status = (result == None)
 
@@ -133,7 +133,7 @@ def finalUpdateStatus(raw_status):
 
         else:
             save_status = True
-        
+
     if save_status:
         labor_forms.save()
         return jsonify({"success": True})
@@ -228,6 +228,35 @@ def insertNotes(formId):
         elif stripresponse=="" or stripresponse==None:
             flash("No changes made to notes.", "danger")
             return jsonify({"Success": False})
+
+    except Exception as e:
+        print("error", e)
+        return jsonify({"Success": False})
+
+@admin.route('/admin/denyNotes/<labor_denial_id>', methods=['POST'])
+def denyReason(labor_denial_id):
+
+    '''
+    This function saves the denial reason in the database.
+    '''
+    try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
+        rsp = request.data.decode("utf-8")
+        # rspFunctional = json.dumps(rsp
+        reason = FormHistory.get(FormHistory.formHistoryID == labor_denial_id)
+
+        print(rsp)
+        if rsp:
+            reason.rejectReason = rsp
+            reason.save()
+            print(reason.rejectReason)
+            return jsonify({"Success": True})
+
 
     except Exception as e:
         print("error", e)

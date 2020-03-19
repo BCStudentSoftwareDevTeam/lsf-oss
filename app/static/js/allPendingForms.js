@@ -205,6 +205,29 @@ function getNotes (formId) {
         });
      }
 
+function denyReason(labor_denial_id) {
+ console.log("Here is the data " + labor_denial_id);
+ var denyReason = $("#denyReason").val();
+ var denyId = labor_denial_id[0];
+
+ $.ajax({
+   method: "POST",
+   url: "/admin/denyNotes/"+denyId,
+   data: denyReason,
+   datatype: "json",
+   contentType: 'application/html',
+   success: function (response) {
+       if (response) {
+         console.log(response);
+     }
+   }
+ });
+}
+
+function finalDeny() { //this function will update the form status and the reject reason at the same time
+ finalDenial();
+ denyReason(labor_denial_id);
+}
 function createTabledataDictionary() { // puts all of the forms into dictionaries
   var listDictAJAX = [];
   $('#statusForms tr').has('td').each(function() {
