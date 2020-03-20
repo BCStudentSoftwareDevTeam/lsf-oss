@@ -644,21 +644,7 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
         totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
       }
     }
-    for (i = 0; i < databasePositions.length; i++){
-      totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
-    }
-    storeTotalHours["Hours"] = {"totalHours": totalHoursCount}
-    if (totalHoursCount > (15)){
-      studentDict.isItOverloadForm = "True";
-      $('#OverloadModal').modal('show');
-      return true;
-    }
-    else {
-      return true;
-    }
-  }
 
-<<<<<<< HEAD
   for (i = 0; i < databasePositions.length; i++){
     totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
   }
@@ -676,7 +662,7 @@ function summerLaborWarning(){
   if (termCodeLastTwo == 13){
     $("#SummerContract").modal('show');
     return true;
-  } else if ( 
+  } else if (
       //checks if any break has been clicked and generates a modal
       termCodeLastTwo == 01 || termCodeLastTwo == 02 || termCodeLastTwo == 03){
       $("#warningModalTitle").html("Reminder");
@@ -687,9 +673,7 @@ function summerLaborWarning(){
       return true;
         }
 }
-=======
 
->>>>>>> 0c55487420f
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
   $("#laborStatusForm").on("submit", function(e) {
     e.preventDefault();
