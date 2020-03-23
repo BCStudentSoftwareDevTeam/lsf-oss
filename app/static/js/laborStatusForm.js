@@ -604,14 +604,6 @@ function createAndFillTable(studentDict) {
   }
 }
 
-$('#selectedTerm').on('change', function(){ // Shows a modal containing all the rules for submitting lsf form for a break period.
-  var termCodeLastTwo = $(this).val().slice(-2);
-  if(["00", "11", "12"].includes(termCodeLastTwo) == false){ // if it is not AY, Fall or Spring, otherwise it is break time
-    $("#warningModalTitle").text("Warning");
-    $("#warningModalText").html("Rules for Break LSF");
-    $("#warningModal").modal('show');
-  }
-});
 
 function isOneLaborStatusForm(studentDict){
   var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
