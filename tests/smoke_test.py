@@ -1,7 +1,6 @@
 # Import the modules that are required for execution
 
 import pytest
-from conftest import MultipleBrowserTest 
 import colorama
 import urllib.request
 from urllib.error import HTTPError, URLError
