@@ -20,7 +20,7 @@ def ff_driver_init(request):
     options.add_argument("--headless")
     options.add_argument("--disable-gpu")
 
-    ff_driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(), options=options)
+    ff_driver = webdriver.Firefox(executable_path=GeckoDriverManager().install(), options=options, service_log_path='tests/geckodriver.log')
     request.cls.drivers.append(ff_driver)
     yield
     ff_driver.close()

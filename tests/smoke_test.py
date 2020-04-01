@@ -51,6 +51,7 @@ class Test_Routes:
             for url,params in urls:
                 if(self.verbose):
                     print("  {}:".format(url), end=" ")
+
                 try:
                     assert 200 == urllib.request.urlopen('{}{}'.format(base_url, url)).getcode()
                 except HTTPError as e:
@@ -65,5 +66,3 @@ class Test_Routes:
         def check_verbose_level(self, request):
             """Record the output level requested"""
             self.verbose = (request.config.getoption('verbose') >= 1)
-
-        
