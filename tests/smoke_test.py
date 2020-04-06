@@ -4,6 +4,7 @@ import pytest
 import colorama
 import urllib.request
 from urllib.error import HTTPError, URLError
+from time import sleep
 
 from app import app
 
@@ -22,13 +23,51 @@ class Test_Routes:
 
         def test_get_routes_with_params(self, base_url, request):
             self.check_verbose_level(request)
-            urls = []
+
+            # Commented out URLs currently have an error
+            urls = [
+                ("/laborHistory/modal/printPdf/<statusKey>", []),
+                ("/admin/emailTemplates/getPurpose/<recipient>", []),
+                ("/admin/emailTemplates/getEmail/<purpose>", []),
+                ("/laborstatusform/getcompliance/<department>", []),
+                ("/laborstatusform/getPositions/<department>", []),
+                # ("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", []),
+                # ("/laborstatusform/getstudents/<termCode>/<student>", []),
+                # ("/laborstatusform/getDate/<termcode>", []),
+                ("/laborHistory/modal/<statusKey>", []),
+                ("/admin/pendingForms/<formType>", []),
+                ("/admin/getNotes/<formid>", []),
+                ("/main/department/<departmentSelected>", []),
+                # ("/studentOverloadApp/<formId>", []),
+                # ("/laborReleaseForm/<laborStatusKey>", []),
+                # ("/laborstatusform/<laborStatusKey>", []),
+                ("/laborHistory/<id>", []),
+                # ("/adjustLSF/<laborStatusKey>", []),
+                # ("/modifyLSF/<laborStatusKey>", []),
+            ]
             self.url_runner(base_url, urls)
 
         def test_post_routes(self, base_url, request):
             self.check_verbose_level(request)
-            urls = self.get_urls("POST")
-            #self.url_runner(base_url, urls)
+            urls = [
+                # ("/laborHistory/modal/updatestatus", []),
+                # ("/admin/emailTemplates/postEmail/", []),
+                # ("/studentOverloadApp/update", []),
+                # ("/laborstatusform/userInsert", []),
+                # ("/adminManagement/userInsert", []),
+                # ("/termManagement/manageStatus", []),
+                # ("/termManagement/setDate", []),
+                # ("/laborHistory/download", []),
+                # ("/admin/complianceStatus", []),
+                # ("/admin/termManagement", []),
+                # ("/admin/checkedForms", []),
+                # ("/adjustLSF/submitModifiedForm/<laborStatusKey>", []),
+                # ("/modifyLSF/updateLSF/<laborStatusKey>", []),
+                # ("/admin/updateStatus/<raw_status>", []),
+                # ("/admin/notesInsert/<formId>", []),
+                # ("/laborReleaseForm/<laborStatusKey>", []),
+            ]
+            self.url_runner(base_url, urls)
 
         def get_urls(self, method):
             """Retrieve the application routes for the given method"""
@@ -57,6 +96,10 @@ class Test_Routes:
                     pytest.fail("HTTPError! HTML Status Code {}".format(e.code))
                 except URLError as e:
                     pytest.fail("URLError! {}".format(e.reason))
+                except socket.timeout as e:
+                    pytest.fail("timeout!")
+                except http.client.HTTPException as e:
+                    pytest.fail("Remote Disconnected!")
                 else:
                     if(self.verbose):
                         print(colorama.Fore.GREEN + "✓" + colorama.Style.RESET_ALL)
