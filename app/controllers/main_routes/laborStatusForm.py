@@ -67,9 +67,11 @@ def userInsert():
     """ Create labor status form. Create labor history form."""
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
+    print('rsp'  + str(rspFunctional))
     all_forms = []
     for i in range(len(rspFunctional)):
         tracyStudent = STUDATA.get(ID = rspFunctional[i]['stuBNumber']) #Gets student info from Tracy
+        print("Tracy student" + str(tracyStudent))
         #Tries to get a student with the followin information from the database
         #if the student doesn't exist, it tries to create a student with that same information
         try:
@@ -149,6 +151,7 @@ def userInsert():
 
             termCode = str(term)[-2:]
             if(rspFunctional[i]["stuTotalHours"]) != None and termCode in ["11", "12", "00"]:
+                print("term code" + termCode)
                 if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
                     formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
                                                       historyType = historyType.historyTypeName,
@@ -183,7 +186,7 @@ def userInsert():
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
-            print("ERROR: " + str(e))
+            print("ERROR: What happened here? " + str(e))
 
     return jsonify(all_forms)
 
