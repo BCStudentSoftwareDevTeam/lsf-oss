@@ -18,11 +18,10 @@ def getUsernameFromEnv():
 
 def require_login():
     username = getUsernameFromEnv()
-    print(username)
+    print("Logging in as", username)
 
     try:
         user = User.get(User.username == username)
-        print(user.username)
         return user
     except Exception as e:
         print(e)
