@@ -28,35 +28,35 @@ class Test_Routes:
 
             # Commented out URLs currently have an error
             urls = [
-                ("/laborHistory/modal/printPdf/2", []),
-                ("/admin/emailTemplates/getPurpose/student", []),
-                ("/admin/emailTemplates/getPurpose/students", []),
-                ("/admin/emailTemplates/getPurpose/supervisor", []),
-                ("/admin/emailTemplates/getPurpose/breakPrimary", []),
-                ("/admin/emailTemplates/getEmail/Labor%20Status%20Form%20Submitted%20For%20Student", []),
-                ("/laborstatusform/getcompliance/1", []),
-                ("/laborstatusform/getPositions/1", []),
-                ("/laborstatusform/getstudents/202000/B00841417/<isOneLSF>", []),
-                ("/laborstatusform/getstudents/202000/B00841417", []),
-                ("/laborstatusform/getDate/202000", []),
-                ("/laborHistory/modal/2", []),
-                ("/admin/pendingForms/pendingLabor", []),
-                ("/admin/getNotes/2", []),
-                ("/main/department/1", []),
-                ("/studentOverloadApp/2", []),
-                ("/laborReleaseForm/2", []),
-                ("/laborstatusform/2", []),
-                ("/laborHistory/2", []),
-                ("/adjustLSF/2", []),
-                ("/modifyLSF/2", []),
+                ("/laborHistory/modal/printPdf/2", None),
+                ("/admin/emailTemplates/getPurpose/student", None),
+                ("/admin/emailTemplates/getPurpose/students", None),
+                ("/admin/emailTemplates/getPurpose/supervisor", None),
+                ("/admin/emailTemplates/getPurpose/breakPrimary", None),
+                ("/admin/emailTemplates/getEmail/Labor%20Status%20Form%20Submitted%20For%20Student", None),
+                ("/laborstatusform/getcompliance/1", None),
+                ("/laborstatusform/getPositions/1", None),
+                ("/laborstatusform/getstudents/202000/B00841417/1", None),
+                ("/laborstatusform/getstudents/202000/B00841417", None),
+                ("/laborstatusform/getDate/202000", None),
+                ("/laborHistory/modal/2", None),
+                ("/admin/pendingForms/pendingLabor", None),
+                ("/admin/getNotes/2", None),
+                ("/main/department/1", None),
+                ("/studentOverloadApp/2", None),
+                ("/laborReleaseForm/2", None),
+                ("/laborstatusform/2", None),
+                ("/laborHistory/2", None),
+                ("/adjustLSF/2", None),
+                ("/modifyLSF/2", None),
             ]
             self.url_runner(base_url, urls)
 
         def test_post_routes(self, base_url, request):
             self.check_verbose_level(request)
             urls = [
-                ("/laborHistory/modal/withdrawform", {"FormID":2}),
-                # ("/admin/emailTemplates/postEmail/", []),
+                ("/laborHistory/modal/withdrawform", b"FormID=2"),
+                ("/admin/emailTemplates/postEmail", b"body=test&purpose=Labor%20Status%20Form%20Submitted%20For%20Student"),
                 # ("/studentOverloadApp/update", []),
                 # ("/laborstatusform/userInsert", []),
                 # ("/adminManagement/userInsert", []),
@@ -82,7 +82,7 @@ class Test_Routes:
                 if method in rule.methods and has_no_empty_params(rule):
                     #url = url_for(rule.endpoint, **(rule.defaults or {}))
                     url = rule.rule
-                    links.append((url,[]))
+                    links.append((url,None))
 
             return links
 
@@ -97,7 +97,7 @@ class Test_Routes:
                     print("  {}:".format(url), end=" ")
 
                 try:
-                    assert 200 == urllib.request.urlopen('{}{}'.format(base_url, url)).getcode()
+                    assert 200 == urllib.request.urlopen('{}{}'.format(base_url, url), data=params).getcode()
                 except HTTPError as e:
                     pytest.fail("HTTPError! HTML Status Code {}".format(e.code))
                 except URLError as e:

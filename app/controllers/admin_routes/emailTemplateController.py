@@ -55,8 +55,7 @@ def getEmail(purpose):
         print(e)
         return jsonify({"Success": False})
 
-@admin.route('/admin/emailTemplates/postEmail/', methods=['POST'])
-
+@admin.route('/admin/emailTemplates/postEmail', methods=['POST'])
 def postEmail():
     try:
         email = EmailTemplate.get(EmailTemplate.purpose == request.form['purpose'])
