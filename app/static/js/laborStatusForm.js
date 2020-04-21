@@ -206,6 +206,7 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
        $("<option />")
           .text(response[key].position+ " " + "(" + response[key].WLS+ ")")
           .attr("id", key)
+          .attr("value", response[key].position)
           .attr("data-wls", response[key].WLS)
      );
 
@@ -430,7 +431,7 @@ function createStuDict(){
   if (!studentName){
     return false;
   }
-  var positionName = $("#position option:selected").text();
+  var positionName = $("#position option:selected").attr("value");
   if (!positionName){
     return false;
   }

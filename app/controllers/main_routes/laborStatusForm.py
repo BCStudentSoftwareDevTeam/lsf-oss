@@ -148,7 +148,7 @@ def userInsert():
                                                     status      = status.statusName)
 
             termCode = str(term)[-2:]
-            if(rspFunctional[i]["stuTotalHours"]) != None and termCode in ["11", "12", "00"]:
+            if "stuTotalHours" in rspFunctional[i] and termCode in ["11", "12", "00"]:
                 if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
                     formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
                                                       historyType = historyType.historyTypeName,
