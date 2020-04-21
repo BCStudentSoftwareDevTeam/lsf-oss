@@ -55,7 +55,7 @@ class Test_Routes:
         def test_post_routes(self, base_url, request):
             self.check_verbose_level(request)
             urls = [
-                # ("/laborHistory/modal/updatestatus", []),
+                ("/laborHistory/modal/withdrawform", {"FormID":2}),
                 # ("/admin/emailTemplates/postEmail/", []),
                 # ("/studentOverloadApp/update", []),
                 # ("/laborstatusform/userInsert", []),

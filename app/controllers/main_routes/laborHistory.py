@@ -178,8 +178,8 @@ def ConvertToPDF(statusKey):
         return(jsonify({"Success": False}))
 
 
-@main_bp.route('/laborHistory/modal/updatestatus', methods=['POST'])
-def updatestatus_post():
+@main_bp.route('/laborHistory/modal/withdrawform', methods=['POST'])
+def withdraw_form():
     """
     This function deletes forms from the database when they are pending and the "withdraw" button is clicked.
     """
