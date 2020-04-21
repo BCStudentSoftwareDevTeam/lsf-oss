@@ -248,7 +248,6 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
         positionsList.append(positionsDict)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
 
-@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
 def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
     isMoreLSF_dict = {}
