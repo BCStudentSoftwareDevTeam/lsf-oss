@@ -12,7 +12,6 @@ def getUsernameFromEnv():
         add_user(env, username)
         return username
     else:
-        print("Debug user!")
         return cfg['user']['debug']
 
 
