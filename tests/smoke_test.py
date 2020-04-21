@@ -5,6 +5,8 @@ import colorama
 import urllib.request
 from urllib.error import HTTPError, URLError
 from time import sleep
+import socket 
+import http.client
 
 from app import app
 
@@ -26,21 +28,24 @@ class Test_Routes:
 
             # Commented out URLs currently have an error
             urls = [
-                ("/laborHistory/modal/printPdf/<statusKey>", []),
-                ("/admin/emailTemplates/getPurpose/<recipient>", []),
-                ("/admin/emailTemplates/getEmail/<purpose>", []),
-                ("/laborstatusform/getcompliance/<department>", []),
-                ("/laborstatusform/getPositions/<department>", []),
+                ("/laborHistory/modal/printPdf/2", []),
+                ("/admin/emailTemplates/getPurpose/student", []),
+                ("/admin/emailTemplates/getPurpose/students", []),
+                ("/admin/emailTemplates/getPurpose/supervisor", []),
+                ("/admin/emailTemplates/getPurpose/breakPrimary", []),
+                ("/admin/emailTemplates/getEmail/Labor%20Status%20Form%20Submitted%20For%20Student", []),
+                ("/laborstatusform/getcompliance/1", []),
+                ("/laborstatusform/getPositions/1", []),
                 # ("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", []),
-                # ("/laborstatusform/getstudents/<termCode>/<student>", []),
-                # ("/laborstatusform/getDate/<termcode>", []),
-                ("/laborHistory/modal/<statusKey>", []),
+                ("/laborstatusform/getstudents/202000/B00841417", []),
+                ("/laborstatusform/getDate/202000", []),
+                ("/laborHistory/modal/2", []),
                 ("/admin/pendingForms/<formType>", []),
-                ("/admin/getNotes/<formid>", []),
+                ("/admin/getNotes/2", []),
                 ("/main/department/<departmentSelected>", []),
-                # ("/studentOverloadApp/<formId>", []),
+                #("/studentOverloadApp/1", []),
                 # ("/laborReleaseForm/<laborStatusKey>", []),
-                # ("/laborstatusform/<laborStatusKey>", []),
+                ("/laborstatusform/2", []),
                 ("/laborHistory/<id>", []),
                 # ("/adjustLSF/<laborStatusKey>", []),
                 # ("/modifyLSF/<laborStatusKey>", []),
@@ -87,6 +92,7 @@ class Test_Routes:
             if(self.verbose):
                 print()
             for url,params in urls:
+                sleep(.1) # Without this sleep we end up with Remote Disconnect exceptions
                 if(self.verbose):
                     print("  {}:".format(url), end=" ")
 
@@ -97,7 +103,7 @@ class Test_Routes:
                 except URLError as e:
                     pytest.fail("URLError! {}".format(e.reason))
                 except socket.timeout as e:
-                    pytest.fail("timeout!")
+                    pytest.fail("Timeout!")
                 except http.client.HTTPException as e:
                     pytest.fail("Remote Disconnected!")
                 else:
