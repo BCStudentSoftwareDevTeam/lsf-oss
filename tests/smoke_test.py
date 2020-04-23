@@ -7,6 +7,7 @@ from urllib.error import HTTPError, URLError
 from time import sleep
 import socket 
 import http.client
+import json
 
 from app import app
 
@@ -57,7 +58,7 @@ class Test_Routes:
             urls = [
                 ("/laborHistory/modal/withdrawform", b"FormID=2"),
                 ("/admin/emailTemplates/postEmail", b"body=test&purpose=Labor%20Status%20Form%20Submitted%20For%20Student"),
-                # ("/studentOverloadApp/update", []),
+                ("/studentOverloadApp/update", {2: {"formID": 2, "Notes": "test"}}),
                 # ("/laborstatusform/userInsert", []),
                 # ("/adminManagement/userInsert", []),
                 # ("/termManagement/manageStatus", []),
@@ -92,12 +93,24 @@ class Test_Routes:
             if(self.verbose):
                 print()
             for url,params in urls:
-                sleep(.1) # Without this sleep we end up with Remote Disconnect exceptions
+                sleep(.05) # Without this sleep we end up with Remote Disconnect exceptions
                 if(self.verbose):
                     print("  {}:".format(url), end=" ")
 
                 try:
-                    assert 200 == urllib.request.urlopen('{}{}'.format(base_url, url), data=params).getcode()
+                    req = urllib.request.Request('{}{}'.format(base_url, url))
+                    data = params
+
+                    # if parameters come in as an object, handle data as json
+                    if isinstance(params, dict):
+                        req.add_header('Content-Type', 'application/json; charset=utf-8')
+                        jsondata = json.dumps(params)
+                        jsondataasbytes = jsondata.encode('utf-8')
+                        req.add_header('Content-Length', len(jsondataasbytes))
+                        data = jsondataasbytes
+                    
+                    assert 200 == urllib.request.urlopen(req, data).getcode()
+
                 except HTTPError as e:
                     pytest.fail("HTTPError! HTML Status Code {}".format(e.code))
                 except URLError as e:
