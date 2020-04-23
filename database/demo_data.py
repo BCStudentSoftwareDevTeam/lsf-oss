@@ -4,12 +4,19 @@ This file will need to be changed if the format of models changes (new fields, d
 ####Add tables that are referenced via foreign key first
 
 from datetime import *
+from app.models.Tracy.studata import STUDATA
+from app.models.Tracy.stuposn import STUPOSN
+from app.models.Tracy.stustaff import STUSTAFF
+from app.models.user import User
+from app.models.status import Status
+from app.models.historyType import HistoryType
+from app.models.term import Term
+from app.models.emailTemplate import EmailTemplate
+from app.models.formHistory import FormHistory
 
 #############################
 # Students (TRACY)
 #############################
-from app.models.Tracy.studata import STUDATA
-
 studentsTracy = [
                 {
                 "PIDM":"1",
@@ -77,8 +84,6 @@ print("students(TRACY) added")
 #############################
 # Positions (TRACY)
 #############################
-from app.models.Tracy.stuposn import STUPOSN
-
 positions = [
             {
             "POSN_CODE": "S61407",
@@ -152,8 +157,6 @@ print("positions (TRACY) added")
 #############################
 # TRACY Staff
 #############################
-from app.models.Tracy.stustaff import STUSTAFF
-
 staffs = [
 
             {
@@ -215,7 +218,6 @@ print(stustaff)
 print("staff added")
 
 def insert_to_users(staffs):
-    from app.models.user import User
     for sta in staffs:
         try:
             u = User()
@@ -238,7 +240,6 @@ insert_to_users(STUSTAFF.select())
 #############################
 # Status
 #############################
-from app.models.status import Status
 stats = [
             {"statusName":"Pending"
             },
@@ -255,7 +256,6 @@ print("status added")
 #############################
 # History Type
 #############################
-from app.models.historyType import HistoryType
 types = [
             {"historyTypeName":"Labor Status Form"
             },
@@ -270,9 +270,59 @@ HistoryType.insert_many(types).on_conflict_replace().execute()
 print("history types added")
 
 #############################
+# Term
+#############################
+terms = [
+            {
+            "termCode":"202000",
+            "termName": "AY 2020-2021",
+            "termStart":"2020-01-01",
+            "termEnd" : "2020-05-01",
+            "termState": 1,
+            "primaryCutOff": "2020-05-01"
+            },
+            {
+            "termCode":"202001",
+            "termName": "Thanksgiving Break 2020",
+            "termStart":"2019-11-21",
+            "termEnd" : "2019-11-29",
+            "termState": 0,
+            "primaryCutOff": "2019-11-21"
+            },
+       ]
+Term.insert_many(terms).on_conflict_replace().execute()
+print("terms added")
+
+#############################
+# Create a Pending Labor Status Form
+#############################
+LaborStatusForm.insert([{
+            "laborStatusFormID": 2,
+            "termCode_id": "202000",
+            "studentSupervisee_id": "B00841417",
+            "supervisor_id": 1,
+            "department_id": 1,
+            "jobType": "Primary",
+            "WLS": 1,
+            "POSN_TITLE": "Student Programmer",
+            "POSN_CODE": "S61407",
+            "weeklyHours": 10,
+            "startDate": "2020-04-01",
+            "endDate": "2020-09-01"
+        }]).on_conflict_replace().execute()
+FormHistory.insert([{
+            "formHistoryID": 2,
+            "formID_id": "2",
+            "historyType_id": "Labor Status Form",
+            "createdBy_id": 1,
+            "createdDate", "2020-04-14",
+            "status_id", "Pending"
+        }]).on_conflict_replace().execute()
+
+
+#############################
 #emailtemplates
 #############################
-from app.models.emailTemplate import EmailTemplate
 emailtemps= [
                 {
                 "purpose":"Labor Status Form Submitted For Student",
