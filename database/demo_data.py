@@ -5,13 +5,16 @@ This file will need to be changed if the format of models changes (new fields, d
 
 from datetime import *
 from app.models.Tracy.studata import STUDATA
+from app.models.student import Student
 from app.models.Tracy.stuposn import STUPOSN
 from app.models.Tracy.stustaff import STUSTAFF
+from app.models.department import Department
 from app.models.user import User
 from app.models.status import Status
 from app.models.historyType import HistoryType
 from app.models.term import Term
 from app.models.emailTemplate import EmailTemplate
+from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
 
 #############################
@@ -79,6 +82,11 @@ studentsTracy = [
                 }
 ]
 STUDATA.insert_many(studentsTracy).on_conflict_replace().execute()
+students = []
+for student in studentsTracy:
+    del student["PIDM"]
+    students.append(student)
+Student.insert_many(students).on_conflict_replace().execute()
 print("students(TRACY) added")
 
 #############################
@@ -238,6 +246,42 @@ insert_to_users(STUSTAFF.select())
 
 
 #############################
+# Department
+#############################
+departments = [
+            {
+              "departmentID":1,
+              "DEPT_NAME": "Computer Science",
+              "ACCOUNT": "6740",
+              "ORG": "2114",
+              "departmentCompliance": 1
+            },
+            {
+              "departmentID":2,
+              "DEPT_NAME": "Technology and Applied Design",
+              "ACCOUNT": "6740",
+              "ORG": "2147",
+              "departmentCompliance": 1
+            },
+            {
+              "departmentID":3,
+              "DEPT_NAME": "Mathematics",
+              "ACCOUNT": "6740",
+              "ORG": "2150",
+              "departmentCompliance": 1
+            },
+            {
+              "departmentID":4,
+              "DEPT_NAME": "Biology",
+              "ACCOUNT": "6740",
+              "ORG": "2107",
+              "departmentCompliance": 1
+            },
+        ]
+Department.insert_many(departments).on_conflict_replace().execute()
+print("departments added")
+
+#############################
 # Status
 #############################
 stats = [
@@ -315,8 +359,8 @@ FormHistory.insert([{
             "formID_id": "2",
             "historyType_id": "Labor Status Form",
             "createdBy_id": 1,
-            "createdDate", "2020-04-14",
-            "status_id", "Pending"
+            "createdDate": "2020-04-14",
+            "status_id": "Pending"
         }]).on_conflict_replace().execute()
 
 
