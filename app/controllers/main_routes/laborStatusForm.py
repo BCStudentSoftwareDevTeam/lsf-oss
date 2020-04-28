@@ -150,8 +150,8 @@ def userInsert():
                                                     status      = status.statusName)
 
             termCode = str(term)[-2:]
-            if(rspFunctional[i]["stuTotalHours"]) != None and termCode in ["11", "12", "00"]:
-                print("term code" + termCode)
+
+            if "stuTotalHours" in rspFunctional[i] and termCode in ["11", "12", "00"]:
                 if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
                     formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
                                                       historyType = historyType.historyTypeName,
@@ -251,7 +251,6 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
         positionsList.append(positionsDict)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
 
-@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
 def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
     isMoreLSF_dict = {}

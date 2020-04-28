@@ -12,17 +12,15 @@ def getUsernameFromEnv():
         add_user(env, username)
         return username
     else:
-        print("Debug user!")
         return cfg['user']['debug']
 
 
 def require_login():
     username = getUsernameFromEnv()
-    print(username)
+    print("Logging in as", username)
 
     try:
         user = User.get(User.username == username)
-        print(user.username)
         return user
     except Exception as e:
         print(e)

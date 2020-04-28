@@ -24,7 +24,8 @@ class emailHandler():
             MAIL_PASSWORD= secret_conf['MAIL_PASSWORD'],
             MAIL_USE_TLS=secret_conf['MAIL_USE_TLS'],
             MAIL_USE_SSL=secret_conf['MAIL_USE_SSL'],
-            MAIL_DEFAULT_SENDER=secret_conf['MAIL_DEFAULT_SENDER']
+            MAIL_DEFAULT_SENDER=secret_conf['MAIL_DEFAULT_SENDER'],
+            ALWAYS_SEND_MAIL=secret_conf['ALWAYS_SEND_MAIL']
         )
 
         self.primaryFormHistory = primaryFormHistory
@@ -139,7 +140,7 @@ class emailHandler():
     def notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak(self):
         self.checkRecipient("Break Labor Status Form Submitted For Second Supervisor")
 
-    # Depending on what the paramater 'sendTo' is set equal to, this method will send the email either to the Primary, Seconday, or the Student
+    # Depending on the parameter 'sendTo', this method will send the email either to the Primary, Secondary, or the Student
     def sendEmail(self, template, sendTo):
         formTemplate = template.body
         formTemplate = self.replaceText(formTemplate)
@@ -160,7 +161,11 @@ class emailHandler():
             message = Message(template.subject,
                 recipients=[self.supervisorEmail])
         message.html = formTemplate
-        self.mail.send(message)
+
+        if app.config['ENV'] == 'production' or app.config['ALWAYS_SEND_MAIL']:
+            self.mail.send(message)
+        else:
+            print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
 
     # This method is responsible for replacing the keyword form the templates in the database with the data in the laborStatusForm
     def replaceText(self, form):
