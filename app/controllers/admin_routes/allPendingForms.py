@@ -8,6 +8,7 @@ from app.models.laborReleaseForm import LaborReleaseForm
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.modifiedForm import ModifiedForm
 from app.models.overloadForm import OverloadForm
+from app.models.laborOfficeNotes import LaborOfficeNotes
 from app.models.formHistory import *
 from app.models.term import Term
 from app.logic.banner import Banner
@@ -123,7 +124,7 @@ def finalUpdateStatus(raw_status):
     if new_status == 'Approved':
         try:
             banner_data = prep_banner_data(labor_forms)
-            conn = Banner() 
+            conn = Banner()
             result = conn.insert(banner_data)
             save_status = (result == None)
 
@@ -133,7 +134,7 @@ def finalUpdateStatus(raw_status):
 
         else:
             save_status = True
-        
+
     if save_status:
         labor_forms.save()
         return jsonify({"success": True})
@@ -178,18 +179,17 @@ def getNotes(formid):
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
-        notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid)
-        notesDict = {}
-        if notes.supervisorNotes:
-            notesDict["supervisorNotes"] = notes.supervisorNotes
-
-        if notes.laborDepartmentNotes:
-            listOfNotes = json.loads(notes.laborDepartmentNotes)
-            notesDict["laborDepartmentNotes"] = ""
-            for i in listOfNotes:
-                singleNote = "<dl class='dl-horizontal text-left'>" + i + "</dl>"
-                notesDict["laborDepartmentNotes"] = notesDict["laborDepartmentNotes"] + singleNote
-        return jsonify(notesDict)
+        supervisorNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid) # Gets Supervisor note
+        notes = LaborOfficeNotes.select().where(LaborOfficeNotes.formID == formid) # Gets labor department notes from the laborofficenotes table
+        notesDict = {}          # Stores the both types of notes
+        if supervisorNotes.supervisorNotes: # If there is a supervisor note, store it in notesDict
+            notesDict["supervisorNotes"] = supervisorNotes.supervisorNotes
+        if len(notes) > 0: # If there are labor office notes, format, and store them in notesDict
+            listOfNotes = []
+            for i in range(len(notes)):
+                listOfNotes.append("<dl class='dl-horizontal text-left'>" + str(notes[i].date) + "   " + notes[i].createdBy.FIRST_NAME + "   " + notes[i].createdBy.LAST_NAME + "   " + notes[i].notesContents + "</dl>")
+            notesDict["laborDepartmentNotes"] = listOfNotes
+        return jsonify(notesDict)     # return as JSON
 
     except Exception as e:
         print("error", e)
