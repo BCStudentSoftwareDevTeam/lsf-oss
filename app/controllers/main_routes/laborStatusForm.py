@@ -219,6 +219,7 @@ def getPositions(department):
 def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+
     isMoreLSF_dict = {}
     if isOneLSF !=None:
         isMoreLSF_dict["Status"] = True # student does not have any previous lsf's
@@ -239,6 +240,10 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
 
     positionsList = []
     for item in positions:
+        statusHistory = FormHistory.get(FormHistory.formID == item.laborStatusFormID)
+        # for i in statusHistory:
+        #     positionsDict["positionStatus"] = statusHistory.status
+        print("positionStatus", statusHistory.status)
         positionsDict = {}
         positionsDict["weeklyHours"] = item.weeklyHours
         positionsDict["contractHours"] = item.contractHours
@@ -247,6 +252,7 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
         positionsDict["POSN_CODE"] = item.POSN_CODE
         positionsDict["primarySupervisorName"] = item.supervisor.FIRST_NAME
         positionsDict["primarySupervisorLastName"] = item.supervisor.LAST_NAME
+        positionsDict["positionStatus"] = statusHistory.status
         # positionsDict["primarySupervisorUserName"] = item.supervisor.username #Passes Primary Supervisor's username if necessary
         positionsList.append(positionsDict)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)

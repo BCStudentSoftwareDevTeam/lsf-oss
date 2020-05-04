@@ -81,6 +81,7 @@ function finalApproval() { //this method changes the status of the lsf from pend
 var labor_denial_id=[]; //this arrary is for insertDenial() and finalDenial() methods
 //This method calls AJAX from checkforms methods in the controller
 function insertDenial(val){
+  console.log("Insert Denial");
     labor_denial_id.push(val);
     var data = JSON.stringify(labor_denial_id);
    $.ajax({
@@ -100,6 +101,7 @@ function insertDenial(val){
 
 // this method inserts data to the table of denial popup modal
 function finalDenial_data(returned_details){
+  console.log("finalDenial_data");
   for (var i = 0; i < returned_details.length; i++){
     var student=returned_details[i][0];
     var position= returned_details[i][1];
@@ -119,6 +121,7 @@ function finalDenial_data(returned_details){
 
  function finalDenial() {// this mehod is AJAX call for the finalDenial method in python file
    var data = JSON.stringify(labor_denial_id);
+   console.log("This is the finalDenial");
    $.ajax({
      type: "POST",
      url: "/admin/updateStatus/denied",

@@ -498,6 +498,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
     url: url,
     dataType: "json",
     success: function (response){
+      console.log(response)
       if(Object.keys(response).length > 0) {
         if (studentDict.stuJobType == "Primary"){
           $("#warningModalTitle").html("Insert Rejected");
