@@ -187,7 +187,8 @@ def getNotes(formid):
         if len(notes) > 0: # If there are labor office notes, format, and store them in notesDict
             listOfNotes = []
             for i in range(len(notes)):
-                listOfNotes.append("<dl class='dl-horizontal text-left'>" + str(notes[i].date) + "   " + notes[i].createdBy.FIRST_NAME + "   " + notes[i].createdBy.LAST_NAME + "   " + notes[i].notesContents + "</dl>")
+                currentNote = len(notes) - i - 1 # Variable to make it go from latest to newest
+                listOfNotes.append("<dl class='dl-horizontal text-left'>" + str(notes[currentNote].date) + "   " + notes[currentNote].createdBy.FIRST_NAME + "   " + notes[currentNote].createdBy.LAST_NAME + "   " + notes[currentNote].notesContents + "</dl>")
             notesDict["laborDepartmentNotes"] = listOfNotes
         return jsonify(notesDict)     # return as JSON
 
