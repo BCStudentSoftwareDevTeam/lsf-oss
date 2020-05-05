@@ -537,7 +537,7 @@ function initialLSFInsert(studentDict, response){ //Add student info to the tabl
       $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
       $("#warningModal").modal("show");
     }
-    else { // No primary needed for break periods, therefore, allow adding a new form. 
+    else { // No primary needed for break periods, therefore, allow adding a new form.
       if (checkDuplicate(studentDict) == true){
         checkTotalHours(studentDict, response);
         createAndFillTable(studentDict);
@@ -643,7 +643,9 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
     }
 
   for (i = 0; i < databasePositions.length; i++){
-    totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
+    if (databasePositions[i]["positionStatus"] != "Denied"){
+      totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
+    }
   }
   if (totalHoursCount > (15) && academicYear.includes(termCodeLastTwo)){
     studentDict.isItOverloadForm = "True";
