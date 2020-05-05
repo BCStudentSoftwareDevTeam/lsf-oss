@@ -492,60 +492,68 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
     url: url,
     dataType: "json",
     success: function (response){
-      console.log(response)
-      if(Object.keys(response).length > 0) {
-        if (studentDict.stuJobType == "Primary"){
-          $("#warningModalTitle").html("Insert Rejected");
-          $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
-          $("#warningModal").modal("show");
-        }
-        else if(studentDict.stuJobType == "Secondary"){
-          if (checkDuplicate(studentDict) == true) {
-            checkTotalHours(studentDict, response);
-            createAndFillTable(studentDict);
-          }
-          else {
-            $("#warningModalTitle").html("Insert Rejected");
-            $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
-            $("#warningModal").modal("show");
-          }
-        }
-      }
-      else {
-        if(studentDict.stuJobType == "Primary"){
-          if (checkDuplicate(studentDict) == true){
-            checkTotalHours(studentDict, response);
-            createAndFillTable(studentDict);
-          }
-          else {
-            $("#warningModalTitle").html("Insert Rejected");
-            $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the  below.");
-            $("#warningModal").modal("show");
+      console.log(response);
+        if(Object.keys(response).length > 0) {
+            for (key in response) {
+              if (studentDict.stuJobType == "Primary" && ("Denied" != response[key]["positionStatus"])){
+                  $("#warningModalTitle").html("Insert Rejected");
+                  $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
+                  $("#warningModal").modal("show");
+              }
+              else if(studentDict.stuJobType == "Secondary"){
+                if (checkDuplicate(studentDict) == true) {
+                  checkTotalHours(studentDict, response);
+                  createAndFillTable(studentDict);
+                }
+                else {
+                  insertRejectedModal(studentDict);
+                }
+              }
+            else{
+              initialLSFInsert(studentDict, response)
+            }
           }
         }
         else {
-          if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
-            $("#warningModalTitle").html("Insert Rejected");
-            $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
-            $("#warningModal").modal("show");
-          }
-          else {
-            if (checkDuplicate(studentDict) == true){
-              checkTotalHours(studentDict, response);
-              createAndFillTable(studentDict);
-            }
-            else {
-              $("#warningModalTitle").html("Insert Rejected");
-              $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
-              $("#warningModal").modal("show");
-            }
-          }
+          initialLSFInsert(studentDict, response)
         }
-      }
     }
   });
 }
 
+function initialLSFInsert(studentDict, response){
+  if(studentDict.stuJobType == "Primary"){
+    if (checkDuplicate(studentDict) == true){
+      checkTotalHours(studentDict, response);
+      createAndFillTable(studentDict);
+    }
+    else {
+      insertRejectedModal(studentDict);
+    }
+  }
+  else { //primary needed for the normal term
+    if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
+      $("#warningModalTitle").html("Insert Rejected");
+      $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
+      $("#warningModal").modal("show");
+    }
+    else { // Break Time/ No primary needed
+      if (checkDuplicate(studentDict) == true){
+        checkTotalHours(studentDict, response);
+        createAndFillTable(studentDict);
+      }
+      else {
+        insertRejectedModal(studentDict);
+      }
+    }
+  }
+}
+
+function insertRejectedModal(studentDict){ // Reject Adding a new form when the form is already in the table
+  $("#warningModalTitle").html("Insert Rejected");
+  $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
+  $("#warningModal").modal("show");
+}
 
 function createAndFillTable(studentDict) {
   globalArrayOfStudents.push(studentDict);
