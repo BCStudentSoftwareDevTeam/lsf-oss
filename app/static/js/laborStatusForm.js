@@ -493,14 +493,14 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
     dataType: "json",
     success: function (response){
       console.log(response);
-        if(Object.keys(response).length > 0) {
+        if(Object.keys(response).length > 0) { // If the submited form is not the first form recorded for that student
             for (key in response) {
-              if (studentDict.stuJobType == "Primary" && ("Denied" != response[key]["positionStatus"])){
+              if (studentDict.stuJobType == "Primary" && ("Denied" != response[key]["positionStatus"])){ // if the student already has a primary and it is not denied show error modal
                   $("#warningModalTitle").html("Insert Rejected");
                   $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
                   $("#warningModal").modal("show");
               }
-              else if(studentDict.stuJobType == "Secondary"){
+              else if(studentDict.stuJobType == "Secondary"){ // If it is secondary allow adding LSF
                 if (checkDuplicate(studentDict) == true) {
                   checkTotalHours(studentDict, response);
                   createAndFillTable(studentDict);
@@ -510,18 +510,18 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
                 }
               }
             else{
-              initialLSFInsert(studentDict, response)
+              initialLSFInsert(studentDict, response) // If the precious primary position is Denied allow the user to continue with the new primary LSF
             }
           }
         }
         else {
-          initialLSFInsert(studentDict, response)
+          initialLSFInsert(studentDict, response) // If the form being submitted for the student is the initial form for that specific term
         }
     }
   });
 }
 
-function initialLSFInsert(studentDict, response){
+function initialLSFInsert(studentDict, response){ //Add student info to the table if they have no previous lfs's in the database
   if(studentDict.stuJobType == "Primary"){
     if (checkDuplicate(studentDict) == true){
       checkTotalHours(studentDict, response);
@@ -537,7 +537,7 @@ function initialLSFInsert(studentDict, response){
       $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
       $("#warningModal").modal("show");
     }
-    else { // Break Time/ No primary needed
+    else { // No primary needed for break periods, therefore, allow adding a new form. 
       if (checkDuplicate(studentDict) == true){
         checkTotalHours(studentDict, response);
         createAndFillTable(studentDict);
