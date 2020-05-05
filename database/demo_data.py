@@ -369,7 +369,7 @@ FormHistory.insert([{
 #############################
 emailtemps= [
                 {
-                "purpose":"Labor Status Form Submitted For Student",
+                "purpose":"Labor Status Form Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -454,7 +454,7 @@ emailtemps= [
                 },
                 #LSF approved
                 {
-                "purpose":"Labor Status Form Approved For Student",
+                "purpose":"Labor Status Form Approved",
                 "subject":"Labor Status Form Approved",
                 "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -479,7 +479,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"student"
                 },
                 {
                 "purpose":"Labor Status Form Approved For Primary",
@@ -521,7 +521,7 @@ emailtemps= [
                 },
                 #LSF Rejected
                 {
-                "purpose":"Labor Status Form Rejected For Student",
+                "purpose":"Labor Status Form Rejected",
                 "subject":"Labor Status Form Rejected",
                 "body":'''
                             ''',
@@ -558,11 +558,11 @@ emailtemps= [
                 "subject":"Labor Status Form Rejected",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"supervisor"
                 },
                 #LSF modified
                 {
-                "purpose":"Labor Status Form Modified For Student",
+                "purpose":"Labor Status Form Modified",
                 "subject":"Labor Status Form Modified",
                 "body":'''
                             ''',
@@ -577,7 +577,7 @@ emailtemps= [
                 },
                 #LRF Submitted
                 {
-                "purpose":"Labor Release Form Submitted For Student",
+                "purpose":"Labor Release Form Submitted",
                 "subject":"Labor Release Form Submitted",
                 "body":'''
                             ''',
@@ -593,7 +593,7 @@ emailtemps= [
                 #LRF approved
 
                 {
-                "purpose":"Labor Release Form Approved For Student",
+                "purpose":"Labor Release Form Approved",
                 "subject":"Labor Release Form Approved",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -628,7 +628,7 @@ emailtemps= [
                 },
                 #LRF Rejected
                 {
-                "purpose":"Labor Release Form Rejected For Student",
+                "purpose":"Labor Release Form Rejected",
                 "subject":"Labor Release Form Rejected",
                 "body":'''
                             ''',
@@ -643,7 +643,7 @@ emailtemps= [
                 },
                 #LOF
                 {
-                "purpose":"Labor Overload Form Submitted For Student",
+                "purpose":"Labor Overload Form Submitted",
                 "subject":"Labor Overload Form Submitted",
                 "body":'''
                     <p>Dear <strong>@@Student@@</strong>,</p>
@@ -660,7 +660,7 @@ emailtemps= [
                 "audience":"supervisor"
                 },
                 {
-                "purpose":"Labor Overload Form Approved For Student",
+                "purpose":"Labor Overload Form Approved",
                 "subject":"Labor Overload Form Approved",
                 "body":'''
                             ''',
@@ -674,655 +674,11 @@ emailtemps= [
                 "audience":"supervisor"
                 },
                 {
-                "purpose":"Labor Overload Form Rejected For Student",
+                "purpose":"Labor Overload Form Rejected",
                 "subject":"Labor Overload Form Rejected",
                 "body":'''
                             ''',
                 "audience":"student"
-                },
-                {
-                "purpose":"Labor Status Form Submitted For Student",
-                "subject":"Labor Status Form Received",
-                "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>This email is very important. Please take a moment to read carefully and review the information. A Labor Status Form has been submitted for you by <strong>@@Creator@@</strong>. Below is the position information for which you have been hired. If you do not accept the terms of this form, you will have 24 hours to contact the supervisor or the Labor Program Office. If we do not hear from you within 24 hours of this notification, it will be determined that it is accepted and the forms will be processed as submitted.</p>
-                            <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, your job will be active to allow for time entry in 24 hours. If at that time, you cannot clock in, please contact the Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
-                            <p>Begin Date: <strong>@@Date@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>''',
-
-                "audience":"students"
-                },
-                {
-                "purpose":"Labor Status Form Submitted For Secondary",
-                "subject":"Labor Status Form Received",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong> and <strong>@@Primsupr@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>This email is confirmation that the Labor Program Office has received a Labor Status Form for a secondary position by
-                            <strong>@@Supervisor@@</strong> for <strong>@@Student@@</strong>.Please take a moment to read carefully and review the information. Below is the position information for the student you have requested to hire.</p>
-                <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, the student’s job will be active to allow for time entry in 24 hours. If at that time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>WLS Level: <strong>@@WLS@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
-                            <p>Begin Date: <strong>@@Date@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>
-                            ''',
-                "audience":"supervisor"
-                },
-                {
-                "purpose":"Labor Status Form Submitted For Primary",
-                "subject":"Labor Status Form Received",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>This email is confirmation that the Labor Program Office has received a Labor Status Form
-                            <strong>@@Creator@@</strong> for <strong>Student</strong>. Please take a moment to read carefully and review the information Below is the position information for the student you have requested to hire.</p>
-                            <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, the student’s job will be active to allow for time entry in 24 hours. If at that time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>WLS Level: <strong>@@WLS@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
-                            <p>Begin Date: <strong>@@Date@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>
-                            ''',
-                "audience":"supervisor"
-                },
-                #LSF approved
-                {
-                "purpose":"Labor Status Form Approved For Student",
-                "subject":"Labor Status Form Approved",
-                "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>A Labor This email is very important. Please take a moment to read carefully and review the information. A Labor Release Form previously submitted for you by <strong>@@Student@@</strong> has been <strong>Approved</strong>. You will no longer be able to record time in this position effective of the release date below. If you have concerns, please contact the supervisor or Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> Please allow 24 hours for the position to become active in Tracy (Ultratime). Students should not work until time can be recorded for the position. If at any time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>WLS Level: <strong>@@WLS@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
-                            <p>Begin Date: <strong>@@Date@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>
-                            ''',
-                "audience":"supervisor"
-                },
-                {
-                "purpose":"Labor Status Form Approved For Primary",
-                "subject":"Labor Status Form Approved",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>A Labor Status Form previously submitted by you for
-                            <strong>@@Student@@</strong> has been <strong>Approved</strong>. Below is the position information for the student that you have hired.</p>
-                            <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> Please allow 24 hours for the position to become active in Tracy (Ultratime). Students should not work until time can be recorded for the position. If at any time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>WLS Level: <strong>@@WLS@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
-                            <p>Begin Date: <strong>@@Date@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>
-                            ''',
-                "audience":"supervisor"
-                },
-
-                {
-                "purpose":"Labor Status Form Approved For Secondary",
-                "subject":"Labor Status Form Approved",
-                "body":'''
-
-                            ''',
-                "audience":"supervisor"
-                },
-                #LSF Rejected
-                {
-                "purpose":"Labor Status Form Rejected For Student",
-                "subject":"Labor Status Form Rejected",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Status Form Rejected For Secondary",
-                "subject":"Labor Status Form Rejected",
-                "body":'''<p>Dear <strong>@@Primsupr@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>A Labor Status Form previously submitted by you for
-                            <strong>@@Student@@</strong>,<strong>%%StudB%%</strong> hiring him/her to work in a secondary position has been Denied. This is an informational email to you as the supervisor for the primary labor position.</p>
-                            <p>&nbsp;</p>
-
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>WLS Level: <strong>@@WLS@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
-                            <p>Begin Date: <strong>@@Date@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>
-                            ''',
-                "audience":"supervisor"
-                },
-                {
-                "purpose":"Labor Status Form Rejected For Primary",
-                "subject":"Labor Status Form Rejected",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                #LSF modified
-                {
-                "purpose":"Labor Status Form Modified For Student",
-                "subject":"Labor Status Form Modified",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Status Form Modified For Supervisor",
-                "subject":"Labor Status Form Modified",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                #LRF Submitted
-                {
-                "purpose":"Labor Release Form Submitted For Student",
-                "subject":"Labor Release Form Submitted",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Release Form Submitted For Supervisor",
-                "subject":"Labor Release Form Submitted",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                #LRF approved
-
-                {
-                "purpose":"Labor Release Form Approved For Student",
-                "subject":"Labor Release Form Approved",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>This email is very important. Please take a moment to read carefully and review the information. A Labor Release Form previously submitted for you by <strong>@@Supervisor@@</strong> has been <strong>Approved</strong>. You will no longer be able to record time in this position effective of the release date below. If you have concerns, please contact the supervisor or Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>WLS Level: <strong>@@WLS@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Release Date: <strong>@@ReleaseDate@@</strong></p>
-                            <p>Reason for Release:: <strong>@@ReleaseReason@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Release Form Approved For Supervisor",
-                "subject":"Labor Release Form Approved",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                #LRF Rejected
-                {
-                "purpose":"Labor Release Form Rejected For Student",
-                "subject":"Labor Release Form Rejected",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Release Form Rejected For Supervisor",
-                "subject":"Labor Release Form Rejected",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                #LOF
-                {
-                "purpose":"Labor Overload Form Submitted For Student",
-                "subject":"Labor Overload Form Submitted",
-                "body":'''
-                    <p>Dear <strong>@@Student@@</strong>,</p>
-                    <p>&nbsp;</p>
-                    <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
-                    ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Overload Form Submitted For Supervisor",
-                "subject":"Labor Overload Form Submitted",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                {
-                "purpose":"Labor Overload Form Approved For Student",
-                "subject":"Labor Overload Form Approved",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Overload Form Approved For Supervisor",
-                "subject":"Labor Overload Form Approved",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                {
-                "purpose":"Labor Overload Form Rejected For Student",
-                "subject":"Labor Overload Form Rejected",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Status Form Submitted For Student",
-                "subject":"Labor Status Form Received",
-                "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>This email is very important. Please take a moment to read carefully and review the information. A Labor Status Form has been submitted for you by <strong>@@Creator@@</strong>. Below is the position information for which you have been hired. If you do not accept the terms of this form, you will have 24 hours to contact the supervisor or the Labor Program Office. If we do not hear from you within 24 hours of this notification, it will be determined that it is accepted and the forms will be processed as submitted.</p>
-                            <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, your job will be active to allow for time entry in 24 hours. If at that time, you cannot clock in, please contact the Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
-                            <p>Begin Date: <strong>@@Date@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>''',
-                "audience":"students"
-                },
-                {
-                "purpose":"Labor Status Form Submitted For Secondary",
-                "subject":"Labor Status Form Received",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong> and <strong>@@Primsupr@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>This email is confirmation that the Labor Program Office has received a Labor Status Form for a secondary position by
-                            <strong>@@Supervisor@@</strong> for <strong>@@Student@@</strong>.Please take a moment to read carefully and review the information. Below is the position information for the student you have requested to hire.</p>
-                            <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, the student's job will be active to allow for time entry in 24 hours. If at that time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>WLS Level: <strong>@@WLS@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
-                            <p>Begin Date: <strong>@@Date@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>
-                            ''',
-                "audience":"supervisor"
-                },
-                {
-                "purpose":"Labor Status Form Submitted For Primary",
-                "subject":"Labor Status Form Received",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>This email is confirmation that the Labor Program Office has received a Labor Status Form
-                            <strong>@@Creator@@</strong> for <strong>Student</strong>. Please take a moment to read carefully and review the information Below is the position information for the student you have requested to hire.</p>
-                            <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, the student's job will be active to allow for time entry in 24 hours. If at that time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>WLS Level: <strong>@@WLS@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
-                            <p>Begin Date: <strong>@@Date@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>
-                            ''',
-                "audience":"supervisor"
-                },
-                #LSF approved
-                {
-                "purpose":"Labor Status Form Approved For Student",
-                "subject":"Labor Status Form Approved",
-                "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>A Labor This email is very important. Please take a moment to read carefully and review the information. A Labor Release Form previously submitted for you by <strong>@@Student@@</strong> has been <strong>Approved</strong>. You will no longer be able to record time in this position effective of the release date below. If you have concerns, please contact the supervisor or Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> Please allow 24 hours for the position to become active in Tracy (Ultratime). Students should not work until time can be recorded for the position. If at any time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>WLS Level: <strong>@@WLS@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
-                            <p>Begin Date: <strong>@@Date@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>
-                            ''',
-                "audience":"supervisor"
-                },
-                {
-                "purpose":"Labor Status Form Approved For Primary",
-                "subject":"Labor Status Form Approved",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>A Labor Status Form previously submitted by you for
-                            <strong>@@Student@@</strong> has been <strong>Approved</strong>. Below is the position information for the student that you have hired.</p>
-                            <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> Please allow 24 hours for the position to become active in Tracy (Ultratime). Students should not work until time can be recorded for the position. If at any time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>WLS Level: <strong>@@WLS@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
-                            <p>Begin Date: <strong>@@Date@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>
-                            ''',
-                "audience":"supervisor"
-                },
-                {
-                "purpose":"Labor Status Form Approved For Secondary",
-                "subject":"Labor Status Form Approved",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                #LSF Rejected
-                {
-                "purpose":"Labor Status Form Rejected For Student",
-                "subject":"Labor Status Form Rejected",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Status Form Rejected For Secondary",
-                "subject":"Labor Status Form Rejected",
-                "body":'''<p>Dear <strong>@@Primsupr@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>A Labor Status Form previously submitted by you for
-                            <strong>@@Student@@</strong>,<strong>%%StudB%%</strong> hiring him/her to work in a secondary position has been Denied. This is an informational email to you as the supervisor for the primary labor position.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>WLS Level: <strong>@@WLS@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Hours per Week (Total Contracted Hours for Break Periods): <strong>@@Hours@@</strong></p>
-                            <p>Begin Date: <strong>@@Date@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>
-                            ''',
-                "audience":"supervisor"
-                },
-                {
-                "purpose":"Labor Status Form Rejected For Primary",
-                "subject":"Labor Status Form Rejected",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                #LSF modified
-                {
-                "purpose":"Labor Status Form Modified For Student",
-                "subject":"Labor Status Form Modified",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Status Form Modified For Supervisor",
-                "subject":"Labor Status Form Modified",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                #LRF Submitted
-                {
-                "purpose":"Labor Release Form Submitted For Student",
-                "subject":"Labor Release Form Submitted",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Release Form Submitted For Supervisor",
-                "subject":"Labor Release Form Submitted",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                #LRF approved
-                {
-                "purpose":"Labor Release Form Approved For Student",
-                "subject":"Labor Release Form Approved",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
-                            <p>&nbsp;</p>
-                            <p>This email is very important. Please take a moment to read carefully and review the information. A Labor Release Form previously submitted for you by <strong>@@Supervisor@@</strong> has been <strong>Approved</strong>. You will no longer be able to record time in this position effective of the release date below. If you have concerns, please contact the supervisor or Labor Program Office immediately.</p>
-                            <p>&nbsp;</p>
-                            <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p><strong>Labor Status Form Information:</strong></p>
-                            <p>Student's Name and B-number: <strong>@@Student@@</strong>, <strong>@@StudB@@</strong></p>
-                            <p>Position Code/Title: <strong>@@Position@@</strong></p>
-                            <p>WLS Level: <strong>@@WLS@@</strong></p>
-                            <p>Department Name: <strong>@@Department@@</strong></p>
-                            <p>Release Date: <strong>@@ReleaseDate@@</strong></p>
-                            <p>Reason for Release:: <strong>@@ReleaseReason@@</strong></p>
-                            <p>&nbsp;</p>
-                            <p>&nbsp;</p>
-                            <p>Sincerely,</p>
-                            <p>Labor Program Office</p>
-                            <p>labor_program@berea.edu</p>
-                            <p>859-985-3611</p>
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Release Form Approved For Supervisor",
-                "subject":"Labor Release Form Approved",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                #LRF Rejected
-                {
-                "purpose":"Labor Release Form Rejected For Student",
-                "subject":"Labor Release Form Rejected",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Release Form Rejected For Supervisor",
-                "subject":"Labor Release Form Rejected",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                #LOF
-                {
-                "purpose":"Labor Overload Form Submitted For Student",
-                "subject":"Labor Overload Form Submitted",
-                "body":'''
-                    <p>Dear <strong>@@Student@@</strong>,</p>
-                    <p>&nbsp;</p>
-                    <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
-                    ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Overload Form Submitted For Supervisor",
-                "subject":"Labor Overload Form Submitted",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                {
-                "purpose":"Labor Overload Form Submitted Notification For Student",
-                "subject":"Labor Overload Form Submitted Notification",
-                "body":'''
-                    <p>Dear <strong>@@Student@@</strong>,</p>
-                    <p>&nbsp;</p>
-                    <p>This is a confiramtion that you submitted a reason for the overload form requested for you.</p>
-                    ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Overload Form Submitted Notification For Labor Office",
-                "subject":"Labor Overload Form Submitted Notification",
-                "body":'''
-                        <p>Dear <strong>Labor Administrator</strong>,</p>
-                        <p>&nbsp;</p>
-                        <p>There has been an overload form request submitted by <strong>@@Student@@</strong> that needs your attention</p>
-                        <p>Please follow this link to check all pending labor overload forms: <a href="@@link@@">@@link@@</a></p>
-                            ''',
-                "audience":"Labor Office"
-                },
-                {
-                "purpose":"Labor Overload Form Approved For Student",
-                "subject":"Labor Overload Form Approved",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Overload Form Approved For Supervisor",
-                "subject":"Labor Overload Form Approved",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
-                },
-                {
-                "purpose":"Labor Overload Form Rejected For Student",
-                "subject":"Labor Overload Form Rejected",
-                "body":'''
-                            ''',
-                "audience":"student"
-                },
-                {
-                "purpose":"Labor Overload Form Rejected For Supervisor",
-                "subject":"Labor Overload Form Rejected",
-                "body":'''
-                            ''',
-                "audience":"supervisor"
                 },
                 #SASS
                 {
@@ -1335,7 +691,7 @@ emailtemps= [
                 },
                 # Break Labor Status Forms
                 {
-                "purpose":"Break Labor Status Form Submitted For Student",
+                "purpose":"Break Labor Status Form Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
                             <p>&nbsp;</p>
