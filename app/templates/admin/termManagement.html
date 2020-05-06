@@ -53,6 +53,14 @@
                     class="glyphicon glyphicon-bookmark">
              </span>
             </th>
+            <th>Adjustments Due
+                  <span data-toggle="tooltip"
+                    data-tooltip="true"
+                    title="Closing a term prevents you from adding labor forms to the term."
+                    data-placement="right"
+                    class="glyphicon glyphicon-bookmark">
+                  </span>
+            </th>
             <th>Term State
                   <span data-toggle="tooltip"
                     data-tooltip="true"
@@ -111,6 +119,20 @@
                         </span>
                         </div>
                       </td>
+                      <td>
+                        <div class="input-group date">
+                          <input id="primaryCutOff_{{term.termCode}}"
+                              onchange="getDate(this, {{term.termCode}});"
+                              type="text"
+                              class="form-control datepicker primaryCutOff"
+                              placeholder="MM/DD/YYYY"
+                              value="{% if term.primaryCutOff != None %}{{term.primaryCutOff.strftime('%m/%d/%Y')}}{% endif %}"
+                          />
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                          </div>
+                        </td>
                     <td>
                        <button
                          {% if term.termStart == None or term.termEnd == None or term.termState == None %} disabled {% endif %}
