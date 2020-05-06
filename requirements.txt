@@ -42,4 +42,4 @@ Werkzeug==0.15.4
 wtf-peewee==3.0.0
 WTForms==2.2.1
 XlsxWriter==1.1.8
-cx_Oracle
+cx-Oracle==7.3.0
