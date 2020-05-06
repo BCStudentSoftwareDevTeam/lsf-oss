@@ -492,21 +492,19 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
     url: url,
     dataType: "json",
     success: function (response){
-      console.log(response);
         status_list = []
+        rejectionStatus = ["Approved", "Approved Relunctantly", "Pending"]
         for (key in response) {
           status_list.push(response[key]["positionStatus"]);
         }
         if(Object.keys(response).length > 0) { // If the submited form is not the first form recorded for that student
-              if (studentDict.stuJobType == "Primary" && (!status_list.includes("Denied"))){ // if the student already has a primary and it is not denied show error modal
-                  console.log("1");
+              if (studentDict.stuJobType == "Primary" && (status_list.some((val) => rejectionStatus.indexOf(val) !== -1))){ // if the student already has a primary and it is not denied show error modal
                   $("#warningModalTitle").html("Insert Rejected");
                   $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
                   $("#warningModal").modal("show");
               }
               else if(studentDict.stuJobType == "Secondary"){ // If it is secondary allow adding LSF
                 if (checkDuplicate(studentDict) == true) {
-                  console.log("D");
                   checkTotalHours(studentDict, response);
                   createAndFillTable(studentDict);
                 }
@@ -515,12 +513,10 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
                 }
               }
             else{
-              console.log("E");
               initialLSFInsert(studentDict, response, status_list) // If the precious primary position is Denied allow the user to continue with the new primary LSF
             }
         }
         else {
-          console.log("C");
           initialLSFInsert(studentDict, response) // If the form being submitted for the student is the initial form for that specific term
         }
     }
@@ -530,7 +526,6 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
 function initialLSFInsert(studentDict, response, status_list = []){ //Add student info to the table if they have no previous lfs's in the database
   if(studentDict.stuJobType == "Primary"){
     if (checkDuplicate(studentDict) == true){
-      console.log("A");
       checkTotalHours(studentDict, response);
       // should create table based on the last position status
       if (status_list == [] || (!status_list.includes("Approved"))) {
@@ -549,7 +544,6 @@ function initialLSFInsert(studentDict, response, status_list = []){ //Add studen
     }
     else { // No primary needed for break periods, therefore, allow adding a new form.
       if (checkDuplicate(studentDict) == true){
-        console.log("B");
         checkTotalHours(studentDict, response);
         createAndFillTable(studentDict);
       }
@@ -654,7 +648,6 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
     }
     for (i = 0; i < databasePositions.length; i++){
       if (databasePositions[i]["positionStatus"] != "Denied"){
-        console.log("2");
         totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
       }
   }

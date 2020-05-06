@@ -97,7 +97,6 @@ def userInsert():
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
         term = d.termCode
-
         # Changes the dates into the appropriate format for the table
         startDate = datetime.strptime(rspFunctional[i]['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
         endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
