@@ -187,8 +187,8 @@ def getNotes(formid):
         if len(notes) > 0: # If there are labor office notes, format, and store them in notesDict
             listOfNotes = []
             for i in range(len(notes)):
-                formattedDate = notes[i].date.strftime('%m/%d/%Y')   # formatting date in the database to display MM/DD/YYYY
-                listOfNotes.append("<dl class='dl-horizontal text-left'> <b>" + formattedDate + " | <i>" + notes[i].createdBy.FIRST_NAME[0] + ". " + notes[i].createdBy.LAST_NAME + "</i> | </b> " + notes[i].notesContents + "</dl>")
+                formattedDate = notes[len(notes) -  i - 1].date.strftime('%m/%d/%Y')   # formatting date in the database to display MM/DD/YYYY
+                listOfNotes.append("<dl class='dl-horizontal text-left'> <b>" + formattedDate + " | <i>" + notes[len(notes) -  i - 1].createdBy.FIRST_NAME[0] + ". " + notes[len(notes) -  i - 1].createdBy.LAST_NAME + "</i> | </b> " + notes[len(notes) -  i - 1].notesContents + "</dl>")
             notesDict["laborDepartmentNotes"] = listOfNotes
         return jsonify(notesDict)     # return as JSON
 
