@@ -85,6 +85,7 @@ def approved_and_denied_Forms():
             return render_template('errors/403.html')
 
         rsp = eval(request.data.decode("utf-8"))
+        print("----rsp = ", rsp)
         if rsp:
             approved_details =  modal_approval_and_denial_data(rsp)
             return jsonify(approved_details)
@@ -103,7 +104,6 @@ def finalUpdateStatus(raw_status):
     else:
         print("Unknown status: ", raw_status)
         return jsonify({"success": False})
-
     try:
         createdUser = User.get(username = cfg['user']['debug'])
         rsp = eval(request.data.decode("utf-8"))
@@ -123,9 +123,13 @@ def finalUpdateStatus(raw_status):
     save_status = True # default true so that we will save in the Deny case
     if new_status == 'Approved':
         try:
+            print("---labor_forms = ", labor_forms)
             banner_data = prep_banner_data(labor_forms)
+            print("---banner_data = ", banner_data)
             conn = Banner()
+            print("---conn = ", conn)
             result = conn.insert(banner_data)
+            print("---result = ", result)
             save_status = (result == None)
 
         except Exception as e:
