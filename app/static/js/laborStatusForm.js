@@ -493,16 +493,19 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
     dataType: "json",
     success: function (response){
       console.log(response);
+        positionsAvailable = len(response)
         if(Object.keys(response).length > 0) { // If the submited form is not the first form recorded for that student
             for (key in response) {
               if (studentDict.stuJobType == "Primary" && ("Denied" != response[key]["positionStatus"])){ // if the student already has a primary and it is not denied show error modal
+                  console.log("1");
                   $("#warningModalTitle").html("Insert Rejected");
                   $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
                   $("#warningModal").modal("show");
               }
               else if(studentDict.stuJobType == "Secondary"){ // If it is secondary allow adding LSF
                 if (checkDuplicate(studentDict) == true) {
-                  checkTotalHours(studentDict, response);
+                  console.log("D");
+                  checkTotalHours(studentDict, response, key);
                   createAndFillTable(studentDict);
                 }
                 else {
@@ -510,22 +513,28 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
                 }
               }
             else{
-              initialLSFInsert(studentDict, response) // If the precious primary position is Denied allow the user to continue with the new primary LSF
+              console.log("E");
+              initialLSFInsert(studentDict, response, key, positionsAvailable) // If the precious primary position is Denied allow the user to continue with the new primary LSF
             }
           }
         }
         else {
-          initialLSFInsert(studentDict, response) // If the form being submitted for the student is the initial form for that specific term
+          console.log("C");
+          initialLSFInsert(studentDict, response, , positionsAvailable) // If the form being submitted for the student is the initial form for that specific term
         }
     }
   });
 }
 
-function initialLSFInsert(studentDict, response){ //Add student info to the table if they have no previous lfs's in the database
+function initialLSFInsert(studentDict, response, key=null, positionsAvailable){ //Add student info to the table if they have no previous lfs's in the database
   if(studentDict.stuJobType == "Primary"){
     if (checkDuplicate(studentDict) == true){
-      checkTotalHours(studentDict, response);
-      createAndFillTable(studentDict);
+      console.log("A");
+      checkTotalHours(studentDict, response, key);
+      // should create table based on the last position status
+      if (positionsAvailable > 1) {
+        createAndFillTable(studentDict);
+      }
     }
     else {
       insertRejectedModal(studentDict);
@@ -539,7 +548,8 @@ function initialLSFInsert(studentDict, response){ //Add student info to the tabl
     }
     else { // No primary needed for break periods, therefore, allow adding a new form.
       if (checkDuplicate(studentDict) == true){
-        checkTotalHours(studentDict, response);
+        console.log("B");
+        checkTotalHours(studentDict, response, key);
         createAndFillTable(studentDict);
       }
       else {
@@ -641,10 +651,10 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
         totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
       }
     }
-
-  for (i = 0; i < databasePositions.length; i++){
-    if (databasePositions[i]["positionStatus"] != "Denied"){
-      totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
+  if (key != null){
+    if (databasePositions[key]["positionStatus"] != "Denied"){
+      console.log("2");
+      totalHoursCount = totalHoursCount + databasePositions[key].weeklyHours; // gets the total hours a student have both in database and in the table
     }
   }
   if (totalHoursCount > (15) && academicYear.includes(termCodeLastTwo)){
