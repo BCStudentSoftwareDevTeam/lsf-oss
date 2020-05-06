@@ -32,6 +32,7 @@ def allPendingForms(formType):
         historyType = None
         pageTitle = ""
         approvalTarget = ""
+        OverloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
         if formType  == "all":
             formList = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
             approvalTarget = "allFormsdenyModal"
@@ -65,7 +66,8 @@ def allPendingForms(formType):
                                 formList = formList,
                                 formType= formType,
                                 modalTarget = approvalTarget,
-                                isLaborAdmin = isLaborAdmin
+                                isLaborAdmin = isLaborAdmin,
+                                OverloadFormCounter = OverloadFormCounter
                                 )
     except Exception as e:
         print("error", e)
@@ -123,7 +125,7 @@ def finalUpdateStatus(raw_status):
     if new_status == 'Approved':
         try:
             banner_data = prep_banner_data(labor_forms)
-            conn = Banner() 
+            conn = Banner()
             result = conn.insert(banner_data)
             save_status = (result == None)
 
@@ -133,7 +135,7 @@ def finalUpdateStatus(raw_status):
 
         else:
             save_status = True
-        
+
     if save_status:
         labor_forms.save()
         return jsonify({"success": True})

@@ -34,7 +34,7 @@
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingModified')}}">Pending Modified Forms</a>
         </li>
         <li {% if formType == "pendingOverload" %} class="active" {% endif %}>
-          <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms</a>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms <strong>({{ OverloadFormCounter }})</strong></a>
         </li>
         <li {% if formType == "pendingRelease" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingRelease')}}">Pending Release Forms</a>
