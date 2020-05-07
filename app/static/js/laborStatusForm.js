@@ -463,6 +463,7 @@ function createStuDict(){
                     stuJobType: jobTypeName,
                     stuWeeklyHours: parseInt(hoursPerWeekName, 10),
                     stuContractHours: parseInt(selectedContractHoursName, 10),
+                    stuTotalHours: null,
                     stuWLS: wls,
                     stuStartDate: startDate,
                     stuEndDate: endDate,
@@ -631,6 +632,8 @@ function isOneLaborStatusForm(studentDict){
 
 storeTotalHours = {}
 function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
+    var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
+    var termCodeLastTwo = termCodeSelected.slice(-2);
     totalHoursCount = studentDict.stuWeeklyHours;
     for (i = 0; i < globalArrayOfStudents.length; i++){
       if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
@@ -641,10 +644,11 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
   for (i = 0; i < databasePositions.length; i++){
     totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
   }
-  if (totalHoursCount > (15)){
+  if (totalHoursCount > (15) && (termCodeLastTwo in ["11", "12", "00"])){
     studentDict.isItOverloadForm = "True";
     $('#OverloadModal').modal('show');
   }
+  studentDict.stuTotalHours = totalHoursCount
   return true;
 }
 //Triggered when summer labor is clicked when making a New Labor Status Form
