@@ -72,26 +72,7 @@ def userInsert():
     print('rsp'  + str(rspFunctional))
     all_forms = []
     for i in range(len(rspFunctional)):
-
         tracyStudent = STUDATA.get(ID = rspFunctional[i]['stuBNumber']) #Gets student info from Tracy
-        print("Tracy student" + str(tracyStudent))
-        #Tries to get a student with the followin information from the database
-        #if the student doesn't exist, it tries to create a student with that same information
-        try:
-            d, created = Student.get_or_create(ID = tracyStudent.ID,
-                                                FIRST_NAME = tracyStudent.FIRST_NAME,
-                                                LAST_NAME = tracyStudent.LAST_NAME,
-                                                CLASS_LEVEL = tracyStudent.CLASS_LEVEL,
-                                                ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS,
-                                                MAJOR = tracyStudent.MAJOR,
-                                                PROBATION = tracyStudent.PROBATION,
-                                                ADVISOR = tracyStudent.ADVISOR,
-                                                STU_EMAIL = tracyStudent.STU_EMAIL,
-                                                STU_CPO = tracyStudent.STU_CPO,
-                                                LAST_POSN = tracyStudent.LAST_POSN,
-                                                LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
-        except Exception as e:
-            print("ERROR: ", e)
         student = Student.get(ID = tracyStudent.ID)
         studentID = student.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
@@ -100,119 +81,31 @@ def userInsert():
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
         term = d.termCode
-
-        # Changes the dates into the appropriate format for the table
-        startDate = datetime.strptime(rspFunctional[i]['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
-        endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
+        #Tries to get a student with the followin information from the database
+        #if the student doesn't exist, it tries to create a student with that same information
         try:
-            lsf = LaborStatusForm.create(termCode_id = term,
-                                         studentSupervisee_id = studentID,
-                                         supervisor_id = primarySupervisor,
-                                         department_id  = department,
-                                         jobType = rspFunctional[i]["stuJobType"],
-                                         WLS = rspFunctional[i]["stuWLS"],
-                                         POSN_TITLE = rspFunctional[i]["stuPosition"],
-                                         POSN_CODE = rspFunctional[i]["stuPositionCode"],
-                                         contractHours = rspFunctional[i].get("stuContractHours", None),
-                                         weeklyHours   = rspFunctional[i].get("stuWeeklyHours", None),
-                                         startDate = startDate,
-                                         endDate = endDate,
-                                         supervisorNotes = rspFunctional[i]["stuNotes"],
-                                         laborDepartmentNotes = rspFunctional[i]["stuLaborNotes"]
-                                         )
+            getOrCreateStudentData(tracyStudent)
+        except Exception as e:
+            print("ERROR: ", e)
+
+        try:
+            lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
+            print("done with createLSF")
             status = Status.get(Status.statusName == "Pending")
             d, created = User.get_or_create(username = cfg['user']['debug'])
             creatorID = d.UserID
-            if rspFunctional[i]["isItOverloadForm"] == "True":
-                historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
-                newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
-                                                            financialAidApproved = None,
-                                                            financialAidApprover = None,
-                                                            financialAidReviewDate = None,
-                                                            SAASApproved = None,
-                                                            SAASApprover = None,
-                                                            SAASReviewDate = None,
-                                                            laborApproved = None,
-                                                            laborApprover = None,
-                                                            laborReviewDate = None)
-                formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
-                                                    historyType = historyType.historyTypeName,
-                                                    overloadForm = newLaborOverloadForm.overloadFormID,
-                                                    createdBy   = creatorID,
-                                                    createdDate = date.today(),
-                                                    status      = status.statusName)
-                # email = emailHandler(formOverload.formHistoryID)
-                # email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
-            else:
-                historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-                FormHistory.create( formID = lsf.laborStatusFormID,
-                                                    historyType = historyType.historyTypeName,
-                                                    overloadForm = None,
-                                                    createdBy   = creatorID,
-                                                    createdDate = date.today(),
-                                                    status      = status.statusName)
 
-            termCode = str(term)[-2:]
-
-            if "stuTotalHours" in rspFunctional[i] and termCode in ["11", "12", "00"]:
-                if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
-                    formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
-                                                      historyType = historyType.historyTypeName,
-                                                      overloadForm = newLaborOverloadForm.overloadFormID,
-                                                      createdBy   = creatorID,
-                                                      createdDate = date.today(),
-                                                      status      = status.statusName)
-                    email = emailHandler(formOverload.formHistoryID)
-                    email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+            createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
+            createBreakHistory(rspFunctional[i], lsf, creatorID, status)
             try:
-                # sending emails during break period
-                isOneLSF = json.loads(checkForSecondLSFBreak(term, studentID, "lsf"))
-                if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
-                    print("Before the list")
-                    primaryFormHistoryID = ""
-                    if(isOneLSF["lsfFormID"] != []): # if there is only one labor status form, do nothing. Otherwise, send emails to the previous supervisors
-                        print("False")
-                        for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
-                            primaryFormHistories = FormHistory.select().where(FormHistory.formID == lsfID)
-                            for primaryFormHistory in primaryFormHistories:
-                                primaryFormHistoryID = primaryFormHistory.formHistoryID
-                            emailPrimSupBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
-                            emailPrimSupBreakLSF.notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak() #send email to all of the previous supervisors
-                        emailForBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
-                        emailForBreakLSF.notifySecondLaborStatusFormSubmittedForBreak() #send email to student and supervisor for the current lsf break form
-                else: # Student has only one lsf, send email to student and supervisor
-                    print("True")
-                    email = emailHandler(formHistory.formHistoryID)
-                    email.laborStatusFormSubmittedForBreak()
+                emailHandler(checkForSecondLSFBreak(term, studentID, "lsf"))
             except Exception as e:
                 print("Error on sending emails during break: " + str(e))
+
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
             print("ERROR: What happened here? " + str(e))
-
-
-        try:
-            try:
-                getOrCreateStudentData(rspFunctional[i])
-            except Exception as e:
-                print("Error on getOrCreateStudentData: ", e)
-            try:
-                createLaborStatusForm(rspFunctional[i])
-            except Exception as e:
-                print("Error on createLaborStatusForm: ", e)
-            try:
-                createFormHistory(rspFunctional[i], createLaborStatusForm(rspFunctional[i]))
-            except Exception as e:
-                print("Error on createFormHistory")
-            try:
-                createLaborOverloadForm(rspFunctional[i], createLaborStatusForm(rspFunctional[i]))
-            except:
-                print("Error on createLaborOverloadForm: ", e)
-            all_forms.append(True)
-        except Exception as e:
-            all_forms.append(False)
-            print("Error on all_forms: " + str(e))
 
     return jsonify(all_forms)
 
@@ -306,5 +199,6 @@ def checkCompliance(department):
     depts = Department.select().where(Department.DEPT_NAME == department)
     deptDict = {}
     for dept in depts:
+        print("dept = ",dept)
         deptDict['Department'] = {'Department Compliance': dept.departmentCompliance}
     return json.dumps(deptDict)
