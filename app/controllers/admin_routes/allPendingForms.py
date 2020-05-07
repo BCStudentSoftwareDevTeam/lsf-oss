@@ -32,7 +32,7 @@ def allPendingForms(formType):
         historyType = None
         pageTitle = ""
         approvalTarget = ""
-        OverloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
+        overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
         if formType  == "all":
             formList = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
             approvalTarget = "allFormsdenyModal"
@@ -67,7 +67,7 @@ def allPendingForms(formType):
                                 formType= formType,
                                 modalTarget = approvalTarget,
                                 isLaborAdmin = isLaborAdmin,
-                                OverloadFormCounter = OverloadFormCounter
+                                overloadFormCounter = overloadFormCounter
                                 )
     except Exception as e:
         print("error", e)
