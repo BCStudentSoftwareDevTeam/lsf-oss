@@ -29,9 +29,6 @@ def modifyLSF(laborStatusKey):
         isLaborAdmin = True
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
-    # print("Key", laborStatusKey, type(laborStatusKey))
-    # laborStatusKey = int(laborStatusKey)
-    # print("Key", laborStatusKey, type(laborStatusKey))
     form = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
@@ -85,7 +82,6 @@ def modifyLSF(laborStatusKey):
 def updateLSF(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
-        print("Into the submit route")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
@@ -142,16 +138,12 @@ def updateLSF(laborStatusKey):
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
         changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
-        print('Before email')
         email = emailHandler(changedForm.formHistoryID)
-        print('In the middle')
         email.laborStatusFormModified()
-        print('After email')
         flash("Your labor status form has been modified.", "success")
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
 
     except Exception as e:
         flash("An error occured.", "danger")
-        print('Error')
-        print(e)
+        # print(e)
         return jsonify({"Success": False})
