@@ -65,6 +65,7 @@ def laborStatusForm(laborStatusKey = None):
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
     """ Create labor status form. Create labor history form."""
+    print("for Luis")
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     print('rsp'  + str(rspFunctional))
