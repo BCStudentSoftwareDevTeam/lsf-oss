@@ -87,9 +87,9 @@
                           placeholder="MM/DD/YYYY"
                           value="{% if term.termStart != None %}{{term.termStart.strftime('%m/%d/%Y')}}{% endif %}"
                       />
-                      <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                      </span>
+                      <label class="input-group-addon" for="start_{{term.termCode}}">
+                          <i class="glyphicon glyphicon-calendar"></i>
+                      </label>
                     </div>
                   </td>
                   <td>
@@ -101,9 +101,9 @@
                           placeholder="MM/DD/YYYY"
                           value="{% if term.termEnd != None %}{{term.termEnd.strftime('%m/%d/%Y')}}{% endif %}"
                       />
-                      <span class="input-group-addon">
-                          <span class="glyphicon glyphicon-calendar"></span>
-                      </span>
+                      <label class="input-group-addon" for="end_{{term.termCode}}">
+                          <i class="glyphicon glyphicon-calendar"></i>
+                      </label>
                       </div>
                     </td>
                     <td>
@@ -115,9 +115,9 @@
                             placeholder="MM/DD/YYYY"
                             value="{% if term.primaryCutOff != None %}{{term.primaryCutOff.strftime('%m/%d/%Y')}}{% endif %}"
                         />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
+                        <label class="input-group-addon" for="primaryCutOff_{{term.termCode}}">
+                          <i class="glyphicon glyphicon-calendar"></i>
+                        </label>
                         </div>
                       </td>
                       <td>
@@ -129,9 +129,9 @@
                               placeholder="MM/DD/YYYY"
                               value="{% if term.adjustmentCutOff != None %}{{term.adjustmentCutOff.strftime('%m/%d/%Y')}}{% endif %}"
                           />
-                          <span class="input-group-addon">
-                              <span class="glyphicon glyphicon-calendar"></span>
-                          </span>
+                          <label class="input-group-addon" for="adjustmentCutOff_{{term.termCode}}">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                          </label>
                           </div>
                         </td>
                     <td style='width:10%'>
