@@ -15,8 +15,11 @@ function getDate(obj, termCode) {
   /* this function makes a dictionary with term code being the keys, and the dates being the values
   then this will trigger the ajax call and send the dictionary to termManagement.py */
   var termStart = obj.value; // You need to get the value of this object otherwise it will show "object Object"
+  console.log(obj.id);
   var termID = obj.id.split("_")[1] // This is how we format the term code
+  console.log(termID);
   var dateType = obj.id.split("_")[0] // This variable stores whether the value is a start date or an end date
+  console.log(dateType);
   var tabledata_dict = {};
   tabledata_dict[dateType] = obj.value;
   tabledata_dict["termCode"] = termID;
@@ -34,8 +37,9 @@ function getDate(obj, termCode) {
         start = $("#start_" + termCode).val();
         end = $("#end_" +termCode).val();
         primaryCutOff = $("#primaryCutOff_" + termCode).val();
+        adjustmentCutOff = $("#adjustmentCutOff_" + termCode).val();
 
-        if (start != "" && end != "" && primaryCutOff != "") {
+        if (start != "" && end != "" && primaryCutOff != "" && adjustmentCutOff != "") {
           $('#term_btn_' + termCode).prop('disabled', false)
         }
       }
@@ -53,6 +57,8 @@ function updateStart(obj, termCode){
   $('#start_' + termCode).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
   $('#primaryCutOff_' + termCode).datepicker({maxDate: new Date(yearNewEnd, monthNewEnd, dayNewEnd)});
   $('#primaryCutOff_' + termCode).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
+  $('#adjustmentCutOff_' + termCode).datepicker({maxDate: new Date(yearNewEnd, monthNewEnd, dayNewEnd)});
+  $('#adjustmentCutOff_' + termCode).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
 
 }
 
@@ -66,6 +72,8 @@ function updateEnd(obj, termCode){
   $("#end_" + termCode).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
   $('#primaryCutOff_' + termCode).datepicker({minDate: new Date(yearNewStart, monthNewStart, dayNewStart)});
   $("#primaryCutOff_" + termCode).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
+  $('#adjustmentCutOff_' + termCode).datepicker({minDate: new Date(yearNewStart, monthNewStart, dayNewStart)});
+  $("#adjustmentCutOff_" + termCode).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
 }
 
 function termStatus(term) {
