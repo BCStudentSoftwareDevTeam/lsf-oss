@@ -44,11 +44,11 @@
             <th>Term Name</th>
             <th>Start Date</th>
             <th>End Date</th>
-            <th>Primary Labor Status Forms Due
+            <th>Primary Forms Due
               <span data-toggle="tooltip"
                     data-tooltip="true"
                     title="After this day, labor supervisor will not be able
-                    to submit any primary positions for students"
+                    to submit any primary positions for students."
                     data-placement="right"
                     class="glyphicon glyphicon-bookmark">
              </span>
@@ -125,7 +125,7 @@
                           <input id="adjustmentCutOff_{{term.termCode}}"
                               onchange="getDate(this, {{term.termCode}});"
                               type="text"
-                              class="form-control datepicker primaryCutOff"
+                              class="form-control datepicker adjustmentCutOff"
                               placeholder="MM/DD/YYYY"
                               value="{% if term.adjustmentCutOff != None %}{{term.adjustmentCutOff.strftime('%m/%d/%Y')}}{% endif %}"
                           />
@@ -134,7 +134,7 @@
                           </span>
                           </div>
                         </td>
-                    <td>
+                    <td style='width:10%'>
                        <button
                          {% if term.termStart == None or term.termEnd == None or term.termState == None %} disabled {% endif %}
                          id="term_btn_{{term.termCode}}"

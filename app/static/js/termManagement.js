@@ -15,11 +15,8 @@ function getDate(obj, termCode) {
   /* this function makes a dictionary with term code being the keys, and the dates being the values
   then this will trigger the ajax call and send the dictionary to termManagement.py */
   var termStart = obj.value; // You need to get the value of this object otherwise it will show "object Object"
-  console.log(obj.id);
   var termID = obj.id.split("_")[1] // This is how we format the term code
-  console.log(termID);
   var dateType = obj.id.split("_")[0] // This variable stores whether the value is a start date or an end date
-  console.log(dateType);
   var tabledata_dict = {};
   tabledata_dict[dateType] = obj.value;
   tabledata_dict["termCode"] = termID;
