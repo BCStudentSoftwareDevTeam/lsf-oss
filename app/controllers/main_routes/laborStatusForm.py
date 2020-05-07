@@ -152,10 +152,8 @@ def userInsert():
                 # sending emails during break period
                 isOneLSF = json.loads(checkForSecondLSFBreak(term, studentID, "lsf"))
                 if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
-                    print("Before the list")
                     primaryFormHistoryID = ""
                     if(isOneLSF["lsfFormID"] != []): # if there is only one labor status form, do nothing. Otherwise, send emails to the previous supervisors
-                        print("False")
                         for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
                             primaryFormHistories = FormHistory.select().where(FormHistory.formID == lsfID)
                             for primaryFormHistory in primaryFormHistories:
@@ -165,7 +163,6 @@ def userInsert():
                         emailForBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
                         emailForBreakLSF.notifySecondLaborStatusFormSubmittedForBreak() #send email to student and supervisor for the current lsf break form
                 else: # Student has only one lsf, send email to student and supervisor
-                    print("True")
                     email = emailHandler(formHistory.formHistoryID)
                     email.laborStatusFormSubmittedForBreak()
             except Exception as e:
@@ -173,7 +170,7 @@ def userInsert():
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
-            print("ERROR: What happened here? " + str(e))
+            print("ERROR on creating Labor Status Form/Overload Form" + str(e))
 
     return jsonify(all_forms)
 
@@ -214,14 +211,6 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
             for item in positions:
                 isMoreLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME
                 isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
-                # FIXME: Send email to both supervisors and student (for more than one lsf). Send it to all supervisors.
-                # laborStatusKey = item.laborStatusFormID
-                # # print(" Labor Status Forms for Break", item.laborStatusFormID)
-                # selectedFormHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
-                # # print("Form History", selectedFormHistory.formHistoryID)
-                # email = emailHandler(selectedFormHistory.formHistoryID)
-                # email.laborStatusFormSubmittedForBreak()
-        # FIXME: Send email to the supervisor and student (for the first lsf)
         return jsonify(isMoreLSF_dict)
 
     positionsList = []
