@@ -19,6 +19,7 @@ from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 from app import cfg
 from app.logic.emailHandler import*
+from app.controllers.main_routes.userInsertFunctions import*
 
 @main_bp.route('/laborstatusform', methods=['GET'])
 @main_bp.route('/laborstatusform/<laborStatusKey>', methods=['GET'])
@@ -71,6 +72,7 @@ def userInsert():
     print('rsp'  + str(rspFunctional))
     all_forms = []
     for i in range(len(rspFunctional)):
+
         tracyStudent = STUDATA.get(ID = rspFunctional[i]['stuBNumber']) #Gets student info from Tracy
         print("Tracy student" + str(tracyStudent))
         #Tries to get a student with the followin information from the database
@@ -188,6 +190,29 @@ def userInsert():
         except Exception as e:
             all_forms.append(False)
             print("ERROR: What happened here? " + str(e))
+
+
+        try:
+            try:
+                getOrCreateStudentData(rspFunctional[i])
+            except Exception as e:
+                print("Error on getOrCreateStudentData: ", e)
+            try:
+                createLaborStatusForm(rspFunctional[i])
+            except Exception as e:
+                print("Error on createLaborStatusForm: ", e)
+            try:
+                createFormHistory(rspFunctional[i], createLaborStatusForm(rspFunctional[i]))
+            except Exception as e:
+                print("Error on createFormHistory")
+            try:
+                createLaborOverloadForm(rspFunctional[i], createLaborStatusForm(rspFunctional[i]))
+            except:
+                print("Error on createLaborOverloadForm: ", e)
+            all_forms.append(True)
+        except Exception as e:
+            all_forms.append(False)
+            print("Error on all_forms: " + str(e))
 
     return jsonify(all_forms)
 
