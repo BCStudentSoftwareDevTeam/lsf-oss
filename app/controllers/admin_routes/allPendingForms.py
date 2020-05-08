@@ -15,6 +15,7 @@ from app import cfg
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 
+print("New Branch")
 @admin.route('/admin/pendingForms/<formType>',  methods=['GET'])
 def allPendingForms(formType):
     try:
@@ -123,7 +124,7 @@ def finalUpdateStatus(raw_status):
     if new_status == 'Approved':
         try:
             banner_data = prep_banner_data(labor_forms)
-            conn = Banner() 
+            conn = Banner()
             result = conn.insert(banner_data)
             save_status = (result == None)
 
@@ -133,7 +134,7 @@ def finalUpdateStatus(raw_status):
 
         else:
             save_status = True
-        
+
     if save_status:
         labor_forms.save()
         return jsonify({"success": True})
