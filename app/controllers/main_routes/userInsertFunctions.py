@@ -20,15 +20,12 @@ from flask import Flask, redirect, url_for, flash
 from app import cfg
 from app.logic.emailHandler import*
 
-###########################################
-#1. getOrCreateStudentData()
 def getOrCreateStudentData(tracyStudent):
     """
     Get a student with the followin information from the database
     if the student doesn't exist, it tries to create a student with that same information
+    tracyStudent: object with all the student's information from Tracy
     """
-    # print("---- Tracy student: " + str(tracyStudent))
-
     d, created = Student.get_or_create( ID = tracyStudent.ID,
                                         FIRST_NAME = tracyStudent.FIRST_NAME,
                                         LAST_NAME = tracyStudent.LAST_NAME,
@@ -43,15 +40,21 @@ def getOrCreateStudentData(tracyStudent):
                                         LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
 
 
-#2. createLaborStatusForm()
 def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional):
     """
-
+    Creates a labor status form with the appropriate data passed from userInsert() in laborStatusForm.py
+    tracyStudent: object with all the student's information from Tracy
+    studentID: student's primary ID in the database AKA their B#
+    primarySupervisor: primary supervisor of the student
+    department: department the position is a part of
+    term: term when the position will happen
+    rspFunctional: a dictionary containing all the data submitted in the LSF page
+    returns the laborStatusForm object just created for later use in laborStatusForm.py
     """
-    print("----- We are in createLSF")
     # Changes the dates into the appropriate format for the table
     startDate = datetime.strptime(rspFunctional['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
     endDate = datetime.strptime(rspFunctional['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
+    # Creates the labor Status form
     lsf = LaborStatusForm.create(termCode_id = term,
                                  studentSupervisee_id = studentID,
                                  supervisor_id = primarySupervisor,
@@ -70,12 +73,16 @@ def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department
 
     return lsf
 
-# #3. createOvrloadFormAndFormHistory()
+
 def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     """
-
+    Creates an overload form and a form history if the request needs an overload, otherwise, creates only a form history
+    rspFunctional: a dictionary containing all the data submitted in the LSF page
+    lsf: stores the new instance of a labor status form
+    creatorID: id of the user submitting the labor status form
+    status: status of the labor status form (e.g. Pending, etc.)
     """
-    if rspFunctional["isItOverloadForm"] == "True":
+    if rspFunctional["isItOverloadForm"] == "True": # If the LSF is an overload form, create its history as such and an overload form
         historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
         newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
                                                     financialAidApproved = None,
@@ -95,7 +102,7 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
                                             status      = status.statusName)
         # email = emailHandler(formOverload.formHistoryID)
         # email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
-    else:
+    else: # If not overload, create its history as a regular LSF
         historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
         FormHistory.create( formID = lsf.laborStatusFormID,
                                             historyType = historyType.historyTypeName,
@@ -104,13 +111,17 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
                                             createdDate = date.today(),
                                             status      = status.statusName)
 
-# #4. createBreakHistory
+
 def createBreakHistory(rspFunctional, lsf, creatorID, status):
     """
-
+    Creates the form history during break periods (Thanksgiving, spring, fall, summer, and Christmas break)
+    rspFunctional: a dictionary containing all the data submitted in the LSF page
+    lsf: stores the new instance of a labor status form
+    creatorID: ID of the user who submitted the LSF
+    status: status of the labor status form (e.g. Pending, etc.)
     """
     termCode = str(term)[-2:]
-    if "stuTotalHours" in rspFunctional and termCode in ["11", "12", "00"]:
+    if "stuTotalHours" in rspFunctional and termCode in ["11", "12", "00"]: # If not a regular term (Academic Year, Fall, or Spring)
         if (rspFunctional["stuTotalHours"] > 15) and (rspFunctional["stuJobType"] == "Secondary"):
             formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
                                               historyType = historyType.historyTypeName,
@@ -124,7 +135,6 @@ def createBreakHistory(rspFunctional, lsf, creatorID, status):
             email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
 
 
-# #5. emailHandler()
 def emailDuringBreak(secondLSFBreak):
     """
     Sending emails during break period
@@ -132,25 +142,16 @@ def emailDuringBreak(secondLSFBreak):
     # sending emails during break period
     isOneLSF = json.loads(secondLSFBreak)
     if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
-        print("Before the list")
         primaryFormHistoryID = ""
         if(isOneLSF["lsfFormID"] != []): # if there is only one labor status form, do nothing. Otherwise, send emails to the previous supervisors
-            print("False")
             for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
                 primaryFormHistories = FormHistory.select().where(FormHistory.formID == lsfID)
                 for primaryFormHistory in primaryFormHistories:
-                    print("---primaryformHistory = ", primaryFormHistory)
                     primaryFormHistoryID = primaryFormHistory.formHistoryID
-                    print("after primaryFormHistoryID")
-                emailPrimSupBreakLSF = emailHandler(FormHistory.formHistoryID, primaryFormHistoryID)
-                print("FormHistory vs. primary: ", FormHistory.formHistoryID, " vs ", primaryFormHistoryID)
+                emailPrimSupBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
                 emailPrimSupBreakLSF.notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak() #send email to all of the previous supervisors
             emailForBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
             emailForBreakLSF.notifySecondLaborStatusFormSubmittedForBreak() #send email to student and supervisor for the current lsf break form
     else: # Student has only one lsf, send email to student and supervisor
-        print("True!!")
-        print("---formHistory = ", formHistory)
-        print("---Formhistory ID = ", FormHistory.formHistoryID)
-        email = emailHandler(FormHistory.formHistoryID)
-        print("FormHistory worked!!!!!!")
+        email = emailHandler(formHistory.formHistoryID)
         email.laborStatusFormSubmittedForBreak()

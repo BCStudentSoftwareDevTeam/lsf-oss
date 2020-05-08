@@ -65,8 +65,7 @@ def laborStatusForm(laborStatusKey = None):
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
-    """ Create labor status form. Create labor history form."""
-    print("for Luis")
+    """ Create labor status form. Create labor history form. Most of the functions called here are in userInsertFunctions.py"""
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     all_forms = []
@@ -81,7 +80,6 @@ def userInsert():
 
         student = Student.get(ID = tracyStudent.ID)
         studentID = student.ID
-        print("it is working")
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.UserID
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
@@ -93,9 +91,9 @@ def userInsert():
             status = Status.get(Status.statusName == "Pending")
             d, created = User.get_or_create(username = cfg['user']['debug'])
             creatorID = d.UserID
-
             createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
             createBreakHistory(rspFunctional[i], lsf, creatorID, status)
+
             try:
                 emailDuringBreak(checkForSecondLSFBreak(term, studentID, "lsf"))
             except Exception as e:
@@ -198,6 +196,5 @@ def checkCompliance(department):
     depts = Department.select().where(Department.DEPT_NAME == department)
     deptDict = {}
     for dept in depts:
-        print("dept = ",dept)
         deptDict['Department'] = {'Department Compliance': dept.departmentCompliance}
     return json.dumps(deptDict)
