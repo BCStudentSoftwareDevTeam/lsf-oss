@@ -118,12 +118,14 @@ def createBreakHistory(rspFunctional, lsf, creatorID, status):
                                               createdBy   = creatorID,
                                               createdDate = date.today(),
                                               status      = status.statusName)
+            print("before email handler")
             email = emailHandler(formOverload.formHistoryID)
+            print("----------this email handler worked")
             email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
 
 
 # #5. emailHandler()
-def emailHandler(secondLSFBreak):
+def emailDuringBreak(secondLSFBreak):
     """
     Sending emails during break period
     """
@@ -137,12 +139,18 @@ def emailHandler(secondLSFBreak):
             for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
                 primaryFormHistories = FormHistory.select().where(FormHistory.formID == lsfID)
                 for primaryFormHistory in primaryFormHistories:
+                    print("---primaryformHistory = ", primaryFormHistory)
                     primaryFormHistoryID = primaryFormHistory.formHistoryID
-                emailPrimSupBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
+                    print("after primaryFormHistoryID")
+                emailPrimSupBreakLSF = emailHandler(FormHistory.formHistoryID, primaryFormHistoryID)
+                print("FormHistory vs. primary: ", FormHistory.formHistoryID, " vs ", primaryFormHistoryID)
                 emailPrimSupBreakLSF.notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak() #send email to all of the previous supervisors
             emailForBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
             emailForBreakLSF.notifySecondLaborStatusFormSubmittedForBreak() #send email to student and supervisor for the current lsf break form
     else: # Student has only one lsf, send email to student and supervisor
-        print("True")
-        email = emailHandler(formHistory.formHistoryID)
+        print("True!!")
+        print("---formHistory = ", formHistory)
+        print("---Formhistory ID = ", FormHistory.formHistoryID)
+        email = emailHandler(FormHistory.formHistoryID)
+        print("FormHistory worked!!!!!!")
         email.laborStatusFormSubmittedForBreak()

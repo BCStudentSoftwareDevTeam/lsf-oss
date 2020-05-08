@@ -69,18 +69,9 @@ def userInsert():
     print("for Luis")
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
-    print('rsp'  + str(rspFunctional))
     all_forms = []
     for i in range(len(rspFunctional)):
         tracyStudent = STUDATA.get(ID = rspFunctional[i]['stuBNumber']) #Gets student info from Tracy
-        student = Student.get(ID = tracyStudent.ID)
-        studentID = student.ID
-        d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
-        primarySupervisor = d.UserID
-        d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
-        department = d.departmentID
-        d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
-        term = d.termCode
         #Tries to get a student with the followin information from the database
         #if the student doesn't exist, it tries to create a student with that same information
         try:
@@ -88,9 +79,17 @@ def userInsert():
         except Exception as e:
             print("ERROR: ", e)
 
+        student = Student.get(ID = tracyStudent.ID)
+        studentID = student.ID
+        print("it is working")
+        d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
+        primarySupervisor = d.UserID
+        d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
+        department = d.departmentID
+        d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
+        term = d.termCode
         try:
             lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
-            print("done with createLSF")
             status = Status.get(Status.statusName == "Pending")
             d, created = User.get_or_create(username = cfg['user']['debug'])
             creatorID = d.UserID
@@ -98,7 +97,7 @@ def userInsert():
             createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
             createBreakHistory(rspFunctional[i], lsf, creatorID, status)
             try:
-                emailHandler(checkForSecondLSFBreak(term, studentID, "lsf"))
+                emailDuringBreak(checkForSecondLSFBreak(term, studentID, "lsf"))
             except Exception as e:
                 print("Error on sending emails during break: " + str(e))
 
