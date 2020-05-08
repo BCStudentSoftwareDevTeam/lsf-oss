@@ -16,7 +16,7 @@ import base64
 from app import cfg
 from app.logic.emailHandler import*
 
-
+print("New branch")
 @main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
 def modifyLSF(laborStatusKey):
     ''' This function gets all the form's data and populates the front end with it'''
