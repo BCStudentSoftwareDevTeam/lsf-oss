@@ -4,13 +4,10 @@
 <div class="modal-content">
   <div class="modal-header">
 
-    <h5 class="modal-title" id="exampleModalLabel" align="center"><b>Deny Labor Status Form</b></h5>
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
+    <h2 class="modal-title" id="exampleModalLabel" align="center"><b>Deny Labor Status Form</b></h2>
   </div>
   <div class="modal-body">
-    <p> Are you sure you want to deny the selected labor status form?</p>
+    <p><strong>Are you sure you want to deny the selected labor status form?</strong></p>
     <table id="denialPendingForms" class="table table-bordered">
       <thead>
         <tr>
@@ -23,6 +20,8 @@
       <tbody>
       </tbody>
     </table>
+    <p><strong>Reason for denial:</strong></p>
+    <textarea id='denyReason' name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder=""></textarea>
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload()">Close</button>

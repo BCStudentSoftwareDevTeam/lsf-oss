@@ -93,7 +93,6 @@ def finalUpdateStatus(raw_status):
         new_status = "Approved"
     elif raw_status == 'denied':
         new_status = "Denied"
-        # Here, we know its denied so we take off the last element in the list
     else:
         print("Unknown status: ", raw_status)
         return jsonify({"success": False})
@@ -101,11 +100,14 @@ def finalUpdateStatus(raw_status):
     try:
         createdUser = User.get(username = cfg['user']['debug'])
         rsp = eval(request.data.decode("utf-8"))
-        if new_status = 'Denied':
+        if new_status == 'Denied':
+            # Index 1 will always hold the reject reason in the list, so we can
+            # set a variable equal to the index value and then slice off the list
+            # item before the iteration
             denyReason = rsp[1]
             rsp = rsp[:1]
+
         for id in rsp:
-            print('This is the list', rsp)
             history_type_data = FormHistory.get(FormHistory.formHistoryID == int(id))
             history_type = str(history_type_data.historyType)
 
@@ -113,6 +115,7 @@ def finalUpdateStatus(raw_status):
             labor_forms.status = Status.get(Status.statusName == new_status)
             labor_forms.reviewedDate = date.today()
             labor_forms.reviewedBy = createdUser.UserID
+            labor_forms.rejectReason = denyReason
     except Exception as e:
         print("Error preparing form for status update:",type(e).__name__ + ":", e)
         return jsonify({"success": False})
@@ -227,29 +230,6 @@ def insertNotes(formId):
         elif stripresponse=="" or stripresponse==None:
             flash("No changes made to notes.", "danger")
             return jsonify({"Success": False})
-
-    except Exception as e:
-        print("error", e)
-        return jsonify({"Success": False})
-
-@admin.route('/admin/denyNotes/<labor_denial_id>', methods=['POST'])
-def denyReason(labor_denial_id):
-
-    '''
-    This function saves the denial reason in the database.
-    '''
-    try:
-        rsp = request.data.decode("utf-8")
-        # rspFunctional = json.dumps(rsp
-        reason = FormHistory.get(FormHistory.formHistoryID == labor_denial_id)
-
-        print(rsp)
-        if rsp:
-            reason.rejectReason = rsp
-            reason.save()
-            print(reason.rejectReason)
-            return jsonify({"Success": True})
-
 
     except Exception as e:
         print("error", e)
