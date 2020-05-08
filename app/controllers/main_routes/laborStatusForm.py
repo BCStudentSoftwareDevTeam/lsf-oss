@@ -138,8 +138,8 @@ def userInsert():
                                                     createdBy   = creatorID,
                                                     createdDate = date.today(),
                                                     status      = status.statusName)
-                # email = emailHandler(formOverload.formHistoryID)
-                # email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+                email = emailHandler(formOverload.formHistoryID)
+                email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
             else:
                 historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
                 FormHistory.create( formID = lsf.laborStatusFormID,
@@ -148,19 +148,6 @@ def userInsert():
                                                     createdBy   = creatorID,
                                                     createdDate = date.today(),
                                                     status      = status.statusName)
-
-            termCode = str(term)[-2:]
-
-            if "stuTotalHours" in rspFunctional[i] and termCode in ["11", "12", "00"]:
-                if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
-                    formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
-                                                      historyType = historyType.historyTypeName,
-                                                      overloadForm = newLaborOverloadForm.overloadFormID,
-                                                      createdBy   = creatorID,
-                                                      createdDate = date.today(),
-                                                      status      = status.statusName)
-                    email = emailHandler(formOverload.formHistoryID)
-                    email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
             try:
                 # sending emails during break period
                 isOneLSF = json.loads(checkForSecondLSFBreak(term, studentID, "lsf"))
@@ -183,7 +170,7 @@ def userInsert():
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
-            print("ERROR: What happened here? " + str(e))
+            print("ERROR on creating Labor Status Form/Overload Form" + str(e))
 
     return jsonify(all_forms)
 
