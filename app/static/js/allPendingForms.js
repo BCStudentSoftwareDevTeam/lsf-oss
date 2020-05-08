@@ -7,7 +7,7 @@ $(document).ready( function(){
         // "dom": '<"top"fl>rt<"bottom"p><"clear">'
     });
 });
-
+ // Rather than refreshing page, just empty out this dictionary or empty modal
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
@@ -24,6 +24,8 @@ function insertApprovals() {
     $("#approveOverload").prop("disabled",true);
     $("#approveRelease").prop("disabled",true);
 
+    // **FIXME**
+    // We should not reload the page after the button has been clicked
      location.reload();
        }
     var data = JSON.stringify(labor_details_ids);
@@ -103,19 +105,19 @@ function finalDenial_data(returned_details){
   for (var i = 0; i < returned_details.length; i++){
     var student=returned_details[i][0];
     var position= returned_details[i][1];
-     var r_hour= returned_details[i][3];
-     var c_Hours= returned_details[i][4];
-      var supervisor= returned_details[i][2];
-      var hours = " ";
-      if (r_hour.length==4){
-        hours = c_Hours;
+    var r_hour= returned_details[i][3];
+    var c_Hours= returned_details[i][4];
+    var supervisor= returned_details[i][2];
+    var hours = " ";
+    if (r_hour.length==4){
+      hours = c_Hours;
+    }
+    else {
+      hours = r_hour;
+    }
+    $('#denialPendingForms').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>'); //populate the denial modal for all pending forms
       }
-      else {
-        hours = r_hour;
-      }
-      $('#denialPendingForms').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>'); //populate the denial modal for all pending forms
-        }
-      }
+    }
 
  function finalDenial() {// this mehod is AJAX call for the finalDenial method in python file
    var data = JSON.stringify(labor_denial_id);
@@ -226,7 +228,7 @@ function denyReason(labor_denial_id) {
 
 function finalDeny() { //this function will update the form status and the reject reason at the same time
  finalDenial();
- denyReason(labor_denial_id);
+ // denyReason(labor_denial_id);
 }
 function createTabledataDictionary() { // puts all of the forms into dictionaries
   var listDictAJAX = [];

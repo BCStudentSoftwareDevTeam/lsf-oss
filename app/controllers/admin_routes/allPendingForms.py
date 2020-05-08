@@ -77,12 +77,6 @@ def approved_and_denied_Forms():
     This function gets the forms that are checked by the user and inserts them into the database
     '''
     try:
-        current_user = require_login()
-        if not current_user:                    # Not logged in
-            return render_template('errors/403.html')
-        if not current_user.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html')
-
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
             approved_details =  modal_approval_and_denial_data(rsp)
@@ -99,6 +93,7 @@ def finalUpdateStatus(raw_status):
         new_status = "Approved"
     elif raw_status == 'denied':
         new_status = "Denied"
+        # Here, we know its denied so we take off the last element in the list
     else:
         print("Unknown status: ", raw_status)
         return jsonify({"success": False})
@@ -106,7 +101,11 @@ def finalUpdateStatus(raw_status):
     try:
         createdUser = User.get(username = cfg['user']['debug'])
         rsp = eval(request.data.decode("utf-8"))
+        if new_status = 'Denied':
+            denyReason = rsp[1]
+            rsp = rsp[:1]
         for id in rsp:
+            print('This is the list', rsp)
             history_type_data = FormHistory.get(FormHistory.formHistoryID == int(id))
             history_type = str(history_type_data.historyType)
 
@@ -240,12 +239,6 @@ def denyReason(labor_denial_id):
     This function saves the denial reason in the database.
     '''
     try:
-        current_user = require_login()
-        if not current_user:                    # Not logged in
-            return render_template('errors/403.html')
-        if not current_user.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html')
-
         rsp = request.data.decode("utf-8")
         # rspFunctional = json.dumps(rsp
         reason = FormHistory.get(FormHistory.formHistoryID == labor_denial_id)
