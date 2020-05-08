@@ -141,10 +141,13 @@ def populateModal(statusKey):
                             buttonState = 0 #Only rehire
                             break
                     elif form.status.statusName == "Approved":
-
                         if currentDate <= form.formID.termCode.termEnd:
-                            buttonState = 3 #Release, modify, and rehire buttons
-                            break
+                            if currentDate > form.formID.termCode.adjustmentCutOff:
+                                buttonState = 4 #Release and rehire buttons
+                                break
+                            else:
+                                buttonState = 3 #Release, adjustment, and rehire buttons
+                                break
                         elif currentDate > form.formID.termCode.termEnd:
                             buttonState = 0 #Only rehire
                             break
