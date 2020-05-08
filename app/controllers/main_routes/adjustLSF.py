@@ -13,6 +13,7 @@ from flask import json, jsonify
 from flask import request
 from flask import flash
 import base64
+from datetime import date
 from app import cfg
 from app.logic.emailHandler import*
 
@@ -27,9 +28,14 @@ def adjustLSF(laborStatusKey):
         isLaborAdmin = False
     else:
         isLaborAdmin = True
+    currentDate = date.today()
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
     form = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+    # If todays date is greater than the adjustment cut off date on the term, then we do not want to 
+    # give users access to the adjustment page
+    if currentDate > form.termCode.adjustmentCutOff:
+        return render_template('errors/403.html')
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME

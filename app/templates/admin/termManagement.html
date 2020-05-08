@@ -44,14 +44,23 @@
             <th>Term Name</th>
             <th>Start Date</th>
             <th>End Date</th>
-            <th>Primary Labor Status Forms Due
+            <th>Primary Forms Due
               <span data-toggle="tooltip"
                     data-tooltip="true"
                     title="After this day, labor supervisor will not be able
-                    to submit any primary positions for students"
+                    to submit any primary positions for students."
                     data-placement="right"
                     class="glyphicon glyphicon-bookmark">
              </span>
+            </th>
+            <th>Adjustments Due
+                  <span data-toggle="tooltip"
+                    data-tooltip="true"
+                    title="After this day, labor supervisors will not be able
+                    to submit any adjustment forms for students."
+                    data-placement="right"
+                    class="glyphicon glyphicon-bookmark">
+                  </span>
             </th>
             <th>Term State
                   <span data-toggle="tooltip"
@@ -78,9 +87,9 @@
                           placeholder="MM/DD/YYYY"
                           value="{% if term.termStart != None %}{{term.termStart.strftime('%m/%d/%Y')}}{% endif %}"
                       />
-                      <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                      </span>
+                      <label class="input-group-addon" for="start_{{term.termCode}}">
+                          <i class="glyphicon glyphicon-calendar"></i>
+                      </label>
                     </div>
                   </td>
                   <td>
@@ -92,9 +101,9 @@
                           placeholder="MM/DD/YYYY"
                           value="{% if term.termEnd != None %}{{term.termEnd.strftime('%m/%d/%Y')}}{% endif %}"
                       />
-                      <span class="input-group-addon">
-                          <span class="glyphicon glyphicon-calendar"></span>
-                      </span>
+                      <label class="input-group-addon" for="end_{{term.termCode}}">
+                          <i class="glyphicon glyphicon-calendar"></i>
+                      </label>
                       </div>
                     </td>
                     <td>
@@ -106,12 +115,26 @@
                             placeholder="MM/DD/YYYY"
                             value="{% if term.primaryCutOff != None %}{{term.primaryCutOff.strftime('%m/%d/%Y')}}{% endif %}"
                         />
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
+                        <label class="input-group-addon" for="primaryCutOff_{{term.termCode}}">
+                          <i class="glyphicon glyphicon-calendar"></i>
+                        </label>
                         </div>
                       </td>
-                    <td>
+                      <td>
+                        <div class="input-group date">
+                          <input id="adjustmentCutOff_{{term.termCode}}"
+                              onchange="getDate(this, {{term.termCode}});"
+                              type="text"
+                              class="form-control datepicker adjustmentCutOff"
+                              placeholder="MM/DD/YYYY"
+                              value="{% if term.adjustmentCutOff != None %}{{term.adjustmentCutOff.strftime('%m/%d/%Y')}}{% endif %}"
+                          />
+                          <label class="input-group-addon" for="adjustmentCutOff_{{term.termCode}}">
+                            <i class="glyphicon glyphicon-calendar"></i>
+                          </label>
+                          </div>
+                        </td>
+                    <td style='width:10%'>
                        <button
                          {% if term.termStart == None or term.termEnd == None or term.termState == None %} disabled {% endif %}
                          id="term_btn_{{term.termCode}}"
