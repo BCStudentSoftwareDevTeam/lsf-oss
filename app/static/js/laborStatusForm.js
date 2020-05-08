@@ -59,10 +59,7 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
 function checkIfFreshman() {
   var jobType = $("#jobType").val();
   var wls = $("#position :selected").attr("data-wls")
-  console.log(wls)
-  console.log(jobType);
   var classLevel = $("#student :selected").attr("data-stuCL");
-  console.log(classLevel);
   if (classLevel == "Freshman" && jobType == "Secondary") {
     laborStatusFormNote = "Warning! This student has freshman classification with either a secondary position or a primary position with a WLS greater than 1. Make sure they meet the requirements for these positions.";
   }
@@ -118,8 +115,6 @@ function fillDates(response) { // prefill term start and term end
     if (primaryCutOff){
       if (termCode != "00" && termCode != "11" && termCode != "12"){ // Checking to see if the termcode is a break one
         if (date > primaryCutOff){
-        console.log(date);
-        console.log(primaryCutOff);
         msgFlash("The deadline to add break positions has ended.", "fail");
         $("#break-cutoff-warning").show();
         $("#break-cutoff-date").text(primaryCutOff);
@@ -128,8 +123,6 @@ function fillDates(response) { // prefill term start and term end
       }
       else{
         if (date > primaryCutOff){
-          console.log(date);
-          console.log(primaryCutOff);
           $("#jobType option[value='Primary']").attr("disabled", true );
           $('.selectpicker').selectpicker('refresh');
           msgFlash("Disabling primary position because cut off date is before today's date", "fail");
@@ -279,6 +272,8 @@ function checkWLS() {
 
 // Check if department is in compliance.
 function checkCompliance(obj) {
+  $("#dept-compliance-warning").hide();
+  $("#departmentClass").removeClass(" has-error")
   var department = $(obj).val();
   var url = "/laborstatusform/getcompliance/" + department;
       $.ajax({
@@ -291,17 +286,14 @@ function checkCompliance(obj) {
             $("#warningModalText").html("Department is out of compliance because position descriptions are not up to date. Please contact labor office to update your position description.");
             $(".disable").prop("disabled", true);
             $("#addMoreStudent").prop("disabled", true);
-            $("#reviewButton0").prop("disabled", true);
-            $("#submitmodalid").prop("disabled", true);
-            $("#addMoreStudent").button("refresh");
-            $("#reviewButton0").button("refresh");
-            $("#submitmodalid").button("refresh");
             $("#selectedTerm").selectpicker("refresh");
             $("#student").selectpicker("refresh");
             $("#position").selectpicker("refresh");
             $("#selectedSupervisor").selectpicker("refresh");
             $("#selectedDepartment").selectpicker("refresh");
-
+            $("#dept-name-compliance").text(department);
+            $("#dept-compliance-warning").show();
+            $("#departmentClass").addClass(" has-error")
           }
           else{
             $(".disable").prop("disabled", false);
@@ -616,7 +608,6 @@ function isOneLaborStatusForm(studentDict){
       url: url,
       dataType: "json",
       success: function (response){
-        console.log(response["Status"]);
         if(response["ShowModal"] == true){
         // if they already have one lsf or multiple (response if false) then show modal reminding the new supervisor of 40 hour mark rule.
           $("#warningModalTitle").text("Warning");
