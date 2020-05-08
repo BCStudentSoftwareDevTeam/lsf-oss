@@ -455,7 +455,6 @@ function createStuDict(){
                     stuJobType: jobTypeName,
                     stuWeeklyHours: parseInt(hoursPerWeekName, 10),
                     stuContractHours: parseInt(selectedContractHoursName, 10),
-                    stuTotalHours: null,
                     stuWLS: wls,
                     stuStartDate: startDate,
                     stuEndDate: endDate,
