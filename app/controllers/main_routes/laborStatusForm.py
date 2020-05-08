@@ -102,7 +102,7 @@ def userInsert():
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
-            print("ERROR: What happened here? " + str(e))
+            print("ERROR on creating Labor Status Form/Overload Form" + str(e))
 
     return jsonify(all_forms)
 
@@ -143,14 +143,6 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
             for item in positions:
                 isMoreLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME
                 isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
-                # FIXME: Send email to both supervisors and student (for more than one lsf). Send it to all supervisors.
-                # laborStatusKey = item.laborStatusFormID
-                # # print(" Labor Status Forms for Break", item.laborStatusFormID)
-                # selectedFormHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
-                # # print("Form History", selectedFormHistory.formHistoryID)
-                # email = emailHandler(selectedFormHistory.formHistoryID)
-                # email.laborStatusFormSubmittedForBreak()
-        # FIXME: Send email to the supervisor and student (for the first lsf)
         return jsonify(isMoreLSF_dict)
 
     positionsList = []
