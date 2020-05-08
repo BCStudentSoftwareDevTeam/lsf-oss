@@ -59,10 +59,7 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
 function checkIfFreshman() {
   var jobType = $("#jobType").val();
   var wls = $("#position :selected").attr("data-wls")
-  console.log(wls)
-  console.log(jobType);
   var classLevel = $("#student :selected").attr("data-stuCL");
-  console.log(classLevel);
   if (classLevel == "Freshman" && jobType == "Secondary") {
     laborStatusFormNote = "Warning! This student has freshman classification with either a secondary position or a primary position with a WLS greater than 1. Make sure they meet the requirements for these positions.";
   }
@@ -118,8 +115,6 @@ function fillDates(response) { // prefill term start and term end
     if (primaryCutOff){
       if (termCode != "00" && termCode != "11" && termCode != "12"){ // Checking to see if the termcode is a break one
         if (date > primaryCutOff){
-        console.log(date);
-        console.log(primaryCutOff);
         msgFlash("The deadline to add break positions has ended.", "fail");
         $("#break-cutoff-warning").show();
         $("#break-cutoff-date").text(primaryCutOff);
@@ -128,8 +123,6 @@ function fillDates(response) { // prefill term start and term end
       }
       else{
         if (date > primaryCutOff){
-          console.log(date);
-          console.log(primaryCutOff);
           $("#jobType option[value='Primary']").attr("disabled", true );
           $('.selectpicker').selectpicker('refresh');
           msgFlash("Disabling primary position because cut off date is before today's date", "fail");
@@ -463,6 +456,7 @@ function createStuDict(){
                     stuJobType: jobTypeName,
                     stuWeeklyHours: parseInt(hoursPerWeekName, 10),
                     stuContractHours: parseInt(selectedContractHoursName, 10),
+                    stuTotalHours: null,
                     stuWLS: wls,
                     stuStartDate: startDate,
                     stuEndDate: endDate,
@@ -616,7 +610,6 @@ function isOneLaborStatusForm(studentDict){
       url: url,
       dataType: "json",
       success: function (response){
-        console.log(response["Status"]);
         if(response["ShowModal"] == true){
         // if they already have one lsf or multiple (response if false) then show modal reminding the new supervisor of 40 hour mark rule.
           $("#warningModalTitle").text("Warning");
@@ -629,8 +622,10 @@ function isOneLaborStatusForm(studentDict){
   }
 }
 
-storeTotalHours = {}
 function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
+    var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
+    var termCodeLastTwo = termCodeSelected.slice(-2);
+    var academicYear = ["11", "12", "00"]
     totalHoursCount = studentDict.stuWeeklyHours;
     for (i = 0; i < globalArrayOfStudents.length; i++){
       if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
@@ -641,12 +636,14 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
   for (i = 0; i < databasePositions.length; i++){
     totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
   }
-  if (totalHoursCount > (15)){
+  if (totalHoursCount > (15) && academicYear.includes(termCodeLastTwo)){
     studentDict.isItOverloadForm = "True";
     $('#OverloadModal').modal('show');
   }
+  studentDict.stuTotalHours = totalHoursCount
   return true;
 }
+
 //Triggered when summer labor is clicked when making a New Labor Status Form
 function summerLaborWarning(){
   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
@@ -724,15 +721,16 @@ function userInsert(){
                term = $("#selectedTerm").val();
                var whichTerm = parseInt(term.toString().substr(-2));
                modalList = [];
-               if (response.includes(false)){ // if there is even one false value in response
-                   for(var key = 0; key < globalArrayOfStudents.length; key++){
-                       var studentName = globalArrayOfStudents[key].stuName;
-                       var position = globalArrayOfStudents[key].stuPosition;
-                       var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
-                       var jobType = globalArrayOfStudents[key].stuJobType;
-                       var hours = globalArrayOfStudents[key].stuWeeklyHours;
+               for(var key = 0; key < globalArrayOfStudents.length; key++){
+                   var studentName = globalArrayOfStudents[key].stuName;
+                   var position = globalArrayOfStudents[key].stuPosition;
+                   var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
+                   var jobType = globalArrayOfStudents[key].stuJobType;
+                   var hours = globalArrayOfStudents[key].stuWeeklyHours;
+
+                   if (response.includes(false)){ // if there is even one false value in response
                        // var selectedContractHours = globalArrayOfStudents[key].stuWeeklyHours;
-                       if (response[key] === false){
+                       if (response[key] === false){ // Finds the form that has failed.
                            if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
                               display_failed.push(key);
                               var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
@@ -750,15 +748,14 @@ function userInsert(){
                                 var bigString = "<li>"+"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
                             }
                        }
-                       modalList.push(bigString);
-                   }
+                    modalList.push(bigString);
                    $("#SubmitModalText").html("Some of your submitted Labor Status Form(s) did not succeed:<br><br>" +
                                               "<ul style=\"list-style-type:none; display: inline-block;text-align:left;\">" +
                                                modalList.join("</li>")+"</ul>"+""
                                             );
                    $("#closeBtn").hide();
                    $("#SubmitModal").modal("show");
-               }
+                 }
                else{
                     if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
                     var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
@@ -767,7 +764,12 @@ function userInsert(){
                     var bigString = "<li>"+"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
                   }
                  modalList.push(bigString);
-                 $("#SubmitModal").modal("hide");
+                 $("#SubmitModalText").html("Labor Status Form(s) succeeded:<br><br>" +
+                                            "<ul style=\"list-style-type:none; display: inline-block;text-align:left;\">" +
+                                             modalList.join("</li>")+"</ul>"+""
+                                          );
+                 $("#closeBtn").hide();
+                 $("#SubmitModal").modal("show");
                  $("#reviewButton0").prop('disabled',true);
                  $("#addMoreStudent").prop('disabled',true);
                  $("a").attr("onclick", "").unbind("click");
@@ -781,6 +783,7 @@ function userInsert(){
                   }, 5000);
                }
              }
+            }
          }); // ajax closing tag
 
       $("#submitmodalid").hide();
