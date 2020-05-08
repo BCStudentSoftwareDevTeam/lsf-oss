@@ -44,7 +44,8 @@ function status(department, dept_name) {
           $("#dept_" + department).attr("data-order", 1);
           category = "info";
         }
-        $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
+
+        $("#flash_container").html('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
         $("#flasher").delay(3000).fadeOut();
 //        $('#departmentsTable').DataTable().ajax.reload();     #FIXME the table doesn't sort correctly after the ajax response.
       }
