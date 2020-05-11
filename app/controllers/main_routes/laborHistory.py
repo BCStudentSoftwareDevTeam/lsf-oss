@@ -116,7 +116,7 @@ def populateModal(statusKey):
                             break
                 if form.overloadForm != None:
                     if form.status.statusName == "Pending":
-                        buttonState = 1 #Only withdraw button
+                        buttonState = 2 # Withdraw button and modify button
                         break
                     if form.status.statusName == "Denied":
                         if currentDate <= form.formID.termCode.termEnd:

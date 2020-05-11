@@ -8,6 +8,7 @@ from app.models.laborReleaseForm import LaborReleaseForm
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.modifiedForm import ModifiedForm
 from app.models.overloadForm import OverloadForm
+from app.models.adminNotes import AdminNotes
 from app.models.formHistory import *
 from app.models.term import Term
 from app.logic.banner import Banner
@@ -182,18 +183,18 @@ def getNotes(formid):
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
-        notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid)
-        notesDict = {}
-        if notes.supervisorNotes:
-            notesDict["supervisorNotes"] = notes.supervisorNotes
-
-        if notes.laborDepartmentNotes:
-            listOfNotes = json.loads(notes.laborDepartmentNotes)
-            notesDict["laborDepartmentNotes"] = ""
-            for i in listOfNotes:
-                singleNote = "<dl class='dl-horizontal text-left'>" + i + "</dl>"
-                notesDict["laborDepartmentNotes"] = notesDict["laborDepartmentNotes"] + singleNote
-        return jsonify(notesDict)
+        supervisorNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid) # Gets Supervisor note
+        notes = AdminNotes.select().where(AdminNotes.formID == formid) # Gets labor department notes from the laborofficenotes table
+        notesDict = {}          # Stores the both types of notes
+        if supervisorNotes.supervisorNotes: # If there is a supervisor note, store it in notesDict
+            notesDict["supervisorNotes"] = supervisorNotes.supervisorNotes
+        if len(notes) > 0: # If there are labor office notes, format, and store them in notesDict
+            listOfNotes = []
+            for i in range(len(notes)):
+                formattedDate = notes[len(notes) -  i - 1].date.strftime('%m/%d/%Y')   # formatting date in the database to display MM/DD/YYYY
+                listOfNotes.append("<dl class='dl-horizontal text-left'> <b>" + formattedDate + " | <i>" + notes[len(notes) -  i - 1].createdBy.FIRST_NAME[0] + ". " + notes[len(notes) -  i - 1].createdBy.LAST_NAME + "</i> | </b> " + notes[len(notes) -  i - 1].notesContents + "</dl>")
+            notesDict["laborDepartmentNotes"] = listOfNotes
+        return jsonify(notesDict)     # return as JSON
 
     except Exception as e:
         print("error", e)
@@ -210,23 +211,14 @@ def insertNotes(formId):
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
-        current_user_string = str(current_user.FIRST_NAME[0] + "." + " " + current_user.LAST_NAME) #Getting the name of the current user in a string and formatting it for the note.  Up for change, we'll demo it
         rsp = eval(request.data.decode("utf-8"))
         stripresponse = rsp.strip()
-        currentDate = datetime.now().strftime("%m/%d/%y")
-        notes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
-        laborDeptNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formId)
+        currentDate = datetime.now().strftime("%Y-%m-%d")  # formats the date to match the peewee format for the database
 
         if stripresponse:
-            stripresponse = "<dt>" + str(currentDate) + " - " + current_user_string + ":" + "</dt>" + "<dd>" + stripresponse + "</dd>" #adding the name of the user to the stripresponse that is the note.
-            listOfNotes = [stripresponse]
-            if notes.laborDepartmentNotes != None:
-                listOfNotesJson = json.loads(notes.laborDepartmentNotes)
-                for i in listOfNotesJson:
-                    listOfNotes.append(i)
-            listOfNotesJson = json.dumps(listOfNotes)
-            laborDeptNotes.laborDepartmentNotes = listOfNotesJson
-            laborDeptNotes.save() #Updates labor notes
+            AdminNotes.create(formID=formId, createdBy=current_user.UserID, date=currentDate, notesContents=stripresponse) # creates a new entry in the laborOfficeNotes table
+            AdminNotes.save()
+
             return jsonify({"Success": True})
 
         elif stripresponse=="" or stripresponse==None:
