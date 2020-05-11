@@ -155,7 +155,6 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
         positionsDict["POSN_CODE"] = item.POSN_CODE
         positionsDict["primarySupervisorName"] = item.supervisor.FIRST_NAME
         positionsDict["primarySupervisorLastName"] = item.supervisor.LAST_NAME
-        # positionsDict["primarySupervisorUserName"] = item.supervisor.username #Passes Primary Supervisor's username if necessary
         positionsList.append(positionsDict)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
 

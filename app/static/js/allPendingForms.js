@@ -24,23 +24,23 @@ function insertApprovals() {
     $("#approveOverload").prop("disabled",true);
     $("#approveRelease").prop("disabled",true);
 
-     location.reload();
-       }
-    var data = JSON.stringify(labor_details_ids);
-   $.ajax({
-     type: "POST",
-     url: "/admin/checkedForms",
-     datatype: "json",
-     data: data,
-     contentType: 'application/json',
-     success: function(response){
-       if (response){
-         var returned_details = response;
-         updateApproveTableData(returned_details);
-              }
-            }
-          });
+    location.reload();
+  }
+  var data = JSON.stringify(labor_details_ids);
+  $.ajax({
+    type: "POST",
+    url: "/admin/checkedForms",
+    datatype: "json",
+    data: data,
+    contentType: 'application/json',
+    success: function(response){
+      if (response){
+        var returned_details = response;
+        updateApproveTableData(returned_details);
+        }
       }
+    });
+  }
 //this method adds data to each row in the approve selected Modal
 function updateApproveTableData(returned_details){
   for (var i = 0; i < returned_details.length; i++){
@@ -78,11 +78,11 @@ function finalApproval() { //this method changes the status of the lsf from pend
    });
  }
 
-var labor_denial_id=[]; //this arrary is for insertDenial() and finalDenial() methods
+var laborDenialInfo=[]; //this arrary is for insertDenial() and finalDenial() methods
 //This method calls AJAX from checkforms methods in the controller
 function insertDenial(val){
-    labor_denial_id.push(val);
-    var data = JSON.stringify(labor_denial_id);
+    laborDenialInfo.push(val);
+    var data = JSON.stringify(laborDenialInfo);
    $.ajax({
      type: "POST",
      url: "/admin/checkedForms",
@@ -103,22 +103,22 @@ function finalDenial_data(returned_details){
   for (var i = 0; i < returned_details.length; i++){
     var student=returned_details[i][0];
     var position= returned_details[i][1];
-     var r_hour= returned_details[i][3];
-     var c_Hours= returned_details[i][4];
-      var supervisor= returned_details[i][2];
-      var hours = " ";
-      if (r_hour.length==4){
-        hours = c_Hours;
+    var r_hour= returned_details[i][3];
+    var c_Hours= returned_details[i][4];
+    var supervisor= returned_details[i][2];
+    var hours = " ";
+    if (r_hour.length==4){
+      hours = c_Hours;
+    }
+    else {
+      hours = r_hour;
+    }
+    $('#denialPendingForms').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>'); //populate the denial modal for all pending forms
       }
-      else {
-        hours = r_hour;
-      }
-      $('#denialPendingForms').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>'); //populate the denial modal for all pending forms
-        }
-      }
+    }
 
  function finalDenial() {// this mehod is AJAX call for the finalDenial method in python file
-   var data = JSON.stringify(labor_denial_id);
+   var data = JSON.stringify(laborDenialInfo);
    $.ajax({
      type: "POST",
      url: "/admin/updateStatus/denied",
@@ -204,6 +204,22 @@ function getNotes (formId) {
           }
         });
      }
+
+function finalDeny() {
+  /*
+  This method will first check if the deny reason text area has been populated, and if
+  it is then the method to update the form with the reject reason will be called
+  */
+  var denyReason = $('#denyReason').val()
+  if (denyReason == ''){
+    $('#denyReason').attr("placeholder", 'A reason for denial is required to deny the form')
+    $('#denyReason').css('border-color', 'red');
+  }
+  else{
+    laborDenialInfo.push(denyReason)
+    finalDenial();
+  }
+}
 
 function createTabledataDictionary() { // puts all of the forms into dictionaries
   var listDictAJAX = [];
