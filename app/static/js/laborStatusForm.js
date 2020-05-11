@@ -484,7 +484,6 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
 }
 
 function checkPrimaryPositionToCreateTheTable(studentDict){
-  var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
   var term = $("#selectedTerm").val();
   var url = "/laborstatusform/getstudents/" + term +"/" +studentDict.stuBNumber;
   $.ajax({
@@ -502,7 +501,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
                   $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
                   $("#warningModal").modal("show");
               }
-              else if(studentDict.stuJobType == "Secondary"){ // If it is secondary allow adding LSF
+              else if(studentDict.stuJobType == "Secondary" && (status_list.some((val) => rejectionStatus.indexOf(val) !== -1))){ // If it is secondary allow adding LSF
                 if (checkDuplicate(studentDict) == true) {
                   checkTotalHours(studentDict, response);
                   createAndFillTable(studentDict);
@@ -511,7 +510,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
                   insertRejectedModal(studentDict);
                 }
               }
-            else{
+             else{
               initialLSFInsert(studentDict, response, status_list) // If the precious primary position is Denied allow the user to continue with the new primary LSF
             }
         }
@@ -523,6 +522,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
 }
 
 function initialLSFInsert(studentDict, response, status_list = []){ //Add student info to the table if they have no previous lfs's in the database
+  var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
   if(studentDict.stuJobType == "Primary"){
     if (checkDuplicate(studentDict) == true){
       checkTotalHours(studentDict, response);
