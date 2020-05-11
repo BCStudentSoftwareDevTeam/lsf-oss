@@ -69,6 +69,7 @@ function checkIfFreshman() {
   else {
     laborStatusFormNote = null;
   }
+  searchDataToPrepareToCheckPrimaryPosition();
 }
 
 function disableTermSupervisorDept() {
@@ -272,6 +273,8 @@ function checkWLS() {
 
 // Check if department is in compliance.
 function checkCompliance(obj) {
+  $("#dept-compliance-warning").hide();
+  $("#departmentClass").removeClass(" has-error")
   var department = $(obj).val();
   var url = "/laborstatusform/getcompliance/" + department;
       $.ajax({
@@ -284,17 +287,14 @@ function checkCompliance(obj) {
             $("#warningModalText").html("Department is out of compliance because position descriptions are not up to date. Please contact labor office to update your position description.");
             $(".disable").prop("disabled", true);
             $("#addMoreStudent").prop("disabled", true);
-            $("#reviewButton0").prop("disabled", true);
-            $("#submitmodalid").prop("disabled", true);
-            $("#addMoreStudent").button("refresh");
-            $("#reviewButton0").button("refresh");
-            $("#submitmodalid").button("refresh");
             $("#selectedTerm").selectpicker("refresh");
             $("#student").selectpicker("refresh");
             $("#position").selectpicker("refresh");
             $("#selectedSupervisor").selectpicker("refresh");
             $("#selectedDepartment").selectpicker("refresh");
-
+            $("#dept-name-compliance").text(department);
+            $("#dept-compliance-warning").show();
+            $("#departmentClass").addClass(" has-error")
           }
           else{
             $(".disable").prop("disabled", false);
@@ -456,7 +456,6 @@ function createStuDict(){
                     stuJobType: jobTypeName,
                     stuWeeklyHours: parseInt(hoursPerWeekName, 10),
                     stuContractHours: parseInt(selectedContractHoursName, 10),
-                    stuTotalHours: null,
                     stuWLS: wls,
                     stuStartDate: startDate,
                     stuEndDate: endDate,
