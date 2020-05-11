@@ -66,7 +66,14 @@
                 {% for allForms in formList %}
                 <tr id="tableData" class="tableData" align="center">
                     <td> {# APPROVE #}
+                      {% if allForms.historyType.historyTypeName != 'Labor Overload Form' %}
                       <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" name="check[]"  autocomplete="off" />
+                      {% else %}
+                      {% with modalTarget = modalTarget %}
+                        {% include "snips/pendingOverloadModal.html" %}
+                      {% endwith %}
+                      <input type='checkbox' id='{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" data-toggle="modal" data-target="#modalOverload" onclick="loadOverloadModal()" name="check[]"  autocomplete="off" />
+                      {% endif %}
                       {% include "snips/pendingNotesModal.html" %}
                       <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
                              class="glyphicon glyphicon-edit btn-lg
@@ -109,6 +116,7 @@
                     {% with modalTarget = modalTarget %}
                       {% include "snips/FormsDeny.html" %}
                     {% endwith %}
+                    {% if allForms.historyType.historyTypeName != 'Labor Overload Form' %}
                     <button
                     id="reject_{{allForms.formHistoryID}}"
                     value="{{allForms.formHistoryID}}"
@@ -121,6 +129,20 @@
                     onclick="insertDenial(this.value);">
                     Deny
                     </button>
+                    {% else %}
+                    <button
+                    id="{{allForms.formHistoryID}}"
+                    value="{{allForms.formHistoryID}}"
+                    type="button"
+                    class ="btn btn-info"
+                    name = "overloadBtn"
+                    value = "Overload"
+                    data-toggle="modal"
+                    data-target="#modalOverload"
+                    onclick="loadOverloadModal();">
+                    Deny
+                    </button>
+                    {% endif %}
                   </td>
                 </tr>
                 {% endfor %}

@@ -285,3 +285,7 @@ function clearTextArea(){ //makes sure that it empties text areas and p tags whe
   $("#notesText").empty();
   $("#laborNotesText").empty();
 }
+
+function loadOverloadModal(){
+  alert('Made it in here')
+}
