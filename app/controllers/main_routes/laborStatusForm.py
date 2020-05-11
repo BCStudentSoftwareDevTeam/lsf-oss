@@ -120,7 +120,7 @@ def userInsert():
             status = Status.get(Status.statusName == "Pending")
             d, created = User.get_or_create(username = cfg['user']['debug'])
             creatorID = d.UserID
-            if rspFunctional[i]["isItOverloadForm"] == "True":
+            if rspFunctional[i].get("isItOverloadForm") == "True":
                 historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
                 newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
                                                             financialAidApproved = None,
@@ -217,9 +217,6 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     positionsList = []
     for item in positions:
         statusHistory = FormHistory.get(FormHistory.formID == item.laborStatusFormID)
-        # for i in statusHistory:
-        #     positionsDict["positionStatus"] = statusHistory.status
-        print("positionStatus", statusHistory.status)
         positionsDict = {}
         positionsDict["weeklyHours"] = item.weeklyHours
         positionsDict["contractHours"] = item.contractHours
