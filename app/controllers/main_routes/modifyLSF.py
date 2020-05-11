@@ -18,7 +18,6 @@ from app.logic.emailHandler import*
 from http import cookies
 import os
 
-
 @main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
 def modifyLSF(laborStatusKey):
     ''' This function gets all the form's data and populates the front end with it'''

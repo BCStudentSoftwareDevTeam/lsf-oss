@@ -19,6 +19,7 @@ from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 from app import cfg
 from app.logic.emailHandler import*
+from app.logic.userInsertFunctions import*
 
 @main_bp.route('/laborstatusform', methods=['GET'])
 @main_bp.route('/laborstatusform/<laborStatusKey>', methods=['GET'])
@@ -64,31 +65,19 @@ def laborStatusForm(laborStatusKey = None):
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
-    """ Create labor status form. Create labor history form."""
+    """ Create labor status form. Create labor history form. Most of the functions called here are in userInsertFunctions.py"""
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
-    print('rsp'  + str(rspFunctional))
     all_forms = []
     for i in range(len(rspFunctional)):
         tracyStudent = STUDATA.get(ID = rspFunctional[i]['stuBNumber']) #Gets student info from Tracy
-        print("Tracy student" + str(tracyStudent))
         #Tries to get a student with the followin information from the database
         #if the student doesn't exist, it tries to create a student with that same information
         try:
-            d, created = Student.get_or_create(ID = tracyStudent.ID,
-                                                FIRST_NAME = tracyStudent.FIRST_NAME,
-                                                LAST_NAME = tracyStudent.LAST_NAME,
-                                                CLASS_LEVEL = tracyStudent.CLASS_LEVEL,
-                                                ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS,
-                                                MAJOR = tracyStudent.MAJOR,
-                                                PROBATION = tracyStudent.PROBATION,
-                                                ADVISOR = tracyStudent.ADVISOR,
-                                                STU_EMAIL = tracyStudent.STU_EMAIL,
-                                                STU_CPO = tracyStudent.STU_CPO,
-                                                LAST_POSN = tracyStudent.LAST_POSN,
-                                                LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
+            getOrCreateStudentData(tracyStudent)
         except Exception as e:
             print("ERROR: ", e)
+
         student = Student.get(ID = tracyStudent.ID)
         studentID = student.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
@@ -97,76 +86,19 @@ def userInsert():
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
         term = d.termCode
-
-        # Changes the dates into the appropriate format for the table
-        startDate = datetime.strptime(rspFunctional[i]['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
-        endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
         try:
-            lsf = LaborStatusForm.create(termCode_id = term,
-                                         studentSupervisee_id = studentID,
-                                         supervisor_id = primarySupervisor,
-                                         department_id  = department,
-                                         jobType = rspFunctional[i]["stuJobType"],
-                                         WLS = rspFunctional[i]["stuWLS"],
-                                         POSN_TITLE = rspFunctional[i]["stuPosition"],
-                                         POSN_CODE = rspFunctional[i]["stuPositionCode"],
-                                         contractHours = rspFunctional[i].get("stuContractHours", None),
-                                         weeklyHours   = rspFunctional[i].get("stuWeeklyHours", None),
-                                         startDate = startDate,
-                                         endDate = endDate,
-                                         supervisorNotes = rspFunctional[i]["stuNotes"],
-                                         laborDepartmentNotes = rspFunctional[i]["stuLaborNotes"]
-                                         )
+            lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
             status = Status.get(Status.statusName == "Pending")
             d, created = User.get_or_create(username = cfg['user']['debug'])
             creatorID = d.UserID
-            if rspFunctional[i]["isItOverloadForm"] == "True":
-                historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
-                newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
-                                                            financialAidApproved = None,
-                                                            financialAidApprover = None,
-                                                            financialAidReviewDate = None,
-                                                            SAASApproved = None,
-                                                            SAASApprover = None,
-                                                            SAASReviewDate = None,
-                                                            laborApproved = None,
-                                                            laborApprover = None,
-                                                            laborReviewDate = None)
-                formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
-                                                    historyType = historyType.historyTypeName,
-                                                    overloadForm = newLaborOverloadForm.overloadFormID,
-                                                    createdBy   = creatorID,
-                                                    createdDate = date.today(),
-                                                    status      = status.statusName)
-                email = emailHandler(formOverload.formHistoryID)
-                email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
-            else:
-                historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-                FormHistory.create( formID = lsf.laborStatusFormID,
-                                                    historyType = historyType.historyTypeName,
-                                                    overloadForm = None,
-                                                    createdBy   = creatorID,
-                                                    createdDate = date.today(),
-                                                    status      = status.statusName)
+            createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
+            createBreakHistory(rspFunctional[i], lsf, creatorID, status)
+
             try:
-                # sending emails during break period
-                isOneLSF = json.loads(checkForSecondLSFBreak(term, studentID, "lsf"))
-                if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
-                    primaryFormHistoryID = ""
-                    if(isOneLSF["lsfFormID"] != []): # if there is only one labor status form, do nothing. Otherwise, send emails to the previous supervisors
-                        for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
-                            primaryFormHistories = FormHistory.select().where(FormHistory.formID == lsfID)
-                            for primaryFormHistory in primaryFormHistories:
-                                primaryFormHistoryID = primaryFormHistory.formHistoryID
-                            emailPrimSupBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
-                            emailPrimSupBreakLSF.notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak() #send email to all of the previous supervisors
-                        emailForBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
-                        emailForBreakLSF.notifySecondLaborStatusFormSubmittedForBreak() #send email to student and supervisor for the current lsf break form
-                else: # Student has only one lsf, send email to student and supervisor
-                    email = emailHandler(formHistory.formHistoryID)
-                    email.laborStatusFormSubmittedForBreak()
+                emailDuringBreak(checkForSecondLSFBreak(term, studentID, "lsf"))
             except Exception as e:
                 print("Error on sending emails during break: " + str(e))
+
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
@@ -203,6 +135,7 @@ def getPositions(department):
 def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+
     isMoreLSF_dict = {}
     if isOneLSF !=None:
         isMoreLSF_dict["Status"] = True # student does not have any previous lsf's
@@ -215,6 +148,7 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
 
     positionsList = []
     for item in positions:
+        statusHistory = FormHistory.get(FormHistory.formID == item.laborStatusFormID)
         positionsDict = {}
         positionsDict["weeklyHours"] = item.weeklyHours
         positionsDict["contractHours"] = item.contractHours
@@ -223,7 +157,7 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
         positionsDict["POSN_CODE"] = item.POSN_CODE
         positionsDict["primarySupervisorName"] = item.supervisor.FIRST_NAME
         positionsDict["primarySupervisorLastName"] = item.supervisor.LAST_NAME
-        # positionsDict["primarySupervisorUserName"] = item.supervisor.username #Passes Primary Supervisor's username if necessary
+        positionsDict["positionStatus"] = statusHistory.status.statusName
         positionsList.append(positionsDict)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
 

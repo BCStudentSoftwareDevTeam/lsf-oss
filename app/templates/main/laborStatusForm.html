@@ -27,6 +27,9 @@
   <div id="break-cutoff-warning" style="color:red;" hidden>
     The last date to add <b>Break</b> positions was <span id="break-cutoff-date"></span>
   </div>
+  <div id="dept-compliance-warning" style="color:red;" hidden>
+    <span id="dept-name-compliance"></span> department is out of compliance.
+  </div>
 </div>
 
 <form id="laborStatusForm">
@@ -48,7 +51,7 @@
           {% endfor %}
         </select>
   </div>
-  <div class="form-group ">
+  <div class="form-group" id="departmentClass">
     <!--selectpicker for department-->
     <label for="selectedDepartment">Department <span type="button" id="departmentInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one department at a time"></span></label>
         <select class="selectpicker"
@@ -189,7 +192,7 @@
           name = "addStudent"
           id="addMoreStudent"
           value = "formSubmission"
-          onclick="checkCompliance(this); checkIfFreshman(); searchDataToPrepareToCheckPrimaryPosition(); disableTermSupervisorDept()">Add Student
+          onclick="checkIfFreshman();">Add Student
   </button>
 </div>
   <br />
