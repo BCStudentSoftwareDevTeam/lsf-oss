@@ -100,7 +100,6 @@ function insertDenial(val){
 
 // this method inserts data to the table of denial popup modal
 function finalDenial_data(returned_details){
-  console.log("finalDenial_data");
   for (var i = 0; i < returned_details.length; i++){
     var student=returned_details[i][0];
     var position= returned_details[i][1];
