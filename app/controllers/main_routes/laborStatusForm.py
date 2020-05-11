@@ -19,7 +19,7 @@ from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 from app import cfg
 from app.logic.emailHandler import*
-from app.controllers.main_routes.userInsertFunctions import*
+from app.logic.userInsertFunctions import*
 
 @main_bp.route('/laborstatusform', methods=['GET'])
 @main_bp.route('/laborstatusform/<laborStatusKey>', methods=['GET'])
