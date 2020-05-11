@@ -8,7 +8,7 @@ from app.models.laborReleaseForm import LaborReleaseForm
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.modifiedForm import ModifiedForm
 from app.models.overloadForm import OverloadForm
-from app.models.laborOfficeNotes import LaborOfficeNotes
+from app.models.adminNotes import AdminNotes
 from app.models.formHistory import *
 from app.models.term import Term
 from app.logic.banner import Banner
@@ -180,7 +180,7 @@ def getNotes(formid):
         if not current_user.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html')
         supervisorNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid) # Gets Supervisor note
-        notes = LaborOfficeNotes.select().where(LaborOfficeNotes.formID == formid) # Gets labor department notes from the laborofficenotes table
+        notes = AdminNotes.select().where(AdminNotes.formID == formid) # Gets labor department notes from the laborofficenotes table
         notesDict = {}          # Stores the both types of notes
         if supervisorNotes.supervisorNotes: # If there is a supervisor note, store it in notesDict
             notesDict["supervisorNotes"] = supervisorNotes.supervisorNotes
@@ -212,8 +212,8 @@ def insertNotes(formId):
         currentDate = datetime.now().strftime("%Y-%m-%d")  # formats the date to match the peewee format for the database
 
         if stripresponse:
-            LaborOfficeNotes.create(formID=formId, createdBy=current_user.UserID, date=currentDate, notesContents=stripresponse) # creates a new entry in the laborOfficeNotes table
-            LaborOfficeNotes.save()
+            AdminNotes.create(formID=formId, createdBy=current_user.UserID, date=currentDate, notesContents=stripresponse) # creates a new entry in the laborOfficeNotes table
+            AdminNotes.save()
 
             return jsonify({"Success": True})
 

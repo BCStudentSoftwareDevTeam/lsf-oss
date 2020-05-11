@@ -16,7 +16,7 @@ from app.models.term import Term
 from app.models.emailTemplate import EmailTemplate
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
-from app.models.laborOfficeNotes import LaborOfficeNotes
+from app.models.adminNotes import AdminNotes
 
 #############################
 # Students (TRACY)
@@ -1459,23 +1459,23 @@ print("emailtemplates added")
 #############################
 #emailtemplates
 #############################
-laborOfficeNotes = [
+adminNotes = [
             {
             "noteHistoryID": 1,
             "formID_id": 2,
             "date":"2020-01-01",
             "createdBy" : 1,
-            "notesContents": "Here we have notes content"
+            "notesContents": "This is the first note"
             },
             {
             "noteHistoryID": 2,
             "formID_id": 2,
-            "date":"2020-01-01",
+            "date":"2020-02-01",
             "createdBy" : 1,
-            "notesContents": "'Tis more notes content"
+            "notesContents": "This is the second note"
             },
        ]
-LaborOfficeNotes.insert_many(laborOfficeNotes).on_conflict_replace().execute()
+AdminNotes.insert_many(adminNotes).on_conflict_replace().execute()
 print("laborOfficeNotes added")
 
 print("Dummy data added")
