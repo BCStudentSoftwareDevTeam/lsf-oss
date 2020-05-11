@@ -15,7 +15,7 @@ from app import cfg
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 
-print("New Branch")
+
 @admin.route('/admin/pendingForms/<formType>',  methods=['GET'])
 def allPendingForms(formType):
     try:

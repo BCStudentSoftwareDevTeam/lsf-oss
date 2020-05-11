@@ -15,6 +15,8 @@ from flask import flash
 import base64
 from app import cfg
 from app.logic.emailHandler import*
+from http import cookies
+import os
 
 
 @main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
@@ -141,7 +143,8 @@ def updateLSF(laborStatusKey):
         email = emailHandler(changedForm.formHistoryID)
         email.laborStatusFormModified()
         flash("Your labor status form has been modified.", "success")
-        # ToDo: input logic here to redirect to prper location
+        # ToDo: input logic here to redirect to proper location
+        # print("new cookie: ", cookie)
         redirect_url = "/laborHistory/"
         return jsonify({"Success":True, "url":redirect_url + student})
 
@@ -149,3 +152,24 @@ def updateLSF(laborStatusKey):
         flash("An error occured.", "danger")
         # print(e)
         return jsonify({"Success": False})
+
+@app.route('/get-cookie/')
+def getCookie():
+    pageClicked = request.cookies.get('pageClicked')
+    print("!!!!! Got pageClicked cookie: ", pageClicked)
+    name = ""
+    color = ""
+    if 'pageClicked' in os.environ:
+        cookie_string = os.environ.get("pageClicked")
+        mycookie = cookies.SimpleCookie()
+        mycookie.load(cookie_string)
+        try:
+            name = mycookie["pageClicked"].value
+        except KeyError:
+            name = ""
+    print("Content-type: text/html\n")
+    if name:
+        print("Cookies Found")
+        print("name:", name)
+    else:
+        print('No cookies name pageClicked found')

@@ -105,7 +105,8 @@
                      {{allForms.formID.startDate.strftime('%m/%d/%y')}} -  {{allForms.formID.endDate.strftime('%m/%d/%y')}}
                   </td>
                   <td> {# EDIT #}
-                    <a href="/modifyLSF/{{allForms.formID.laborStatusFormID}}"> <span id="edit_{{allForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
+                    <a href="/modifyLSF/{{allForms.formID.laborStatusFormID}}" onclick="setCookie();"> <span id="edit_{{allForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
+                    <!-- <a href="goToModifyLsfAndSetCookie({{allForms.formID.laborStatusFormID}})"> <span id="edit_{{allForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a> -->
                     {% with modalTarget = modalTarget %}
                       {% include "snips/FormsDeny.html" %}
                     {% endwith %}
