@@ -143,8 +143,7 @@ def updateLSF(laborStatusKey, cookie):
         email = emailHandler(changedForm.formHistoryID)
         email.laborStatusFormModified()
         flash("Your labor status form has been modified.", "success")
-        # ToDo: input logic here to redirect to proper location
-        if(cookie == "pendingForms"):
+        if(cookie == "pendingForms"):   # if there is a pending forms cookies then redirect to Pending Forms page
             return jsonify({"Success":True, "url":"/admin/pendingForms/all"})
 
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
