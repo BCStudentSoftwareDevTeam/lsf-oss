@@ -77,12 +77,6 @@ def approved_and_denied_Forms():
     This function gets the forms that are checked by the user and inserts them into the database
     '''
     try:
-        current_user = require_login()
-        if not current_user:                    # Not logged in
-            return render_template('errors/403.html')
-        if not current_user.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html')
-
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
             approved_details =  modal_approval_and_denial_data(rsp)
@@ -106,6 +100,13 @@ def finalUpdateStatus(raw_status):
     try:
         createdUser = User.get(username = cfg['user']['debug'])
         rsp = eval(request.data.decode("utf-8"))
+        if new_status == 'Denied':
+            # Index 1 will always hold the reject reason in the list, so we can
+            # set a variable equal to the index value and then slice off the list
+            # item before the iteration
+            denyReason = rsp[1]
+            rsp = rsp[:1]
+
         for id in rsp:
             history_type_data = FormHistory.get(FormHistory.formHistoryID == int(id))
             history_type = str(history_type_data.historyType)
@@ -114,6 +115,7 @@ def finalUpdateStatus(raw_status):
             labor_forms.status = Status.get(Status.statusName == new_status)
             labor_forms.reviewedDate = date.today()
             labor_forms.reviewedBy = createdUser.UserID
+            labor_forms.rejectReason = denyReason
     except Exception as e:
         print("Error preparing form for status update:",type(e).__name__ + ":", e)
         return jsonify({"success": False})
@@ -123,7 +125,7 @@ def finalUpdateStatus(raw_status):
     if new_status == 'Approved':
         try:
             banner_data = prep_banner_data(labor_forms)
-            conn = Banner() 
+            conn = Banner()
             result = conn.insert(banner_data)
             save_status = (result == None)
 
@@ -133,7 +135,7 @@ def finalUpdateStatus(raw_status):
 
         else:
             save_status = True
-        
+
     if save_status:
         labor_forms.save()
         return jsonify({"success": True})
