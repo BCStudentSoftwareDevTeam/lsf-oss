@@ -106,7 +106,6 @@
                   </td>
                   <td> {# EDIT #}
                     <a href="/modifyLSF/{{allForms.formID.laborStatusFormID}}" onclick="setCookie();"> <span id="edit_{{allForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
-                    <!-- <a href="goToModifyLsfAndSetCookie({{allForms.formID.laborStatusFormID}})"> <span id="edit_{{allForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a> -->
                     {% with modalTarget = modalTarget %}
                       {% include "snips/FormsDeny.html" %}
                     {% endwith %}

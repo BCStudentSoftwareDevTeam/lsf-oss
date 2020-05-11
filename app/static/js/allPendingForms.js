@@ -9,14 +9,14 @@ $(document).ready( function(){
 });
 
 function setCookie(){
-  document.cookie = "pageClicked=pendingForms;max-age=28800;";
+  // Tracks if the edit LSF button was clicked from the Pending Forms page
+  document.cookie = "pageClicked=pendingForms; path=/";   // set a cookie accessible from anywhere in the site
 }
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
     labor_details_ids.push(this.value);
-
     });
 
   //this checks wether the checkbox is checked or not and if does not it disable the approve selected button

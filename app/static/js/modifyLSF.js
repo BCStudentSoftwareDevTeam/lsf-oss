@@ -93,9 +93,9 @@ function checkForChange(){
   }
 }
 
-function buttonListener(laborStatusKey) {
+function buttonListener(laborStatusKey, cookie) {
   $.ajax({
-    url: "/modifyLSF/updateLSF/" + laborStatusKey,
+    url: "/modifyLSF/updateLSF/" + laborStatusKey + "/" + cookie,
     method: "POST",
     contentType: 'application/json',
     data: JSON.stringify(finalDict),
@@ -105,18 +105,20 @@ function buttonListener(laborStatusKey) {
   })
 }
 
-// function getCookie(){
-//   var name = "pageClicked" + "=";
-//   var decodedCookie = decodeURIComponent(document.cookie);
-//   var ca = decodedCookie.split(';');
-//   for(var i = 0; i < ca.length; i++) {
-//     var c = ca[i];
-//     while (c.charAt(0) == ' ') {
-//       c = c.substring(1);
-//     }
-//     if (c.indexOf(name) == 0) {
-//       return c.substring(name.length, c.length);
-//     }
-//   }
-//   return "";
-// }
+function getCookie(){
+  // Get the cookie if it was created
+  var name = "pageClicked" + "=";
+  if(document.cookie == name + "pendingForms"){
+    var ca = document.cookie.split(';');
+    for(var i = 0; i < ca.length; i++) {
+      var c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);}
+      if (c.indexOf(name) == 0) {
+        var cookieValue = c.substring(name.length, c.length);  // get cookie value specified under cookie name
+        document.cookie = "pageClicked=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/"; // deletes the cookie by setting expiration to a past date
+        return cookieValue;
+      }
+    }}
+  return "notPendingForms";
+}

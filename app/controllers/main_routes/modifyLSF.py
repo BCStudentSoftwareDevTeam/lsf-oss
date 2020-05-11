@@ -80,8 +80,8 @@ def modifyLSF(laborStatusKey):
                             totalHours = totalHours
                           )
 
-@main_bp.route("/modifyLSF/updateLSF/<laborStatusKey>", methods=['POST'])
-def updateLSF(laborStatusKey):
+@main_bp.route("/modifyLSF/updateLSF/<laborStatusKey>/<cookie>", methods=['POST'])
+def updateLSF(laborStatusKey, cookie):
     """ Create Modified Labor Form and Form History"""
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
@@ -144,32 +144,12 @@ def updateLSF(laborStatusKey):
         email.laborStatusFormModified()
         flash("Your labor status form has been modified.", "success")
         # ToDo: input logic here to redirect to proper location
-        # print("new cookie: ", cookie)
-        redirect_url = "/laborHistory/"
-        return jsonify({"Success":True, "url":redirect_url + student})
+        if(cookie == "pendingForms"):
+            return jsonify({"Success":True, "url":"/admin/pendingForms/all"})
+
+        return jsonify({"Success":True, "url":"/laborHistory/" + student})
 
     except Exception as e:
         flash("An error occured.", "danger")
         # print(e)
         return jsonify({"Success": False})
-
-@app.route('/get-cookie/')
-def getCookie():
-    pageClicked = request.cookies.get('pageClicked')
-    print("!!!!! Got pageClicked cookie: ", pageClicked)
-    name = ""
-    color = ""
-    if 'pageClicked' in os.environ:
-        cookie_string = os.environ.get("pageClicked")
-        mycookie = cookies.SimpleCookie()
-        mycookie.load(cookie_string)
-        try:
-            name = mycookie["pageClicked"].value
-        except KeyError:
-            name = ""
-    print("Content-type: text/html\n")
-    if name:
-        print("Cookies Found")
-        print("name:", name)
-    else:
-        print('No cookies name pageClicked found')
