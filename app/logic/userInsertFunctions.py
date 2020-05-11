@@ -52,8 +52,8 @@ def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department
     returns the laborStatusForm object just created for later use in laborStatusForm.py
     """
     # Changes the dates into the appropriate format for the table
-    startDate = datetime.strptime(rspFunctional['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
-    endDate = datetime.strptime(rspFunctional['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
+    startDate = datetime.strptime(rspFunctional[i]['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
+    endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
     # Creates the labor Status form
     lsf = LaborStatusForm.create(termCode_id = term,
                                  studentSupervisee_id = studentID,
@@ -82,7 +82,8 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     creatorID: id of the user submitting the labor status form
     status: status of the labor status form (e.g. Pending, etc.)
     """
-    if rspFunctional["isItOverloadForm"] == "True": # If the LSF is an overload form, create its history as such and an overload form
+    # If the LSF is an overload form, create its history as such and an overload form
+    if rspFunctional[i].get("isItOverloadForm") == "True": 
         historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
         newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
                                                     financialAidApproved = None,
@@ -105,11 +106,11 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     else: # If not overload, create its history as a regular LSF
         historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
         FormHistory.create( formID = lsf.laborStatusFormID,
-                                            historyType = historyType.historyTypeName,
-                                            overloadForm = None,
-                                            createdBy   = creatorID,
-                                            createdDate = date.today(),
-                                            status      = status.statusName)
+                            historyType = historyType.historyTypeName,
+                            overloadForm = None,
+                            createdBy   = creatorID,
+                            createdDate = date.today(),
+                            status      = status.statusName)
 
 
 def createBreakHistory(rspFunctional, lsf, creatorID, status):
