@@ -52,8 +52,8 @@ def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department
     returns the laborStatusForm object just created for later use in laborStatusForm.py
     """
     # Changes the dates into the appropriate format for the table
-    startDate = datetime.strptime(rspFunctional[i]['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
-    endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
+    startDate = datetime.strptime(rspFunctional['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
+    endDate = datetime.strptime(rspFunctional['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
     # Creates the labor Status form
     lsf = LaborStatusForm.create(termCode_id = term,
                                  studentSupervisee_id = studentID,
@@ -83,7 +83,7 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     status: status of the labor status form (e.g. Pending, etc.)
     """
     # If the LSF is an overload form, create its history as such and an overload form
-    if rspFunctional[i].get("isItOverloadForm") == "True": 
+    if rspFunctional.get("isItOverloadForm") == "True":
         historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
         newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
                                                     financialAidApproved = None,
