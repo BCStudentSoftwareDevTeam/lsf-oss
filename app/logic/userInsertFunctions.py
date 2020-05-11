@@ -82,7 +82,8 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     creatorID: id of the user submitting the labor status form
     status: status of the labor status form (e.g. Pending, etc.)
     """
-    if rspFunctional["isItOverloadForm"] == "True": # If the LSF is an overload form, create its history as such and an overload form
+    # If the LSF is an overload form, create its history as such and an overload form
+    if rspFunctional.get("isItOverloadForm") == "True":
         historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
         newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
                                                     financialAidApproved = None,
@@ -105,11 +106,11 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     else: # If not overload, create its history as a regular LSF
         historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
         FormHistory.create( formID = lsf.laborStatusFormID,
-                                            historyType = historyType.historyTypeName,
-                                            overloadForm = None,
-                                            createdBy   = creatorID,
-                                            createdDate = date.today(),
-                                            status      = status.statusName)
+                            historyType = historyType.historyTypeName,
+                            overloadForm = None,
+                            createdBy   = creatorID,
+                            createdDate = date.today(),
+                            status      = status.statusName)
 
 
 def createBreakHistory(rspFunctional, lsf, creatorID, status):
