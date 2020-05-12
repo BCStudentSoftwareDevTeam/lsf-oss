@@ -371,6 +371,8 @@ FormHistory.insert([{
 emailtemps= [
                 {
                 "purpose":"Labor Status Form Submitted",
+                "formType":"Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -393,10 +395,12 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>''',
 
-                "audience":"students"
+                "audience":"student"
                  },
                 {
                 "purpose":"Labor Status Form Submitted For Secondary",
+                "formType":"Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong> and <strong>@@Primsupr@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -426,6 +430,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Labor Status Form Submitted For Primary",
+                "formType":"Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -456,6 +462,8 @@ emailtemps= [
                 #LSF approved
                 {
                 "purpose":"Labor Status Form Approved",
+                "formType":"Labor Status Form",
+                "action":"Approved",
                 "subject":"Labor Status Form Approved",
                 "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -484,6 +492,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Labor Status Form Approved For Primary",
+                "formType":"Labor Status Form",
+                "action":"Approved",
                 "subject":"Labor Status Form Approved",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -514,6 +524,8 @@ emailtemps= [
 
                 {
                 "purpose":"Labor Status Form Approved For Secondary",
+                "formType":"Labor Status Form",
+                "action":"Approved",
                 "subject":"Labor Status Form Approved",
                 "body":'''
 
@@ -523,6 +535,8 @@ emailtemps= [
                 #LSF Rejected
                 {
                 "purpose":"Labor Status Form Rejected",
+                "formType":"Labor Status Form",
+                "action":"Rejected",
                 "subject":"Labor Status Form Rejected",
                 "body":'''
                             ''',
@@ -530,6 +544,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Labor Status Form Rejected For Secondary",
+                "formType":"Labor Status Form",
+                "action":"Rejected",
                 "subject":"Labor Status Form Rejected",
                 "body":'''<p>Dear <strong>@@Primsupr@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -556,6 +572,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Labor Status Form Rejected For Primary",
+                "formType":"Labor Status Form",
+                "action":"Rejected",
                 "subject":"Labor Status Form Rejected",
                 "body":'''
                             ''',
@@ -564,6 +582,8 @@ emailtemps= [
                 #LSF modified
                 {
                 "purpose":"Labor Status Form Modified",
+                "formType":"Labor Status Form",
+                "action":"Modified",
                 "subject":"Labor Status Form Modified",
                 "body":'''
                             ''',
@@ -571,6 +591,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Labor Status Form Modified For Supervisor",
+                "formType":"Labor Status Form",
+                "action":"Modified",
                 "subject":"Labor Status Form Modified",
                 "body":'''
                             ''',
@@ -579,6 +601,8 @@ emailtemps= [
                 #LRF Submitted
                 {
                 "purpose":"Labor Release Form Submitted",
+                "formType":"Labor Release Form",
+                "action":"Submitted",
                 "subject":"Labor Release Form Submitted",
                 "body":'''
                             ''',
@@ -586,6 +610,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Labor Release Form Submitted For Supervisor",
+                "formType":"Labor Release Form",
+                "action":"Submitted",
                 "subject":"Labor Release Form Submitted",
                 "body":'''
                             ''',
@@ -595,6 +621,8 @@ emailtemps= [
 
                 {
                 "purpose":"Labor Release Form Approved",
+                "formType":"Labor Release Form",
+                "action":"Approved",
                 "subject":"Labor Release Form Approved",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -622,6 +650,8 @@ emailtemps= [
                 {
 
                 "purpose":"Labor Release Form Approved For Supervisor",
+                "formType":"Labor Release Form",
+                "action":"Approved",
                 "subject":"Labor Release Form Approved",
                 "body":'''
                             ''',
@@ -630,6 +660,8 @@ emailtemps= [
                 #LRF Rejected
                 {
                 "purpose":"Labor Release Form Rejected",
+                "formType":"Labor Release Form",
+                "action":"Rejected",
                 "subject":"Labor Release Form Rejected",
                 "body":'''
                             ''',
@@ -637,6 +669,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Labor Release Form Rejected For Supervisor",
+                "formType":"Labor Release Form",
+                "action":"Rejected",
                 "subject":"Labor Release Form Rejected",
                 "body":'''
                             ''',
@@ -645,6 +679,8 @@ emailtemps= [
                 #LOF
                 {
                 "purpose":"Labor Overload Form Submitted",
+                "formType":"Labor Overload Form",
+                "action":"Submitted",
                 "subject":"Labor Overload Form Submitted",
                 "body":'''
                     <p>Dear <strong>@@Student@@</strong>,</p>
@@ -655,6 +691,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Labor Overload Form Submitted For Supervisor",
+                "formType":"Labor Overload Form",
+                "action":"Submitted",
                 "subject":"Labor Overload Form Submitted",
                 "body":'''
                             ''',
@@ -662,6 +700,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Labor Overload Form Approved",
+                "formType":"Labor Overload Form",
+                "action":"Approved",
                 "subject":"Labor Overload Form Approved",
                 "body":'''
                             ''',
@@ -669,6 +709,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Labor Overload Form Approved For Supervisor",
+                "formType":"Labor Overload Form",
+                "action":"Approved",
                 "subject":"Labor Overload Form Approved",
                 "body":'''
                             ''',
@@ -676,6 +718,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Labor Overload Form Rejected",
+                "formType":"Labor Overload Form",
+                "action":"Rejected",
                 "subject":"Labor Overload Form Rejected",
                 "body":'''
                             ''',
@@ -684,6 +728,8 @@ emailtemps= [
                 #SASS
                 {
                 "purpose":"SASS and Financial Aid Office",
+                "formType":"Labor Overload Form",
+                "action":"Submitted",
                 "subject":"Overload Verification",
                 "body":'''
                     <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
@@ -693,6 +739,8 @@ emailtemps= [
                 # Break Labor Status Forms
                 {
                 "purpose":"Break Labor Status Form Submitted",
+                "formType":"Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -721,6 +769,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Break Labor Status Form Submitted For Supervisor",
+                "formType":"Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -752,6 +802,8 @@ emailtemps= [
                 },
                 {
                 "purpose":"Break Labor Status Form Submitted For Supervisor on Second LSF",
+                "formType":"Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -783,6 +835,8 @@ emailtemps= [
                 "audience":"supervisor"
                 },
                 {"purpose":"Break Labor Status Form Submitted For Second Supervisor",
+                "formType":"Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@PrimarySupervisor@@</strong>,</p>
                             <p>&nbsp;</p>

@@ -18,23 +18,40 @@ def email_templates():
     else:
         isLaborAdmin = True
     emailTemplateID = EmailTemplate.select()
-    purpose = EmailTemplate.select()
-    subject = EmailTemplate.select()
-    body = EmailTemplate.select()
+    purpose = EmailTemplate.select(EmailTemplate.purpose).distinct()
+    formType = EmailTemplate.select(EmailTemplate.formType).distinct()
+    action = EmailTemplate.select(EmailTemplate.action).distinct()
+    subject = EmailTemplate.select(EmailTemplate.subject).distinct()
+    recipient = EmailTemplate.select(EmailTemplate.audience).distinct()
+    body = EmailTemplate.select(EmailTemplate.body)
     return render_template( 'admin/emailTemplates.html',
 				            title=('Email Templates'),
                             emailTemplateID = emailTemplateID,
                             purpose = purpose,
+                            action = action,
+                            formType = formType,
                             subject = subject,
+                            recipient = recipient,
                             body = body,
                             isLaborAdmin = isLaborAdmin
                           )
 
-@admin.route('/admin/emailTemplates/getPurpose/<recipient>', methods=['GET'])
+@admin.route('/admin/emailTemplates/getPurpose/<fieldsDictSTR>', methods=['GET'])
 
-def getPurpose(recipient):
+def getPurpose(fieldsDictSTR):
     try:
-        emailPurposes = EmailTemplate.select(EmailTemplate.purpose).where(EmailTemplate.audience == recipient)
+        fieldsDict = json.loads(fieldsDictSTR)
+        # print("---fields dict ", fieldsDict)
+        emailPurposes = EmailTemplate.select(EmailTemplate.purpose)
+        if len(fieldsDict[recipient]) > 0:
+            emailPurposes = emailPurposes.select(EmailTemplate.purpose).where(EmailTemplate.audience == fieldsDict[recipient])
+
+        if len(fieldsDict[formType]) > 0:
+            emailPurposes = emailPurposes.select(EmailTemplate.purpose).where(EmailTemplate.formType == fieldsDict[formType])
+
+        if len(fieldsDict[action]) > 0:
+            emailPurposes = emailPurposes.select(EmailTemplate.purpose).where(EmailTemplate.action == fieldsDict[action])
+
         purposeList = []
         for i in emailPurposes:
             purposeList.append({"Purpose":i.purpose})

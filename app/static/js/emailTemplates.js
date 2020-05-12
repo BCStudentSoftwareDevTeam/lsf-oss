@@ -12,8 +12,14 @@ function populatePurpose(){
   $("#subject").val("Subject")
   CKEDITOR.instances["editor1"].setData('')
   var recipient = $("#recipient").val()
+  var formType = $("#formType").val()
+  var action = $("#action").val()
+  fieldsDict = {recipient: recipient,
+                formType: formType,
+                action: action};
+  fieldsDictSTR = JSON.stringify(fieldsDict);
   $.ajax({
-    url: "/admin/emailTemplates/getPurpose/" + recipient,
+    url: "/admin/emailTemplates/getPurpose/" + fieldsDictSTR,
     dataType: "json",
     success: function(response){
       for (var key in response){
