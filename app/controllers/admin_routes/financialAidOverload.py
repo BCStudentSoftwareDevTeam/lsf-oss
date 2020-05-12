@@ -7,13 +7,14 @@ from app.models.formHistory import *
 from flask import json, jsonify
 from flask import request, render_template
 from app.models.overloadForm import *
+from app import cfg
 
 @admin.route('/admin/financialAidOverloadApproval/<overloadKey>', methods=['GET']) # we get the form ID when FinancialAid or SAAS clicks on the link they receive via email.
 def financialAidOverload(overloadKey):
     '''
     This function prefills all the information for a student's current job and overload request.
     '''
-    current_user = require_login()
+    current_user = require_login() #we need to check to see if the person logged in is SAAS or FinancialAid #TODO
 
     if not current_user: # Not logged in
         return render_template('errors/403.html')
@@ -53,45 +54,7 @@ def financialAidOverload(overloadKey):
     currentTerm = str(lsfForm.termCode.termCode)[-2:]
     contractDate = "{} - {}".format(lsfForm.startDate.strftime('%m/%d/%y'), lsfForm.endDate.strftime('%m/%d/%y'))
 
-
-
-
-
-
-# ------------------ Hila's NOTE: I think this is all unneccessary. We do all of this just to sum up all hours a student is working ----------------#
-
-    # TermsNeeded=[]
-    # for term in termCodeYear:
-    #     if str(term)[-2:] == "11" or str(term)[-2:] == "12" or str(term)[-2:]== "00":
-    #         TermsNeeded.append(term)
-    #
-    # studentPrimaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == studentBnum,
-    #                                                                                        LaborStatusForm.jobType == "Primary",
-    #                                                                                        LaborStatusForm.termCode.in_(TermsNeeded))
-    #
-    # studentSecondaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == studentBnum,
-    #                                                                                            LaborStatusForm.jobType == "Secondary",
-    #                                                                                            LaborStatusForm.termCode.in_(TermsNeeded))
-    # formIDPrimary = []
-    # for i in studentPrimaryLabor:
-    #     studentPrimaryHistory = FormHistory.select().where((FormHistory.formID == i) & (FormHistory.historyType == "Labor Status Form") & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly") | (FormHistory.status == "Pending")))
-    #     formIDPrimary.append(studentPrimaryHistory)
-    # formIDSecondary = []
-    # for i in studentSecondaryLabor:
-    #     studentSecondaryHistory = FormHistory.select().where((FormHistory.formID == i) & (FormHistory.historyType == "Labor Status Form") & ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly") | (FormHistory.status == "Pending")))
-    #     formIDSecondary.append(studentSecondaryHistory)
-    # currentHours = 0
-    # for i in formIDPrimary:
-    #     for j in i:
-    #         if str(j.status) != "Pending":
-    #             currentHours += j.formID.weeklyHours
-    # for i in formIDSecondary:
-    #     for j in i:
-    #         if str(j.status) != "Pending":
-    #             currentHours += j.formID.weeklyHours
-    # totalFormHours = currentHours + overloadHours
-    # print ("total form hours", totalFormHours)
-
+## TODO: Check to see if primary + secondary hours gets summed up.
 
 # will need to add term to the interface and then have a prefill variable
     return render_template( 'admin/financialAidOverload.html',
@@ -109,3 +72,24 @@ def financialAidOverload(overloadKey):
                         overloadPosition = overloadPosition,
                         totalOverloadHours = totalOverloadHours
                       )
+
+@admin.route("/admin/financialAidOverloadApproval/<status>", methods=["POST"])
+def formDenial(status):
+    ''' This fucntion will get the status (Approved/Denied) and make the appropriate
+    changes in the database for that specific overload form'''
+    print(status)
+    if status == "denial":
+        newStatus = "Denied"
+    elif status == "approval":
+        newStatus = "Approved"
+    else:
+        return jsonify({'error': 'Unknown Status'}), 500
+    try:
+        # Here we need to change the db with the appropriate information
+        createdUser = User.get(username = cfg['user']['debug'])
+        rsp = eval(request.data.decode("utf-8"))
+        print(rsp, "dictionary")
+        return jsonify({'success':True}), 200
+    except Exception as e:
+        print("Unable to Deny the OverloadForm",type(e).__name__ + ":", e)
+        return jsonify({'error': "Unable to Deny the form"}), 500
