@@ -81,6 +81,7 @@ def approved_and_denied_Forms():
     '''
     try:
         rsp = eval(request.data.decode("utf-8"))
+        print(type(rsp[0]))
         if rsp:
             approved_details =  modal_approval_and_denial_data(rsp)
             return jsonify(approved_details)
@@ -153,8 +154,8 @@ def prep_banner_data(form):
 def modal_approval_and_denial_data(approval_ids):
     ''' This method grabs the data that populated the on approve modal for lsf'''
     id_list = []
-    for form_history_id in approval_ids:
-        fhistory_id = LaborStatusForm.select().join(FormHistory).where(FormHistory.formHistoryID == int(form_history_id)).get()
+    for formHistoryID in approval_ids:
+        fhistory_id = LaborStatusForm.select().join(FormHistory).where(FormHistory.formHistoryID == int(formHistoryID)).get()
         student_details = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == fhistory_id)
         student_firstname, student_lastname = student_details.studentSupervisee.FIRST_NAME, student_details.studentSupervisee.LAST_NAME
         student_name = str(student_firstname) + " " + str(student_lastname)
@@ -163,13 +164,13 @@ def modal_approval_and_denial_data(approval_ids):
         supervisor_name = str(supervisor_firstname) +" "+ str(supervisor_lastname)
         student_hours = student_details.weeklyHours
         student_hours_ch = student_details.contractHours
-        temp_list = []
-        temp_list.append(student_name)
-        temp_list.append(student_pos)
-        temp_list.append(supervisor_name)
-        temp_list.append(str(student_hours))
-        temp_list.append(str(student_hours_ch))
-        id_list.append(temp_list)
+        tempList = []
+        tempList.append(student_name)
+        tempList.append(student_pos)
+        tempList.append(supervisor_name)
+        tempList.append(str(student_hours))
+        tempList.append(str(student_hours_ch))
+        id_list.append(tempList)
     return(id_list)
 
 @admin.route('/admin/getNotes/<formid>', methods=['GET'])
@@ -225,6 +226,43 @@ def insertNotes(formId):
             flash("No changes made to notes.", "danger")
             return jsonify({"Success": False})
 
+    except Exception as e:
+        print("error", e)
+        return jsonify({"Success": False})
+@admin.route('/admin/overloadModal', methods=['POST'])
+def getOverloadModalData():
+    """
+    This function will retrieve the data to populate the overload modal
+    """
+    try:
+        rsp =eval(request.data.decode("utf-8"))
+        print('Hit the controller', rsp)
+        if rsp:
+            overloadModalInfo = []
+            for formHistoryID in rsp:
+                fhistory_id = LaborStatusForm.select().join(FormHistory).where(FormHistory.formHistoryID == int(formHistoryID)).get()
+                student_details = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == fhistory_id)
+                student_firstname, student_lastname = student_details.studentSupervisee.FIRST_NAME, student_details.studentSupervisee.LAST_NAME
+                student_name = str(student_firstname) + " " + str(student_lastname)
+                student_pos = student_details.POSN_TITLE
+                supervisor_firstname, supervisor_lastname = student_details.supervisor.FIRST_NAME, student_details.supervisor.LAST_NAME
+                supervisor_name = str(supervisor_firstname) +" "+ str(supervisor_lastname)
+                student_hours = student_details.weeklyHours
+                student_hours_ch = student_details.contractHours
+                department = student_details.department
+                # contract_start_date, contract_end_date = student_details.startDate, student_details.endDate
+                # contract_date = str(contract_start_date) + " - " + str(contract_end_date)
+                # studentOverloadReason =
+                tempList = []
+                tempList.append(student_name)
+                tempList.append(student_pos)
+                tempList.append(supervisor_name)
+                tempList.append(str(student_hours))
+                tempList.append(str(student_hours_ch))
+                tempList.append(department)
+                tempList.append(contract_date)
+                id_list.append(tempList)
+            return jsonify(overloadModalInfo)
     except Exception as e:
         print("error", e)
         return jsonify({"Success": False})

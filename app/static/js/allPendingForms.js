@@ -82,7 +82,9 @@ var laborDenialInfo=[]; //this arrary is for insertDenial() and finalDenial() me
 //This method calls AJAX from checkforms methods in the controller
 function insertDenial(val){
     laborDenialInfo.push(val);
+    console.log(labor)
     var data = JSON.stringify(laborDenialInfo);
+    console.log(data);
    $.ajax({
      type: "POST",
      url: "/admin/checkedForms",
@@ -286,6 +288,42 @@ function clearTextArea(){ //makes sure that it empties text areas and p tags whe
   $("#laborNotesText").empty();
 }
 
-function loadOverloadModal(){
-  alert('Made it in here')
+var laborOverloadInfo = [];
+function loadOverloadModal(val){
+  // alert('Made it in here')
+  laborOverloadInfo.push(val);
+  var data = JSON.stringify(laborOverloadInfo);
+  $.ajax({
+    type: "POST",
+    url: "/admin/overloadModal",
+    datatype: "json",
+    data: data,
+    contentType: 'application/json',
+    success: function(response){
+      if (response){
+        console.log('Made it to success');
+        // var labor_denial_detials = response;
+        // finalOverload_data(labor_denial_detials);
+       }
+     }
+   });
 }
+
+function finalOverload_data(returned_details){
+  for (var i = 0; i < returned_details.length; i++){
+    var position= returned_details[i][1];
+    var r_hour= returned_details[i][3];
+    var c_Hours= returned_details[i][4];
+    var supervisor= returned_details[i][2];
+    var department= returned_details[i][5];
+    var contractDate = returned_details[i][6];
+    var hours = " ";
+    if (r_hour.length==4){
+      hours = c_Hours;
+    }
+    else {
+      hours = r_hour;
+    }
+    $('#denialPendingForms').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>'); //populate the denial modal for all pending forms
+      }
+    }
