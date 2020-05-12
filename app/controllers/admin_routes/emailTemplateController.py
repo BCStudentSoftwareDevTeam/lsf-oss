@@ -5,7 +5,7 @@ from app.models.emailTemplate import *
 from app.login_manager import require_login
 from flask import Flask, redirect, url_for, flash, jsonify, json, request, flash
 
-
+print("New branch")
 @admin.route('/admin/emailTemplates', methods=['GET'])
 # @login_required
 def email_templates():
