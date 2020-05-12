@@ -62,7 +62,7 @@ def createTerms(termList, iteration):
             elif i == 6:
                 termList.create(termCode = (code + 13), termName = ("Summer " + str(termYear + 1)))
         except Exception as e:
-             print("You failed to create a term in the " + str(termYear) + " AY.")
+             print("You failed to create a term in the " + str(termYear) + " AY. This is likely expected.")
 
 def accordionTerms():
     """ This function populates all the Academic Years with the correct terms.
@@ -76,7 +76,6 @@ def accordionTerms():
         listOfTerms.append([])
         for term in currentTerm:
             listOfTerms[i].append(term)
-    # print(listOfTerms)
     return listOfTerms
 
 @admin.route("/termManagement/setDate/", methods=['POST'])
@@ -86,25 +85,26 @@ def ourDate():
     """
     try:
         rsp = eval(request.data.decode("utf-8"))
-        # print(rsp)
         if rsp:
-            print("success")
             termCode = rsp['termCode']
             termToChange = Term.get(Term.termCode == termCode)
-            date_value = rsp.get("start", rsp.get("end", None))
-            # print(date_value)
+            date_value = rsp.get("start", rsp.get("end", rsp.get("primaryCutOff", rsp.get("adjustmentCutOff", None))))
             if rsp.get('start', None):
                 startDate = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.termStart = startDate
-                # print("startDate saved")
             if rsp.get('end', None):
                 endDate = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.termEnd = endDate
-                # print("endDate saved")
+            if rsp.get('primaryCutOff', None):
+                primaryCutOff = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
+                termToChange.primaryCutOff = primaryCutOff
+            if rsp.get('adjustmentCutOff', None):
+                adjustmentCutOff = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
+                termToChange.adjustmentCutOff = adjustmentCutOff
             termToChange.save()
             return jsonify({"Success": True})
     except Exception as e:
-        # print("You have failed to update the date.", e)
+        print("You have failed to update the date.", e)
         return jsonify({"Success": False})
 
 
@@ -113,23 +113,17 @@ def termStatusCheck():
     """ This function updates the state of the term
     """
     try:
-    #print("Get request")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
-        print(rsp)
         if rsp:
             term = Term.get(rsp['termBtn'])
-            # print(term.termState)
 
             if term.termState == True:
                 term.termState = False
             elif term.termState == False:
                 term.termState = True
 
-            # print(term.termState)
-
             term.save()
-            # print("worked")
             return jsonify({"Success": True})
     except Exception as e:
-        # print(e)
+        print(e)
         return jsonify({"Success": False})

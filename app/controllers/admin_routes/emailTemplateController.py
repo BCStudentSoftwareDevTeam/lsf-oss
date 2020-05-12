@@ -12,7 +12,7 @@ def email_templates():
     current_user = require_login()
     if not current_user:                    # Not logged in
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin:       # Not an admin
+    if not current_user.isLaborAdmin:       # Not a labor admin
         isLaborAdmin = False
         return render_template('errors/403.html',
                                 isLaborAdmin = isLaborAdmin)
@@ -55,8 +55,7 @@ def getEmail(purpose):
         print(e)
         return jsonify({"Success": False})
 
-@admin.route('/admin/emailTemplates/postEmail/', methods=['POST'])
-
+@admin.route('/admin/emailTemplates/postEmail', methods=['POST'])
 def postEmail():
     try:
         email = EmailTemplate.get(EmailTemplate.purpose == request.form['purpose'])

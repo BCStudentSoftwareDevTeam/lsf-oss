@@ -19,6 +19,7 @@ from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 from app import cfg
 from app.logic.emailHandler import*
+from app.logic.userInsertFunctions import*
 
 @main_bp.route('/laborstatusform', methods=['GET'])
 @main_bp.route('/laborstatusform/<laborStatusKey>', methods=['GET'])
@@ -64,7 +65,7 @@ def laborStatusForm(laborStatusKey = None):
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
-    """ Create labor status form. Create labor history form."""
+    """ Create labor status form. Create labor history form. Most of the functions called here are in userInsertFunctions.py"""
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     all_forms = []
@@ -73,87 +74,35 @@ def userInsert():
         #Tries to get a student with the followin information from the database
         #if the student doesn't exist, it tries to create a student with that same information
         try:
-            d, created = Student.get_or_create(ID = tracyStudent.ID,
-                                                FIRST_NAME = tracyStudent.FIRST_NAME,
-                                                LAST_NAME = tracyStudent.LAST_NAME,
-                                                CLASS_LEVEL = tracyStudent.CLASS_LEVEL,
-                                                ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS,
-                                                MAJOR = tracyStudent.MAJOR,
-                                                PROBATION = tracyStudent.PROBATION,
-                                                ADVISOR = tracyStudent.ADVISOR,
-                                                STU_EMAIL = tracyStudent.STU_EMAIL,
-                                                STU_CPO = tracyStudent.STU_CPO,
-                                                LAST_POSN = tracyStudent.LAST_POSN,
-                                                LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
+            getOrCreateStudentData(tracyStudent)
         except Exception as e:
             print("ERROR: ", e)
-            d, created = Student.get(ID = tracyStudent.ID)
-        student = d.ID
+
+        student = Student.get(ID = tracyStudent.ID)
+        studentID = student.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.UserID
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
         term = d.termCode
-        # Changes the dates into the appropriate format for the table
-        startDate = datetime.strptime(rspFunctional[i]['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
-        endDate = datetime.strptime(rspFunctional[i]['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
         try:
-            lsf = LaborStatusForm.create(termCode_id = term,
-                                         studentSupervisee_id = student,
-                                         supervisor_id = primarySupervisor,
-                                         department_id  = department,
-                                         jobType = rspFunctional[i]["stuJobType"],
-                                         WLS = rspFunctional[i]["stuWLS"],
-                                         POSN_TITLE = rspFunctional[i]["stuPosition"],
-                                         POSN_CODE = rspFunctional[i]["stuPositionCode"],
-                                         contractHours = rspFunctional[i].get("stuContractHours", None),
-                                         weeklyHours   = rspFunctional[i].get("stuWeeklyHours", None),
-                                         startDate = startDate,
-                                         endDate = endDate,
-                                         supervisorNotes = rspFunctional[i]["stuNotes"]
-                                         )
-            if rspFunctional[i].get("isItOverloadForm") == "True":
-                historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
-            else:
-                historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
+            lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
             status = Status.get(Status.statusName == "Pending")
             d, created = User.get_or_create(username = cfg['user']['debug'])
             creatorID = d.UserID
-            formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
-                                              historyType = historyType.historyTypeName,
-                                              createdBy   = creatorID,
-                                              createdDate = date.today(),
-                                              status      = status.statusName)
+            createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
+            createBreakHistory(rspFunctional[i], lsf, creatorID, status)
 
-            newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
-                                                        financialAidApproved = None,
-                                                        financialAidApprover = None,
-                                                        financialAidReviewDate = None,
-                                                        SAASApproved = None,
-                                                        SAASApprover = None,
-                                                        SAASReviewDate = None,
-                                                        laborApproved = None,
-                                                        laborApprover = None,
-                                                        laborReviewDate = None)
-            historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
-            status = Status.get(Status.statusName == "Pending")
-            d, created = User.get_or_create(username = cfg['user']['debug'])
-            creatorID = d.UserID
-            if(rspFunctional[i]["stuTotalHours"]) != None:
-                if (rspFunctional[i]["stuTotalHours"] > 15) and (rspFunctional[i]["stuJobType"] == "Secondary"):
-                    formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
-                                                      historyType = historyType.historyTypeName,
-                                                      overloadForm = newLaborOverloadForm.overloadFormID,
-                                                      createdBy   = creatorID,
-                                                      createdDate = date.today(),
-                                                      status      = status.statusName)
-                    email = emailHandler(formOverload.formHistoryID)
-                    email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+            try:
+                emailDuringBreak(checkForSecondLSFBreak(term, studentID, "lsf"))
+            except Exception as e:
+                print("Error on sending emails during break: " + str(e))
+
             all_forms.append(True)
         except Exception as e:
             all_forms.append(False)
-            print("ERROR: " + str(e))
+            print("ERROR on creating Labor Status Form/Overload Form" + str(e))
 
     return jsonify(all_forms)
 
@@ -165,7 +114,11 @@ def getDates(termcode):
     for date in dates:
         start = date.termStart
         end  = date.termEnd
-        datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
+        primaryCutOff = date.primaryCutOff
+        if primaryCutOff is None:
+            datesDict[date.termCode] = {"Term Code": date.termCode,"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
+        else:
+            datesDict[date.termCode] = {"Term Code": date.termCode, "Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y")}
     return json.dumps(datesDict)
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
@@ -178,11 +131,24 @@ def getPositions(department):
     return json.dumps(positionDict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["GET"])
-def checkForPrimaryPosition(termCode, student):
+@main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
+def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+
+    isMoreLSF_dict = {}
+    if isOneLSF !=None:
+        isMoreLSF_dict["Status"] = True # student does not have any previous lsf's
+        if len(list(positions)) > 1: # If student has one or more than one lsf
+            isMoreLSF_dict["Status"] = False
+            for item in positions:
+                isMoreLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME
+                isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
+        return jsonify(isMoreLSF_dict)
+
     positionsList = []
     for item in positions:
+        statusHistory = FormHistory.get(FormHistory.formID == item.laborStatusFormID)
         positionsDict = {}
         positionsDict["weeklyHours"] = item.weeklyHours
         positionsDict["contractHours"] = item.contractHours
@@ -191,9 +157,32 @@ def checkForPrimaryPosition(termCode, student):
         positionsDict["POSN_CODE"] = item.POSN_CODE
         positionsDict["primarySupervisorName"] = item.supervisor.FIRST_NAME
         positionsDict["primarySupervisorLastName"] = item.supervisor.LAST_NAME
-        # positionsDict["primarySupervisorUserName"] = item.supervisor.username #Passes Primary Supervisor's username if necessary
+        positionsDict["positionStatus"] = statusHistory.status.statusName
         positionsList.append(positionsDict)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
+
+def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
+    positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    isMoreLSF_dict = {}
+    storeLsfFormsID = []
+    if isOneLSF != None:
+        if len(list(positions)) >= 1 : # If student has one or more than one lsf
+            isMoreLSF_dict["ShowModal"] = True # show modal when the student has one or more than one lsf
+            for item in positions:
+                isMoreLSF_dict["primarySupervisorName"] = item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME
+                isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
+            if len(list(positions)) == 1: # if there is only one labor status form then send email to the supervisor and student
+                isMoreLSF_dict["Status"] = True
+            else: # if there are more lsfs then send email to student, supervisor and all previous supervisors
+                isMoreLSF_dict["Status"] = False
+                for item in positions: # add all the previous lsf ID's
+                    storeLsfFormsID.append(item.laborStatusFormID) # store all of the previous labor status forms for break
+                storeLsfFormsID.pop() #save all the previous lsf ID's except the one currently created. Pop removes the one created right now.
+                isMoreLSF_dict["lsfFormID"] = storeLsfFormsID
+        else:
+            isMoreLSF_dict["ShowModal"] = False # Do not show the modal when there's not previous lsf
+            isMoreLSF_dict["Status"] = True # student does not have any previous lsf's.
+    return json.dumps(isMoreLSF_dict)
 
 @main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
 def checkCompliance(department):

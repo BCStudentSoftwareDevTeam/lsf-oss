@@ -6,6 +6,7 @@ from app.models.laborStatusForm import *
 # from app.models.formHistory import FormHistory
 from app.models.formHistory import *
 from app.models.overloadForm import *
+from app.models.department import *
 from app.models.student import *
 from app.controllers.errors_routes.handlers import *
 from app.login_manager import require_login
@@ -23,15 +24,11 @@ def laborhistory(id):
         current_user = require_login()
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
-        if not current_user.isLaborAdmin:       # Not an admin
-            isLaborAdmin = False
-        else:
-            isLaborAdmin = True
-
         if not current_user.isLaborAdmin:
             # If the current user is not an admin, then we can only allow them to see the labor history of a
             # given BNumber if the BNumber is tied to a labor status form that is tied to a department where the
             # current user is a supervisor or created a labor status form for the department
+            isLaborAdmin = False
             authorizedUser = False
             allStudentDepartments = LaborStatusForm.select(LaborStatusForm.department).where(LaborStatusForm.studentSupervisee == id).distinct()
             allUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).distinct()
@@ -42,7 +39,12 @@ def laborhistory(id):
                         break
             if authorizedUser == False:
                 return render_template('errors/403.html')
-
+            departmentsList = []
+            for i in allUserDepartments:
+                departmentsList.append(i.formID.department.departmentID)
+        else:
+            isLaborAdmin = True
+            departmentsList = []
         student = Student.get(Student.ID == id)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         formHistoryList = ""
@@ -55,9 +57,10 @@ def laborhistory(id):
                                 username=current_user.username,
                                 studentForms = studentForms,
                                 formHistoryList = formHistoryList,
+                                departmentsList = departmentsList,
                                 isLaborAdmin = isLaborAdmin
                               )
-    except:
+    except Exception as e:
         return render_template('errors/500.html')
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
@@ -113,7 +116,7 @@ def populateModal(statusKey):
                             break
                 if form.overloadForm != None:
                     if form.status.statusName == "Pending":
-                        buttonState = 1 #Only withdraw button
+                        buttonState = 2 # Withdraw button and modify button
                         break
                     if form.status.statusName == "Denied":
                         if currentDate <= form.formID.termCode.termEnd:
@@ -138,10 +141,13 @@ def populateModal(statusKey):
                             buttonState = 0 #Only rehire
                             break
                     elif form.status.statusName == "Approved":
-
                         if currentDate <= form.formID.termCode.termEnd:
-                            buttonState = 3 #Release, modify, and rehire buttons
-                            break
+                            if currentDate > form.formID.termCode.adjustmentCutOff:
+                                buttonState = 4 #Release and rehire buttons
+                                break
+                            else:
+                                buttonState = 3 #Release, adjustment, and rehire buttons
+                                break
                         elif currentDate > form.formID.termCode.termEnd:
                             buttonState = 0 #Only rehire
                             break
@@ -175,8 +181,8 @@ def ConvertToPDF(statusKey):
         return(jsonify({"Success": False}))
 
 
-@main_bp.route('/laborHistory/modal/updatestatus', methods=['POST'])
-def updatestatus_post():
+@main_bp.route('/laborHistory/modal/withdrawform', methods=['POST'])
+def withdraw_form():
     """
     This function deletes forms from the database when they are pending and the "withdraw" button is clicked.
     """

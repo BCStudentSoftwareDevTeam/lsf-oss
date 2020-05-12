@@ -34,8 +34,8 @@ def financialAidOverload(overloadKey):
     # how do I tell which labor status form id in the form history table was for Primary?
 
 
-    getoverloadReason = OverloadForm.get(OverloadForm.overloadFormID == overload.formID)
-    print("this is overload reason: ", getoverloadReason)
+    # getoverloadReason = OverloadForm.get(OverloadForm.overloadFormID == overload.formID)
+    # print("this is overload reason: ", getoverloadReason)
     # the following lines prefills the information for student
     studentName = lsfForm.studentSupervisee.FIRST_NAME + " "+ lsfForm.studentSupervisee.LAST_NAME
     studentBnum = lsfForm.studentSupervisee.ID
@@ -43,8 +43,8 @@ def financialAidOverload(overloadKey):
     position = lsfForm.POSN_TITLE
     supervisor = lsfForm.supervisor.FIRST_NAME +" "+ lsfForm.supervisor.LAST_NAME
     overloadHours = lsfForm.weeklyHours
-    overloadReason = getoverloadReason.overloadReason
-    print("here", overloadReason)
+    # overloadReason = getoverloadReason.overloadReason
+    # print("here", overloadReason)
     #totalCurrentHours = totalCurrentHours.weeklyHours
     laborOfficeNotes=lsfForm.laborDepartmentNotes
     today = date.today()
@@ -100,7 +100,7 @@ def financialAidOverload(overloadKey):
                         currentSecondary = formIDSecondary,
                         #totalCurrentHours = totalCurrentHours,
                         totalFormHours = totalFormHours,
-                        overloadReason = overloadReason,
+                        # overloadReason = overloadReason,
                         laborOfficeNotes = laborOfficeNotes,
                         contractDate = contractDate
                       )

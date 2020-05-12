@@ -5,6 +5,7 @@
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.css"/>
   <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="{{url_for('static', filename ='css/allPendingForms.css')}}">
+  <link rel="stylesheet" href="{{url_for('static', filename ='css/pendingNotesModal.css')}}">
 {% endblock %}
 
 {% block scripts %}
@@ -33,19 +34,15 @@
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingModified')}}">Pending Modified Forms</a>
         </li>
         <li {% if formType == "pendingOverload" %} class="active" {% endif %}>
-          <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">  Pending Overload Forms </a>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms <strong>({{ overloadFormCounter }})</strong></a>
         </li>
         <li {% if formType == "pendingRelease" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingRelease')}}">Pending Release Forms</a>
         </li>
       </ul>
       </div>
-
        <br> </br>
-
-
       <div align="center" class="tab-content clearfix">
-
 			  <div class="tab-pane active" id="allPendingForms">
           <div class="col-lg-12" align="center" >
             <table id="pendingForms" class="table table-striped pendingForms dataTable" >
@@ -145,12 +142,6 @@
                 </div>
                 </div>
           </div>
-          {#
-          <div class="tab-pane" id="overloadPendingForms">
-              <div class="tab-content">
-             {% include "admin/pendingOverloadForms.html" %}
-  				   </div>
-          </div> #}
    </div>
   </div>
 

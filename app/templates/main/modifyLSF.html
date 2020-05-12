@@ -9,13 +9,12 @@
   <!-- These are the outside links for the effective date calendar-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> --> <!--I commented these out and it still worked -Kat 7/26-->
+
 </head>
 <div align="center">
   <h2>Modify Labor Status Form</h2>
 </div>
- <form action="/index" id="modifyLSF">
+ <form id="modifyLSF">
    <div class="container">
    <div class="floatleft">
        <div class="form-group">
@@ -52,14 +51,10 @@
                             class="selectpicker form-control newValue"
                             id="POSN_TITLE"
                             data-live-search="true"
-                            >
-
-
-                  {% for pos in positions %}
-                    {% if pos.DEPT_NAME == prefilldepartment %}
-                      <option title="{{pos.POSN_TITLE}} ({{pos.WLS}})" value="{{prefillposition}}">{{pos.POSN_TITLE}} ({{pos.WLS}})</option>
-                    {% endif %}
-                  {%endfor%}
+                            onchange="fillHoursPerWeek()">
+                  {% for position in positions %}
+                    <option value="{{position.POSN_TITLE}}" data-wls={{position.WLS}} {% if position.POSN_TITLE == prefillposition %} selected {% endif %} >{{position.POSN_TITLE}} ({{position.WLS}})</option>
+                  {% endfor %}
            </select>
            <input hidden class = "oldValue"  id= "prefillposition" value="{{prefillposition}}"></input>
          </div>
@@ -94,44 +89,26 @@
                      value = "{{prefillhours}}"
                      oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0">
              </input>
-             <input hidden class = "oldValue"  id= "oldContractHours" value="{{prefillhours}}">  </input>
+             <input hidden class = "oldValue"  id= "oldContractHours" value="{{prefillhours}}"></input>
           </div>
         </div>
      <div id="weeklyHoursDiv" class="form-group">
             <label for="weeklyHours">Hours Per Week</label>
             <div  class="change">
-              <select  type="weeklyHours"
+              <select  type="number"
                        class="selectpicker form-control newValue"
                        id="weeklyHours"
                        name='selectedHoursPerWeek'
                        data-live-search="true"
-                       title = {{prefillhours}}
-                       value = {{prefillhours}}
-                       onchange = "hourscheck()">
-              {% if prefilljobtype == "Secondary"%}
-                <option title="5" value="5">5</option>
-                <option title="10" value="10">10</option>
-              {% else %}
-                <option title="10" value="10">10</option>
-                <option title="12" value="12">12</option>
-                <option title="15" value="15">15</option>
-                <option title="20" value="20">20</option>
-              {% endif %}
+                       title = "{{prefillhours}}"
+                       onchange="checkWLS20()">
               </select>
               <input hidden class = "oldValue"  id= "oldWeeklyHours" value="{{prefillhours}}">  </input>
+              <input hidden class = "totalHours"  id= "totalHours" value="{{totalHours}}"></input>
               {% include "snips/ReviewForm.html" %}
             </div>
           </div>
 
-    <div class="form-group" id= "dateDiv">
-    <label for="datetimepicker" class="required-asterisk">Date Needed:</label>
-      <div class="input-group date"  class="change">
-        <input type="text" class="form-control effectiveDate" id="datetimepicker0" placeholder="MM/DD/YYYY" required > <!--Should prefill with todays date though// effective date does not have old/new value comparison-->
-        <span class="input-group-addon">
-        <span class="glyphicon glyphicon-calendar"></span>
-        </span>
-      </div>
-     </div>
      <div class="form-group" >
        <label for="supervisorNotes">Notes:</label>
        <div class ="change">
@@ -148,8 +125,8 @@
       </div>
       <div class="submitbutton">
         <button id="submit" type="button" class="btn btn-success" onclick="checkForChange()">Submit Changes</button>
-        {% include "snips/ModifyLSFNoChange.html" %}
-        {% include "snips/ModifyLSFSubmit.html" %}
+        {% include "snips/adjustLSFNoChange.html" %}
+        {% include "snips/adjustLSFSubmit.html" %}
       </div>
     </div>
 

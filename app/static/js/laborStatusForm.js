@@ -1,21 +1,39 @@
 var globalArrayOfStudents = [];
 var display_failed = [];
+var laborStatusFormNote = null;
 
 $(document).ready(function(){
-    $("[data-toggle=\"tooltip\"]").tooltip();
-    $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
-    if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
-      checkCompliance($("#selectedDepartment"));
-      getDepartment($("#selectedDepartment"), "stopSelectRefresh");
+  $("[data-toggle=\"tooltip\"]").tooltip();
+  $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
+  if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
+    checkCompliance($("#selectedDepartment"));
+    getDepartment($("#selectedDepartment"));
+  }
+  if($("#jobType").val()){ // fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
+    var value = $("#selectedHoursPerWeek").val();
+    $("#selectedHoursPerWeek").val(value);
+    fillHoursPerWeek("fillhours");
+  }
+  var cookies = document.cookie;
+  if (cookies){
+    parsedArrayOfStudentCookies = JSON.parse(cookies);
+    document.cookie = parsedArrayOfStudentCookies + ";max-age=28800;";
+    for (i in parsedArrayOfStudentCookies) {
+      createAndFillTable(parsedArrayOfStudentCookies[i]);
     }
-    if($("#jobType").val()){ // fills hours per week selectpicker with correct information from laborstatusform. This is triggered on redirect from form history.
-      var value = $("#selectedHoursPerWeek").val();
-      $("#selectedHoursPerWeek").val(value);
-      fillHoursPerWeek("fillhours");
-    }
+    $("#selectedTerm option[value=" + parsedArrayOfStudentCookies[0].stuTermCode + "]").attr('selected', 'selected');
+    $("#selectedSupervisor option[value=" + parsedArrayOfStudentCookies[0].stuSupervisorID + "]").attr('selected', 'selected');
+    $("#selectedDepartment option[value=\"" + parsedArrayOfStudentCookies[0].stuDepartment + "\"]").attr('selected', 'selected');
+    getDepartment($("#selectedDepartment"));
+    preFilledDate($("#selectedTerm"));
+    showAccessLevel($("#selectedTerm"));
+    disableTermSupervisorDept();
+  }
+
+
 });
 
-$("laborStatusForm").submit(function(event) {
+$("#laborStatusForm").submit(function(event) {
   event.preventDefault();
 });
 
@@ -33,22 +51,38 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
   var jobType = $(this).val();
   if (jobType == "Secondary") {
       $("#warningModal").modal("show");
-      $("#warningModalTitle").html("Warning") //Maybe change the wording here.
+      $("#warningModalTitle").html("Warning"); //Maybe change the wording here.
       $("#warningModalText").html("The labor student and the supervisor of this secondary position should obtain permission from the primary supervisor before submitting this labor status form.");
       }
   });
 
+function checkIfFreshman() {
+  var jobType = $("#jobType").val();
+  var wls = $("#position :selected").attr("data-wls")
+  var classLevel = $("#student :selected").attr("data-stuCL");
+  if (classLevel == "Freshman" && jobType == "Secondary") {
+    laborStatusFormNote = "Warning! This student has freshman classification with either a secondary position or a primary position with a WLS greater than 1. Make sure they meet the requirements for these positions.";
+  }
+  if (classLevel == "Freshman" && wls > 1) {
+    laborStatusFormNote = "Warning! This student has freshman classification with either a secondary position or a primary position with a WLS greater than 1. Make sure they meet the requirements for these positions.";
+  }
+  else {
+    laborStatusFormNote = null;
+  }
+  searchDataToPrepareToCheckPrimaryPosition();
+}
+
 function disableTermSupervisorDept() {
   // disables term, supervisor and department select pickers when add student button is clicked
-  $("#selectedTerm").prop("disabled", "disabled");
-  $("#termInfo").show();
-  $("#selectedTerm").selectpicker("refresh");
-  $("#selectedSupervisor").prop("disabled", "disabled");
-  $("#supervisorInfo").show();
-  $("#selectedSupervisor").selectpicker("refresh");
-  $("#selectedDepartment").prop("disabled", "disabled");
-  $("#departmentInfo").show();
-  $("#selectedDepartment").selectpicker("refresh");
+    $("#selectedTerm").prop("disabled", "disabled");
+    $("#termInfo").show();
+    $("#selectedTerm").selectpicker("refresh");
+    $("#selectedSupervisor").prop("disabled", "disabled");
+    $("#supervisorInfo").show();
+    $("#selectedSupervisor").selectpicker("refresh");
+    $("#selectedDepartment").prop("disabled", "disabled");
+    $("#departmentInfo").show();
+    $("#selectedDepartment").selectpicker("refresh");
 }
 
 function preFilledDate(obj){ // get term start date and end date
@@ -63,9 +97,46 @@ function preFilledDate(obj){ // get term start date and end date
 }
 
 function fillDates(response) { // prefill term start and term end
+  $("#primary-cutoff-warning").hide();
+  $("#break-cutoff-warning").hide();
+  $("#primary-cutoff-date").text("");
+  $("#addMoreStudent").show();
+
+  $("#selectedTerm").on("change", function(){
+    $("#jobType").val('');
+  });
   for (var key in response){
     var start = response[key]["Start Date"];
     var end = response[key]["End Date"];
+    var primaryCutOff = response[key]["Primary Cut Off"];
+    // disabling primary position if cut off date is before today's date
+    var today = new Date();
+    var date = ("0"+(today.getMonth()+1)).slice(-2)+"/"+("0"+today.getDate()).slice(-2)+"/"+today.getFullYear();
+    var termCode = (response[key]["Term Code"]).toString().slice(-2);
+    if (primaryCutOff){
+      if (termCode != "00" && termCode != "11" && termCode != "12"){ // Checking to see if the termcode is a break one
+        if (date > primaryCutOff){
+        msgFlash("The deadline to add break positions has ended.", "fail");
+        $("#break-cutoff-warning").show();
+        $("#break-cutoff-date").text(primaryCutOff);
+        $("#addMoreStudent").hide();
+        }
+      }
+      else{
+        if (date > primaryCutOff){
+          $("#jobType option[value='Primary']").attr("disabled", true );
+          $('.selectpicker').selectpicker('refresh');
+          msgFlash("Disabling primary position because cut off date is before today's date", "fail");
+          $("#primary-cutoff-warning").show();
+          $("#primary-cutoff-date").text(primaryCutOff);
+        }
+        else{
+          $("#jobType option[value='Primary']").attr("disabled", false );
+          $('.selectpicker').selectpicker('refresh');
+        }
+      }
+
+    }
     // Start Date
     var startd = new Date(start);
     var dayStart1 = startd.getDate();
@@ -115,7 +186,8 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
          url: url,
          dataType: "json",
          success: function (response){
-            fillPositions(response, stopSelectRefresh);
+
+           fillPositions(response, stopSelectRefresh);
           }
         });
   }
@@ -128,8 +200,10 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
        $("<option />")
           .text(response[key].position+ " " + "(" + response[key].WLS+ ")")
           .attr("id", key)
+          .attr("value", response[key].position)
           .attr("data-wls", response[key].WLS)
      );
+
    }
    if (stopSelectRefresh== "") {
      $(".selectpicker").selectpicker("refresh");
@@ -199,6 +273,8 @@ function checkWLS() {
 
 // Check if department is in compliance.
 function checkCompliance(obj) {
+  $("#dept-compliance-warning").hide();
+  $("#departmentClass").removeClass(" has-error")
   var department = $(obj).val();
   var url = "/laborstatusform/getcompliance/" + department;
       $.ajax({
@@ -207,33 +283,24 @@ function checkCompliance(obj) {
         success: function (response){
           if(response.Department["Department Compliance"] == false){
             $("#warningModal").modal("show");
-            $("#warningModalTitle").html("Warning")
-            $("#warningModalText").html("Department is out of compliance because position descriptions are not up to date. Please contact labor office to update your position description.")
+            $("#warningModalTitle").html("Warning");
+            $("#warningModalText").html("Department is out of compliance because position descriptions are not up to date. Please contact labor office to update your position description.");
             $(".disable").prop("disabled", true);
+            $("#addMoreStudent").prop("disabled", true);
             $("#selectedTerm").selectpicker("refresh");
             $("#student").selectpicker("refresh");
             $("#position").selectpicker("refresh");
             $("#selectedSupervisor").selectpicker("refresh");
             $("#selectedDepartment").selectpicker("refresh");
+            $("#dept-name-compliance").text(department);
+            $("#dept-compliance-warning").show();
+            $("#departmentClass").addClass(" has-error")
           }
           else{
             $(".disable").prop("disabled", false);
           }
         }
       });
-}
-
-//refresh select pickers
-function refreshSelectPickers() {
-  $("#selectedContractHours").val("");
-  $("#selectedHoursPerWeek").val("default");
-  $("#selectedHoursPerWeek").selectpicker("refresh");
-  $("#jobType").val("default");
-  $("#jobType").selectpicker("refresh");
-  $("#student").val("default");
-  $("#student").selectpicker("refresh");
-  $("#position").val("default");
-  $("#position").selectpicker("refresh");
 }
 
 // TABLE LABELS
@@ -243,21 +310,24 @@ $("#JopTypes").hide();
 $("#plus").hide();
 $("#mytable").hide();
 $("#failedTable").hide();
-function showAccessLevel(obj){ // Make Table labels appear
-  $("#contractHours").hide();
-  $("#hoursPerWeek").hide();
-  $("#JopTypes").hide();
-  $("#plus").hide();
-  var termCode = $(obj).val();
-  var whichTerm = termCode.substr(-2);
-  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) { // Summer term or any other break period table labels
-    $("#contractHours").show();
-    $("#plus").show();
-  }
-  else{ // normal semester like Fall or Spring table labels
-    $("#hoursPerWeek").show();
-    $("#JopTypes").show();
-    $("#plus").show();
+
+
+function showAccessLevel(){ // Make Table labels appear
+  if ($("#selectedSupervisor").val() && $("#selectedDepartment").val() && $("#selectedTerm").val()){
+    var termCode = $("#selectedTerm").val();
+    var whichTerm = termCode.substr(-2);
+    if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) { // Summer term or any other break period table labels
+      $("#contractHours").show();
+      $("#plus").show();
+      $("#jobType").hide();
+      $("#hoursPerWeek").hide();
+    }
+    else{ // normal semester like Fall or Spring table labels
+      $("#hoursPerWeek").show();
+      $("#JopTypes").show();
+      $("#plus").show();
+      $("#contractHours").hide();
+    }
   }
 }
 // TABLE LABELS
@@ -293,8 +363,23 @@ function deleteRow(glyphicon) {
     if (rowParent === table.rows[i]) {
       $(glyphicon).parents("tr").remove();
       globalArrayOfStudents.splice(i, 1);
+      if(globalArrayOfStudents.length > 1){
+        document.cookie = JSON.stringify(globalArrayOfStudents) + ";max-age=28800;";
+      }
+      else {
+        parsedArrayOfStudentCookies = document.cookie;
+        document.cookie = parsedArrayOfStudentCookies + ";max-age=0;";
+      }
       break;
     }
+  }
+  if (globalArrayOfStudents.length <= 0) {
+    $("#selectedTerm").prop("disabled", false);
+    $("#selectedTerm").selectpicker("refresh");
+    $("#selectedSupervisor").prop("disabled", false);
+    $("#selectedSupervisor").selectpicker("refresh");
+    $("#selectedDepartment").prop("disabled", false);
+    $("#selectedDepartment").selectpicker("refresh");
   }
 }
 //END of glyphicons
@@ -320,10 +405,12 @@ function searchDataToPrepareToCheckPrimaryPosition() { // displays table when pl
     msgFlash("Please fill out all fields before submitting.", "fail");
   }
   else if (checkWLS() === false) {
-    checkWLS();
+    // checkWLS();
   }
   else  {
+    disableTermSupervisorDept();
     checkPrimaryPositionToCreateTheTable(studentDict);
+    isOneLaborStatusForm(studentDict);
      }
   }
 
@@ -337,7 +424,7 @@ function createStuDict(){
   if (!studentName){
     return false;
   }
-  var positionName = $("#position option:selected").text();
+  var positionName = $("#position option:selected").attr("value");
   if (!positionName){
     return false;
   }
@@ -374,11 +461,11 @@ function createStuDict(){
                     stuEndDate: endDate,
                     stuTermCode: termCodeSelected,
                     stuNotes: null,
+                    stuLaborNotes: laborStatusFormNote,
                     stuSupervisor: supervisor,
                     stuDepartment: department,
                     stuSupervisorID: supervisorID,
-                    isItOverloadForm: "False",
-                    stuTotalHours: null
+                    isItOverloadForm: "False"
                     };
     return studentDict;
   }
@@ -397,64 +484,84 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
 }
 
 function checkPrimaryPositionToCreateTheTable(studentDict){
-  var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
   var term = $("#selectedTerm").val();
   var url = "/laborstatusform/getstudents/" + term +"/" +studentDict.stuBNumber;
   $.ajax({
     url: url,
     dataType: "json",
     success: function (response){
-      if(Object.keys(response).length > 0) {
-        if (studentDict.stuJobType == "Primary"){
-          $("#warningModalTitle").html("Insert Rejected")
-          $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
-          $("#warningModal").modal("show");
+        status_list = []
+        rejectionStatus = ["Approved", "Approved Relunctantly", "Pending"]
+        for (key in response) {
+          status_list.push(response[key]["positionStatus"]);
         }
-        else if(studentDict.stuJobType == "Secondary"){
-          if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true) {
-            createAndFillTable(studentDict);
-          }
-          else {
-            $("#warningModalTitle").html("Insert Rejected")
-            $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
-            $("#warningModal").modal("show");
-          }
-        }
-      }
-      else {
-        if(studentDict.stuJobType == "Primary"){
-          if (checkDuplicate(studentDict) == true  && checkTotalHours(studentDict, response) == true){
-            createAndFillTable(studentDict);
-          }
-          else {
-            $("#warningModalTitle").html("Insert Rejected")
-            $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
-            $("#warningModal").modal("show");
-          }
+        if(Object.keys(response).length > 0) { // If the submited form is not the first form recorded for that student
+              if (studentDict.stuJobType == "Primary" && (status_list.some((val) => rejectionStatus.indexOf(val) !== -1))){ // if the student already has a primary and it is not denied show error modal
+                  $("#warningModalTitle").html("Insert Rejected");
+                  $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
+                  $("#warningModal").modal("show");
+              }
+              else if(studentDict.stuJobType == "Secondary" && (status_list.some((val) => rejectionStatus.indexOf(val) !== -1))){ // If it is secondary allow adding LSF
+                if (checkDuplicate(studentDict) == true) {
+                  checkTotalHours(studentDict, response);
+                  createAndFillTable(studentDict);
+                }
+                else {
+                  insertRejectedModal(studentDict);
+                }
+              }
+             else{
+              initialLSFInsert(studentDict, response, status_list) // If the precious primary position is Denied allow the user to continue with the new primary LSF
+            }
         }
         else {
-          if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
-            $("#warningModalTitle").html("Insert Rejected")
-            $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
-            $("#warningModal").modal("show");
-          }
-          else {
-            if (checkDuplicate(studentDict) == true && checkTotalHours(studentDict, response) == true){
-              createAndFillTable(studentDict);
-            }
-            else {
-              $("#warningModalTitle").html("Insert Rejected")
-              $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
-              $("#warningModal").modal("show");
-            }
-          }
+          initialLSFInsert(studentDict, response) // If the form being submitted for the student is the initial form for that specific term
         }
-      }
     }
   });
 }
+
+function initialLSFInsert(studentDict, response, status_list = []){ //Add student info to the table if they have no previous lfs's in the database
+  var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
+  if(studentDict.stuJobType == "Primary"){
+    if (checkDuplicate(studentDict) == true){
+      checkTotalHours(studentDict, response);
+      // should create table based on the last position status
+      if (status_list == [] || (!status_list.includes("Approved"))) {
+        createAndFillTable(studentDict);
+      }
+    }
+    else {
+      insertRejectedModal(studentDict);
+    }
+  }
+  else { //primary needed for the normal term
+    if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
+      $("#warningModalTitle").html("Insert Rejected");
+      $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
+      $("#warningModal").modal("show");
+    }
+    else { // No primary needed for break periods, therefore, allow adding a new form.
+      if (checkDuplicate(studentDict) == true){
+        checkTotalHours(studentDict, response);
+        createAndFillTable(studentDict);
+      }
+      else {
+        insertRejectedModal(studentDict);
+      }
+    }
+  }
+}
+
+function insertRejectedModal(studentDict){ // Reject Adding a new form when the form is already in the table
+  $("#warningModalTitle").html("Insert Rejected");
+  $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
+  $("#warningModal").modal("show");
+}
+
 function createAndFillTable(studentDict) {
   globalArrayOfStudents.push(studentDict);
+  document.cookie = JSON.stringify(globalArrayOfStudents) + ";max-age=28800;";
   $("#mytable").show();
   $("#jobTable").show();
   $("#hoursTable").show();
@@ -483,10 +590,13 @@ function createAndFillTable(studentDict) {
   $(cell2).attr("data-posn", (studentDict).stuPositionCode);
   $(cell2).attr("data-wls", (studentDict).stuWLS);
   cell2.id="position_code";
-  hours = studentDict.stuContractHours;
   if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00") {
     hours = studentDict.stuWeeklyHours;
     studentDict.stuContractHours = null;
+  }
+  else{
+    hours = studentDict.stuContractHours;
+    studentDict.stuWeeklyHours = null;
   }
   $(cell3).html(studentDict.stuJobType);
   $(cell4).html(hours);
@@ -494,43 +604,89 @@ function createAndFillTable(studentDict) {
   $(cell6).html(notesGlyphicon);
   $(cell7).html(removeIcon);
 
-  refreshSelectPickers();
-  var rowLength = document.getElementById("mytable").rows.length;
-  if (rowLength > 1) {
+
+  $("#student").val("default");
+  $("#student").selectpicker("refresh");
+  if (globalArrayOfStudents.length >= 1) {
     $("#reviewButton").show();
   }
 }
 
-storeTotalHours = {}
-function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
-  totalHoursCount = studentDict.stuWeeklyHours;
-  for (i = 0; i < globalArrayOfStudents.length; i++){
-    if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
-      totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
-    }
-  }
 
-  for (i = 0; i < databasePositions.length; i++){
-    totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
-  }
-  storeTotalHours["Hours"] = {"totalHours": totalHoursCount}
-  if (totalHoursCount > (15)){
-    studentDict.isItOverloadForm = "True";
-    $('#OverloadModal').modal('show');
-    return true;
-  }
-  else {
-    return true;
+function isOneLaborStatusForm(studentDict){
+  var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
+  var term = $("#selectedTerm").val();
+  if(["00", "11", "12"].includes(termCodeLastTwo) == false){
+    url = "/laborstatusform/getstudents/" + term + "/"+ studentDict.stuBNumber+ "/"+ 'isOneLSF';
+    // check whether student has multiple labor status forms over the break period.
+    $.ajax({
+      url: url,
+      dataType: "json",
+      success: function (response){
+        if(response["ShowModal"] == true){
+        // if they already have one lsf or multiple (response if false) then show modal reminding the new supervisor of 40 hour mark rule.
+          $("#warningModalTitle").text("Warning");
+          $("#warningModalText").html(response["studentName"] +" "+ "is already working with" +" "+ response["primarySupervisorName"] +
+                                      "<br><br> " + "Rules for Break LSF");
+          $("#warningModal").modal('show');
+        }
+      }
+    });
   }
 }
 
+function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
+    var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
+    var termCodeLastTwo = termCodeSelected.slice(-2);
+    var academicYear = ["11", "12", "00"]
+    totalHoursCount = studentDict.stuWeeklyHours;
+    for (i = 0; i < globalArrayOfStudents.length; i++){
+      if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
+        totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
+      }
+    }
+    for (i = 0; i < databasePositions.length; i++){
+      if (databasePositions[i]["positionStatus"] != "Denied"){
+        totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
+      }
+  }
+  if (totalHoursCount > (15) && academicYear.includes(termCodeLastTwo)){
+    studentDict.isItOverloadForm = "True";
+    $('#OverloadModal').modal('show');
+  }
+  studentDict.stuTotalHours = totalHoursCount
+  return true;
+}
+
+//Triggered when summer labor is clicked when making a New Labor Status Form
+function summerLaborWarning(){
+  var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
+  var termCodeLastTwo = termCodeSelected.slice(-2);
+  //term code 13 is summer
+  if (termCodeLastTwo == 13){
+    $("#SummerContract").modal('show');
+    return true;
+  } else if (
+      //checks if any break has been clicked and generates a modal
+      termCodeLastTwo == 01 || termCodeLastTwo == 02 || termCodeLastTwo == 03){
+      $("#warningModalTitle").html("Reminder");
+      $("#warningModalText").html("Students may only work up to 40 hours a week during break periods.");
+      $("#warningModal").modal('show');
+      return true;
+  } else {
+      return true;
+        }
+}
+
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
-  $("#submitmodalid").show();
-  $("#doneBtn").hide();
-  disableTermSupervisorDept();
-  var rowLength = document.getElementById("mytable").rows.length;
-  if (rowLength > 1) {
-     createModalContent();
+  $("#laborStatusForm").on("submit", function(e) {
+    e.preventDefault();
+  });
+  if (globalArrayOfStudents.length >= 1) {
+    $("#submitmodalid").show();
+    $("#doneBtn").hide();
+    disableTermSupervisorDept();
+    createModalContent();
   }
 }
 
@@ -569,12 +725,7 @@ function userInsert(){
     $("#laborStatusForm").on("submit", function(e) {
       e.preventDefault();
     });
-    if (storeTotalHours['Hours']['totalHours']){
-      for (var i = 0; i <globalArrayOfStudents.length; i++){
-        globalArrayOfStudents[i].stuTotalHours = storeTotalHours['Hours']['totalHours']
-      }
-    }
-    console.log(globalArrayOfStudents);
+
     $.ajax({
            method: "POST",
            url: "/laborstatusform/userInsert",
@@ -584,15 +735,16 @@ function userInsert(){
                term = $("#selectedTerm").val();
                var whichTerm = parseInt(term.toString().substr(-2));
                modalList = [];
-               if (response.includes(false)){ // if there is even one false value in response
-                   for(var key = 0; key < globalArrayOfStudents.length; key++){
-                       var studentName = globalArrayOfStudents[key].stuName;
-                       var position = globalArrayOfStudents[key].stuPosition;
-                       var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
-                       var jobType = globalArrayOfStudents[key].stuJobType;
-                       var hours = globalArrayOfStudents[key].stuWeeklyHours;
+               for(var key = 0; key < globalArrayOfStudents.length; key++){
+                   var studentName = globalArrayOfStudents[key].stuName;
+                   var position = globalArrayOfStudents[key].stuPosition;
+                   var selectedContractHours = globalArrayOfStudents[key].stuContractHours;
+                   var jobType = globalArrayOfStudents[key].stuJobType;
+                   var hours = globalArrayOfStudents[key].stuWeeklyHours;
+
+                   if (response.includes(false)){ // if there is even one false value in response
                        // var selectedContractHours = globalArrayOfStudents[key].stuWeeklyHours;
-                       if (response[key] === false){
+                       if (response[key] === false){ // Finds the form that has failed.
                            if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
                               display_failed.push(key);
                               var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
@@ -610,15 +762,14 @@ function userInsert(){
                                 var bigString = "<li>"+"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
                             }
                        }
-                       modalList.push(bigString);
-                   }
+                    modalList.push(bigString);
                    $("#SubmitModalText").html("Some of your submitted Labor Status Form(s) did not succeed:<br><br>" +
                                               "<ul style=\"list-style-type:none; display: inline-block;text-align:left;\">" +
                                                modalList.join("</li>")+"</ul>"+""
                                             );
                    $("#closeBtn").hide();
                    $("#SubmitModal").modal("show");
-               }
+                 }
                else{
                     if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
                     var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
@@ -627,18 +778,26 @@ function userInsert(){
                     var bigString = "<li>"+"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + jobType + " | " + hours + " hours";
                   }
                  modalList.push(bigString);
-                 $("#SubmitModal").modal("hide");
+                 $("#SubmitModalText").html("Labor Status Form(s) succeeded:<br><br>" +
+                                            "<ul style=\"list-style-type:none; display: inline-block;text-align:left;\">" +
+                                             modalList.join("</li>")+"</ul>"+""
+                                          );
+                 $("#closeBtn").hide();
+                 $("#SubmitModal").modal("show");
                  $("#reviewButton0").prop('disabled',true);
                  $("#addMoreStudent").prop('disabled',true);
                  $("a").attr("onclick", "").unbind("click");
                  $(".glyphicon-edit").css("color", "grey");
                  $(".glyphicon-remove").css("color", "grey");
-                 msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait for page reload.)", "success");
+                 parsedArrayOfStudentCookies = document.cookie;
+                 document.cookie = parsedArrayOfStudentCookies +";max-age=0";
+                 msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait for page to reload.)", "success");
                  setTimeout(function() { // executed after 1 second
                     window.location.replace("/laborstatusform"); // reloads the page if every form
                   }, 5000);
                }
              }
+            }
          }); // ajax closing tag
 
       $("#submitmodalid").hide();
@@ -647,8 +806,8 @@ function userInsert(){
       document.getElementById("doneBtn").onclick = function() { // Calls this function after failed form(s)
        if (display_failed.length > 0){
            $('#error_modal').empty();
-           $('#error_modal').append('<p style="padding-left:16px;"><b>ERROR:</b> Contact Systems Support if form(s) continue to fail <span style="color:darkred;" class="glyphicon glyphicon-exclamation-sign"></span> </p>')
-           msgFlash("The form(s) below failed to submit, please try again.", "fail")
+           $('#error_modal').append('<p style="padding-left:16px;"><b>ERROR:</b> Contact Systems Support if form(s) continue to fail <span style="color:darkred;" class="glyphicon glyphicon-exclamation-sign"></span> </p>');
+           msgFlash("The form(s) below failed to submit, please try again.", "fail");
             var failed_students = globalArrayOfStudents.filter(function(item, indx){
                 if (display_failed.includes(indx)){
                  return item;

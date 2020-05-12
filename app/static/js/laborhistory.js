@@ -1,15 +1,24 @@
-$('#positionTable tbody tr  td').on('click',function(){
-     $("#modal").modal("show");
-     $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id)
-     setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
+$('#positionTable tbody tr td').on('click',function(){
+  /*If boolean value is false, flash container letting user know that they do not
+  have access. Else, load student labor history modal.*/
+ if (this.getAttribute('value') == 'false') {
+   $("#flash_container").prepend('<div class="alert alert-danger" role="alert" id="flasher">You do not have access to this department\'s information.</div>');
+   $("#flasher").delay(3000).fadeOut();
+ }
+ else {
+   $("#modal").modal("show");
+   $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id);
+   setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
+ }
 });
 
 function redirection(laborStatusKey){
   /*
   When any of the three buttons is clicked, this function will append the 'href' attribute with the
-  correct redirection link and LSF primary key to each button.
+  correct redirection link and LSF primary key to each button
   */
   $("#modify").attr("href", "/modifyLSF/" + laborStatusKey); // will go to the modifyLSF controller
+  $("#adjust").attr("href", "/adjustLSF/" + laborStatusKey); // will go to the modifyLSF controller
   $("#rehire").attr("href", "/laborstatusform/" + laborStatusKey); // will go to the lsf controller
   $("#release").attr("href", "/laborReleaseForm/" + laborStatusKey); // will go to labor release form controller
 }
@@ -52,15 +61,15 @@ function fillPDF(laborStatusKey){
 
 function withdrawform(formID){
   /*
-  This funciton gets a response from the controller function: updatestatus_post() in laborHistory.py.  It reloads the page when the forms from the
-  database are deleted by the controller function.
+  This function gets a response from the controller function: withdraw_form() in laborHistory.py.  It reloads the page when 
+  the forms from the database are deleted by the controller function.
   */
   formIdDict={}
   formIdDict["FormID"] = formID
   data = JSON.stringify(formIdDict);
   $.ajax({
          method: "POST",
-         url: '/laborHistory/modal/updatestatus',
+         url: '/laborHistory/modal/withdrawform',
          data: data,
          contentType: 'application/json',
          success: function(response) {

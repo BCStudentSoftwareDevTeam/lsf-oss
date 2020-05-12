@@ -3,16 +3,18 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <b <h6 class="modal-title" id="notesModalLabel">Labor Office Notes </h6> </b>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="notesModalLabel">Labor Office Notes </h3>
 
       </div>
       <div class="modal-body" >
         <div id="notesDiv">
-           <label id="supeNotesLabel" class="col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </label>
+           <h4 id="supeNotesLabel" class="col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </h4>
               <textarea id="notesText" rows="2" cols="70" disabled> </textarea>
-          <label class="col-md-4 control-label text-left" for ="laboroffice" align = "left"> Labor Office Notes: </label>
-              <textarea id="laborNotesText" rows="2" cols="70"> </textarea>
+          <h4 class="col-md-4 control-label text-left" for ="laboroffice" align = "left">Labor Office Notes: </h4>
+              <textarea id="laborNotesText" rows="2" cols="70"></textarea>
+          <h4 class=" control-label text-left" id="notesLogTitle" for="notesLog">Notes Log:</h4>
+              <div id="notesLogArea"></div>
         </div>
 
 

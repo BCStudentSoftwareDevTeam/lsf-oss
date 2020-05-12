@@ -14,7 +14,7 @@ import os
 from datetime import datetime, date
 
 class emailHandler():
-    def __init__(self, formHistoryKey):
+    def __init__(self, formHistoryKey, primaryFormHistory=None):
         secret_conf = get_secret_cfg()
 
         app.config.update(
@@ -24,9 +24,11 @@ class emailHandler():
             MAIL_PASSWORD= secret_conf['MAIL_PASSWORD'],
             MAIL_USE_TLS=secret_conf['MAIL_USE_TLS'],
             MAIL_USE_SSL=secret_conf['MAIL_USE_SSL'],
-            MAIL_DEFAULT_SENDER=secret_conf['MAIL_DEFAULT_SENDER']
+            MAIL_DEFAULT_SENDER=secret_conf['MAIL_DEFAULT_SENDER'],
+            ALWAYS_SEND_MAIL=secret_conf['ALWAYS_SEND_MAIL']
         )
 
+        self.primaryFormHistory = primaryFormHistory
         self.mail = Mail(app)
 
         self.formHistory = FormHistory.get(FormHistory.formHistoryID == formHistoryKey)
@@ -43,6 +45,12 @@ class emailHandler():
         self.link = ""
         self.releaseReason = ""
         self.releaseDate = ""
+
+        # self.primaryLaborStatusForm = None
+        if self.primaryFormHistory is not None:
+            self.primaryFormHistory = FormHistory.get(FormHistory.formHistoryID == primaryFormHistory)
+            self.primaryLaborStatusForm = self.primaryFormHistory.formID
+            self.primarySupervisorEmail = self.primaryLaborStatusForm.supervisor.EMAIL
 
         try:
             self.releaseDate = self.formHistory.releaseForm.releaseDate.strftime("%m/%d/%Y")
@@ -62,34 +70,34 @@ class emailHandler():
     # is pulled from the model, and replaceText method will replace the neccesary keywords with the correct data.
     # The sendEmail method will handle all of the email sending once the email template has been populated.
     def laborStatusFormSubmitted(self):
-        self.checkRecipient("Labor Status Form Submitted For Student",
+        self.checkRecipient("Labor Status Form Submitted",
                       "Labor Status Form Submitted For Primary",
                       "Labor Status Form Submitted For Secondary")
 
     def laborStatusFormApproved(self):
-        self.checkRecipient("Labor Status Form Approved For Student",
+        self.checkRecipient("Labor Status Form Approved",
                       "Labor Status Form Approved For Primary",
                       "Labor Status Form Approved For Secondary")
 
     def laborStatusFormRejected(self):
-        self.checkRecipient("Labor Status Form Rejected For Student",
+        self.checkRecipient("Labor Status Form Rejected",
                       "Labor Status Form Rejected For Primary",
                       "Labor Status Form Rejected For Secondary")
 
     def laborStatusFormModified(self):
-        self.checkRecipient("Labor Status Form Modified For Student",
+        self.checkRecipient("Labor Status Form Modified",
                       "Labor Status Form Modified For Supervisor")
 
     def laborReleaseFormSubmitted(self):
-        self.checkRecipient("Labor Release Form Submitted For Student",
+        self.checkRecipient("Labor Release Form Submitted",
                       "Labor Release Form Submitted For Supervisor")
 
     def laborReleaseFormApproved(self):
-        self.checkRecipient("Labor Release Form Approved For Student",
+        self.checkRecipient("Labor Release Form Approved",
                       "Labor Release Form Approved For Supervisor")
 
     def laborReleaseFormRejected(self):
-        self.checkRecipient("Labor Release Form Rejected For Student",
+        self.checkRecipient("Labor Release Form Rejected",
                       "Labor Release Form Rejected For Supervisor")
 
     def LaborOverLoadFormSubmitted(self, link):
@@ -101,7 +109,7 @@ class emailHandler():
         Once this is finished, the email can then be sent.
         """
         self.link = link
-        self.checkRecipient("Labor Overload Form Submitted For Student",
+        self.checkRecipient("Labor Overload Form Submitted",
                       "Labor Overload Form Submitted For Supervisor")
     def LaborOverLoadFormSubmittedNotification(self, link):
         """
@@ -110,22 +118,32 @@ class emailHandler():
         email to the student and the other one will be for the labor office.
         """
         self.link = link
-        self.checkRecipient("Labor Overload Form Submitted Notification For Student",
+        self.checkRecipient("Labor Overload Form Submitted Notification",
                             "Labor Overload Form Submitted Notification For Labor Office")
 
     def LaborOverLoadFormApproved(self):
-        self.checkRecipient("Labor Overload Form Approved For Student",
+        self.checkRecipient("Labor Overload Form Approved",
                       "Labor Overload Form Approved For Supervisor")
 
     def LaborOverLoadFormRejected(self):
-        self.checkRecipient("Labor Overload Form Rejected For Student",
+        self.checkRecipient("Labor Overload Form Rejected",
                       "Labor Overload Form Rejected For Supervisor")
 
-    # Depending on what the paramater 'sendTo' is set equal to, this method will send the email either to the Primary, Seconday, or the Student
+    def laborStatusFormSubmittedForBreak(self):
+        self.checkRecipient("Break Labor Status Form Submitted",
+                            "Break Labor Status Form Submitted For Supervisor")
+
+    def notifySecondLaborStatusFormSubmittedForBreak(self):
+        self.checkRecipient("Break Labor Status Form Submitted",
+                            "Break Labor Status Form Submitted For Supervisor on Second LSF")
+
+    def notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak(self):
+        self.checkRecipient("Break Labor Status Form Submitted For Second Supervisor")
+
+    # Depending on the parameter 'sendTo', this method will send the email either to the Primary, Secondary, or the Student
     def sendEmail(self, template, sendTo):
         formTemplate = template.body
         formTemplate = self.replaceText(formTemplate)
-
         if sendTo == "student":
             message = Message(template.subject,
                 recipients=[self.studentEmail])
@@ -135,11 +153,18 @@ class emailHandler():
         elif sendTo == "Labor Office":
             message = Message(template.subject,
                 recipients=[""]) #TODO: Email for the Labor Office
+        elif sendTo == "breakPrimary":
+            message = Message(template.subject,
+                recipients=[self.primarySupervisorEmail])
         else:
             message = Message(template.subject,
                 recipients=[self.supervisorEmail])
         message.html = formTemplate
-        self.mail.send(message)
+
+        if app.config['ENV'] == 'production' or app.config['ALWAYS_SEND_MAIL']:
+            self.mail.send(message)
+        else:
+            print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
 
     # This method is responsible for replacing the keyword form the templates in the database with the data in the laborStatusForm
     def replaceText(self, form):
@@ -157,6 +182,9 @@ class emailHandler():
             form = form.replace("@@Hours@@", self.weeklyHours)
         else:
             form = form.replace("@@Hours@@", self.contractHours)
+        if self.primaryFormHistory != None:
+            form = form.replace("@@PrimarySupervisor@@", self.primaryLaborStatusForm.supervisor.FIRST_NAME +" "+ self.primaryLaborStatusForm.supervisor.LAST_NAME)
+            form = form.replace("@@SupervisorEmail@@", self.supervisorEmail)
         form = form.replace("@@Date@@", self.date)
         form = form.replace("@@ReleaseReason@@", self.releaseReason)
         form = form.replace("@@ReleaseDate@@", self.releaseDate)
@@ -193,25 +221,30 @@ class emailHandler():
         self.mail.send(message)
 
 
-    def checkRecipient(self, studentEmailPurpose, primaryEmailPurpose, secondaryEmailPurpose = False):
+    def checkRecipient(self, studentEmailPurpose=False, primaryEmailPurpose=False, secondaryEmailPurpose = False):
         """
         This method will take in two to three inputs of email purposes. An email to the student is always sent.
         The method then checks whether to send the email to only the primary or both the primary and secondary supervisors.
         The method sendEmail is then called to handle the actual sending of the emails.
         """
-        studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
-        self.sendEmail(studentEmail, "student")
+        if studentEmailPurpose != False:
+            studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
+            self.sendEmail(studentEmail, "student")
 
-        if secondaryEmailPurpose == False:
+        if primaryEmailPurpose != False:
             primaryEmail = EmailTemplate.get(EmailTemplate.purpose == primaryEmailPurpose)
             if primaryEmail.audience == "Labor Office":
                 self.sendEmail(primaryEmail, "Labor Office")
             else:
                 self.sendEmail(primaryEmail, "supervisor")
-        else:
+        elif secondaryEmailPurpose != False:
             if self.laborStatusForm.jobType == "Secondary":
                 secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
                 self.sendEmail(secondaryEmail, "secondary")
+            elif self.primaryFormHistory is not None:
+                secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
+                self.sendEmail(secondaryEmail, "breakPrimary")
+                self.sendEmail(primaryEmail, "supervisor")
             else:
                 primaryEmail = EmailTemplate.get(EmailTemplate.purpose == primaryEmailPurpose)
                 self.sendEmail(primaryEmail, "supervisor")

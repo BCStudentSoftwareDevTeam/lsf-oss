@@ -182,9 +182,16 @@
         <a id="release" href="#"><button type="button" class="btn btn-danger" onclick="redirection({{form1.laborStatusFormID}})">Release</button></a>
         </div>
         <div class = "col-sm-4">
-        <a id="modify" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Modify</button></a>
+        <a id="adjust" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Adjustment</button></a>
         </div>
         <div class = "col-sm-4" style="text-align:left">
+        <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success" onclick="redirection({{form1.laborStatusFormID}})">Rehire</button></a>
+        </div>
+        {% elif buttonState == 4 %}
+        <div class = "col-sm-6">
+        <a id="release" href="#"><button type="button" class="btn btn-danger" onclick="redirection({{form1.laborStatusFormID}})">Release</button></a>
+        </div>
+        <div class = "col-sm-6">
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success" onclick="redirection({{form1.laborStatusFormID}})">Rehire</button></a>
         </div>
         {% endif %}
