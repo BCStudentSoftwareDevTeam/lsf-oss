@@ -1,6 +1,5 @@
 $(document).ready(function() {
-  populatePurpose("yes");
-  console.log("ready test");
+  populatePurpose("Onload");
 });
 
 function populatePurpose(onload = null){
@@ -15,7 +14,6 @@ function populatePurpose(onload = null){
   CKEDITOR.instances["editor1"].setData('')
   var recipient = $("#recipient").val()
   var formType = $("#formType").val()
-  console.log("formType JS: "+ formType);
   var action = $("#action").val()
   fieldsDict = {recipient: recipient,
                 formType: formType,
@@ -31,13 +29,16 @@ function populatePurpose(onload = null){
     url: "/admin/emailTemplates/getPurpose/" + fieldsDictSTR,
     dataType: "json",
     success: function(response){
+      var value;
       for (var key in response){
-        var value = response[key]["Purpose"]
+        value = response[key]["Purpose"]
         $("#purpose").append('<option value="' + value + '">' + value + '</option>');
         $("#purpose").val('default').selectpicker("refresh");
-        if (response.length == 1){
-          getEmailTemplate();
-        }
+      }
+      if (response.length == 1){     // if there is only 1 item left in the Purpose dropdown, choose it automatically
+        $('#purpose').val(value);
+        $("#purpose").selectpicker("refresh");
+        getEmailTemplate();
       }
     }
   })
