@@ -395,7 +395,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>''',
 
-                "audience":"student"
+                "audience":"Student"
                  },
                 {
                 "purpose":"Labor Status Form Submitted For Secondary",
@@ -426,7 +426,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 {
                 "purpose":"Labor Status Form Submitted For Primary",
@@ -457,7 +457,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LSF approved
                 {
@@ -488,7 +488,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
                 "purpose":"Labor Status Form Approved For Primary",
@@ -519,7 +519,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
 
                 {
@@ -530,7 +530,7 @@ emailtemps= [
                 "body":'''
 
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LSF Rejected
                 {
@@ -540,7 +540,7 @@ emailtemps= [
                 "subject":"Labor Status Form Rejected",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
                 "purpose":"Labor Status Form Rejected For Secondary",
@@ -568,7 +568,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 {
                 "purpose":"Labor Status Form Rejected For Primary",
@@ -577,7 +577,7 @@ emailtemps= [
                 "subject":"Labor Status Form Rejected",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LSF modified
                 {
@@ -587,7 +587,7 @@ emailtemps= [
                 "subject":"Labor Status Form Modified",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
                 "purpose":"Labor Status Form Modified For Supervisor",
@@ -596,7 +596,7 @@ emailtemps= [
                 "subject":"Labor Status Form Modified",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LRF Submitted
                 {
@@ -606,7 +606,7 @@ emailtemps= [
                 "subject":"Labor Release Form Submitted",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
                 "purpose":"Labor Release Form Submitted For Supervisor",
@@ -615,7 +615,7 @@ emailtemps= [
                 "subject":"Labor Release Form Submitted",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LRF approved
 
@@ -645,7 +645,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
 
@@ -655,7 +655,7 @@ emailtemps= [
                 "subject":"Labor Release Form Approved",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LRF Rejected
                 {
@@ -665,7 +665,7 @@ emailtemps= [
                 "subject":"Labor Release Form Rejected",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
                 "purpose":"Labor Release Form Rejected For Supervisor",
@@ -674,7 +674,7 @@ emailtemps= [
                 "subject":"Labor Release Form Rejected",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LOF
                 {
@@ -687,7 +687,7 @@ emailtemps= [
                     <p>&nbsp;</p>
                     <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
                     ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
                 "purpose":"Labor Overload Form Submitted For Supervisor",
@@ -696,7 +696,7 @@ emailtemps= [
                 "subject":"Labor Overload Form Submitted",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 {
                 "purpose":"Labor Overload Form Approved",
@@ -705,7 +705,7 @@ emailtemps= [
                 "subject":"Labor Overload Form Approved",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
                 "purpose":"Labor Overload Form Approved For Supervisor",
@@ -714,7 +714,7 @@ emailtemps= [
                 "subject":"Labor Overload Form Approved",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 {
                 "purpose":"Labor Overload Form Rejected",
@@ -723,7 +723,7 @@ emailtemps= [
                 "subject":"Labor Overload Form Rejected",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 #SASS
                 {
@@ -734,7 +734,7 @@ emailtemps= [
                 "body":'''
                     <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 # Break Labor Status Forms
                 {
@@ -765,7 +765,7 @@ emailtemps= [
                             <p>Labor Program Office</p>
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
                 "purpose":"Break Labor Status Form Submitted For Supervisor",
@@ -798,7 +798,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 {
                 "purpose":"Break Labor Status Form Submitted For Supervisor on Second LSF",
@@ -832,7 +832,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 {"purpose":"Break Labor Status Form Submitted For Second Supervisor",
                 "formType":"Labor Status Form",
