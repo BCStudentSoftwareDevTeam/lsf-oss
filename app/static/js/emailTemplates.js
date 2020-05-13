@@ -35,6 +35,9 @@ function populatePurpose(onload = null){
         var value = response[key]["Purpose"]
         $("#purpose").append('<option value="' + value + '">' + value + '</option>');
         $("#purpose").val('default').selectpicker("refresh");
+        if (response.length == 1){
+          getEmailTemplate();
+        }
       }
     }
   })
