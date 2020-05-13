@@ -5,9 +5,13 @@ from app.models.laborStatusForm import *
 from datetime import date
 from app.models.formHistory import *
 from flask import json, jsonify
-from flask import request, render_template
+from flask import request, render_template, flash
 from app.models.overloadForm import *
 from app import cfg
+from app.models.adminNotes import AdminNotes
+from datetime import datetime, date
+from app.models.status import *
+
 
 @admin.route('/admin/financialAidOverloadApproval/<overloadKey>', methods=['GET']) # we get the form ID when FinancialAid or SAAS clicks on the link they receive via email.
 def financialAidOverload(overloadKey):
@@ -77,18 +81,45 @@ def financialAidOverload(overloadKey):
 def formDenial(status):
     ''' This fucntion will get the status (Approved/Denied) and make the appropriate
     changes in the database for that specific overload form'''
-    print(status)
-    if status == "denial":
-        newStatus = "Denied"
-    elif status == "approval":
-        newStatus = "Approved"
-    else:
-        return jsonify({'error': 'Unknown Status'}), 500
     try:
-        # Here we need to change the db with the appropriate information
-        createdUser = User.get(username = cfg['user']['debug'])
+        current_user = require_login() #we need to check to see if the person logged in is SAAS or FinancialAid
+        if not current_user: # Not logged in
+            return render_template('errors/403.html')
+        if not (current_user.isFinancialAidAdmin or current_user.isSaasAdmin): # Not an admin
+            return render_template('errors/403.html')
+        print(status)
+        if status == "denial":
+            newStatus = "Denied"
+        elif status == "approval":
+            newStatus = "Approved"
+        else:
+            return jsonify({'error': 'Unknown Status'}), 500
+
         rsp = eval(request.data.decode("utf-8"))
         print(rsp, "dictionary")
+        currentDate = datetime.now().strftime("%Y-%m-%d")
+        selectedFormHistory = FormHistory.get(FormHistory.formHistoryID == rsp["formHistoryID"])
+        selectedOverload = OverloadForm.get(OverloadForm.overloadFormID == selectedFormHistory.overloadForm.overloadFormID)
+        formStatus = Status.get(Status.statusName == newStatus)
+        if rsp:
+            ## New Entry in AdminNote Table
+            newNoteEntry = AdminNotes.create(formID=selectedFormHistory.formID.laborStatusFormID,
+            createdBy=current_user.UserID, date=currentDate,
+            notesContents=rsp["denialNote"])
+            newNoteEntry.save()
+            ## Updating the overloadform Table
+            if current_user.isFinancialAidAdmin:
+                print("i am financial Aid Admin")
+                selectedOverload.financialAidApproved = formStatus.statusName
+                selectedOverload.financialAidApprover = current_user.UserID
+                selectedOverload.financialAidReviewDate = currentDate
+                selectedOverload.save()
+            if current_user.isSaasAdmin:
+                print("i am SAAS Admin")
+                selectedOverload.SAASApproved = formStatus.statusName
+                selectedOverload.SAASApprover = current_user.UserID
+                selectedOverload.SAASReviewDate = currentDate
+                selectedOverload.save()
         return jsonify({'success':True}), 200
     except Exception as e:
         print("Unable to Deny the OverloadForm",type(e).__name__ + ":", e)

@@ -15,11 +15,30 @@ function denialSubmission(formHistoryKey){
     datatype: "json",
     data: data,
     contentType: "application/json",
-    success:function(response){
-      console.log("success", response);
+    success:function(){
+      console.log("success");
+      msgFlash("Your changes have been saved successfuly.(You will be redirected shortly.)", "success")
+      setTimeout(function() { // executed after 1 second
+         window.location.replace('http://berea.edu'); // redirects to a new website
+       }, 5000);
     },
     error:function(response){
       console.log("error", response);
     }
   })
+}
+
+// for showing different messages with flash
+function msgFlash(flash_message, status){
+    if (status === "success") {
+        category = "success";
+        $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
+        $("#flasher").delay(5000).fadeOut();
+    }
+    else {
+        category = "danger";
+        $("#flash_container").prepend("<div class=\"alert alert-"+ category +"\" role=\"alert\" id=\"flasher\">"+flash_message+"</div>");
+        $("#flasher").delay(5000).fadeOut();
+    }
+
 }
