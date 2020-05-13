@@ -72,7 +72,7 @@
                       {% with modalTarget = modalTarget %}
                         {% include "snips/pendingOverloadModal.html" %}
                       {% endwith %}
-                      <input type='checkbox' id='{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" data-toggle="modal" data-target="#modalOverload" onclick="loadOverloadModal()" name="check[]"  autocomplete="off" />
+                      <input type='checkbox' id='{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" data-toggle="modal" data-target="#modalOverload" onclick="loadOverloadModal(this.value)" name="check[]"  autocomplete="off" />
                       {% endif %}
                       {% include "snips/pendingNotesModal.html" %}
                       <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"

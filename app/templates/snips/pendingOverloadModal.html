@@ -2,7 +2,7 @@
   <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div id="content" class="modal-content">
       <div class="modal-header">
-        <h2 class="modal-title" id="exampleModalLabel" align="center"><b>Labor Overload Form</b></h2>
+        <h3 class="modal-title" id="exampleModalLabel" align="center"><b>Labor Overload Form</b></h3>
       </div>
       <div class="modal-body">
         <table id="overloadStudentTable" class="table table-bordered">
@@ -24,8 +24,8 @@
           <thead>
             <tr>
               <th scope="col">Department</th>
-              <th scope="col">Last Email Date</th>
               <th scope="col">Status</th>
+              <th scope="col">Last Email Sent</th>
               <th scope="col">Email</th>
             </tr>
           </thead>
@@ -33,11 +33,11 @@
           </tbody>
         </table>
         <div class="">
-          <input type="radio" id="approve" name="gender" value="male">
+          <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.id)">
           <label for="approve">Approve</label>
-          <input type="radio" id="approveRel" name="gender" value="female">
+          <input type="radio" id="approveRel" name="decision" value="approveRel" onclick="displayModalTextArea('this.id')">
           <label for="approveRel">Approve Reluctantly</label>
-          <input type="radio" id="deny" name="gender" value="other">
+          <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea('this.id')">
           <label for="deny">Deny</label>
         </div>
         <div id="denyTextarea" style="display:none">

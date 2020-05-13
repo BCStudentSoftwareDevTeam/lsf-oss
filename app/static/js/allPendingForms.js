@@ -288,11 +288,12 @@ function clearTextArea(){ //makes sure that it empties text areas and p tags whe
   $("#laborNotesText").empty();
 }
 
-var laborOverloadInfo = [];
-function loadOverloadModal(val){
-  // alert('Made it in here')
-  laborOverloadInfo.push(val);
-  var data = JSON.stringify(laborOverloadInfo);
+
+function loadOverloadModal(formHistoryID){
+  alert('Made it in here')
+  var laborOverloadID = []
+  laborOverloadID.push(formHistoryID);
+  var data = JSON.stringify(laborOverloadID);
   $.ajax({
     type: "POST",
     url: "/admin/overloadModal",
@@ -302,28 +303,38 @@ function loadOverloadModal(val){
     success: function(response){
       if (response){
         console.log('Made it to success');
+        console.log(response);
+        var studentName = response['stuName']
+        var position = response['stuPosition']
+        var department = response['stuDepartment']
+        var supervisor = response['stuSupervisor']
+        var hours = response['stuHours']
+        var overloadReason = response['studentOverloadReason']
+        var emailDateSAAS = response['SAASEmail']
+        var statusSAAS = response['SAASStatus']
+        var emailDateFinancialAid = response['financialAidLastEmail']
+        var statusFinancialAid = response['financialAidStatus']
         // var labor_denial_detials = response;
         // finalOverload_data(labor_denial_detials);
+        $('#studentOverloadReason').append(overloadReason)
+        $('#overloadStudentTable').append('<tr><td>'+studentName+'</td><td>'+position+'</td><td>'+hours+'</td><td>'+supervisor+'</td><td>'+department+'</td></tr>'); //populate the denial modal for all pending forms
+        $('#overloadDepartmentTable').append('<tr><td>SAAS</td><td>'+emailDateSAAS+'</td><td>'+statusSAAS+'</td><td><button id="SAASEmail" value='+formHistoryID+' type="button" class ="btn btn-info" onclick="sendEmail()">Send Email</button></td></tr>');
+        $('#overloadDepartmentTable').append('<tr><td>Financial Aid</td><td>'+emailDateFinancialAid+'</td><td>'+statusFinancialAid+'</td><td><button id="financialAidEmail" value='+formHistoryID+' type="button" class ="btn btn-info" onclick="sendEmail()">Send Email</button></td></tr>'); //populate the denial modal for all pending forms
        }
      }
    });
 }
 
-function finalOverload_data(returned_details){
-  for (var i = 0; i < returned_details.length; i++){
-    var position= returned_details[i][1];
-    var r_hour= returned_details[i][3];
-    var c_Hours= returned_details[i][4];
-    var supervisor= returned_details[i][2];
-    var department= returned_details[i][5];
-    var contractDate = returned_details[i][6];
-    var hours = " ";
-    if (r_hour.length==4){
-      hours = c_Hours;
-    }
-    else {
-      hours = r_hour;
-    }
-    $('#denialPendingForms').append('<tr><td>'+student+'</td><td>'+position+'</td><td> '+supervisor+'</td> <td> '+ hours +'</td></tr>'); //populate the denial modal for all pending forms
-      }
-    }
+// function displayModalTextArea(radioID){
+//   var radioId = radioID
+//   if (radioID == 'deny'){
+//     $('#denyTextarea').css('display', 'show')
+//   }
+//   else(){
+//     $('#denyTextarea').css('display', 'hide')
+//   }
+// }
+
+function sendEmail() {
+  alert("hello :)")
+}

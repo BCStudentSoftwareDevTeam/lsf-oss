@@ -7,6 +7,7 @@ from app.controllers.errors_routes.handlers import *
 from app.models.laborReleaseForm import LaborReleaseForm
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.modifiedForm import ModifiedForm
+from app.models.emailTracker import EmailTracker
 from app.models.overloadForm import OverloadForm
 from app.models.adminNotes import AdminNotes
 from app.models.formHistory import *
@@ -235,33 +236,57 @@ def getOverloadModalData():
     This function will retrieve the data to populate the overload modal
     """
     try:
-        rsp =eval(request.data.decode("utf-8"))
-        print('Hit the controller', rsp)
+        rsp = eval(request.data.decode("utf-8"))
+        print('Hit the controller', type(int(rsp[0])))
         if rsp:
-            overloadModalInfo = []
-            for formHistoryID in rsp:
-                fhistory_id = LaborStatusForm.select().join(FormHistory).where(FormHistory.formHistoryID == int(formHistoryID)).get()
-                student_details = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == fhistory_id)
-                student_firstname, student_lastname = student_details.studentSupervisee.FIRST_NAME, student_details.studentSupervisee.LAST_NAME
-                student_name = str(student_firstname) + " " + str(student_lastname)
-                student_pos = student_details.POSN_TITLE
-                supervisor_firstname, supervisor_lastname = student_details.supervisor.FIRST_NAME, student_details.supervisor.LAST_NAME
-                supervisor_name = str(supervisor_firstname) +" "+ str(supervisor_lastname)
-                student_hours = student_details.weeklyHours
-                student_hours_ch = student_details.contractHours
-                department = student_details.department
-                # contract_start_date, contract_end_date = student_details.startDate, student_details.endDate
-                # contract_date = str(contract_start_date) + " - " + str(contract_end_date)
-                # studentOverloadReason =
-                tempList = []
-                tempList.append(student_name)
-                tempList.append(student_pos)
-                tempList.append(supervisor_name)
-                tempList.append(str(student_hours))
-                tempList.append(str(student_hours_ch))
-                tempList.append(department)
-                tempList.append(contract_date)
-                id_list.append(tempList)
+            overloadModalInfo = {}
+            historyForm = FormHistory.get(FormHistory.formHistoryID == int(rsp[0]))
+            print('Form', historyForm.formID)
+            studentFirstName, studentLastName = historyForm.formID.studentSupervisee.FIRST_NAME, historyForm.formID.studentSupervisee.LAST_NAME
+            studentName = studentFirstName + " " + studentLastName
+            print('Student', studentName)
+            studentPosition = historyForm.formID.POSN_TITLE
+            studentHours = historyForm.formID.weeklyHours
+            studentDepartment = historyForm.formID.department.DEPT_NAME
+            studentSupervisorFirstName, studentSupervisorLastName  = historyForm.formID.supervisor.FIRST_NAME, historyForm.formID.supervisor.LAST_NAME
+            studentSupervisorName = studentSupervisorFirstName + ' ' + studentSupervisorLastName
+            print('Supervisor:', studentSupervisorName)
+            studentOverloadReason = historyForm.overloadForm.overloadReason
+            print('Overload Reason:', studentOverloadReason)
+
+            # Grab the info for SAASA
+            # Select from EmailTracker where recipient is SAAS in desc order
+            # Input dept, status, last email sent, email button
+            SAASStatus = historyForm.overloadForm.SAASApproved.statusName
+            SAASLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'SAAS') & (EmailTracker.formID == historyForm.formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
+            SAASEmailDate = SAASLastEmail[0].date.strftime('%m/%d/%y')
+            # SAASDate = SAASEmailDate[:8]
+            # print(SAASDate)
+            # Push this variable into the dictionary
+
+            # Grab the info for Financial aid
+            financialAidStatus = historyForm.overloadForm.financialAidApproved.statusName
+            financialAidLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'Financial Aid') & (EmailTracker.formID == historyForm.formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
+            financialAidEmailDate = financialAidLastEmail[0].date.strftime('%m/%d/%y')
+            # financialAidDate = financialAidEmailDate[:8]
+            # print(financialAidEmailDate)
+            # print(financialAidDate)
+            # Push this variable into the dictionary
+
+            overloadModalInfo.update({
+                                'stuName': studentName,
+                                'stuPosition': studentPosition,
+                                'stuDepartment': studentDepartment,
+                                'stuSupervisor': studentSupervisorName,
+                                'stuHours': studentHours,
+                                'studentOverloadReason': studentOverloadReason,
+                                'SAASEmail': SAASEmailDate,
+                                'SAASStatus': SAASStatus,
+                                'financialAidStatus': financialAidStatus,
+                                'financialAidLastEmail': financialAidEmailDate
+                                })
+            print(overloadModalInfo)
+
             return jsonify(overloadModalInfo)
     except Exception as e:
         print("error", e)
