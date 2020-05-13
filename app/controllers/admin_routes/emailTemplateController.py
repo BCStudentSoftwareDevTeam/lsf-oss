@@ -42,17 +42,21 @@ def getPurpose(fieldsDictSTR):
     try:
         fieldsDict = json.loads(fieldsDictSTR)
         emailPurposes = EmailTemplate.select(EmailTemplate.purpose)
+        print("emailPurposes: ", len(emailPurposes), " ", emailPurposes)
         # populate the Purpose dropdown depending on other dropdowns' values
+        print("----- formType: ", fieldsDict['formType'])
         if len(fieldsDict['recipient']) > 0:
             emailPurposes = emailPurposes.select(EmailTemplate.purpose).where(EmailTemplate.audience == fieldsDict['recipient'])
         if len(fieldsDict['formType']) > 0:
             emailPurposes = emailPurposes.select(EmailTemplate.purpose).where(EmailTemplate.formType == fieldsDict['formType'])
         if len(fieldsDict['action']) > 0:
             emailPurposes = emailPurposes.select(EmailTemplate.purpose).where(EmailTemplate.action == fieldsDict['action'])
-
         purposeList = []
-        for i in emailPurposes:
-            purposeList.append({"Purpose":i.purpose})
+
+        for i in range(len(emailPurposes)):
+            print("Current i: ", i)
+            purposeList.append({"Purpose":emailPurposes[i].purpose})
+        print("len purposeList: ", len(purposeList))
         return json.dumps(purposeList)
     except Exception as e:
         print(e)

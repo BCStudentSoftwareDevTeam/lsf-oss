@@ -1,7 +1,9 @@
 $(document).ready(function() {
+  populatePurpose("yes");
+  console.log("ready test");
 });
 
-function populatePurpose(){
+function populatePurpose(onload = null){
   // This function will begin by refreshing the 'Purpose' select picker everytime,
   // in order to correctly update it everytime. The function then checks what
   // recipient was choosen from the select picker, and queries all the purposes from
@@ -13,10 +15,17 @@ function populatePurpose(){
   CKEDITOR.instances["editor1"].setData('')
   var recipient = $("#recipient").val()
   var formType = $("#formType").val()
+  console.log("formType JS: "+ formType);
   var action = $("#action").val()
   fieldsDict = {recipient: recipient,
                 formType: formType,
                 action: action};
+  if(onload){
+    fieldsDict = {recipient: "",
+                  formType: "",
+                  action: ""};
+  }
+
   fieldsDictSTR = JSON.stringify(fieldsDict);
   $.ajax({
     url: "/admin/emailTemplates/getPurpose/" + fieldsDictSTR,
