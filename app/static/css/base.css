@@ -128,8 +128,9 @@ a:hover {
 }
 
 #logo img {
-    padding-right: 5px;
-    border-radius: 75px;
+    margin-right: 5px;
+    margin-top: 5px;
+    border-radius: 20px;
     box-shadow: -4px 4px 8px 2px lightgrey;
 }
 
