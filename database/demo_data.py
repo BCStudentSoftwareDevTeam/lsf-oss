@@ -492,7 +492,7 @@ emailtemps= [
                 },
                 {
                 "purpose":"Primary Position Labor Status Form Approved",
-                "formType":"Primary Labor Status Form",
+                "formType":"Labor Status Form",
                 "action":"Approved",
                 "subject":"Labor Status Form Approved",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
@@ -572,7 +572,7 @@ emailtemps= [
                 },
                 {
                 "purpose":"Primary Position Labor Status Form Rejected",
-                "formType":"Primary Labor Status Form",
+                "formType":"Labor Status Form",
                 "action":"Rejected",
                 "subject":"Labor Status Form Rejected",
                 "body":'''
