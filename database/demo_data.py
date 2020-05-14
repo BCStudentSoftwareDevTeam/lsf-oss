@@ -860,7 +860,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"breakPrimary"
+                "audience":"Break Supervisor"
                 }
             ]
 EmailTemplate.insert_many(emailtemps).on_conflict_replace().execute()
