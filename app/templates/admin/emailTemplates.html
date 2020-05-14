@@ -60,24 +60,17 @@
      </select>
   </div>
   <div class="form-group col-md-12">
-  <label for="Purpose">Purpose</label>
-    <select class="selectpicker"
+  <label for="Purpose">Subject</label>
+    <input class="form-control"
+      type="text"
       name='purpose'
       id='purpose'
-      data-live-search='true'
-      title="Select Purpose of Email"
+      style = "background-color:#dcdee4;"
+      placeholder="Subject of Email"
       data-width="100%"
-      onchange="getEmailTemplate()">
-   </select>
-  </div>
-  <div class="form-group col-md-12">
-  <label for="Subject">Subject</label>
-     <input type="text"
-     class="form-control"
-     id="subject"
-     style = "background-color:#dcdee4;"
-     placeholder="Subject"
-     readonly></input>
+      onchange="getEmailTemplate()"
+      readonly>
+   </input>
   </div>
 
   <div class="form-group col-md-12">
