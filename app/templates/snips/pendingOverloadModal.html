@@ -18,8 +18,6 @@
           <tbody>
           </tbody>
         </table>
-        <p><strong>Student's Reason for Overload:</strong></p>
-        <textarea id='studentOverloadReason' name="name" rows="4" cols="80" style="max-width:100%;resize:none" disabled></textarea>
         <table id="overloadDepartmentTable" class="table table-bordered">
           <thead>
             <tr>
@@ -32,18 +30,34 @@
           <tbody>
           </tbody>
         </table>
-        <div class="">
-          <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.id)">
+        <div id='radioDiv'>
+          <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
+                 class="glyphicon glyphicon-edit btn-lg
+                      {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
+                      {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
+                      {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
+                      {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#NotesModal"> </span>
+          <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">
           <label for="approve">Approve</label>
-          <input type="radio" id="approveRel" name="decision" value="approveRel" onclick="displayModalTextArea('this.id')">
+          <input type="radio" id="approveRel" name="decision" value="approveRel" onclick="displayModalTextArea(this.value)">
           <label for="approveRel">Approve Reluctantly</label>
-          <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea('this.id')">
+          <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea(this.value)">
           <label for="deny">Deny</label>
         </div>
-        <div id="denyTextarea" style="display:none">
-          <p><strong>Reason for denial:</strong></p>
-          <textarea id='denyOverloadReason' name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder=""></textarea>
+        <div id="notesTextArea">
+          <p id="notesTextAreaHeader"><strong>Labor Office Notes:</strong></p>
+          <textarea id='overloadNotes' name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
+          <button id='overloadSubmitNotes' type="button" class="btn btn-primary" value="overloadNotes" name="button" onclick="notesInsert(this.value, this.id)">Send Notes</button>
         </div>
+        <div id="denyTextArea" style="display:None">
+          <p id="denyTextAreaHeader"><strong>Denial Reason:</strong></p>
+          <textarea id='denyOverloadReason' name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
+        </div>
+
+
+
+
+
       </div>
       <div class="modal-footer">
         <div class="col-sm-2" align="left">
@@ -51,7 +65,7 @@
           data-dismiss="modal"  onclick="location.reload()">Close</button>
         </div>
           <div class="col-sm- floatright" align="right" >
-          <button type="button" class="btn btn-success floatright" id="submitOverload">Submit</button>
+          <button type="button" class="btn btn-success floatright" id="submitOverload" onclick="submitOverload()">Submit</button>
         </div>
       </div>
     </div>

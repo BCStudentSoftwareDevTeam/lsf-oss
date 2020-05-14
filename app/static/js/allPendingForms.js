@@ -172,16 +172,17 @@ function getNotes (formId) {
    });
 }
 
- function notesInsert() {
-   var formId = $("#laborNotesText").data('formId');
-   var laborNotes = $("#laborNotesText").val(); //this is getting the id of the labor notes text area
+ function notesInsert(textareaID, buttonID) {
+   var formId = $("#" + textareaID).data('formId');
+   console.log(formId);
+   var laborNotes = $("#" + textareaID).val(); //this is getting the id of the labor notes text area
    var notes = {'formId': formId, 'notes':laborNotes};   // {ID: textarea value} this sets the text area to what the user types in it
    formId = notes.formId; //This is how we get the ID of the form
    var note = notes.notes; //This is how we are getting the note object from the dictionary
    var data = JSON.stringify(note);
    var notesGlyph = $("#notes_" + formId);
 
-   $("#saveNotes").on('submit', function(e) {
+   $("#" + buttonID).on('submit', function(e) {
      e.preventDefault();
      });
 
@@ -289,8 +290,8 @@ function clearTextArea(){ //makes sure that it empties text areas and p tags whe
 }
 
 
-function loadOverloadModal(formHistoryID){
-  alert('Made it in here')
+function loadOverloadModal(formHistoryID, laborStatusFormID){
+  // alert('Made it in here')
   var laborOverloadID = []
   laborOverloadID.push(formHistoryID);
   var data = JSON.stringify(laborOverloadID);
@@ -318,23 +319,72 @@ function loadOverloadModal(formHistoryID){
         // finalOverload_data(labor_denial_detials);
         $('#studentOverloadReason').append(overloadReason)
         $('#overloadStudentTable').append('<tr><td>'+studentName+'</td><td>'+position+'</td><td>'+hours+'</td><td>'+supervisor+'</td><td>'+department+'</td></tr>'); //populate the denial modal for all pending forms
+        $('#overloadStudentTable').append('<tr><td><strong>Overload Reason</strong></td><td colspan="4">'+overloadReason+'</td></tr>')
+        // $('#overloadStudentTable').append('<tr><th colspan="5">Overload Reason</th></tr>')
+        // $('#overloadStudentTable').append('<tr><td colspan="5">'+ overloadReason +'</td></tr>')
+
+
+
+
+
+
+
         $('#overloadDepartmentTable').append('<tr><td>SAAS</td><td>'+emailDateSAAS+'</td><td>'+statusSAAS+'</td><td><button id="SAASEmail" value='+formHistoryID+' type="button" class ="btn btn-info" onclick="sendEmail()">Send Email</button></td></tr>');
         $('#overloadDepartmentTable').append('<tr><td>Financial Aid</td><td>'+emailDateFinancialAid+'</td><td>'+statusFinancialAid+'</td><td><button id="financialAidEmail" value='+formHistoryID+' type="button" class ="btn btn-info" onclick="sendEmail()">Send Email</button></td></tr>'); //populate the denial modal for all pending forms
+
+        $('#overloadNotes').data('formId', laborStatusFormID)
        }
      }
    });
 }
 
-// function displayModalTextArea(radioID){
-//   var radioId = radioID
-//   if (radioID == 'deny'){
-//     $('#denyTextarea').css('display', 'show')
-//   }
-//   else(){
-//     $('#denyTextarea').css('display', 'hide')
-//   }
-// }
+function displayModalTextArea(radioValue){
+  var radioVal = radioValue
+  if (radioVal == 'deny'){
+    $('#denyTextArea').css('display', 'block')
+    $('#notesTextArea').css('display', 'none')
+  }
+  else {
+    $('#denyTextArea').css('display', 'none')
+    $('#notesTextArea').css('display', 'block')
+  }
+}
 
 function sendEmail() {
   alert("hello :)")
+}
+
+function submitOverload() {
+  if ($('input[name=decision]:checked').length > 0) {
+    var submitStatus = true
+    console.log('okay to submit');
+    if($('#deny').is(':checked')){
+      console.log('Celebrate our diffrences');
+      if ($('#denyOverloadReason').val() == '') {
+        $('#denyOverloadReason').attr("placeholder", 'A reason for denial is required to deny the form')
+        $('#denyOverloadReason').css('border-color', 'red');
+        // nothing is submitted
+        submitStatus = false
+      }
+      else{
+        // Here, we grab the value and set the status to deny
+      }
+    }
+    else{
+      console.log('Not deny');
+      // if #approved is checked, we set the status to approved
+      // if #approvedRel is checked, we set the status to approved rel
+    }
+    if (submitStatus == true){
+      //AJAx call
+    }
+  }
+  else {
+    $('#radioDiv').css('border', 'thin dotted red')
+    $('#radioDiv').delay(2000).queue(function (next) {
+      $(this).css('border', 'none');
+      next();
+    })
+
+  }
 }
