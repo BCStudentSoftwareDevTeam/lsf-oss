@@ -31,30 +31,31 @@
           </tbody>
         </table>
         <div id='radioDiv'>
-          <span id="notes_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})"
-                 class="glyphicon glyphicon-edit btn-lg
+          <span id="notes_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" class="glyphicon glyphicon-edit btn-lg
                       {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
                       {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
                       {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
-                      {% else %} text-secondary {% endif %}"> </span>
-          <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">
-          <label for="approve">Approve</label>
-          <input type="radio" id="approveRel" name="decision" value="approveRel" onclick="displayModalTextArea(this.value)">
-          <label for="approveRel">Approve Reluctantly</label>
-          <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea(this.value)">
-          <label for="deny">Deny</label>
+                      {% else %} text-success {% endif %}" style='float: left;'> </span>
+
+          <label for="approve" class="radio-inline">
+            <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve
+          </label>
+          <label for="approveRel" class="radio-inline">
+            <input type="radio" id="approveRel" name="decision" value="approveRel" onclick="displayModalTextArea(this.value)">Approve Reluctantly
+          </label>
+          <label for="deny" class="radio-inline">
+            <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea(this.value)">Deny
+          </label>
         </div>
         <div id="notesTextArea">
-          <p id="notesTextAreaHeader"><strong>Labor Office Notes:</strong></p>
           <textarea id='overloadNotes' name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
-          <button id='overloadSubmitNotes' type="button" class="btn btn-primary" value="overloadNotes" name="button" onclick="notesInsert(this.value, this.id)">Send Notes</button>
         </div>
         <div id="denyTextArea" style="display:None">
-          <p id="denyTextAreaHeader"><strong>Denial Reason:</strong></p>
+          <p id="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
           <textarea id='denyOverloadReason' name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
         </div>
         <div id="logNotesDiv" style='display:none'>
-          <h4 class="supeNotesLabel col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </h4>
+          <h4 class="supeNotesLabel col-md-4 control-label text-left" for="supervisor">Supervisor Notes: </h4>
           <textarea class="notesText" rows="2" cols="70" disabled> </textarea>
           <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
           <div class="notesLogArea"></div>
@@ -67,11 +68,10 @@
       </div>
       <div class="modal-footer">
         <div class="col-sm-2" align="left">
-          <button type="button" class="btn btn-secondary floatleft" id="close"
-          data-dismiss="modal"  onclick="location.reload()">Close</button>
+          <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal" onclick="location.reload()">Close</button>
         </div>
-          <div class="col-sm- floatright" align="right" >
-          <button type="button" class="btn btn-success floatright" id="submitOverload" onclick="submitOverload()">Submit</button>
+        <div class="col-sm- floatright" align="right">
+          <button type="button" class="btn btn-success floatright" id="submitOverload" onclick="submitOverload({{allForms.formHistoryID}})">Submit</button>
         </div>
       </div>
     </div>

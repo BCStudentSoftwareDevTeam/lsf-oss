@@ -10,6 +10,7 @@ from app.models.modifiedForm import ModifiedForm
 from app.models.emailTracker import EmailTracker
 from app.models.overloadForm import OverloadForm
 from app.models.adminNotes import AdminNotes
+from app.logic.emailHandler import *
 from app.models.formHistory import *
 from app.models.term import Term
 from app.logic.banner import Banner
@@ -219,7 +220,6 @@ def insertNotes(formId):
 
         if stripresponse:
             AdminNotes.create(formID=formId, createdBy=current_user.UserID, date=currentDate, notesContents=stripresponse) # creates a new entry in the laborOfficeNotes table
-            AdminNotes.save()
 
             return jsonify({"Success": True})
 
@@ -288,6 +288,73 @@ def getOverloadModalData():
             print(overloadModalInfo)
 
             return jsonify(overloadModalInfo)
+    except Exception as e:
+        print("error", e)
+        return jsonify({"Success": False})
+
+
+@admin.route('/admin/overloadFormUpdate', methods=['POST'])
+def updateOverloadForm():
+    """
+    This function will retrieve the data to populate the overload modal
+    """
+    try:
+        rsp = eval(request.data.decode("utf-8"))
+        if rsp:
+            historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
+            overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
+            currentDate = datetime.now().strftime("%Y-%m-%d")
+            createdUser = User.get(username = cfg['user']['debug'])
+            status = Status.get(Status.statusName == rsp['status'])
+            if 'denialReason' in rsp.keys():
+                historyForm.rejectReason = rsp['denialReason']
+                historyForm.save()
+                AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
+                                createdBy = createdUser.UserID,
+                                date = currentDate,
+                                notesContents = rsp['denialReason'])
+            if 'adminNotes' in rsp.keys():
+                AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
+                                createdBy = createdUser.UserID,
+                                date = currentDate,
+                                notesContents = rsp['adminNotes'])
+            overloadForm.laborApproved = status.statusName
+            overloadForm.laborApprover = createdUser.UserID
+            overloadForm.laborReviewDate = currentDate
+            overloadForm.save()
+            # historyForm.status = status.statusName
+            historyForm.reviewedBy = createdUser.UserID
+            historyForm.reviewedDate = currentDate
+            historyForm.save()
+
+            return jsonify({"Success": True})
+    except Exception as e:
+        print("error", e)
+        return jsonify({"Success": False})
+
+@admin.route('/admin/sendVerificationEmail', methods=['POST'])
+def sendEmail():
+    try:
+        rsp = eval(request.data.decode("utf-8"))
+        if rsp:
+            print(rsp)
+            if rsp['emailRecipient'] == 'SAASEmail':
+                recipient = 'SAAS'
+            elif rsp['emailRecipient'] == 'financialAidEmail':
+                recipient = 'Financial Aid'
+            print(rsp['formHistoryID'])
+            historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
+            print('Past it')
+            currentDate = datetime.now().strftime("%Y-%m-%d")
+            EmailTracker.create(formID = historyForm.formID.laborStatusFormID,
+                                date = currentDate,
+                                recipient = recipient
+            )
+            print('Made it past email')
+            # email = emailHandler(historyForm.historyFormID)
+            # email.overloadVerification(recipient, link)
+            print('Made it all the way through')
+            return jsonify({"Success": True})
     except Exception as e:
         print("error", e)
         return jsonify({"Success": False})
