@@ -681,14 +681,13 @@ emailtemps= [
                             ''',
                 "audience":"student"
                 },
-                #SASS
+                #SAAS
                 {
-                "purpose":"SASS and Financial Aid Office",
-                "subject":"Overload Verification",
+                "purpose":"SAAS and Financial Aid Office",
+                "subject":"Labor Overload Form Verification",
                 "body":'''
                     <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
                             ''',
-                "audience":"supervisor"
                 },
                 # Break Labor Status Forms
                 {

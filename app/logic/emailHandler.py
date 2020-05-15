@@ -214,7 +214,7 @@ class emailHandler():
             email = "" #In the future, this(SASS email address) should be puled from the yaml file instead of being a string
         elif dept == "Financial Aid":
             email = "" #This(financial Aid email) address should also be pull from the yaml file
-        message = Message("Overload Verification",
+        message = Message("Labor Overload Form Verification",
             recipients=[email])
         emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "SAAS and Financial Aid Office")
         message.html = self.replaceText(emailTemplateID.body)

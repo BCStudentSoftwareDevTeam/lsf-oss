@@ -15,43 +15,33 @@
   <h2>Financial Aid (SAAS) Overload Approval</h2>
     <h3 id = "student"> {{studentName}} ({{studentBnum}}) <h3>
 </div>
- <form action="/index" id="modifyLSF">
+ <form id="modifyLSF">
    <div class="container">
    <div class="floatleft">
        <div class="form-group">
          <h2> Current Position </h2>
          <label for="Student">Student Name:</label> <!--User CANNOT edit-->
-         <div>
            <input type="text" class="form-control" id="student" value="{{studentName}}" disabled> <!--User CANNOT edit-->
-         </div>
        </div>
 
        <div class="form-group">
          <label for="primaryPosition" class="field">Primary Position:</label>
-         <div>
             <input type = "text" class="form-control" id= "primaryPosition"value="{{position}}" disabled> </input> <!-- stores value of original-->
-        </div>
        </div>
 
        <div class="form-group">
          <label for="primaryPosHours">Total Primary Position Hours:</label> <!--User CANNOT edit-->
-         <div>
            <input type="text" class="form-control" id="primaryPosHours" value="{{primaryPositionHours}}" disabled> <!--User CANNOT edit-->
-         </div>
        </div>
 
        <div class="form-group">
          <label for="primarySupervisor" class="field">Primary Supervisor:</label>
-         <div>
             <input  type="text" class="form-control" id= "primarySupervisor"value="{{supervisor}}" disabled> </input> <!-- stores value of original-->
-        </div>
        </div>
        <!-- This selectpicker will be disabled if term is for a break, since jobtype is always Secondary-->
        <div class="form-group">
          <label for="department">Department:</label> <!--User CANNOT edit-->
-         <div>
            <input type="text" class="form-control" id="department" value="{{department}}" disabled> <!--User CANNOT edit-->
-         </div>
        </div>
    </div>
 
@@ -59,45 +49,35 @@
      <div class="form-group">
        <h2> Overload Request Info </h2>
        <label for="overloadPosition">Position:</label> <!--User CANNOT edit-->
-       <div >
          <input type="text" class="form-control" id="overloadPosition" value="{{overloadPosition}}" disabled> <!--User CANNOT edit-->
-       </div>
      </div>
 
      <div class="form-group">
        <label for="overloadHours">Total hours with overload:</label> <!--User CANNOT edit-->
-       <div>
          <input type="text" class="form-control" id="overloadHours" value= "{{totalOverloadHours}}" disabled> <!--User CANNOT edit-->
-       </div>
      </div>
 
      <div class="form-group">
        <label for="dates">Contract Date:</label> <!--User CANNOT edit--> <!--- TODO Is connected to Labor Status form Start Date -->
-       <div>
          <input type="text" class="form-control" id="dates" value= "{{contractDate}}" disabled> <!--User CANNOT edit-->
-       </div>
      </div>
 
      <div class="form-group">
-       <h4>Student's Overload Reason:</h4>
-       <div>
+       <label>Student's Overload Reason:</label>
          <textarea type="text" class="form-control" id="overloadReason" value="{{studentOverloadReason}}" disabled>{{studentOverloadReason}}</textarea>
-       </div>
      </div>
      <div class="form-group">
-       <h4>Labor Office Notes:</h4>
-       <div>
+       <label>Labor Office Notes:</label>
          <textarea type="text" class="form-control" id="laborNotes" value="{{laborOfficeNotes}}" disabled>{{laborOfficeNotes}}</textarea>
-       </div>
      </div>
   </div>
   </div>
 
-    <div class="container">
-      <div class="floatleft">
+    <div class="container" align="center" id="buttonContainer">
+      <div class="col-md-6" align="right">
         <button type="button" id = "approve" class="btn btn-success" value="approved" onclick="openApproveDenyModal(this.value)">Approve</button>
       </div>
-      <div class="floatright">
+      <div class="col-md-6" align="left" >
         <button id="deny_{{overload.formHistoryID}}"
          type="button" class="btn btn-danger"
          value = "denied"
@@ -108,6 +88,5 @@
         {% include "snips/financialAidOverloadModals.html" %}
       {% endwith %}
     </div>
-
  </form>
 {% endblock %}

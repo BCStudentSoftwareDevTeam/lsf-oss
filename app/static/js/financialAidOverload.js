@@ -16,12 +16,11 @@ function overloadSubmission(formHistoryKey){
     $("#finOverloadSubmit").attr("data-dismiss", "modal")
     $.ajax({
       method: "POST",
-      url:"/admin/financialAidOverloadApproval/denial",
+      url:"/admin/financialAidOverloadApproval/"+statusName,
       datatype: "json",
       data: data,
       contentType: "application/json",
       success:function(){
-        console.log("success");
         msgFlash("Your changes have been saved successfuly.(You will be redirected shortly.)", "success")
         setTimeout(function() { // executed after 1 second
            window.location.replace('http://berea.edu'); // redirects to a new website
@@ -48,8 +47,9 @@ function msgFlash(flash_message, status){
     }
 
 }
-
+var statusName = null
 function openApproveDenyModal(status){
+  statusName = status
   if (status == "approved"){
     $("#required-error").hide();
     $("#finOverloadSubmit").attr("data-dismiss", "modal")
@@ -60,7 +60,7 @@ function openApproveDenyModal(status){
   }
   else{
     $("#finOverloadModal .modal-title").text("Reason for Denial");
-    $("#modal-body-content").text("You have selected 'Deny' for this student's Overload Request. Please indicate a reasoning for this decision");
+    $("#modal-body-content").text("You have selected 'Deny' for this student's Overload Request. Please indicate a reasoning for this decision (Required).");
     $(".textarea-required").prop('required', true);
     $("#finOverloadModal").modal("show");
   }
