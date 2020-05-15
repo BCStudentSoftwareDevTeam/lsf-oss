@@ -39,7 +39,8 @@
         data-live-search='false'
         title="Select Form Type"
         data-width="100%"
-        onchange="populatePurpose()">
+        onchange="populatePurpose()"
+        disabled>
         {% for value in formType %}
            <option value="{{value.formType}}">{{value.formType}}</option>
         {% endfor %}
@@ -53,7 +54,8 @@
         data-live-search='false'
         title="Select Action"
         data-width="100%"
-        onchange="populatePurpose()">
+        onchange="populatePurpose()"
+        disabled>
         {% for value in action %}
            <option value="{{value.action}}">{{value.action}}</option>
         {% endfor %}

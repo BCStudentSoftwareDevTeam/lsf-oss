@@ -1,8 +1,40 @@
+emailTemplateArray = [];
+
 $(document).ready(function() {
-  populatePurpose("Onload");
+  console.log("pre funct");
+  getEmailArray();
+  console.log("post funct");
+
 });
 
-function populatePurpose(onload = null){
+
+function getEmailArray(){
+  console.log("in funct");
+  $.ajax({
+    url: "/admin/emailTemplates/getEmailArray/",
+    dataType: "json",
+    success: function(response){
+      console.log("in AJAX");
+      console.log(typeof(response));
+      var item = JSON.parse(response)
+      console.log(typeof(item));
+      console.log("---response: ", response);
+      // print()
+      // emailTemplateArray = JSON.parse(response);
+      console.log("---array: ", emailTemplateArray)
+      for(i = 0; i < emailTemplateArray.length; i++){
+        // console.log("in loop:", i);
+        console.log(emailTemplateArray[i]);
+      }
+      // console.log("---response: ", response);
+      // emailTemplateArray = JSON.stringify(response);
+      // console.log("---array: ", emailTemplateArray);
+    }
+  })
+}
+
+
+function populatePurpose(){
   // This function will begin by refreshing the 'Purpose' select picker everytime,
   // in order to correctly update it everytime. The function then checks what
   // recipient was choosen from the select picker, and queries all the purposes from
@@ -18,11 +50,6 @@ function populatePurpose(onload = null){
   fieldsDict = {recipient: recipient,
                 formType: formType,
                 action: action};
-  if(onload){
-    fieldsDict = {recipient: "",
-                  formType: "",
-                  action: ""};
-  }
 
   fieldsDictSTR = JSON.stringify(fieldsDict);
   $.ajax({
@@ -33,7 +60,6 @@ function populatePurpose(onload = null){
       for (var key in response){
         value = response[key]["Purpose"]
         $("#purpose").append('<option value="' + value + '">' + value + '</option>');
-        $("#purpose").val('default').selectpicker("refresh");
       }
       if (response.length == 1){     // if there is only 1 item left in the Purpose dropdown, choose it automatically
         $('#purpose').val(value);
