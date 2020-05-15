@@ -11,7 +11,7 @@ from app import cfg
 from app.models.adminNotes import AdminNotes
 from datetime import datetime, date
 from app.models.status import *
-
+from app.logic.emailHandler import*
 
 @admin.route('/admin/financialAidOverloadApproval/<overloadKey>', methods=['GET']) # we get the form ID when FinancialAid or SAAS clicks on the link they receive via email.
 def financialAidOverload(overloadKey):
@@ -116,6 +116,8 @@ def formDenial(status):
                 selectedOverload.SAASApprover = current_user.UserID
                 selectedOverload.SAASReviewDate = currentDate
                 selectedOverload.save()
+        email = emailHandler(rsp["formHistoryID"]) ## sending email to Labor Admin on any submission
+        email.verifiedOverloadNotification()
         return jsonify({'success':True}), 200
     except Exception as e:
         print("Unable to Deny the OverloadForm",type(e).__name__ + ":", e)

@@ -220,6 +220,19 @@ class emailHandler():
         message.html = self.replaceText(emailTemplateID.body)
         self.mail.send(message)
 
+    def verifiedOverloadNotification(self):
+        """ This email will be sent to Labor Admin when SAAS or Financial Aid Make
+        a decision on an overload form"""
+        newEmailTracker = EmailTracker.create(
+                        formID = self.laborStatusForm,
+                        date = datetime.today().strftime('%Y-%m-%d'),
+                        recipient = "Labor Admin"
+                        )
+        message = Message("Verified Labor Overload Form Notification",
+                    recipients=[""]) # TODO: Labor Admin email
+        emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Admin Notification")
+        message.html = self.replaceText(emailTemplateID.body)
+        self.mail.send(message)
 
     def checkRecipient(self, studentEmailPurpose=False, primaryEmailPurpose=False, secondaryEmailPurpose = False):
         """
