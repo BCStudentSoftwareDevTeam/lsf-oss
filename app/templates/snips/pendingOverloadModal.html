@@ -31,12 +31,12 @@
           </tbody>
         </table>
         <div id='radioDiv'>
-          <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
+          <span id="notes_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})"
                  class="glyphicon glyphicon-edit btn-lg
                       {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
                       {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
                       {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
-                      {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#NotesModal"> </span>
+                      {% else %} text-secondary {% endif %}"> </span>
           <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">
           <label for="approve">Approve</label>
           <input type="radio" id="approveRel" name="decision" value="approveRel" onclick="displayModalTextArea(this.value)">
@@ -52,6 +52,12 @@
         <div id="denyTextArea" style="display:None">
           <p id="denyTextAreaHeader"><strong>Denial Reason:</strong></p>
           <textarea id='denyOverloadReason' name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
+        </div>
+        <div id="logNotesDiv" style='display:none'>
+          <h4 class="supeNotesLabel col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </h4>
+          <textarea class="notesText" rows="2" cols="70" disabled> </textarea>
+          <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
+          <div class="notesLogArea"></div>
         </div>
 
 
