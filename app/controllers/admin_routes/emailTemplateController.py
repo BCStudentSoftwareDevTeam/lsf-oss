@@ -41,23 +41,20 @@ def email_templates():
 def getEmailArray():
     print("in AJAX")
     response = EmailTemplate.select()
-    # for i in response:
-    #     print(i.audience)
     emailTemplateArrayDict = []
     for i in range(len(response)):
         currentTemplateDict = { "ID": response[i].emailTemplateID,
                                 "purpose": response[i].purpose,
                                 "subject": response[i].subject,
-                                "body": str(response[i].body),
+                                "body": response[i].body,
                                 "audience": response[i].audience,
                                 "formType": response[i].formType,
                                 "action": response[i].action
                               }
         emailTemplateArrayDict.append(currentTemplateDict)
-        break
-    print("emailTemplate: ", emailTemplateArrayDict)
-    print("---response: ", type(response))
-    return json.dumps((emailTemplateArrayDict))
+
+    # print("!!!!emailTemplate: ", emailTemplateArrayDict) # Can't print on terminal
+    return json.dumps(emailTemplateArrayDict)
 
 @admin.route('/admin/emailTemplates/getPurpose/<fieldsDictSTR>', methods=['GET'])
 

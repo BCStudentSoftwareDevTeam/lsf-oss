@@ -1,38 +1,54 @@
-emailTemplateArray = [];
+var emailTemplateArray;
 
 $(document).ready(function() {
-  console.log("pre funct");
   getEmailArray();
-  console.log("post funct");
-
 });
 
-
 function getEmailArray(){
-  console.log("in funct");
   $.ajax({
     url: "/admin/emailTemplates/getEmailArray/",
     dataType: "json",
     success: function(response){
-      console.log("in AJAX");
-      console.log(typeof(response));
-      var item = JSON.parse(response)
-      console.log(typeof(item));
-      console.log("---response: ", response);
-      // print()
-      // emailTemplateArray = JSON.parse(response);
-      console.log("---array: ", emailTemplateArray)
-      for(i = 0; i < emailTemplateArray.length; i++){
-        // console.log("in loop:", i);
-        console.log(emailTemplateArray[i]);
-      }
-      // console.log("---response: ", response);
-      // emailTemplateArray = JSON.stringify(response);
-      // console.log("---array: ", emailTemplateArray);
+      emailTemplateArray = response;
     }
   })
 }
 
+function populateFormType(){
+  // populates Form Type only when Recipient is selected
+  $("#formType").prop("disabled", false);
+  $("#formType").empty();
+  $("#action").empty();
+  var recipient = $("#recipient").val();
+  var appendedItems = [];
+  for (var dict in emailTemplateArray){
+    var value = emailTemplateArray[dict]["formType"];
+    if(recipient == emailTemplateArray[dict]["audience"] && !appendedItems.includes(value)){
+      appendedItems.push(value);
+      $("#formType").append('<option value="' + value + '">' + value + '</option>');
+    }
+  }
+  $("#formType").selectpicker("refresh");
+  $("#action").selectpicker("refresh");
+  $("#action").prop("disabled", true);
+}
+
+function populateAction(){
+  // populates Action only when Form Type is selected
+  $("#action").prop("disabled", false);
+  $("#action").empty();
+  var recipient = $("#recipient").val();
+  var formType = $("#formType").val();
+  var appendedItems = [];
+  for (var dict in emailTemplateArray){
+    var value = emailTemplateArray[dict]["action"];
+    if(recipient == emailTemplateArray[dict]["audience"] && formType == emailTemplateArray[dict]["formType"] && !appendedItems.includes(value)){
+      appendedItems.push(value);
+      $("#action").append('<option value="' + value + '">' + value + '</option>');
+    }
+  }
+  $("#action").selectpicker("refresh");
+}
 
 function populatePurpose(){
   // This function will begin by refreshing the 'Purpose' select picker everytime,
