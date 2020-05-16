@@ -460,7 +460,7 @@ function createStuDict(){
                     stuStartDate: startDate,
                     stuEndDate: endDate,
                     stuTermCode: termCodeSelected,
-                    stuNotes: null,
+                    stuNotes: "",
                     stuLaborNotes: laborStatusFormNote,
                     stuSupervisor: supervisor,
                     stuDepartment: department,

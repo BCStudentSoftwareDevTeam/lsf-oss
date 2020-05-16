@@ -32,7 +32,7 @@ def adjustLSF(laborStatusKey):
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
     form = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-    # If todays date is greater than the adjustment cut off date on the term, then we do not want to 
+    # If todays date is greater than the adjustment cut off date on the term, then we do not want to
     # give users access to the adjustment page
     if currentDate > form.termCode.adjustmentCutOff:
         return render_template('errors/403.html')
@@ -50,6 +50,7 @@ def adjustLSF(laborStatusKey):
     else:
         prefillhours = form.contractHours
     prefillnotes = form.supervisorNotes
+    print("prefillNotes", prefillnotes)
     #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
     supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == prefilldepartment)
