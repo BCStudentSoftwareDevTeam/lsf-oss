@@ -45,6 +45,7 @@ def financialAidOverload(overloadKey):
                 department = form.department.DEPT_NAME
                 primaryPositionHours = form.weeklyHours
                 totalHours["primaryHours"] = primaryPositionHours
+                totalHours["secondaryHours"] = 0 # if we don't initialize secondary hours to zero it will give error on line 55 saying the key secondaryHours does not exist or it is nonetype.
         if form.jobType == "Secondary" and studentHistory.historyType.historyTypeName == "Labor Status Form":
             totalHours["secondaryHours"] = form.weeklyHours
 
