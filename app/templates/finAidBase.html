@@ -24,13 +24,13 @@
 {% block html_attribs %} lang="en"{% endblock %}
 
 {% block content %}
-<div>
+<div class="col-xs-12">
     <div class="col-lg-11 navbar-header">
          <h2 class="bclp">Berea College Labor Program</h2>
     </div>
     <div id="logo" class="pull-right"><img src="/static/laborprogram.png" title="Labor Program Logo" /></div>
 </div>
-<div>
+<div class="container col-xs-12">
     <div id="flash_container">
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
@@ -40,10 +40,10 @@
             {% endif %}
         {% endwith %}
     </div>
+</div>
     {% block app_content %}
         {# application content needs to be provided in the app_content block #}
     {% endblock %}
-</div>
 
 </div>
 <div class="row bottom-buffer"></div>

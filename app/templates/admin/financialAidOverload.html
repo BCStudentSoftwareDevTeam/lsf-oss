@@ -13,20 +13,21 @@
 <!-- ?holds the heading and the student name -->
 <div align="center">
   <h2>Financial Aid (SAAS) Overload Approval
-    <span class="glyphicon glyphicon-bookmark">
-      <a  data-toggle="tooltip" data-tooltip="true"
-          title=".???"
-          data-placement = "right" id="titleGlyphicon">
-      </a>
+    <span class="glyphicon glyphicon-bookmark"
+       data-toggle="tooltip" data-tooltip="true"
+       title="The Financial Aid (SAAS) interface is for approving or denying overload forms."
+       data-placement = "right" id="titleGlyphicon">
     </span>
   </h2>
-  <h3 id = "student"> {{studentName}} ({{studentBnum}}) <h3>
+  <h3 id = "student"> {{studentName}} ({{studentBnum}})</h3>
 </div>
  <form id="FinancialAidSAAS">
    <div class="container">
      <div class="floatleft">
          <div class="form-group">
-           <h3> Current Position </h3>
+           <div>
+             <h3> Current Position </h3>
+           </div>
            <label for="Student">Student Name:</label> <!--User CANNOT edit-->
            <input type="text" class="form-control" id="student" value="{{studentName}}" disabled> <!--User CANNOT edit-->
          </div>
@@ -51,7 +52,9 @@
 
     <div class= "floatright" >
        <div class="form-group">
-         <h3> Overload Request Info </h3>
+         <div>
+           <h3> Overload Request Info </h3>
+         </div>
          <label for="overloadPosition">Position:</label> <!--User CANNOT edit-->
          <input type="text" class="form-control" id="overloadPosition" value="{{overloadPosition}}" disabled> <!--User CANNOT edit-->
        </div>
