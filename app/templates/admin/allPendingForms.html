@@ -25,19 +25,19 @@
    <div align="center" id="pendingTabs" class="container">
      <ul  class="nav nav-pills">
        <li {% if formType == "all" %} class="active" {% endif %}>
-          <a  href="{{url_for('admin.allPendingForms', formType = 'all')}}">All Pending Forms</a>
+          <a  href="{{url_for('admin.allPendingForms', formType = 'all')}}">All Pending Forms <strong>({{ pendingAllFormsCounter }})</strong></a>
        </li>
         <li {% if formType == "pendingLabor" %} class="active" {% endif %}>
-          <a href="{{url_for('admin.allPendingForms', formType = 'pendingLabor')}}"> Pending Labor Status Forms</a>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingLabor')}}"> Pending Labor Status Forms <strong>({{ laborStatusFormCounter }})</strong></a>
         </li>
         <li {% if formType == "pendingModified" %} class="active" {% endif %}>
-          <a href="{{url_for('admin.allPendingForms', formType = 'pendingModified')}}">Pending Modified Forms</a>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingModified')}}">Pending Modified Forms <strong>({{ modifiedFormCounter }})</strong></a>
         </li>
         <li {% if formType == "pendingOverload" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms <strong>({{ overloadFormCounter }})</strong></a>
         </li>
         <li {% if formType == "pendingRelease" %} class="active" {% endif %}>
-          <a href="{{url_for('admin.allPendingForms', formType = 'pendingRelease')}}">Pending Release Forms</a>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingRelease')}}">Pending Release Forms <strong>({{ releaseFormCounter }})</strong></a>
         </li>
       </ul>
       </div>
