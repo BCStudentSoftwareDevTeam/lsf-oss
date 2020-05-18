@@ -74,7 +74,8 @@ def getPurpose(fieldsDictSTR):
 
 def getEmail(purpose):
     try:
-        email = EmailTemplate.get(EmailTemplate.purpose == purpose)
+        print("subject in py: ", purpose)
+        email = EmailTemplate.get(EmailTemplate.subject == purpose)
         # email = EmailTemplate.get(EmailTemplate.audience == request.form['recipient'], EmailTemplate.formType == request.form['formType'], EmailTemplate.action == request.form['action'])
         subjectList = {"emailBody": email.body, "emailSubject": email.subject}
         return json.dumps(subjectList)

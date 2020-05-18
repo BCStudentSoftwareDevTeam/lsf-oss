@@ -80,10 +80,12 @@ function populatePurpose(){
     success: function(response){
       var value;
       value = response[0]["Subject"]
-      $('#subject').val(value);
       $("#subject").selectpicker("refresh");
+      $('#subject').val(value);
+      getEmailTemplate();
     }
   })
+
 }
 
 function getEmailTemplate(){
@@ -91,20 +93,20 @@ function getEmailTemplate(){
   // is completed, this method will call the purpose. The purpose is used to pull
   // the subject and body from the appropriate template in the database and
   // fill them in the purpose selectpicker and the CKEditor body.
-  // $("#subject").val("Subject")
+  console.log("getEmailTemplate()");
   CKEDITOR.instances["editor1"].setData('');
-  var purpose = $("#subject").val();
+  var subject = $("#subject").val();
   var action = $("#action").val();
   var formType = $("#formType").val();
   var recipient = $("#recipient").val()
   $.ajax({
-    url: "/admin/emailTemplates/getEmail/" + purpose,
+    url: "/admin/emailTemplates/getEmail/" + subject,
     dataType: "json",
     success: function(response){
       var body = response["emailBody"]
       var subject = response["emailSubject"]
       CKEDITOR.instances["editor1"].insertHtml(body);
-      $("#subject").val(subject)
+      // $("#subject").val(subject)
     }
   })
 }
