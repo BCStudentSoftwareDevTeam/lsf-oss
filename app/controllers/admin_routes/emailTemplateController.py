@@ -53,7 +53,6 @@ def getEmailArray():
                               }
         emailTemplateArrayDict.append(currentTemplateDict)
 
-    # print("!!!!emailTemplate: ", emailTemplateArrayDict) # Can't print on terminal
     return json.dumps(emailTemplateArrayDict)
 
 @admin.route('/admin/emailTemplates/getPurpose/<fieldsDictSTR>', methods=['GET'])
@@ -61,18 +60,12 @@ def getEmailArray():
 def getPurpose(fieldsDictSTR):
     try:
         fieldsDict = json.loads(fieldsDictSTR)
-        emailPurposes = EmailTemplate.select(EmailTemplate.purpose)
-        # populate the Purpose dropdown depending on other dropdowns' values
-        if len(fieldsDict['recipient']) > 0:
-            emailPurposes = emailPurposes.select(EmailTemplate.purpose).where(EmailTemplate.audience == fieldsDict['recipient'])
-        if len(fieldsDict['formType']) > 0:
-            emailPurposes = emailPurposes.select(EmailTemplate.purpose).where(EmailTemplate.formType == fieldsDict['formType'])
-        if len(fieldsDict['action']) > 0:
-            emailPurposes = emailPurposes.select(EmailTemplate.purpose).where(EmailTemplate.action == fieldsDict['action'])
+        # populate the Subject field depending on other dropdowns' values
+        emailPurposes = EmailTemplate.select(EmailTemplate.subject).where(EmailTemplate.audience == fieldsDict['recipient'], EmailTemplate.formType == fieldsDict['formType'], EmailTemplate.action == fieldsDict['action'])
 
         purposeList = []
-        for i in range(len(emailPurposes)):
-            purposeList.append({"Purpose":emailPurposes[i].purpose})
+        purposeList.append({"Purpose":emailPurposes[0].subject})
+
         return json.dumps(purposeList)
     except Exception as e:
         print(e)
@@ -83,6 +76,7 @@ def getPurpose(fieldsDictSTR):
 def getEmail(purpose):
     try:
         email = EmailTemplate.get(EmailTemplate.purpose == purpose)
+        # email = EmailTemplate.get(EmailTemplate.audience == request.form['recipient'], EmailTemplate.formType == request.form['formType'], EmailTemplate.action == request.form['action'])
         purposeList = {"emailBody": email.body, "emailSubject": email.subject}
         return json.dumps(purposeList)
     except Exception as e:
@@ -92,7 +86,7 @@ def getEmail(purpose):
 @admin.route('/admin/emailTemplates/postEmail', methods=['POST'])
 def postEmail():
     try:
-        email = EmailTemplate.get(EmailTemplate.purpose == request.form['purpose'])
+        email = EmailTemplate.get(EmailTemplate.audience == request.form['recipient'], EmailTemplate.formType == request.form['formType'], EmailTemplate.action == request.form['action'])
         email.body = request.form['body']
         email.save()
         flash("The email template has been successfully updated.", "success")

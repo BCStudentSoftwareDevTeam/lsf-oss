@@ -19,6 +19,7 @@ function populateFormType(){
   $("#formType").prop("disabled", false);
   $("#formType").empty();
   $("#action").empty();
+  $("#formType").empty();
   var recipient = $("#recipient").val();
   var appendedItems = [];
   for (var dict in emailTemplateArray){
@@ -56,8 +57,9 @@ function populatePurpose(){
   // recipient was choosen from the select picker, and queries all the purposes from
   // the database that correspond to that recipient, and finally appends the purposes
   // into the 'Purpose' selectpicker.
+  $("#purpose").prop("disabled", false);
   $("#purpose").empty()
-  $("#purpose").val('default').selectpicker("refresh")
+  $("#purpose").selectpicker("refresh")
   $("#subject").val("Subject")
   CKEDITOR.instances["editor1"].setData('')
   var recipient = $("#recipient").val()
@@ -91,9 +93,12 @@ function getEmailTemplate(){
   // is completed, this method will call the purpose. The purpose is used to pull
   // the subject and body from the appropriate template in the database and
   // fill them in the purpose selectpicker and the CKEditor body.
-  $("#subject").val("Subject")
+  // $("#subject").val("Subject")
   CKEDITOR.instances["editor1"].setData('');
   var purpose = $("#purpose").val();
+  var action = $("#action").val();
+  var formType = $("#formType").val();
+  var recipient = $("#recipient").val()
   $.ajax({
     url: "/admin/emailTemplates/getEmail/" + purpose,
     dataType: "json",
@@ -113,9 +118,12 @@ function postEmailTemplate(){
   // selected. On success, we reload the page and give a python success flash message.
   var body = CKEDITOR.instances.editor1.getData();
   var purpose = $("#purpose").val();
+  var action = $("#action").val();
+  var formType = $("#formType").val();
+  var recipient = $("#recipient").val();
   $.ajax({
-    url: "/admin/emailTemplates/postEmail/",
-    data: { 'body': body, 'purpose': purpose },
+    url: "/admin/emailTemplates/postEmail",
+    data: { 'body': body, 'purpose': purpose, 'action': action, 'formType': formType, 'recipient': recipient},
     dataType: 'json',
     type: 'POST',
     success: function(response){
