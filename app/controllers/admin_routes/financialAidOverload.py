@@ -60,6 +60,8 @@ def financialAidOverload(overloadKey):
     termCodeYear = Term.select(Term.termCode).where(Term.termCode.between(termYear-1, termYear + 15))
     currentTerm = str(lsfForm.termCode.termCode)[-2:]
     contractDate = "{} - {}".format(lsfForm.startDate.strftime('%m/%d/%y'), lsfForm.endDate.strftime('%m/%d/%y'))
+    contractDateStart = lsfForm.startDate.strftime('%m/%d/%yyyy')
+    contractDateEnd = lsfForm.endDate.strftime('%m/%d/%yyyy')
 
 # will need to add term to the interface and then have a prefill variable
     return render_template( 'admin/financialAidOverload.html',
@@ -74,6 +76,8 @@ def financialAidOverload(overloadKey):
                         studentOverloadReason = studentOverloadReason,
                         laborOfficeNotes = laborOfficeNotes,
                         contractDate = contractDate,
+                        contractDateStart = contractDateStart,
+                        contractDateEnd = contractDateEnd,
                         overloadPosition = overloadPosition,
                         totalOverloadHours = totalOverloadHours
                       )
