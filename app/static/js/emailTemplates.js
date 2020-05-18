@@ -19,7 +19,7 @@ function populateFormType(){
   $("#formType").prop("disabled", false);
   $("#formType").empty();
   $("#action").empty();
-  $("#formType").empty();
+  $("#subject").val("");
   var recipient = $("#recipient").val();
   var appendedItems = [];
   for (var dict in emailTemplateArray){
@@ -31,13 +31,16 @@ function populateFormType(){
   }
   $("#formType").selectpicker("refresh");
   $("#action").selectpicker("refresh");
+  $("#subject").selectpicker("refresh");
   $("#action").prop("disabled", true);
+  $("#subject").prop("disabled", true);
 }
 
 function populateAction(){
   // populates Action only when Form Type is selected
   $("#action").prop("disabled", false);
   $("#action").empty();
+  $("#subject").val("");
   var recipient = $("#recipient").val();
   var formType = $("#formType").val();
   var appendedItems = [];
@@ -49,6 +52,7 @@ function populateAction(){
     }
   }
   $("#action").selectpicker("refresh");
+  $("#subject").prop("disabled", true);
 }
 
 function populatePurpose(){
@@ -57,9 +61,9 @@ function populatePurpose(){
   // recipient was choosen from the select picker, and queries all the purposes from
   // the database that correspond to that recipient, and finally appends the purposes
   // into the 'Purpose' selectpicker.
-  $("#purpose").prop("disabled", false);
-  $("#purpose").empty()
-  $("#purpose").selectpicker("refresh")
+  $("#subject").prop("disabled", false);
+  $("#subject").empty()
+  $("#subject").selectpicker("refresh")
   $("#subject").val("Subject")
   CKEDITOR.instances["editor1"].setData('')
   var recipient = $("#recipient").val()
@@ -75,17 +79,13 @@ function populatePurpose(){
     dataType: "json",
     success: function(response){
       var value;
-      for (var key in response){
-        value = response[key]["Purpose"]
-        $("#purpose").append('<option value="' + value + '">' + value + '</option>');
-      }
-      if (response.length == 1){     // if there is only 1 item left in the Purpose dropdown, choose it automatically
-        $('#purpose').val(value);
-        $("#purpose").selectpicker("refresh");
-        getEmailTemplate();
-      }
+      value = response[0]["Subject"]
+      $("#subject").selectpicker("refresh");
+      $('#subject').val(value);
+      getEmailTemplate();
     }
   })
+
 }
 
 function getEmailTemplate(){
@@ -107,7 +107,7 @@ function getEmailTemplate(){
       var body = response["emailBody"]
       var subject = response["emailSubject"]
       CKEDITOR.instances["editor1"].insertHtml(body);
-      $("#subject").val(subject)
+      // $("#subject").val(subject)
     }
   })
 }
@@ -118,7 +118,7 @@ function postEmailTemplate(){
   // database to override the current body of the email template that was
   // selected. On success, we reload the page and give a python success flash message.
   var body = CKEDITOR.instances.editor1.getData();
-  var purpose = $("#purpose").val();
+  var purpose = $("#subject").val();
   var action = $("#action").val();
   var formType = $("#formType").val();
   var recipient = $("#recipient").val();
@@ -138,17 +138,17 @@ function discard(){
   // purpose was selected, it will flash an error message saying there were no
   // changes to be discarded. If a purpose was selected, the method will clear all
   // three selectpickers and the CKEditor body.
-  if ( !$("#purpose").val() ) {
+  if ( !$("#subject").val() ) {
     msg = "There are no changes to be discarded.";
     category = "danger";
   }
   else {
     $("#recipient").val('default').selectpicker("refresh")
-    $("#purpose").empty()
-    $("#purpose").val('default').selectpicker("refresh")
-    // $("#purpose").empty()
-    // $("#purpose").remove()
-    // $("#purpose").selectpicker('destroy')
+    $("#subject").empty()
+    $("#subject").val('default').selectpicker("refresh")
+    // $("#subject").empty()
+    // $("#subject").remove()
+    // $("#subject").selectpicker('destroy')
     $("#subject").val("Subject")
     CKEDITOR.instances["editor1"].setData('')
     msg = "The email template changes have been discarded.";
@@ -164,7 +164,7 @@ function saveChanges() {
   // was selected, it will flash an error message saying there were no changes
   // to be discarded. If a purpose was selected, the method will call a modal that
   // will ask the user if they are sure they want to save their changes.
-  if ( !$("#purpose").val() ) {
+  if ( !$("#subject").val() ) {
     msg = "There are no changes to be saved.";
     category = "danger";
     $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');

@@ -60,14 +60,12 @@ def getPurpose(fieldsDictSTR):
     try:
         fieldsDict = json.loads(fieldsDictSTR)
         # populate the Subject field depending on other dropdowns' values
-        emailPurposes = EmailTemplate.select(EmailTemplate.subject).where(EmailTemplate.audience == fieldsDict['recipient'], EmailTemplate.formType == fieldsDict['formType'], EmailTemplate.action == fieldsDict['action'])
-
-        purposeList = []
-        purposeList.append({"Purpose":emailPurposes[0].subject})
-
-        return json.dumps(purposeList)
+        emailSubjects = EmailTemplate.select(EmailTemplate.subject).where(EmailTemplate.audience == fieldsDict['recipient'], EmailTemplate.formType == fieldsDict['formType'], EmailTemplate.action == fieldsDict['action'])
+        subjectList = []
+        subjectList.append({"Subject":emailSubjects[0].subject})
+        return json.dumps(subjectList)
     except Exception as e:
-        print("ERROR in getPurpose(): "e)
+        print("ERROR in getPurpose(): ", e)
         return jsonify({"Success": False})
 
 @admin.route('/admin/emailTemplates/getEmail/<fieldsDictSTR>', methods=['GET'])
