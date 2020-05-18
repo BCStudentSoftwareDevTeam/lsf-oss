@@ -297,6 +297,7 @@ function loadOverloadModal(formHistoryID, laborStatusFormID) {
   var laborOverloadID = []
   laborOverloadID.push(formHistoryID);
   var data = JSON.stringify(laborOverloadID);
+  console.log(laborOverloadID);
   $.ajax({
     type: "POST",
     url: "/admin/overloadModal",

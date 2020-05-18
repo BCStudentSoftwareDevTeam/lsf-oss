@@ -257,9 +257,17 @@ def getOverloadModalData():
             # Grab the info for SAASA
             # Select from EmailTracker where recipient is SAAS in desc order
             # Input dept, status, last email sent, email button
-            SAASStatus = historyForm.overloadForm.SAASApproved.statusName
-            SAASLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'SAAS') & (EmailTracker.formID == historyForm.formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
-            SAASEmailDate = SAASLastEmail[0].date.strftime('%m/%d/%y')
+            if historyForm.overloadForm.SAASApproved.statusName:
+                SAASStatus = historyForm.overloadForm.SAASApproved.statusName
+            else:
+                SAASStatus = 'Pending?'
+            print('Made it here?')
+            try:
+                SAASLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'SAAS') & (EmailTracker.formID == historyForm.formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
+                SAASEmailDate = SAASLastEmail[0].date.strftime('%m/%d/%y')
+            except:
+                SAASLastEmail = 'No Email Sent'
+            print('Past SAAS forms')
             # SAASDate = SAASEmailDate[:8]
             # print(SAASDate)
             # Push this variable into the dictionary
