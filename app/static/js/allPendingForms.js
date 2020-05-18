@@ -86,9 +86,7 @@ var laborDenialInfo = []; //this arrary is for insertDenial() and finalDenial() 
 //This method calls AJAX from checkforms methods in the controller
 function insertDenial(val) {
   laborDenialInfo.push(val);
-  console.log(labor)
   var data = JSON.stringify(laborDenialInfo);
-  console.log(data);
   $.ajax({
     type: "POST",
     url: "/admin/checkedForms",
@@ -175,7 +173,6 @@ function getNotes(formId) {
 
 function notesInsert(textareaID, buttonID) {
   var formId = $("#" + textareaID).data('formId');
-  console.log(formId);
   var laborNotes = $("#" + textareaID).val(); //this is getting the id of the labor notes text area
   var notes = {
     'formId': formId,
@@ -293,11 +290,13 @@ function clearTextArea() { //makes sure that it empties text areas and p tags wh
 
 
 function loadOverloadModal(formHistoryID, laborStatusFormID) {
-  // alert('Made it in here')
+  /*
+  This method sends an AJAX call to recieve data used to populate
+  the overload modal.
+  */
   var laborOverloadID = []
   laborOverloadID.push(formHistoryID);
   var data = JSON.stringify(laborOverloadID);
-  console.log(laborOverloadID);
   $.ajax({
     type: "POST",
     url: "/admin/overloadModal",
@@ -306,8 +305,6 @@ function loadOverloadModal(formHistoryID, laborStatusFormID) {
     contentType: 'application/json',
     success: function(response) {
       if (response) {
-        console.log('Made it to success');
-        console.log(response);
         var studentName = response['stuName']
         var position = response['stuPosition']
         var department = response['stuDepartment']
@@ -318,30 +315,25 @@ function loadOverloadModal(formHistoryID, laborStatusFormID) {
         var statusSAAS = response['SAASStatus']
         var emailDateFinancialAid = response['financialAidLastEmail']
         var statusFinancialAid = response['financialAidStatus']
-        // var labor_denial_detials = response;
-        // finalOverload_data(labor_denial_detials);
         $('#studentOverloadReason').append(overloadReason)
         $('#overloadStudentTable').append('<tr><td>' + studentName + '</td><td>' + position + '</td><td>' + hours + '</td><td>' + supervisor + '</td><td>' + department + '</td></tr>'); //populate the denial modal for all pending forms
         $('#overloadStudentTable').append('<tr><td><strong>Overload Reason</strong></td><td colspan="4">' + overloadReason + '</td></tr>')
-        // $('#overloadStudentTable').append('<tr><th colspan="5">Overload Reason</th></tr>')
-        // $('#overloadStudentTable').append('<tr><td colspan="5">'+ overloadReason +'</td></tr>')
-
-
-
-
-
-
-
-        $('#overloadDepartmentTable').append('<tr><td>SAAS</td><td>' + statusSAAS + '</td><td>' + emailDateSAAS + '</td><td><button id="SAASEmail" value=' + formHistoryID + ' type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td></tr>');
-        $('#overloadDepartmentTable').append('<tr><td>Financial Aid</td><td>' + statusFinancialAid + '</td><td>' + emailDateFinancialAid + '</td><td><button id="financialAidEmail" value=' + formHistoryID + ' type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td></tr>'); //populate the denial modal for all pending forms
-
+        $('#overloadDepartmentTable').append('<tr><td>SAAS</td><td id="statusSAAS">' + statusSAAS + '</td><td id="emailSAAS">' + emailDateSAAS + '</td><td><button id="SAASEmail" value=' + formHistoryID + ' type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td></tr>');
+        $('#overloadDepartmentTable').append('<tr><td>Financial Aid</td><td id="statusFinancialAid">' + statusFinancialAid + '</td><td id="emailFinancialAid">' + emailDateFinancialAid + '</td><td><button id="financialAidEmail" value=' + formHistoryID + ' type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td></tr>');
         $('#overloadNotes').data('formId', laborStatusFormID)
       }
+    },
+    error: function(request,status,error){
+      console.log(request.responseText);
     }
   });
 }
 
 function displayModalTextArea(radioValue) {
+  /*
+  This method toggles the 'Deny' and 'Admin Notes' textareas
+  based on what radio has been selected
+  */
   var radioVal = radioValue
   if (radioVal == 'deny') {
     $('#overloadNotes').val('');
@@ -356,8 +348,11 @@ function displayModalTextArea(radioValue) {
 }
 
 function sendEmail(formHistoryID, emailRecipient) {
+  /*
+  This method sends data to the backend that it used to send an email,
+  and also updates the data inside of the overload modal
+  */
   emailTrackerInfo = {'formHistoryID': formHistoryID, 'emailRecipient': emailRecipient}
-  console.log(emailTrackerInfo);
   data = JSON.stringify(emailTrackerInfo)
   $.ajax({
     method: "POST",
@@ -365,12 +360,29 @@ function sendEmail(formHistoryID, emailRecipient) {
     data: data,
     contentType: 'application/json',
     success: function(response) {
-      console.log('Email sent');
+      var newDate = response['emailDate']
+      var status = response['status']
+      var recipient = response['recipient']
+      if(recipient == 'SAAS'){
+        $("#statusSAAS").html(status)
+        $("#emailSAAS").html(newDate)
+      }
+      else if (recipient == 'Financial Aid') {
+        $("#statusFinancialAid").html(status)
+        $("#emailFinancialAid").html(newDate)
+      }
+    },
+    error: function(request,status,error){
+      console.log(request.responseText);
     }
   });
 }
 
 function submitOverload(formHistoryID) {
+  /*
+  This method is used to check if the form is ready for submission, then
+  makes an AJAX call with the information needed to complete the submission
+  */
   if ($('input[name=decision]:checked').length > 0) {
     var createAJAX = true
     var status = 'Pending'
@@ -379,17 +391,11 @@ function submitOverload(formHistoryID) {
       if($("#denyOverloadReason").val() == ""){
       $("#denyOverloadReason").focus();
       $("#required-error").show();
-        // nothing is submitted
         createAJAX = false
       } else {
         $('#required-error').hide();
         status = 'Denied'
         var denyReason = $('#denyOverloadReason').val()
-        // overloadModalInfo.push({
-        //   'denialReason': denyReason,
-        //   'status': status
-        // })
-        // Here, we grab the value and set the status to deny
         overloadModalInfo['denialReason'] = denyReason;
       }
     } else {
@@ -403,13 +409,9 @@ function submitOverload(formHistoryID) {
         var adminNotes = $('#overloadNotes').val()
         overloadModalInfo['adminNotes'] = adminNotes;
       }
-      // if #approved is checked, we set the status to approved
-      // if #approvedRel is checked, we set the status to approved rel
     }
     if (createAJAX == true) {
       overloadModalInfo['status'] = status;
-      console.log('Make AJAX call');
-      console.log(overloadModalInfo);
       var data = JSON.stringify(overloadModalInfo)
       $.ajax({
         method: "POST",
@@ -418,6 +420,9 @@ function submitOverload(formHistoryID) {
         contentType: 'application/json',
         success: function(response) {
           location.reload();
+        },
+        error: function(request,status,error){
+          console.log(request.responseText);
         }
       });
     }
@@ -432,6 +437,10 @@ function submitOverload(formHistoryID) {
 }
 
 function toggleNotesLog(laborStatusFormID) {
+  /*
+  This method toggles the 'Notes' log at the bottom of the
+  modal to show/hide it
+  */
   if ($('#logNotesDiv').css('display') == 'none') {
     getNotes(laborStatusFormID)
     $('#logNotesDiv').css('display', 'block')

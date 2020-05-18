@@ -83,7 +83,6 @@ def approved_and_denied_Forms():
     '''
     try:
         rsp = eval(request.data.decode("utf-8"))
-        print(type(rsp[0]))
         if rsp:
             approved_details =  modal_approval_and_denial_data(rsp)
             return jsonify(approved_details)
@@ -230,6 +229,7 @@ def insertNotes(formId):
     except Exception as e:
         print("error", e)
         return jsonify({"Success": False})
+
 @admin.route('/admin/overloadModal', methods=['POST'])
 def getOverloadModalData():
     """
@@ -237,50 +237,33 @@ def getOverloadModalData():
     """
     try:
         rsp = eval(request.data.decode("utf-8"))
-        print('Hit the controller', type(int(rsp[0])))
         if rsp:
             overloadModalInfo = {}
             historyForm = FormHistory.get(FormHistory.formHistoryID == int(rsp[0]))
-            print('Form', historyForm.formID)
             studentFirstName, studentLastName = historyForm.formID.studentSupervisee.FIRST_NAME, historyForm.formID.studentSupervisee.LAST_NAME
             studentName = studentFirstName + " " + studentLastName
-            print('Student', studentName)
             studentPosition = historyForm.formID.POSN_TITLE
             studentHours = historyForm.formID.weeklyHours
             studentDepartment = historyForm.formID.department.DEPT_NAME
             studentSupervisorFirstName, studentSupervisorLastName  = historyForm.formID.supervisor.FIRST_NAME, historyForm.formID.supervisor.LAST_NAME
             studentSupervisorName = studentSupervisorFirstName + ' ' + studentSupervisorLastName
-            print('Supervisor:', studentSupervisorName)
-            studentOverloadReason = historyForm.overloadForm.overloadReason
-            print('Overload Reason:', studentOverloadReason)
-
-            # Grab the info for SAASA
-            # Select from EmailTracker where recipient is SAAS in desc order
-            # Input dept, status, last email sent, email button
-            if historyForm.overloadForm.SAASApproved.statusName:
-                SAASStatus = historyForm.overloadForm.SAASApproved.statusName
-            else:
-                SAASStatus = 'Pending?'
-            print('Made it here?')
+            studentOverloadReason = historyForm.overloadForm.studentOverloadReason
             try:
+                SAASStatus = historyForm.overloadForm.SAASApproved.statusName
                 SAASLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'SAAS') & (EmailTracker.formID == historyForm.formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
                 SAASEmailDate = SAASLastEmail[0].date.strftime('%m/%d/%y')
-            except:
-                SAASLastEmail = 'No Email Sent'
-            print('Past SAAS forms')
-            # SAASDate = SAASEmailDate[:8]
-            # print(SAASDate)
-            # Push this variable into the dictionary
-
-            # Grab the info for Financial aid
-            financialAidStatus = historyForm.overloadForm.financialAidApproved.statusName
-            financialAidLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'Financial Aid') & (EmailTracker.formID == historyForm.formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
-            financialAidEmailDate = financialAidLastEmail[0].date.strftime('%m/%d/%y')
-            # financialAidDate = financialAidEmailDate[:8]
-            # print(financialAidEmailDate)
-            # print(financialAidDate)
-            # Push this variable into the dictionary
-
+            except (AttributeError, IndexError):
+                # We expect to see the AttributeError and IndexError if there is no data,
+                # and in those cases we set the variables manually
+                SAASStatus = 'None'
+                SAASEmailDate = 'No Email Sent'
+            try:
+                financialAidStatus = historyForm.overloadForm.financialAidApproved.statusName
+                financialAidLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'Financial Aid') & (EmailTracker.formID == historyForm.formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
+                financialAidEmailDate = financialAidLastEmail[0].date.strftime('%m/%d/%y')
+            except (AttributeError, IndexError):
+                financialAidStatus = 'None'
+                financialAidEmailDate = 'No Email Sent'
             overloadModalInfo.update({
                                 'stuName': studentName,
                                 'stuPosition': studentPosition,
@@ -293,18 +276,16 @@ def getOverloadModalData():
                                 'financialAidStatus': financialAidStatus,
                                 'financialAidLastEmail': financialAidEmailDate
                                 })
-            print(overloadModalInfo)
-
             return jsonify(overloadModalInfo)
     except Exception as e:
         print("error", e)
         return jsonify({"Success": False})
 
-
 @admin.route('/admin/overloadFormUpdate', methods=['POST'])
 def updateOverloadForm():
     """
-    This function will retrieve the data to populate the overload modal
+    This function will retrieve update the overloaf from using the
+    data entered into the modal.
     """
     try:
         rsp = eval(request.data.decode("utf-8"))
@@ -315,6 +296,7 @@ def updateOverloadForm():
             createdUser = User.get(username = cfg['user']['debug'])
             status = Status.get(Status.statusName == rsp['status'])
             if 'denialReason' in rsp.keys():
+                # We only update the reject reason if one was given on the UI
                 historyForm.rejectReason = rsp['denialReason']
                 historyForm.save()
                 AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
@@ -322,6 +304,7 @@ def updateOverloadForm():
                                 date = currentDate,
                                 notesContents = rsp['denialReason'])
             if 'adminNotes' in rsp.keys():
+                # We only add admin notes if there was a note made on the UI
                 AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
                                 createdBy = createdUser.UserID,
                                 date = currentDate,
@@ -330,7 +313,7 @@ def updateOverloadForm():
             overloadForm.laborApprover = createdUser.UserID
             overloadForm.laborReviewDate = currentDate
             overloadForm.save()
-            # historyForm.status = status.statusName
+            historyForm.status = status.statusName
             historyForm.reviewedBy = createdUser.UserID
             historyForm.reviewedDate = currentDate
             historyForm.save()
@@ -340,29 +323,41 @@ def updateOverloadForm():
         print("error", e)
         return jsonify({"Success": False})
 
+
 @admin.route('/admin/sendVerificationEmail', methods=['POST'])
 def sendEmail():
+    """
+    This method will send an email to either SAAS or Financial Aid
+    """
     try:
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
-            print(rsp)
+            historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
+            overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm)
+            status = Status.get(Status.statusName == 'Pending')
             if rsp['emailRecipient'] == 'SAASEmail':
                 recipient = 'SAAS'
+                overloadForm.SAASApproved = status.statusName
+                overloadForm.save()
             elif rsp['emailRecipient'] == 'financialAidEmail':
                 recipient = 'Financial Aid'
-            print(rsp['formHistoryID'])
-            historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
-            print('Past it')
+                overloadForm.financialAidApproved = status.statusName
+                overloadForm.save()
             currentDate = datetime.now().strftime("%Y-%m-%d")
             EmailTracker.create(formID = historyForm.formID.laborStatusFormID,
                                 date = currentDate,
                                 recipient = recipient
             )
-            print('Made it past email')
+            # Lines 352-354 were left as comments because they require code from PR #89
+            # link = '/admin/financialAidOverloadApproval/' + str(rsp['formHistoryID'])
             # email = emailHandler(historyForm.historyFormID)
             # email.overloadVerification(recipient, link)
-            print('Made it all the way through')
-            return jsonify({"Success": True})
+            currentDate = datetime.now().strftime('%m/%d/%y')
+            newEmailInformation = {'recipient': recipient,
+                                    'emailDate': currentDate,
+                                    'status': 'Pending'
+            }
+            return jsonify(newEmailInformation)
     except Exception as e:
         print("error", e)
         return jsonify({"Success": False})
