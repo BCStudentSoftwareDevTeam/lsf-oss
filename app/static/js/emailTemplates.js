@@ -93,14 +93,15 @@ function getEmailTemplate(){
   // is completed, this method will call the purpose. The purpose is used to pull
   // the subject and body from the appropriate template in the database and
   // fill them in the purpose selectpicker and the CKEditor body.
-  // $("#subject").val("Subject")
   CKEDITOR.instances["editor1"].setData('');
   var purpose = $("#purpose").val();
-  var action = $("#action").val();
-  var formType = $("#formType").val();
-  var recipient = $("#recipient").val()
+  fieldsDict = {"action": $("#action").val(),
+                "formType":$("#formType").val(),
+                "recipient":$("#recipient").val()
+               };
+  fieldsDictSTR = JSON.stringify(fieldsDict);
   $.ajax({
-    url: "/admin/emailTemplates/getEmail/" + purpose,
+    url: "/admin/emailTemplates/getEmail/" + fieldsDictSTR,
     dataType: "json",
     success: function(response){
       var body = response["emailBody"]

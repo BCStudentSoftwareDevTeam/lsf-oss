@@ -39,7 +39,6 @@ def email_templates():
 @admin.route('/admin/emailTemplates/getEmailArray/', methods=['GET'])
 
 def getEmailArray():
-    print("in AJAX")
     response = EmailTemplate.select()
     emailTemplateArrayDict = []
     for i in range(len(response)):
@@ -68,19 +67,19 @@ def getPurpose(fieldsDictSTR):
 
         return json.dumps(purposeList)
     except Exception as e:
-        print(e)
+        print("ERROR in getPurpose(): "e)
         return jsonify({"Success": False})
 
-@admin.route('/admin/emailTemplates/getEmail/<purpose>', methods=['GET'])
+@admin.route('/admin/emailTemplates/getEmail/<fieldsDictSTR>', methods=['GET'])
 
-def getEmail(purpose):
+def getEmail(fieldsDictSTR):
     try:
-        email = EmailTemplate.get(EmailTemplate.purpose == purpose)
-        # email = EmailTemplate.get(EmailTemplate.audience == request.form['recipient'], EmailTemplate.formType == request.form['formType'], EmailTemplate.action == request.form['action'])
+        fieldsDict = json.loads(fieldsDictSTR)
+        email = EmailTemplate.get(EmailTemplate.action == fieldsDict["action"], EmailTemplate.audience == fieldsDict["recipient"], EmailTemplate.formType == fieldsDict["formType"])
         purposeList = {"emailBody": email.body, "emailSubject": email.subject}
         return json.dumps(purposeList)
     except Exception as e:
-        print(e)
+        print("ERROR getEmail(): ", e)
         return jsonify({"Success": False})
 
 @admin.route('/admin/emailTemplates/postEmail', methods=['POST'])
@@ -88,9 +87,10 @@ def postEmail():
     try:
         email = EmailTemplate.get(EmailTemplate.audience == request.form['recipient'], EmailTemplate.formType == request.form['formType'], EmailTemplate.action == request.form['action'])
         email.body = request.form['body']
+        email.subject = request.form["purpose"]
         email.save()
         flash("The email template has been successfully updated.", "success")
         return (jsonify({"Success": True}))
     except Exception as e:
-        print(e)
+        print("ERROR in postEmail: ", e)
         return jsonify({"Success": False})
