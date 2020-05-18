@@ -138,18 +138,18 @@ function discard(){
   // purpose was selected, it will flash an error message saying there were no
   // changes to be discarded. If a purpose was selected, the method will clear all
   // three selectpickers and the CKEditor body.
-  if ( !$("#subject").val() ) {
+  if ( !$("#subject").val() && !$("#editor1").val() ) {
     msg = "There are no changes to be discarded.";
     category = "danger";
   }
   else {
     $("#recipient").val('default').selectpicker("refresh")
+    $("#formType").empty()
+    $("#formType").val('default').selectpicker("refresh")
+    $("#action").empty()
+    $("#action").val('default').selectpicker("refresh")
     $("#subject").empty()
-    $("#subject").val('default').selectpicker("refresh")
-    // $("#subject").empty()
-    // $("#subject").remove()
-    // $("#subject").selectpicker('destroy')
-    $("#subject").val("Subject")
+    $("#subject").val('').selectpicker("refresh")
     CKEDITOR.instances["editor1"].setData('')
     msg = "The email template changes have been discarded.";
     category = "info";
