@@ -61,12 +61,11 @@ def getPurpose(fieldsDictSTR):
     try:
         fieldsDict = json.loads(fieldsDictSTR)
         # populate the Subject field depending on other dropdowns' values
-        emailPurposes = EmailTemplate.select(EmailTemplate.subject).where(EmailTemplate.audience == fieldsDict['recipient'], EmailTemplate.formType == fieldsDict['formType'], EmailTemplate.action == fieldsDict['action'])
+        emailSubjects = EmailTemplate.select(EmailTemplate.subject).where(EmailTemplate.audience == fieldsDict['recipient'], EmailTemplate.formType == fieldsDict['formType'], EmailTemplate.action == fieldsDict['action'])
 
-        purposeList = []
-        purposeList.append({"Purpose":emailPurposes[0].subject})
-
-        return json.dumps(purposeList)
+        subjectList = []
+        subjectList.append({"Subject":emailSubjects[0].subject})
+        return json.dumps(subjectList)
     except Exception as e:
         print(e)
         return jsonify({"Success": False})
@@ -77,8 +76,8 @@ def getEmail(purpose):
     try:
         email = EmailTemplate.get(EmailTemplate.purpose == purpose)
         # email = EmailTemplate.get(EmailTemplate.audience == request.form['recipient'], EmailTemplate.formType == request.form['formType'], EmailTemplate.action == request.form['action'])
-        purposeList = {"emailBody": email.body, "emailSubject": email.subject}
-        return json.dumps(purposeList)
+        subjectList = {"emailBody": email.body, "emailSubject": email.subject}
+        return json.dumps(subjectList)
     except Exception as e:
         print(e)
         return jsonify({"Success": False})
