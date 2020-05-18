@@ -688,12 +688,14 @@ emailtemps= [
                 "body":'''
                     <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
                             ''',
+                "audience":"supervisor"
                 },
                 # labor Admin Notification
                 {
                 "purpose":"Labor Admin Notification",
                 "subject":"Verified Labor Overload Form Notification",
-                "body":""
+                "body":"This is for notifying Labor Admin that SAAS or/and Financial Aid has submitted the overload Verification form",
+                "audience":"supervisor" #TODO: Needs to be changed to Labor Admin
                 },
                 # Break Labor Status Forms
                 {
