@@ -45,6 +45,7 @@ def financialAidOverload(overloadKey):
                 department = form.department.DEPT_NAME
                 primaryPositionHours = form.weeklyHours
                 totalHours["primaryHours"] = primaryPositionHours
+                totalHours["secondaryHours"] = 0
         if form.jobType == "Secondary" and studentHistory.historyType.historyTypeName == "Labor Status Form":
             totalHours["secondaryHours"] = form.weeklyHours
 
