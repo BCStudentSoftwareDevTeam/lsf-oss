@@ -343,12 +343,7 @@ def sendEmail():
                 recipient = 'Financial Aid'
                 overloadForm.financialAidApproved = status.statusName
                 overloadForm.save()
-            currentDate = datetime.now().strftime("%Y-%m-%d")
-            EmailTracker.create(formID = historyForm.formID.laborStatusFormID,
-                                date = currentDate,
-                                recipient = recipient
-            )
-            # Lines 352-354 were left as comments because they require code from PR #89
+            # Lines 347-349 were left as comments because they require code from PR #89
             # link = '/admin/financialAidOverloadApproval/' + str(rsp['formHistoryID'])
             # email = emailHandler(historyForm.historyFormID)
             # email.overloadVerification(recipient, link)

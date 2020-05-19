@@ -208,7 +208,8 @@ class emailHandler():
         newEmailTracker = EmailTracker.create(
                         formID = self.laborStatusForm,
                         date = datetime.today().strftime('%Y-%m-%d'),
-                        recipient = dept
+                        recipient = dept,
+                        purpose = "SAAS and Financial Aid Office"
                         )
         if dept == "SAAS":
             email = "" #In the future, this(SASS email address) should be puled from the yaml file instead of being a string

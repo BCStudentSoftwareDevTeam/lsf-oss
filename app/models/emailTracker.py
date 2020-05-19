@@ -6,3 +6,4 @@ class EmailTracker(baseModel):
     formID             = ForeignKeyField(LaborStatusForm, on_delete="cascade")               # foreign key to lsf
     date               = DateField()
     recipient          = CharField()
+    purpose            = CharField()
