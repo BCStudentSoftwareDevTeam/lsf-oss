@@ -32,7 +32,7 @@ def adjustLSF(laborStatusKey):
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
     form = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-    # If todays date is greater than the adjustment cut off date on the term, then we do not want to 
+    # If todays date is greater than the adjustment cut off date on the term, then we do not want to
     # give users access to the adjustment page
     if currentDate > form.termCode.adjustmentCutOff:
         return render_template('errors/403.html')
@@ -118,7 +118,7 @@ def sumbitModifiedForm(laborStatusKey):
                 previousTotalHours = totalHours + int(rsp[k]['oldValue'])
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
-                    newLaborOverloadForm = OverloadForm.create(overloadReason = "None")
+                    newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
                     user = User.get(User.username == cfg["user"]["debug"])
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",

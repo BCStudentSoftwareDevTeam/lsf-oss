@@ -124,7 +124,7 @@ def updateLSF(laborStatusKey):
                 previousTotalHours = totalHours + int(rsp[k]['oldValue'])
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
-                    newLaborOverloadForm = OverloadForm.create(overloadReason = "None")
+                    newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
                     user = User.get(User.username == cfg["user"]["debug"])
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
