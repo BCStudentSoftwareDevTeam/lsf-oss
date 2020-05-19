@@ -82,13 +82,13 @@ function populatePurpose(){
       value = response[0]["Subject"]
       $("#subject").selectpicker("refresh");
       $('#subject').val(value);
-      getEmailTemplate();
+      populateEmailTemplate();
     }
   })
 
 }
 
-function getEmailTemplate(){
+function populateEmailTemplate(){
   // This method starts by clearing the subject and the body on the UI. Once that
   // is completed, this method will call the purpose. The purpose is used to pull
   // the subject and body from the appropriate template in the database and
