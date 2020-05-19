@@ -215,12 +215,25 @@ class emailHandler():
             email = "" #In the future, this(SASS email address) should be puled from the yaml file instead of being a string
         elif dept == "Financial Aid":
             email = "" #This(financial Aid email) address should also be pull from the yaml file
-        message = Message("Overload Verification",
+        message = Message("Labor Overload Form Verification",
             recipients=[email])
         emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "SAAS and Financial Aid Office")
         message.html = self.replaceText(emailTemplateID.body)
         self.mail.send(message)
 
+    def verifiedOverloadNotification(self):
+        """ This email will be sent to Labor Admin when SAAS or Financial Aid Make
+        a decision on an overload form"""
+        newEmailTracker = EmailTracker.create(
+                        formID = self.laborStatusForm,
+                        date = datetime.today().strftime('%Y-%m-%d'),
+                        recipient = "Labor Admin"
+                        )
+        message = Message("Verified Labor Overload Form Notification",
+                    recipients=[""]) # TODO: Labor Admin email
+        emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Admin Notification")
+        message.html = self.replaceText(emailTemplateID.body)
+        self.mail.send(message)
 
     def checkRecipient(self, studentEmailPurpose=False, primaryEmailPurpose=False, secondaryEmailPurpose = False):
         """

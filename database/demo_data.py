@@ -371,6 +371,8 @@ FormHistory.insert([{
 emailtemps= [
                 {
                 "purpose":"Labor Status Form Submitted",
+                "formType":"Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -393,10 +395,12 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>''',
 
-                "audience":"students"
+                "audience":"Student"
                  },
                 {
-                "purpose":"Labor Status Form Submitted For Secondary",
+                "purpose":"Secondary Position Labor Status Form Submitted",
+                "formType":"Secondary Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong> and <strong>@@Primsupr@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -422,10 +426,12 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 {
-                "purpose":"Labor Status Form Submitted For Primary",
+                "purpose":"Primary Position Labor Status Form Submitted",
+                "formType":"Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -451,11 +457,13 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LSF approved
                 {
                 "purpose":"Labor Status Form Approved",
+                "formType":"Labor Status Form",
+                "action":"Approved",
                 "subject":"Labor Status Form Approved",
                 "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -480,10 +488,12 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
-                "purpose":"Labor Status Form Approved For Primary",
+                "purpose":"Primary Position Labor Status Form Approved",
+                "formType":"Labor Status Form",
+                "action":"Approved",
                 "subject":"Labor Status Form Approved",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -509,27 +519,33 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
 
                 {
-                "purpose":"Labor Status Form Approved For Secondary",
+                "purpose":"Secondary Position Labor Status Form Approved",
+                "formType":"Secondary Labor Status Form",
+                "action":"Approved",
                 "subject":"Labor Status Form Approved",
                 "body":'''
 
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LSF Rejected
                 {
                 "purpose":"Labor Status Form Rejected",
+                "formType":"Labor Status Form",
+                "action":"Rejected",
                 "subject":"Labor Status Form Rejected",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
-                "purpose":"Labor Status Form Rejected For Secondary",
+                "purpose":"Secondary Position Labor Status Form Rejected",
+                "formType":"Secondary Labor Status Form",
+                "action":"Rejected",
                 "subject":"Labor Status Form Rejected",
                 "body":'''<p>Dear <strong>@@Primsupr@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -552,49 +568,61 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 {
-                "purpose":"Labor Status Form Rejected For Primary",
+                "purpose":"Primary Position Labor Status Form Rejected",
+                "formType":"Labor Status Form",
+                "action":"Rejected",
                 "subject":"Labor Status Form Rejected",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LSF modified
                 {
                 "purpose":"Labor Status Form Modified",
+                "formType":"Labor Status Form",
+                "action":"Modified",
                 "subject":"Labor Status Form Modified",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
-                "purpose":"Labor Status Form Modified For Supervisor",
+                "purpose":"Labor Status Form Modified",
+                "formType":"Labor Status Form",
+                "action":"Modified",
                 "subject":"Labor Status Form Modified",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LRF Submitted
                 {
                 "purpose":"Labor Release Form Submitted",
+                "formType":"Labor Release Form",
+                "action":"Submitted",
                 "subject":"Labor Release Form Submitted",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
-                "purpose":"Labor Release Form Submitted For Supervisor",
+                "purpose":"Labor Release Form Submitted",
+                "formType":"Labor Release Form",
+                "action":"Submitted",
                 "subject":"Labor Release Form Submitted",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LRF approved
 
                 {
                 "purpose":"Labor Release Form Approved",
+                "formType":"Labor Release Form",
+                "action":"Approved",
                 "subject":"Labor Release Form Approved",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -617,82 +645,109 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
 
-                "purpose":"Labor Release Form Approved For Supervisor",
+                "purpose":"Labor Release Form Approved",
+                "formType":"Labor Release Form",
+                "action":"Approved",
                 "subject":"Labor Release Form Approved",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LRF Rejected
                 {
                 "purpose":"Labor Release Form Rejected",
+                "formType":"Labor Release Form",
+                "action":"Rejected",
                 "subject":"Labor Release Form Rejected",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
-                "purpose":"Labor Release Form Rejected For Supervisor",
+                "purpose":"Labor Release Form Rejected",
+                "formType":"Labor Release Form",
+                "action":"Rejected",
                 "subject":"Labor Release Form Rejected",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 #LOF
                 {
                 "purpose":"Labor Overload Form Submitted",
+                "formType":"Labor Overload Form",
+                "action":"Submitted",
                 "subject":"Labor Overload Form Submitted",
                 "body":'''
                     <p>Dear <strong>@@Student@@</strong>,</p>
                     <p>&nbsp;</p>
                     <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
                     ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
-                "purpose":"Labor Overload Form Submitted For Supervisor",
+                "purpose":"Labor Overload Form Submitted",
+                "formType":"Labor Overload Form",
+                "action":"Submitted",
                 "subject":"Labor Overload Form Submitted",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 {
                 "purpose":"Labor Overload Form Approved",
+                "formType":"Labor Overload Form",
+                "action":"Approved",
                 "subject":"Labor Overload Form Approved",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
-                "purpose":"Labor Overload Form Approved For Supervisor",
+                "purpose":"Labor Overload Form Approved",
+                "formType":"Labor Overload Form",
+                "action":"Approved",
                 "subject":"Labor Overload Form Approved",
                 "body":'''
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 {
                 "purpose":"Labor Overload Form Rejected",
+                "formType":"Labor Overload Form",
+                "action":"Rejected",
                 "subject":"Labor Overload Form Rejected",
                 "body":'''
                             ''',
-                "audience":"student"
+                "audience":"Student"
                 },
-                #SASS
+                #SAAS
                 {
-                "purpose":"SASS and Financial Aid Office",
+                "purpose":"SAAS and Financial Aid Office",
+                "formType":"Labor Overload Form",
+                "action":"Submitted",
                 "subject":"Overload Verification",
                 "body":'''
                     <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
                             ''',
-                "audience":"supervisor"
+                "audience":"SAAS and Financial Aid Office"
+                },
+                # labor Admin Notification
+                {
+                "purpose":"Labor Admin Notification",
+                "subject":"Verified Labor Overload Form Notification",
+                "body":"This is for notifying Labor Admin that SAAS or/and Financial Aid has submitted the overload Verification form",
+                "audience":"supervisor" #TODO: Needs to be changed to Labor Admin
                 },
                 # Break Labor Status Forms
                 {
                 "purpose":"Break Labor Status Form Submitted",
+                "formType":"Break Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -717,10 +772,12 @@ emailtemps= [
                             <p>Labor Program Office</p>
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>''',
-                "audience":"student"
+                "audience":"Student"
                 },
                 {
-                "purpose":"Break Labor Status Form Submitted For Supervisor",
+                "purpose":"Break Labor Status Form Submitted", #Original name: Break Labor Status Form Submitted For Supervisor
+                "formType":"Break Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -748,10 +805,12 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
                 {
-                "purpose":"Break Labor Status Form Submitted For Supervisor on Second LSF",
+                "purpose":"Second Break Labor Status Form Submitted", #Original name: Break Labor Status Form Submitted For Supervisor on Second LSF
+                "formType":"Second Break Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -780,9 +839,11 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"supervisor"
+                "audience":"Supervisor"
                 },
-                {"purpose":"Break Labor Status Form Submitted For Second Supervisor",
+                {"purpose":"Second Break Labor Status Form Submitted", # Original name: Break Labor Status Form Submitted For Second Supervisor
+                "formType":"Second Break Labor Status Form",
+                "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@PrimarySupervisor@@</strong>,</p>
                             <p>&nbsp;</p>
@@ -806,7 +867,7 @@ emailtemps= [
                             <p>labor_program@berea.edu</p>
                             <p>859-985-3611</p>
                             ''',
-                "audience":"breakPrimary"
+                "audience":"Break Supervisor"
                 }
             ]
 EmailTemplate.insert_many(emailtemps).on_conflict_replace().execute()

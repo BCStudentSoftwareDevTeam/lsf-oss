@@ -140,7 +140,8 @@ def updateLSF(laborStatusKey):
         email = emailHandler(changedForm.formHistoryID)
         email.laborStatusFormModified()
         flash("Your labor status form has been modified.", "success")
-        return jsonify({"Success":True, "url":"/laborHistory/" + student})
+
+        return jsonify({"Success":True})
 
     except Exception as e:
         flash("An error occured.", "danger")

@@ -10,6 +10,7 @@ from app.models.historyType import HistoryType
 class FormHistory(baseModel):
     formHistoryID       = PrimaryKeyField()
     formID              = ForeignKeyField(LaborStatusForm, on_delete="cascade")               # foreign key to lsf
+    # overloadID          = ForeignKeyField(OverloadForm, on_delete = "cascade")
     historyType         = ForeignKeyField(HistoryType)                                        # foreign key to historytype
     releaseForm         = ForeignKeyField(LaborReleaseForm, null=True, on_delete="SET NULL")  # if its a release form
     modifiedForm        = ForeignKeyField(ModifiedForm, null=True, on_delete="SET NULL")      # if its a form modification

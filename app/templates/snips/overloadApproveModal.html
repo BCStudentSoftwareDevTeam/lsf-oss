@@ -1,0 +1,25 @@
+<!-- Modal approving modal here-->
+<div class="modal fade" id="approvingModal" tabindex="-1" role="dialog" aria-labelledby="approvingModal" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="approvingModal">Approve Overload</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="studentInfo">  </p>
+        <p id="nothingChecked"> </p>
+        <br>
+
+        <p class="text-justify"> <strong> Are you sure you would like to approve this request?</strong></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary approvingclose" style="float: left;" data-dismiss="modal" onclick="location.reload()" >close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="finalOverloadApproval()" >Yes</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
