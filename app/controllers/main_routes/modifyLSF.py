@@ -15,8 +15,6 @@ from flask import flash
 import base64
 from app import cfg
 from app.logic.emailHandler import*
-from http import cookies
-import os
 
 @main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
 def modifyLSF(laborStatusKey):
