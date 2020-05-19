@@ -14,6 +14,11 @@
   color: #000000 !important;
 }
 
+.textarea-required{
+  height: 100%;
+  width: 100%;
+}
+
 h3 {
   margin-bottom: 20px;
 }
