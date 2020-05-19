@@ -209,7 +209,7 @@ class emailHandler():
                         formID = self.laborStatusForm,
                         date = datetime.today().strftime('%Y-%m-%d'),
                         recipient = dept,
-                        purpose = "SAAS and Financial Aid Office"
+                        subject = "Overload Verification"
                         )
         if dept == "SAAS":
             email = "" #In the future, this(SASS email address) should be puled from the yaml file instead of being a string
