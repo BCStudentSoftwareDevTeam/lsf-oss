@@ -33,6 +33,10 @@ def allPendingForms(formType):
         historyType = None
         pageTitle = ""
         approvalTarget = ""
+        pendingAllFormsCounter = FormHistory.select().where(FormHistory.status == 'Pending').count()
+        laborStatusFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Status Form')).count()
+        modifiedFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Modified Labor Form')).count()
+        releaseFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Release Form')).count()
         overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
         if formType  == "all":
             formList = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
@@ -68,7 +72,11 @@ def allPendingForms(formType):
                                 formType= formType,
                                 modalTarget = approvalTarget,
                                 isLaborAdmin = isLaborAdmin,
-                                overloadFormCounter = overloadFormCounter
+                                overloadFormCounter = overloadFormCounter,
+                                pendingAllFormsCounter = pendingAllFormsCounter,
+                                laborStatusFormCounter = laborStatusFormCounter,
+                                modifiedFormCounter  = modifiedFormCounter,
+                                releaseFormCounter = releaseFormCounter
                                 )
     except Exception as e:
         print("error", e)
