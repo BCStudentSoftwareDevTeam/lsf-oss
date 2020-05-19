@@ -12,7 +12,6 @@ var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
     labor_details_ids.push(this.value);
-
     });
 
   //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
