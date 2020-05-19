@@ -93,32 +93,14 @@ function checkForChange(){
   }
 }
 
-function buttonListener(laborStatusKey, cookie) {
+function buttonListener(laborStatusKey) {
   $.ajax({
-    url: "/modifyLSF/updateLSF/" + laborStatusKey + "/" + cookie,
+    url: "/modifyLSF/updateLSF/" + laborStatusKey,
     method: "POST",
     contentType: 'application/json',
     data: JSON.stringify(finalDict),
     success: function(response) {
-      window.location.href = response["url"];
+      window.location.href = document.referrer;
     }
   })
-}
-
-function getCookie(){
-  // Get the cookie if it was created
-  var name = "pageClicked" + "=";
-  if(document.cookie == name + "pendingForms"){
-    var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') {
-        c = c.substring(1);}
-      if (c.indexOf(name) == 0) {
-        var cookieValue = c.substring(name.length, c.length);  // get cookie value specified under cookie name
-        document.cookie = "pageClicked=; expires = Thu, 01 Jan 1970 00:00:00 GMT; path=/"; // deletes the cookie by setting expiration to a past date
-        return cookieValue;
-      }
-    }}
-  return "notPendingForms";
 }

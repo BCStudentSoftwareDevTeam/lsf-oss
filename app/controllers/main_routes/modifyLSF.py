@@ -79,8 +79,8 @@ def modifyLSF(laborStatusKey):
                             totalHours = totalHours
                           )
 
-@main_bp.route("/modifyLSF/updateLSF/<laborStatusKey>/<cookie>", methods=['POST'])
-def updateLSF(laborStatusKey, cookie):
+@main_bp.route("/modifyLSF/updateLSF/<laborStatusKey>", methods=['POST'])
+def updateLSF(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
@@ -142,10 +142,8 @@ def updateLSF(laborStatusKey, cookie):
         email = emailHandler(changedForm.formHistoryID)
         email.laborStatusFormModified()
         flash("Your labor status form has been modified.", "success")
-        if(cookie == "pendingForms"):   # if there is a pending forms cookies then redirect to Pending Forms page
-            return jsonify({"Success":True, "url":"/admin/pendingForms/all"})
 
-        return jsonify({"Success":True, "url":"/laborHistory/" + student})
+        return jsonify({"Success":True})
 
     except Exception as e:
         flash("An error occured.", "danger")
