@@ -736,6 +736,13 @@ emailtemps= [
                             ''',
                 "audience":"SAAS and Financial Aid Office"
                 },
+                # labor Admin Notification
+                {
+                "purpose":"Labor Admin Notification",
+                "subject":"Verified Labor Overload Form Notification",
+                "body":"This is for notifying Labor Admin that SAAS or/and Financial Aid has submitted the overload Verification form",
+                "audience":"supervisor" #TODO: Needs to be changed to Labor Admin
+                },
                 # Break Labor Status Forms
                 {
                 "purpose":"Break Labor Status Form Submitted",
