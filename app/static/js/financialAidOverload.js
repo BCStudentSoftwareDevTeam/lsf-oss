@@ -1,6 +1,3 @@
-$(document).ready(function(){
-  $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
-})
 function overloadSubmission(formHistoryKey){
   // this function will update the notes and status in the db
   var notesContent = $("#denyReason_"+formHistoryKey).val()
