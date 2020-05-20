@@ -88,7 +88,7 @@ for student in studentsTracy:
     del student["PIDM"]
     students.append(student)
 Student.insert_many(students).on_conflict_replace().execute()
-print("students (TRACY) added")
+print(" * students (TRACY) added")
 
 #############################
 # Positions (TRACY)
@@ -161,7 +161,7 @@ positions = [
 ]
 STUPOSN.insert_many(positions).on_conflict_replace().execute()
 
-print("positions (TRACY) added")
+print(" * positions (TRACY) added")
 
 #############################
 # TRACY Staff
@@ -233,7 +233,7 @@ staffs = [
             },
         ]
 stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
-print("staff added")
+print(" * staff added")
 
 def insert_to_users(staffs):
     for sta in staffs:
@@ -251,7 +251,7 @@ def insert_to_users(staffs):
                 u.isLaborAdmin = 1
             u.save()
         except Exception as e:
-            print("Failed to insert ", u.username, ": ", e)
+            print(" * Failed to insert ", u.username, ": ", e)
 insert_to_users(STUSTAFF.select())
 
 
@@ -289,7 +289,7 @@ departments = [
             },
         ]
 Department.insert_many(departments).on_conflict_replace().execute()
-print("departments added")
+print(" * departments added")
 
 #############################
 # Status
@@ -305,7 +305,7 @@ stats = [
             }
         ]
 Status.insert_many(stats).on_conflict_replace().execute()
-print("status added")
+print(" * status added")
 
 #############################
 # History Type
@@ -321,7 +321,7 @@ types = [
             }
         ]
 HistoryType.insert_many(types).on_conflict_replace().execute()
-print("history types added")
+print(" * history types added")
 
 #############################
 # Term
@@ -345,7 +345,7 @@ terms = [
             },
        ]
 Term.insert_many(terms).on_conflict_replace().execute()
-print("terms added")
+print(" * terms added")
 
 #############################
 # Create a Pending Labor Status Form
@@ -873,7 +873,7 @@ emailtemps= [
                 }
             ]
 EmailTemplate.insert_many(emailtemps).on_conflict_replace().execute()
-print("emailtemplates added")
+print(" * emailtemplates added")
 
 #############################
 #emailtemplates
@@ -895,6 +895,6 @@ adminNotes = [
             },
        ]
 AdminNotes.insert_many(adminNotes).on_conflict_replace().execute()
-print("laborOfficeNotes added")
+print(" * laborOfficeNotes added")
 
 print("Dummy data added")
