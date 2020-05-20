@@ -36,36 +36,30 @@ def allPendingForms(formType):
         historyType = None
         pageTitle = ""
         approvalTarget = ""
-        pendingAllFormsCounter = FormHistory.select().where(FormHistory.status == 'Pending').count()
         laborStatusFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Status Form')).count()
         modifiedFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Modified Labor Form')).count()
         releaseFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Release Form')).count()
         overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
-        if formType  == "all":
-            formList = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
-            approvalTarget = "allFormsdenyModal"
-            pageTitle = "All Pending Forms"
-        else:
-            if formType == "pendingLabor":
-                historyType = "Labor Status Form"
-                approvalTarget = "denyLaborStatusFormsModal"
-                pageTitle = "Pending Labor Status Forms"
+        if formType == "pendingLabor":
+            historyType = "Labor Status Form"
+            approvalTarget = "denyLaborStatusFormsModal"
+            pageTitle = "Pending Labor Status Forms"
 
-            elif formType == "pendingModified":
-                historyType = "Modified Labor Form"
-                approvalTarget = "denyModifiedFormsModal"
-                pageTitle = "Pending Modified Forms"
+        elif formType == "pendingModified":
+            historyType = "Modified Labor Form"
+            approvalTarget = "denyModifiedFormsModal"
+            pageTitle = "Pending Adjustment Forms"
 
-            elif formType == "pendingOverload":
-                historyType = "Labor Overload Form"
-                approvalTarget = "denyOverloadFormsModal"
-                pageTitle = "Pending Overload Forms"
+        elif formType == "pendingOverload":
+            historyType = "Labor Overload Form"
+            approvalTarget = "denyOverloadFormsModal"
+            pageTitle = "Pending Overload Forms"
 
-            elif formType == "pendingRelease":
-                historyType = "Labor Release Form"
-                approvalTarget = "denyReleaseformSModal"
-                pageTitle = "Pending Release Forms"
-            formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
+        elif formType == "pendingRelease":
+            historyType = "Labor Release Form"
+            approvalTarget = "denyReleaseformSModal"
+            pageTitle = "Pending Release Forms"
+        formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
         users = User.select()
         return render_template( 'admin/allPendingForms.html',
                                 title=pageTitle,
@@ -76,7 +70,6 @@ def allPendingForms(formType):
                                 modalTarget = approvalTarget,
                                 isLaborAdmin = isLaborAdmin,
                                 overloadFormCounter = overloadFormCounter,
-                                pendingAllFormsCounter = pendingAllFormsCounter,
                                 laborStatusFormCounter = laborStatusFormCounter,
                                 modifiedFormCounter  = modifiedFormCounter,
                                 releaseFormCounter = releaseFormCounter

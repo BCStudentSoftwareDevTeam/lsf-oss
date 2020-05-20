@@ -1,8 +1,16 @@
 $(document).ready(function() {
-  $('#pendingForms, #statusForms, #modifiedForms, #overloadForms, #releaseForms').DataTable({
+  if($('#overloadTab').hasClass('active')){
+    console.log('Celebrate our diffrences');
+    targetsList = [3, 9]
+  } else {
+    console.log("Don't Celebrate");
+    targetsList = [0, 4, 10]
+  }
+  // If overload tab has been clicked, then we
+  $('#pendingForms, #statusForms, #modifiedForms, #releaseForms').DataTable({
     'columnDefs': [{
       'orderable': false,
-      'targets': [0, 4, 10]
+      'targets': targetsList
     }], // hide sort icon on header of first column
     // 'columnDefs': [{ 'orderable': false, 'targets': 9 }],
     'aaSorting': [
@@ -11,6 +19,7 @@ $(document).ready(function() {
     pageLength: 50
     // "dom": '<"top"fl>rt<"bottom"p><"clear">'
   });
+  console.log('Made it through');
 });
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
