@@ -1,6 +1,3 @@
-activate_this= '/var/www/html/venv/bin/activate_this.py'
-exec(open(activate_this).read())
-
 import sys
 import logging
 

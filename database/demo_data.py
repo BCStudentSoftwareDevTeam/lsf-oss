@@ -88,7 +88,7 @@ for student in studentsTracy:
     del student["PIDM"]
     students.append(student)
 Student.insert_many(students).on_conflict_replace().execute()
-print("students(TRACY) added")
+print("students (TRACY) added")
 
 #############################
 # Positions (TRACY)
@@ -220,10 +220,9 @@ staffs = [
             "CPO":"6301",
             "ORG":"2114",
             "DEPT_NAME": "Computer Science"
-            }
+            },
         ]
 stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
-print(stustaff)
 print("staff added")
 
 def insert_to_users(staffs):
