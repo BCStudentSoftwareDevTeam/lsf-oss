@@ -16,6 +16,7 @@ import base64
 from datetime import date
 from app import cfg
 from app.logic.emailHandler import*
+from app.models.adminNotes import AdminNotes
 
 
 @main_bp.route('/adjustLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
@@ -32,7 +33,7 @@ def adjustLSF(laborStatusKey):
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
     form = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-    # If todays date is greater than the adjustment cut off date on the term, then we do not want to 
+    # If todays date is greater than the adjustment cut off date on the term, then we do not want to
     # give users access to the adjustment page
     if currentDate > form.termCode.adjustmentCutOff:
         return render_template('errors/403.html')
@@ -89,6 +90,7 @@ def adjustLSF(laborStatusKey):
 def sumbitModifiedForm(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
+        currentDate = datetime.now().strftime("%Y-%m-%d")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
@@ -109,6 +111,14 @@ def sumbitModifiedForm(laborStatusKey):
                                              createdBy   = createdbyid.UserID,
                                              createdDate = date.today(),
                                              status      = status.statusName)
+            if k == "supervisorNotes":
+                ## New Entry in AdminNote Table
+                newNoteEntry = AdminNotes.create(formID=LSF.laborStatusFormID,
+                                                createdBy=createdbyid.UserID,
+                                                date=currentDate,
+                                                notesContents=rsp[k]["newValue"])
+                newNoteEntry.save()
+
             if k == "weeklyHours":
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
                 totalHours = 0

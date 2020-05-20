@@ -48,6 +48,7 @@
             <table id="pendingForms" class="table table-striped pendingForms dataTable" >
               <!-- Made empty header tags because we need to hide the header -->
               <thead id="headTable" text-align="center" >
+                {% for allForms in formList %}
                 <tr id="tableHeaders" class="tableHeaders" >
                   <th> Approve </th>
                   <th>Term</th>
@@ -59,11 +60,13 @@
                   <th>Hours</th>
                   <th>Created</th>
                   <th>Contract Dates</th>
+                  {% if allForms.modifiedForm != None %}
+                  <th>Effective Date</th>
+                  {% endif %}
                   <th> Edit </th>
                 </tr>
               </thead>
               <tbody id="tablebody">
-                {% for allForms in formList %}
                 <tr id="tableData" class="tableData" align="center">
                     <td> {# APPROVE #}
                       <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" name="check[]"  autocomplete="off" />
@@ -85,7 +88,7 @@
                     </td>
                     <td> {# SUPERVISOR #}
                       {% if allForms.modifiedForm.fieldModified == "supervisor" %}
-                        {{allForms.modifiedForm.newValue}}
+                        <s>{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</s> <br> {{allForms.modifiedForm.newValue}}
                       {% else %}
                         {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
                       {% endif %}
@@ -98,14 +101,14 @@
                     </td>
                     <td> {# POSITON AND WLS #}
                       {% if allForms.modifiedForm.fieldModified == "POSN_TITLE" %}
-                        {{allForms.modifiedForm.newValue}}
+                          <s>{{allForms.formID.POSN_TITLE}}</s> <br> {{allForms.modifiedForm.newValue}}
                       {% else %}
                         {{allForms.formID.POSN_TITLE}}
                       {% endif %}
                     </td>
                     <td> {# HOURS #}
                     {% if allForms.modifiedForm.fieldModified == "weeklyHours" %}
-                      {{allForms.modifiedForm.newValue}}
+                      <s>{% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}</s> <br> {{allForms.modifiedForm.newValue}}
                     {% else %}
                       {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}
                     {% endif %}
@@ -114,12 +117,13 @@
                     {{allForms.createdBy.username}}  <br/> {{allForms.createdDate.strftime('%m/%d/%y')}}
                   </td>
                   <td> {# CONTRACT DATE #}
-                    {% if allForms.modifiedForm.fieldModified == "contractHours" %}
-                      {{allForms.formID.startDate.strftime('%m/%d/%y')}} -  {{allForms.modifiedForm.newValue.strftime('%m/%d/%y')}}
-                    {% else %}
                      {{allForms.formID.startDate.strftime('%m/%d/%y')}} -  {{allForms.formID.endDate.strftime('%m/%d/%y')}}
-                    {% endif %}
                   </td>
+                  {% if allForms.modifiedForm != None %}
+                    <td> {# EFFECTIVE DATE #}
+                         {{allForms.modifiedForm.effectiveDate}}
+                    </td>
+                  {% endif %}
                   <td> {# EDIT #}
                     <a href="/modifyLSF/{{allForms.formID.laborStatusFormID}}"> <span id="edit_{{allForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
                     {% with modalTarget = modalTarget %}
