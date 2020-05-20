@@ -1,6 +1,5 @@
 from flask_login import login_required
 from app.controllers.main_routes import *
-from app.login_manager import require_login
 from app.models.user import *
 from app.models.status import *
 from app.models.laborStatusForm import *
@@ -19,6 +18,44 @@ from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 from app import cfg
 from app.logic.emailHandler import*
+
+class InvalidUserException(Exception):
+    pass
+
+def createUserFromTracy(username):
+    """ 
+        Attempts to add a user from the Tracy database to the application, based on the provided username.
+        XXX Currently only handles adding staff. XXX
+
+        Raises InvalidUserException if this does not succeed.
+    """
+
+    email = "{}@berea.edu".format(username)
+    try:
+        tracyUser = STUSTAFF.get(EMAIL=email)
+    except DoesNotExist as e:
+        raise InvalidUserException("{} not found in Tracy database".format(email))
+
+    data = {
+        'PIDM': tracyUser.PIDM,
+        'username': username,
+        'FIRST_NAME': tracyUser.FIRST_NAME,
+        'LAST_NAME': tracyUser.LAST_NAME,
+        'ID': tracyUser.ID,
+        'EMAIL': email,
+        'CPO': tracyUser.CPO,
+        'ORG': tracyUser.ORG,
+        'DEPT_NAME': tracyUser.DEPT_NAME,
+        'isLaborAdmin': False,
+        'isFinancialAidAdmin': False,
+        'isSaasAdmin': False,
+    }
+
+    try:
+        user = User.create(**data)
+        return user
+    except Exception as e:
+        raise InvalidUserException("Adding {} to user table failed".format(username), e)
 
 def getOrCreateStudentData(tracyStudent):
     """

@@ -2,10 +2,7 @@ from flask import request
 from app import cfg
 from app.controllers.errors_routes.handlers import *
 from app.models.user import User, DoesNotExist
-from app.models.Tracy.stustaff import STUSTAFF
-
-class InvalidUserException(Exception):
-    pass
+from app.logic.userInsertFunctions import createUserFromTracy, InvalidUserException
 
 def getUsernameFromEnv(env):
     envK = "eppn"
@@ -44,34 +41,8 @@ def auth_user(env, username):
     except DoesNotExist as e:
         description = env['description'].lower()
         if description != 'student':
-            try:
-                print("Adding {} to user table".format(username))
+            print("Adding {} to user table".format(username))
+            return createUserFromTracy(username)
 
-                # Get Tracy data
-                #tracyUser = STUSTAFF.get(STUSTAFF.email="{}@berea.edu".format(username))
-                #tracyUser = STUSTAFF.select().where(STUSTAFF.email="{}@berea.edu".format(username))
-                tracyUser = STUSTAFF.get(EMAIL="{}@berea.edu".format(username))
-                data = {
-                    'PIDM': tracyUser.PIDM,
-                    'username': username,
-                    'FIRST_NAME': env['givenName'],
-                    'LAST_NAME': env['sn'],
-                    'ID': tracyUser.ID,
-                    'EMAIL': env['eppn'],
-                    'CPO': tracyUser.CPO,
-                    'ORG': tracyUser.ORG,
-                    'DEPT_NAME': tracyUser.DEPT_NAME,
-                    'isLaborAdmin': False,
-                    'isFinancialAidAdmin': False,
-                    'isSaasAdmin': False,
-                }
-                user = User.create(**data)
-                return user
-
-            except DoesNotExist as e:
-                raise InvalidUserException("{} not found in Tracy database".format(username))
-            except Exception as e:
-                raise InvalidUserException("Adding {} to user table failed".format(username), e)
-        
         else:
-            raise InvalidUserException("Students must be added as administrators before logging in.")
+            raise InvalidUserException("Students must be added as administrators before logging in. {} is a student.".format(username))
