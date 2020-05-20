@@ -23,7 +23,7 @@
 </div>
 
 <div class="container" id="wrapper" align="center">
-   <div align="center" id="pendingTabs" class="container" style='text-align: center;'>
+   <div id="pendingTabs" class="container" style='text-align: center;'>
      <ul  class="nav nav-pills" style='text-align: center;'>
         <li id='laborTab' {% if formType == "pendingLabor" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingLabor')}}"> Pending Labor Status Forms <strong>({{ laborStatusFormCounter }})</strong></a>
@@ -68,14 +68,6 @@
                   {% if formType != "pendingOverload" %}
                     <td> {# APPROVE #}
                       <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" name="check[]"  autocomplete="off" />
-                      {% include "snips/pendingNotesModal.html" %}
-                      <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
-                             class="glyphicon glyphicon-edit btn-lg
-                                  {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
-                                  {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
-                                  {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
-                                  {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#NotesModal"> </span>
-                                  <input id="dummyInput" value="{{allForms.formID.laborStatusFormID}}" hidden/>
                     </td>
                     {% endif %}
                     <td> {# TERM #}
@@ -105,51 +97,42 @@
                   <td> {# CREATED DATE #}
                      {{allForms.formID.startDate.strftime('%m/%d/%y')}} -  {{allForms.formID.endDate.strftime('%m/%d/%y')}}
                   </td>
-                  <td> {# EDIT #}
-                    <a href="/modifyLSF/{{allForms.formID.laborStatusFormID}}"> <span id="edit_{{allForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
+                  <td> {# ACTION #}
+
                     {% with modalTarget = modalTarget %}
                       {% include "snips/FormsDeny.html" %}
                     {% endwith %}
-                    {% if allForms.historyType.historyTypeName != 'Labor Overload Form' %}
-                    <button
-                    id="reject_{{allForms.formHistoryID}}"
-                    value="{{allForms.formHistoryID}}"
-                    type="button"
-                    class ="btn btn-danger"
-                    name = "rejectBtn"
-                    value = "Reject"
-                    data-toggle="modal"
-                    data-target="#{{modalTarget}}"
-                    onclick="insertDenial(this.value);">
-                    Deny
-                    </button>
-                    {% else %}
+
                     {% with modalTarget = modalTarget %}
                       {% include "snips/pendingOverloadModal.html" %}
                     {% endwith %}
-                    <button
-                    id="{{allForms.formHistoryID}}"
-                    value="{{allForms.formHistoryID}}"
-                    type="button"
-                    class ="btn btn-info"
-                    name = "overloadBtn"
-                    value = "Overload"
-                    data-toggle="modal"
-                    data-target="#modalOverload"
-                    onclick="loadOverloadModal(this.value, {{allForms.formID.laborStatusFormID}});">
-                    Manage
-                    </button>
                     <div class="dropdown">
-                      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                        Dropdown button
-                      </button>
-                      <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Link 1</a>
-                        <a class="dropdown-item" href="#">Link 2</a>
-                        <a class="dropdown-item" href="#">Link 3</a>
-                      </div>
+                      {% include "snips/pendingNotesModal.html" %}
+                      <button class="btn btn-primary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Actions
+                      <span class="caret"></span></button>
+                      <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="min-width: 100%;">
+                        {% if allForms.historyType.historyTypeName != 'Labor Overload Form' %}
+                        <li role="presentation"><a role="menuitem">
+                          <span id="reject_{{allForms.formHistoryID}}"
+                            data-toggle="modal"
+                            data-target="#{{modalTarget}}"
+                            onclick="insertDenial({{allForms.formHistoryID}});">Deny</span></a></li>
+                        {% else %}
+                        <li role="presentation"><a role="menuitem">
+                          <span id="{{allForms.formHistoryID}}"
+                                data-toggle="modal"
+                                data-target="#modalOverload"
+                                onclick="loadOverloadModal({{allForms.formHistoryID}}, {{allForms.formID.laborStatusFormID}});">Manage</span></a></li>
+                        {% endif %}
+                        <li role="presentation"><a role="menuitem" href="/modifyLSF/{{allForms.formID.laborStatusFormID}}">
+                          <span id="edit_{{allForms.formID.laborStatusFormID}}">Edit</span></a></li>
+                        <li role="presentation"><a role="menuitem"
+                          <span id="notes_{{allForms.formID.laborStatusFormID}}"
+                                onclick="getNotes({{allForms.formID.laborStatusFormID}})"
+                                data-toggle="modal"
+                                data-target="#NotesModal">Notes</span></a></li>
+                      </ul>
                     </div>
-                    {% endif %}
                   </td>
                 </tr>
                 {% endfor %}
