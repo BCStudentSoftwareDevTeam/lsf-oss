@@ -221,6 +221,16 @@ staffs = [
             "ORG":"2114",
             "DEPT_NAME": "Computer Science"
             },
+            {
+            "PIDM":6,
+            "ID": "B00005893",
+            "FIRST_NAME":"Brian",
+            "LAST_NAME" : "Ramsay",
+            "EMAIL"  :"ramsayb2@berea.edu",
+            "CPO":"6301",
+            "ORG":"2114",
+            "DEPT_NAME": "Computer Science"
+            },
         ]
 stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
 print("staff added")
@@ -734,13 +744,6 @@ emailtemps= [
                     <p>Please follow the attached link to verify information needed for the approval of an overload form: <a href="@@link@@">@@link@@</a></p>
                             ''',
                 "audience":"SAAS and Financial Aid Office"
-                },
-                # labor Admin Notification
-                {
-                "purpose":"Labor Admin Notification",
-                "subject":"Verified Labor Overload Form Notification",
-                "body":"This is for notifying Labor Admin that SAAS or/and Financial Aid has submitted the overload Verification form",
-                "audience":"supervisor" #TODO: Needs to be changed to Labor Admin
                 },
                 # Break Labor Status Forms
                 {
