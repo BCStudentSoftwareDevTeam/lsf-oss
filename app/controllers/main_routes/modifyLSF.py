@@ -121,7 +121,7 @@ def updateLSF(laborStatusKey):
                 if allTermForms:
                     for i in allTermForms:
                         totalHours += i.weeklyHours
-                previousTotalHours = totalHours + int(rsp[k]['oldValue']) #TODO: I think we might be counting weekly hours of one form twice.
+                previousTotalHours = totalHours + int(rsp[k]['oldValue'])
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(overloadReason = "None")

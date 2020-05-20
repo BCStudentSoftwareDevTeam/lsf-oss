@@ -50,7 +50,6 @@ def adjustLSF(laborStatusKey):
     else:
         prefillhours = form.contractHours
     prefillnotes = form.supervisorNotes
-    print("prefillNotes", prefillnotes)
     #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
     supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == prefilldepartment)
