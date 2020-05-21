@@ -35,7 +35,7 @@ function fillHoursPerWeek(){ // prefill hours per week select picker
   var defaultValue = $("#oldWeeklyHours").val();
   var selectedHoursPerWeek = $("#weeklyHours");
   var jobType = $("#jobType").val();
-  var wls = $("#POSN_TITLE option:selected").attr("data-wls");
+  var wls = $("#POSN_CODE option:selected").attr("data-wls");
   if (selectedHoursPerWeek){
        var list = ["10", "12", "15", "20"];
        if (jobType == "Secondary") {
@@ -73,7 +73,7 @@ function checkForChange(){
   var oldSupervisor = $("#prefillsupervisor").val();
   var newSupervisor = $("#supervisor").val();
   var oldPostition = $("#prefillposition").val();
-  var newPostition = $("#POSN_TITLE").val();
+  var newPostition = $("#POSN_CODE").val();
   var date = $("#datetimepicker0").val();
   var oldNotes = $("#oldNotes").val();
   var newNotes = $("#supervisorNotes").val();
@@ -86,7 +86,7 @@ function checkForChange(){
     finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor, "date": date}
   }
   if(oldPostition != newPostition){
-    finalDict["POSN_TITLE"] = {"oldValue": oldPostition, "newValue": newPostition, "date": date}
+    finalDict["POSN_CODE"] = {"oldValue": oldPostition, "newValue": newPostition, "date": date}
   }
   if(oldNotes != newNotes){
     finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes, "date": date}

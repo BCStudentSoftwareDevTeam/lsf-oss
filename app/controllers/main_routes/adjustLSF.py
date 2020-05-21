@@ -43,7 +43,7 @@ def adjustLSF(laborStatusKey):
     prefillsupervisorID = form.supervisor.PIDM
     superviser_id = form.supervisor.UserID
     prefilldepartment = form.department.DEPT_NAME
-    prefillposition = form.POSN_TITLE #+ " " +"("+ form.WLS + ")"
+    prefillposition = form.POSN_CODE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
     prefillterm = form.termCode.termName
     if form.weeklyHours != None:
@@ -96,11 +96,19 @@ def sumbitModifiedForm(laborStatusKey):
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-            modifiedforms = ModifiedForm.create(fieldModified = k,
-                                            oldValue      =  rsp[k]['oldValue'],
-                                            newValue      =  rsp[k]['newValue'],
-                                            effectiveDate =  datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d')
-                                            )
+            if k == "supervisorNotes":
+                ## New Entry in AdminNote Table
+                newNoteEntry = AdminNotes.create(formID=LSF.laborStatusFormID,
+                                                createdBy=createdbyid.UserID,
+                                                date=currentDate,
+                                                notesContents=rsp[k]["newValue"])
+                newNoteEntry.save()
+            else:
+                modifiedforms = ModifiedForm.create(fieldModified = k,
+                                                oldValue      =  rsp[k]['oldValue'],
+                                                newValue      =  rsp[k]['newValue'],
+                                                effectiveDate =  datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d')
+                                                )
             historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
             status = Status.get(Status.statusName == "Pending")
             username = cfg['user']['debug']
@@ -111,13 +119,7 @@ def sumbitModifiedForm(laborStatusKey):
                                              createdBy   = createdbyid.UserID,
                                              createdDate = date.today(),
                                              status      = status.statusName)
-            if k == "supervisorNotes":
-                ## New Entry in AdminNote Table
-                newNoteEntry = AdminNotes.create(formID=LSF.laborStatusFormID,
-                                                createdBy=createdbyid.UserID,
-                                                date=currentDate,
-                                                notesContents=rsp[k]["newValue"])
-                newNoteEntry.save()
+
 
             if k == "weeklyHours":
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
@@ -125,7 +127,7 @@ def sumbitModifiedForm(laborStatusKey):
                 if allTermForms:
                     for i in allTermForms:
                         totalHours += i.weeklyHours
-                previousTotalHours = totalHours + int(rsp[k]['oldValue'])
+                previousTotalHours = totalHours + int(rsp[k]['oldValue']) #TODO: we might be counting one of the forms twice.
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(overloadReason = "None")

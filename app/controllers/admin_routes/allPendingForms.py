@@ -33,6 +33,7 @@ def allPendingForms(formType):
         historyType = None
         pageTitle = ""
         approvalTarget = ""
+        newSupervisorName = ""
         overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
         if formType  == "all":
             formList = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
@@ -59,6 +60,12 @@ def allPendingForms(formType):
                 approvalTarget = "denyReleaseformSModal"
                 pageTitle = "Pending Release Forms"
             formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
+            for allForms in formList: #TODO: Add comments
+                if allForms.modifiedForm != None:
+                    if allForms.modifiedForm.fieldModified == "supervisor":
+                        newSupervisorID = allForms.modifiedForm.newValue
+                        newSupervisor = User.get(User.UserID == newSupervisorID)
+                        newSupervisorName = newSupervisor.FIRST_NAME + " " + newSupervisor.LAST_NAME
         users = User.select()
         return render_template( 'admin/allPendingForms.html',
                                 title=pageTitle,
@@ -68,7 +75,8 @@ def allPendingForms(formType):
                                 formType= formType,
                                 modalTarget = approvalTarget,
                                 isLaborAdmin = isLaborAdmin,
-                                overloadFormCounter = overloadFormCounter
+                                overloadFormCounter = overloadFormCounter,
+                                newSupervisorName = newSupervisorName
                                 )
     except Exception as e:
         print("error", e)
