@@ -1,10 +1,10 @@
 $(document).ready(function() {
+  // If the overload tab has been selected, then we need to restrict the
+  // ordering functionality on different headers
   if($('#overloadTab').hasClass('active')){
-    console.log('Celebrate our diffrences');
-    targetsList = [3, 9]
+    targetsList = [8]
   } else {
-    console.log("Don't Celebrate");
-    targetsList = [0, 4, 10]
+    targetsList = [0, 9]
   }
   // If overload tab has been clicked, then we
   $('#pendingForms, #statusForms, #modifiedForms, #releaseForms').DataTable({
@@ -19,7 +19,6 @@ $(document).ready(function() {
     pageLength: 50
     // "dom": '<"top"fl>rt<"bottom"p><"clear">'
   });
-  console.log('Made it through');
 });
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only

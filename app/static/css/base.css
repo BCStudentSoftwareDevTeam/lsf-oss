@@ -133,8 +133,3 @@ a:hover {
 .bottom-buffer {
     margin-bottom: 60px;
 }
-
-body {
-  max-width: 100%;
-  overflow-x: hidden;
-}

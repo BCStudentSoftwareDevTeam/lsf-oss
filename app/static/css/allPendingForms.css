@@ -34,3 +34,8 @@ div#pendingTabs.container {
 div#pendingForms_length.dataTables_length {
   text-align: left;
 }
+
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
