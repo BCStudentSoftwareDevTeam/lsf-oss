@@ -39,7 +39,7 @@ function getDate(obj, termCode) {
         if (start != "" && end != "" && primaryCutOff != "" && adjustmentCutOff != "") {
           $('#term_btn_' + termCode).prop('disabled', false)
         }
-        category = "success"
+        category = "info"
         dateChanged = response['dateChanged']
         termchanged = response['changedTerm']
         newDate = response['newDate']
@@ -106,7 +106,7 @@ function termStatus(term) {
           $(termBtnID).removeClass("btn-danger");
           $(termBtnID).addClass("btn-success");
           $(termBtnID).text("Open");
-          category = "info";
+          category = "success";
           state = "'Open'.";
         }
         term = response['termChanged']
