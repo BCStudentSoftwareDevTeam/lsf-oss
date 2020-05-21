@@ -114,6 +114,7 @@ def finalUpdateStatus(raw_status):
     try:
         createdUser = User.get(username = cfg['user']['debug'])
         rsp = eval(request.data.decode("utf-8"))
+        denyReason = None
         if new_status == 'Denied':
             # Index 1 will always hold the reject reason in the list, so we can
             # set a variable equal to the index value and then slice off the list
