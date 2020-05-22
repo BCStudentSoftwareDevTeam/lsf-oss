@@ -83,12 +83,12 @@
                     <td> {# TERM #}
                       {{allForms.formID.termCode.termName}}
                     </td>
-                    <td> {# DEPARTMENT #}
-                      {{allForms.formID.department.DEPT_NAME}} <br/> {{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}}
+                    <td title = "{{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}}"> {# DEPARTMENT #}
+                      {{allForms.formID.department.DEPT_NAME}}
                     </td>
-                    <td> {# SUPERVISOR #}
+                    <td title = "{{allForms.formID.supervisor.username}}{% if allForms.modifiedForm.fieldModified == 'supervisor' %}, {{newSupervisor.username}} {%endif%} "> {# SUPERVISOR #}
                       {% if allForms.modifiedForm.fieldModified == "supervisor" %}
-                        <s>{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</s> <br/> {{newSupervisorName}}
+                        <s>{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</s>  <br/> {{newSupervisor.FIRST_NAME}} {{newSupervisor.LAST_NAME}}
                       {% else %}
                         {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
                       {% endif %}
@@ -96,10 +96,10 @@
                     <td>
                       |
                     </td>
-                    <td> {# STUDENT #}
-                      {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}} <br/>  {{allForms.formID.studentSupervisee.ID}}
+                    <td title="{{allForms.formID.studentSupervisee.ID}}"> {# STUDENT #}
+                      {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}
                     </td>
-                    <td> {# POSITON AND WLS #}
+                    <td title="{{allForms.formID.POSN_TITLE}}{% if allForms.modifiedForm.fieldModified == 'POSN_CODE'%}, new position name {% endif %}"> {# POSITON AND WLS #}
                       {% if allForms.modifiedForm.fieldModified == "POSN_CODE" %}
                           <s>{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</s> <br/> {{allForms.modifiedForm.newValue}}
                       {% else %}

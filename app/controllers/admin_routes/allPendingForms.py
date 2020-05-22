@@ -76,7 +76,7 @@ def allPendingForms(formType):
                                 modalTarget = approvalTarget,
                                 isLaborAdmin = isLaborAdmin,
                                 overloadFormCounter = overloadFormCounter,
-                                newSupervisorName = newSupervisorName
+                                newSupervisor = newSupervisor
                                 )
     except Exception as e:
         print("error", e)
