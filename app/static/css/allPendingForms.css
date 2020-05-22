@@ -34,3 +34,7 @@ div#pendingTabs.container {
 div#pendingForms_length.dataTables_length {
   text-align: left;
 }
+
+/* TODO */
+.tooltip[aria-hidden='true'] {display: none}
+.tooltip[aria-hidden='false'] {display: block}

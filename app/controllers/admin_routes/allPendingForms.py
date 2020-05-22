@@ -17,6 +17,7 @@ from app.logic.banner import Banner
 from app import cfg
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
+from app.models.Tracy.stuposn import STUPOSN
 
 
 @admin.route('/admin/pendingForms/<formType>',  methods=['GET'])
@@ -36,7 +37,8 @@ def allPendingForms(formType):
         historyType = None
         pageTitle = ""
         approvalTarget = ""
-        newSupervisorName = ""
+        newSupervisor = ""
+        newPosition = ""
         pendingAllFormsCounter = FormHistory.select().where(FormHistory.status == 'Pending').count()
         laborStatusFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Status Form')).count()
         modifiedFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Modified Labor Form')).count()
@@ -68,11 +70,13 @@ def allPendingForms(formType):
                 pageTitle = "Pending Release Forms"
             formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
             for allForms in formList: #TODO: Add comments
-                if allForms.modifiedForm != None:
-                    if allForms.modifiedForm.fieldModified == "supervisor":
-                        newSupervisorID = allForms.modifiedForm.newValue
+                if allForms.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
+                    if allForms.modifiedForm.fieldModified == "supervisor": # if supervisor field in adjust forms has been modified,
+                        newSupervisorID = allForms.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
                         newSupervisor = User.get(User.UserID == newSupervisorID)
-                        newSupervisorName = newSupervisor.FIRST_NAME + " " + newSupervisor.LAST_NAME
+                    if allForms.modifiedForm.fieldModified == "POSN_CODE": # if position field has been modified in adjust form then retriev position name.
+                        newPositionCode = allForms.modifiedForm.newValue.split("(", 1)
+                        newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode[0])
         users = User.select()
         return render_template( 'admin/allPendingForms.html',
                                 title=pageTitle,
@@ -84,6 +88,7 @@ def allPendingForms(formType):
                                 isLaborAdmin = isLaborAdmin,
                                 overloadFormCounter = overloadFormCounter,
                                 newSupervisor = newSupervisor,
+                                newPosition = newPosition,
                                 pendingAllFormsCounter = pendingAllFormsCounter,
                                 laborStatusFormCounter = laborStatusFormCounter,
                                 modifiedFormCounter  = modifiedFormCounter,
