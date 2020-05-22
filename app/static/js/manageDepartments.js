@@ -42,7 +42,7 @@ function status(department, dept_name) {
           $(departmentID).text("In Compliance");
           msg = "The " + dept_name +" department's compliance status was changed to 'In compliance'.";
           $("#dept_" + department).attr("data-order", 1);
-          category = "info";
+          category = "success";
         }
 
         $("#flash_container").html('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>');
