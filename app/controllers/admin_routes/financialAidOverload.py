@@ -59,7 +59,7 @@ def financialAidOverload(overloadKey):
     termYear = today.year
     termCodeYear = Term.select(Term.termCode).where(Term.termCode.between(termYear-1, termYear + 15))
     currentTerm = str(lsfForm.termCode.termCode)[-2:]
-    contractDate = "{} - {}".format(lsfForm.startDate.strftime('%m/%d/%y'), lsfForm.endDate.strftime('%m/%d/%y'))
+    contractDate = "{} - {}".format(lsfForm.startDate.strftime('%m/%d/%Y'), lsfForm.endDate.strftime('%m/%d/%Y'))
 
 # will need to add term to the interface and then have a prefill variable
     return render_template( 'admin/financialAidOverload.html',
@@ -117,8 +117,8 @@ def formDenial(status):
                 selectedOverload.SAASApprover = current_user.UserID
                 selectedOverload.SAASReviewDate = currentDate
                 selectedOverload.save()
-        email = emailHandler(rsp["formHistoryID"]) ## sending email to Labor Admin on any submission
-        email.verifiedOverloadNotification()
+        # email = emailHandler(rsp["formHistoryID"]) ## sending email to Labor Admin on any submission
+        # email.verifiedOverloadNotification()
         return jsonify({'success':True}), 200
     except Exception as e:
         print("Unable to Deny the OverloadForm",type(e).__name__ + ":", e)
