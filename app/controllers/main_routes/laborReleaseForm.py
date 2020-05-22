@@ -72,6 +72,10 @@ def laborReleaseForm(laborStatusKey):
             # Once all the forms are created, the user gets redirected to the
             # home page and gets a flash message telling them the forms were
             # submiteds
+            print('Here?')
+            email = emailHandler(newFormHistory.formHistoryID)
+            email.LaborOverLoadFormSubmitted('google.com')
+            print('Made it to the bottom')
             flash("Your labor release form has been submitted.", "success")
             return redirect(url_for("main.index"))
 

@@ -87,6 +87,7 @@ def populateModal(statusKey):
     to put on the modal depending on what form is in the history.
     """
     try:
+        print('Inside')
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         currentDate = datetime.date.today()
@@ -141,14 +142,14 @@ def populateModal(statusKey):
                             buttonState = 0 #Only rehire
                             break
                     elif form.status.statusName == "Approved":
-                        if currentDate <= form.formID.termCode.termEnd:
+                        if currentDate <= form.formID.endDate:
                             if currentDate > form.formID.termCode.adjustmentCutOff:
                                 buttonState = 4 #Release and rehire buttons
                                 break
                             else:
                                 buttonState = 3 #Release, adjustment, and rehire buttons
                                 break
-                        elif currentDate > form.formID.termCode.termEnd:
+                        else:
                             buttonState = 0 #Only rehire
                             break
         resp = make_response(render_template('snips/studentHistoryModal.html',
@@ -159,7 +160,7 @@ def populateModal(statusKey):
                                             ))
         return (resp)
     except Exception as e:
-        # print(e)
+        print(e)
         return render_template('errors/500.html')
         return (jsonify({"Success": False}))
 
