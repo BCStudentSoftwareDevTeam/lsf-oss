@@ -38,3 +38,7 @@ div#pendingForms_length.dataTables_length {
 /* TODO */
 .tooltip[aria-hidden='true'] {display: none}
 .tooltip[aria-hidden='false'] {display: block}
+
+.hover_indicator {
+  border-bottom:1px dotted #000;
+}

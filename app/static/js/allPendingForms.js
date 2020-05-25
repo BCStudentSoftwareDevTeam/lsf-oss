@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
   $('#pendingForms, #statusForms, #modifiedForms, #overloadForms, #releaseForms').DataTable({
     'columnDefs': [{
       'orderable': false,
@@ -8,9 +9,14 @@ $(document).ready(function() {
     'aaSorting': [
       [1, 'asc']
     ], // start to sort data in second column
-    pageLength: 50
+    pageLength: 50,
+    "fnDrawCallback": function(oSettings){
+      console.log("!!!!!!! this is tooltipp");
+      $('[data-toggle="tooltip"]').tooltip();
+    }
     // "dom": '<"top"fl>rt<"bottom"p><"clear">'
   });
+
 });
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
