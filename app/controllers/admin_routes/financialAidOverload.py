@@ -53,7 +53,7 @@ def financialAidOverload(overloadKey):
     # Get the overload form submitted for the student. Then, populate the Overload Request Information section with the data from overload form.
     overloadPosition = lsfForm.POSN_TITLE
     totalOverloadHours = lsfForm.weeklyHours + totalHours["primaryHours"] + totalHours["secondaryHours"]
-    studentOverloadReason = overloadForm.overloadForm.overloadReason
+    studentOverloadReason = overloadForm.overloadForm.studentOverloadReason
     laborOfficeNotes = lsfForm.laborDepartmentNotes
     today = date.today()
     termYear = today.year
