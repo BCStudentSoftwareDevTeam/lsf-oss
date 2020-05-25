@@ -10,10 +10,6 @@ $(document).ready(function() {
       [1, 'asc']
     ], // start to sort data in second column
     pageLength: 50,
-    "fnDrawCallback": function(oSettings){
-      console.log("!!!!!!! this is tooltipp");
-      $('[data-toggle="tooltip"]').tooltip();
-    }
     // "dom": '<"top"fl>rt<"bottom"p><"clear">'
   });
 

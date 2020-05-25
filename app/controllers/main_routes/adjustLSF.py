@@ -94,6 +94,7 @@ def sumbitModifiedForm(laborStatusKey):
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
+        print("rsp", rsp)
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if k == "supervisorNotes":
@@ -113,7 +114,7 @@ def sumbitModifiedForm(laborStatusKey):
             status = Status.get(Status.statusName == "Pending")
             username = cfg['user']['debug']
             createdbyid = User.get(User.username == username)
-            formhistorys = FormHistory.create( formID = laborStatusKey,
+            formHistories = FormHistory.create( formID = laborStatusKey,
                                              historyType = historyType.historyTypeName,
                                              modifiedForm = modifiedforms.modifiedFormID,
                                              createdBy   = createdbyid.UserID,
@@ -138,10 +139,10 @@ def sumbitModifiedForm(laborStatusKey):
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
-                    overloadEmail = emailHandler(formhistorys.formHistoryID)
+                    overloadEmail = emailHandler(formHistories.formHistoryID)
                     overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
-        email = emailHandler(formhistorys.formHistoryID)
-        email.laborStatusFormModified()
+        # email = emailHandler(formHistories.formHistoryID)
+        # email.laborStatusFormModified()
         flash("Your labor status form has been modified.", "success")
 
         return jsonify({"Success":True, "url":"/laborHistory/" + student})

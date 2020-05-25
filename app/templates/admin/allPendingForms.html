@@ -126,7 +126,7 @@
                   <td> {# CONTRACT DATE #}
                      {{allForms.formID.startDate.strftime('%m/%d/%y')}} <br/>  {{allForms.formID.endDate.strftime('%m/%d/%y')}}
                   </td>
-                  {% if allForms.modifiedForm != None %}
+                  {% if formType == "pendingModified" %}
                     <td> {# EFFECTIVE DATE #}
                          {{allForms.modifiedForm.effectiveDate.strftime('%m/%d/%y')}}
                     </td>
