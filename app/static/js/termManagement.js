@@ -39,6 +39,12 @@ function getDate(obj, termCode) {
         if (start != "" && end != "" && primaryCutOff != "" && adjustmentCutOff != "") {
           $('#term_btn_' + termCode).prop('disabled', false)
         }
+        category = "info"
+        dateChanged = response['dateChanged']
+        termchanged = response['changedTerm']
+        newDate = response['newDate']
+        $("#flash_container").html('<div class="alert alert-'+ category +'" role="alert" id="flasher">The '+ dateChanged +' for '+ termchanged +' was changed to '+ newDate +'</div>');
+        $("#flasher").delay(5000).fadeOut();
       }
 
     });
@@ -88,21 +94,24 @@ function termStatus(term) {
       data: JSON.stringify({"termBtn": term}),
       processData: false,
       success: function(response) {
-      if(response["Success"]) {
         //category = "info"
-         if ($(termBtnID).hasClass("btn-success")) {
-            $(termBtnID).removeClass("btn-success");
-            $(termBtnID).addClass("btn-danger");
-            $(termBtnID).text("Closed");
-            //category = "danger";
-            }
-          else {
-            $(termBtnID).removeClass("btn-danger");
-            $(termBtnID).addClass("btn-success");
-            $(termBtnID).text("Open");
-          //  category = "info";
-            }
-       }
+        if($(termBtnID).hasClass("btn-success")) {
+          $(termBtnID).removeClass("btn-success");
+          $(termBtnID).addClass("btn-danger");
+          $(termBtnID).text("Closed");
+          category = "danger";
+          state = "'Closed'.";
+          }
+        else {
+          $(termBtnID).removeClass("btn-danger");
+          $(termBtnID).addClass("btn-success");
+          $(termBtnID).text("Open");
+          category = "success";
+          state = "'Open'.";
+        }
+        term = response['termChanged']
+        $("#flash_container").html('<div class="alert alert-'+ category +'" role="alert" id="flasher">The state for '+ term +' is set to '+ state +'</div>');
+        $("#flasher").delay(5000).fadeOut();
      }
   })
 };

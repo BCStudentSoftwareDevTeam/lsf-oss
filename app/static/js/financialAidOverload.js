@@ -54,13 +54,14 @@ function openApproveDenyModal(status){
     $("#required-error").hide();
     $("#finOverloadSubmit").attr("data-dismiss", "modal")
     $("#finOverloadModal .modal-title").text("Reason for Approval")
-    $("#modal-body-content").text("You have selected 'Approve' for this student's Overload Request. Please indicate a reasoning for this decision (Optional).");
+    $("#modal-body-content").html("You have selected 'Approve' for this student's Overload Request. Please indicate a reasoning for this decision <b>(Optional)</b>."+
+                                  "<br><br><b>Please indicate in the notes if the overload form is being approved for a different term.</b>");
     $(".textarea-required").prop('required', false);
     $("#finOverloadModal").modal("show");
   }
   else{
     $("#finOverloadModal .modal-title").text("Reason for Denial");
-    $("#modal-body-content").text("You have selected 'Deny' for this student's Overload Request. Please indicate a reasoning for this decision (Required).");
+    $("#modal-body-content").html("You have selected 'Deny' for this student's Overload Request. Please indicate a reasoning for this decision <b>(Required)</b>.");
     $(".textarea-required").prop('required', true);
     $("#finOverloadModal").modal("show");
   }

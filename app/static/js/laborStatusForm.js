@@ -284,7 +284,7 @@ function checkCompliance(obj) {
           if(response.Department["Department Compliance"] == false){
             $("#warningModal").modal("show");
             $("#warningModalTitle").html("Warning");
-            $("#warningModalText").html("Department is out of compliance because position descriptions are not up to date. Please contact labor office to update your position description.");
+            $("#warningModalText").html("The "+ department +" Department is out of compliance. Please contact the Labor Office.");
             $(".disable").prop("disabled", true);
             $("#addMoreStudent").prop("disabled", true);
             $("#selectedTerm").selectpicker("refresh");
@@ -460,7 +460,7 @@ function createStuDict(){
                     stuStartDate: startDate,
                     stuEndDate: endDate,
                     stuTermCode: termCodeSelected,
-                    stuNotes: null,
+                    stuNotes: "",
                     stuLaborNotes: laborStatusFormNote,
                     stuSupervisor: supervisor,
                     stuDepartment: department,

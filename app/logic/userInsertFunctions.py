@@ -85,7 +85,7 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     # If the LSF is an overload form, create its history as such and an overload form
     if rspFunctional.get("isItOverloadForm") == "True":
         historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
-        newLaborOverloadForm = OverloadForm.create( overloadReason = "None",
+        newLaborOverloadForm = OverloadForm.create( studentOverloadReason = "None",
                                                     financialAidApproved = None,
                                                     financialAidApprover = None,
                                                     financialAidReviewDate = None,
