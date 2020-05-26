@@ -90,11 +90,11 @@
                       {{allForms.formID.termCode.termName}}
                     </td>
                     <td> {# DEPARTMENT #}
-                      <span class="hover_indicator" tabindex="0" data-toggle="tooltip" data-placement="top" title="{{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}}"> {{allForms.formID.department.DEPT_NAME}} </span>
+                      <a href="#" aria-label="{{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}}" class="hover_indicator"> {{allForms.formID.department.DEPT_NAME}} </a>
                     </td>
                     <td> {# SUPERVISOR #}
                       {% if allForms.modifiedForm.fieldModified == "supervisor" %}
-                        <s>{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</s>  <br/> {{newSupervisor.FIRST_NAME}} {{newSupervisor.LAST_NAME}}
+                        <s aria-hidden="true">{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</s>  <br/> {{newSupervisor.FIRST_NAME}} {{newSupervisor.LAST_NAME}}
                       {% else %}
                         {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
                       {% endif %}
@@ -103,22 +103,20 @@
                       |
                     </td>
                     <td> {# STUDENT #}
-                      <span class="hover_indicator" tabindex="0" data-toggle="tooltip" data-placement="top" title="{{allForms.formID.studentSupervisee.ID}}">
-                        {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}
-                      </span>
+                       <a href="#" aria-label="{{allForms.formID.studentSupervisee.ID}}" class="hover_indicator"> {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}</a>
                     </td>
                     <td> {# POSITON AND WLS #}
-                      <span class="hover_indicator" tabindex="0" data-toggle="tooltip" data-placement="top" title="{{allForms.formID.POSN_TITLE}}{% if allForms.modifiedForm.fieldModified == 'POSN_CODE'%}, {{newPosition.POSN_TITLE}} {% endif %}">
+                      <a href="#" aria-label="{{allForms.formID.POSN_TITLE}}{% if allForms.modifiedForm.fieldModified == 'POSN_CODE'%}, {{newPosition.POSN_TITLE}} {% endif %}" class="hover_indicator">
                         {% if allForms.modifiedForm.fieldModified == "POSN_CODE" %}
-                            <s>{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</s> <br/> {{allForms.modifiedForm.newValue}}
+                          <s aria-hidden="true">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</s><br/> {{allForms.modifiedForm.newValue}}
                         {% else %}
                           {{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})
                         {% endif %}
-                      </span>
+                      </a>
                     </td>
                     <td> {# HOURS #}
                     {% if allForms.modifiedForm.fieldModified == "weeklyHours" %}
-                      <s>{% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}</s> <br> {{allForms.modifiedForm.newValue}}
+                      <s aria-hidden="true">{% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}</s> <br> {{allForms.modifiedForm.newValue}}
                     {% else %}
                       {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}
                     {% endif %}
