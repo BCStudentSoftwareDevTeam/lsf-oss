@@ -139,8 +139,8 @@ def sumbitModifiedForm(laborStatusKey):
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
-                    overloadEmail = emailHandler(formHistories.formHistoryID)
-                    overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+                    # overloadEmail = emailHandler(formHistories.formHistoryID)
+                    # overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
         # email = emailHandler(formHistories.formHistoryID)
         # email.laborStatusFormModified()
         flash("Your labor status form has been modified.", "success")
