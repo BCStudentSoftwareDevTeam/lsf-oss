@@ -270,11 +270,10 @@ class emailHandler():
                         subject = template.subject
                         )
 
-        self.mail.send(message)
-        # if app.config['ENV'] == 'production' or app.config['ALWAYS_SEND_MAIL']:
-        #     self.mail.send(message)
-        # else:
-        #     print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
+        if app.config['ENV'] == 'production' or app.config['ALWAYS_SEND_MAIL']:
+            self.mail.send(message)
+        else:
+            print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
 
     # This method is responsible for replacing the keyword form the templates in the database with the data in the laborStatusForm
     def replaceText(self, form):
