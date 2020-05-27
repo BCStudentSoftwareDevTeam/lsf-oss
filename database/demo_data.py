@@ -871,6 +871,20 @@ emailtemps= [
                             <p>859-985-3611</p>
                             ''',
                 "audience":"Break Supervisor"
+                },
+                {"purpose":"Labor Overload Form Submitted Notification For Student",
+                "formType":"Labor Overload Form",
+                "action":"Notification",
+                "subject":"Labor Overload Form Student Reason",
+                "body":'',
+                "audience":"Student"
+                },
+                {"purpose":"Labor Overload Form Submitted Notification For Labor Office",
+                "formType":"Labor Overload Form",
+                "action":"Notification",
+                "subject":"Labor Overload Form Student Reason",
+                "body":'',
+                "audience":"Labor Office"
                 }
             ]
 EmailTemplate.insert_many(emailtemps).on_conflict_replace().execute()

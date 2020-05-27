@@ -5,7 +5,7 @@ from app.models.user import *
 from app.models.status import *
 from app.models.laborStatusForm import *
 from app.models.overloadForm import *
-from app.models.formHistory import *
+from app.models.formHistory import*
 from app.models.historyType import *
 from app.models.term import *
 from app.models.student import Student
@@ -112,47 +112,19 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
                             createdDate = date.today(),
                             status      = status.statusName)
 
-
-def createBreakHistory(rspFunctional, lsf, creatorID, status):
-    """
-    Creates the form history during break periods (Thanksgiving, spring, fall, summer, and Christmas break)
-    rspFunctional: a dictionary containing all the data submitted in the LSF page
-    lsf: stores the new instance of a labor status form
-    creatorID: ID of the user who submitted the LSF
-    status: status of the labor status form (e.g. Pending, etc.)
-    """
-    termCode = str(term)[-2:]
-    if "stuTotalHours" in rspFunctional and termCode in ["11", "12", "00"]: # If not a regular term (Academic Year, Fall, or Spring)
-        if (rspFunctional["stuTotalHours"] > 15) and (rspFunctional["stuJobType"] == "Secondary"):
-            formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
-                                              historyType = historyType.historyTypeName,
-                                              overloadForm = newLaborOverloadForm.overloadFormID,
-                                              createdBy   = creatorID,
-                                              createdDate = date.today(),
-                                              status      = status.statusName)
-            print("before email handler")
-            email = emailHandler(formOverload.formHistoryID)
-            print("----------this email handler worked")
-            email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
-
-
-def emailDuringBreak(secondLSFBreak):
+def emailDuringBreak(secondLSFBreak, term):
     """
     Sending emails during break period
     """
     # sending emails during break period
-    isOneLSF = json.loads(secondLSFBreak)
-    if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
-        primaryFormHistoryID = ""
-        if(isOneLSF["lsfFormID"] != []): # if there is only one labor status form, do nothing. Otherwise, send emails to the previous supervisors
+    termCode = str(term)[-2:]
+    if termCode not in ["11", "12", "00"]: # If not a regular term (Academic Year, Fall, or Spring)
+        isOneLSF = json.loads(secondLSFBreak)
+        formHistory = FormHistory.get(FormHistory.formHistoryID == isOneLSF['formHistoryID'])
+        if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
             for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
-                primaryFormHistories = FormHistory.select().where(FormHistory.formID == lsfID)
-                for primaryFormHistory in primaryFormHistories:
-                    primaryFormHistoryID = primaryFormHistory.formHistoryID
-                emailPrimSupBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
-                emailPrimSupBreakLSF.notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak() #send email to all of the previous supervisors
-            emailForBreakLSF = emailHandler(formHistory.formHistoryID, primaryFormHistoryID)
-            emailForBreakLSF.notifySecondLaborStatusFormSubmittedForBreak() #send email to student and supervisor for the current lsf break form
-    else: # Student has only one lsf, send email to student and supervisor
-        email = emailHandler(formHistory.formHistoryID)
-        email.laborStatusFormSubmittedForBreak()
+                email = emailHandler(formHistory.formHistoryID, lsfID)
+                email.notifySecondLaborStatusFormSubmittedForBreak()
+        else: # Student has only one lsf, send email to student and supervisor
+            email = emailHandler(formHistory.formHistoryID)
+            email.laborStatusFormSubmittedForBreak()
