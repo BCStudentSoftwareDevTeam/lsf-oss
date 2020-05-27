@@ -3,10 +3,18 @@ $('a.hover_indicator').click(function(e){
 });
 
 $(document).ready(function() {
-  $('#pendingForms, #statusForms, #modifiedForms, #overloadForms, #releaseForms').DataTable({
+  // If the overload tab has been selected, then we need to restrict the
+  // ordering functionality on different headers
+  if($('#overloadTab').hasClass('active')){
+    targetsList = [8]
+  } else {
+    targetsList = [0, 9]
+  }
+  // If overload tab has been clicked, then we
+  $('#pendingForms, #statusForms, #modifiedForms, #releaseForms').DataTable({
     'columnDefs': [{
       'orderable': false,
-      'targets': [0, 4, 10]
+      'targets': targetsList
     }], // hide sort icon on header of first column
     // 'columnDefs': [{ 'orderable': false, 'targets': 9 }],
     'aaSorting': [

@@ -6,6 +6,7 @@
   <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="{{url_for('static', filename ='css/allPendingForms.css')}}">
   <link rel="stylesheet" href="{{url_for('static', filename ='css/pendingNotesModal.css')}}">
+
 {% endblock %}
 
 {% block scripts %}
@@ -18,25 +19,22 @@
 
 {% block app_content %}
 <div align="center">
-  <h1>Pending Forms</h1>
+  <h1>{{title}}</h1>
 </div>
 
-<div class="container" id="wrapper" align="center">
-   <div align="center" id="pendingTabs" class="container">
-     <ul  class="nav nav-pills">
-       <li {% if formType == "all" %} class="active" {% endif %}>
-          <a  href="{{url_for('admin.allPendingForms', formType = 'all')}}">All Pending Forms <strong>({{ pendingAllFormsCounter }})</strong></a>
-       </li>
-        <li {% if formType == "pendingLabor" %} class="active" {% endif %}>
+<div class="container" id="wrapper">
+   <div id="pendingTabs" class="container" style='display: inline-block;;'>
+     <ul  class="nav nav-tabs" style='text-align: center;'>
+        <li id='laborTab' {% if formType == "pendingLabor" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingLabor')}}"> Pending Labor Status Forms <strong>({{ laborStatusFormCounter }})</strong></a>
         </li>
-        <li {% if formType == "pendingModified" %} class="active" {% endif %}>
-          <a href="{{url_for('admin.allPendingForms', formType = 'pendingModified')}}">Pending Modified Forms <strong>({{ modifiedFormCounter }})</strong></a>
+        <li id='modifiedTab' {% if formType == "pendingAdjustment" %} class="active" {% endif %}>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingAdjustment')}}">Pending Adjustment Forms <strong>({{ modifiedFormCounter }})</strong></a>
         </li>
-        <li {% if formType == "pendingOverload" %} class="active" {% endif %}>
+        <li id='overloadTab' {% if formType == "pendingOverload" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms <strong>({{ overloadFormCounter }})</strong></a>
         </li>
-        <li {% if formType == "pendingRelease" %} class="active" {% endif %}>
+        <li id='releaseTab' {% if formType == "pendingRelease" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingRelease')}}">Pending Release Forms <strong>({{ releaseFormCounter }})</strong></a>
         </li>
       </ul>
@@ -49,43 +47,31 @@
               <!-- Made empty header tags because we need to hide the header -->
               <thead id="headTable" text-align="center" >
                 <tr id="tableHeaders" class="tableHeaders" >
+                  {% if formType != "pendingOverload" %}
                   <th> Approve </th>
+                  {% endif %}
                   <th>Term</th>
                   <th>Department</th>
                   <th>Supervisor</th>
-                  <th> </th>
                   <th>Students</th>
                   <th> Position (WLS)</th>
                   <th>Hours</th>
                   <th>Contract Dates</th>
-                  {% if formType == "pendingModified" %}
+                  {% if formType == "pendingAdjustment" %}
                     <th>Effective Date</th>
                   {%endif%}
                   <th>Created</th>
-                  <th> Edit </th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody id="tablebody">
                 {% for allForms in formList %}
                 <tr id="tableData" class="tableData" align="center">
+                  {% if formType != "pendingOverload" %}
                     <td> {# APPROVE #}
-                      {% if allForms.historyType.historyTypeName != 'Labor Overload Form' %}
                       <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" name="check[]"  autocomplete="off" />
-                      {% else %}
-                      {% with modalTarget = modalTarget %}
-                        {% include "snips/pendingOverloadModal.html" %}
-                      {% endwith %}
-                      {% endif %}
-                      {% include "snips/pendingNotesModal.html" %}
-                      <span  id="notes_{{allForms.formID.laborStatusFormID}}" onclick="getNotes({{allForms.formID.laborStatusFormID}})"
-                             class="glyphicon glyphicon-edit btn-lg
-                                  {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
-                                  {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
-                                  {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
-                                  {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#NotesModal"> </span>
-                                  <input id="dummyInput" value="{{allForms.formID.laborStatusFormID}}" hidden/>
-
                     </td>
+                    {% endif %}
                     <td> {# TERM #}
                       {{allForms.formID.termCode.termName}}
                     </td>
@@ -98,9 +84,6 @@
                       {% else %}
                         {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
                       {% endif %}
-                    </td>
-                    <td>
-                      |
                     </td>
                     <td> {# STUDENT #}
                        <a href="#" aria-label="{{allForms.formID.studentSupervisee.ID}}" class="hover_indicator"> {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}</a>
@@ -124,7 +107,7 @@
                   <td> {# CONTRACT DATE #}
                      {{allForms.formID.startDate.strftime('%m/%d/%y')}} <br/>  {{allForms.formID.endDate.strftime('%m/%d/%y')}}
                   </td>
-                  {% if formType == "pendingModified" %}
+                  {% if formType == "pendingAdjustment" %}
                     <td> {# EFFECTIVE DATE #}
                          {{allForms.modifiedForm.effectiveDate.strftime('%m/%d/%y')}}
                     </td>
@@ -132,57 +115,58 @@
                   <td> {# CREATED BY #}
                     {{allForms.createdBy.username}}  <br/> {{allForms.createdDate.strftime('%m/%d/%y')}}
                   </td>
-                  <td> {# EDIT #}
-                    <a href="/modifyLSF/{{allForms.formID.laborStatusFormID}}"> <span id="edit_{{allForms.formID.laborStatusFormID}}" class="glyphicon glyphicon-pencil" ></span> </a>
+                  <td> {# ACTION #}
                     {% with modalTarget = modalTarget %}
-                      {% include "snips/FormsDeny.html" %}
+                      {% include "snips/pendingOverloadModal.html" %}
                     {% endwith %}
-                    {% if allForms.historyType.historyTypeName != 'Labor Overload Form' %}
-                    <button
-                    id="reject_{{allForms.formHistoryID}}"
-                    value="{{allForms.formHistoryID}}"
-                    type="button"
-                    class ="btn btn-danger"
-                    name = "rejectBtn"
-                    value = "Reject"
-                    data-toggle="modal"
-                    data-target="#{{modalTarget}}"
-                    onclick="insertDenial(this.value);">
-                    Deny
-                    </button>
-                    {% else %}
-                    <button
-                    id="{{allForms.formHistoryID}}"
-                    value="{{allForms.formHistoryID}}"
-                    type="button"
-                    class ="btn btn-info"
-                    name = "overloadBtn"
-                    value = "Overload"
-                    data-toggle="modal"
-                    data-target="#modalOverload"
-                    onclick="loadOverloadModal(this.value, {{allForms.formID.laborStatusFormID}});">
-                    Manage
-                    </button>
-                    {% endif %}
+                    <div class="dropdown">
+                      {% include "snips/FormsDeny.html" %}
+                      {% include "snips/pendingNotesModal.html" %}
+                      <button class="btn btn-primary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Actions
+                      <span class="caret"></span></button>
+                      <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="min-width: 100%;">
+                        {% if allForms.historyType.historyTypeName != 'Labor Overload Form' %}
+                        <li role="presentation"><a role="menuitem"
+                          <span id="reject_{{allForms.formHistoryID}}"
+                            onclick="insertDenial({{allForms.formHistoryID}})"
+                            data-toggle="modal"
+                            data-target="#{{modalTarget}}">Deny</span></a></li>
+                        {% else %}
+                        <li role="presentation"><a role="menuitem"
+                          <span id="{{allForms.formHistoryID}}"
+                                data-toggle="modal"
+                                data-target="#modalOverload"
+                                onclick="loadOverloadModal({{allForms.formHistoryID}}, {{allForms.formID.laborStatusFormID}});">Manage</span></a></li>
+                        {% endif %}
+                        <li role="presentation"><a role="menuitem" href="/modifyLSF/{{allForms.formID.laborStatusFormID}}">
+                          <span id="edit_{{allForms.formID.laborStatusFormID}}">Modify</span></a></li>
+                        <li role="presentation"><a role="menuitem"
+                          <span id="notes_{{allForms.formID.laborStatusFormID}}"
+                                onclick="getNotes({{allForms.formID.laborStatusFormID}})"
+                                data-toggle="modal"
+                                data-target="#NotesModal">View Notes</span></a></li>
+                      </ul>
+                    </div>
                   </td>
                 </tr>
                 {% endfor %}
               </tbody>
               </table>
-                <div class="btn-holder">
-                  {% include "snips/pendingApprovalModal.html" %}
-                  <button
-                    id="approveSelected"
-                    name="approveBtn"
-                    type="button"
-                    class="btn btn-newcolor"
-                    onclick="insertApprovals();"
-                    value="Approve Selected"
-                    data-target="#approvalModal"
-                    data-toggle="modal">
-                    Approve Selected
-                  </button>
-                </div>
+              {% if formType != 'pendingOverload' %}
+              <div style='float:left'>
+                <button
+                  id="approveSelected"
+                  name="approveBtn"
+                  type="button"
+                  class="btn btn-newcolor"
+                  onclick="insertApprovals();"
+                  value="Approve Selected"
+                  data-target="#approvalModal"
+                  data-toggle="modal">
+                  Approve Selected
+                </button>
+              </div>
+              {% endif %}
                 </div>
           </div>
    </div>

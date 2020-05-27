@@ -22,6 +22,10 @@
   width: 100%;
 }
 
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
 
 th {
   text-align: center;
@@ -42,7 +46,10 @@ div#pendingForms_length.dataTables_length {
   color: #000000;
 }
 
-a.hover_indicator:visited {
+a.hover_indicator:visited,
+a.hover_indicator:link,
+a.hover_indicator:hover,
+a.hover_indicator:active {
   color: #000000;
 }
 
@@ -72,4 +79,5 @@ a.hover_indicator:visited {
 
 [class*="hover_indicator"]:hover:after, [class*="hover_indicator"]:focus:after {
   display: block;
+  color: #000000;
 }

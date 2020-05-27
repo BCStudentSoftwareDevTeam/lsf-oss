@@ -13,6 +13,24 @@
   /* Makes titles black instead of gray */
   color: #000000 !important;
 }
+
+.textarea-required{
+  height: 100%;
+  width: 100%;
+}
+
+h3 {
+  margin-bottom: 20px;
+}
+
 #buttonContainer{
   margin-top: 15px;
+}
+
+#titleGlyphicon{
+      font-size: 29px;
+}
+
+#finAidTitle {
+  margin-top: 0;
 }

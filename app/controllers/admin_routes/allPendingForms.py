@@ -44,39 +44,34 @@ def allPendingForms(formType):
         modifiedFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Modified Labor Form')).count()
         releaseFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Release Form')).count()
         overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
-        if formType  == "all":
-            formList = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
-            approvalTarget = "allFormsdenyModal"
-            pageTitle = "All Pending Forms"
-        else:
-            if formType == "pendingLabor":
-                historyType = "Labor Status Form"
-                approvalTarget = "denyLaborStatusFormsModal"
-                pageTitle = "Pending Labor Status Forms"
+        if formType == "pendingLabor":
+            historyType = "Labor Status Form"
+            approvalTarget = "denyLaborStatusFormsModal"
+            pageTitle = "Pending Labor Status Forms"
 
-            elif formType == "pendingModified":
-                historyType = "Modified Labor Form"
-                approvalTarget = "denyModifiedFormsModal"
-                pageTitle = "Pending Modified Forms"
+        elif formType == "pendingAdjustment":
+            historyType = "Modified Labor Form"
+            approvalTarget = "denyModifiedFormsModal"
+            pageTitle = "Pending Adjustment Forms"
 
-            elif formType == "pendingOverload":
-                historyType = "Labor Overload Form"
-                approvalTarget = "denyOverloadFormsModal"
-                pageTitle = "Pending Overload Forms"
+        elif formType == "pendingOverload":
+            historyType = "Labor Overload Form"
+            approvalTarget = "denyOverloadFormsModal"
+            pageTitle = "Pending Overload Forms"
 
-            elif formType == "pendingRelease":
-                historyType = "Labor Release Form"
-                approvalTarget = "denyReleaseformSModal"
-                pageTitle = "Pending Release Forms"
-            formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
-            for allForms in formList: #TODO: Add comments
-                if allForms.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
-                    if allForms.modifiedForm.fieldModified == "supervisor": # if supervisor field in adjust forms has been modified,
-                        newSupervisorID = allForms.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
-                        newSupervisor = User.get(User.UserID == newSupervisorID)
-                    if allForms.modifiedForm.fieldModified == "POSN_CODE": # if position field has been modified in adjust form then retriev position name.
-                        newPositionCode = allForms.modifiedForm.newValue.split("(", 1)
-                        newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode[0])
+        elif formType == "pendingRelease":
+            historyType = "Labor Release Form"
+            approvalTarget = "denyReleaseformSModal"
+            pageTitle = "Pending Release Forms"
+        formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
+        for allForms in formList: 
+            if allForms.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
+                if allForms.modifiedForm.fieldModified == "supervisor": # if supervisor field in adjust forms has been modified,
+                    newSupervisorID = allForms.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
+                    newSupervisor = User.get(User.UserID == newSupervisorID)
+                if allForms.modifiedForm.fieldModified == "POSN_CODE": # if position field has been modified in adjust form then retriev position name.
+                    newPositionCode = allForms.modifiedForm.newValue.split("(", 1)
+                    newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode[0])
         users = User.select()
         return render_template( 'admin/allPendingForms.html',
                                 title=pageTitle,
