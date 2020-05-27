@@ -48,7 +48,7 @@
                       <div id="admin" class="panel-collapse collapse">
 
                         <ul id="admindropdown" class="panel panel-default">
-                          <a href="/admin/pendingForms/all"><li class="panel-heading"><h4>Pending Forms</h4></li></a>
+                          <a href="/admin/pendingForms/pendingLabor"><li class="panel-heading"><h4>Pending Forms</h4></li></a>
                           {#  <a href="/admin/adminOverload"><li class="panel-heading"><h4>Overload Forms</h4></li></a> #}
                           {#  <a href="/"><li class="panel-heading"><h4>Past Forms</h4></li></a> #}
                           <a href="/admin/termManagement"><li class="panel-heading"><h4>Manage Terms</h4></li></a>
@@ -63,9 +63,8 @@
 
               </div>
             {% endif %}
-
             <div class="panel panel-default">
-                <a href="/">
+                <a href="{{ '/' if env == 'development' else '/Shibboleth.sso/Logout' }}">
                     <div class="panel-heading">
                         <h4>
                             Logout
