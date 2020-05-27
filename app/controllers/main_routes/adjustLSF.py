@@ -128,7 +128,7 @@ def sumbitModifiedForm(laborStatusKey):
                 if allTermForms:
                     for i in allTermForms:
                         totalHours += i.weeklyHours
-                previousTotalHours = totalHours + int(rsp[k]['oldValue']) #TODO: we might be counting one of the forms twice.
+                previousTotalHours = totalHours + int(rsp[k]['oldValue'])
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
@@ -139,10 +139,10 @@ def sumbitModifiedForm(laborStatusKey):
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
-                    # overloadEmail = emailHandler(formHistories.formHistoryID)
-                    # overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
-        # email = emailHandler(formHistories.formHistoryID)
-        # email.laborStatusFormModified()
+                    overloadEmail = emailHandler(formHistories.formHistoryID)
+                    overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+        email = emailHandler(formHistories.formHistoryID)
+        email.laborStatusFormModified()
         flash("Your labor status form has been modified.", "success")
 
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
