@@ -81,12 +81,6 @@ class Banner():
                 ":term_type": termType
             }
 
-            # Debugging
-            print(data)
-            print(params)
-            return False, None
-            # Debugging
-
             try:
                 cursor = self.conn.cursor()
                 result = cursor.execute(stmt, params)
