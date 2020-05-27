@@ -63,9 +63,8 @@
 
               </div>
             {% endif %}
-
             <div class="panel panel-default">
-                <a href="/">
+                <a href="{{ '/' if env == 'development' else '/Shibboleth.sso/Logout' }}">
                     <div class="panel-heading">
                         <h4>
                             Logout
