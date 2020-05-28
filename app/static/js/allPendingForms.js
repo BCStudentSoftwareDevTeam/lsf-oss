@@ -438,9 +438,12 @@ function toggleNotesLog(laborStatusFormID) {
   modal to show/hide it
   */
   if ($('#logNotesDiv').css('display') == 'none') {
+    var overloadViewNotesID = '#overloadNote_' + String(laborStatusFormID)
+    $(overloadViewNotesID).html('Hide Notes')
     getNotes(laborStatusFormID)
     $('#logNotesDiv').css('display', 'block')
   } else {
+    notesCounter(laborStatusFormID)
     $('#logNotesDiv').css('display', 'none')
   }
 }
@@ -454,7 +457,6 @@ function notesCounter(laborStatusFormID){
     data: data,
     contentType: 'application/json',
     success: function(response) {
-      console.log(response);
       var viewNotesID = '#notes_' + String(laborStatusFormID)
       var overloadViewNotesID = '#overloadNote_' + String(laborStatusFormID)
       $(viewNotesID).html('View Notes (' + response['noteTotal'] + ')')
