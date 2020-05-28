@@ -34,39 +34,23 @@ def adjustLSF(laborStatusKey):
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
     form = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-
-    #TODO: TESTING TO GET THE CORRECT information WHEN Adjustment FORM is Approved
-    formsList = FormHistory.select().where(FormHistory.formID == laborStatusKey, FormHistory.status == "Approved", FormHistory.historyType == "Modified Labor Form")
-
-    print("formLsit", formsList)
-    if formsList:
-        for allForms in formsList:
-            if allForms.modifiedForm != None:
-                if allForms.modifiedForm.fieldModified == "weeklyHours":
-                    print("weeklyHours", allForms.modifiedForm.newValue)
-                    prefillhours = allForms.modifiedForm.newValue
-                if allForms.modifiedForm.fieldModified == "supervisor":
-                    prefillsupervisor = allForms.modifiedForm.newValue
-                    print("prefillsupervisor", prefillsupervisor)
-                else:
-                    prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
-    else:
-        prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
-
     # If todays date is greater than the adjustment cut off date on the term, then we do not want to
     # give users access to the adjustment page
     if currentDate > form.termCode.adjustmentCutOff:
         return render_template('errors/403.html')
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
-
+    prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
     prefillsupervisorID = form.supervisor.PIDM
     superviser_id = form.supervisor.UserID
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_CODE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
     prefillterm = form.termCode.termName
-
+    if form.weeklyHours != None:
+        prefillhours = form.weeklyHours
+    else:
+        prefillhours = form.contractHours
     prefillnotes = form.supervisorNotes
     #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
     supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
@@ -156,10 +140,10 @@ def sumbitModifiedForm(laborStatusKey):
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
-                    overloadEmail = emailHandler(formHistories.formHistoryID)
-                    overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
-        email = emailHandler(formHistories.formHistoryID)
-        email.laborStatusFormModified()
+        #             overloadEmail = emailHandler(formHistories.formHistoryID)
+        #             overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+        # email = emailHandler(formHistories.formHistoryID)
+        # email.laborStatusFormModified()
         flash("Your labor status form has been modified.", "success")
 
         return jsonify({"Success":True, "url":"/laborHistory/" + student})
