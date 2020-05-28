@@ -326,7 +326,6 @@ def updateOverloadForm():
         print("error", e)
         return jsonify({"Success": False})
 
-
 @admin.route('/admin/sendVerificationEmail', methods=['POST'])
 def sendEmail():
     """

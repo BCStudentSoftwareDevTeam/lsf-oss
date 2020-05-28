@@ -336,6 +336,13 @@ function loadOverloadModal(formHistoryID, laborStatusFormID) {
   });
 }
 
+function loadReleaseModal(formHistoryID, laborStatusFormID) {
+  var laborReleaseID = []
+  laborReleaseID.push(formHistoryID);
+  var data = JSON.stringify(laborReleaseID)
+
+}
+
 function displayModalTextArea(radioValue) {
   /*
   This method toggles the 'Deny' and 'Admin Notes' textareas
@@ -343,14 +350,14 @@ function displayModalTextArea(radioValue) {
   */
   var radioVal = radioValue
   if (radioVal == 'deny') {
-    $('#overloadNotes').val('');
-    $('#denyTextArea').css('display', 'block')
-    $('#notesTextArea').css('display', 'none')
+    $('.finalNote').val('');
+    $('.denyTextArea').css('display', 'block')
+    $('.notesTextArea').css('display', 'none')
 
   } else {
-    $('#denyOverloadReason').val('');
-    $('#denyTextArea').css('display', 'none')
-    $('#notesTextArea').css('display', 'block')
+    $('.finalDeny').val('');
+    $('.denyTextArea').css('display', 'none')
+    $('.notesTextArea').css('display', 'block')
   }
 }
 
@@ -448,10 +455,10 @@ function toggleNotesLog(laborStatusFormID) {
   This method toggles the 'Notes' log at the bottom of the
   modal to show/hide it
   */
-  if ($('#logNotesDiv').css('display') == 'none') {
+  if ($('.logNotesDiv').css('display') == 'none') {
     getNotes(laborStatusFormID)
-    $('#logNotesDiv').css('display', 'block')
+    $('.logNotesDiv').css('display', 'block')
   } else {
-    $('#logNotesDiv').css('display', 'none')
+    $('.logNotesDiv').css('display', 'none')
   }
 }

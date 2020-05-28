@@ -1,0 +1,86 @@
+<div class="modal fade" id="modalRelease" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div id="content" class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabel" align="center"><b>Labor Overload Form</b></h3>
+      </div>
+      <div class="modal-body">
+        <table id="overloadStudentTable" class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Student</th>
+              <th scope="col">Position</th>
+              <th scope="col">Hours</th>
+              <th scope="col">Supervisor</th>
+              <th scope="col">Department</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{allForms.formID.studentSupervisee.FIRST_NAME}} {{allForms.formID.studentSupervisee.LAST_NAME}}</td>
+              <td>{{allForms.formID.POSN_TITLE}}</td>
+              <td>{{allForms.formID.weeklyHours}}</td>
+              <td>{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</td>
+              <td>{{allForms.formID.department.DEPT_NAME}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <table id="overloadDepartmentTable" class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Condition at Release</th>
+              <th scope="col">Release Request Date</th>
+              <th scope="col">Date Submitted</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>{{allForms.releaseForm.conditionAtRelease}}</td>
+              <td>{{allForms.releaseForm.releaseDate}}</td>
+              <td>{{allForms.createdDate}}</td>
+            </tr>
+            <tr>
+              <td><strong>Release Reason3</strong></td>
+              <td colspan='2'>{{allForms.releaseForm.reasonForRelease}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div id='radioDiv'>
+          <span id="notes_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" class="glyphicon glyphicon-edit btn-lg
+                      {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
+                      {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
+                      {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
+                      {% else %} text-secondary {% endif %}" style='float: left; margin-top: -10px;'> </span>
+          <span aria-hidden="true" style="color:red"><strong>*</strong></span>
+          <label for="approve" class="radio-inline">
+            <input type="radio" id="approveRelease" class='release' name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve
+          </label>
+          <label for="deny" class="radio-inline">
+            <input type="radio" id="denyRelease" class='release' name="decision" value="deny" onclick="displayModalTextArea(this.value, this.class)">Deny
+          </label>
+        </div>
+        <div id="notesTextAreaRelease" class="notesTextArea">
+          <textarea id='releaseNotes' class="finalNote" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
+        </div>
+        <div id="denyTextAreaRelease" class="denyTextArea" style="display:None">
+          <p class="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
+          <textarea id='denyReleaseReason' class="finalDeny" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
+        </div>
+        <div class="logNotesDiv" style='display:none'>
+          <h4 class="supeNotesLabel col-md-4 control-label text-left" for="supervisor">Supervisor Notes: </h4>
+          <textarea class="notesText" rows="2" cols="70" disabled> </textarea>
+          <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
+          <div class="notesLogArea"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-sm-2" align="left">
+          <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal" onclick="location.reload()">Close</button>
+        </div>
+        <div class="col-sm- floatright" align="right">
+          <button type="button" class="btn btn-success floatright" id="submitOverload" onclick="submitOverload({{allForms.formHistoryID}})">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

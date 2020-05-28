@@ -97,6 +97,7 @@
 
                     {% with modalTarget = modalTarget %}
                       {% include "snips/pendingOverloadModal.html" %}
+                      {% include "snips/pendingReleaseModal.html" %}
                     {% endwith %}
                     <div class="dropdown">
                       {% include "snips/FormsDeny.html" %}
@@ -114,8 +115,8 @@
                         <li role="presentation"><a role="menuitem"
                           <span id="{{allForms.formHistoryID}}"
                                 data-toggle="modal"
-                                data-target="#modalOverload"
-                                onclick="loadOverloadModal({{allForms.formHistoryID}}, {{allForms.formID.laborStatusFormID}});">Release</span></a></li>
+                                data-target="#modalRelease"
+                                onclick="loadReleaseModal({{allForms.formHistoryID}}, {{allForms.formID.laborStatusFormID}});">Release</span></a></li>
                         {% else %}
                         <li role="presentation"><a role="menuitem"
                           <span id="reject_{{allForms.formHistoryID}}"

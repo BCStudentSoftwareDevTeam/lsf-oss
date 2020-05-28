@@ -47,14 +47,14 @@
             <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea(this.value)">Deny
           </label>
         </div>
-        <div id="notesTextArea">
-          <textarea id='overloadNotes' name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
+        <div id="notesTextAreaOverload" class="notesTextArea">
+          <textarea id='overloadNotes' class="finalNote" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
         </div>
-        <div id="denyTextArea" style="display:None">
-          <p id="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
-          <textarea id='denyOverloadReason' name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
+        <div id="denyTextAreaOverload" class="denyTextArea" style="display:None">
+          <p class="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
+          <textarea id='denyOverloadReason' class="finalDeny" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
         </div>
-        <div id="logNotesDiv" style='display:none'>
+        <div class="logNotesDiv" style='display:none'>
           <h4 class="supeNotesLabel col-md-4 control-label text-left" for="supervisor">Supervisor Notes: </h4>
           <textarea class="notesText" rows="2" cols="70" disabled> </textarea>
           <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
