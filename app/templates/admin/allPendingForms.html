@@ -104,18 +104,24 @@
                       <button class="btn btn-primary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Actions
                       <span class="caret"></span></button>
                       <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="min-width: 100%;">
-                        {% if allForms.historyType.historyTypeName != 'Labor Overload Form' %}
-                        <li role="presentation"><a role="menuitem"
-                          <span id="reject_{{allForms.formHistoryID}}"
-                            onclick="insertDenial({{allForms.formHistoryID}})"
-                            data-toggle="modal"
-                            data-target="#{{modalTarget}}">Deny</span></a></li>
-                        {% else %}
+                        {% if allForms.historyType.historyTypeName == 'Labor Overload Form' %}
                         <li role="presentation"><a role="menuitem"
                           <span id="{{allForms.formHistoryID}}"
                                 data-toggle="modal"
                                 data-target="#modalOverload"
                                 onclick="loadOverloadModal({{allForms.formHistoryID}}, {{allForms.formID.laborStatusFormID}});">Manage</span></a></li>
+                        {% elif allForms.historyType.historyTypeName == 'Labor Release Form' %}
+                        <li role="presentation"><a role="menuitem"
+                          <span id="{{allForms.formHistoryID}}"
+                                data-toggle="modal"
+                                data-target="#modalOverload"
+                                onclick="loadOverloadModal({{allForms.formHistoryID}}, {{allForms.formID.laborStatusFormID}});">Release</span></a></li>
+                        {% else %}
+                        <li role="presentation"><a role="menuitem"
+                          <span id="reject_{{allForms.formHistoryID}}"
+                            onclick="insertDenial({{allForms.formHistoryID}})"
+                            data-toggle="modal"
+                            data-target="#{{modalTarget}}">Deny</span></a></li>
                         {% endif %}
                         <li role="presentation"><a role="menuitem" href="/modifyLSF/{{allForms.formID.laborStatusFormID}}">
                           <span id="edit_{{allForms.formID.laborStatusFormID}}">Modify</span></a></li>
