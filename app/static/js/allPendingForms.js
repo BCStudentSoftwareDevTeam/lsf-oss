@@ -1,5 +1,5 @@
 $('a.hover_indicator').click(function(e){
-  e.preventDefault(); // prevents click on '#' link from jumping to top of the page. 
+  e.preventDefault(); // prevents click on '#' link from jumping to top of the page.
 });
 
 $(document).ready(function() {

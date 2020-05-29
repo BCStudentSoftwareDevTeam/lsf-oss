@@ -24,9 +24,11 @@ function jobPositionDisable(){
     $("#jobType").prop("disabled", true);
     $("#jobType").val("Secondary");
     $("#contractHoursDiv").show();
+    $("#weeklyHours").val("");
   }
   else{
     $("#weeklyHoursDiv").show();
+    $("#contractHours").val("");
   }
 }
 
@@ -79,6 +81,7 @@ function checkForChange(){
   var newNotes = $("#supervisorNotes").val();
   var oldContractHours = $('#oldContractHours').val();
   var newContractHours = $('#contractHours').val();
+  console.log("newContractHours", newContractHours);
   var oldWeeklyHours = $('#oldWeeklyHours').val();
   var newWeeklyHours = $('#weeklyHours').val();
 
@@ -91,11 +94,10 @@ function checkForChange(){
   if(oldNotes != newNotes){
     finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes, "date": date}
   }
-  //FIXME: when only weeklyhours is shows either just send weeklyhours dict or maybe make the contract hours null. and vice versa.
-  if(oldContractHours != newContractHours){
+  if(oldContractHours != newContractHours && newWeeklyHours == ""){
     finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours, "date": date}
   }
-  if(oldWeeklyHours != newWeeklyHours){
+  if(oldWeeklyHours != newWeeklyHours && newContractHours == ""){
     finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours, "date": date}
   }
 

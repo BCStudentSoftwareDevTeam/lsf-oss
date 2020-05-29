@@ -19,6 +19,7 @@ from app.controllers.main_routes.download import ExcelMaker
 from fpdf import FPDF
 from app.models.Tracy.stuposn import STUPOSN
 
+
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
     try:
@@ -86,13 +87,10 @@ def populateModal(statusKey):
     This function creates the modal and populates it with the history of a selected position.  It works with the openModal() function in laborhistory.js
     to create the modal, and append all of the data gathered here form the database to the modal.  It also sets a button state which decides which buttons
     to put on the modal depending on what form is in the history.
-
-    Additionally, this function overrides the original information of a Labor Status Form that was adjusted and approved.
     """
     try:
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
-        LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == statusKey) # getting the specific labor status form that will be used for determining whether the form is adjusted and approved.
         currentDate = datetime.date.today()
         buttonState = None
         current_user = cfg['user']['debug']
@@ -155,7 +153,6 @@ def populateModal(statusKey):
                         elif currentDate > form.formID.termCode.termEnd:
                             buttonState = 0 #Only rehire
                             break
-            overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF) # Function that overrides info if an adjusted form is approved.
         resp = make_response(render_template('snips/studentHistoryModal.html',
                                             forms = forms,
                                             statusForm = statusForm,
@@ -167,64 +164,6 @@ def populateModal(statusKey):
         # print(e)
         return render_template('errors/500.html')
         return (jsonify({"Success": False}))
-
-
-def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
-    """
-    This function checks whether an Adjustment Form is approved. If yes, it overrides the information
-    in the original Labor Status Form with the new information coming from approved Adjustment Form.
-
-    The only fields that will ever be modified in an adjustment form are: supervisor, position, and hours. 
-    """
-    if form.modifiedForm != None and form.status.statusName == "Approved":
-        if form.modifiedForm.fieldModified == "supervisor":
-            d, created = User.get_or_create(PIDM = form.modifiedForm.newValue)
-            if not created:
-                LSF.supervisor = d.UserID
-            LSF.save()
-            if created:
-                tracyUser = STUSTAFF.get(STUSTAFF.PIDM == form.modifiedForm.newValue)
-                tracyEmail = tracyUser.EMAIL
-                tracyUsername = tracyEmail.find('@')
-                user = User.get(User.PIDM == form.modifiedForm.newValue)
-                user.username   = tracyEmail[:tracyUsername]
-                user.FIRST_NAME = tracyUser.FIRST_NAME
-                user.LAST_NAME  = tracyUser.LAST_NAME
-                user.EMAIL      = tracyUser.EMAIL
-                user.CPO        = tracyUser.CPO
-                user.ORG        = tracyUser.ORG
-                user.DEPT_NAME  = tracyUser.DEPT_NAME
-                user.save()
-                LSF.supervisor = d.PIDM
-                LSF.save()
-        if form.modifiedForm.fieldModified == "POSN_CODE":
-            LSF.POSN_CODE = form.modifiedForm.newValue
-            position = STUPOSN.get(STUPOSN.POSN_CODE == form.modifiedForm.newValue)
-            LSF.POSN_TITLE = position.POSN_TITLE
-            LSF.WLS = position.WLS
-            LSF.save()
-        if form.modifiedForm.fieldModified == "weeklyHours":
-            allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
-            totalHours = 0
-            if allTermForms:
-                for i in allTermForms:
-                    totalHours += i.weeklyHours
-            previousTotalHours = totalHours + int(form.modifiedForm.newValue)
-            newTotalHours = totalHours + int(form.modifiedForm.newValue)
-            if previousTotalHours <= 15 and newTotalHours > 15:
-                newLaborOverloadForm = OverloadForm.create(studentOverloadReason = None)
-                user = User.get(User.username == cfg["user"]["debug"])
-                newFormHistory = FormHistory.create( formID = LSF.laborStatusFormID,
-                                                    historyType = "Labor Overload Form",
-                                                    createdBy = user.UserID,
-                                                    overloadForm = newLaborOverloadForm.overloadFormID,
-                                                    createdDate = date.today(),
-                                                    status = "Pending")
-             # emails are commented out for testing purposes
-                # overloadEmail = emailHandler(newFormHistory.formHistoryID)
-                # overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
-            LSF.weeklyHours = int(form.modifiedForm.newValue)
-            LSF.save()
 
 @main_bp.route('/laborHistory/modal/printPdf/<statusKey>', methods=['GET'])
 def ConvertToPDF(statusKey):

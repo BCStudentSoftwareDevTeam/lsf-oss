@@ -98,7 +98,7 @@
                       </a>
                     </td>
                     <td> {# HOURS #}
-                    {% if allForms.modifiedForm.fieldModified == "weeklyHours" %}
+                    {% if allForms.modifiedForm.fieldModified == "weeklyHours"  or  allForms.modifiedForm.fieldModified == "contractHours"%}
                       <s aria-hidden="true">{% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}</s> <br> {{allForms.modifiedForm.newValue}}
                     {% else %}
                       {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}
@@ -165,6 +165,7 @@
                   data-toggle="modal">
                   Approve Selected
                 </button>
+                {% include "snips/pendingApprovalModal.html" %}
               </div>
               {% endif %}
                 </div>
