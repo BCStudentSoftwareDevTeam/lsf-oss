@@ -287,8 +287,7 @@ def getOverloadModalData():
 @admin.route('/admin/overloadFormUpdate', methods=['POST'])
 def updateOverloadForm():
     """
-    This function will retrieve update the overloaf from using the
-    data entered into the modal.
+    This function will update the overload form based on the data from the modal.
     """
     try:
         rsp = eval(request.data.decode("utf-8"))
@@ -322,6 +321,48 @@ def updateOverloadForm():
             historyForm.save()
 
             return jsonify({"Success": True})
+    except Exception as e:
+        print("error", e)
+        return jsonify({"Success": False})
+
+@admin.route('/admin/releaseFormUpdate', methods=['POST'])
+def updateReleaseForm():
+    """
+    This function will update the release form based on the data from the modal.
+    """
+    try:
+        print('inside controller')
+        rsp = eval(request.data.decode("utf-8"))
+        if rsp:
+    #         historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
+    #         overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
+    #         currentDate = datetime.now().strftime("%Y-%m-%d")
+    #         createdUser = User.get(username = cfg['user']['debug'])
+    #         status = Status.get(Status.statusName == rsp['status'])
+    #         if 'denialReason' in rsp.keys():
+    #             # We only update the reject reason if one was given on the UI
+    #             historyForm.rejectReason = rsp['denialReason']
+    #             historyForm.save()
+    #             AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
+    #                             createdBy = createdUser.UserID,
+    #                             date = currentDate,
+    #                             notesContents = rsp['denialReason'])
+    #         if 'adminNotes' in rsp.keys():
+    #             # We only add admin notes if there was a note made on the UI
+    #             AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
+    #                             createdBy = createdUser.UserID,
+    #                             date = currentDate,
+    #                             notesContents = rsp['adminNotes'])
+    #         overloadForm.laborApproved = status.statusName
+    #         overloadForm.laborApprover = createdUser.UserID
+    #         overloadForm.laborReviewDate = currentDate
+    #         overloadForm.save()
+    #         historyForm.status = status.statusName
+    #         historyForm.reviewedBy = createdUser.UserID
+    #         historyForm.reviewedDate = currentDate
+    #         historyForm.save()
+
+        return jsonify({"Success": True})
     except Exception as e:
         print("error", e)
         return jsonify({"Success": False})

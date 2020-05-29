@@ -351,11 +351,12 @@ function displayModalTextArea(radioValue) {
   var radioVal = radioValue
   if (radioVal == 'deny') {
     $('.finalNote').val('');
+    $('#banner-warning').hide();
     $('.denyTextArea').css('display', 'block')
     $('.notesTextArea').css('display', 'none')
-
   } else {
     $('.finalDeny').val('');
+    $('#banner-warning').show();
     $('.denyTextArea').css('display', 'none')
     $('.notesTextArea').css('display', 'block')
   }
@@ -414,7 +415,7 @@ function submitOverload(formHistoryID) {
       }
     } else {
       if ($('#approve').is(':checked')) {
-        status = 'Approved'
+        status = 'Approved';
       }
       if ($('#approveRel').is(':checked')) {
         status = 'Approved Reluctantly'
@@ -443,6 +444,61 @@ function submitOverload(formHistoryID) {
   } else {
     $('#radioDiv').css('border', 'thin dotted red')
     $('#radioDiv').delay(2000).queue(function(next) {
+      $(this).css('border', 'none');
+      next();
+    })
+
+  }
+}
+
+function submitRelease(formHistoryID) {
+  console.log('Made it here');
+  if ($('input[name=decision]:checked').length > 0) {
+    console.log('Checked something');
+    var createAJAX = true
+    var status = 'Pending'
+    var releaseModalInfo = {'formHistoryID': formHistoryID}
+    if ($('#denyRelease').is(':checked')) {
+      if($("#denyReleaseReason").val() == ""){
+      $("#denyReleaseReason").focus();
+      $(".required-error").show();
+        createAJAX = false
+      } else {
+        $('.required-error').hide();
+        status = 'Denied';
+        var denyReason = $('#denyReleaseReason').val();
+        releaseModalInfo['denialReason'] = denyReason;
+      }
+    } else {
+      if ($('#approveRelease').is(':checked')) {
+        console.log('Approved');
+        status = 'Approved';
+      }
+      if ($('#releaseNotes').val() != '') {
+        var adminNotes = $('#releaseNotes').val();
+        releaseModalInfo['adminNotes'] = adminNotes;
+      }
+    }
+    if (createAJAX == true) {
+      releaseModalInfo['status'] = status;
+      var data = JSON.stringify(releaseModalInfo)
+      $.ajax({
+        method: "POST",
+        url: '/admin/releaseFormUpdate',
+        data: data,
+        contentType: 'application/json',
+        success: function(response) {
+          location.reload();
+          console.log('Made it back to AJAX');
+        },
+        error: function(request,status,error){
+          console.log(request.responseText);
+        }
+      });
+    }
+  } else {
+    $('#radioDivRelease').css('border', 'thin dotted red')
+    $('#radioDivRelease').delay(2000).queue(function(next) {
       $(this).css('border', 'none');
       next();
     })
