@@ -47,7 +47,7 @@
               <!-- Made empty header tags because we need to hide the header -->
               <thead id="headTable" text-align="center" >
                 <tr id="tableHeaders" class="tableHeaders" >
-                  {% if formType != "pendingOverload" %}
+                  {% if formType != "pendingOverload" and formType != "pendingRelease"  %}
                   <th> Approve </th>
                   {% endif %}
                   <th>Term</th>
@@ -64,7 +64,7 @@
               <tbody id="tablebody">
                 {% for allForms in formList %}
                 <tr id="tableData" class="tableData" align="center">
-                  {% if formType != "pendingOverload" %}
+                  {% if formType != "pendingOverload" and formType != "pendingRelease" %}
                     <td> {# APPROVE #}
                       <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value= "{{allForms.formHistoryID}}" name="check[]"  autocomplete="off" />
                     </td>
@@ -115,8 +115,7 @@
                         <li role="presentation"><a role="menuitem"
                           <span id="{{allForms.formHistoryID}}"
                                 data-toggle="modal"
-                                data-target="#modalRelease"
-                                onclick="loadReleaseModal({{allForms.formHistoryID}}, {{allForms.formID.laborStatusFormID}});">Release</span></a></li>
+                                data-target="#modalRelease">Manage</span></a></li>
                         {% else %}
                         <li role="presentation"><a role="menuitem"
                           <span id="reject_{{allForms.formHistoryID}}"
@@ -138,7 +137,7 @@
                 {% endfor %}
               </tbody>
               </table>
-              {% if formType != 'pendingOverload' %}
+              {% if formType != 'pendingOverload' and formType != 'pendingRelease' %}
               <div style='float:left'>
                 <button
                   id="approveSelected"

@@ -1,7 +1,7 @@
 $(document).ready(function() {
   // If the overload tab has been selected, then we need to restrict the
   // ordering functionality on different headers
-  if($('#overloadTab').hasClass('active')){
+  if($('#overloadTab').hasClass('active') || $('#releaseTab').hasClass('active')){
     targetsList = [8]
   } else {
     targetsList = [0, 9]
@@ -336,17 +336,10 @@ function loadOverloadModal(formHistoryID, laborStatusFormID) {
   });
 }
 
-function loadReleaseModal(formHistoryID, laborStatusFormID) {
-  var laborReleaseID = []
-  laborReleaseID.push(formHistoryID);
-  var data = JSON.stringify(laborReleaseID)
-
-}
-
 function displayModalTextArea(radioValue) {
   /*
-  This method toggles the 'Deny' and 'Admin Notes' textareas
-  based on what radio has been selected
+  This method toggles the 'Deny' and 'Admin Notes' textareas for the
+  'Overload' and 'Release' modals based on what radio has been selected
   */
   var radioVal = radioValue
   if (radioVal == 'deny') {
@@ -427,10 +420,11 @@ function submitOverload(formHistoryID) {
     }
     if (createAJAX == true) {
       overloadModalInfo['status'] = status;
+      overloadModalInfo['formType'] = 'Overload';
       var data = JSON.stringify(overloadModalInfo)
       $.ajax({
         method: "POST",
-        url: '/admin/overloadFormUpdate',
+        url: '/admin/modalFormUpdate',
         data: data,
         contentType: 'application/json',
         success: function(response) {
@@ -447,14 +441,15 @@ function submitOverload(formHistoryID) {
       $(this).css('border', 'none');
       next();
     })
-
   }
 }
 
 function submitRelease(formHistoryID) {
-  console.log('Made it here');
+  /*
+  This method is used to check if the form is ready for submission, then
+  makes an AJAX call with the information needed to complete the submission
+  */
   if ($('input[name=decision]:checked').length > 0) {
-    console.log('Checked something');
     var createAJAX = true
     var status = 'Pending'
     var releaseModalInfo = {'formHistoryID': formHistoryID}
@@ -462,7 +457,7 @@ function submitRelease(formHistoryID) {
       if($("#denyReleaseReason").val() == ""){
       $("#denyReleaseReason").focus();
       $(".required-error").show();
-        createAJAX = false
+        createAJAX = false;
       } else {
         $('.required-error').hide();
         status = 'Denied';
@@ -471,7 +466,6 @@ function submitRelease(formHistoryID) {
       }
     } else {
       if ($('#approveRelease').is(':checked')) {
-        console.log('Approved');
         status = 'Approved';
       }
       if ($('#releaseNotes').val() != '') {
@@ -481,15 +475,15 @@ function submitRelease(formHistoryID) {
     }
     if (createAJAX == true) {
       releaseModalInfo['status'] = status;
+      releaseModalInfo['formType'] = "Release";
       var data = JSON.stringify(releaseModalInfo)
       $.ajax({
         method: "POST",
-        url: '/admin/releaseFormUpdate',
+        url: '/admin/modalFormUpdate',
         data: data,
         contentType: 'application/json',
         success: function(response) {
           location.reload();
-          console.log('Made it back to AJAX');
         },
         error: function(request,status,error){
           console.log(request.responseText);
@@ -502,14 +496,13 @@ function submitRelease(formHistoryID) {
       $(this).css('border', 'none');
       next();
     })
-
   }
 }
 
 function toggleNotesLog(laborStatusFormID) {
   /*
   This method toggles the 'Notes' log at the bottom of the
-  modal to show/hide it
+  'Overload' and 'Release' modal to show/hide it
   */
   if ($('.logNotesDiv').css('display') == 'none') {
     getNotes(laborStatusFormID)

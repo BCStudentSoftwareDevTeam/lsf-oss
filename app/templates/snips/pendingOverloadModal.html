@@ -36,7 +36,7 @@
                       {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
                       {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
                       {% else %} text-secondary {% endif %}" style='float: left; margin-top: -10px;'> </span>
-
+          
           <label for="approve" class="radio-inline">
             <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve
           </label>
@@ -51,7 +51,7 @@
           <textarea id='overloadNotes' class="finalNote" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
         </div>
         <div id="denyTextAreaOverload" class="denyTextArea" style="display:None">
-          <p class="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
+          <p id="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
           <textarea id='denyOverloadReason' class="finalDeny" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
         </div>
         <div class="logNotesDiv" style='display:none'>
