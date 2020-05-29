@@ -72,8 +72,6 @@ class emailHandler():
     # is pulled from the model, and replaceText method will replace the neccesary keywords with the correct data.
     # The sendEmail method will handle all of the email sending once the email template has been populated.
     def laborStatusFormSubmitted(self):
-        ## FIXME ##
-        # Add a conditional to check if jobType is Prim or Sec
         if self.laborStatusForm.jobType == 'Secondary':
             self.checkRecipient("Labor Status Form Submitted For Student",
                                 False,
@@ -133,8 +131,6 @@ class emailHandler():
         reason for the overload form; One email will be just a confirmation
         email to the student and the other one will be for the labor office.
         """
-        ## FIXME ##
-        # Does not exist, will need to create the template
         self.checkRecipient("Labor Overload Form Submitted Notification For Student",
                             "Labor Overload Form Submitted Notification For Labor Office")
 
@@ -192,8 +188,6 @@ class emailHandler():
     def verifiedOverloadNotification(self):
         """ This email will be sent to Labor Admin when SAAS or Financial Aid Make
         a decision on an overload form"""
-        ## FIXME ##
-        # Does not exist, will need to create
         message = Message("Verified Labor Overload Form Notification",
                     recipients=[""]) # TODO: Labor Admin email
         emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Admin Notification")

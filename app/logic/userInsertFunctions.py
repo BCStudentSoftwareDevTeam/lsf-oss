@@ -23,7 +23,7 @@ class InvalidUserException(Exception):
     pass
 
 def createUserFromTracy(username):
-    """ 
+    """
         Attempts to add a user from the Tracy database to the application, based on the provided username.
         XXX Currently only handles adding staff. XXX
 
@@ -153,7 +153,6 @@ def emailDuringBreak(secondLSFBreak, term):
     """
     Sending emails during break period
     """
-    # sending emails during break period
     termCode = str(term)[-2:]
     if termCode not in ["11", "12", "00"]: # If not a regular term (Academic Year, Fall, or Spring)
         isOneLSF = json.loads(secondLSFBreak)
