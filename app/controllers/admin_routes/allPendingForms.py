@@ -372,5 +372,5 @@ def getNotesCounter():
             noteDictionary = {'noteTotal': noteTotal}
             return jsonify(noteDictionary)
     except Exception as e:
-        print("error", e)
-        return jsonify({"Success": False})
+        print("Error selecting admin notes:", e)
+        return jsonify({"Success": False}),500
