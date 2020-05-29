@@ -37,7 +37,6 @@ def allPendingForms(formType):
         historyType = None
         pageTitle = ""
         approvalTarget = ""
-        pendingAllFormsCounter = FormHistory.select().where(FormHistory.status == 'Pending').count()
         laborStatusFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Status Form')).count()
         modifiedFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Modified Labor Form')).count()
         releaseFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Release Form')).count()
@@ -87,7 +86,6 @@ def allPendingForms(formType):
                                 modalTarget = approvalTarget,
                                 isLaborAdmin = isLaborAdmin,
                                 overloadFormCounter = overloadFormCounter,
-                                pendingAllFormsCounter = pendingAllFormsCounter,
                                 laborStatusFormCounter = laborStatusFormCounter,
                                 modifiedFormCounter  = modifiedFormCounter,
                                 releaseFormCounter = releaseFormCounter
