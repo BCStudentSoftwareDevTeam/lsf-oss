@@ -89,13 +89,12 @@
                        <a href="#" aria-label="{{allForms.formID.studentSupervisee.ID}}" class="hover_indicator"> {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}</a>
                     </td>
                     <td> {# POSITON AND WLS #}
-                      <a href="#" aria-label="{{allForms.formID.POSN_TITLE}}{% if allForms.modifiedForm.fieldModified == 'POSN_CODE'%}, {{allForms.modifiedForm.oldValue}} {% endif %}" class="hover_indicator">
-                        {% if allForms.modifiedForm.fieldModified == "POSN_CODE" %}
-                          <s aria-hidden="true">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</s><br/> {{allForms.modifiedForm.newValue}}
-                        {% else %}
-                          {{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})
-                        {% endif %}
-                      </a>
+                      {% if allForms.modifiedForm.fieldModified == "POSN_CODE" %}
+                        <s aria-hidden="true"><a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a></s><br/>
+                        <a href="#" aria-label="{{allForms.modifiedForm.oldValue}}" class="hover_indicator"> {{allForms.modifiedForm.newValue}}</a>
+                      {% else %}
+                        <a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a>
+                      {% endif %}
                     </td>
                     <td> {# HOURS #}
                     {% if allForms.modifiedForm.fieldModified == "weeklyHours"  or  allForms.modifiedForm.fieldModified == "contractHours"%}
