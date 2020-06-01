@@ -20,9 +20,9 @@
               <td style="text-align:center">{{allForms.formID.studentSupervisee.FIRST_NAME}} {{allForms.formID.studentSupervisee.LAST_NAME}} ({{allForms.formID.studentSupervisee.ID}})</td>
               <td style="text-align:center">{{allForms.formID.POSN_TITLE}} ({{allForms.formID.POSN_CODE}})</td>
               {% if allForms.formID.weeklyHours == None %}
-                <td style="text-align:center">{{allForms.formID.contractHours}}</td>
+              <td style="text-align:center">{{allForms.formID.contractHours}}</td>
               {% else %}
-                <td style="text-align:center">{{allForms.formID.weeklyHours}}</td>
+              <td style="text-align:center">{{allForms.formID.weeklyHours}}</td>
               {% endif %}
               <td style="text-align:center">{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}} ({{allForms.formID.supervisor.ID}})</td>
               <td style="text-align:center">{{allForms.formID.department.DEPT_NAME}} ({{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}})</td>
@@ -40,7 +40,7 @@
           <tbody>
             <tr>
               <td style="text-align:center">{{allForms.releaseForm.conditionAtRelease}}</td>
-              <td style="text-align:center">{{allForms.releaseForm.releaseDate}}</td>
+              <td style="text-align:center">{{allForms.releaseForm.releaseDate.strftime('%m/%d/%y')}}</td>
               <td style="text-align:center">{{allForms.createdDate.strftime('%m/%d/%y')}}</td>
             </tr>
             <tr>
@@ -49,6 +49,7 @@
             </tr>
           </tbody>
         </table>
+        <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
         <div id='radioDivRelease'>
           <span id="notes_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" class="glyphicon glyphicon-edit btn-lg text-secondary" style='float: left; margin-top: -10px;'></span>
           <span>Status:<span aria-hidden="true" style="color:red"><strong>*</strong></span></span>

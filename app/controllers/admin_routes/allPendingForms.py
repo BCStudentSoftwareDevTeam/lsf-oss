@@ -281,7 +281,7 @@ def getOverloadModalData():
                                 })
             return jsonify(overloadModalInfo)
     except Exception as e:
-        print("Error Loading Data Into Overload Modal:", e)
+        print("Error Loading Data Into Overload Modal:",type(e).__name__ + ":", e)
         return jsonify({"Success": False}), 500
 
 @admin.route('/admin/modalFormUpdate', methods=['POST'])
@@ -318,7 +318,7 @@ def modalFormUpdate():
                                 createdBy = createdUser.UserID,
                                 date = currentDate,
                                 notesContents = rsp['adminNotes'])
-            # historyForm.status = status.statusName
+            historyForm.status = status.statusName
             historyForm.reviewedBy = createdUser.UserID
             historyForm.reviewedDate = currentDate
             historyForm.save()
@@ -335,7 +335,7 @@ def modalFormUpdate():
 
             return jsonify({"Success": True})
     except Exception as e:
-        print("Error Updating Release/Overload Forms:", e)
+        print("Error Updating Release/Overload Forms:",type(e).__name__ + ":", e)
         return jsonify({"Success": False}),500
 
 @admin.route('/admin/sendVerificationEmail', methods=['POST'])
@@ -368,5 +368,5 @@ def sendEmail():
             }
             return jsonify(newEmailInformation)
     except Exception as e:
-        print("Error sending verification email to SASS/Financial Aid:", e)
+        print("Error sending verification email to SASS/Financial Aid:",type(e).__name__ + ":", e)
         return jsonify({"Success": False}),500

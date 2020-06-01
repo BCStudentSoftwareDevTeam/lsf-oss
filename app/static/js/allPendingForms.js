@@ -1,7 +1,7 @@
 $(document).ready(function() {
   // If the overload tab has been selected, then we need to restrict the
   // ordering functionality on different headers
-  if($('#overloadTab').hasClass('active') || $('#releaseTab').hasClass('active')){
+  if ($('#overloadTab').hasClass('active') || $('#releaseTab').hasClass('active')) {
     targetsList = [8]
   } else {
     targetsList = [0, 9]
@@ -25,7 +25,7 @@ var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
     labor_details_ids.push(this.value);
-    });
+  });
 
   //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
   var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;
@@ -330,7 +330,7 @@ function loadOverloadModal(formHistoryID, laborStatusFormID) {
         $('#overloadNotes').data('formId', laborStatusFormID)
       }
     },
-    error: function(request,status,error){
+    error: function(request, status, error) {
       console.log(request.responseText);
     }
   });
@@ -341,6 +341,7 @@ function displayModalTextArea(radioValue) {
   This method toggles the 'Deny' and 'Admin Notes' textareas for the
   'Overload' and 'Release' modals based on what radio has been selected
   */
+  $('.status-warning').hide();
   var radioVal = radioValue
   if (radioVal == 'deny') {
     $('.finalNote').val('');
@@ -360,7 +361,10 @@ function sendEmail(formHistoryID, emailRecipient) {
   This method sends data to the backend that it used to send an email,
   and also updates the data inside of the overload modal
   */
-  emailTrackerInfo = {'formHistoryID': formHistoryID, 'emailRecipient': emailRecipient}
+  emailTrackerInfo = {
+    'formHistoryID': formHistoryID,
+    'emailRecipient': emailRecipient
+  }
   data = JSON.stringify(emailTrackerInfo)
   $.ajax({
     method: "POST",
@@ -371,16 +375,15 @@ function sendEmail(formHistoryID, emailRecipient) {
       var newDate = response['emailDate']
       var status = response['status']
       var recipient = response['recipient']
-      if(recipient == 'SAAS'){
+      if (recipient == 'SAAS') {
         $("#statusSAAS").html(status)
         $("#emailSAAS").html(newDate)
-      }
-      else if (recipient == 'Financial Aid') {
+      } else if (recipient == 'Financial Aid') {
         $("#statusFinancialAid").html(status)
         $("#emailFinancialAid").html(newDate)
       }
     },
-    error: function(request,status,error){
+    error: function(request, status, error) {
       console.log(request.responseText);
     }
   });
@@ -394,11 +397,13 @@ function submitOverload(formHistoryID) {
   if ($('input[name=decision]:checked').length > 0) {
     var createAJAX = true
     var status = 'Pending'
-    var overloadModalInfo = {'formHistoryID': formHistoryID}
+    var overloadModalInfo = {
+      'formHistoryID': formHistoryID
+    }
     if ($('#deny').is(':checked')) {
-      if($("#denyOverloadReason").val() == ""){
-      $("#denyOverloadReason").focus();
-      $("#required-error").show();
+      if ($("#denyOverloadReason").val() == "") {
+        $("#denyOverloadReason").focus();
+        $("#required-error").show();
         createAJAX = false
       } else {
         $('#required-error').hide();
@@ -430,17 +435,13 @@ function submitOverload(formHistoryID) {
         success: function(response) {
           location.reload();
         },
-        error: function(request,status,error){
+        error: function(request, status, error) {
           console.log(request.responseText);
         }
       });
     }
   } else {
-    $('#radioDiv').css('border', 'thin dotted red')
-    $('#radioDiv').delay(2000).queue(function(next) {
-      $(this).css('border', 'none');
-      next();
-    })
+    $('.status-warning').show();
   }
 }
 
@@ -452,11 +453,13 @@ function submitRelease(formHistoryID) {
   if ($('input[name=decision]:checked').length > 0) {
     var createAJAX = true
     var status = 'Pending'
-    var releaseModalInfo = {'formHistoryID': formHistoryID}
+    var releaseModalInfo = {
+      'formHistoryID': formHistoryID
+    }
     if ($('#denyRelease').is(':checked')) {
-      if($("#denyReleaseReason").val() == ""){
-      $("#denyReleaseReason").focus();
-      $(".required-error").show();
+      if ($("#denyReleaseReason").val() == "") {
+        $("#denyReleaseReason").focus();
+        $(".required-error").show();
         createAJAX = false;
       } else {
         $('.required-error').hide();
@@ -485,17 +488,13 @@ function submitRelease(formHistoryID) {
         success: function(response) {
           location.reload();
         },
-        error: function(request,status,error){
+        error: function(request, status, error) {
           console.log(request.responseText);
         }
       });
     }
   } else {
-    $('#radioDivRelease').css('border', 'thin dotted red')
-    $('#radioDivRelease').delay(2000).queue(function(next) {
-      $(this).css('border', 'none');
-      next();
-    })
+    $('.status-warning').show();
   }
 }
 
