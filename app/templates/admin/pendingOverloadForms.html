@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{{super()}}
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.css"/>
+  <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="{{url_for('static', filename ='css/allPendingForms.css')}}">
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/allPendingForms.js') }}"></script>
+{% endblock %}
+
+{% block title %}
+{{super()}}
+    Pending Forms
+{% endblock %}
+
+{% block app_content %}
+
+<div class="container" id="wrapper" align="center">
+  <b><h1 id="header"> Pending Forms </h1></b>
+      <br> </br>
+   <div align="center" id="pendingTabs" class="container">
+   <ul  class="nav nav-pills">
+     <li {% if formType == "all" %} class="active" {% endif %}>
+        <a  href="{{url_for('admin.allPendingForms', formType = 'all')}}">All Pending Forms</a>
+     </li>
+      <li {% if formType == "pendingLabor" %} class="active" {% endif %}>
+        <a href="{{url_for('admin.allPendingForms', formType = 'pendingLabor')}}"> Pending Labor Status Forms</a>
+      </li>
+      <li {% if formType == "pendingModified" %} class="active" {% endif %}>
+        <a href="{{url_for('admin.allPendingForms', formType = 'pendingModified')}}">Pending Modified Forms</a>
+      </li>
+      <li {% if formType == "pendingOverload" %} class="active" {% endif %}>
+        <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">  Pending Overload Forms </a>
+      </li>
+      <li {% if formType == "pendingRelease" %} class="active" {% endif %}>
+        <a href="{{url_for('admin.allPendingForms', formType = 'pendingRelease')}}">Pending Release Forms</a>
+      </li>
+    </ul>
+    </div>
+
+<br> </br>
+
+<div align="center" class="tab-content clearfix">
+
+  <div class="tab-pane active" id="allPendingForms">
+    <div class="col-lg-12" align="center" >
+      <table id="overloadForms" class="table table-striped overloadForm dataTable" >
+        <!-- Made empty header tags because we need to hide the header -->
+          <thead id="headTable" text-align="center" >
+            <tr id="tableHeaders" class="tableHeaders"  >
+              <th> Notes </th>
+              <th>Term</th>
+              <th>Department</th>
+              <th>Supervisor</th>
+              <th></th>
+              <th>Students</th>
+              <th> Position (WLS)</th>
+              <th>Hours</th>
+              <th>Created</th>
+              <th>Contract Dates</th>
+              <th></th>
+
+            </tr>
+          </thead>
+
+          <tbody id="tablebody">
+            {% for overloadForm in pending_overload_forms %}
+            <tr id="tableData_{{overloadForm.formHistoryID}}" value= "{{overloadForm.formHistoryID}}" class="tableData" align="center">
+                <td> {#Admin Notes #}
+                  <span  id="notes_{{overloadForm.formID.laborStatusFormID}}" onclick="getNotes({{overloadForm.formID.laborStatusFormID}})"
+                         class="glyphicon glyphicon-book btn-lg
+                              {% if overloadForm.formID.supervisorNotes != None and overloadForm.formID.laborDepartmentNotes == None %} text-success
+                              {% elif overloadForm.formID.laborDepartmentNotes != None and overloadForm.formID.supervisorNotes == None  %} text-danger
+                              {% elif overloadForm.formID.supervisorNotes != None and overloadForm.formID.laborDepartmentNotes != None %} text-danger
+                              {% else %} text-secondary {% endif %}" data-toggle="modal" data-target="#overloadFormNotesModal"
+                         value="{{overloadForm.formID.termCode.termName}} {{overloadForm.formID.studentSupervisee.FIRST_NAME}}  {{overloadForm.formID.studentSupervisee.LAST_NAME}}
+                         ({{overloadForm.formID.studentSupervisee.ID}} {{overloadForm.formID.POSN_TITLE}} ({{overloadForm.formID.WLS}})" class="noteModelClose">
+
+                              </span>
+                              <input id="dummyInput" value="{{overloadForm.formID.laborStatusFormID}}" hidden/>
+
+                </td>
+                <td> {# TERM #}
+                  {{overloadForm.formID.termCode.termName}}
+                </td>
+                <td> {# DEPARTMENT #}
+                  {{overloadForm.formID.department.DEPT_NAME}} ({{overloadForm.formID.department.ORG}}-{{overloadForm.formID.department.ACCOUNT}})
+                </td>
+                <td> {# SUPERVISOR #}
+                  {{overloadForm.formID.supervisor.FIRST_NAME}} {{overloadForm.formID.supervisor.LAST_NAME}}
+                </td>
+                <td>
+                  |
+                </td>
+                <td> {# STUDENT #}
+                  {{overloadForm.formID.studentSupervisee.FIRST_NAME}}  {{overloadForm.formID.studentSupervisee.LAST_NAME}}  ({{overloadForm.formID.studentSupervisee.ID}})
+                </td>
+                <td> {# POSITON AND WLS #}
+                  {{overloadForm.formID.POSN_TITLE}} ({{overloadForm.formID.WLS}})
+                </td>
+                <td> {# HOURS #}
+                {% if overloadForm.formID.weeklyHours != None%} {{overloadForm.formID.weeklyHours}} {% else %}   {{overloadForm.formID.contractHours}} {% endif %}
+              </td>
+              <td> {# CREATED BY #}
+                {{overloadForm.createdBy.username}}  <br/> {{overloadForm.createdDate.strftime('%m/%d/%y')}}
+              </td>
+              <td> {# CREATED DATE #}
+                 {{overloadForm.formID.startDate.strftime('%m/%d/%y')}} -  {{overloadForm.formID.endDate.strftime('%m/%d/%y')}}
+              </td>
+              <td></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% with modalTarget = modalTarget %}
+          {% include "snips/adminOverloadModal.html" %}
+        {% endwith %}
+    </div>
+  </div>
+</div>
+{% include "snips/overloadApproveModal.html" %}
+{% include "snips/overloadDenyModal.html" %}
+{% include "snips/overloadNotesModal.html" %}
+{% endblock %}

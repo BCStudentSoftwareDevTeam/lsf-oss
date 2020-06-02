@@ -16,7 +16,6 @@ import base64
 from app import cfg
 from app.logic.emailHandler import*
 
-
 @main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
 def modifyLSF(laborStatusKey):
     ''' This function gets all the form's data and populates the front end with it'''
@@ -45,7 +44,7 @@ def modifyLSF(laborStatusKey):
         prefillhours = form.contractHours
     prefillnotes = form.supervisorNotes
     #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
-    supervisors = STUSTAFF.select().where(STUSTAFF.DEPT_NAME == prefilldepartment).order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
+    supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == prefilldepartment)
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
@@ -125,7 +124,7 @@ def updateLSF(laborStatusKey):
                 previousTotalHours = totalHours + int(rsp[k]['oldValue'])
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
-                    newLaborOverloadForm = OverloadForm.create(overloadReason = "None")
+                    newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
                     user = User.get(User.username == cfg["user"]["debug"])
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
@@ -141,7 +140,8 @@ def updateLSF(laborStatusKey):
         email = emailHandler(changedForm.formHistoryID)
         email.laborStatusFormModified()
         flash("Your labor status form has been modified.", "success")
-        return jsonify({"Success":True, "url":"/laborHistory/" + student})
+
+        return jsonify({"Success":True})
 
     except Exception as e:
         flash("An error occured.", "danger")

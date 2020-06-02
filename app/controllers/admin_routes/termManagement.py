@@ -88,18 +88,29 @@ def ourDate():
         if rsp:
             termCode = rsp['termCode']
             termToChange = Term.get(Term.termCode == termCode)
-            date_value = rsp.get("start", rsp.get("end", rsp.get("primaryCutOff", None)))
+            date_value = rsp.get("start", rsp.get("end", rsp.get("primaryCutOff", rsp.get("adjustmentCutOff", None))))
             if rsp.get('start', None):
                 startDate = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.termStart = startDate
+                dateChanged = 'Start Date'
             if rsp.get('end', None):
                 endDate = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.termEnd = endDate
+                dateChanged = 'End Date'
             if rsp.get('primaryCutOff', None):
                 primaryCutOff = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.primaryCutOff = primaryCutOff
+                dateChanged = 'Primary Cut Off Date'
+            if rsp.get('adjustmentCutOff', None):
+                adjustmentCutOff = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
+                termToChange.adjustmentCutOff = adjustmentCutOff
+                dateChanged = 'Adjustment Cut Off Date'
             termToChange.save()
-            return jsonify({"Success": True})
+            flasherInfo = {'changedTerm': termToChange.termName,
+                            'newDate': date_value,
+                            'dateChanged': dateChanged
+            }
+            return jsonify(flasherInfo)
     except Exception as e:
         print("You have failed to update the date.", e)
         return jsonify({"Success": False})
@@ -118,9 +129,9 @@ def termStatusCheck():
                 term.termState = False
             elif term.termState == False:
                 term.termState = True
-
             term.save()
-            return jsonify({"Success": True})
+            flasherInfo = {'termChanged': term.termName}
+            return jsonify(flasherInfo)
     except Exception as e:
         print(e)
         return jsonify({"Success": False})

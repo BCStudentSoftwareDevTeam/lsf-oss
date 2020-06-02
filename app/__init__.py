@@ -28,3 +28,7 @@ app.register_blueprint(admin_bp)
 # Registers error messaging
 from app.controllers.errors_routes import error as errors_bp
 app.register_blueprint(errors_bp)
+
+@app.context_processor
+def inject_environment():
+    return dict(env=app.config['ENV'])

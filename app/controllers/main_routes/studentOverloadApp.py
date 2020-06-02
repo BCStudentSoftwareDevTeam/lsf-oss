@@ -89,7 +89,7 @@ def updateDatabase():
             for data in rsp.values():
                 formHistoryForm = FormHistory.get(FormHistory.formHistoryID == data["formID"])
                 d, created = OverloadForm.get_or_create(overloadFormID = formHistoryForm.overloadForm)
-                d.overloadReason = data["Notes"]
+                d.studentOverloadReason = data["Notes"]
                 d.save()
                 email = emailHandler(formHistoryForm.formHistoryID)
                 email.LaborOverLoadFormSubmittedNotification('http://{0}/'.format(request.host) + 'admin/pendingForms/pendingOverload')
