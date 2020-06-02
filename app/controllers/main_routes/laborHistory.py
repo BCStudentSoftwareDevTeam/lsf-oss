@@ -95,6 +95,22 @@ def populateModal(statusKey):
         buttonState = None
         current_user = cfg['user']['debug']
         for form in forms:
+            if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
+                if form.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
+                    newSupervisorID = form.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
+                    newSupervisor = User.get(User.UserID == newSupervisorID)
+                    # we are temporarily storing the supervisor name in new value,
+                    # because we want to show the supervisor name in the hmtl template.
+                    form.modifiedForm.oldValue = form.formID.supervisor.FIRST_NAME + " " + form.formID.supervisor.LAST_NAME # old supervisor name
+                    form.modifiedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
+                if form.modifiedForm.fieldModified == "Position": # if position field has been modified in adjust form then retriev position name.
+                    newPositionCode = form.modifiedForm.newValue
+                    newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode)
+                    # temporarily storing the new position name in new value, and old position name in old value
+                    # because we want to show these information in the hmtl template.
+                    form.modifiedForm.newValue = form.formID.POSN_TITLE
+                    form.modifiedForm.oldValue = newPosition.POSN_TITLE
+        for form in forms:
             if current_user != (form.createdBy.username or form.formID.supervisor.username):
                 break
             else:
@@ -153,6 +169,7 @@ def populateModal(statusKey):
                         elif currentDate > form.formID.termCode.termEnd:
                             buttonState = 0 #Only rehire
                             break
+
         resp = make_response(render_template('snips/studentHistoryModal.html',
                                             forms = forms,
                                             statusForm = statusForm,
