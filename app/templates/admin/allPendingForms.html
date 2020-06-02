@@ -89,7 +89,7 @@
                        <a href="#" aria-label="{{allForms.formID.studentSupervisee.ID}}" class="hover_indicator"> {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}</a>
                     </td>
                     <td> {# POSITON AND WLS #}
-                      {% if allForms.modifiedForm.fieldModified == "Position" %}
+                      {% if allForms.modifiedForm.fieldModified == "Position"%}
                         <s aria-hidden="true"><a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a></s><br/>
                         <a href="#" aria-label="{{allForms.modifiedForm.oldValue}}" class="hover_indicator"> {{allForms.modifiedForm.newValue}}</a>
                       {% else %}
@@ -97,7 +97,7 @@
                       {% endif %}
                     </td>
                     <td> {# HOURS #}
-                    {% if allForms.modifiedForm.fieldModified == "Weekly Hours"  or  allForms.modifiedForm.fieldModified == "Contract Hours"%}
+                    {% if allForms.modifiedForm.fieldModified == "Weekly Hours"  or  allForms.modifiedForm.fieldModified == "Contract Hours" %}
                       <s aria-hidden="true">{% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}</s> <br> {{allForms.modifiedForm.newValue}}
                     {% else %}
                       {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}

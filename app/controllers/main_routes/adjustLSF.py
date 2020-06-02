@@ -121,7 +121,6 @@ def sumbitModifiedForm(laborStatusKey):
                                              createdDate = date.today(),
                                              status      = status.statusName)
 
-
             if k == "Weekly Hours":
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
                 totalHours = 0

@@ -61,6 +61,7 @@ def allPendingForms(formType):
             approvalTarget = "denyReleaseformSModal"
             pageTitle = "Pending Release Forms"
         formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
+        # only if a form is adjusted
         for allForms in formList:
             if allForms.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
                 if allForms.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,

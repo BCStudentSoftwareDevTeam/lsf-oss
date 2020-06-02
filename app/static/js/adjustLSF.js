@@ -81,7 +81,6 @@ function checkForChange(){
   var newNotes = $("#supervisorNotes").val();
   var oldContractHours = $('#oldContractHours').val();
   var newContractHours = $('#contractHours').val();
-  console.log("newContractHours", newContractHours);
   var oldWeeklyHours = $('#oldWeeklyHours').val();
   var newWeeklyHours = $('#weeklyHours').val();
 

@@ -94,6 +94,7 @@ def populateModal(statusKey):
         currentDate = datetime.date.today()
         buttonState = None
         current_user = cfg['user']['debug']
+
         for form in forms:
             if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
                 if form.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
@@ -108,8 +109,9 @@ def populateModal(statusKey):
                     newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode)
                     # temporarily storing the new position name in new value, and old position name in old value
                     # because we want to show these information in the hmtl template.
-                    form.modifiedForm.newValue = form.formID.POSN_TITLE
-                    form.modifiedForm.oldValue = newPosition.POSN_TITLE
+                    form.modifiedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
+                    form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
+
         for form in forms:
             if current_user != (form.createdBy.username or form.formID.supervisor.username):
                 break
