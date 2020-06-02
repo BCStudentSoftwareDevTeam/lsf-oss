@@ -39,7 +39,8 @@ def laborReleaseForm(laborStatusKey):
                     if form.status.statusName != "Denied":
                         # If there is currently a pending labor release form for the labor status form
                         # then the user should not be able submit another one
-                        flash("An error has occurred. Student already has a 'Pending' labor release form.", "danger")
+                        message = "An error has occurred. {0} {1} already has a 'Pending' Labor Release Form.".format(historyForms[0].formID.studentSupervisee.FIRST_NAME, historyForms[0].formID.studentSupervisee.LAST_NAME)
+                        flash(message, "danger")
                         return redirect(url_for("main.index"))
             # If the labor status form does not have a pending labor release form, then the user
             # will be able to submit a labor release form. This section will create the new
@@ -72,12 +73,14 @@ def laborReleaseForm(laborStatusKey):
             # Once all the forms are created, the user gets redirected to the
             # home page and gets a flash message telling them the forms were
             # submiteds
-            flash("Your labor release form has been submitted.", "success")
+            message = "Your Labor Release Form for {0} {1} has been submitted.".format(laborStatusForiegnKey.studentSupervisee.FIRST_NAME, laborStatusForiegnKey.studentSupervisee.LAST_NAME)
+            flash(message, "success")
             return redirect(url_for("main.index"))
 
         except Exception as e:
             print(e)
-            flash("An error has occurred. Your labor release form was not submitted.", "danger")
+            message = "An error has occurred. Your Labor Release Form for {0} {1} was not submitted.".format(laborStatusForiegnKey.studentSupervisee.FIRST_NAME, laborStatusForiegnKey.studentSupervisee.LAST_NAME)
+            flash(message, "danger")
             return redirect(url_for("main.index"))
 
     return render_template('main/laborReleaseForm.html',
