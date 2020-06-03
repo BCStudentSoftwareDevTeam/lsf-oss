@@ -359,3 +359,18 @@ def sendEmail():
     except Exception as e:
         print("error", e)
         return jsonify({"Success": False})
+
+@admin.route('/admin/notesCounter', methods=['POST'])
+def getNotesCounter():
+    """
+    This method will send an email to either SAAS or Financial Aid
+    """
+    try:
+        rsp = eval(request.data.decode("utf-8"))
+        if rsp:
+            noteTotal = AdminNotes.select().where(AdminNotes.formID == rsp['laborStatusFormID']).count()
+            noteDictionary = {'noteTotal': noteTotal}
+            return jsonify(noteDictionary)
+    except Exception as e:
+        print("Error selecting admin notes:", e)
+        return jsonify({"Success": False}),500
