@@ -130,7 +130,7 @@ def finalUpdateStatus(raw_status):
         print("Error preparing form for status update:",type(e).__name__ + ":", e)
         return jsonify({"success": False})
 
-    BANNER
+    # BANNER
     save_status = True # default true so that we will save in the Deny case
     if new_status == 'Approved':
         try:
