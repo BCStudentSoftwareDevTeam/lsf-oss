@@ -70,34 +70,34 @@ class emailHandler():
     # is pulled from the model, and replaceText method will replace the neccesary keywords with the correct data.
     # The sendEmail method will handle all of the email sending once the email template has been populated.
     def laborStatusFormSubmitted(self):
-        self.checkRecipient("Labor Status Form Submitted For Student",
+        self.checkRecipient("Labor Status Form Submitted",
                       "Labor Status Form Submitted For Primary",
                       "Labor Status Form Submitted For Secondary")
 
     def laborStatusFormApproved(self):
-        self.checkRecipient("Labor Status Form Approved For Student",
+        self.checkRecipient("Labor Status Form Approved",
                       "Labor Status Form Approved For Primary",
                       "Labor Status Form Approved For Secondary")
 
     def laborStatusFormRejected(self):
-        self.checkRecipient("Labor Status Form Rejected For Student",
+        self.checkRecipient("Labor Status Form Rejected",
                       "Labor Status Form Rejected For Primary",
                       "Labor Status Form Rejected For Secondary")
 
     def laborStatusFormModified(self):
-        self.checkRecipient("Labor Status Form Modified For Student",
+        self.checkRecipient("Labor Status Form Modified",
                       "Labor Status Form Modified For Supervisor")
 
     def laborReleaseFormSubmitted(self):
-        self.checkRecipient("Labor Release Form Submitted For Student",
+        self.checkRecipient("Labor Release Form Submitted",
                       "Labor Release Form Submitted For Supervisor")
 
     def laborReleaseFormApproved(self):
-        self.checkRecipient("Labor Release Form Approved For Student",
+        self.checkRecipient("Labor Release Form Approved",
                       "Labor Release Form Approved For Supervisor")
 
     def laborReleaseFormRejected(self):
-        self.checkRecipient("Labor Release Form Rejected For Student",
+        self.checkRecipient("Labor Release Form Rejected",
                       "Labor Release Form Rejected For Supervisor")
 
     def LaborOverLoadFormSubmitted(self, link):
@@ -109,7 +109,7 @@ class emailHandler():
         Once this is finished, the email can then be sent.
         """
         self.link = link
-        self.checkRecipient("Labor Overload Form Submitted For Student",
+        self.checkRecipient("Labor Overload Form Submitted",
                       "Labor Overload Form Submitted For Supervisor")
     def LaborOverLoadFormSubmittedNotification(self, link):
         """
@@ -118,23 +118,23 @@ class emailHandler():
         email to the student and the other one will be for the labor office.
         """
         self.link = link
-        self.checkRecipient("Labor Overload Form Submitted Notification For Student",
+        self.checkRecipient("Labor Overload Form Submitted Notification",
                             "Labor Overload Form Submitted Notification For Labor Office")
 
     def LaborOverLoadFormApproved(self):
-        self.checkRecipient("Labor Overload Form Approved For Student",
+        self.checkRecipient("Labor Overload Form Approved",
                       "Labor Overload Form Approved For Supervisor")
 
     def LaborOverLoadFormRejected(self):
-        self.checkRecipient("Labor Overload Form Rejected For Student",
+        self.checkRecipient("Labor Overload Form Rejected",
                       "Labor Overload Form Rejected For Supervisor")
 
     def laborStatusFormSubmittedForBreak(self):
-        self.checkRecipient("Break Labor Status Form Submitted For Student",
+        self.checkRecipient("Break Labor Status Form Submitted",
                             "Break Labor Status Form Submitted For Supervisor")
 
     def notifySecondLaborStatusFormSubmittedForBreak(self):
-        self.checkRecipient("Break Labor Status Form Submitted For Student",
+        self.checkRecipient("Break Labor Status Form Submitted",
                             "Break Labor Status Form Submitted For Supervisor on Second LSF")
 
     def notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak(self):
@@ -144,7 +144,6 @@ class emailHandler():
     def sendEmail(self, template, sendTo):
         formTemplate = template.body
         formTemplate = self.replaceText(formTemplate)
-
         if sendTo == "student":
             message = Message(template.subject,
                 recipients=[self.studentEmail])
@@ -209,18 +208,32 @@ class emailHandler():
         newEmailTracker = EmailTracker.create(
                         formID = self.laborStatusForm,
                         date = datetime.today().strftime('%Y-%m-%d'),
-                        recipient = dept
+                        recipient = dept,
+                        subject = "Overload Verification"
                         )
         if dept == "SAAS":
             email = "" #In the future, this(SASS email address) should be puled from the yaml file instead of being a string
         elif dept == "Financial Aid":
             email = "" #This(financial Aid email) address should also be pull from the yaml file
-        message = Message("Overload Verification",
+        message = Message("Labor Overload Form Verification",
             recipients=[email])
         emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "SAAS and Financial Aid Office")
         message.html = self.replaceText(emailTemplateID.body)
         self.mail.send(message)
 
+    def verifiedOverloadNotification(self):
+        """ This email will be sent to Labor Admin when SAAS or Financial Aid Make
+        a decision on an overload form"""
+        newEmailTracker = EmailTracker.create(
+                        formID = self.laborStatusForm,
+                        date = datetime.today().strftime('%Y-%m-%d'),
+                        recipient = "Labor Admin"
+                        )
+        message = Message("Verified Labor Overload Form Notification",
+                    recipients=[""]) # TODO: Labor Admin email
+        emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Admin Notification")
+        message.html = self.replaceText(emailTemplateID.body)
+        self.mail.send(message)
 
     def checkRecipient(self, studentEmailPurpose=False, primaryEmailPurpose=False, secondaryEmailPurpose = False):
         """

@@ -34,10 +34,17 @@ function getDate(obj, termCode) {
         start = $("#start_" + termCode).val();
         end = $("#end_" +termCode).val();
         primaryCutOff = $("#primaryCutOff_" + termCode).val();
+        adjustmentCutOff = $("#adjustmentCutOff_" + termCode).val();
 
-        if (start != "" && end != "" && primaryCutOff != "") {
+        if (start != "" && end != "" && primaryCutOff != "" && adjustmentCutOff != "") {
           $('#term_btn_' + termCode).prop('disabled', false)
         }
+        category = "info"
+        dateChanged = response['dateChanged']
+        termchanged = response['changedTerm']
+        newDate = response['newDate']
+        $("#flash_container").html('<div class="alert alert-'+ category +'" role="alert" id="flasher">The '+ dateChanged +' for '+ termchanged +' was changed to '+ newDate +'</div>');
+        $("#flasher").delay(5000).fadeOut();
       }
 
     });
@@ -53,6 +60,8 @@ function updateStart(obj, termCode){
   $('#start_' + termCode).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
   $('#primaryCutOff_' + termCode).datepicker({maxDate: new Date(yearNewEnd, monthNewEnd, dayNewEnd)});
   $('#primaryCutOff_' + termCode).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
+  $('#adjustmentCutOff_' + termCode).datepicker({maxDate: new Date(yearNewEnd, monthNewEnd, dayNewEnd)});
+  $('#adjustmentCutOff_' + termCode).datepicker( "option", "maxDate", new Date(yearNewEnd, monthNewEnd, dayNewEnd));
 
 }
 
@@ -66,6 +75,8 @@ function updateEnd(obj, termCode){
   $("#end_" + termCode).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
   $('#primaryCutOff_' + termCode).datepicker({minDate: new Date(yearNewStart, monthNewStart, dayNewStart)});
   $("#primaryCutOff_" + termCode).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
+  $('#adjustmentCutOff_' + termCode).datepicker({minDate: new Date(yearNewStart, monthNewStart, dayNewStart)});
+  $("#adjustmentCutOff_" + termCode).datepicker( "option", "minDate", new Date(yearNewStart, monthNewStart, dayNewStart));
 }
 
 function termStatus(term) {
@@ -83,21 +94,24 @@ function termStatus(term) {
       data: JSON.stringify({"termBtn": term}),
       processData: false,
       success: function(response) {
-      if(response["Success"]) {
         //category = "info"
-         if ($(termBtnID).hasClass("btn-success")) {
-            $(termBtnID).removeClass("btn-success");
-            $(termBtnID).addClass("btn-danger");
-            $(termBtnID).text("Closed");
-            //category = "danger";
-            }
-          else {
-            $(termBtnID).removeClass("btn-danger");
-            $(termBtnID).addClass("btn-success");
-            $(termBtnID).text("Open");
-          //  category = "info";
-            }
-       }
+        if($(termBtnID).hasClass("btn-success")) {
+          $(termBtnID).removeClass("btn-success");
+          $(termBtnID).addClass("btn-danger");
+          $(termBtnID).text("Closed");
+          category = "danger";
+          state = "'Closed'.";
+          }
+        else {
+          $(termBtnID).removeClass("btn-danger");
+          $(termBtnID).addClass("btn-success");
+          $(termBtnID).text("Open");
+          category = "success";
+          state = "'Open'.";
+        }
+        term = response['termChanged']
+        $("#flash_container").html('<div class="alert alert-'+ category +'" role="alert" id="flasher">The state for '+ term +' is set to '+ state +'</div>');
+        $("#flasher").delay(5000).fadeOut();
      }
   })
 };

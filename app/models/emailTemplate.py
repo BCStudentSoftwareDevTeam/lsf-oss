@@ -4,6 +4,8 @@ from app.models import *
 class EmailTemplate (baseModel):
     emailTemplateID                 = PrimaryKeyField()
     purpose                         = CharField()
+    formType                        = CharField()
+    action                          = CharField()
     subject                         = CharField()
     body                            = CharField(max_length=10000)
     audience                        = CharField()
