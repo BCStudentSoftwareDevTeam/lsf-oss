@@ -21,6 +21,11 @@ $(document).ready(function() {
   });
 });
 
+function approvalModalClose(){// on close of approval modal we are clearing the table to prevent duplicate data.
+  $('#classTableBody').empty();
+  labor_details_ids = [] // emptying the list, becuase otherwise will cause duplicate data.
+}
+
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
@@ -67,7 +72,7 @@ function updateApproveTableData(returned_details) {
     } else {
       hours = r_hour;
     }
-    $('#classTable').append('<tr><td>' + student + '</td><td>' + position + '</td><td> ' + hours + '</td> <td> ' + supervisor + '</td></tr>');
+    $('#classTableBody').append('<tr><td>' + student + '</td><td>' + position + '</td><td> ' + hours + '</td> <td> ' + supervisor + '</td></tr>');
   }
 }
 

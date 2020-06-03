@@ -124,11 +124,13 @@ def finalUpdateStatus(raw_status):
             labor_forms.reviewedDate = date.today()
             labor_forms.reviewedBy = createdUser.UserID
             labor_forms.rejectReason = denyReason
+            labor_forms.save()
+        return jsonify({"success": True})
     except Exception as e:
         print("Error preparing form for status update:",type(e).__name__ + ":", e)
         return jsonify({"success": False})
 
-    # BANNER
+    BANNER
     save_status = True # default true so that we will save in the Deny case
     if new_status == 'Approved':
         try:
