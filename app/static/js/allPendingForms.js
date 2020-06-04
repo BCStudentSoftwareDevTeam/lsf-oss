@@ -21,15 +21,6 @@ $(document).ready(function() {
   });
 });
 
-$('#approvalModal').on('hidden.bs.modal', function () {// Makes the close functionality work when clicking outside of the modal
-  approvalModalClose();
-});
-
-function approvalModalClose(){// on close of approval modal we are clearing the table to prevent duplicate data.
-  $('#classTableBody').empty();
-  labor_details_ids = [] // emptying the list, becuase otherwise will cause duplicate data.
-}
-
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
@@ -78,6 +69,15 @@ function updateApproveTableData(returned_details) {
     }
     $('#classTableBody').append('<tr><td>' + student + '</td><td>' + position + '</td><td> ' + hours + '</td> <td> ' + supervisor + '</td></tr>');
   }
+}
+
+$('#approvalModal').on('hidden.bs.modal', function () {// Makes the close functionality work when clicking outside of the modal
+  approvalModalClose();
+});
+
+function approvalModalClose(){// on close of approval modal we are clearing the table to prevent duplicate data.
+  $('#classTableBody').empty();
+  labor_details_ids = [] // emptying the list, becuase otherwise will cause duplicate data.
 }
 
 function finalApproval() { //this method changes the status of the lsf from pending to approved status
