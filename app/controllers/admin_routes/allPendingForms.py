@@ -317,18 +317,14 @@ def modalFormUpdate():
             historyForm.save()
             if rsp['formType'] == 'Overload':
                 if rsp['status'] == 'Approved' or rsp['status'] == 'Approved Reluctantly':
-                    # email.LaborOverLoadFormApproved()
-                    pass
+                    email.LaborOverLoadFormApproved()
                 elif rsp['status'] == 'Denied':
-                    # email.LaborOverLoadFormRejected()
-                    pass
+                    email.LaborOverLoadFormRejected()
             elif rsp['formType'] == 'Release':
                 if rsp['status'] == 'Approved':
-                    # email.laborReleaseFormApproved()
-                    pass
+                    email.laborReleaseFormApproved()
                 elif rsp['status'] == 'Denied':
-                    # email.laborReleaseFormRejected()
-                    pass
+                    email.laborReleaseFormRejected()
 
             return jsonify({"Success": True})
     except Exception as e:
