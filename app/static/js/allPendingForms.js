@@ -21,6 +21,15 @@ $(document).ready(function() {
   });
 });
 
+$('#approvalModal').on('hidden.bs.modal', function () {
+  approvalModalClose();
+});
+
+function approvalModalClose(){// on close of approval modal we are clearing the table to prevent duplicate data.
+  $('#classTableBody').empty();
+  labor_details_ids = [] // emptying the list, becuase otherwise will cause duplicate data.
+}
+
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
@@ -69,11 +78,6 @@ function updateApproveTableData(returned_details) {
     }
     $('#classTableBody').append('<tr><td>' + student + '</td><td>' + position + '</td><td> ' + hours + '</td> <td> ' + supervisor + '</td></tr>');
   }
-}
-
-function approvalModalClose(){// on close of approval modal we are clearing the table to prevent duplicate data.
-  $('#classTableBody').empty();
-  labor_details_ids = [] // emptying the list, becuase otherwise will cause duplicate data.
 }
 
 function finalApproval() { //this method changes the status of the lsf from pending to approved status
@@ -136,6 +140,12 @@ function denialModalClose(){// on close of approval modal we are clearing the ta
   $('#denialPendingFormsBody').empty();
   laborDenialInfo = [] // emptying the list, becuase otherwise will cause duplicate data.
 }
+
+$('.denialModal').on('hidden.bs.modal', function () {
+  denialModalClose();
+});
+
+
 
 function finalDenial() { // this mehod is AJAX call for the finalDenial method in python file
   var data = JSON.stringify(laborDenialInfo);
@@ -224,6 +234,8 @@ function notesInsert(textareaID, buttonID) {
     }
   });
 }
+
+
 
 function finalDeny() {
   /*
