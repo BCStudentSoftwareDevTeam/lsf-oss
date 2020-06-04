@@ -21,7 +21,7 @@ $(document).ready(function() {
   });
 });
 
-$('#approvalModal').on('hidden.bs.modal', function () {
+$('#approvalModal').on('hidden.bs.modal', function () {// Makes the close functionality work when clicking outside of the modal
   approvalModalClose();
 });
 
@@ -136,12 +136,12 @@ function finalDenial_data(returned_details) {
   }
 }
 
-function denialModalClose(){// on close of approval modal we are clearing the table to prevent duplicate data.
+function denialModalClose(){// on close of denial modal we are clearing the table to prevent duplicate data.
   $('#denialPendingFormsBody').empty();
   laborDenialInfo = [] // emptying the list, becuase otherwise will cause duplicate data.
 }
 
-$('.denialModal').on('hidden.bs.modal', function () {
+$('.denialModal').on('hidden.bs.modal', function () {// makes the close functionality work when clicking otuside of the modal
   denialModalClose();
 });
 
