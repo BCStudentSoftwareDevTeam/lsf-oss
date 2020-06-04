@@ -144,8 +144,8 @@ def sumbitModifiedForm(laborStatusKey):
         #             overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
         # email = emailHandler(formHistories.formHistoryID)
         # email.laborStatusFormModified()
-        # message = "Your Labor Adjustment Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
-        # flash(message, "success")
+        message = "Your Labor Adjustment Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        flash(message, "success")
 
         return jsonify({"Success":True, "url":"/laborHistory/" + student.studentSupervisee.ID})
     except Exception as e:

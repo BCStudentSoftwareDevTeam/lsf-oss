@@ -139,7 +139,6 @@ def finalUpdateStatus(raw_status):
             labor_forms.status = Status.get(Status.statusName == new_status)
             labor_forms.reviewedDate = date.today()
             labor_forms.reviewedBy = createdUser.UserID
-<<<<<<< HEAD
             labor_forms.rejectReason = denyReason
 
             if history_type == "Modified Labor Form" and new_status == "Approved":
@@ -147,11 +146,6 @@ def finalUpdateStatus(raw_status):
                 # The following function overrides the original data in lsf with the new data from adjustment form.
                 LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == history_type_data.formID) # getting the specific labor status form
                 overrideOriginalStatusFormOnAdjustmentFormApproval(history_type_data, LSF)
-
-=======
-            if new_status == 'Denied':
-                labor_forms.rejectReason = denyReason
->>>>>>> development
     except Exception as e:
         print("Error preparing form for status update:",type(e).__name__ + ":", e)
         return jsonify({"success": False})
