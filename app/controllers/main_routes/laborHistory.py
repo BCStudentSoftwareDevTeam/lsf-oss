@@ -188,7 +188,7 @@ def withdraw_form():
     """
     try:
         rsp = eval(request.data.decode("utf-8"))
-        student = LaborStatusForm.get(rsp["FormID"]).studentSupervisee.ID
+        student = LaborStatusForm.get(rsp["FormID"])
         selectedPendingForms = FormHistory.select().join(Status).where(FormHistory.formID == rsp["FormID"]).where(FormHistory.status.statusName == "Pending").order_by(FormHistory.historyType.asc())
         for form in selectedPendingForms:
             try:
@@ -208,8 +208,11 @@ def withdraw_form():
                     LaborStatusForm.get(formID).delete_instance()
             except:
                 pass
-        flash("Your selected form has been withdrawn.", "success")
-        return jsonify({"Success":True, "url":"/laborHistory/" + student})
+        message = "Your selected form for {0} {1} has been withdrawn.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        flash(message, "success")
+        return jsonify({"Success":True, "url":"/"})
     except Exception as e:
         # print(e)
-        return jsonify({"Success": False})
+        message = "An error occured. Your selected form for {0} {1} was not withdrawn.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        flash(message, "danger")
+        return jsonify({"Success": False, "url":"/"})
