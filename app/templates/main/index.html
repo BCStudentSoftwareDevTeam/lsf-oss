@@ -28,18 +28,24 @@
 and hide the department select picker. -->
 <div class="col-md-5"></div>
 <div class="col-md-2" id="placeholder"></div>
+
 <div class="col-md-2" align="center" id="userDepartments">
   <select class="selectpicker" id="departmentDropDown" onchange="populateTable()" title="Department" data-width="100%">
     {% for formHistory in currentUserDepartments %}
-      <!-- If the user only has one department, then we auto-select the department -->
-      {% if multiDepartments == false %}
-        <option value="{{formHistory.formID.department.DEPT_NAME}}" selected>{{formHistory.formID.department.DEPT_NAME}}</option>
+      {% if isLaborAdmin == true %}
+      <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
       {% else %}
+        <!-- We want to populate the select picker with the first option if the user is not an admin -->
+        {% if loop.index == 1 %}
+        <option value="{{formHistory.formID.department.DEPT_NAME}}" selected>{{formHistory.formID.department.DEPT_NAME}}</option>
+        {% else %}
         <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
+        {% endif %}
       {% endif %}
     {% endfor %}
   </select>
 </div>
+
 <div class="col-md-3" align= "right">
   <button class="btn btn-success" id="download" data-toggle="modal" data-target="#downloadModal">Download</button>
 </div>

@@ -91,7 +91,7 @@ def sumbitModifiedForm(laborStatusKey):
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
-        student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
+        student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             modifiedforms = ModifiedForm.create(fieldModified = k,
@@ -130,10 +130,12 @@ def sumbitModifiedForm(laborStatusKey):
                     overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
         email = emailHandler(formhistorys.formHistoryID)
         email.laborStatusFormModified()
-        flash("Your labor status form has been modified.", "success")
+        message = "Your Labor Adjustment Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        flash(message, "success")
 
-        return jsonify({"Success":True, "url":"/laborHistory/" + student})
+        return jsonify({"Success":True, "url":"/laborHistory/" + student.studentSupervisee.ID})
     except Exception as e:
-        flash("An error occured.", "danger")
-        # print(e)
+        message = "An error occured. Your Labor Adjustment Form(s) for {0} {1} was not submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        flash(message, "danger")
+        print("Error Occured On Adjustment Form Submission:", e)
         return jsonify({"Success": False})
