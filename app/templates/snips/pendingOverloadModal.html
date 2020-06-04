@@ -32,12 +32,7 @@
         </table>
         <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
         <div id='radioDiv'>
-          <span id="notes_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" class="glyphicon glyphicon-edit btn-lg
-                      {% if allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes == None %} text-success
-                      {% elif allForms.formID.laborDepartmentNotes != None and allForms.formID.supervisorNotes == None  %} text-danger
-                      {% elif allForms.formID.supervisorNotes != None and allForms.formID.laborDepartmentNotes != None %} text-danger
-                      {% else %} text-secondary {% endif %}" style='float: left; margin-top: -10px;'> </span>
-          <span>Status:<span aria-hidden="true" style="color:red"><strong>*</strong></span></span>
+          <button id="modalNote_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes</button>
           <label for="approve" class="radio-inline">
             <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve
           </label>

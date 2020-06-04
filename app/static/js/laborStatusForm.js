@@ -402,7 +402,7 @@ function msgFlash(flash_message, status){
 function searchDataToPrepareToCheckPrimaryPosition() { // displays table when plus glyphicon is clicked and check if fields are filled out
   var studentDict = createStuDict();
   if (studentDict === false) {
-    msgFlash("Please fill out all fields before submitting.", "fail");
+    msgFlash("Please make sure that the Student, Position (WLS), Job Type, and Hours Per Week fields are filled out before submitting.", "fail");
   }
   else if (checkWLS() === false) {
     // checkWLS();

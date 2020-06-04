@@ -87,7 +87,9 @@ def postEmail():
         email.body = request.form['body']
         email.subject = request.form["purpose"]
         email.save()
-        flash("The email template has been successfully updated.", "success")
+        message = "The Email Template '{0} {1} {2}' has been successfully updated.".format(email.audience, email.formType, email.action)
+        print(message)
+        flash(message, "success")
         return (jsonify({"Success": True}))
     except Exception as e:
         print("ERROR in postEmail: ", e)

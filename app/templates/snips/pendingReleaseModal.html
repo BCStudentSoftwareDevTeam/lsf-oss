@@ -51,7 +51,7 @@
         </table>
         <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
         <div id='radioDivRelease'>
-          <span id="notes_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" class="glyphicon glyphicon-edit btn-lg text-secondary" style='float: left; margin-top: -10px;'></span>
+          <button id="modalNote_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View</button>
           <span>Status:<span aria-hidden="true" style="color:red"><strong>*</strong></span></span>
           <label for="approveRelease" class="radio-inline">
             <input type="radio" id="approveRelease" class='release' name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve
