@@ -193,7 +193,6 @@ function notesInsert(textareaID, buttonID) {
   formId = notes.formId; //This is how we get the ID of the form
   var note = notes.notes; //This is how we are getting the note object from the dictionary
   var data = JSON.stringify(note);
-  var notesGlyph = $("#notes_" + formId);
 
   $("#" + buttonID).on('submit', function(e) {
     e.preventDefault();
@@ -205,18 +204,8 @@ function notesInsert(textareaID, buttonID) {
     data: data,
     contentType: 'application/json',
     success: function(response) {
-      if (response) {
-        //This changes the color of the notes glyphicon when a labor note is saved
-        if ($(notesGlyph).hasClass("text-success")) {
-          $(notesGlyph).removeClass("text-success");
-          $(notesGlyph).addClass("text-danger");
-        } else if ($(notesGlyph).hasClass("text-secondary")) {
-          $(notesGlyph).removeClass("text-secondary");
-          $(notesGlyph).addClass("text-danger");
-        }
         window.location.reload(true);
       }
-    }
   });
 }
 
@@ -454,9 +443,32 @@ function toggleNotesLog(laborStatusFormID) {
   modal to show/hide it
   */
   if ($('#logNotesDiv').css('display') == 'none') {
+    var overloadViewNotesID = '#overloadNote_' + String(laborStatusFormID)
+    $(overloadViewNotesID).html('Hide Notes')
     getNotes(laborStatusFormID)
     $('#logNotesDiv').css('display', 'block')
   } else {
+    notesCounter(laborStatusFormID)
     $('#logNotesDiv').css('display', 'none')
   }
+}
+
+function notesCounter(laborStatusFormID){
+  var data = {'laborStatusFormID': laborStatusFormID}
+  data = JSON.stringify(data)
+  $.ajax({
+    method: "POST",
+    url: '/admin/notesCounter',
+    data: data,
+    contentType: 'application/json',
+    success: function(response) {
+      var viewNotesID = '#notes_' + String(laborStatusFormID)
+      var overloadViewNotesID = '#overloadNote_' + String(laborStatusFormID)
+      $(viewNotesID).html('View Notes (' + response['noteTotal'] + ')')
+      $(overloadViewNotesID).html('View Notes (' + response['noteTotal'] + ')')
+    },
+    error: function(request,status,error){
+      console.log(request.responseText);
+    }
+  });
 }

@@ -139,6 +139,7 @@ def finalUpdateStatus(raw_status):
             labor_forms.status = Status.get(Status.statusName == new_status)
             labor_forms.reviewedDate = date.today()
             labor_forms.reviewedBy = createdUser.UserID
+<<<<<<< HEAD
             labor_forms.rejectReason = denyReason
 
             if history_type == "Modified Labor Form" and new_status == "Approved":
@@ -147,35 +148,31 @@ def finalUpdateStatus(raw_status):
                 LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == history_type_data.formID) # getting the specific labor status form
                 overrideOriginalStatusFormOnAdjustmentFormApproval(history_type_data, LSF)
 
+=======
+            if new_status == 'Denied':
+                labor_forms.rejectReason = denyReason
+>>>>>>> development
     except Exception as e:
         print("Error preparing form for status update:",type(e).__name__ + ":", e)
         return jsonify({"success": False})
 
     # BANNER
-    save_status = True # default true so that we will save in the Deny case
+    save_status = True # default true so that we will still save in the Deny case
     if new_status == 'Approved':
         try:
-            banner_data = prep_banner_data(labor_forms)
             conn = Banner()
-            result = conn.insert(banner_data)
-            save_status = (result == None)
+            save_status = conn.insert(labor_forms)
 
         except Exception as e:
             print("Unable to update BANNER:",type(e).__name__ + ":", e)
             save_status = False
-
-        else:
-            save_status = True
 
     if save_status:
         labor_forms.save()
         return jsonify({"success": True})
     else:
         print("Unable to update form status.")
-        return jsonify({"success": False})
-
-def prep_banner_data(form):
-    return []
+        return jsonify({"success": False}), 500
 
 
 def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
@@ -443,3 +440,18 @@ def sendEmail():
     except Exception as e:
         print("error", e)
         return jsonify({"Success": False})
+
+@admin.route('/admin/notesCounter', methods=['POST'])
+def getNotesCounter():
+    """
+    This method will send an email to either SAAS or Financial Aid
+    """
+    try:
+        rsp = eval(request.data.decode("utf-8"))
+        if rsp:
+            noteTotal = AdminNotes.select().where(AdminNotes.formID == rsp['laborStatusFormID']).count()
+            noteDictionary = {'noteTotal': noteTotal}
+            return jsonify(noteDictionary)
+    except Exception as e:
+        print("Error selecting admin notes:", e)
+        return jsonify({"Success": False}),500
