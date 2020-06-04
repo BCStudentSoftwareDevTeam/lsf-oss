@@ -62,7 +62,7 @@ def allPendingForms(formType):
             pageTitle = "Pending Release Forms"
         formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
         for allForms in formList:
-            if allForms.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
+            if allForms.modifiedForm:  # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
                 if allForms.modifiedForm.fieldModified == "supervisor": # if supervisor field in adjust forms has been modified,
                     newSupervisorID = allForms.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
                     newSupervisor = User.get(User.UserID == newSupervisorID)
