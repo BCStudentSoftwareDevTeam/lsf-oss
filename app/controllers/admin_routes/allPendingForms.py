@@ -123,7 +123,6 @@ def finalUpdateStatus(raw_status):
     try:
         createdUser = User.get(username = cfg['user']['debug'])
         rsp = eval(request.data.decode("utf-8"))
-        denyReason = None
         if new_status == 'Denied':
             # Index 1 will always hold the reject reason in the list, so we can
             # set a variable equal to the index value and then slice off the list
@@ -139,7 +138,8 @@ def finalUpdateStatus(raw_status):
             labor_forms.status = Status.get(Status.statusName == new_status)
             labor_forms.reviewedDate = date.today()
             labor_forms.reviewedBy = createdUser.UserID
-            labor_forms.rejectReason = denyReason
+            if new_status == 'Denied':
+                labor_forms.rejectReason = denyReason
 
             if history_type == "Modified Labor Form" and new_status == "Approved":
                 # This function is triggered whenever an adjustment form is approved.
