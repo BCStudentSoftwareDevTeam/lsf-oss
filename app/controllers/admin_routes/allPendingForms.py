@@ -176,6 +176,9 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
 
     The only fields that will ever be modified in an adjustment form are: supervisor, position, and hours.
     """
+    current_user = require_login()
+    if not current_user:        # Not logged in
+            return render_template('errors/403.html')
     if form.modifiedForm.fieldModified == "supervisor":
         d, created = User.get_or_create(PIDM = form.modifiedForm.newValue)
         if not created:
@@ -215,7 +218,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
         newTotalHours = totalHours + int(form.modifiedForm.newValue)
         if previousTotalHours <= 15 and newTotalHours > 15:
             newLaborOverloadForm = OverloadForm.create(studentOverloadReason = None)
-            user = User.get(User.username == cfg["user"]["debug"])
+            user = User.get(User.username == current_user)
             newFormHistory = FormHistory.create( formID = LSF.laborStatusFormID,
                                                 historyType = "Labor Overload Form",
                                                 createdBy = user.UserID,
