@@ -136,20 +136,9 @@ def finalUpdateStatus(raw_status):
     save_status = True # default true so that we will still save in the Deny case
     if new_status == 'Approved':
         try:
-# <<<<<<< HEAD
-#             print("---labor_forms = ", labor_forms)
-#             banner_data = prep_banner_data(labor_forms)
-#             print("---banner_data = ", banner_data)
-#             conn = Banner()
-#             print("---conn = ", conn)
-#             result = conn.insert(banner_data)
-#             print("---result = ", result)
-#             save_status = (result == None)
-# =======
-#             conn = Banner()
-#             save_status = conn.insert(labor_forms)
-# >>>>>>> development
-
+            conn = Banner()
+            save_status = conn.insert(labor_forms)
+            
         except Exception as e:
             print("Unable to update BANNER:",type(e).__name__ + ":", e)
             save_status = False
