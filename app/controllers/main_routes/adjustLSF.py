@@ -1,6 +1,7 @@
 from app.controllers.main_routes import *
 from app.controllers.main_routes.main_routes import *
 from app.controllers.main_routes.laborHistory import *
+from app.models.formHistory import FormHistory
 from app.models.user import User
 from app.models.Tracy.studata import *
 from app.models.Tracy.stustaff import *
@@ -16,6 +17,7 @@ import base64
 from datetime import date
 from app import cfg
 from app.logic.emailHandler import*
+from app.models.adminNotes import AdminNotes
 
 
 @main_bp.route('/adjustLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
@@ -42,7 +44,7 @@ def adjustLSF(laborStatusKey):
     prefillsupervisorID = form.supervisor.PIDM
     superviser_id = form.supervisor.UserID
     prefilldepartment = form.department.DEPT_NAME
-    prefillposition = form.POSN_TITLE #+ " " +"("+ form.WLS + ")"
+    prefillposition = form.POSN_CODE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
     prefillterm = form.termCode.termName
     if form.weeklyHours != None:
@@ -89,27 +91,37 @@ def adjustLSF(laborStatusKey):
 def sumbitModifiedForm(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
+        currentDate = datetime.now().strftime("%Y-%m-%d")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-            modifiedforms = ModifiedForm.create(fieldModified = k,
-                                            oldValue      =  rsp[k]['oldValue'],
-                                            newValue      =  rsp[k]['newValue'],
-                                            effectiveDate =  datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d')
-                                            )
+            if k == "supervisorNotes":
+                ## New Entry in AdminNote Table
+                newNoteEntry = AdminNotes.create(formID=LSF.laborStatusFormID,
+                                                createdBy=createdbyid.UserID,
+                                                date=currentDate,
+                                                notesContents=rsp[k]["newValue"])
+                newNoteEntry.save()
+            else:
+                modifiedforms = ModifiedForm.create(fieldModified = k,
+                                                oldValue      =  rsp[k]['oldValue'],
+                                                newValue      =  rsp[k]['newValue'],
+                                                effectiveDate =  datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d')
+                                                )
             historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
             status = Status.get(Status.statusName == "Pending")
             username = cfg['user']['debug']
             createdbyid = User.get(User.username == username)
-            formhistorys = FormHistory.create( formID = laborStatusKey,
+            formHistories = FormHistory.create( formID = laborStatusKey,
                                              historyType = historyType.historyTypeName,
                                              modifiedForm = modifiedforms.modifiedFormID,
                                              createdBy   = createdbyid.UserID,
                                              createdDate = date.today(),
                                              status      = status.statusName)
-            if k == "weeklyHours":
+
+            if k == "Weekly Hours":
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
                 totalHours = 0
                 if allTermForms:
@@ -126,10 +138,11 @@ def sumbitModifiedForm(laborStatusKey):
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
-                    overloadEmail = emailHandler(formhistorys.formHistoryID)
-                    overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
-        email = emailHandler(formhistorys.formHistoryID)
-        email.laborStatusFormModified()
+        # TODO: emails are commented out for testing purposes
+        #             overloadEmail = emailHandler(formHistories.formHistoryID)
+        #             overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+        # email = emailHandler(formHistories.formHistoryID)
+        # email.laborStatusFormModified()
         message = "Your Labor Adjustment Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
 
