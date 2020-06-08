@@ -31,7 +31,7 @@ def term_Management():
         createTerms(Term, i)
     accordionTerms()
     return render_template( 'admin/termManagement.html',
-                             title=('Admin Management'),
+                             title=('Term Management'),
                              terms = terms,
                              isLaborAdmin = isLaborAdmin,
                              listOfTerms = accordionTerms()
