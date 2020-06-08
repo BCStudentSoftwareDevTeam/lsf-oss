@@ -125,16 +125,16 @@ selectpicker, label {
 /* Tooltip text */
 .required .tooltip {
   /* visibility: hidden; */
-  width: 120px;
-  background-color: black;
+  /* width: 120px; */
+  /* background-color: black; */
   /* color: #d40c13; */
   color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
+  /* text-align: center; */
+  /* padding: 5px 0; */
+  /* border-radius: 6px; */
 
   /* Position the tooltip text - see examples below! */
-  position: absolute;
+  /* position: absolute; */
   z-index: 1;
 }
 
