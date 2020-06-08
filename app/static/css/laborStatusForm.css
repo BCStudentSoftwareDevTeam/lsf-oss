@@ -124,7 +124,7 @@ selectpicker, label {
 }
 
 /* Tooltip text */
-.required .tooltip {
+.required .required-tip {
   visibility: hidden;
   width: 120px;
   background-color: black;
@@ -137,15 +137,17 @@ selectpicker, label {
   /* Position the tooltip text - see examples below! */
   position: absolute;
   z-index: 1;
+  top: -5px;
+  left: 110%;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
-.required:hover .tooltip {
+.required:hover .required-tip {
   visibility: visible;
 }
 
 /* Left arrow styling */
-.required .tooltip::after {
+.required .required-tip::after {
   content: " ";
   position: absolute;
   top: 50%;
