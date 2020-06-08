@@ -72,8 +72,17 @@ function updateApproveTableData(returned_details) {
     } else {
       hours = r_hour;
     }
-    $('#classTable').append('<tr><td>' + student + '</td><td>' + position + '</td><td> ' + hours + '</td> <td> ' + supervisor + '</td></tr>');
+    $('#classTableBody').append('<tr><td>' + student + '</td><td>' + position + '</td><td> ' + hours + '</td> <td> ' + supervisor + '</td></tr>');
   }
+}
+
+$('#approvalModal').on('hidden.bs.modal', function () {// Makes the close functionality work when clicking outside of the modal
+  approvalModalClose();
+});
+
+function approvalModalClose(){// on close of approval modal we are clearing the table to prevent duplicate data.
+  $('#classTableBody').empty();
+  labor_details_ids = [] // emptying the list, becuase otherwise will cause duplicate data.
 }
 
 function finalApproval() { //this method changes the status of the lsf from pending to approved status
@@ -128,9 +137,20 @@ function finalDenial_data(returned_details) {
     } else {
       hours = r_hour;
     }
-    $('#denialPendingForms').append('<tr><td>' + student + '</td><td>' + position + '</td><td> ' + supervisor + '</td> <td> ' + hours + '</td></tr>'); //populate the denial modal for all pending forms
+    $('#denialPendingFormsBody').append('<tr><td>' + student + '</td><td>' + position + '</td><td> ' + supervisor + '</td> <td> ' + hours + '</td></tr>'); //populate the denial modal for all pending forms
   }
 }
+
+function denialModalClose(){// on close of denial modal we are clearing the table to prevent duplicate data.
+  $('#denialPendingFormsBody').empty();
+  laborDenialInfo = [] // emptying the list, becuase otherwise will cause duplicate data.
+}
+
+$('.denialModal').on('hidden.bs.modal', function () {// makes the close functionality work when clicking otuside of the modal
+  denialModalClose();
+});
+
+
 
 function finalDenial() { // this mehod is AJAX call for the finalDenial method in python file
   var data = JSON.stringify(laborDenialInfo);
@@ -208,6 +228,8 @@ function notesInsert(textareaID, buttonID) {
       }
   });
 }
+
+
 
 function finalDeny() {
   /*
