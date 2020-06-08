@@ -123,8 +123,8 @@ selectpicker, label {
 }
 
 /* Tooltip text */
-.tooltip .tooltiptext {
-  visibility: hidden;
+.required .tooltiptext {
+  /* visibility: hidden; */
   width: 120px;
   background-color: black;
   /* color: #d40c13; */
