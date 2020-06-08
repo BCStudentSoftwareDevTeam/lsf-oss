@@ -1,3 +1,7 @@
+$('a.hover_indicator').click(function(e){
+  e.preventDefault(); // prevents click on '#' link from jumping to top of the page.
+});
+
 $(document).ready(function() {
   // If the overload tab has been selected, then we need to restrict the
   // ordering functionality on different headers
@@ -16,9 +20,10 @@ $(document).ready(function() {
     'aaSorting': [
       [1, 'asc']
     ], // start to sort data in second column
-    pageLength: 50
+    pageLength: 50,
     // "dom": '<"top"fl>rt<"bottom"p><"clear">'
   });
+
 });
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
