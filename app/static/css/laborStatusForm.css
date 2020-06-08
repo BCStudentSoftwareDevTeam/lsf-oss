@@ -122,7 +122,7 @@ selectpicker, label {
 }
 
 /* Tooltip text */
-.tooltip .tooltiptext {
+.tooltiptext {
   visibility: hidden;
   width: 120px;
   background-color: black;
