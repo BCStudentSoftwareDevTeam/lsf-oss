@@ -101,7 +101,6 @@ def approved_and_denied_Forms():
     '''
     try:
         rsp = eval(request.data.decode("utf-8"))
-        print("----rsp = ", rsp)
         if rsp:
             approved_details =  modal_approval_and_denial_data(rsp)
             return jsonify(approved_details)
