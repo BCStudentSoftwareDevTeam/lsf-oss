@@ -448,6 +448,7 @@ def sendEmail():
             return jsonify(newEmailInformation)
     except Exception as e:
         print("Error sending verification email to SASS/Financial Aid:",type(e).__name__ + ":", e)
+        return jsonify({"Success": False}),500
 
 @admin.route('/admin/notesCounter', methods=['POST'])
 def getNotesCounter():
