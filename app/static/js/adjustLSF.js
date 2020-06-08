@@ -24,9 +24,11 @@ function jobPositionDisable(){
     $("#jobType").prop("disabled", true);
     $("#jobType").val("Secondary");
     $("#contractHoursDiv").show();
+    $("#weeklyHours").val("");
   }
   else{
     $("#weeklyHoursDiv").show();
+    $("#contractHours").val("");
   }
 }
 
@@ -35,7 +37,7 @@ function fillHoursPerWeek(){ // prefill hours per week select picker
   var defaultValue = $("#oldWeeklyHours").val();
   var selectedHoursPerWeek = $("#weeklyHours");
   var jobType = $("#jobType").val();
-  var wls = $("#POSN_TITLE option:selected").attr("data-wls");
+  var wls = $("#POSN_CODE option:selected").attr("data-wls");
   if (selectedHoursPerWeek){
        var list = ["10", "12", "15", "20"];
        if (jobType == "Secondary") {
@@ -73,12 +75,13 @@ function checkForChange(){
   var oldSupervisor = $("#prefillsupervisor").val();
   var newSupervisor = $("#supervisor").val();
   var oldPostition = $("#prefillposition").val();
-  var newPostition = $("#POSN_TITLE").val();
+  var newPostition = $("#POSN_CODE").val();
   var date = $("#datetimepicker0").val();
   var oldNotes = $("#oldNotes").val();
   var newNotes = $("#supervisorNotes").val();
   var oldContractHours = $('#oldContractHours').val();
   var newContractHours = $('#contractHours').val();
+  console.log("newContractHours", newContractHours);
   var oldWeeklyHours = $('#oldWeeklyHours').val();
   var newWeeklyHours = $('#weeklyHours').val();
 
@@ -86,16 +89,15 @@ function checkForChange(){
     finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor, "date": date}
   }
   if(oldPostition != newPostition){
-    finalDict["POSN_TITLE"] = {"oldValue": oldPostition, "newValue": newPostition, "date": date}
+    finalDict["POSN_CODE"] = {"oldValue": oldPostition, "newValue": newPostition, "date": date}
   }
   if(oldNotes != newNotes){
     finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes, "date": date}
   }
-  //FIXME: when only weeklyhours is shows either just send weeklyhours dict or maybe make the contract hours null. and vice versa.
-  if(oldContractHours != newContractHours){
+  if(oldContractHours != newContractHours && newWeeklyHours == ""){
     finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours, "date": date}
   }
-  if(oldWeeklyHours != newWeeklyHours){
+  if(oldWeeklyHours != newWeeklyHours && newContractHours == ""){
     finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours, "date": date}
   }
 

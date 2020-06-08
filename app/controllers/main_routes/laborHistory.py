@@ -17,6 +17,8 @@ from datetime import date
 from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
 from fpdf import FPDF
+from app.models.Tracy.stuposn import STUPOSN
+
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):

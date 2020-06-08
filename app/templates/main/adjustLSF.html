@@ -45,15 +45,15 @@
          </div>
        </div>
        <div class="form-group">
-         <label for="POSN_TITLE" class="field">Position:</label>
+         <label for="POSN_CODE" class="field">Position:</label>
          <div  class="change">
-           <select required type="POSN_TITLE"
+           <select required type="POSN_CODE"
                             class="selectpicker form-control newValue"
-                            id="POSN_TITLE"
+                            id="POSN_CODE"
                             data-live-search="true"
                             onchange="fillHoursPerWeek()">
                   {% for position in positions %}
-                    <option value="{{position.POSN_TITLE}}" data-wls={{position.WLS}} {% if position.POSN_TITLE == prefillposition %} selected {% endif %} >{{position.POSN_TITLE}} ({{position.WLS}})</option>
+                    <option value="{{position.POSN_CODE}}" data-wls={{position.WLS}} {% if position.POSN_CODE == prefillposition %} selected {% endif %} >{{position.POSN_TITLE}} ({{position.WLS}})</option>
                   {% endfor %}
            </select>
            <input hidden class = "oldValue"  id= "prefillposition" value="{{prefillposition}}"></input>
@@ -91,7 +91,7 @@
              </input>
              <input hidden class = "oldValue"  id= "oldContractHours" value="{{prefillhours}}">  </input>
           </div>
-        </div>
+        </div> 
       <div id="weeklyHoursDiv" class="form-group">
              <label for="weeklyHours">Hours Per Week</label>
              <div  class="change">

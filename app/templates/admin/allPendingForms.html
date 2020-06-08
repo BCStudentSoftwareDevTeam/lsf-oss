@@ -56,8 +56,11 @@
                   <th>Students</th>
                   <th> Position (WLS)</th>
                   <th>Hours</th>
-                  <th>Created</th>
                   <th>Contract Dates</th>
+                  {% if formType == "pendingAdjustment" %}
+                    <th>Effective Date</th>
+                  {%endif%}
+                  <th>Created</th>
                   <th></th>
                 </tr>
               </thead>
@@ -73,28 +76,45 @@
                       {{allForms.formID.termCode.termName}}
                     </td>
                     <td> {# DEPARTMENT #}
-                      {{allForms.formID.department.DEPT_NAME}} ({{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}})
+                      <a href="#" aria-label="{{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}}" class="hover_indicator"> {{allForms.formID.department.DEPT_NAME}} </a>
                     </td>
                     <td> {# SUPERVISOR #}
-                      {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
+                      {% if allForms.modifiedForm.fieldModified == "supervisor" %}
+                        <s aria-hidden="true">{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</s> <br/> {{allForms.modifiedForm.newValue}}
+                      {% else %}
+                        {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
+                      {% endif %}
                     </td>
                     <td> {# STUDENT #}
-                      {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}  ({{allForms.formID.studentSupervisee.ID}})
+                       <a href="#" aria-label="{{allForms.formID.studentSupervisee.ID}}" class="hover_indicator"> {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}</a>
                     </td>
                     <td> {# POSITON AND WLS #}
-                      {{allForms.formID.POSN_TITLE}}
+                      {% if allForms.modifiedForm.fieldModified == "POSN_CODE" %}
+                        <s aria-hidden="true"><a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a></s><br/>
+                        <a href="#" aria-label="{{allForms.modifiedForm.oldValue}}" class="hover_indicator"> {{allForms.modifiedForm.newValue}}</a>
+                      {% else %}
+                        <a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a>
+                      {% endif %}
                     </td>
                     <td> {# HOURS #}
-                    {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}
+                    {% if allForms.modifiedForm.fieldModified == "weeklyHours"  or  allForms.modifiedForm.fieldModified == "contractHours"%}
+                      <s aria-hidden="true">{% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}</s> <br> {{allForms.modifiedForm.newValue}}
+                    {% else %}
+                      {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}
+                    {% endif %}
                   </td>
+                  <td> {# CONTRACT DATE #}
+                     {{allForms.formID.startDate.strftime('%m/%d/%y')}} <br/>  {{allForms.formID.endDate.strftime('%m/%d/%y')}}
+                  </td>
+                  {% if formType == "pendingAdjustment" %}
+                    <td> {# EFFECTIVE DATE #}
+                         {{allForms.modifiedForm.effectiveDate.strftime('%m/%d/%y')}}
+                    </td>
+                  {% endif %}
                   <td> {# CREATED BY #}
                     {{allForms.createdBy.username}}  <br/> {{allForms.createdDate.strftime('%m/%d/%y')}}
                   </td>
-                  <td> {# CREATED DATE #}
-                     {{allForms.formID.startDate.strftime('%m/%d/%y')}} -  {{allForms.formID.endDate.strftime('%m/%d/%y')}}
-                  </td>
                   <td> {# ACTION #}
-
                     {% with modalTarget = modalTarget %}
                       {% include "snips/pendingOverloadModal.html" %}
                     {% endwith %}
@@ -144,6 +164,7 @@
                   data-toggle="modal">
                   Approve Selected
                 </button>
+                {% include "snips/pendingApprovalModal.html" %}
               </div>
               {% endif %}
                 </div>
