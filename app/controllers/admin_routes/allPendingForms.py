@@ -120,7 +120,6 @@ def finalUpdateStatus(raw_status):
     else:
         print("Unknown status: ", raw_status)
         return jsonify({"success": False})
-
     try:
         createdUser = User.get(username = cfg['user']['debug'])
         rsp = eval(request.data.decode("utf-8"))
@@ -141,12 +140,14 @@ def finalUpdateStatus(raw_status):
             labor_forms.reviewedBy = createdUser.UserID
             if new_status == 'Denied':
                 labor_forms.rejectReason = denyReason
+            labor_forms.save()
 
             if history_type == "Modified Labor Form" and new_status == "Approved":
                 # This function is triggered whenever an adjustment form is approved.
                 # The following function overrides the original data in lsf with the new data from adjustment form.
                 LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == history_type_data.formID) # getting the specific labor status form
                 overrideOriginalStatusFormOnAdjustmentFormApproval(history_type_data, LSF)
+        return jsonify({"success": True})
     except Exception as e:
         print("Error preparing form for status update:",type(e).__name__ + ":", e)
         return jsonify({"success": False})

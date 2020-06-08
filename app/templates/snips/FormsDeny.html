@@ -1,10 +1,13 @@
 <!-- Modal -->
-<div class="modal fade" id="{{modalTarget}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade denialModal" id="{{modalTarget}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 <div class="modal-dialog" role="document">
 <div class="modal-content">
   <div class="modal-header">
 
     <h2 class="modal-title" id="exampleModalLabel" align="center"><b>Deny Labor Status Form</b></h2>
+    <button type="button" class="close" data-dismiss="modal" onclick="denialModalClose()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
   </div>
   <div class="modal-body">
     <p><strong>Are you sure you want to deny the selected labor status form?</strong></p>
@@ -17,14 +20,14 @@
           <th scope="col">Hours</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id="denialPendingFormsBody">
       </tbody>
     </table>
     <p><strong>Reason for denial:</strong></p>
     <textarea id='denyReason' name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder=""></textarea>
   </div>
   <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="window.location.reload()">Close</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="denialModalClose()">Close</button>
     <button type="button" class="btn btn-danger" onclick="finalDeny()">Deny</button>
   </div>
 </div>

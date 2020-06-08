@@ -41,7 +41,7 @@ def manage_departments():
             d.save()
         department = Department.select()
         return render_template( 'admin/manageDepartments.html',
-                                title = ("Manage departments"),
+                                title = ("Manage Departments"),
                                 department = department,
                                 isLaborAdmin = isLaborAdmin
                                 )
