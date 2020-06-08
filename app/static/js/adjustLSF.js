@@ -81,24 +81,23 @@ function checkForChange(){
   var newNotes = $("#supervisorNotes").val();
   var oldContractHours = $('#oldContractHours').val();
   var newContractHours = $('#contractHours').val();
-  console.log("newContractHours", newContractHours);
   var oldWeeklyHours = $('#oldWeeklyHours').val();
   var newWeeklyHours = $('#weeklyHours').val();
 
   if(oldSupervisor != newSupervisor){
-    finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor, "date": date}
+    finalDict["Supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor, "date": date}
   }
   if(oldPostition != newPostition){
-    finalDict["POSN_CODE"] = {"oldValue": oldPostition, "newValue": newPostition, "date": date}
+    finalDict["Position"] = {"oldValue": oldPostition, "newValue": newPostition, "date": date}
   }
   if(oldNotes != newNotes){
     finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes, "date": date}
   }
   if(oldContractHours != newContractHours && newWeeklyHours == ""){
-    finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours, "date": date}
+    finalDict["Contract Hours"] = {"oldValue": oldContractHours, "newValue": newContractHours, "date": date}
   }
   if(oldWeeklyHours != newWeeklyHours && newContractHours == ""){
-    finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours, "date": date}
+    finalDict["Weekly Hours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours, "date": date}
   }
 
   if (JSON.stringify(finalDict) !== '{}'){

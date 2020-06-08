@@ -61,6 +61,7 @@ def allPendingForms(formType):
             approvalTarget = "denyReleaseformSModal"
             pageTitle = "Pending Release Forms"
         formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
+        # only if a form is adjusted
         for allForms in formList:
             if allForms.modifiedForm: # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
                 if allForms.modifiedForm.fieldModified == "supervisor": # if supervisor field in adjust forms has been modified,
@@ -69,7 +70,7 @@ def allPendingForms(formType):
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     allForms.modifiedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
-                if allForms.modifiedForm.fieldModified == "POSN_CODE": # if position field has been modified in adjust form then retriev position name.
+                if allForms.modifiedForm.fieldModified == "Position": # if position field has been modified in adjust form then retriev position name.
                     newPositionCode = allForms.modifiedForm.newValue
                     newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode)
                     # temporarily storing the position code and wls in new value, and position name in old value
