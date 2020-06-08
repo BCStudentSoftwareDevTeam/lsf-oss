@@ -115,7 +115,7 @@ selectpicker, label {
 }
 
 /* Tooltip container */
-.tooltip {
+.required {
   color: #d40c13;
   /* position: relative;
   display: inline-block; */
