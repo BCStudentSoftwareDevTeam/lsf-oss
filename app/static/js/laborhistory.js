@@ -1,8 +1,3 @@
-$('#modal').on('shown.bs.modal', function () {
-  console.log("on focus");
-  $('#content').focus();
-})
-
 $('#positionTable tbody tr td').on('click',function(){
   /*If boolean value is false, flash container letting user know that they do not
   have access. Else, load student labor history modal.*/

@@ -1,3 +1,8 @@
+// $('.modal').on('shown.bs.modal', function () {
+//   console.log("on focus");
+//   $('.modal-dialog').focus();
+// })
+
 var globalArrayOfStudents = [];
 var display_failed = [];
 var laborStatusFormNote = null;

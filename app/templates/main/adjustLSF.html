@@ -91,7 +91,7 @@
              </input>
              <input hidden class = "oldValue"  id= "oldContractHours" value="{{prefillhours}}">  </input>
           </div>
-        </div> 
+        </div>
       <div id="weeklyHoursDiv" class="form-group">
              <label for="weeklyHours">Hours Per Week</label>
              <div  class="change">
@@ -105,7 +105,6 @@
                </select>
                <input hidden class = "oldValue"  id= "oldWeeklyHours" value="{{prefillhours}}">  </input>
                <input hidden class = "totalHours"  id= "totalHours" value="{{totalHours}}"></input>
-               {% include "snips/ReviewForm.html" %}
              </div>
            </div>
 
@@ -134,11 +133,11 @@
       </div>
       <div class="submitbutton">
         <button id="submit" type="button" class="btn btn-success" onclick="checkForChange()">Submit Changes</button>
-        {% include "snips/adjustLSFNoChange.html" %}
-        {% include "snips/adjustLSFSubmit.html" %}
       </div>
     </div>
-
+    {% include "snips/adjustLSFNoChange.html" %}
+    {% include "snips/adjustLSFSubmit.html" %}
+    {% include "snips/ReviewForm.html" %}
  </form>
 
 <script language="JavaScript" type="text/javascript" src="/static/js/adjustLSF.js"></script>
