@@ -116,6 +116,7 @@ selectpicker, label {
 
 /* Tooltip container */
 .tooltip {
+  color: #d40c13
   position: relative;
   display: inline-block;
   border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
