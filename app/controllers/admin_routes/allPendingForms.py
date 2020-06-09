@@ -316,7 +316,7 @@ def insertNotes(formId):
 @admin.route('/admin/overloadModal', methods=['POST'])
 def getOverloadModalData():
     """
-    This function will retrieve the data to populate the overload modal.
+    This function will retrieve the data to populate the overload modal
     """
     try:
         rsp = eval(request.data.decode("utf-8"))
@@ -361,29 +361,23 @@ def getOverloadModalData():
                                 })
             return jsonify(overloadModalInfo)
     except Exception as e:
-        print("Error Loading Data Into Overload Modal:",type(e).__name__ + ":", e)
-        return jsonify({"Success": False}), 500
+        print("error", e)
+        return jsonify({"Success": False})
 
-@admin.route('/admin/modalFormUpdate', methods=['POST'])
-def modalFormUpdate():
+@admin.route('/admin/overloadFormUpdate', methods=['POST'])
+def updateOverloadForm():
     """
-    This function will update the overload or release form based on the form
-    type and the data from the modal.
+    This function will retrieve update the overload from using the
+    data entered into the modal.
     """
     try:
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
             historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
-            email = emailHandler(historyForm.formHistoryID)
+            overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
             currentDate = datetime.now().strftime("%Y-%m-%d")
             createdUser = User.get(username = cfg['user']['debug'])
             status = Status.get(Status.statusName == rsp['status'])
-            if rsp['formType'] == 'Overload':
-                overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
-                overloadForm.laborApproved = status.statusName
-                overloadForm.laborApprover = createdUser.UserID
-                overloadForm.laborReviewDate = currentDate
-                overloadForm.save()
             if 'denialReason' in rsp.keys():
                 # We only update the reject reason if one was given on the UI
                 historyForm.rejectReason = rsp['denialReason']
@@ -398,25 +392,20 @@ def modalFormUpdate():
                                 createdBy = createdUser.UserID,
                                 date = currentDate,
                                 notesContents = rsp['adminNotes'])
-            # historyForm.status = status.statusName
+            overloadForm.laborApproved = status.statusName
+            overloadForm.laborApprover = createdUser.UserID
+            overloadForm.laborReviewDate = currentDate
+            overloadForm.save()
+            historyForm.status = status.statusName
             historyForm.reviewedBy = createdUser.UserID
             historyForm.reviewedDate = currentDate
             historyForm.save()
-            if rsp['formType'] == 'Overload':
-                if rsp['status'] == 'Approved' or rsp['status'] == 'Approved Reluctantly':
-                    email.LaborOverLoadFormApproved()
-                elif rsp['status'] == 'Denied':
-                    email.LaborOverLoadFormRejected()
-            elif rsp['formType'] == 'Release':
-                if rsp['status'] == 'Approved':
-                    email.laborReleaseFormApproved()
-                elif rsp['status'] == 'Denied':
-                    email.laborReleaseFormRejected()
 
             return jsonify({"Success": True})
     except Exception as e:
-        print("Error Updating Release/Overload Forms:",type(e).__name__ + ":", e)
-        return jsonify({"Success": False}),500
+        print("error", e)
+        return jsonify({"Success": False})
+
 
 @admin.route('/admin/sendVerificationEmail', methods=['POST'])
 def sendEmail():
@@ -448,13 +437,13 @@ def sendEmail():
             }
             return jsonify(newEmailInformation)
     except Exception as e:
-        print("Error sending verification email to SASS/Financial Aid:",type(e).__name__ + ":", e)
-        return jsonify({"Success": False}),500
+        print("error", e)
+        return jsonify({"Success": False})
 
 @admin.route('/admin/notesCounter', methods=['POST'])
 def getNotesCounter():
     """
-    This method retrieve the number of notes a labor status form has
+    This method will send an email to either SAAS or Financial Aid
     """
     try:
         rsp = eval(request.data.decode("utf-8"))
@@ -463,5 +452,5 @@ def getNotesCounter():
             noteDictionary = {'noteTotal': noteTotal}
             return jsonify(noteDictionary)
     except Exception as e:
-        print("Error selecting admin notes:",type(e).__name__ + ":", e)
+        print("Error selecting admin notes:", e)
         return jsonify({"Success": False}),500
