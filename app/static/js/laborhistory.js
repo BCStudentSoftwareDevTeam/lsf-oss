@@ -61,7 +61,7 @@ function fillPDF(laborStatusKey){
 
 function withdrawform(formID){
   /*
-  This function gets a response from the controller function: withdraw_form() in laborHistory.py.  It reloads the page when 
+  This function gets a response from the controller function: withdraw_form() in laborHistory.py.  It reloads the page when
   the forms from the database are deleted by the controller function.
   */
   formIdDict={}
