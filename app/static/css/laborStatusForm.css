@@ -120,7 +120,7 @@ selectpicker, label {
   display:inline;
   /* position: relative;
   display: inline-block; */
-  border-bottom: 1px dotted #d40c13; /* If you want dots under the hoverable text */
+  /* border-bottom: 1px dotted #d40c13; /* If you want dots under the hoverable text */ */
 }
 
 /* Tooltip text */
@@ -129,21 +129,25 @@ selectpicker, label {
   width: 120px;
   background-color: black;
   /* color: #d40c13; */
-  color: #FF0;
+  color: #FFF;
   text-align: center;
   padding: 5px 0;
-  border-radius: 6px;
+  border-radius: 6px; */
 
   /* Position the tooltip text - see examples below! */
   position: absolute;
   z-index: 1;
   top: -5px;
-  left: 110%;
+  left: 110%; */
+  /* Fade */
+  opacity: 0;
+  transition: opacity 1s;
 }
 
 /* Show the tooltip text when you mouse over the tooltip container */
 .required:hover .required-tip {
   visibility: visible;
+  opacity: 1;
 }
 
 /* Left arrow styling */
