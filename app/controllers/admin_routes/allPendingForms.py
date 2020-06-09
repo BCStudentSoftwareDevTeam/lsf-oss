@@ -64,7 +64,7 @@ def allPendingForms(formType):
         # only if a form is adjusted
         for allForms in formList:
             if allForms.modifiedForm: # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
-                if allForms.modifiedForm.fieldModified == "supervisor": # if supervisor field in adjust forms has been modified,
+                if allForms.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
                     newSupervisorID = allForms.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
                     newSupervisor = User.get(User.UserID == newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
