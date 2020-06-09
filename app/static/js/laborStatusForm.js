@@ -575,8 +575,8 @@ function createAndFillTable(studentDict) {
   else {
     var selectedContractHoursName = $("#selectedContractHours").val();// For whatever reason this is undefined
   }
-  var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(this)\" id= \"nGlyphicon\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
-  var removeIcon = "<a onclick= \"deleteRow(this)\" id=\"rGlyphicon\"><span class=\"glyphicon glyphicon-remove color-red\" style=\"color:red;\"></span></a>";
+  var notesGlyphicon = "<a href=\"#\" data-toggle=\"modal\" aria-label=\"View Notess\" onclick = \"showNotesModal(this)\" id= \"nGlyphicon\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
+  var removeIcon = "<a href=\"#\" onclick= \"deleteRow(this)\" aria-label=\"Remove Row\" id=\"rGlyphicon\"><span class=\"glyphicon glyphicon-remove color-red\" style=\"color:red;\"></span></a>";
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);
