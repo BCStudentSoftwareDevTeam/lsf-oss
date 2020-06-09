@@ -116,7 +116,7 @@ selectpicker, label {
 
 /* Tooltip container */
 .required {
-  color: #d40c13;
+  color: red;
   display:inline;
   /* position: relative;
   display: inline-block; */
@@ -189,13 +189,14 @@ selectpicker, label {
 
 /**
  * Tooltip Styles
+ * Utilized snippets from https://chrisbracco.com/a-simple-css-tooltip/
  */
 
 /* Base styles for the element that has a tooltip */
 [data-tooltip],
 .tooltip {
   position: relative;
-  color: #d40c13;       /* Asterisk color */
+  color: red;       /* Asterisk color */
 }
 
 /* Base styles for the entire tooltip */
@@ -239,14 +240,14 @@ selectpicker, label {
 .tooltip:after,
 [data-tooltip]:after {
   z-index: 1000;
-  padding: 8px;
-  width: 160px;
+  padding: 6px;
+  /* width: 100px; */
   background-color: #000;
   background-color: hsla(0, 0%, 20%, 0.9);
   color: #fff;
   content: attr(data-tooltip);
   font-size: 14px;
-  line-height: 1.2;
+  /* line-height: 1.2; */
   border-radius: 4px;
 }
 

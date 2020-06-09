@@ -52,7 +52,7 @@
   </div>
   <div class="form-group" id="departmentClass">
     <!--selectpicker for department-->
-    <label for="selectedDepartment">Department<span style="color: #d40c13">*</span> <span type="button" id="departmentInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one department at a time"></span></label>
+    <label for="selectedDepartment">Department<span class="tooltip-right" data-tooltip="Required">*</span><span type="button" id="departmentInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one department at a time"></span></label>
         <select class="selectpicker"
                 name='department'
                 id='selectedDepartment'
@@ -69,7 +69,7 @@
   </div>
   <div class="form-group {% if forms %} has-error {% endif %}  ">
     <!-- selectpicker for term  -->
-      <label for="selectedTerm">Term<span style="color: #d40c13">*</span> <span type="button" id="termInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted to one term at a time"></span></label>
+      <label for="selectedTerm">Term<span class="tooltip-right" data-tooltip="Required">*</span><span type="button" id="termInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted to one term at a time"></span></label>
             <select class="selectpicker disable"
                     name='term'
                     id='selectedTerm'
@@ -88,7 +88,7 @@
   <div class="form-group col-xs-12">
       <div  class="form-group col-xs-6" id="startDateStyle">
         <!--datePicker for start date-->
-        <label for="dateTimePicker1" id="datePicker">Start Date<span style="color: #d40c13">*</span></label>
+        <label for="dateTimePicker1" id="datePicker">Start Date<span class="tooltip-right" data-tooltip="Required">*</span></label>
           <div class='input-group date'>
             <input type='text' class="form-control disable" id='dateTimePicker1' name="startDate" placeholder="Start Date" data-width="320px" onchange="updateDate(this)" readonly/>
             <span class="input-group-addon">
@@ -98,7 +98,7 @@
       </div>
       <div class="form-group col-xs-6" id ="endDateStyle">
         <!--datePicker for End date-->
-      <label for="dateTimePicker2" id="datePicker">End Date<span style="color: #d40c13">*</span></label>
+      <label for="dateTimePicker2" id="datePicker">End Date<span class="tooltip-right" data-tooltip="Required">*</span></label>
         <div class='input-group date'>
             <input type='text' class="form-control disable" id='dateTimePicker2' name="endDate" placeholder="End Date" data-width="320px" onchange="updateDate(this)" readonly/>
             <span class="input-group-addon">
@@ -108,7 +108,7 @@
       </div>​
     </div>
     <div>
-        <p style="color: #d40c13">*required field</p>
+        <p style="color: red">*required field</p>
     </div>
 </div>
 
@@ -118,7 +118,7 @@
 
   <div class= "form-group ">
       <!-- selectpicker for student  -->
-      <label for="student">Student<span style="color: #d40c13">*</span></label>
+      <label for="student">Student<span class="tooltip-right" data-tooltip="Required">*</span></label>
         <select class="selectpicker disable stu"
                 name='student'
                 id='student'
@@ -133,7 +133,7 @@
   </div>
   <div class= "form-group " id="Position">
       <!--selectpicker for positio3-->
-      <label for="position">Position (WLS)<span style="color: #d40c13">*</span></label>
+      <label for="position">Position (WLS)<span class="tooltip-right" data-tooltip="Required">*</span></label>
         <select class="selectpicker disable"
                 name='position'
                 id='position'
@@ -146,7 +146,7 @@
     </div>
     <div id="JopTypes" class= "form-group ">
         <!--selectpicker for Job type-->
-        <label for="jobType">Job Type<span style="color: #d40c13">*</span></label>
+        <label for="jobType">Job Type<span class="tooltip-right" data-tooltip="Required">*</span></label>
           <select class="selectpicker disable"
                   name='jobType'
                   id='jobType'
@@ -162,7 +162,7 @@
     </div>
     <div id="hoursPerWeek" class= "form-group ">
         <!--selectpicker for hrs per week-->
-        <label for="selectedHoursPerWeek">Hours Per Week<span style="color: #d40c13">*</span></label>
+        <label for="selectedHoursPerWeek">Hours Per Week<span class="tooltip-right" data-tooltip="Required">*</span></label>
           <select class="selectpicker disable"
                   name='selectedHoursPerWeek'
                   id='selectedHoursPerWeek'
@@ -175,7 +175,7 @@
     </div>
     <div id="contractHours" class= "form-group ">
     <!-- Contract hours for breaks -->
-       <label for="selectedContractHours">Contract Hours<span style="color: #d40c13">*</span></label>
+       <label for="selectedContractHours">Contract Hours<span class="tooltip-right" data-tooltip="Required">*</span></label>
          <input class="form-control quantity disable"
                  type = "number"
                  name='contractHours'
@@ -187,9 +187,6 @@
          </input>
     </div>
 </div>
-<!-- <div>
-    <p style="color: #d40c13">*required field</p>
-</div> -->
 <br>
 <div id="plus" class= "col-md-12">
   <button type="button"
