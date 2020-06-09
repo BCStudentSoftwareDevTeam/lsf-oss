@@ -25,3 +25,4 @@ def laborHistoryAuthorizeUser(id, UserID):
         return(authorizedUser, departmentsList)
     except Exception as e:
         print('Error authorizing user to access students labor history', type(e).__name__, e)
+        raise type(e)
