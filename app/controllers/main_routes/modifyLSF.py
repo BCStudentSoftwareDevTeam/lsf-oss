@@ -83,7 +83,7 @@ def updateLSF(laborStatusKey):
     try:
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
-        student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey).studentSupervisee.ID
+        student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if k == "supervisor":
@@ -139,11 +139,13 @@ def updateLSF(laborStatusKey):
         changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
         email = emailHandler(changedForm.formHistoryID)
         email.laborStatusFormModified()
-        flash("Your labor status form has been modified.", "success")
+        message = "Your Labor Status Form for {0} {1} has been modified.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        flash(message, "success")
 
         return jsonify({"Success":True})
 
     except Exception as e:
-        flash("An error occured.", "danger")
+        message = "An error occured. Your Labor Status Form for {0} {1} was not modified.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        flash(message, "danger")
         # print(e)
         return jsonify({"Success": False})

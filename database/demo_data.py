@@ -333,7 +333,8 @@ terms = [
             "termStart":"2020-01-01",
             "termEnd" : "2020-05-01",
             "termState": 1,
-            "primaryCutOff": "2020-05-01"
+            "primaryCutOff": "2020-05-01",
+            "adjustmentCutOff": "2020-01-01"
             },
             {
             "termCode":"202001",
@@ -341,8 +342,9 @@ terms = [
             "termStart":"2019-11-21",
             "termEnd" : "2019-11-29",
             "termState": 0,
-            "primaryCutOff": "2019-11-21"
-            },
+            "primaryCutOff": "2019-11-21",
+            "adjustmentCutOff": "2019-11-22"
+            }
        ]
 Term.insert_many(terms).on_conflict_replace().execute()
 print(" * terms added")
@@ -379,7 +381,7 @@ FormHistory.insert([{
 #############################
 emailtemps= [
                 {
-                "purpose":"Labor Status Form Submitted",
+                "purpose":"Labor Status Form Submitted For Student",
                 "formType":"Labor Status Form",
                 "action":"Submitted",
                 "subject":"Labor Status Form Received",
@@ -470,7 +472,7 @@ emailtemps= [
                 },
                 #LSF approved
                 {
-                "purpose":"Labor Status Form Approved",
+                "purpose":"Labor Status Form Approved For Student",
                 "formType":"Labor Status Form",
                 "action":"Approved",
                 "subject":"Labor Status Form Approved",
@@ -543,7 +545,7 @@ emailtemps= [
                 },
                 #LSF Rejected
                 {
-                "purpose":"Labor Status Form Rejected",
+                "purpose":"Labor Status Form Rejected For Student",
                 "formType":"Labor Status Form",
                 "action":"Rejected",
                 "subject":"Labor Status Form Rejected",
@@ -556,10 +558,10 @@ emailtemps= [
                 "formType":"Secondary Labor Status Form",
                 "action":"Rejected",
                 "subject":"Labor Status Form Rejected",
-                "body":'''<p>Dear <strong>@@Primsupr@@</strong>,</p>
+                "body":'''<p>Dear <strong>@@Supervisor@@</strong> and <strong>@@Primsupr@@</strong>,</p>
                             <p>&nbsp;</p>
                             <p>A Labor Status Form previously submitted by you for
-                            <strong>@@Student@@</strong>,<strong>%%StudB%%</strong> hiring him/her to work in a secondary position has been Denied. This is an informational email to you as the supervisor for the primary labor position.</p>
+                            <strong>@@Student@@</strong>, <strong>@@StudB@@</strong> hiring him/her to work in a secondary position has been Denied. This is an informational email to you as the supervisor for the primary labor position.</p>
                             <p>&nbsp;</p>
 
                             <p>&nbsp;</p>
@@ -590,7 +592,7 @@ emailtemps= [
                 },
                 #LSF modified
                 {
-                "purpose":"Labor Status Form Modified",
+                "purpose":"Labor Status Form Modified For Student",
                 "formType":"Labor Status Form",
                 "action":"Modified",
                 "subject":"Labor Status Form Modified",
@@ -599,7 +601,7 @@ emailtemps= [
                 "audience":"Student"
                 },
                 {
-                "purpose":"Labor Status Form Modified",
+                "purpose":"Labor Status Form Modified For Supervisor",
                 "formType":"Labor Status Form",
                 "action":"Modified",
                 "subject":"Labor Status Form Modified",
@@ -609,7 +611,7 @@ emailtemps= [
                 },
                 #LRF Submitted
                 {
-                "purpose":"Labor Release Form Submitted",
+                "purpose":"Labor Release Form Submitted For Student",
                 "formType":"Labor Release Form",
                 "action":"Submitted",
                 "subject":"Labor Release Form Submitted",
@@ -618,7 +620,7 @@ emailtemps= [
                 "audience":"Student"
                 },
                 {
-                "purpose":"Labor Release Form Submitted",
+                "purpose":"Labor Release Form Submitted For Supervisor",
                 "formType":"Labor Release Form",
                 "action":"Submitted",
                 "subject":"Labor Release Form Submitted",
@@ -629,11 +631,11 @@ emailtemps= [
                 #LRF approved
 
                 {
-                "purpose":"Labor Release Form Approved",
+                "purpose":"Labor Release Form Approved For Student",
                 "formType":"Labor Release Form",
                 "action":"Approved",
                 "subject":"Labor Release Form Approved",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
+                "body":'''<p>Dear <strong>@@Student@@</strong>,</p>
                             <p>&nbsp;</p>
                             <p>This email is very important. Please take a moment to read carefully and review the information. A Labor Release Form previously submitted for you by <strong>@@Supervisor@@</strong> has been <strong>Approved</strong>. You will no longer be able to record time in this position effective of the release date below. If you have concerns, please contact the supervisor or Labor Program Office immediately.</p>
                             <p>&nbsp;</p>
@@ -657,8 +659,7 @@ emailtemps= [
                 "audience":"Student"
                 },
                 {
-
-                "purpose":"Labor Release Form Approved",
+                "purpose":"Labor Release Form Approved For Supervisor",
                 "formType":"Labor Release Form",
                 "action":"Approved",
                 "subject":"Labor Release Form Approved",
@@ -668,7 +669,7 @@ emailtemps= [
                 },
                 #LRF Rejected
                 {
-                "purpose":"Labor Release Form Rejected",
+                "purpose":"Labor Release Form Rejected For Student",
                 "formType":"Labor Release Form",
                 "action":"Rejected",
                 "subject":"Labor Release Form Rejected",
@@ -677,7 +678,7 @@ emailtemps= [
                 "audience":"Student"
                 },
                 {
-                "purpose":"Labor Release Form Rejected",
+                "purpose":"Labor Release Form Rejected For Supervisor",
                 "formType":"Labor Release Form",
                 "action":"Rejected",
                 "subject":"Labor Release Form Rejected",
@@ -687,7 +688,7 @@ emailtemps= [
                 },
                 #LOF
                 {
-                "purpose":"Labor Overload Form Submitted",
+                "purpose":"Labor Overload Form Submitted For Student",
                 "formType":"Labor Overload Form",
                 "action":"Submitted",
                 "subject":"Labor Overload Form Submitted",
@@ -699,7 +700,7 @@ emailtemps= [
                 "audience":"Student"
                 },
                 {
-                "purpose":"Labor Overload Form Submitted",
+                "purpose":"Labor Overload Form Submitted For Supervisor",
                 "formType":"Labor Overload Form",
                 "action":"Submitted",
                 "subject":"Labor Overload Form Submitted",
@@ -708,7 +709,7 @@ emailtemps= [
                 "audience":"Supervisor"
                 },
                 {
-                "purpose":"Labor Overload Form Approved",
+                "purpose":"Labor Overload Form Approved For Student",
                 "formType":"Labor Overload Form",
                 "action":"Approved",
                 "subject":"Labor Overload Form Approved",
@@ -717,7 +718,7 @@ emailtemps= [
                 "audience":"Student"
                 },
                 {
-                "purpose":"Labor Overload Form Approved",
+                "purpose":"Labor Overload Form Approved For Supervisor",
                 "formType":"Labor Overload Form",
                 "action":"Approved",
                 "subject":"Labor Overload Form Approved",
@@ -726,7 +727,7 @@ emailtemps= [
                 "audience":"Supervisor"
                 },
                 {
-                "purpose":"Labor Overload Form Rejected",
+                "purpose":"Labor Overload Form Rejected For Student",
                 "formType":"Labor Overload Form",
                 "action":"Rejected",
                 "subject":"Labor Overload Form Rejected",
@@ -747,7 +748,7 @@ emailtemps= [
                 },
                 # Break Labor Status Forms
                 {
-                "purpose":"Break Labor Status Form Submitted",
+                "purpose":"Break Labor Status Form Submitted For Student",
                 "formType":"Break Labor Status Form",
                 "action":"Submitted",
                 "subject":"Labor Status Form Received",
@@ -777,7 +778,7 @@ emailtemps= [
                 "audience":"Student"
                 },
                 {
-                "purpose":"Break Labor Status Form Submitted", #Original name: Break Labor Status Form Submitted For Supervisor
+                "purpose":"Break Labor Status Form Submitted For Supervisor", #Original name: Break Labor Status Form Submitted For Supervisor
                 "formType":"Break Labor Status Form",
                 "action":"Submitted",
                 "subject":"Labor Status Form Received",
@@ -810,7 +811,7 @@ emailtemps= [
                 "audience":"Supervisor"
                 },
                 {
-                "purpose":"Second Break Labor Status Form Submitted", #Original name: Break Labor Status Form Submitted For Supervisor on Second LSF
+                "purpose":"Break Labor Status Form Submitted For Supervisor on Second LSF", #Original name: Break Labor Status Form Submitted For Supervisor on Second LSF
                 "formType":"Second Break Labor Status Form",
                 "action":"Submitted",
                 "subject":"Labor Status Form Received",
@@ -843,7 +844,7 @@ emailtemps= [
                             ''',
                 "audience":"Supervisor"
                 },
-                {"purpose":"Second Break Labor Status Form Submitted", # Original name: Break Labor Status Form Submitted For Second Supervisor
+                {"purpose":"Break Labor Status Form Submitted For Second Supervisor", # Original name: Break Labor Status Form Submitted For Second Supervisor
                 "formType":"Second Break Labor Status Form",
                 "action":"Submitted",
                 "subject":"Labor Status Form Received",
@@ -870,6 +871,20 @@ emailtemps= [
                             <p>859-985-3611</p>
                             ''',
                 "audience":"Break Supervisor"
+                },
+                {"purpose":"Labor Overload Form Submitted Notification For Student",
+                "formType":"Labor Overload Form",
+                "action":"Notification",
+                "subject":"Labor Overload Form Student Reason",
+                "body":'',
+                "audience":"Student"
+                },
+                {"purpose":"Labor Overload Form Submitted Notification For Labor Office",
+                "formType":"Labor Overload Form",
+                "action":"Notification",
+                "subject":"Labor Overload Form Student Reason",
+                "body":'',
+                "audience":"Labor Office"
                 }
             ]
 EmailTemplate.insert_many(emailtemps).on_conflict_replace().execute()

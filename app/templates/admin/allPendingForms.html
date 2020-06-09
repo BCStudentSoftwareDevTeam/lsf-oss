@@ -2,8 +2,7 @@
 
 {% block styles %}
 {{super()}}
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.css"/>
-  <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/datatables.min.css"/>
   <link rel="stylesheet" href="{{url_for('static', filename ='css/allPendingForms.css')}}">
   <link rel="stylesheet" href="{{url_for('static', filename ='css/pendingNotesModal.css')}}">
 
@@ -11,8 +10,7 @@
 
 {% block scripts %}
 {{super()}}
-  <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
-  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/datatables.min.js"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/allPendingForms.js') }}"></script>
 {% endblock %}
 
@@ -56,8 +54,11 @@
                   <th>Students</th>
                   <th> Position (WLS)</th>
                   <th>Hours</th>
-                  <th>Created</th>
                   <th>Contract Dates</th>
+                  {% if formType == "pendingAdjustment" %}
+                    <th>Effective Date</th>
+                  {%endif%}
+                  <th>Created</th>
                   <th></th>
                 </tr>
               </thead>
@@ -73,35 +74,52 @@
                       {{allForms.formID.termCode.termName}}
                     </td>
                     <td> {# DEPARTMENT #}
-                      {{allForms.formID.department.DEPT_NAME}} ({{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}})
+                      <a href="#" aria-label="{{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}}" class="hover_indicator"> {{allForms.formID.department.DEPT_NAME}} </a>
                     </td>
                     <td> {# SUPERVISOR #}
-                      {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
+                      {% if allForms.modifiedForm.fieldModified == "Supervisor" %}
+                        <s aria-hidden="true">{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</s> <br/> {{allForms.modifiedForm.newValue}}
+                      {% else %}
+                        {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
+                      {% endif %}
                     </td>
                     <td> {# STUDENT #}
-                      {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}  ({{allForms.formID.studentSupervisee.ID}})
+                       <a href="#" aria-label="{{allForms.formID.studentSupervisee.ID}}" class="hover_indicator"> {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}</a>
                     </td>
                     <td> {# POSITON AND WLS #}
-                      {{allForms.formID.POSN_TITLE}}
+                      {% if allForms.modifiedForm.fieldModified == "Position"%}
+                        <s aria-hidden="true"><a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a></s><br/>
+                        <a href="#" aria-label="{{allForms.modifiedForm.oldValue}}" class="hover_indicator"> {{allForms.modifiedForm.newValue}}</a>
+                      {% else %}
+                        <a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a>
+                      {% endif %}
                     </td>
                     <td> {# HOURS #}
-                    {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}
+                    {% if allForms.modifiedForm.fieldModified == "Weekly Hours"  or  allForms.modifiedForm.fieldModified == "Contract Hours" %}
+                      <s aria-hidden="true">{% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}</s> <br> {{allForms.modifiedForm.newValue}}
+                    {% else %}
+                      {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}
+                    {% endif %}
                   </td>
+                  <td> {# CONTRACT DATE #}
+                     {{allForms.formID.startDate.strftime('%m/%d/%y')}} <br/>  {{allForms.formID.endDate.strftime('%m/%d/%y')}}
+                  </td>
+                  {% if formType == "pendingAdjustment" %}
+                    <td> {# EFFECTIVE DATE #}
+                         {{allForms.modifiedForm.effectiveDate.strftime('%m/%d/%y')}}
+                    </td>
+                  {% endif %}
                   <td> {# CREATED BY #}
                     {{allForms.createdBy.username}}  <br/> {{allForms.createdDate.strftime('%m/%d/%y')}}
                   </td>
-                  <td> {# CREATED DATE #}
-                     {{allForms.formID.startDate.strftime('%m/%d/%y')}} -  {{allForms.formID.endDate.strftime('%m/%d/%y')}}
-                  </td>
                   <td> {# ACTION #}
-
                     {% with modalTarget = modalTarget %}
                       {% include "snips/pendingOverloadModal.html" %}
                     {% endwith %}
                     <div class="dropdown">
                       {% include "snips/FormsDeny.html" %}
                       {% include "snips/pendingNotesModal.html" %}
-                      <button class="btn btn-primary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Actions
+                      <button class="btn btn-primary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown" onclick="notesCounter({{allForms.formID.laborStatusFormID}})">Actions
                       <span class="caret"></span></button>
                       <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="min-width: 100%;">
                         {% if allForms.historyType.historyTypeName != 'Labor Overload Form' %}
@@ -144,6 +162,7 @@
                   data-toggle="modal">
                   Approve Selected
                 </button>
+                {% include "snips/pendingApprovalModal.html" %}
               </div>
               {% endif %}
                 </div>

@@ -24,16 +24,16 @@ def index():
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:       # Not an admin
         isLaborAdmin = False
+        # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
+        departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
     else:
         isLaborAdmin = True
+        # Grabs every single department that currently has at least one labor status form in it
+        departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
 
     todayDate = date.today()
     # Grabs all the labor status forms where the current user is the supervisor
     formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.UserID).order_by(LaborStatusForm.endDate.desc())
-    # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments asscioted with those forms. Will only grab each department once.
-    currentUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).distinct()
-    # Grabs every single department that currently has at least one labor status form in it
-    allDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).distinct()
 
     inactiveSupervisees = []
     currentSupervisees = []
@@ -124,33 +124,14 @@ def index():
 
         # Returns the file path so the button will download the file
         return send_file(completePath,as_attachment=True, attachment_filename=filename)
-
-    # If the user is an admin, then we load in all the departments that have at least one labor status form
-    if current_user.isLaborAdmin == 1:
-        return render_template( 'main/index.html',
-                    title=('Home'),
-                    currentSupervisees = currentSupervisees,
-                    pastSupervisees = pastSupervisees,
-                    inactiveSupervisees = inactiveSupervisees,
-                    UserID = current_user,
-                    currentUserDepartments = allDepartments,
-                    isLaborAdmin = isLaborAdmin,
-                    multiDepartments = True
-                          )
-    # If the user is not an admin, then we will only load in the departments the user is tied to
-    if currentUserDepartments.count() > 1:
-        multiDepartments = True
-    else:
-        multiDepartments = False
     return render_template( 'main/index.html',
 				    title=('Home'),
                     currentSupervisees = currentSupervisees,
                     pastSupervisees = pastSupervisees,
                     inactiveSupervisees = inactiveSupervisees,
                     UserID = current_user,
-                    currentUserDepartments = currentUserDepartments,
-                    isLaborAdmin = isLaborAdmin,
-                    multiDepartments = multiDepartments
+                    currentUserDepartments = departments,
+                    isLaborAdmin = isLaborAdmin
                           )
 
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])

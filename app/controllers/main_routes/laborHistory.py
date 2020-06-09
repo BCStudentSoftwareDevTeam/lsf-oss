@@ -17,6 +17,7 @@ from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
 from fpdf import FPDF
 from app.logic.authorizationFunctions import*
+from app.models.Tracy.stuposn import STUPOSN
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
@@ -79,6 +80,24 @@ def populateModal(statusKey):
         currentDate = datetime.date.today()
         buttonState = None
         current_user = cfg['user']['debug']
+
+        for form in forms:
+            if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
+                if form.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
+                    newSupervisorID = form.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
+                    newSupervisor = User.get(User.UserID == newSupervisorID)
+                    # we are temporarily storing the supervisor name in new value,
+                    # because we want to show the supervisor name in the hmtl template.
+                    form.modifiedForm.oldValue = form.formID.supervisor.FIRST_NAME + " " + form.formID.supervisor.LAST_NAME # old supervisor name
+                    form.modifiedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
+                if form.modifiedForm.fieldModified == "Position": # if position field has been modified in adjust form then retriev position name.
+                    newPositionCode = form.modifiedForm.newValue
+                    newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode)
+                    # temporarily storing the new position name in new value, and old position name in old value
+                    # because we want to show these information in the hmtl template.
+                    form.modifiedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
+                    form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
+
         for form in forms:
             if current_user != (form.createdBy.username or form.formID.supervisor.username):
                 break
@@ -128,16 +147,17 @@ def populateModal(statusKey):
                             buttonState = 0 #Only rehire
                             break
                     elif form.status.statusName == "Approved":
-                        if currentDate <= form.formID.termCode.termEnd:
+                        if currentDate <= form.formID.endDate:
                             if currentDate > form.formID.termCode.adjustmentCutOff:
                                 buttonState = 4 #Release and rehire buttons
                                 break
                             else:
                                 buttonState = 3 #Release, adjustment, and rehire buttons
                                 break
-                        elif currentDate > form.formID.termCode.termEnd:
+                        else:
                             buttonState = 0 #Only rehire
                             break
+
         resp = make_response(render_template('snips/studentHistoryModal.html',
                                             forms = forms,
                                             statusForm = statusForm,
@@ -175,7 +195,7 @@ def withdraw_form():
     """
     try:
         rsp = eval(request.data.decode("utf-8"))
-        student = LaborStatusForm.get(rsp["FormID"]).studentSupervisee.ID
+        student = LaborStatusForm.get(rsp["FormID"])
         selectedPendingForms = FormHistory.select().join(Status).where(FormHistory.formID == rsp["FormID"]).where(FormHistory.status.statusName == "Pending").order_by(FormHistory.historyType.asc())
         for form in selectedPendingForms:
             try:
@@ -195,8 +215,11 @@ def withdraw_form():
                     LaborStatusForm.get(formID).delete_instance()
             except:
                 pass
-        flash("Your selected form has been withdrawn.", "success")
-        return jsonify({"Success":True, "url":"/laborHistory/" + student})
+        message = "Your selected form for {0} {1} has been withdrawn.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        flash(message, "success")
+        return jsonify({"Success":True, "url":"/"})
     except Exception as e:
         # print(e)
-        return jsonify({"Success": False})
+        message = "An error occured. Your selected form for {0} {1} was not withdrawn.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        flash(message, "danger")
+        return jsonify({"Success": False, "url":"/"})

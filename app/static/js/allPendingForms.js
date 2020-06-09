@@ -1,3 +1,7 @@
+$('a.hover_indicator').click(function(e){
+  e.preventDefault(); // prevents click on '#' link from jumping to top of the page.
+});
+
 $(document).ready(function() {
   // If the overload tab has been selected, then we need to restrict the
   // ordering functionality on different headers
@@ -16,9 +20,10 @@ $(document).ready(function() {
     'aaSorting': [
       [1, 'asc']
     ], // start to sort data in second column
-    pageLength: 50
+    pageLength: 50,
     // "dom": '<"top"fl>rt<"bottom"p><"clear">'
   });
+
 });
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
@@ -67,8 +72,17 @@ function updateApproveTableData(returned_details) {
     } else {
       hours = r_hour;
     }
-    $('#classTable').append('<tr><td>' + student + '</td><td>' + position + '</td><td> ' + hours + '</td> <td> ' + supervisor + '</td></tr>');
+    $('#classTableBody').append('<tr><td>' + student + '</td><td>' + position + '</td><td> ' + hours + '</td> <td> ' + supervisor + '</td></tr>');
   }
+}
+
+$('#approvalModal').on('hidden.bs.modal', function () {// Makes the close functionality work when clicking outside of the modal
+  approvalModalClose();
+});
+
+function approvalModalClose(){// on close of approval modal we are clearing the table to prevent duplicate data.
+  $('#classTableBody').empty();
+  labor_details_ids = [] // emptying the list, becuase otherwise will cause duplicate data.
 }
 
 function finalApproval() { //this method changes the status of the lsf from pending to approved status
@@ -123,9 +137,20 @@ function finalDenial_data(returned_details) {
     } else {
       hours = r_hour;
     }
-    $('#denialPendingForms').append('<tr><td>' + student + '</td><td>' + position + '</td><td> ' + supervisor + '</td> <td> ' + hours + '</td></tr>'); //populate the denial modal for all pending forms
+    $('#denialPendingFormsBody').append('<tr><td>' + student + '</td><td>' + position + '</td><td> ' + supervisor + '</td> <td> ' + hours + '</td></tr>'); //populate the denial modal for all pending forms
   }
 }
+
+function denialModalClose(){// on close of denial modal we are clearing the table to prevent duplicate data.
+  $('#denialPendingFormsBody').empty();
+  laborDenialInfo = [] // emptying the list, becuase otherwise will cause duplicate data.
+}
+
+$('.denialModal').on('hidden.bs.modal', function () {// makes the close functionality work when clicking otuside of the modal
+  denialModalClose();
+});
+
+
 
 function finalDenial() { // this mehod is AJAX call for the finalDenial method in python file
   var data = JSON.stringify(laborDenialInfo);
@@ -188,7 +213,6 @@ function notesInsert(textareaID, buttonID) {
   formId = notes.formId; //This is how we get the ID of the form
   var note = notes.notes; //This is how we are getting the note object from the dictionary
   var data = JSON.stringify(note);
-  var notesGlyph = $("#notes_" + formId);
 
   $("#" + buttonID).on('submit', function(e) {
     e.preventDefault();
@@ -200,20 +224,12 @@ function notesInsert(textareaID, buttonID) {
     data: data,
     contentType: 'application/json',
     success: function(response) {
-      if (response) {
-        //This changes the color of the notes glyphicon when a labor note is saved
-        if ($(notesGlyph).hasClass("text-success")) {
-          $(notesGlyph).removeClass("text-success");
-          $(notesGlyph).addClass("text-danger");
-        } else if ($(notesGlyph).hasClass("text-secondary")) {
-          $(notesGlyph).removeClass("text-secondary");
-          $(notesGlyph).addClass("text-danger");
-        }
         window.location.reload(true);
       }
-    }
   });
 }
+
+
 
 function finalDeny() {
   /*
@@ -323,10 +339,10 @@ function loadOverloadModal(formHistoryID, laborStatusFormID) {
         var emailDateFinancialAid = response['financialAidLastEmail']
         var statusFinancialAid = response['financialAidStatus']
         $('#studentOverloadReason').append(overloadReason)
-        $('#overloadStudentTable').append('<tr><td>' + studentName + '</td><td>' + position + '</td><td>' + hours + '</td><td>' + supervisor + '</td><td>' + department + '</td></tr>'); //populate the denial modal for all pending forms
-        $('#overloadStudentTable').append('<tr><td><strong>Overload Reason</strong></td><td colspan="4">' + overloadReason + '</td></tr>')
-        $('#overloadDepartmentTable').append('<tr><td>SAAS</td><td id="statusSAAS">' + statusSAAS + '</td><td id="emailSAAS">' + emailDateSAAS + '</td><td><button id="SAASEmail" value=' + formHistoryID + ' type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td></tr>');
-        $('#overloadDepartmentTable').append('<tr><td>Financial Aid</td><td id="statusFinancialAid">' + statusFinancialAid + '</td><td id="emailFinancialAid">' + emailDateFinancialAid + '</td><td><button id="financialAidEmail" value=' + formHistoryID + ' type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td></tr>');
+        $('#overloadStudentTableBody').append('<tr><td>' + studentName + '</td><td>' + position + '</td><td>' + hours + '</td><td>' + supervisor + '</td><td>' + department + '</td></tr>'); //populate the denial modal for all pending forms
+        $('#overloadStudentTableBody').append('<tr><td><strong>Overload Reason</strong></td><td colspan="4">' + overloadReason + '</td></tr>')
+        $('#overloadDepartmentTableBody').append('<tr><td>SAAS</td><td id="statusSAAS">' + statusSAAS + '</td><td id="emailSAAS">' + emailDateSAAS + '</td><td><button id="SAASEmail" value=' + formHistoryID + ' type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td></tr>');
+        $('#overloadDepartmentTableBody').append('<tr><td>Financial Aid</td><td id="statusFinancialAid">' + statusFinancialAid + '</td><td id="emailFinancialAid">' + emailDateFinancialAid + '</td><td><button id="financialAidEmail" value=' + formHistoryID + ' type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td></tr>');
         $('#overloadNotes').data('formId', laborStatusFormID)
       }
     },
@@ -335,6 +351,16 @@ function loadOverloadModal(formHistoryID, laborStatusFormID) {
     }
   });
 }
+
+function overloadModalClose(){// on close of overload modal we are clearing the table to prevent duplicate data.
+  $('#overloadStudentTableBody').empty();
+  $('#overloadDepartmentTableBody').empty();
+  laborOverloadID = [] // emptying the list, becuase otherwise will cause duplicate data.
+}
+
+$('#modalOverload').on('hidden.bs.modal', function () {// makes the close functionality work when clicking otuside of the modal
+  overloadModalClose();
+});
 
 function displayModalTextArea(radioValue) {
   /*
@@ -449,9 +475,32 @@ function toggleNotesLog(laborStatusFormID) {
   modal to show/hide it
   */
   if ($('#logNotesDiv').css('display') == 'none') {
+    var overloadViewNotesID = '#overloadNote_' + String(laborStatusFormID)
+    $(overloadViewNotesID).html('Hide Notes')
     getNotes(laborStatusFormID)
     $('#logNotesDiv').css('display', 'block')
   } else {
+    notesCounter(laborStatusFormID)
     $('#logNotesDiv').css('display', 'none')
   }
+}
+
+function notesCounter(laborStatusFormID){
+  var data = {'laborStatusFormID': laborStatusFormID}
+  data = JSON.stringify(data)
+  $.ajax({
+    method: "POST",
+    url: '/admin/notesCounter',
+    data: data,
+    contentType: 'application/json',
+    success: function(response) {
+      var viewNotesID = '#notes_' + String(laborStatusFormID)
+      var overloadViewNotesID = '#overloadNote_' + String(laborStatusFormID)
+      $(viewNotesID).html('View Notes (' + response['noteTotal'] + ')')
+      $(overloadViewNotesID).html('View Notes (' + response['noteTotal'] + ')')
+    },
+    error: function(request,status,error){
+      console.log(request.responseText);
+    }
+  });
 }
