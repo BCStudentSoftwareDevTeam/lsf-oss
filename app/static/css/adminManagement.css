@@ -11,13 +11,13 @@ select {
   margin-bottom: 50px;
 }
 
-#borders{
+/* #borders{
   border-style: solid;
   border-width: thin;
   border-radius: 15px;
   position: relative;
   right: 50px;
-  padding-bottom: 50px;
+  padding-bottom: 20px;
   padding-top: 20px;
 }
 
@@ -25,7 +25,7 @@ select {
   border-style: solid;
   border-width: thin;
   border-radius: 15px;
-  padding-bottom: 50px;
+  padding-bottom: 20px;
   padding-top: 20px;
 }
 
@@ -35,9 +35,9 @@ select {
   border-radius: 15px;
   position: relative;
   left: 50px;
-  padding-bottom: 50px;
+  padding-bottom: 20px;
   padding-top: 20px;
-}
+} */
 
 #header {
   margin-bottom: 30px
