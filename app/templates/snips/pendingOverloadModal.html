@@ -3,6 +3,9 @@
     <div id="content" class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title" id="exampleModalLabel" align="center"><b>Labor Overload Form</b></h3>
+        <button type="button" class="close" data-dismiss="modal" onclick="overloadModalClose()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
         <table id="overloadStudentTable" class="table table-bordered">
@@ -15,7 +18,7 @@
               <th scope="col">Department</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="overloadStudentTableBody">
           </tbody>
         </table>
         <table id="overloadDepartmentTable" class="table table-bordered">
@@ -27,7 +30,7 @@
               <th scope="col">Email</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody id="overloadDepartmentTableBody">
           </tbody>
         </table>
         <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
@@ -59,7 +62,7 @@
       </div>
       <div class="modal-footer">
         <div class="col-sm-2" align="left">
-          <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal" onclick="location.reload()">Close</button>
+          <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal" onclick="overloadModalClose()">Close</button>
         </div>
         <div class="col-sm- floatright" align="right">
           <button type="button" class="btn btn-success floatright" id="submitOverload" onclick="submitOverload({{allForms.formHistoryID}})">Submit</button>
