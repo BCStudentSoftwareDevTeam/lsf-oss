@@ -21,6 +21,8 @@ from app import cfg
 from app.logic.emailHandler import*
 from app.logic.userInsertFunctions import*
 
+#here is a change
+
 @main_bp.route('/laborstatusform', methods=['GET'])
 @main_bp.route('/laborstatusform/<laborStatusKey>', methods=['GET'])
 def laborStatusForm(laborStatusKey = None):
