@@ -90,29 +90,11 @@
     </div>
 
     <!-- Modal that will be rendered on the click of the submit button -->
+    {% include "snips/laborReleaseFormModal.html" %}
+
     <div class="container">
       <button id="cancel" type="button" class="btn btn-danger" onclick="window.history.back()">Cancel</button>
       <button id="submit" type="button" class="btn btn-success">Submit</button>
-      <div class="modal fade" id="modal" role="dialog" tabindex="-1">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-              <h4 class="modal-title">Are you sure you want to submit?</h4>
-            </div>
-            <div class="modal-body">
-              <p>Submitting this form will put the selected student up for release from their current
-              labor position pending approval from the labor office within one business day.</p>
-              <p>The student will be notified about the submission of the form via email. Both you
-                and the student will be notified within one business day about the form's status.</p>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-              <button type="submit" name="submit" value="submit" class="btn btn-success" id="submitModal" ">Submit</button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
   </form>

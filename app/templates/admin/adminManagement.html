@@ -108,23 +108,9 @@
   </div>
 </div>
 
-<div class="modal fade" id="modal" role="dialog" tabindex="-1">
-  <div class="modal-dialog" role="document">
-       <div class="modal-content">
-         <div class="modal-header">
-           <button type="button" class="close" data-dismiss="modal">&times;</button>
-           <h2 id="header" class="modal-title" text-align="center">Users</h2>
-         </div>
-         <div class="modal-body">
-           <p id="modalText">placeholder text </p>
-         </div>
-         <div class="modal-footer">
-           <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
-           <button id="submitModal" class="btn btn-success">Yes</button>
-         </div>
-       </div>
-       </div>
-     </div>
+<!-- Modal that will be rendered on the click of the submit button -->
+{% include "snips/adminManagementModal.html" %}
+
 </form>
 <script src="/static/js/adminManagement.js"></script>
 
