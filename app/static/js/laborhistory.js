@@ -2,7 +2,7 @@ $('#positionTable tbody tr td').on('click',function(){
   /*If boolean value is false, flash container letting user know that they do not
   have access. Else, load student labor history modal.*/
  if (this.getAttribute('value') == 'false') {
-   $("#flash_container").prepend('<div class="alert alert-danger" role="alert" id="flasher">You do not have access to this department\'s information.</div>');
+   $("#flash_container").html('<div class="alert alert-danger" role="alert" id="flasher">You do not have access to this department\'s information.</div>');
    $("#flasher").delay(3000).fadeOut();
  }
  else {
