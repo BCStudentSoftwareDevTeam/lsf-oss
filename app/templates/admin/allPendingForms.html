@@ -123,13 +123,13 @@
                       <span class="caret"></span></button>
                       <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="min-width: 100%;">
                         {% if allForms.historyType.historyTypeName != 'Labor Overload Form' %}
-                        <li role="presentation"><a role="menuitem"
+                        <li role="presentation"><a role="menuitem" href="#"
                           <span id="reject_{{allForms.formHistoryID}}"
                             onclick="insertDenial({{allForms.formHistoryID}})"
                             data-toggle="modal"
                             data-target="#{{modalTarget}}">Deny</span></a></li>
                         {% else %}
-                        <li role="presentation"><a role="menuitem"
+                        <li role="presentation"><a role="menuitem" href="#"
                           <span id="{{allForms.formHistoryID}}"
                                 data-toggle="modal"
                                 data-target="#modalOverload"
@@ -137,7 +137,7 @@
                         {% endif %}
                         <li role="presentation"><a role="menuitem" href="/modifyLSF/{{allForms.formID.laborStatusFormID}}">
                           <span id="edit_{{allForms.formID.laborStatusFormID}}">Modify</span></a></li>
-                        <li role="presentation"><a role="menuitem"
+                        <li role="presentation"><a role="menuitem" href="#"
                           <span id="notes_{{allForms.formID.laborStatusFormID}}"
                                 onclick="getNotes({{allForms.formID.laborStatusFormID}})"
                                 data-toggle="modal"
