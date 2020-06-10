@@ -74,7 +74,7 @@
                 {{allForms.formID.termCode.termName}}
               </td>
               <td> {# DEPARTMENT #}
-                {{allForms.formID.department.DEPT_NAME}} ({{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}})
+                <a href="#" aria-label="{{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}}" class="hover_indicator"> {{allForms.formID.department.DEPT_NAME}} </a>
               </td>
               <td> {# SUPERVISOR #}
                 {% if allForms.modifiedForm.fieldModified == "Supervisor" %}
@@ -84,7 +84,7 @@
                 {% endif %}
               </td>
               <td> {# STUDENT #}
-                {{allForms.formID.studentSupervisee.FIRST_NAME}} {{allForms.formID.studentSupervisee.LAST_NAME}} ({{allForms.formID.studentSupervisee.ID}})
+                <a href="#" aria-label="{{allForms.formID.studentSupervisee.ID}}" class="hover_indicator"> {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}</a>
               </td>
               <td> {# POSITON AND WLS #}
                 {% if allForms.modifiedForm.fieldModified == "Position"%}
@@ -149,9 +149,18 @@
         </table>
         {% if formType != 'pendingOverload' and formType != 'pendingRelease' %}
         <div style='float:left'>
-          <button id="approveSelected" name="approveBtn" type="button" class="btn btn-newcolor" onclick="insertApprovals();" value="Approve Selected" data-target="#approvalModal" data-toggle="modal">
+          <button
+            id="approveSelected"
+            name="approveBtn"
+            type="button"
+            class="btn btn-newcolor"
+            onclick="insertApprovals();"
+            value="Approve Selected"
+            data-target="#approvalModal"
+            data-toggle="modal">
             Approve Selected
           </button>
+        {% include "snips/pendingApprovalModal.html" %}
         </div>
         {% endif %}
       </div>

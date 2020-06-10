@@ -7,6 +7,8 @@ $(document).ready(function() {
   // ordering functionality on different headers
   if ($('#overloadTab').hasClass('active') || $('#releaseTab').hasClass('active')) {
     targetsList = [8]
+  } else if ($('#modifiedTab').hasClass('active')) {
+    targetsList = [0, 10]
   } else {
     targetsList = [0, 9]
   }
@@ -543,7 +545,7 @@ function toggleNotesLog(laborStatusFormID) {
 function notesCounter(laborStatusFormID){
   /*
   This method displays the number of admin notes a Labor
-  Status Form has 
+  Status Form has
   */
   var data = {'laborStatusFormID': laborStatusFormID}
   data = JSON.stringify(data)
