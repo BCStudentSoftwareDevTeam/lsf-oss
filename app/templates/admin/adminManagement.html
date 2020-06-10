@@ -3,6 +3,7 @@
 {% block app_content %}
 
 <head>
+<link href="/static/css/adminManagement.css" rel="stylesheet" type="text/css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 </head>
@@ -19,9 +20,9 @@
 
 <div class="container">
   <div class="row">
-    <div id="borders" class="col-sm-4">
-      <h3 id="header">Labor Administrators</h3>
-        <div class = "form-group">
+      <div id="borders" class="col-sm-4">
+        <h3 id="header">Labor Administrators</h3>
+        <div class="form-group">
           <select id="addlaborAdmin" class="form-control selectpicker" title="Select User" data-width="258px"
           data-show-subtext="true" data-live-search="true" name="addAdmin">
             {% for user in users %}
@@ -30,21 +31,20 @@
               {% endif %}
             {% endfor %}
           </select>
-          <button id="add" onclick="modal('add')" value="add" name="add" class="btn btn-success" type="button">Add</button>
+          <button id="add" onclick="modal('add')" value="add" name="add" class="btn btn-success " type="button">Add</button>
         </div>
-
-<div class = "form-group">
-  <select id="removelaborAdmin" class = "form-control selectpicker" title="Current Labor Admins" data-width="258px"
-    data-show-subtext="true" data-live-search="true" name="removeAdmin">
-      {% for user in users %}
-        {% if user.isLaborAdmin == True %}
-          <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
-        {% endif %}
-      {% endfor %}
-        </select>
-          <button id="remove" onclick="modal('remove')" value="remove" name="remove" class="btn btn-danger" type="button">Remove</button>
+  <div class = "form-group">
+    <select id="removelaborAdmin" class = "form-control selectpicker" title="Current Labor Admins" data-width="258px"
+      data-show-subtext="true" data-live-search="true" name="removeAdmin">
+        {% for user in users %}
+          {% if user.isLaborAdmin == True %}
+            <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+          {% endif %}
+        {% endfor %}
+          </select>
+            <button id="remove" onclick="modal('remove')" value="remove" name="remove" class="btn btn-danger " type="button">Remove</button>
+          </div>
         </div>
-      </div>
 
 {# Financial Aid Admins #}
 
@@ -59,7 +59,7 @@
           {% endif %}
         {% endfor %}
       </select>
-      <button id="add1"  onclick="modal('add1')" value="addAid" name="addAid" class="btn btn-success" type="button">Add</button>
+      <button id="add1"  onclick="modal('add1')" value="addAid" name="addAid" class="btn btn-success " type="button">Add</button>
     </div>
 
  <div class = "form-group">
@@ -71,7 +71,7 @@
       {% endif %}
     {% endfor %}
     </select>
-  <button id="remove1" onclick="modal('remove1')" value="removeAid" name="removeAid" class="btn btn-danger" type="button">Remove</button>
+  <button id="remove1" onclick="modal('remove1')" value="removeAid" name="removeAid" class="btn btn-danger " type="button">Remove</button>
  </div>
 </div>
 
@@ -88,7 +88,7 @@
         {% endif %}
       {% endfor %}
       </select>
-    <button id="add2" onclick="modal('add2')" value="addSaas" name="addSaas" class="btn btn-success" type="button">Add</button>
+    <button id="add2" onclick="modal('add2')" value="addSaas" name="addSaas" class="btn btn-success " type="button">Add</button>
 </div>
 
        <div class = "form-group">
@@ -100,7 +100,7 @@
              {% endif %}
            {% endfor %}
            </select>
-          <button id="remove2" onclick="modal('remove2')" value="removeSaas" name="removeSaas" class="btn btn-danger" type="button">Remove</button>
+          <button id="remove2" onclick="modal('remove2')" value="removeSaas" name="removeSaas" class="btn btn-danger " type="button">Remove</button>
        </div>
      </div>
   </div>
