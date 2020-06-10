@@ -14,9 +14,9 @@
   <script type="text/javascript" src="{{url_for('static', filename='js/allPendingForms.js') }}"></script>
 {% endblock %}
 
-
 {% block app_content %}
 <div align="center">
+  <a class="skipContent" href="#pendingLabor" tabindex="1">Click to Skip</a>
   <h1>{{title}}</h1>
 </div>
 
@@ -24,7 +24,7 @@
   <div id="pendingTabs" class="container" style='display: inline-block;;'>
     <ul class="nav nav-tabs" style='text-align: center;'>
       <li id='laborTab' {% if formType == "pendingLabor" %} class="active" {% endif %}>
-        <a href="{{url_for('admin.allPendingForms', formType = 'pendingLabor')}}"> Pending Labor Status Forms <strong>({{ laborStatusFormCounter }})</strong></a>
+        <a id="pendingLabor" href="{{url_for('admin.allPendingForms', formType = 'pendingLabor')}}"> Pending Labor Status Forms <strong>({{ laborStatusFormCounter }})</strong></a>
       </li>
       <li id='modifiedTab' {% if formType == "pendingAdjustment" %} class="active" {% endif %}>
         <a href="{{url_for('admin.allPendingForms', formType = 'pendingAdjustment')}}">Pending Adjustment Forms <strong>({{ modifiedFormCounter }})</strong></a>
@@ -56,8 +56,8 @@
               <th>Hours</th>
               <th>Contract Dates</th>
               {% if formType == "pendingAdjustment" %}
-                    <th>Effective Date</th>
-                  {%endif%}
+                <th>Effective Date</th>
+              {%endif%}
               <th>Created</th>
               <th></th>
             </tr>

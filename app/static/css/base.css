@@ -133,3 +133,30 @@ a:hover {
 .bottom-buffer {
     margin-bottom: 60px;
 }
+
+.skipContent {
+  left:0px;
+  position:absolute;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+  z-index:0;
+}
+
+.skipContent:focus, .skipContent:active {
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
+  left: -34%;
+  top: -1%;
+  width: 12%;
+  height: auto;
+  overflow:auto;
+  margin: 10px 35%;
+  padding:5px;
+  border-radius: 4px;
+  text-align:center;
+  font-size:1.2em;
+  z-index:999;
+}
