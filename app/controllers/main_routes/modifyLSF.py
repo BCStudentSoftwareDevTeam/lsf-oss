@@ -103,6 +103,7 @@ def updateLSF(laborStatusKey):
                     user.CPO        = tracyUser.CPO
                     user.ORG        = tracyUser.ORG
                     user.DEPT_NAME  = tracyUser.DEPT_NAME
+                    user.ID         = tracyUser.ID
                     user.save()
                     LSF.supervisor = d.PIDM
                     LSF.save()
