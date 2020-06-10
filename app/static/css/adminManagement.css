@@ -11,34 +11,6 @@ select {
   margin-bottom: 50px;
 }
 
-/* #borders{
-  border-style: solid;
-  border-width: thin;
-  border-radius: 15px;
-  position: relative;
-  right: 50px;
-  padding-bottom: 20px;
-  padding-top: 20px;
-}
-
-#borders1 {
-  border-style: solid;
-  border-width: thin;
-  border-radius: 15px;
-  padding-bottom: 20px;
-  padding-top: 20px;
-}
-
-#borders2 {
-  border-style: solid;
-  border-width: thin;
-  border-radius: 15px;
-  position: relative;
-  left: 50px;
-  padding-bottom: 20px;
-  padding-top: 20px;
-} */
-
 #header {
   margin-bottom: 30px
 }
