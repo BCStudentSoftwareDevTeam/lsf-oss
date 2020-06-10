@@ -33,8 +33,9 @@
           <tbody id="overloadDepartmentTableBody">
           </tbody>
         </table>
+        <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
         <div id='radioDiv'>
-          <button id="overloadNote_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes</button>
+          <button id="modalNote_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes</button>
           <label for="approve" class="radio-inline">
             <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve</input>
           </label>
@@ -45,15 +46,15 @@
             <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea(this.value)">Deny</input>
           </label>
         </div>
-        <div id="notesTextArea">
-          <textarea id='overloadNotes' name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
+        <div id="notesTextAreaOverload" class="notesTextArea">
+          <textarea id='overloadNotes' class="finalNote" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
         </div>
-        <div id="denyTextArea" style="display:None">
+        <div id="denyTextAreaOverload" class="denyTextArea" style="display:None">
           <p id="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
-          <textarea id='denyOverloadReason' name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
+          <textarea id='denyOverloadReason' class="finalDeny" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
         </div>
-        <div id="logNotesDiv" style='display:none'>
-          <h4 class="supeNotesLabel col-md-4 control-label text-left" for="supervisor">Supervisor Notes:</h4>
+        <div class="logNotesDiv" style='display:none'>
+          <h4 class="supeNotesLabel col-md-4 control-label text-left" for="supervisor">Supervisor Notes: </h4>
           <textarea class="notesText" rows="2" cols="70" disabled> </textarea>
           <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
           <div class="notesLogArea"></div>
