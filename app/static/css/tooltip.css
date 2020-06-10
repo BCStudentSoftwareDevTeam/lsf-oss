@@ -7,7 +7,12 @@
 [data-tooltip],
 .tooltip {
   position: relative;
-  color: red;       /* Asterisk color */
+
+}
+
+.required-mark {
+    color: red;       /* Asterisk color */
+    font-weight: bold
 }
 
 /* Base styles for the entire tooltip */

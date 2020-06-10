@@ -35,10 +35,13 @@
 
 <form id="laborStatusForm">
 <div class="container">
+<div>
+    <p class="required-mark">* Marked fields are required</p>
+</div>
 <!-- everythin on the left -->
 <div class="floatleft">
   <div class="form-group ">
-    <label for="selectedSupervisor">Supervisor<span class="tooltip-right" data-tooltip="Required">*</span><span type="button" id="supervisorInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one supervisor at a time"></span></label>
+    <label for="selectedSupervisor"><span class="tooltip-right" data-tooltip="Required">Supervisor<span class="required-mark">*</span><span type="button" id="supervisorInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one supervisor at a time"></span></label>
         <select class="selectpicker form-control"
                 name='supervisor'
                 id='selectedSupervisor'
@@ -53,7 +56,7 @@
   </div>
   <div class="form-group" id="departmentClass">
     <!--selectpicker for department-->
-    <label for="selectedDepartment">Department<span class="tooltip-right" data-tooltip="Required">*</span><span type="button" id="departmentInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one department at a time"></span></label>
+    <label for="selectedDepartment"><span class="tooltip-right" data-tooltip="Required">Department<span class="required-mark">*</span></span><span type="button" id="departmentInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one department at a time"></span></label>
         <select class="selectpicker"
                 name='department'
                 id='selectedDepartment'
@@ -70,7 +73,7 @@
   </div>
   <div class="form-group {% if forms %} has-error {% endif %}  ">
     <!-- selectpicker for term  -->
-      <label for="selectedTerm">Term<span class="tooltip-right" data-tooltip="Required">*</span><span type="button" id="termInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted to one term at a time"></span></label>
+      <label for="selectedTerm"><span class="tooltip-right" data-tooltip="Required">Term<span class="required-mark">*</span></span><span type="button" id="termInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted to one term at a time"></span></label>
             <select class="selectpicker disable"
                     name='term'
                     id='selectedTerm'
@@ -89,7 +92,7 @@
   <div class="form-group col-xs-12">
       <div  class="form-group col-xs-6" id="startDateStyle">
         <!--datePicker for start date-->
-        <label for="dateTimePicker1" id="datePicker">Start Date<span class="tooltip-right" data-tooltip="Required">*</span></label>
+        <label for="dateTimePicker1" id="datePicker"><span class="tooltip-right" data-tooltip="Required">Start Date<span class="required-mark">*</span></span></label>
           <div class='input-group date'>
             <input type='text' class="form-control disable" id='dateTimePicker1' name="startDate" placeholder="Start Date" data-width="320px" onchange="updateDate(this)" readonly/>
             <span class="input-group-addon">
@@ -99,7 +102,7 @@
       </div>
       <div class="form-group col-xs-6" id ="endDateStyle">
         <!--datePicker for End date-->
-      <label for="dateTimePicker2" id="datePicker">End Date<span class="tooltip-right" data-tooltip="Required">*</span></label>
+      <label for="dateTimePicker2" id="datePicker"><span class="tooltip-right" data-tooltip="Required">End Date<span class="required-mark">*</span></span></label>
         <div class='input-group date'>
             <input type='text' class="form-control disable" id='dateTimePicker2' name="endDate" placeholder="End Date" data-width="320px" onchange="updateDate(this)" readonly/>
             <span class="input-group-addon">
@@ -107,9 +110,6 @@
             </span>
         </div>
       </div>​
-    </div>
-    <div>
-        <p style="color: red">*required field</p>
     </div>
 </div>
 
@@ -119,7 +119,7 @@
 
   <div class= "form-group ">
       <!-- selectpicker for student  -->
-      <label for="student">Student<span class="tooltip-right" data-tooltip="Required">*</span></label>
+      <label for="student"><span class="tooltip-right" data-tooltip="Required">Student<span class="required-mark">*</span></span></label>
         <select class="selectpicker disable stu"
                 name='student'
                 id='student'
@@ -134,7 +134,7 @@
   </div>
   <div class= "form-group " id="Position">
       <!--selectpicker for positio3-->
-      <label for="position">Position (WLS)<span class="tooltip-right" data-tooltip="Required">*</span></label>
+      <label for="position"><span class="tooltip-right" data-tooltip="Required">Position (WLS)<span class="required-mark">*</span></span></label>
         <select class="selectpicker disable"
                 name='position'
                 id='position'
@@ -147,7 +147,7 @@
     </div>
     <div id="JopTypes" class= "form-group ">
         <!--selectpicker for Job type-->
-        <label for="jobType">Job Type<span class="tooltip-right" data-tooltip="Required">*</span></label>
+        <label for="jobType"><span class="tooltip-right" data-tooltip="Required">Job Type<span class="required-mark">*</span></span></label>
           <select class="selectpicker disable"
                   name='jobType'
                   id='jobType'
@@ -163,7 +163,7 @@
     </div>
     <div id="hoursPerWeek" class= "form-group ">
         <!--selectpicker for hrs per week-->
-        <label for="selectedHoursPerWeek">Hours Per Week<span class="tooltip-right" data-tooltip="Required">*</span></label>
+        <label for="selectedHoursPerWeek"><span class="tooltip-right" data-tooltip="Required">Hours Per Week<span class="required-mark">*</span></span></label>
           <select class="selectpicker disable"
                   name='selectedHoursPerWeek'
                   id='selectedHoursPerWeek'
@@ -176,7 +176,7 @@
     </div>
     <div id="contractHours" class= "form-group ">
     <!-- Contract hours for breaks -->
-       <label for="selectedContractHours">Contract Hours<span class="tooltip-right" data-tooltip="Required">*</span></label>
+       <label for="selectedContractHours"><span class="tooltip-right" data-tooltip="Required">Contract Hours<span class="required-mark">*</span></span></label>
          <input class="form-control quantity disable"
                  type = "number"
                  name='contractHours'
