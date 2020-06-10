@@ -9,12 +9,13 @@
 {% endblock %}
 {% block app_content %}
 
+<a class="skipContent" href="#downloadButton" tabindex="1">Click to Skip</a>
 <div align= "center">
   <h1>Labor History</h1>
     <h3>{{student.FIRST_NAME}} {{student.LAST_NAME}}</h3>
     <form method="POST" action="/laborHistory/download">
       <input hidden name="listOfForms" value="{{formHistoryList}}" />
-      <div align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success">Download</button></div>
+      <div align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success" id="downloadButton">Download</button></div>
     </form>
 
     <div align= "center">
