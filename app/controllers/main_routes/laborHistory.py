@@ -80,7 +80,6 @@ def populateModal(statusKey):
         currentDate = datetime.date.today()
         buttonState = None
         current_user = cfg['user']['debug']
-        print('Made it inside of the controller')
         for form in forms:
             if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
                 if form.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
@@ -97,13 +96,8 @@ def populateModal(statusKey):
                     # because we want to show these information in the hmtl template.
                     form.modifiedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
                     form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
-        print('Before chained conditional')
         for form in forms:
             if current_user != (form.createdBy.username or form.formID.supervisor.username):
-                print('Current User: ', current_user)
-                print('Current Creator: ', form.createdBy.username)
-                print('Current Sup: ',form.formID.supervisor.username)
-                print('Am i in here?')
                 buttonState = 5 #Informs the user why they cannot see any buttons
                 break
             else:
@@ -152,14 +146,11 @@ def populateModal(statusKey):
                             buttonState = 0 #Only rehire
                             break
                     elif form.status.statusName == "Approved":
-                        print('Made it inside of Approval')
                         if currentDate <= form.formID.endDate:
-                            print('Made it inside of currentDate check')
                             if currentDate > form.formID.termCode.adjustmentCutOff:
                                 buttonState = 4 #Release and rehire buttons
                                 break
                             else:
-                                print('Made it inside of final check?')
                                 buttonState = 3 #Release, adjustment, and rehire buttons
                                 break
                         else:
