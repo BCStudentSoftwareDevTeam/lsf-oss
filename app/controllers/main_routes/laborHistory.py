@@ -3,7 +3,6 @@ from flask_login import current_user, login_required
 from app.controllers.main_routes import *
 from app.models.user import *
 from app.models.laborStatusForm import *
-# from app.models.formHistory import FormHistory
 from app.models.formHistory import *
 from app.models.overloadForm import *
 from app.models.department import *
@@ -17,8 +16,8 @@ from datetime import date
 from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
 from fpdf import FPDF
+from app.logic.authorizationFunctions import*
 from app.models.Tracy.stuposn import STUPOSN
-
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
@@ -27,23 +26,10 @@ def laborhistory(id):
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:
-            # If the current user is not an admin, then we can only allow them to see the labor history of a
-            # given BNumber if the BNumber is tied to a labor status form that is tied to a department where the
-            # current user is a supervisor or created a labor status form for the department
             isLaborAdmin = False
-            authorizedUser = False
-            allStudentDepartments = LaborStatusForm.select(LaborStatusForm.department).where(LaborStatusForm.studentSupervisee == id).distinct()
-            allUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).distinct()
-            for userDepartment in allUserDepartments:
-                for studentDepartment in allStudentDepartments:
-                    if userDepartment.formID.department == studentDepartment.department:
-                        authorizedUser = True
-                        break
+            authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.UserID)
             if authorizedUser == False:
                 return render_template('errors/403.html')
-            departmentsList = []
-            for i in allUserDepartments:
-                departmentsList.append(i.formID.department.departmentID)
         else:
             isLaborAdmin = True
             departmentsList = []
