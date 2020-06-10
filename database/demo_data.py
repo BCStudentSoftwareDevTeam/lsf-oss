@@ -236,6 +236,7 @@ def insert_to_users(staffs):
             u.username = sta.EMAIL.split("@")[0]
             u.EMAIL = sta.EMAIL
             u.CPO = sta.CPO
+            u.ID = sta.ID
             u.ORG = sta.ORG
             u.DEPT_NAME = sta.DEPT_NAME
             if u.PIDM == 1:
