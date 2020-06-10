@@ -1,4 +1,5 @@
 var globalArrayOfStudents = [];
+console.log(globalArrayOfStudents);
 var display_failed = [];
 var laborStatusFormNote = null;
 
@@ -339,7 +340,10 @@ $("#reviewButton").hide();
 // Table glyphicons
 function showNotesModal(glyphicon){// pops up Note Modal when notes glyphicon is clicked
   var rowParent = glyphicon.parentNode.parentNode;
+  console.log(rowParent);
   var table = document.getElementById("mytable").getElementsByTagName("tbody")[0];
+  console.log(table);
+  console.log(globalArrayOfStudents);
   for (var i = 0, row; row = table.rows[i]; i++) {
     if (rowParent === table.rows[i]) {
       $("#modal_text").val(globalArrayOfStudents[i].stuNotes);
