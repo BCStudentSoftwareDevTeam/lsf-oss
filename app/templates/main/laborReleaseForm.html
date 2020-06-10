@@ -9,6 +9,7 @@
 {% block styles %}
   {{super()}}
   <link rel='stylesheet' type="text/css" href='/static/css/laborReleaseForm.css' />
+  <link rel="stylesheet" href="/static/css/tooltip.css" type="text/css"/>
 {% endblock %}
 
 {% block app_content %}
@@ -18,43 +19,51 @@
 <div align="center">
 <h1> Labor Release Form </h1>
 
-  <div class= "padding">
+  <!-- <div class= "padding">
    <p>Fill out all fields in this form and click 'Submit' if you wish to release the selected
      student from their current labor position.</p>
    <p>Note: This form should only be submited if the selected student will no longer be be working in your department. Changes within the department
      (supervisor, position, hours, etc.) should be completed by submitting a labor modify form.</p>
-  </div>
+  </div> -->
 </div>
 
 <div>
-  <form  method="POST" id="form">
-    <div class="container">
 
+  <form  method="POST" id="form">
+
+    <div class="container">
+         <p>Fill out all fields in this form and click 'Submit' if you wish to release the selected
+           student from their current labor position.</p>
+         <p>Note: This form should only be submited if the selected student will no longer be be working in your department. Changes within the department
+           (supervisor, position, hours, etc.) should be completed by submitting a labor modify form.</p>
+        <div>
+            <p class="required-mark">* Marked fields are required</p>
+        </div>
       <!-- All of the pre-populated fields on the left -->
       <div class="floatleft">
       {% for form in forms %}
       <div class="form-group">
-        <label>Student:</label>
+        <label>Student</label>
         <div>
-          <input type="text" class="form-control" id="student" value="{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}" readonly></input>
+          <input type="text" class="form-control" id="student" value="{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}" disabled></input>  <!--User CANNOT edit-->
         </div>
       </div>
         <div class="form-group">
-        <label>Supervisor:</label>
+        <label>Supervisor</label>
         <div>
           <input type="text" class="form-control" id="supervisor" value="{{form.supervisor.FIRST_NAME}} {{form.supervisor.LAST_NAME}}" readonly>
         </div>
         </div>
       <div class="form-group">
-        <label>Department:</label>
+        <label>Department</label>
         <div>
-          <input type="text" class="form-control" id="department" value="{{form.department.DEPT_NAME}}" readonly>
+          <input type="text" class="form-control" id="department" value="{{form.department.DEPT_NAME}}" disabled>  <!--User CANNOT edit-->
         </div>
       </div>
       <div class="form-group">
-        <label>Released from Primary or Secondary:</label>
+        <label>Released from Primary or Secondary</label>   <!--User CANNOT edit-->
         <div>
-          <input type="text" class="form-control" id="jobType" value="{{form.jobType}}" readonly>
+          <input type="text" class="form-control" id="jobType" value="{{form.jobType}}" disabled>   <!--User CANNOT edit-->
         </div>
       </div>
       {% endfor %}
@@ -63,7 +72,7 @@
       <!-- All of the fields on the right -->
       <div class= "floatright" >
         <div class="form-group">
-          <label>Condition at Release:</label>
+          <label><span class="tooltip-right" data-tooltip="Required">Condition at Release<span class="required-mark">*</span></span></label>
           <div>
             <select class="selectpicker" name="condition" id="condition" title="Condition at release" data-width="100%">
               <option value="Satisfactory">Satisfactory</option>
@@ -72,7 +81,7 @@
           </div>
         </div>
         <div class="form-group" id= "dateDiv">
-          <label for="datepicker" class="required-asterisk">Release Date:</label>
+          <label for="datepicker"><span class="tooltip-right" data-tooltip="Required">Release Date<span class="required-mark">*</span></span></label>
           <div class="input-group date">
             <input type="text" class="form-control" class="datepicker" id="datepicker0" name="date" readonly>
             <span class="input-group-addon">
@@ -81,7 +90,7 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="Notes">Reason for Release:</label>
+          <label for="Notes"><span class="tooltip-right" data-tooltip="Required">Reason for Release<span class="required-mark">*</span></span></label>
           <div>
             <textarea name="notes" rows="6" cols="73" id="reason"></textarea>
           </div>
