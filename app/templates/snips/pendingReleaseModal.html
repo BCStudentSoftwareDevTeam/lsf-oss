@@ -1,0 +1,88 @@
+<div class="modal fade" id="modalRelease" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div id="content" class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabel" align="center"><b>Labor Release Form</b></h3>
+      </div>
+      <div class="modal-body">
+        <table id="releaseStudentTable" class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Student</th>
+              <th scope="col">Position</th>
+              <th scope="col">Hours</th>
+              <th scope="col">Supervisor</th>
+              <th scope="col">Department</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align:center">{{allForms.formID.studentSupervisee.FIRST_NAME}} {{allForms.formID.studentSupervisee.LAST_NAME}} ({{allForms.formID.studentSupervisee.ID}})</td>
+              <td style="text-align:center">{{allForms.formID.POSN_TITLE}} ({{allForms.formID.POSN_CODE}})</td>
+              {% if allForms.formID.weeklyHours == None %}
+              <td style="text-align:center">{{allForms.formID.contractHours}}</td>
+              {% else %}
+              <td style="text-align:center">{{allForms.formID.weeklyHours}}</td>
+              {% endif %}
+              <td style="text-align:center">{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}} ({{allForms.formID.supervisor.ID}})</td>
+              <td style="text-align:center">{{allForms.formID.department.DEPT_NAME}} ({{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}})</td>
+            </tr>
+          </tbody>
+        </table>
+        <table id="releaseDepartmentTable" class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Condition at Release</th>
+              <th scope="col">Release Request Date</th>
+              <th scope="col">Date Submitted</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="text-align:center">{{allForms.releaseForm.conditionAtRelease}}</td>
+              <td style="text-align:center">{{allForms.releaseForm.releaseDate.strftime('%m/%d/%y')}}</td>
+              <td style="text-align:center">{{allForms.createdDate.strftime('%m/%d/%y')}}</td>
+            </tr>
+            <tr>
+              <td style="text-align: center"><strong>Release Reason</strong></td>
+              <td colspan='2'>{{allForms.releaseForm.reasonForRelease}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
+        <div id='radioDivRelease'>
+          <button id="modalNote_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View</button>
+          <span>Status:<span aria-hidden="true" style="color:red"><strong>*</strong></span></span>
+          <label for="approveRelease" class="radio-inline">
+            <input type="radio" id="approveRelease" class='release' name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve
+          </label>
+          <label for="denyRelease" class="radio-inline">
+            <input type="radio" id="denyRelease" class='release' name="decision" value="deny" onclick="displayModalTextArea(this.value, this.class)">Deny
+          </label>
+        </div>
+        <div id="notesTextAreaRelease" class="notesTextArea">
+          <textarea id='releaseNotes' class="finalNote" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
+          <p id="banner-warning" style="color:blue;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b>Please ensure the student's form has been updated in <strong>Banner</strong> before approving the release form.</b></p>
+        </div>
+        <div id="denyTextAreaRelease" class="denyTextArea" style="display:None">
+          <p class="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
+          <textarea id='denyReleaseReason' class="finalDeny" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
+        </div>
+        <div class="logNotesDiv" style='display:none'>
+          <h4 class="supeNotesLabel col-md-4 control-label text-left" for="supervisor">Supervisor Notes: </h4>
+          <textarea class="notesText" rows="2" cols="70" disabled> </textarea>
+          <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
+          <div class="notesLogArea"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="col-sm-2" align="left">
+          <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal" onclick="location.reload()">Close</button>
+        </div>
+        <div class="col-sm- floatright" align="right">
+          <button type="button" class="btn btn-success floatright" id="submitRelease" onclick="submitRelease({{allForms.formHistoryID}})">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
