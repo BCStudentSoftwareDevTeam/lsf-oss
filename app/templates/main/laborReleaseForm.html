@@ -14,6 +14,7 @@
 {% block app_content %}
 
 
+<a class="skipContent" href="#condition" tabindex="1">Click to Skip</a>
 <div align="center">
 <h1> Labor Release Form </h1>
 
@@ -92,7 +93,7 @@
     <div class="container">
       <button id="cancel" type="button" class="btn btn-danger" onclick="window.history.back()">Cancel</button>
       <button id="submit" type="button" class="btn btn-success">Submit</button>
-      <div class="modal fade" id="modal" role="dialog">
+      <div class="modal fade" id="modal" role="dialog" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">

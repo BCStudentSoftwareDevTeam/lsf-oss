@@ -33,6 +33,7 @@
   </div>
 </div>
 
+<a class="skipContent" href="#selectedSupervisor" tabindex="1">Click to Skip</a>
 <form id="laborStatusForm">
 <div class="container">
 <div>
@@ -69,7 +70,7 @@
             <option value="{{department.DEPT_NAME}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-subtext = "({{department.ORG}}-{{department.ACCOUNT}})">{{department.DEPT_NAME}}</option>
           {% endfor %}
         </select>
-        {% include "snips/LSFModals.html" %}
+
   </div>
   <div class="form-group {% if forms %} has-error {% endif %}  ">
     <!-- selectpicker for term  -->
@@ -159,7 +160,7 @@
             <option id = "primary" value="Primary"{% if forms %}{% if forms.jobType == "Primary" %} data-jobType={{forms.jobType}} selected {% endif %}{% endif %}>Primary</option>
             <option value="Secondary"{% if forms %}{% if forms.jobType == "Secondary" %} data-jobType={{forms.jobType}} selected {% endif %}{% endif %}>Secondary</option>
           </select>
-        {% include "snips/LSFModals.html" %}
+
     </div>
     <div id="hoursPerWeek" class= "form-group ">
         <!--selectpicker for hrs per week-->
@@ -221,8 +222,9 @@
             id="reviewButton0"
             value = "formSubmission"
             onclick="reviewButtonFunctionality()">Review</button>
-      {% include "snips/LSFModals.html" %}
+
   </div>
+  {% include "snips/LSFModals.html" %}
 </div>
 </form>
 {% endblock %}
