@@ -24,13 +24,13 @@
             {% if form.reviewedDate == None %}
               <div class= "h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">Submitted</div>
               </div>
             {% elif form.reviewedDate != None %}
               <div class= "h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
@@ -43,7 +43,7 @@
               {% endif %}
               <div class= "h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">Submitted</div>
               </div>
             {% endif %}
@@ -97,13 +97,13 @@
           {% if form.reviewedDate == None %}
             <div class="h4">
               <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
+              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
               <div class="col-sm-3">Submitted</div>
             </div>
           {% elif form.reviewedDate != None %}
             <div class="h4">
               <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
-              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
+              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
               <div class="col-sm-3">{{form.status}}</div>
             </div>
             {% if form.status.statusName == "Denied" %}
@@ -116,7 +116,7 @@
             {% endif %}
             <div class="h4">
               <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
+              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
               <div class="col-sm-3">Submitted</div>
             </div>
           {% endif %}
@@ -129,13 +129,13 @@
             {% if form.reviewedDate == None %}
               <div class="h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">Submitted</div>
               </div>
             {% elif form.reviewedDate != None %}
               <div class="h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
@@ -148,7 +148,7 @@
               {% endif %}
               <div class="h4">
                 <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
+                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
                 <div class="col-sm-3">Submitted</div>
               </div>
             {% endif %}
