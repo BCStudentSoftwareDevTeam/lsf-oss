@@ -78,7 +78,8 @@ def populateModal(statusKey):
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         currentDate = datetime.date.today()
-        buttonState = None
+        buttonState = 7 # & by deafult because if it does not change that means the there are no history forms
+        pendingformType = None
         current_user = cfg['user']['debug']
         for form in forms:
             if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
@@ -196,11 +197,13 @@ def withdraw_form():
     This function deletes forms from the database when they are pending and the "withdraw" button is clicked.
     """
     try:
+        print('Inside of withdraw route')
         rsp = eval(request.data.decode("utf-8"))
         student = LaborStatusForm.get(rsp["FormID"])
         selectedPendingForms = FormHistory.select().join(Status).where(FormHistory.formID == rsp["FormID"]).where(FormHistory.status.statusName == "Pending").order_by(FormHistory.historyType.asc())
         for form in selectedPendingForms:
             try:
+                print('Inside of overloadForm')
                 OverloadForm.get(OverloadForm.overloadFormID == form.overloadForm.overloadFormID).delete_instance()
                 form.delete_instance()
             except:
@@ -221,7 +224,7 @@ def withdraw_form():
         flash(message, "success")
         return jsonify({"Success":True, "url":"/"})
     except Exception as e:
-        # print(e)
+        print(e)
         message = "An error occured. Your selected form for {0} {1} was not withdrawn.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "danger")
         return jsonify({"Success": False, "url":"/"})
