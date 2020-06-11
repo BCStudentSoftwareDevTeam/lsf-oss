@@ -2,7 +2,7 @@
   <div class="modal-dialog modal-dialog-scrollable" role="document">
     <div id="content" class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title" id="exampleModalLabel" align="center"><b>Labor Overload Form</b></h3>
+        <h3 class="modal-title" id="exampleModalLabel" align="center"><strong>Labor Overload Form</strong></h3>
         <button type="button" class="close" data-dismiss="modal" onclick="overloadModalClose()" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -35,7 +35,7 @@
         </table>
         <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
         <div id='radioDiv'>
-          <button id="modalNote_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes</button>
+          <button type="button" id="modalNote_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes</button>
           <label for="approve" class="radio-inline">
             <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve
           </label>
@@ -50,7 +50,7 @@
           <textarea id='overloadNotes' class="finalNote" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
         </div>
         <div id="denyTextAreaOverload" class="denyTextArea" style="display:None">
-          <p id="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
+          <p id="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong> This field is required</strong></p>
           <textarea id='denyOverloadReason' class="finalDeny" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
         </div>
         <div class="logNotesDiv" style='display:none'>
