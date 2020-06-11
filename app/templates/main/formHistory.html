@@ -34,7 +34,7 @@
               <td id="{{form.laborStatusFormID}}" class="modalLink" value="false">
             {% endif %}
           {% endif %}
-            <a><span class="h4">{{form.termCode.termName}} - {{form.department.DEPT_NAME}} Dept.</span></a>
+            <a href="#" tabindex="0"><span class="h4">{{form.termCode.termName}} - {{form.department.DEPT_NAME}} Dept.</span></a>
             <p class="h6" id="second-line">{{form.jobType}} - {{form.POSN_TITLE}} ({{form.POSN_CODE}})</p>
           </td>
         </tr>
@@ -51,5 +51,5 @@
 </div>
 <!-- Modal End -->
 
-  <div align= "left"><a type='button' class='btn btn-danger' id="returnbutton" onclick="window.history.back()">Return</a></div>
+  <div align= "left"><button class='btn btn-danger' id="returnbutton" onclick="window.history.back()">Return</button></div>
 {% endblock %}
