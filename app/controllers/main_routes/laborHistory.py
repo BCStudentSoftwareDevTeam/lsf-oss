@@ -75,7 +75,7 @@ def populateModal(statusKey):
     to put on the modal depending on what form is in the history.
     """
     try:
-        forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
+        forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         currentDate = datetime.date.today()
         buttonState = None
@@ -110,7 +110,8 @@ def populateModal(statusKey):
                             buttonState = 0 #Only rehire
                             break
                     elif form.status.statusName == "Pending":
-                        buttonState = None # no buttons
+                        buttonState = 6 # no buttons
+                        pendingformType = form.historyType.historyTypeName
                         break
                     elif form.status.statusName == "Denied":
                         if currentDate <= form.formID.endDate:
@@ -132,7 +133,8 @@ def populateModal(statusKey):
                             break
                 if form.modifiedForm != None:
                     if form.status.statusName == "Pending":
-                        buttonState = None # no buttons
+                        buttonState = 6 # no buttons
+                        pendingformType = form.historyType.historyTypeName
                         break
                 if form.historyType.historyTypeName == "Labor Status Form":
                     if form.status.statusName == "Pending":
@@ -161,11 +163,12 @@ def populateModal(statusKey):
                                             forms = forms,
                                             statusForm = statusForm,
                                             currentDate = currentDate,
-                                            buttonState = buttonState
+                                            buttonState = buttonState,
+                                            pendingformType = pendingformType
                                             ))
         return (resp)
     except Exception as e:
-        # print(e)
+        print(e)
         return render_template('errors/500.html')
         return (jsonify({"Success": False}))
 
