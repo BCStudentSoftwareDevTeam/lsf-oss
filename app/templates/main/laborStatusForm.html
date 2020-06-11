@@ -2,7 +2,6 @@
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="/static/css/laborStatusForm.css" type="text/css"/>
 {% endblock %}
 
 ​{% block scripts %}
@@ -47,7 +46,8 @@
                 id='selectedSupervisor'
                 data-live-search='true'
                 title="Supervisor"
-                onchange = "showAccessLevel()">
+                onchange = "showAccessLevel()"
+                required>
             <option value = "" disabled selected>Select a Supervisor</option>
           {% for staff in staffs %}
             <option value="{{staff.PIDM}}" {% if forms %}{% if forms.supervisor.ID == staff.ID %} selected {% endif %}{% endif %} data-subtext="({{staff.ID}})">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
