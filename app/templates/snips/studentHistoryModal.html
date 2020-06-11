@@ -194,6 +194,10 @@
         <div class = "col-sm-6">
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success" onclick="redirection({{form1.laborStatusFormID}})">Rehire</button></a>
         </div>
+        {% elif buttonState == 5 %}
+        <div class = "col-md-12">
+        <p style="color:blue;"><span class="glyphicon glyphicon-exclamation-sign"></span><b> Only the current supervisor or the creator of this form can make changes.</b></p>
+        </div>
         {% endif %}
         {% endfor %}
       </div>

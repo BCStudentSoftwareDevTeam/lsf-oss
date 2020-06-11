@@ -4,11 +4,12 @@
   <link rel="stylesheet" type="text/css" href="/static/css/modifyLSF.css" /> <!--jquery and js file called in code below-->
 <!-- These are the outside links for the datepicker-->
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https//code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
   <!-- These are the outside links for the effective date calendar-->
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="https//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="/static/css/tooltip.css" type="text/css"/>
 
 </head>
 
@@ -18,15 +19,18 @@
 </div>
  <form id="modifyLSF">
    <div class="container">
+       <div>
+           <p class="required-mark">* Marked fields are required</p>
+       </div>
    <div class="floatleft">
        <div class="form-group">
-         <label for="Student">Student:</label> <!--User CANNOT edit-->
+         <label for="Student">Student</label> <!--User CANNOT edit-->
          <div>
            <input type="text" class="form-control" id="Student" value="{{prefillstudent}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
-         <label for="supervisor" class="field">Supervisor:</label>
+         <label for="supervisor" class="field"><span class="tooltip-right" data-tooltip="Required">Supervisor<span class="required-mark">*</span></span></label>
          <div class="change">
            <select required
                 class="selectpicker form-control newValue"
@@ -41,13 +45,13 @@
          </div>
        </div>
        <div class="form-group">
-         <label for="Department">Department:</label> <!--User CANNOT edit-->
+         <label for="Department">Department</label> <!--User CANNOT edit-->
          <div>
            <input type="text" class="form-control" id="Department" value="{{prefilldepartment}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
-         <label for="POSN_TITLE" class="field">Position:</label>
+         <label for="POSN_TITLE" class="field"><span class="tooltip-right" data-tooltip="Required">Position<span class="required-mark">*</span></span></label>
          <div  class="change">
            <select required
                   class="selectpicker form-control newValue"
@@ -63,7 +67,7 @@
        </div>
        <!-- This selectpicker will be disabled if term is for a break, since jobtype is always Secondary-->
        <div class="form-group">
-         <label for="jobType">Job Type:</label> <!--User CANNOT edit-->
+         <label for="jobType">Job Type</label> <!--User CANNOT edit-->
          <div>
            <input type="text" class="form-control" id="jobType" value="{{prefilljobtype}}" disabled> <!--User CANNOT edit-->
          </div>
@@ -71,7 +75,7 @@
    </div>
   <div class= "floatright" >
      <div class="form-group">
-       <label for="Term">Term:</label> <!--User CANNOT edit-->
+       <label for="Term">Term</label> <!--User CANNOT edit-->
        <div >
          <input type="text" class="form-control" id="Term" value="{{prefillterm}}"disabled> <!--User CANNOT edit-->
          <input hidden id= "termCode" value="{{form.termCode}}"> </input>
@@ -79,7 +83,7 @@
      </div>
      <div id="contractHoursDiv" class="form-group newValue">
         <!-- Contract hours for breaks -->
-           <label for="contractHours">Contract Hours</label>
+           <label for="contractHours"><span class="tooltip-right" data-tooltip="Required">Contract Hours<span class="required-mark">*</span></span></label>
            <div  class="change">
              <input class="form-control quantity newValue disable"
                      type = "number"
@@ -95,7 +99,7 @@
           </div>
         </div>
      <div id="weeklyHoursDiv" class="form-group">
-            <label for="weeklyHours">Hours Per Week</label>
+            <label for="weeklyHours"><span class="tooltip-right" data-tooltip="Required">Hours Per Week<span class="required-mark">*</span></span></label>
             <div  class="change">
               <select  type="number"
                        class="selectpicker form-control newValue"
@@ -112,7 +116,7 @@
           </div>
 
      <div class="form-group" >
-       <label for="supervisorNotes">Notes:</label>
+       <label for="supervisorNotes">Notes</label>
        <div class ="change">
          <textarea name="supervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue">{{prefillnotes}}</textarea>
           <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}"></input>
