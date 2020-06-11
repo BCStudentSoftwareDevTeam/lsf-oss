@@ -8,5 +8,6 @@ class Term(baseModel):
     termEnd             = DateField(null=True, default=None)                    # end date
     primaryCutOff       = DateField(null=True, default=None)                    # Cut off date for primary position submission
     adjustmentCutOff    = DateField(null=True, default=None)                    # Cut off date for the adjustment of labor status forms
-    termState           = BooleanField(default=False)             #open, closed, inactive
+    termState           = BooleanField(default=False)                           #open, closed, inactive
     isBreak             = BooleanField(default=False)
+    isSummer            = BooleanField(default=False)

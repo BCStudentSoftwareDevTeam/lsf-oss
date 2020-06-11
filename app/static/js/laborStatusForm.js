@@ -1,5 +1,4 @@
 var globalArrayOfStudents = [];
-console.log(globalArrayOfStudents);
 var display_failed = [];
 var laborStatusFormNote = null;
 
@@ -113,9 +112,10 @@ function fillDates(response) { // prefill term start and term end
     // disabling primary position if cut off date is before today's date
     var today = new Date();
     var date = ("0"+(today.getMonth()+1)).slice(-2)+"/"+("0"+today.getDate()).slice(-2)+"/"+today.getFullYear();
-    var termCode = (response[key]["Term Code"]).toString().slice(-2);
+    var isBreak = response[key]["isBreak"];
+    var isSummer = response[key]["isSummer"];
     if (primaryCutOff){
-      if (termCode != "00" && termCode != "11" && termCode != "12"){ // Checking to see if the termcode is a break one
+      if (isBreak == true && isSummer == true){
         if (date > primaryCutOff){
         msgFlash("The deadline to add break positions has ended.", "fail");
         $("#break-cutoff-warning").show();
@@ -219,7 +219,8 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
  $("#position").change(function(){
    //this is just getting the value that is selected
    var wls = $("#position").find("option:selected").attr("data-wls");
-   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
+   var isBreak = $("#selectedTerm").find("option:selected").attr("data-termBreak");
+   console.log(termSelected);
    var termCodeLastTwo = termCodeSelected.slice(-2);
    //We only want to show the modal if the selected term is 'Spring', 'Fall', or 'AY'
    if (termCodeLastTwo == 00 || termCodeLastTwo == 11 || termCodeLastTwo == 12) {

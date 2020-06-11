@@ -82,7 +82,7 @@
                     onchange = "showAccessLevel(); preFilledDate(this); summerLaborWarning()">
                 <option value = "" disabled selected>Select a Term</option>
             {% for term in terms %}
-                <option value = "{{term.termCode}}" data-termCode = "{{term.termCode}}">{{term.termName}}</option>
+                <option value = "{{term.termCode}}" data-termSummer = "{{term.isSummer}}" data-termBreak = "{{term.isBreak}}">{{term.termName}}</option>
             {% endfor %}
           </select>
   </div>

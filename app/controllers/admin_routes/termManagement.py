@@ -60,7 +60,7 @@ def createTerms(termList, iteration):
             elif i == 5:
                 termList.create(termCode = (code + 3), termName = ("Spring Break " + str(termYear + 1)), isBreak = True)
             elif i == 6:
-                termList.create(termCode = (code + 13), termName = ("Summer " + str(termYear + 1)), isBreak = True)
+                termList.create(termCode = (code + 13), termName = ("Summer " + str(termYear + 1)), isSummer = True)
         except Exception as e:
              print("You failed to create a term in the " + str(termYear) + " AY. This is likely expected.")
 

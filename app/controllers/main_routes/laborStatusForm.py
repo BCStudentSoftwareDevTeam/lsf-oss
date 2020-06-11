@@ -85,7 +85,7 @@ def userInsert():
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
-        term = d.termCode
+        term = d
         try:
             lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
             status = Status.get(Status.statusName == "Pending")
@@ -93,7 +93,7 @@ def userInsert():
             creatorID = d.UserID
             createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
             try:
-                emailDuringBreak(checkForSecondLSFBreak(term, studentID, "lsf"), term)
+                emailDuringBreak(checkForSecondLSFBreak(term.termCode, studentID, "lsf"), term)
             except Exception as e:
                 print("Error on sending emails during break: " + str(e))
 
@@ -114,9 +114,9 @@ def getDates(termcode):
         end  = date.termEnd
         primaryCutOff = date.primaryCutOff
         if primaryCutOff is None:
-            datesDict[date.termCode] = {"Term Code": date.termCode,"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
+            datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
         else:
-            datesDict[date.termCode] = {"Term Code": date.termCode, "Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y")}
+            datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y"), "isBreak": date.isBreak, "isSummer": date.isSummer}
     return json.dumps(datesDict)
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
