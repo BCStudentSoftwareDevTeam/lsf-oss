@@ -115,7 +115,7 @@ function fillDates(response) { // prefill term start and term end
     var isBreak = response[key]["isBreak"];
     var isSummer = response[key]["isSummer"];
     if (primaryCutOff){
-      if (isBreak == true && isSummer == true){
+      if (isBreak == true){
         if (date > primaryCutOff){
         msgFlash("The deadline to add break positions has ended.", "fail");
         $("#break-cutoff-warning").show();
@@ -220,10 +220,8 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
    //this is just getting the value that is selected
    var wls = $("#position").find("option:selected").attr("data-wls");
    var isBreak = $("#selectedTerm").find("option:selected").attr("data-termBreak");
-   console.log(termSelected);
-   var termCodeLastTwo = termCodeSelected.slice(-2);
    //We only want to show the modal if the selected term is 'Spring', 'Fall', or 'AY'
-   if (termCodeLastTwo == 00 || termCodeLastTwo == 11 || termCodeLastTwo == 12) {
+   if (isBreak == "False") {
      if (wls >= 5) {
        $("#warningModalTitle").html("Work-Learning-Service Levels (WLS)");
        $("#warningModalText").html("Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
@@ -257,10 +255,9 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
 function checkWLS() {
   var wls = $("#position").find("option:selected").attr("data-wls");
   var hoursPerWeek = $("#selectedHoursPerWeek").val();
-  var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
-  var termCodeLastTwo = termCodeSelected.slice(-2);
+  var isBreak = $("#selectedTerm").find("option:selected").attr("data-termBreak");
   //We only want to show the modal if the selected term is 'Spring', 'Fall', or 'AY'
-  if (termCodeLastTwo == 00 || termCodeLastTwo == 11 || termCodeLastTwo == 12) {
+  if (isBreak == "False") {
     if (wls >= 5 && hoursPerWeek < 15 ) {
       $("#warningModalTitle").html("Insert Rejected");
       $("#warningModalText").html("Student requires at least a 15 hour contract with positions that are WLS 5 or greater.  Please also make sure that job type is not secondary for positions that are WLS 5 or greater.");
@@ -316,9 +313,8 @@ $("#failedTable").hide();
 
 function showAccessLevel(){ // Make Table labels appear
   if ($("#selectedSupervisor").val() && $("#selectedDepartment").val() && $("#selectedTerm").val()){
-    var termCode = $("#selectedTerm").val();
-    var whichTerm = termCode.substr(-2);
-    if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) { // Summer term or any other break period table labels
+    var isBreak = $("#selectedTerm").find("option:selected").attr("data-termBreak");
+    if (isBreak == "True") { // Summer term or any other break period table labels
       $("#contractHours").show();
       $("#plus").show();
       $("#jobType").hide();
@@ -423,8 +419,8 @@ function createStuDict(){
   var supervisor = $("#selectedSupervisor").find("option:selected").text();
   var supervisorID = $("#selectedSupervisor").find("option:selected").attr("value");
   var department = $("#selectedDepartment").find("option:selected").text();
-  var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
-  var termCodeLastTwo = termCodeSelected.slice(-2);
+  var termCodeSelected = $("#selectedTerm").find("option:selected").val();
+  var isBreak = $("#selectedTerm").find("option:selected").attr("data-termBreak")
   var studentName = $("#student option:selected" ).text();
   if (!studentName){
     return false;
@@ -438,7 +434,7 @@ function createStuDict(){
   var studentBNumber = $("#student").val();
   var startDate  = $("#dateTimePicker1").datepicker({dateFormat: "dd-mm-yy"}).val();
   var endDate  = $("#dateTimePicker2").datepicker({dateFormat: "dd-mm-yy"}).val();
-  if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
+  if (isBreak == "False"){
     var jobType = $("#jobType");
     var jobTypeName = $("#jobType option:selected").text();
     var hoursPerWeek = $("#selectedHoursPerWeek");
@@ -516,7 +512,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
                 }
               }
              else{
-              initialLSFInsert(studentDict, response, status_list) // If the precious primary position is Denied allow the user to continue with the new primary LSF
+              initialLSFInsert(studentDict, response, status_list) // If the previous primary position is Denied allow the user to continue with the new primary LSF
             }
         }
         else {
@@ -665,6 +661,16 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
 
 //Triggered when summer labor is clicked when making a New Labor Status Form
 function summerLaborWarning(){
+  /*
+  If isBreak == True and isSummer == False:
+    Show Break modal
+    return true
+  else if isSummer == True:
+    show summer modal
+    return true
+  else:
+  return true
+  */
   var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
   var termCodeLastTwo = termCodeSelected.slice(-2);
   //term code 13 is summer

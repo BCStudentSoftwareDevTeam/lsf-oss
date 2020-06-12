@@ -63,7 +63,7 @@ class Banner():
             termType = "REG"
             contractHours = form.contractHours
             hours = form.weeklyHours
-            if term.isBreak == True:
+            if term.isBreak == True and term.isSummer == False:
                 termType = "BRK"
                 hours = 8
             elif term.isSummer == True:
