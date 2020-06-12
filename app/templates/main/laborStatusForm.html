@@ -16,7 +16,6 @@
   <h1 id ="title">Labor Status Form
 	  <span class="glyphicon glyphicon-bookmark"
         data-toggle="tooltip"
-        data-tooltip="true"
         title="This online labor status form is used to establish a student's work status in the Labor Program."
         data-placement = "right"
         id="titleGlyphicon"
@@ -44,7 +43,17 @@
 <div class="floatleft">
   <div class="form-group ">
     <label for="selectedSupervisor">
-      <span class="tooltip-right" data-tooltip="Required">Supervisor <span class="required-mark">*</span> <span tabindex="0" type="button" id="supervisorInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one supervisor at a time"></span></label>
+      <span class="tooltip-right" data-tooltip="Required" aria-describedby="supervisorInfo">Supervisor <span class="required-mark">*</span></span>
+       <span class="glyphicon glyphicon-question-sign"
+             data-toggle="tooltip"
+             title="Forms can only be submitted for one supervisor at a time"
+             data-placement="right"
+             id="supervisorInfo"
+             tabindex="0"
+             aria-hidden="false">
+        </span>
+      </label>
+
         <select class="selectpicker form-control"
                 name='supervisor'
                 id='selectedSupervisor'
@@ -59,7 +68,16 @@
   </div>
   <div class="form-group" id="departmentClass">
     <!--selectpicker for department-->
-    <label for="selectedDepartment"><span class="tooltip-right" data-tooltip="Required">Department <span class="required-mark">*</span> </span><span tabindex="0" type="button" id="departmentInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one department at a time"></span></label>
+      <label for="selectedDepartment" aria-describedby="departmentInfo"><span class="tooltip-right" data-tooltip="Required">Department <span class="required-mark">*</span> </span>
+        <span tabindex="0"
+              id="departmentInfo"
+              class="glyphicon glyphicon-question-sign"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Forms can only be submitted for one department at a time"
+              aria-hidden="false">
+          </span>
+        </label>
         <select class="selectpicker"
                 name='department'
                 id='selectedDepartment'
@@ -76,7 +94,16 @@
   </div>
   <div class="form-group {% if forms %} has-error {% endif %}  ">
     <!-- selectpicker for term  -->
-      <label for="selectedTerm"><span class="tooltip-right" data-tooltip="Required">Term <span class="required-mark">*</span> </span><span tabindex="0" type="button" id="termInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted to one term at a time"></span></label>
+        <label for="selectedTerm" aria-describedby="termInfo"><span class="tooltip-right" data-tooltip="Required">Term <span class="required-mark">*</span> </span>
+          <span tabindex="0"
+                id="termInfo"
+                class="glyphicon glyphicon-question-sign"
+                data-toggle="tooltip"
+                data-placement="top"
+                title="Forms can only be submitted to one term at a time"
+                aria-hidden="false">
+            </span>
+          </label>
             <select class="selectpicker disable"
                     name='term'
                     id='selectedTerm'
