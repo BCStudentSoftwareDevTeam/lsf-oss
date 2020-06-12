@@ -417,6 +417,32 @@ function sendEmail(formHistoryID, emailRecipient) {
   });
 }
 
+$(document).ready(function() {
+    $("#deny").click(function() {
+      /*
+      This method sets the reason for denial text area to Bootstrap "has-error"
+      to inform the user that the field is required for submission
+      */
+      $("#denyTextAreaOverload").addClass("has-error");
+    });
+
+    $("#approve").click(function() {
+        /*
+        This method unsets the denial text area to Bootstrap "has-error"
+        because the text area is no longer required
+        */
+        $("#denyTextAreaOverload").removeClass("has-error");
+    });
+
+    $("#approveRel").click(function() {
+        /*
+        This method unsets the denial text area to Bootstrap "has-error"
+        because the text area is no longer required
+        */
+        $("#denyTextAreaOverload").removeClass("has-error");
+    });
+});
+
 function submitOverload(formHistoryID) {
   /*
   This method is used to check if the form is ready for submission, then
