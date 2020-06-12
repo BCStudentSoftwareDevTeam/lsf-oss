@@ -23,15 +23,15 @@
           {% if form.modifiedForm == None and form.releaseForm == None and form.overloadForm == None %}
             {% if form.reviewedDate == None %}
               <div class= "h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">Submitted</div>
+                <div class="col-sm-4">Submitted</div>
               </div>
             {% elif form.reviewedDate != None %}
               <div class= "h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-3">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">{{form.status}}</div>
+                <div class="col-sm-4">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
                <div class="row">
@@ -42,114 +42,113 @@
                </div>
               {% endif %}
               <div class= "h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">Submitted</div>
+                <div class="col-sm-4">Submitted</div>
               </div>
             {% endif %}
 
           {% elif form.releaseForm != None %}
             {% if form.reviewedDate == None %}
               <div class= "h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">Submitted</div>
+                <div class="col-sm-4">Submitted</div>
               </div>
             {% elif form.reviewedDate != None %}
               <div class= "h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-3">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">{{form.status}}</div>
+                <div class="col-sm-4">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
               <div class="row">
-                <p class="control-label col-sm-6" align="right">Reject Reason: </p>
-              <div class="col-sm-6">
+                <p class="col-sm-4 col-sm-offset-1">Reject Reason:</p>
+              <div class="col-sm-7">
                 <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
               </div>
               </div>
               {% endif %}
               <div class= "h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">Submitted</div>
+                <div class="col-sm-4">Submitted</div>
               </div>
             {% endif %}
               <div class="row" style="padding-top:5px">
-                <p class="control-label col-sm-6" align="right">Condition at Release:</p>
-              <div class="col-sm-6">
+                <p class="col-sm-4 col-sm-offset-1">Condition at Release:</p>
+              <div class="col-sm-7" align="left">
                 <p>{{form.releaseForm.conditionAtRelease}}</p>
               </div>
               </div>
               <div class="row">
-                <p class="control-label col-sm-3 col-sm-offset-3" align="left">Release Date:</p>
-              <div class="col-sm-6">
+                <p class="col-sm-4 col-sm-offset-1" align="left">Release Date:</p>
+              <div class="col-sm-7" align="left">
                 <p>{{form.releaseForm.releaseDate.strftime('%m-%d-%Y')}}</p>
               </div>
               </div>
               <div class="row">
-                <p class="control-label col-sm-6" align="right">Reason for release:</p>
-              <div class="col-sm-6">
+                <p class="col-sm-4 col-sm-offset-1">Reason for release:</p>
+              <div class="col-sm-7" align="left">
                 <textarea class="releaseReasonTextArea" rows="3" cols="25" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
               </div>
               </div>
           {% elif form.modifiedForm != None %}
           {% if form.reviewedDate == None %}
             <div class="h4">
-              <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+              <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
               <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
-              <div class="col-sm-3">Submitted</div>
+              <div class="col-sm-4">Submitted</div>
             </div>
           {% elif form.reviewedDate != None %}
             <div class="h4">
-              <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
+              <div class="col-sm-3">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
               <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
-              <div class="col-sm-3">{{form.status}}</div>
+              <div class="col-sm-4">{{form.status}}</div>
             </div>
             {% if form.status.statusName == "Denied" %}
             <div class="row">
-              <p class="control-label col-sm-6" align="right">Reject Reason: </p>
-            <div class="col-sm-6">
+              <p class="col-sm-4 col-sm-offset-1">Reject Reason:</p>
+            <div class="col-sm-7">
               <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
             </div>
             </div>
             {% endif %}
             <div class="h4">
-              <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+              <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
               <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
-              <div class="col-sm-3">Submitted</div>
+              <div class="col-sm-4">Submitted</div>
             </div>
           {% endif %}
-            <div class="row" style="padding-top:5px">
-              <p class="control-label col-sm-12" align="center">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</p>
+            <div class="row">
+              <p class="col-sm-11 col-sm-offset-1">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</p>
             </div>
-
 
           {% elif form.overloadForm != None %}
             {% if form.reviewedDate == None %}
               <div class="h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">Submitted</div>
+                <div class="col-sm-4">Submitted</div>
               </div>
             {% elif form.reviewedDate != None %}
               <div class="h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-3">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">{{form.status}}</div>
+                <div class="col-sm-4">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
               <div class="row">
-                <p class="control-label col-sm-6" align="right">Reject Reason: </p>
-              <div class="col-sm-6">
+                <p class="col-sm-4 col-sm-offset-1">Reject Reason:</p>
+              <div class="col-sm-7">
                 <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
               </div>
               </div>
               {% endif %}
               <div class="h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
                 <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">Submitted</div>
+                <div class="col-sm-4">Submitted</div>
               </div>
             {% endif %}
 

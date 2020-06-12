@@ -80,7 +80,7 @@ def populateModal(statusKey):
         currentDate = datetime.date.today()
         buttonState = 7 # & by deafult because if it does not change that means the there are no history forms
         pendingformType = None
-        current_user = cfg['user']['debug']
+        current_user = require_login()
         for form in forms:
             if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
                 if form.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
@@ -98,7 +98,7 @@ def populateModal(statusKey):
                     form.modifiedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
                     form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
         for form in forms:
-            if current_user != (form.createdBy.username or form.formID.supervisor.username):
+            if current_user.username != (form.createdBy.username or form.formID.supervisor.username):
                 buttonState = 5 #Informs the user why they cannot see any buttons
                 break
             else:
@@ -170,7 +170,6 @@ def populateModal(statusKey):
         return (resp)
     except Exception as e:
         print(e)
-        return render_template('errors/500.html')
         return (jsonify({"Success": False}))
 
 @main_bp.route('/laborHistory/modal/printPdf/<statusKey>', methods=['GET'])
@@ -187,7 +186,6 @@ def ConvertToPDF(statusKey):
                         ))
         return (pdf)
     except Exception as e:
-        return render_template('errors/500.html')
         return(jsonify({"Success": False}))
 
 
@@ -197,13 +195,11 @@ def withdraw_form():
     This function deletes forms from the database when they are pending and the "withdraw" button is clicked.
     """
     try:
-        print('Inside of withdraw route')
         rsp = eval(request.data.decode("utf-8"))
         student = LaborStatusForm.get(rsp["FormID"])
         selectedPendingForms = FormHistory.select().join(Status).where(FormHistory.formID == rsp["FormID"]).where(FormHistory.status.statusName == "Pending").order_by(FormHistory.historyType.asc())
         for form in selectedPendingForms:
             try:
-                print('Inside of overloadForm')
                 OverloadForm.get(OverloadForm.overloadFormID == form.overloadForm.overloadFormID).delete_instance()
                 form.delete_instance()
             except:
