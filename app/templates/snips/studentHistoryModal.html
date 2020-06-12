@@ -24,14 +24,14 @@
             {% if form.reviewedDate == None %}
               <div class= "h4">
                 <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-4">Submitted</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% elif form.reviewedDate != None %}
               <div class= "h4">
                 <div class="col-sm-3">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-4">{{form.status}}</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
                <div class="row">
@@ -43,8 +43,8 @@
               {% endif %}
               <div class= "h4">
                 <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-4">Submitted</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% endif %}
 
@@ -52,14 +52,14 @@
             {% if form.reviewedDate == None %}
               <div class= "h4">
                 <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-4">Submitted</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-minus-sign" style="color:red;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% elif form.reviewedDate != None %}
               <div class= "h4">
                 <div class="col-sm-3">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-4">{{form.status}}</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-minus-sign" style="color:red;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
               <div class="row">
@@ -71,8 +71,8 @@
               {% endif %}
               <div class= "h4">
                 <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-4">Submitted</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-minus-sign" style="color:red;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% endif %}
               <div class="row" style="padding-top:5px">
@@ -97,14 +97,14 @@
           {% if form.reviewedDate == None %}
             <div class="h4">
               <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
-              <div class="col-sm-4">Submitted</div>
+              <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
+              <div class="col-sm-2" align="left">Submitted</div>
             </div>
           {% elif form.reviewedDate != None %}
             <div class="h4">
               <div class="col-sm-3">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
-              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
-              <div class="col-sm-4">{{form.status}}</div>
+              <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
+              <div class="col-sm-2" align="left">{{form.status}}</div>
             </div>
             {% if form.status.statusName == "Denied" %}
             <div class="row">
@@ -116,8 +116,8 @@
             {% endif %}
             <div class="h4">
               <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
-              <div class="col-sm-4">Submitted</div>
+              <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
+              <div class="col-sm-2" align="left">Submitted</div>
             </div>
           {% endif %}
             <div class="row">
@@ -128,14 +128,14 @@
             {% if form.reviewedDate == None %}
               <div class="h4">
                 <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-4">Submitted</div>
+                <div class="col-sm-5 col-sm-offset-1"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% elif form.reviewedDate != None %}
               <div class="h4">
                 <div class="col-sm-3">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-4">{{form.status}}</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
               <div class="row">
@@ -147,8 +147,8 @@
               {% endif %}
               <div class="h4">
                 <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
-                <div class="col-sm-4">Submitted</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% endif %}
 
