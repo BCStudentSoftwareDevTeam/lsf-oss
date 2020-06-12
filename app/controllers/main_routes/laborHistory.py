@@ -99,37 +99,44 @@ def populateModal(statusKey):
                     form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
         for form in forms:
             if current_user != (form.createdBy.username or form.formID.supervisor.username):
-                buttonState = buttonStatus.no_buttons.value #Informs the user why they cannot see any buttons
+                buttonState = buttonStatus.no_buttons #Informs the user why they cannot see any buttons
                 break
             else:
                 if form.releaseForm != None:
                     if form.status.statusName == "Approved":
                         if currentDate <= form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button.value #Only rehire button
+                            buttonState = buttonStatus.show_rehire_button #Only rehire button
+                            print("buttonState", buttonState)
                             break
                         elif currentDate > form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button.value #Only rehire
+                            buttonState = buttonStatus.show_rehire_button #Only rehire
+                            print("buttonState", buttonState)
                             break
                     elif form.status.statusName == "Pending":
                         buttonState = None # no buttons
                         break
                     elif form.status.statusName == "Denied":
                         if currentDate <= form.formID.endDate:
-                            buttonState = buttonStatus.show_release_adjustment_rehire_buttons.value   #Release, adjustment, and rehire buttons
+                            buttonState = buttonStatus.show_release_adjustment_rehire_buttons   #Release, adjustment, and rehire buttons
+                            print("buttonState", buttonState)
                             break
                         elif currentDate > form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button.value #Only rehire
+                            buttonState = buttonStatus.show_rehire_button #Only rehire
+                            print("buttonState", buttonState)
                             break
                 if form.overloadForm != None:
                     if form.status.statusName == "Pending":
-                        buttonState = buttonStatus.show_withdraw_modify_buttons.value # Withdraw button and modify button
+                        buttonState = buttonStatus.show_withdraw_modify_buttons # Withdraw button and modify button
+                        print("buttonState", buttonState)
                         break
                     if form.status.statusName == "Denied":
                         if currentDate <= form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button.value #Only rehire button
+                            buttonState = buttonStatus.show_rehire_button #Only rehire button
+                            print("buttonState", buttonState)
                             break
                         elif currentDate > form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button.value #Only rehire
+                            buttonState = buttonStatus.show_rehire_button #Only rehire
+                            print("buttonState", buttonState)
                             break
                 if form.modifiedForm != None:
                     if form.status.statusName == "Pending":
@@ -137,31 +144,38 @@ def populateModal(statusKey):
                         break
                 if form.historyType.historyTypeName == "Labor Status Form":
                     if form.status.statusName == "Pending":
-                        buttonState = buttonStatus.show_withdraw_modify_buttons.value #Withdraw and modify buttons
+                        buttonState = buttonStatus.show_withdraw_modify_buttons #Withdraw and modify buttons
+                        print("buttonState", buttonState)
                         break
                     elif form.status.statusName == "Denied":
                         if currentDate <= form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button.value #Rehire button
+                            buttonState = buttonStatus.show_rehire_button #Rehire button
+                            print("buttonState", buttonState)
                             break
                         elif currentDate > form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button.value #Only rehire
+                            buttonState = buttonStatus.show_rehire_button #Only rehire
+                            print("buttonState", buttonState)
                             break
                     elif form.status.statusName == "Approved":
                         if currentDate <= form.formID.endDate:
                             if currentDate > form.formID.termCode.adjustmentCutOff:
-                                buttonState = buttonStatus.show_release_rehire_buttons.value #Release and rehire buttons
+                                buttonState = buttonStatus.show_release_rehire_buttons #Release and rehire buttons
+                                print("buttonState", buttonState)
                                 break
                             else:
-                                buttonState = buttonStatus.show_release_adjustment_rehire_buttons.value #Release, adjustment, and rehire buttons
+                                buttonState = buttonStatus.show_release_adjustment_rehire_buttons #Release, adjustment, and rehire buttons
+                                print("buttonState", buttonState)
                                 break
                         else:
-                            buttonState = buttonStatus.show_rehire_button.value #Only rehire
+                            buttonState = buttonStatus.show_rehire_button #Only rehire
+                            print("buttonState", buttonState)
                             break
         resp = make_response(render_template('snips/studentHistoryModal.html',
                                             forms = forms,
                                             statusForm = statusForm,
                                             currentDate = currentDate,
-                                            buttonState = buttonState
+                                            buttonState = buttonState,
+                                            buttonStatus = buttonStatus
                                             ))
         return (resp)
     except Exception as e:
