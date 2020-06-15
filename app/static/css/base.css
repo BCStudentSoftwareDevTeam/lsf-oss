@@ -28,7 +28,9 @@ body {
 
 #full-navbar {
   background-color: #285881;
-  margin-left: 250px; /* Fixes sidebar spacing */
+  box-sizing: border-box;
+  left: 250px;  /* Fixes sidebar spacing */
+  /* padding-left: 250px;  */
   background-image: linear-gradient(45deg, #285881 30%, #aebcca);
 }
 
@@ -121,10 +123,11 @@ body {
   background-color: #e9ebec;
   color:#1e2433;
   text-align: center !important;
+  box-sizing: border-box !important;
   width: 100%; /* Set the fixed width of the footer here */
   height: 80px;
   line-height: 80px; /* Vertically center the text there */
-  margin-left: 250px; /* Fixes sidebar spacing */
+  padding-left: 250px; /* Fixes sidebar spacing */
 }
 
 .bottom-buffer {
@@ -152,8 +155,14 @@ a:hover {
 #wrapper {
   width: 100%;
   margin-bottom:90px !important;
-  margin-left: 250px;
 }
+
+.sidebar-push {
+  /* width: 100%; */
+  box-sizing: border-box;
+  left: 250px;
+}
+
 
 .footerlink {
   font-weight: bold;
@@ -172,6 +181,7 @@ a:hover {
     /* background-color: #66c2cc; */
     background-color: #91bbde;
 }
+
 
 #admin ul {
     /* background-color: #f5f5f5; */
