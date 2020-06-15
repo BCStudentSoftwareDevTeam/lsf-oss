@@ -181,7 +181,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
     current_user = require_login()
     if not current_user:        # Not logged in
             return render_template('errors/403.html')
-    if form.modifiedForm.fieldModified == "supervisor":
+    if form.modifiedForm.fieldModified == "Supervisor":
         d, created = User.get_or_create(PIDM = form.modifiedForm.newValue)
         if not created:
             LSF.supervisor = d.UserID

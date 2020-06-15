@@ -112,12 +112,11 @@ def sumbitModifiedForm(laborStatusKey):
                                                 )
             historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
             status = Status.get(Status.statusName == "Pending")
-            username = cfg['user']['debug']
-            createdbyid = User.get(User.username == username)
+            current_user = require_login()
             formHistories = FormHistory.create( formID = laborStatusKey,
                                              historyType = historyType.historyTypeName,
                                              modifiedForm = modifiedforms.modifiedFormID,
-                                             createdBy   = createdbyid.UserID,
+                                             createdBy   = current_user.UserID,
                                              createdDate = date.today(),
                                              status      = status.statusName)
 
@@ -131,10 +130,10 @@ def sumbitModifiedForm(laborStatusKey):
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
-                    user = User.get(User.username == cfg["user"]["debug"])
+                    current_user = require_login()
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
-                                                        createdBy = user.UserID,
+                                                        createdBy = current_user.UserID,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
