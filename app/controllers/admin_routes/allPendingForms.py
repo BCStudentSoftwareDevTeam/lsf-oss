@@ -112,6 +112,11 @@ def approved_and_denied_Forms():
 @admin.route('/admin/updateStatus/<raw_status>', methods=['POST'])
 def finalUpdateStatus(raw_status):
     ''' This method changes the status of the pending forms to approved '''
+    current_user = require_login()
+    if not current_user:                    # Not logged in
+        return render_template('errors/403.html')
+    if not current_user.isLaborAdmin:       # Not an admin
+        return render_template('errors/403.html')
 
     if raw_status == 'approved':
         new_status = "Approved"
@@ -121,7 +126,7 @@ def finalUpdateStatus(raw_status):
         print("Unknown status: ", raw_status)
         return jsonify({"success": False})
     try:
-        createdUser = User.get(username = cfg['user']['debug'])
+        createdUser = User.get(username = current_user.username)
         rsp = eval(request.data.decode("utf-8"))
         if new_status == 'Denied':
             # Index 1 will always hold the reject reason in the list, so we can
@@ -371,12 +376,18 @@ def modalFormUpdate():
     type and the data from the modal.
     """
     try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
             historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
             email = emailHandler(historyForm.formHistoryID)
             currentDate = datetime.now().strftime("%Y-%m-%d")
-            createdUser = User.get(username = cfg['user']['debug'])
+            createdUser = User.get(username = current_user.username)
             status = Status.get(Status.statusName == rsp['status'])
             if rsp['formType'] == 'Overload':
                 overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)

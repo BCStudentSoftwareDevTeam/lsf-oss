@@ -91,6 +91,9 @@ def adjustLSF(laborStatusKey):
 def sumbitModifiedForm(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
+        current_user = require_login()
+        if not current_user:        # Not logged in
+            return render_template('errors/403.html')
         currentDate = datetime.now().strftime("%Y-%m-%d")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
@@ -100,7 +103,7 @@ def sumbitModifiedForm(laborStatusKey):
             if k == "supervisorNotes":
                 ## New Entry in AdminNote Table
                 newNoteEntry = AdminNotes.create(formID=LSF.laborStatusFormID,
-                                                createdBy=createdbyid.UserID,
+                                                createdBy=current_user.UserID,
                                                 date=currentDate,
                                                 notesContents=rsp[k]["newValue"])
                 newNoteEntry.save()
@@ -112,7 +115,6 @@ def sumbitModifiedForm(laborStatusKey):
                                                 )
             historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
             status = Status.get(Status.statusName == "Pending")
-            current_user = require_login()
             formHistories = FormHistory.create( formID = laborStatusKey,
                                              historyType = historyType.historyTypeName,
                                              modifiedForm = modifiedforms.modifiedFormID,
@@ -130,18 +132,22 @@ def sumbitModifiedForm(laborStatusKey):
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
-                    current_user = require_login()
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
                                                         createdBy = current_user.UserID,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
-        # TODO: emails are commented out for testing purposes
-        #             overloadEmail = emailHandler(formHistories.formHistoryID)
-        #             overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
-        # email = emailHandler(formHistories.formHistoryID)
-        # email.laborStatusFormModified()
+                    try:
+                        overloadEmail = emailHandler(formHistories.formHistoryID)
+                        overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+                    except Exception as e:
+                        print("Error on sending overload form emails: ", e)
+        try:
+            email = emailHandler(formHistories.formHistoryID)
+            email.laborStatusFormModified()
+        except Exception as e:
+            print("Error on sending adjustment form emails: ", e)
         message = "Your Labor Adjustment Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
 
