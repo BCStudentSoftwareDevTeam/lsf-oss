@@ -50,7 +50,6 @@ def adjustLSF(laborStatusKey):
     totalHours = 0
     if form.weeklyHours != None:
         prefillhours = form.weeklyHours
-        contractHours
         allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == form.termCode) & (LaborStatusForm.laborStatusFormID != laborStatusKey) & (LaborStatusForm.studentSupervisee.ID == form.studentSupervisee.ID))
         if allTermForms:
             for i in allTermForms:
