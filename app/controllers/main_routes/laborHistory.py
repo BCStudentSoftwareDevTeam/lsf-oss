@@ -76,11 +76,14 @@ def populateModal(statusKey):
     to put on the modal depending on what form is in the history.
     """
     try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         currentDate = datetime.date.today()
         buttonState = None
-        current_user = cfg['user']['debug']
+        current_user = current_user
         for form in forms:
             if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
                 if form.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
@@ -98,7 +101,7 @@ def populateModal(statusKey):
                     form.modifiedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
                     form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
         for form in forms:
-            if current_user != (form.createdBy.username or form.formID.supervisor.username):
+            if current_user.username != (form.createdBy.username or form.formID.supervisor.username):
                 buttonState = ButtonStatus.no_buttons
                 break
             else:
