@@ -1,6 +1,6 @@
 from enum import Enum
 
-class buttonStatus(Enum):
+class ButtonStatus(Enum):
     show_rehire_button = 0
     show_withdraw_button = 1
     show_withdraw_modify_buttons = 2

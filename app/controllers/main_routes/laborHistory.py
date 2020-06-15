@@ -18,7 +18,7 @@ from app.controllers.main_routes.download import ExcelMaker
 from fpdf import FPDF
 from app.logic.authorizationFunctions import*
 from app.models.Tracy.stuposn import STUPOSN
-from app.logic.buttonStatus import buttonStatus
+from app.logic.buttonStatus import ButtonStatus
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
@@ -99,70 +99,70 @@ def populateModal(statusKey):
                     form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
         for form in forms:
             if current_user != (form.createdBy.username or form.formID.supervisor.username):
-                buttonState = buttonStatus.no_buttons #Informs the user why they cannot see any buttons
+                buttonState = ButtonStatus.no_buttons
                 break
             else:
                 if form.releaseForm != None:
                     if form.status.statusName == "Approved":
                         if currentDate <= form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button #Only rehire button
+                            buttonState = ButtonStatus.show_rehire_button
                             break
                         elif currentDate > form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button #Only rehire
+                            buttonState = ButtonStatus.show_rehire_button
                             break
                     elif form.status.statusName == "Pending":
-                        buttonState = None # no buttons
+                        buttonState = None
                         break
                     elif form.status.statusName == "Denied":
                         if currentDate <= form.formID.endDate:
-                            buttonState = buttonStatus.show_release_adjustment_rehire_buttons   #Release, adjustment, and rehire buttons
+                            buttonState = ButtonStatus.show_release_adjustment_rehire_buttons
                             break
                         elif currentDate > form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button #Only rehire
+                            buttonState = ButtonStatus.show_rehire_button
                             break
                 if form.overloadForm != None:
                     if form.status.statusName == "Pending":
-                        buttonState = buttonStatus.show_withdraw_modify_buttons # Withdraw button and modify button
+                        buttonState = ButtonStatus.show_withdraw_modify_buttons
                         break
                     if form.status.statusName == "Denied":
                         if currentDate <= form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button #Only rehire button
+                            buttonState = ButtonStatus.show_rehire_button
                             break
                         elif currentDate > form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button #Only rehire
+                            buttonState = ButtonStatus.show_rehire_button
                             break
                 if form.modifiedForm != None:
                     if form.status.statusName == "Pending":
-                        buttonState = None # no buttons
+                        buttonState = None
                         break
                 if form.historyType.historyTypeName == "Labor Status Form":
                     if form.status.statusName == "Pending":
-                        buttonState = buttonStatus.show_withdraw_modify_buttons #Withdraw and modify buttons
+                        buttonState = ButtonStatus.show_withdraw_modify_buttons
                         break
                     elif form.status.statusName == "Denied":
                         if currentDate <= form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button #Rehire button
+                            buttonState = ButtonStatus.show_rehire_button
                             break
                         elif currentDate > form.formID.endDate:
-                            buttonState = buttonStatus.show_rehire_button #Only rehire
+                            buttonState = ButtonStatus.show_rehire_button
                             break
                     elif form.status.statusName == "Approved":
                         if currentDate <= form.formID.endDate:
                             if currentDate > form.formID.termCode.adjustmentCutOff:
-                                buttonState = buttonStatus.show_release_rehire_buttons #Release and rehire buttons
+                                buttonState = ButtonStatus.show_release_rehire_buttons
                                 break
                             else:
-                                buttonState = buttonStatus.show_release_adjustment_rehire_buttons #Release, adjustment, and rehire buttons
+                                buttonState = ButtonStatus.show_release_adjustment_rehire_buttons
                                 break
                         else:
-                            buttonState = buttonStatus.show_rehire_button #Only rehire
+                            buttonState = ButtonStatus.show_rehire_button
                             break
         resp = make_response(render_template('snips/studentHistoryModal.html',
                                             forms = forms,
                                             statusForm = statusForm,
                                             currentDate = currentDate,
                                             buttonState = buttonState,
-                                            buttonStatus = buttonStatus
+                                            ButtonStatus = ButtonStatus
                                             ))
         return (resp)
     except Exception as e:
