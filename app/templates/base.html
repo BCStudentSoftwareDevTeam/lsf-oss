@@ -30,12 +30,13 @@
 {% endblock %}
 {% block content %}
 
-<div class="body-container">
-
 {% block sidebar %}
     {% include 'sidebar.html' %}
 {% endblock %}
-    <div class="content">
+
+<div class="body-container">
+
+    <!-- <div class="content"> -->
         <div class="col-xs-10">
             <div id="flash_container">
                 {% with messages = get_flashed_messages(with_categories=true) %}
@@ -51,7 +52,7 @@
             {% endblock %}
 
         </div>
-    </div>
+    <!-- </div> -->
 </div>
 
 <div class="row bottom-buffer"></div>
