@@ -3,10 +3,6 @@ html, body {
     /* margin: 0; */
 }
 
-/* {% block navbar %}
-    {% include 'navbar.html' %}
-{% endblock %} */
-
 body {
     /* margin-bottom: 80px; */
 }
@@ -54,7 +50,8 @@ body {
     padding-top: 20px;
 
     /* border-left: 8px solid #275881; */
-    /* border-bottom-right-radius: 6px; */
+    /* border-right: 5px solid #102333; */
+    /* border-top-right-radius: 6px; */
 
 }
 

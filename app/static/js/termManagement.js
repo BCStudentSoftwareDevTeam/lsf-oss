@@ -1,3 +1,6 @@
+// Opens collapse menu for this page
+$('#admin').addClass('show');
+
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 });

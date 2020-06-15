@@ -1,3 +1,6 @@
+// Opens collapse menu for this page
+$('#admin').addClass('show');
+
 $('a.hover_indicator').click(function(e){
   e.preventDefault(); // prevents click on '#' link from jumping to top of the page.
 });
@@ -5,9 +8,6 @@ $('a.hover_indicator').click(function(e){
 $(document).ready(function() {
   // If the overload tab has been selected, then we need to restrict the
   // ordering functionality on different headers
-  console.log($("#accordian:first-child:first-child"));
-  $('#accordian').collapse("show");
-  // $("#accordian:first-child:first-child").addClass("in")
 
   if ($('#overloadTab').hasClass('active') || $('#releaseTab').hasClass('active')) {
     targetsList = [8]
