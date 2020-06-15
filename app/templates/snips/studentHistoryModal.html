@@ -34,12 +34,14 @@
                 <div class="col-sm-2" align="left">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
-               <div class="row">
-                 <p class="control-label col-sm-6 nopadding" align="right">Reject Reason: </p>
-               <div class="col-sm-6">
-                 <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
-               </div>
-               </div>
+              <div class="smallDataMargin">
+                 <div class="row">
+                   <p class="control-label col-sm-6 nopadding" align="right">Reject Reason: </p>
+                 <div class="col-sm-6">
+                   <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
+                 </div>
+                 </div>
+              </div>
               {% endif %}
               <div class="h4 nopadding">
                 <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
@@ -62,11 +64,13 @@
                 <div class="col-sm-2" align="left">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
-              <div class="row">
-                <p class="col-sm-4">Reject Reason:</p>
-              <div class="col-sm-8">
-                <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
-              </div>
+              <div class="smallDataMargin">
+                <div class="row">
+                  <p class="col-sm-4">Reject Reason:</p>
+                <div class="col-sm-8">
+                  <textarea class="rejectReasonTextArea" rows="3" cols="45" readonly>{{form.rejectReason}}</textarea>
+                </div>
+                </div>
               </div>
               {% endif %}
               <div class="h4 nopadding">
@@ -75,23 +79,25 @@
                 <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% endif %}
-              <div class="row" style="padding-top:5px">
-                <p class="col-sm-4 releaseTopRows">Condition at Release:</p>
-              <div class="col-sm-7" align="left">
-                <p>{{form.releaseForm.conditionAtRelease}}</p>
-              </div>
-              </div>
-              <div class="row">
-                <p class="col-sm-4 releaseTopRows" align="left">Release Date:</p>
-              <div class="col-sm-7" align="left">
-                <p>{{form.releaseForm.releaseDate.strftime('%m-%d-%Y')}}</p>
-              </div>
-              </div>
-              <div class="row">
-                <p class="col-sm-4 bottomRows">Reason for release:</p>
-              <div class="col-sm-7" align="left">
-                <textarea class="releaseReasonTextArea" rows="3" cols="25" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
-              </div>
+              <div class="smallDataMargin">
+                <div class="row" style="padding-top:5px">
+                  <p class="col-sm-4 releaseTopRows">Condition at Release:</p>
+                <div class="col-sm-7" align="left">
+                  <p>{{form.releaseForm.conditionAtRelease}}</p>
+                </div>
+                </div>
+                <div class="row">
+                  <p class="col-sm-4 releaseTopRows" align="left">Release Date:</p>
+                <div class="col-sm-7" align="left">
+                  <p>{{form.releaseForm.releaseDate.strftime('%m-%d-%Y')}}</p>
+                </div>
+                </div>
+                <div class="row">
+                  <p class="col-sm-4 bottomRows">Reason for release:</p>
+                <div class="col-sm-7" align="left">
+                  <textarea class="releaseReasonTextArea" rows="3" cols="45" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
+                </div>
+                </div>
               </div>
           {% elif form.modifiedForm != None %}
           {% if form.reviewedDate == None %}
@@ -107,11 +113,13 @@
               <div class="col-sm-2" align="left">{{form.status}}</div>
             </div>
             {% if form.status.statusName == "Denied" %}
-            <div class="row">
-              <p class="col-sm-4">Reject Reason:</p>
-            <div class="col-sm-8">
-              <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
-            </div>
+            <div class="smallDataMargin">
+              <div class="row">
+                <p class="col-sm-4">Reject Reason:</p>
+              <div class="col-sm-8">
+                <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
+              </div>
+              </div>
             </div>
             {% endif %}
             <div class="h4 nopadding">
@@ -121,7 +129,7 @@
             </div>
           {% endif %}
             <div class="row">
-              <p class="col-sm-12">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</p>
+              <p class="col-sm-12 smallDataMargin">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</p>
             </div>
 
           {% elif form.overloadForm != None %}
@@ -138,11 +146,13 @@
                 <div class="col-sm-2" align="left">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
-              <div class="row">
-                <p class="col-sm-4 col-sm-offset-1 nopadding">Reject Reason:</p>
-              <div class="col-sm-7">
-                <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
-              </div>
+              <div class="smallDataMargin">
+                <div class="row">
+                  <p class="col-sm-4 col-sm-offset-1 nopadding">Reject Reason:</p>
+                <div class="col-sm-7">
+                  <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
+                </div>
+                </div>
               </div>
               {% endif %}
               <div class="h4 nopadding">
