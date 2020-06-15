@@ -132,7 +132,7 @@ def updateLSF(laborStatusKey):
                     user = User.get(User.username == current_user.username)
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
-                                                        createdBy = user.UserID,
+                                                        createdBy = current_user.UserID,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
