@@ -28,7 +28,8 @@ textarea {
 }
 
 p {
-   margin:0
+   margin:0;
+   padding-left: 0px;
   }
 
 .releaseReasonTextArea {
@@ -40,3 +41,15 @@ p {
     overflow: -moz-scrollbars-vertical;
     overflow-y: scroll;
     }
+
+.nopadding {
+  margin-left: -15px;
+}
+
+.row {
+  margin-left: -15px;
+}
+
+.col-sm-2 {
+  margin-left: -5px;
+}
