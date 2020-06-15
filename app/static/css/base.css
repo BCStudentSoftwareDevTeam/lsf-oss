@@ -32,12 +32,21 @@ body {
 
 #sidebar {
     /* background-color: #f5f5f5; */
-    background-color: #e9ebec;
-    padding-right: 0px;
+    /* background-color: #e9ebec;
+    padding-right: 0px; */
     /* height: 100%; */
     /* box-shadow: 3px 9px 9px 0px lightgrey; */
-    border-left: 8px solid #275881;
-    border-bottom-right-radius: 6px;
+    /* border-left: 8px solid #275881;
+    border-bottom-right-radius: 6px; */
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #e9ebec;
+    overflow-x: hidden;
+    padding-top: 20px;
 }
 
 .panel-default, .panel-heading {
@@ -127,6 +136,7 @@ a:hover {
 #wrapper {
   width: 100%;
   margin-bottom:90px !important;
+  margin-left: 250px;
 }
 
 .footerlink {
@@ -155,6 +165,7 @@ a:hover {
 }
 
 #logo {
+    margin-bottom: 300px;
     padding: 0px;
     position: absolute;
     z-index: 100;
