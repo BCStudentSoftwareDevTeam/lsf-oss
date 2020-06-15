@@ -63,8 +63,8 @@
               </div>
               {% if form.status.statusName == "Denied" %}
               <div class="row">
-                <p class="col-sm-4 col-sm-offset-1 nopadding">Reject Reason:</p>
-              <div class="col-sm-7">
+                <p class="col-sm-4">Reject Reason:</p>
+              <div class="col-sm-8">
                 <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
               </div>
               </div>
@@ -76,19 +76,19 @@
               </div>
             {% endif %}
               <div class="row" style="padding-top:5px">
-                <p class="col-sm-4 col-sm-offset-1 nopadding">Condition at Release:</p>
+                <p class="col-sm-4 releaseTopRows">Condition at Release:</p>
               <div class="col-sm-7" align="left">
                 <p>{{form.releaseForm.conditionAtRelease}}</p>
               </div>
               </div>
               <div class="row">
-                <p class="col-sm-4 col-sm-offset-1 nopadding" align="left">Release Date:</p>
+                <p class="col-sm-4 releaseTopRows" align="left">Release Date:</p>
               <div class="col-sm-7" align="left">
                 <p>{{form.releaseForm.releaseDate.strftime('%m-%d-%Y')}}</p>
               </div>
               </div>
               <div class="row">
-                <p class="col-sm-4 col-sm-offset-1 nopadding">Reason for release:</p>
+                <p class="col-sm-4 bottomRows">Reason for release:</p>
               <div class="col-sm-7" align="left">
                 <textarea class="releaseReasonTextArea" rows="3" cols="25" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
               </div>
@@ -108,8 +108,8 @@
             </div>
             {% if form.status.statusName == "Denied" %}
             <div class="row">
-              <p class="col-sm-4 col-sm-offset-1">Reject Reason:</p>
-            <div class="col-sm-7">
+              <p class="col-sm-4">Reject Reason:</p>
+            <div class="col-sm-8">
               <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
             </div>
             </div>
@@ -121,7 +121,7 @@
             </div>
           {% endif %}
             <div class="row">
-              <p class="col-sm-11 col-sm-offset-1">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</p>
+              <p class="col-sm-12">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</p>
             </div>
 
           {% elif form.overloadForm != None %}
