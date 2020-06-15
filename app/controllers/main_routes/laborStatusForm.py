@@ -133,7 +133,6 @@ def getPositions(department):
 def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
-[1, 23, 232]
     isMoreLSF_dict = {}
     if isOneLSF !=None:
         isMoreLSF_dict["Status"] = True # student does not have any previous lsf's

@@ -466,7 +466,8 @@ function createStuDict(){
                     stuSupervisor: supervisor,
                     stuDepartment: department,
                     stuSupervisorID: supervisorID,
-                    isItOverloadForm: "False"
+                    isItOverloadForm: "False",
+                    isTermBreak: isBreak
                     };
     return studentDict;
   }
@@ -504,7 +505,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
               }
               else if(studentDict.stuJobType == "Secondary" && (status_list.some((val) => rejectionStatus.indexOf(val) !== -1))){ // If it is secondary allow adding LSF
                 if (checkDuplicate(studentDict) == true) {
-                  checkTotalHours(studentDict, response);
+                  (studentDict, response);
                   createAndFillTable(studentDict);
                 }
                 else {
@@ -523,7 +524,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
 }
 
 function initialLSFInsert(studentDict, response, status_list = []){ //Add student info to the table if they have no previous lfs's in the database
-  var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
+  var isBreak = (studentDict).isTermBreak;
   if(studentDict.stuJobType == "Primary"){
     if (checkDuplicate(studentDict) == true){
       checkTotalHours(studentDict, response);
@@ -537,7 +538,7 @@ function initialLSFInsert(studentDict, response, status_list = []){ //Add studen
     }
   }
   else { //primary needed for the normal term
-    if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00"){
+    if (isBreak == "False"){
       $("#warningModalTitle").html("Insert Rejected");
       $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
       $("#warningModal").modal("show");
@@ -566,9 +567,9 @@ function createAndFillTable(studentDict) {
   $("#mytable").show();
   $("#jobTable").show();
   $("#hoursTable").show();
-  var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
+  var isBreak = (studentDict).isTermBreak;
   var table = document.getElementById("mytable").getElementsByTagName("tbody")[0]; //This one needs document.getElementById, it won't work without it
-  if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00") {
+  if (isBreak == "False") {
     var notesID0 = String((studentDict).stuName + (studentDict).stuJobType + (studentDict).stuPosition);
     var notesID1 = notesID0.replace(/ /g, "");
     //var notesID2 = notesID1.substring(0, notesID1.indexOf("("));
@@ -591,7 +592,7 @@ function createAndFillTable(studentDict) {
   $(cell2).attr("data-posn", (studentDict).stuPositionCode);
   $(cell2).attr("data-wls", (studentDict).stuWLS);
   cell2.id="position_code";
-  if (termCodeLastTwo == "11" || termCodeLastTwo == "12" || termCodeLastTwo == "00") {
+  if (isBreak == "False") {
     hours = studentDict.stuWeeklyHours;
     studentDict.stuContractHours = null;
   }
@@ -615,9 +616,9 @@ function createAndFillTable(studentDict) {
 
 
 function isOneLaborStatusForm(studentDict){
-  var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
+  var isBreak = (studentDict).isTermBreak;
   var term = $("#selectedTerm").val();
-  if(["00", "11", "12"].includes(termCodeLastTwo) == false){
+  if(isBreak == "True"){
     url = "/laborstatusform/getstudents/" + term + "/"+ studentDict.stuBNumber+ "/"+ 'isOneLSF';
     // check whether student has multiple labor status forms over the break period.
     $.ajax({
@@ -637,9 +638,7 @@ function isOneLaborStatusForm(studentDict){
 }
 
 function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
-    var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
-    var termCodeLastTwo = termCodeSelected.slice(-2);
-    var academicYear = ["11", "12", "00"]
+    var isBreak = $("#selectedTerm").find("option:selected").attr("data-termBreak");
     totalHoursCount = studentDict.stuWeeklyHours;
     for (i = 0; i < globalArrayOfStudents.length; i++){
       if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
@@ -651,7 +650,7 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
         totalHoursCount = totalHoursCount + databasePositions[i].weeklyHours; // gets the total hours a student have both in database and in the table
       }
   }
-  if (totalHoursCount > (15) && academicYear.includes(termCodeLastTwo)){
+  if (totalHoursCount > (15) && isBreak == "False"){
     studentDict.isItOverloadForm = "True";
     $('#OverloadModal').modal('show');
   }
@@ -661,25 +660,14 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
 
 //Triggered when summer labor is clicked when making a New Labor Status Form
 function summerLaborWarning(){
-  /*
-  If isBreak == True and isSummer == False:
-    Show Break modal
-    return true
-  else if isSummer == True:
-    show summer modal
-    return true
-  else:
-  return true
-  */
-  var termCodeSelected = $("#selectedTerm").find("option:selected").attr("data-termCode");
-  var termCodeLastTwo = termCodeSelected.slice(-2);
-  //term code 13 is summer
-  if (termCodeLastTwo == 13){
+  var isBreak = $("#selectedTerm").find("option:selected").attr("data-termBreak");
+  var isSummer = $("#selectedTerm").find("option:selected").attr("data-termSummer");
+  if (isSummer == "True"){
     $("#SummerContract").modal('show');
     return true;
   } else if (
       //checks if any break has been clicked and generates a modal
-      termCodeLastTwo == 01 || termCodeLastTwo == 02 || termCodeLastTwo == 03){
+      isBreak == "True" && isSummer == "False"){
       $("#warningModalTitle").html("Reminder");
       $("#warningModalText").html("Students may only work up to 40 hours a week during break periods.");
       $("#warningModal").modal('show');
@@ -702,10 +690,9 @@ function reviewButtonFunctionality() { // Triggred when Review button is clicked
 }
 
 function createModalContent() { // Populates Submit Modal with Student information from the table
-  term = $("#selectedTerm").val();
-  var whichTerm = term.toString().substr(-2);
+  var isBreak = $('#selectedTerm').find('option:selected').attr('data-termBreak');
   modalList = [];
-  if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
+  if (isBreak == "True"){
     for (var i = 0; i < globalArrayOfStudents.length; i++) {
       var bigString = "<li>" + globalArrayOfStudents[i].stuName + " | " + globalArrayOfStudents[i].stuPosition + " | " +
                       globalArrayOfStudents[i].stuContractHours + " hours";
@@ -731,7 +718,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
   }
 }
 
-// userInsert() sends SubmitModal's info to controller using ajax and gets the response in array containing true(s) or/and flase(s)
+// userInsert() sends SubmitModal's info to controller using ajax and gets the response in array containing true(s) or/and fasle(s)
 function userInsert(){
     $("#laborStatusForm").on("submit", function(e) {
       e.preventDefault();
@@ -743,8 +730,9 @@ function userInsert(){
            data: JSON.stringify(globalArrayOfStudents),
            contentType: "application/json",
            success: function(response) {
-               term = $("#selectedTerm").val();
-               var whichTerm = parseInt(term.toString().substr(-2));
+               //term = $("#selectedTerm").val();
+               //var whichTerm = parseInt(term.toString().substr(-2));
+               var isBreak = $('#selectedTerm').find('option:selected').attr('data-termBreak');
                modalList = [];
                for(var key = 0; key < globalArrayOfStudents.length; key++){
                    var studentName = globalArrayOfStudents[key].stuName;
@@ -756,7 +744,8 @@ function userInsert(){
                    if (response.includes(false)){ // if there is even one false value in response
                        // var selectedContractHours = globalArrayOfStudents[key].stuWeeklyHours;
                        if (response[key] === false){ // Finds the form that has failed.
-                           if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
+                           //if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
+                           if (isBreak == "True"){
                               display_failed.push(key);
                               var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                            }
@@ -766,7 +755,8 @@ function userInsert(){
                            }
                        }
                        else{
-                            if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
+                            //if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
+                            if (isBreak == "True"){
                                 var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                             }
                             else {
@@ -782,7 +772,8 @@ function userInsert(){
                    $("#SubmitModal").modal("show");
                  }
                else{
-                    if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
+                    //if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
+                    if (isBreak == "True"){
                     var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                   }
                     else{
