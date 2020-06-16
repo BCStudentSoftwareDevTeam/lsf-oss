@@ -43,7 +43,8 @@
           <tr>
             <td scope="row">{{department.DEPT_NAME}} <small>({{department.ORG}}, {{department.ACCOUNT}})</small></td>
             <td id="dept_{{department.departmentID}}" scope="row" data-order="{% if department.departmentCompliance == True %}1{% else %}-1{% endif %}">
-              <button id="dept_btn_{{department.departmentID}}"
+              <button type="button"
+                      id="dept_btn_{{department.departmentID}}"
                       name="deptName"
                       class="{% if department.departmentCompliance == True %} btn btn-success {% else %} btn btn-danger {% endif %} complianceBtn"
                       onclick="status({{department.departmentID}}, '{{department.DEPT_NAME}}')"

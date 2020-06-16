@@ -3,7 +3,7 @@ var display_failed = [];
 var laborStatusFormNote = null;
 
 $(document).ready(function(){
-  $("[data-toggle=\"tooltip\"]").tooltip();
+  $('[data-toggle="tooltip"]').tooltip();
   $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
   if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
     checkCompliance($("#selectedDepartment"));
