@@ -24,8 +24,6 @@
 
 {% block html_attribs %} lang="en"{% endblock %}
 
-<div class="row">
-
 {% block navbar %}
     {% include 'navbar.html' %}
 {% endblock %}
@@ -37,33 +35,29 @@
 {% endblock %}
 
 <div class="body-container">
-
-    <!-- <div class="content"> -->
-        <div class="col-xs-10 sidebar-push">
-            <div id="flash_container">
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="alert  alert-{{category}} alert-dismissible" role="alert" id="flasher" style="width:87%">{{ message }}<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-            </div>
-            {% block app_content %}
-                {# application content needs to be provided in the app_content block #}
-            {% endblock %}
-
+    <div class="col-xs-10 sidebar-push">
+        <div id="flash_container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert  alert-{{category}} alert-dismissible" role="alert" id="flasher" style="width:87%">{{ message }}<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button></div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
         </div>
-    <!-- </div> -->
+        {% block app_content %}
+            {# application content needs to be provided in the app_content block #}
+        {% endblock %}
+    </div>
 </div>
 
 <div class="row bottom-buffer"></div>
+
 {% block footer %}
 <div class="footer">
         <span><b>Issues? Contact: </b><a href="mailto:support@bereacollege.onmicrosoft.com" class="footerlink">Systems Support </a>
         <b>Created & Designed by the </b><a href="/contributors" id = "contribLink" class="footerlink">Student Software Development Team</a></span>
 </div>
 {% endblock %}
-</div>
 
 {% endblock %}

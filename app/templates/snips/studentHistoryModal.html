@@ -162,22 +162,22 @@
 
       <div class="modal-footer" id="modalFooter">
         {% for form1 in statusForm %}
-        {% if buttonState == 0 %}
+        {% if buttonState == ButtonStatus.show_rehire_button %}
         <div class = "col-sm-12">
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success" onclick="redirection({{form1.laborStatusFormID}})">Rehire</button></a>
         </div>
-        {% elif buttonState == 1 %}
+        {% elif buttonState == ButtonStatus.show_withdraw_button %}
           <div class = "col-sm-12">
           <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form1.laborStatusFormID}})">Withdraw</button>
           </div>
-        {% elif buttonState == 2 %}
+        {% elif buttonState == ButtonStatus.show_withdraw_modify_buttons %}
         <div class = "col-sm-6">
         <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form1.laborStatusFormID}})">Withdraw</button>
         </div>
         <div class = "col-sm-6">
         <a id="modify" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Modify</button></a>
         </div>
-        {% elif buttonState == 3 %}
+        {% elif buttonState == ButtonStatus.show_release_adjustment_rehire_buttons %}
         <div class = "col-sm-4" style="text-align: right">
         <a id="release" href="#"><button type="button" class="btn btn-danger" onclick="redirection({{form1.laborStatusFormID}})">Release</button></a>
         </div>
@@ -187,14 +187,14 @@
         <div class = "col-sm-4" style="text-align:left">
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success" onclick="redirection({{form1.laborStatusFormID}})">Rehire</button></a>
         </div>
-        {% elif buttonState == 4 %}
+        {% elif buttonState == ButtonStatus.show_release_rehire_buttons %}
         <div class = "col-sm-6">
         <a id="release" href="#"><button type="button" class="btn btn-danger" onclick="redirection({{form1.laborStatusFormID}})">Release</button></a>
         </div>
         <div class = "col-sm-6">
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success" onclick="redirection({{form1.laborStatusFormID}})">Rehire</button></a>
         </div>
-        {% elif buttonState == 5 %}
+        {% elif buttonState == ButtonStatus.no_buttons %}
         <div class = "col-md-12">
         <p style="color:blue;"><span class="glyphicon glyphicon-exclamation-sign"></span><b> Only the current supervisor or the creator of this form can make changes.</b></p>
         </div>
