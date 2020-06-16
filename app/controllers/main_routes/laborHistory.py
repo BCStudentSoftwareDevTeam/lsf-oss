@@ -26,6 +26,13 @@ def laborhistory(id):
         current_user = require_login()
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
+
+        # if current_user.ID == id:
+            # isLaborAdmin = False
+            # authorizedUser = True
+            # student logged in
+
+
         if not current_user.isLaborAdmin:
             isLaborAdmin = False
             authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.UserID)
@@ -105,6 +112,9 @@ def populateModal(statusKey):
             if current_user.username != (form.createdBy.username or form.formID.supervisor.username):
                 buttonState = ButtonStatus.no_buttons
                 break
+            # elif current_user.ID == (form.studentSupervisee.ID):
+                # buttonState = None
+                # break
             else:
                 if form.releaseForm != None:
                     if form.status.statusName == "Approved":
