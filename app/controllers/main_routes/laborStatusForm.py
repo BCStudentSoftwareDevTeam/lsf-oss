@@ -82,6 +82,23 @@ def userInsert():
             print("ERROR: ", e)
 
         student = Student.get(ID = tracyStudent.ID)
+
+        # Updates the __ database with any updated attributes from __
+
+        # FIRST_NAME
+        newFirstName = Student.get(FIRST_NAME = tracyStudent.FIRST_NAME)
+        Student.FIRST_NAME = newFirstName
+        # LAST_NAME
+        # CLASS_LEVEL
+        # ACADEMIC_FOCUS
+        # MAJOR
+        # PROBATION
+        # ADVISOR
+        # STU_EMAIL
+        # STU_CPO
+        # LAST_POSN
+        # LAST_SUP_PIDM
+
         studentID = student.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.UserID
