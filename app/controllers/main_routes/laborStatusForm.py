@@ -82,7 +82,9 @@ def userInsert():
             print("ERROR: ", e)
 
         student = Student.get(ID = tracyStudent.ID)
-        student = tracyStudent
+        # student = tracyStudent
+        # query = Student.update(student).where(ID = rspFunctional[i]['stuBNumber'])
+        # query.execute()
 
         # Updates the [insert] database with any updated attributes from [insert]
 
@@ -90,11 +92,13 @@ def userInsert():
         # student.FIRST_NAME = Student.get(FIRST_NAME = tracyStudent.FIRST_NAME)
         print("=======================================")
         # print(STUDATA.get(ID = rspFunctional[i]['stuBNumber']))
-        print(student == tracyStudent)
-        print(student.FIRST_NAME)
-        # student.FIRST_NAME = Student.get(ID = tracyStudent.ID).FIRST_NAME
+        # print(student == STUDATA.get(ID = rspFunctional[i]['stuBNumber']))
+        # print(tracyStudent.select("FIRST_NAME").where(tracyStudent.ID == student.ID).get())
+        print(tracyStudent.select().where().get())
+
+        # student.FIRST_NAME = tracyStudent.get(ID = tracyStudent.ID).FIRST_NAME
         # # LAST_NAME
-        # student.LAST_NAME = Student.get(LAST_NAME = tracyStudent.LAST_NAME)
+        # student.LAST_NAME = tracyStudent.get(LAST_NAME = tracyStudent.LAST_NAME)
         # # CLASS_LEVEL
         # student.CLASS_LEVEL = Student.get(CLASS_LEVEL = tracyStudent.CLASS_LEVEL)
         # # ACADEMIC_FOCUS
@@ -114,7 +118,9 @@ def userInsert():
         # # LAST_SUP_PIDM
         # student.LAST_SUP_PIDM = Student.get(LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
         # # print(student)
-        student.save()
+        # student.save()
+
+        print(type(student))
 
         studentID = student.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
