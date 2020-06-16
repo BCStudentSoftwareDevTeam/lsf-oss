@@ -82,22 +82,39 @@ def userInsert():
             print("ERROR: ", e)
 
         student = Student.get(ID = tracyStudent.ID)
+        student = tracyStudent
 
-        # Updates the __ database with any updated attributes from __
+        # Updates the [insert] database with any updated attributes from [insert]
 
         # FIRST_NAME
-        newFirstName = Student.get(FIRST_NAME = tracyStudent.FIRST_NAME)
-        Student.FIRST_NAME = newFirstName
-        # LAST_NAME
-        # CLASS_LEVEL
-        # ACADEMIC_FOCUS
-        # MAJOR
-        # PROBATION
-        # ADVISOR
-        # STU_EMAIL
-        # STU_CPO
-        # LAST_POSN
-        # LAST_SUP_PIDM
+        # student.FIRST_NAME = Student.get(FIRST_NAME = tracyStudent.FIRST_NAME)
+        print("=======================================")
+        # print(STUDATA.get(ID = rspFunctional[i]['stuBNumber']))
+        print(student == tracyStudent)
+        print(student.FIRST_NAME)
+        # student.FIRST_NAME = Student.get(ID = tracyStudent.ID).FIRST_NAME
+        # # LAST_NAME
+        # student.LAST_NAME = Student.get(LAST_NAME = tracyStudent.LAST_NAME)
+        # # CLASS_LEVEL
+        # student.CLASS_LEVEL = Student.get(CLASS_LEVEL = tracyStudent.CLASS_LEVEL)
+        # # ACADEMIC_FOCUS
+        # student.ACADEMIC_FOCUS = Student.get(ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS)
+        # # MAJOR
+        # student.MAJOR = Student.get(MAJOR = tracyStudent.MAJOR)
+        # # PROBATION
+        # student.PROBATION = Student.get(PROBATION = tracyStudent.PROBATION)
+        # # ADVISOR
+        # student.ADVISOR = Student.get(ADVISOR = tracyStudent.ADVISOR)
+        # # STU_EMAIL
+        # student.STU_EMAIL = Student.get(STU_EMAIL = tracyStudent.STU_EMAIL)
+        # # STU_CPO
+        # student.STU_CPO = Student.get(STU_CPO = tracyStudent.STU_CPO)
+        # # LAST_POSN
+        # student.LAST_POSN = Student.get(LAST_POSN = tracyStudent.LAST_POSN)
+        # # LAST_SUP_PIDM
+        # student.LAST_SUP_PIDM = Student.get(LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
+        # # print(student)
+        student.save()
 
         studentID = student.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
