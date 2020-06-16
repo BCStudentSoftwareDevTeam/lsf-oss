@@ -115,7 +115,7 @@ def populateModal(statusKey):
                             buttonState = ButtonStatus.show_rehire_button
                             break
                     elif form.status.statusName == "Pending":
-                        buttonState = None
+                        buttonState = ButtonStatus.no_buttons_pending_forms
                         pendingformType = form.historyType.historyTypeName
                         break
                     elif form.status.statusName == "Denied":
@@ -138,7 +138,7 @@ def populateModal(statusKey):
                             break
                 if form.modifiedForm != None:
                     if form.status.statusName == "Pending":
-                        buttonState = None
+                        buttonState = ButtonStatus.no_buttons_pending_forms
                         pendingformType = form.historyType.historyTypeName
                         break
                 if form.historyType.historyTypeName == "Labor Status Form":
@@ -163,8 +163,6 @@ def populateModal(statusKey):
                         else:
                             buttonState = ButtonStatus.show_rehire_button
                             break
-        print(buttonState)
-        print(repr(buttonState))
         resp = make_response(render_template('snips/studentHistoryModal.html',
                                             forms = forms,
                                             statusForm = statusForm,
