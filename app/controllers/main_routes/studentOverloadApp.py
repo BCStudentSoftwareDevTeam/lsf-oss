@@ -34,6 +34,7 @@ def studentOverloadApp(formId):
     currentTerm = str(lsfForm.termCode.termCode)[-2:]
     TermsNeeded=[]
     for term in termCodeYear:
+        print(term)
         if str(term)[-2:] == "11" or str(term)[-2:] == "12" or str(term)[-2:]== "00":
             TermsNeeded.append(term)
     studentSecondaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,

@@ -57,6 +57,7 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
   });
 
 function checkIfFreshman() {
+  console.log("into checkIfFreshman");
   var jobType = $("#jobType").val();
   var wls = $("#position :selected").attr("data-wls")
   var classLevel = $("#student :selected").attr("data-stuCL");
@@ -718,7 +719,7 @@ function createModalContent() { // Populates Submit Modal with Student informati
   }
 }
 
-// userInsert() sends SubmitModal's info to controller using ajax and gets the response in array containing true(s) or/and fasle(s)
+// userInsert() sends SubmitModal's info to controller using ajax and gets the response in array containing true(s) or/and false(s)
 function userInsert(){
     $("#laborStatusForm").on("submit", function(e) {
       e.preventDefault();
@@ -730,8 +731,8 @@ function userInsert(){
            data: JSON.stringify(globalArrayOfStudents),
            contentType: "application/json",
            success: function(response) {
-               //term = $("#selectedTerm").val();
-               //var whichTerm = parseInt(term.toString().substr(-2));
+               term = $("#selectedTerm").val();
+               var whichTerm = parseInt(term.toString().substr(-2));
                var isBreak = $('#selectedTerm').find('option:selected').attr('data-termBreak');
                modalList = [];
                for(var key = 0; key < globalArrayOfStudents.length; key++){
@@ -744,7 +745,7 @@ function userInsert(){
                    if (response.includes(false)){ // if there is even one false value in response
                        // var selectedContractHours = globalArrayOfStudents[key].stuWeeklyHours;
                        if (response[key] === false){ // Finds the form that has failed.
-                           //if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
+                           // if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
                            if (isBreak == "True"){
                               display_failed.push(key);
                               var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
@@ -755,7 +756,7 @@ function userInsert(){
                            }
                        }
                        else{
-                            //if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
+                            // if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
                             if (isBreak == "True"){
                                 var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                             }
@@ -772,7 +773,7 @@ function userInsert(){
                    $("#SubmitModal").modal("show");
                  }
                else{
-                    //if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
+                    // if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
                     if (isBreak == "True"){
                     var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                   }
