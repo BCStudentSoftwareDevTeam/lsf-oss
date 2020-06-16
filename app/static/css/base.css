@@ -15,7 +15,8 @@ html, body {
 
 #full-navbar {
   background-color: #285881;
-  box-sizing: border-box;
+  /* box-sizing: border-box; */
+  width: calc(100% - 250px);
   left: 250px;  /* Fixes sidebar spacing */
   background-image: linear-gradient(45deg, #285881 30%, #aebcca);
 }
@@ -24,7 +25,7 @@ html, body {
     height: 100%;
     width: 250px;
     position: fixed;
-    z-index: 1;
+    z-index: 100;
     top: 0;
     left: 0;
     /* background-color: #e9ebec; */
@@ -105,6 +106,7 @@ html, body {
 
 .bottom-buffer {
     padding-bottom: 20px;
+    width: 100%;
 }
 
 a {
