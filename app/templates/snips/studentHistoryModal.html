@@ -2,8 +2,8 @@
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         {% for form1 in statusForm %}
-        <div class="modal-title h2" align="center">{{form1.studentSupervisee.FIRST_NAME}} {{form1.studentSupervisee.LAST_NAME}}</div>
-        <div align= "right"><button type="button" class="btn btn-default btn" id="print" onclick="fillPDF({{form1.laborStatusFormID}})"><span class="glyphicon glyphicon-print"></span>Print</button></div>
+        <span style="text-align: right;"><button type="button" class="btn btn-default btn col-sm-2" id="print" onclick="fillPDF({{form1.laborStatusFormID}})"><span class="glyphicon glyphicon-print"></span> Print</button></span>
+        <span class="h2 col-sm-9 modalHeader">{{form1.studentSupervisee.FIRST_NAME}} {{form1.studentSupervisee.LAST_NAME}}</span>
         {% endfor %}
       </div>
       <div class="modal-body" id="modalid">
@@ -22,134 +22,143 @@
         {% for form in forms %}
           {% if form.modifiedForm == None and form.releaseForm == None and form.overloadForm == None %}
             {% if form.reviewedDate == None %}
-              <div class= "h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">Submitted</div>
+              <div class="h4 nopadding">
+                <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% elif form.reviewedDate != None %}
-              <div class= "h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">{{form.status}}</div>
+              <div class="h4 nopadding">
+                <div class="col-sm-3">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
-               <div class="row">
-                 <p class="control-label col-sm-6" align="right">Reject Reason: </p>
-               <div class="col-sm-6">
-                 <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
-               </div>
-               </div>
+              <div class="leftMargin">
+                 <div class="row">
+                   <p class="control-label col-sm-6" align="right">Reject Reason: </p>
+                 <div class="col-sm-6">
+                   <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
+                 </div>
+                 </div>
+              </div>
               {% endif %}
-              <div class= "h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-plus-sign" style="color:green"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">Submitted</div>
+              <div class="h4 nopadding">
+                <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-plus-sign" style="color:green;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% endif %}
 
           {% elif form.releaseForm != None %}
             {% if form.reviewedDate == None %}
-              <div class= "h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">Submitted</div>
+              <div class="h4 nopadding">
+                <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-minus-sign" style="color:red;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% elif form.reviewedDate != None %}
-              <div class= "h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">{{form.status}}</div>
+              <div class="h4 nopadding">
+                <div class="col-sm-3">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-minus-sign" style="color:red;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
-              <div class="row">
-                <p class="control-label col-sm-6" align="right">Reject Reason: </p>
-              <div class="col-sm-6">
-                <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
-              </div>
+              <div class="leftMargin">
+                <div class="row">
+                  <p class="col-sm-4">Reject Reason:</p>
+                <div class="col-sm-7">
+                  <textarea class="rejectReasonTextArea" rows="2" cols="45" readonly>{{form.rejectReason}}</textarea>
+                </div>
+                </div>
               </div>
               {% endif %}
-              <div class= "h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-minus-sign" style="color:red"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">Submitted</div>
+              <div class="h4 nopadding">
+                <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-minus-sign" style="color:red;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% endif %}
-              <div class="row" style="padding-top:5px">
-                <p class="control-label col-sm-6" align="right">Condition at Release:</p>
-              <div class="col-sm-6">
-                <p>{{form.releaseForm.conditionAtRelease}}</p>
-              </div>
-              </div>
-              <div class="row">
-                <p class="control-label col-sm-3 col-sm-offset-3" align="left">Release Date:</p>
-              <div class="col-sm-6">
-                <p>{{form.releaseForm.releaseDate.strftime('%m-%d-%Y')}}</p>
-              </div>
-              </div>
-              <div class="row">
-                <p class="control-label col-sm-6" align="right">Reason for release:</p>
-              <div class="col-sm-6">
-                <textarea class="releaseReasonTextArea" rows="3" cols="25" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
-              </div>
+              <div class="smallDataMargin">
+                <div class="row" style="padding-top:5px">
+                  <p class="col-sm-4 releaseTopRows">Condition at Release:</p>
+                <div class="col-sm-7" align="left">
+                  <p>{{form.releaseForm.conditionAtRelease}}</p>
+                </div>
+                </div>
+                <div class="row">
+                  <p class="col-sm-4 releaseTopRows" align="left">Release Date:</p>
+                <div class="col-sm-7" align="left">
+                  <p>{{form.releaseForm.releaseDate.strftime('%m-%d-%Y')}}</p>
+                </div>
+                </div>
+                <div class="row">
+                  <p class="col-sm-4 bottomRows">Reason for release:</p>
+                <div class="col-sm-7" align="left">
+                  <textarea class="releaseReasonTextArea" rows="2" cols="45" readonly>{{form.releaseForm.reasonForRelease}}</textarea>
+                </div>
+                </div>
               </div>
           {% elif form.modifiedForm != None %}
           {% if form.reviewedDate == None %}
-            <div class="h4">
-              <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
-              <div class="col-sm-3">Submitted</div>
+            <div class="h4 nopadding">
+              <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+              <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
+              <div class="col-sm-2" align="left">Submitted</div>
             </div>
           {% elif form.reviewedDate != None %}
-            <div class="h4">
-              <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
-              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
-              <div class="col-sm-3">{{form.status}}</div>
+            <div class="h4 nopadding">
+              <div class="col-sm-3">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
+              <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
+              <div class="col-sm-2" align="left">{{form.status}}</div>
             </div>
             {% if form.status.statusName == "Denied" %}
-            <div class="row">
-              <p class="control-label col-sm-6" align="right">Reject Reason: </p>
-            <div class="col-sm-6">
-              <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
-            </div>
+            <div class="leftMargin">
+              <div class="row">
+                <p class="col-sm-4">Reject Reason:</p>
+              <div class="col-sm-7">
+                <textarea class="rejectReasonTextArea" rows="2" cols="45" readonly>{{form.rejectReason}}</textarea>
+              </div>
+              </div>
             </div>
             {% endif %}
-            <div class="h4">
-              <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-              <div class="col-sm-5"><span class="glyphicon glyphicon-pencil" style="color:blue"></span> {{form.historyType}}</div>
-              <div class="col-sm-3">Submitted</div>
+            <div class="h4 nopadding">
+              <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+              <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-pencil" style="color:blue;font-size:85%"></span> {{form.historyType}}</div>
+              <div class="col-sm-2" align="left">Submitted</div>
             </div>
           {% endif %}
-            <div class="row" style="padding-top:5px">
-              <p class="control-label col-sm-12" align="center">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</p>
+            <div class="row">
+              <p class="col-sm-11 smallDataMargin">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</p>
             </div>
-
 
           {% elif form.overloadForm != None %}
             {% if form.reviewedDate == None %}
-              <div class="h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">Submitted</div>
+              <div class="h4 overloadBottom">
+                <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% elif form.reviewedDate != None %}
-              <div class="h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">{{form.status}}</div>
+              <div class="h4 nopadding">
+                <div class="col-sm-3">{{form.reviewedDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">{{form.status}}</div>
               </div>
               {% if form.status.statusName == "Denied" %}
-              <div class="row">
-                <p class="control-label col-sm-6" align="right">Reject Reason: </p>
-              <div class="col-sm-6">
-                <textarea class="rejectReasonTextArea" rows="3" cols="25" readonly>{{form.rejectReason}}</textarea>
-              </div>
+              <div class="leftMargin">
+                <div class="row">
+                  <p class="col-sm-4 nopadding">Reject Reason:</p>
+                <div class="col-sm-7">
+                  <textarea class="rejectReasonTextArea" rows="2" cols="45" readonly>{{form.rejectReason}}</textarea>
+                </div>
+                </div>
               </div>
               {% endif %}
-              <div class="h4">
-                <div class="col-sm-3 col-sm-offset-1">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
-                <div class="col-sm-5"><span class="glyphicon glyphicon-warning-sign" style="color:orange"></span> {{form.historyType}}</div>
-                <div class="col-sm-3">Submitted</div>
+              <div class="h4 overloadBottom">
+                <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
+                <div class="col-sm-6 col-sm-offset-1"><span class="glyphicon glyphicon-warning-sign" style="color:orange;font-size:85%"></span> {{form.historyType}}</div>
+                <div class="col-sm-2" align="left">Submitted</div>
               </div>
             {% endif %}
 
@@ -196,7 +205,11 @@
         </div>
         {% elif buttonState == ButtonStatus.no_buttons %}
         <div class = "col-md-12">
-        <p style="color:blue;"><span class="glyphicon glyphicon-exclamation-sign"></span><b> Only the current supervisor or the creator of this form can make changes.</b></p>
+        <p style="color:blue;"><span class="glyphicon glyphicon-exclamation-sign"></span><strong> Only the current supervisor or the creator of this form can make changes.</strong></p>
+        </div>
+        {% elif buttonState == ButtonStatus.no_buttons_pending_forms %}
+        <div class = "col-md-12">
+        <p style="color:blue;"><span class="glyphicon glyphicon-exclamation-sign"></span><b> Changes to a form are unavailable when a {{pendingformType}} is 'Pending'.</b></p>
         </div>
         {% endif %}
         {% endfor %}

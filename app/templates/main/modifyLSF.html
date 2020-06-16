@@ -39,17 +39,17 @@
        <div class="form-group">
          <label for="Student">Student</label> <!--User CANNOT edit-->
          <div>
-           <input type="Student" class="form-control" id="Student" value="{{prefillstudent}}" disabled> <!--User CANNOT edit-->
+           <input type="text" class="form-control" id="Student" value="{{prefillstudent}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
          <label for="supervisor" class="field"><span class="tooltip-right" data-tooltip="Required">Supervisor<span class="required-mark">*</span></span></label>
          <div class="change">
-           <select required type="supervisor"
-                            class="selectpicker form-control newValue"
-                            id="supervisor"
-                            data-live-search="true"
-                            >
+           <select required
+                class="selectpicker form-control newValue"
+                id="supervisor"
+                data-live-search="true"
+                >
                 {% for sup in supervisors %}
                     <option title="{{sup.FIRST_NAME}} {{sup.LAST_NAME}}" value="{{sup.PIDM}}" {% if form.supervisor.PIDM == sup.PIDM %} selected {% endif %}>{{sup.FIRST_NAME}} {{sup.LAST_NAME}}</option>
                 {% endfor %}
@@ -60,17 +60,17 @@
        <div class="form-group">
          <label for="Department">Department</label> <!--User CANNOT edit-->
          <div>
-           <input type="Department" class="form-control" id="Department" value="{{prefilldepartment}}" disabled> <!--User CANNOT edit-->
+           <input type="text" class="form-control" id="Department" value="{{prefilldepartment}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
          <label for="POSN_TITLE" class="field"><span class="tooltip-right" data-tooltip="Required">Position<span class="required-mark">*</span></span></label>
          <div  class="change">
-           <select required type="POSN_TITLE"
-                            class="selectpicker form-control newValue"
-                            id="POSN_TITLE"
-                            data-live-search="true"
-                            onchange="fillHoursPerWeek()">
+           <select required
+                  class="selectpicker form-control newValue"
+                  id="POSN_TITLE"
+                  data-live-search="true"
+                  onchange="fillHoursPerWeek()">
                   {% for position in positions %}
                     <option value="{{position.POSN_TITLE}}" data-wls={{position.WLS}} {% if position.POSN_TITLE == prefillposition %} selected {% endif %} >{{position.POSN_TITLE}} ({{position.WLS}})</option>
                   {% endfor %}
@@ -82,7 +82,7 @@
        <div class="form-group">
          <label for="jobType">Job Type</label> <!--User CANNOT edit-->
          <div>
-           <input type="jobType" class="form-control" id="jobType" value="{{prefilljobtype}}" disabled> <!--User CANNOT edit-->
+           <input type="text" class="form-control" id="jobType" value="{{prefilljobtype}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
    </div>
@@ -90,7 +90,7 @@
      <div class="form-group">
        <label for="Term">Term</label> <!--User CANNOT edit-->
        <div >
-         <input type="Term" class="form-control" id="Term" value="{{prefillterm}}"disabled> <!--User CANNOT edit-->
+         <input type="text" class="form-control" id="Term" value="{{prefillterm}}"disabled> <!--User CANNOT edit-->
          <input hidden id= "termCode" value="{{form.termCode}}"> </input>
        </div>
      </div>
@@ -140,7 +140,7 @@
 
     <div class="container">
       <div class="floatleft">
-        <button type="cancel" class="btn btn-danger" onclick="window.history.go(-1); return false;">Cancel</button>
+        <button type="button" class="btn btn-danger" onclick="window.history.go(-1); return false;">Cancel</button>
       </div>
       <div class="submitbutton">
         <button id="submit" type="button" class="btn btn-success" onclick="checkForChange()">Submit Changes</button>

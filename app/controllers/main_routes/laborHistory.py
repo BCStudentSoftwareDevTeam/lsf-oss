@@ -79,9 +79,10 @@ def populateModal(statusKey):
         current_user = require_login()
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
-        forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
+        forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         currentDate = datetime.date.today()
+        pendingformType = None
         buttonState = None
         current_user = current_user
         for form in forms:
@@ -114,7 +115,8 @@ def populateModal(statusKey):
                             buttonState = ButtonStatus.show_rehire_button
                             break
                     elif form.status.statusName == "Pending":
-                        buttonState = None
+                        buttonState = ButtonStatus.no_buttons_pending_forms
+                        pendingformType = form.historyType.historyTypeName
                         break
                     elif form.status.statusName == "Denied":
                         if currentDate <= form.formID.endDate:
@@ -136,7 +138,8 @@ def populateModal(statusKey):
                             break
                 if form.modifiedForm != None:
                     if form.status.statusName == "Pending":
-                        buttonState = None
+                        buttonState = ButtonStatus.no_buttons_pending_forms
+                        pendingformType = form.historyType.historyTypeName
                         break
                 if form.historyType.historyTypeName == "Labor Status Form":
                     if form.status.statusName == "Pending":
@@ -165,12 +168,12 @@ def populateModal(statusKey):
                                             statusForm = statusForm,
                                             currentDate = currentDate,
                                             buttonState = buttonState,
+                                            pendingformType = pendingformType,
                                             ButtonStatus = ButtonStatus
                                             ))
         return (resp)
     except Exception as e:
-        # print(e)
-        return render_template('errors/500.html')
+        print(e)
         return (jsonify({"Success": False}))
 
 @main_bp.route('/laborHistory/modal/printPdf/<statusKey>', methods=['GET'])
@@ -187,7 +190,6 @@ def ConvertToPDF(statusKey):
                         ))
         return (pdf)
     except Exception as e:
-        return render_template('errors/500.html')
         return(jsonify({"Success": False}))
 
 
@@ -222,7 +224,7 @@ def withdraw_form():
         flash(message, "success")
         return jsonify({"Success":True, "url":"/"})
     except Exception as e:
-        # print(e)
+        print(e)
         message = "An error occured. Your selected form for {0} {1} was not withdrawn.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "danger")
         return jsonify({"Success": False, "url":"/"})

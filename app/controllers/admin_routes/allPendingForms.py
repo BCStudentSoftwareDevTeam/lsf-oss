@@ -409,7 +409,7 @@ def modalFormUpdate():
                                 createdBy = createdUser.UserID,
                                 date = currentDate,
                                 notesContents = rsp['adminNotes'])
-            # historyForm.status = status.statusName
+            historyForm.status = status.statusName
             historyForm.reviewedBy = createdUser.UserID
             historyForm.reviewedDate = currentDate
             historyForm.save()
