@@ -1,3 +1,6 @@
+// Opens collapse menu for this page
+$('#admin').addClass('show');
+
 $('a.hover_indicator').click(function(e){
   e.preventDefault(); // prevents click on '#' link from jumping to top of the page.
 });
@@ -5,8 +8,11 @@ $('a.hover_indicator').click(function(e){
 $(document).ready(function() {
   // If the overload tab has been selected, then we need to restrict the
   // ordering functionality on different headers
-  if($('#overloadTab').hasClass('active')){
+
+  if ($('#overloadTab').hasClass('active') || $('#releaseTab').hasClass('active')) {
     targetsList = [8]
+  } else if ($('#modifiedTab').hasClass('active')) {
+    targetsList = [0, 10]
   } else {
     targetsList = [0, 9]
   }
@@ -30,7 +36,7 @@ var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = $('input:checked').each(function() {
     labor_details_ids.push(this.value);
-    });
+  });
 
   //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
   var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;
@@ -246,66 +252,6 @@ function finalDeny() {
   }
 }
 
-function createTabledataDictionary() { // puts all of the forms into dictionaries
-  var listDictAJAX = [];
-  $('#statusForms tr').has('td').each(function() {
-    /* Get the input box values first */
-    var supervisor = $("#selectedSupervisor").val();
-    var department = $("#selectedDepartment").val();
-    var term = $("#selectedTerm").val();
-    var whichTerm = term.toString().substr(-2);
-    var startDate = $("#dateTimePicker1").val();
-    var endDate = $("#dateTimePicker2").val();
-    var positionCode = $("#position_code").attr("data-posn");
-    var listDict = [];
-    listDict.push(supervisor, department, term, startDate, endDate, positionCode);
-    var headersLabel = ["Supervisor", "Department", "Term", "Start Date", "End Date", "Position Code"];
-    var tableDataDict = {};
-    for (var i in listDict) {
-      tableDataDict[headersLabel[i]] = listDict[i];
-    }
-
-    /* If it's a break, get table values */
-    if (whichTerm != 11 && whichTerm != 12 && whichTerm != 00) {
-      tableDataDict["Job Type"] = "Secondary";
-      var headers_2_data = ["Student", "Position", "Contract Hours"];
-      $('td', $(this)).each(function(index, item) {
-        var aTag = $.parseHTML($(item).html());
-        if (!$(aTag).hasClass('remove')) {
-          var notes = $(aTag).data('note');
-          tableDataDict["Supervisor Notes"] = notes;
-          tableDataDict[headers_2_data[index]] = $(item).html();
-        }
-      });
-      listDictAJAX.push(tableDataDict);
-      var allTableDataDict = {};
-      for (var key in listDictAJAX) {
-        allTableDataDict[key] = listDictAJAX[key];
-      }
-    }
-    /* If it's academic year, get the table values */
-    else {
-      var headersData = ["Student", "Position", "Job Type", "Hours Per Week"];
-      $('td', $(this)).each(function(index, item) {
-        var aTag = $.parseHTML($(item).html());
-        if (!$(aTag).hasClass('remove')) {
-          var notes = $(aTag).data('note');
-          tableDataDict["Supervisor Notes"] = notes;
-          tableDataDict[headersData[index]] = $(item).html();
-        }
-      });
-      listDictAJAX.push(tableDataDict);
-      var allTableDataDict = {}; // this is the dictionary that contains all the forms
-      for (var key in listDictAJAX) {
-        allTableDataDict[key] = listDictAJAX[key];
-      }
-    }
-  });
-
-  delete allTableDataDict["0"]; // gets rid of the first dictionary that contains table labels
-  return allTableDataDict;
-}
-
 function clearTextArea() { //makes sure that it empties text areas and p tags when modal is closed
   $("#notesText").empty();
   $("#laborNotesText").empty();
@@ -346,7 +292,7 @@ function loadOverloadModal(formHistoryID, laborStatusFormID) {
         $('#overloadNotes').data('formId', laborStatusFormID)
       }
     },
-    error: function(request,status,error){
+    error: function(request, status, error) {
       console.log(request.responseText);
     }
   });
@@ -364,19 +310,21 @@ $('#modalOverload').on('hidden.bs.modal', function () {// makes the close functi
 
 function displayModalTextArea(radioValue) {
   /*
-  This method toggles the 'Deny' and 'Admin Notes' textareas
-  based on what radio has been selected
+  This method toggles the 'Deny' and 'Admin Notes' textareas for the
+  'Overload' and 'Release' modals based on what radio has been selected
   */
+  $('.status-warning').hide();
   var radioVal = radioValue
   if (radioVal == 'deny') {
-    $('#overloadNotes').val('');
-    $('#denyTextArea').css('display', 'block')
-    $('#notesTextArea').css('display', 'none')
-
+    $('.finalNote').val('');
+    $('#banner-warning').hide();
+    $('.denyTextArea').css('display', 'block')
+    $('.notesTextArea').css('display', 'none')
   } else {
-    $('#denyOverloadReason').val('');
-    $('#denyTextArea').css('display', 'none')
-    $('#notesTextArea').css('display', 'block')
+    $('.finalDeny').val('');
+    $('#banner-warning').show();
+    $('.denyTextArea').css('display', 'none')
+    $('.notesTextArea').css('display', 'block')
   }
 }
 
@@ -385,7 +333,10 @@ function sendEmail(formHistoryID, emailRecipient) {
   This method sends data to the backend that it used to send an email,
   and also updates the data inside of the overload modal
   */
-  emailTrackerInfo = {'formHistoryID': formHistoryID, 'emailRecipient': emailRecipient}
+  emailTrackerInfo = {
+    'formHistoryID': formHistoryID,
+    'emailRecipient': emailRecipient
+  }
   data = JSON.stringify(emailTrackerInfo)
   $.ajax({
     method: "POST",
@@ -396,16 +347,15 @@ function sendEmail(formHistoryID, emailRecipient) {
       var newDate = response['emailDate']
       var status = response['status']
       var recipient = response['recipient']
-      if(recipient == 'SAAS'){
+      if (recipient == 'SAAS') {
         $("#statusSAAS").html(status)
         $("#emailSAAS").html(newDate)
-      }
-      else if (recipient == 'Financial Aid') {
+      } else if (recipient == 'Financial Aid') {
         $("#statusFinancialAid").html(status)
         $("#emailFinancialAid").html(newDate)
       }
     },
-    error: function(request,status,error){
+    error: function(request, status, error) {
       console.log(request.responseText);
     }
   });
@@ -419,11 +369,13 @@ function submitOverload(formHistoryID) {
   if ($('input[name=decision]:checked').length > 0) {
     var createAJAX = true
     var status = 'Pending'
-    var overloadModalInfo = {'formHistoryID': formHistoryID}
+    var overloadModalInfo = {
+      'formHistoryID': formHistoryID
+    }
     if ($('#deny').is(':checked')) {
-      if($("#denyOverloadReason").val() == ""){
-      $("#denyOverloadReason").focus();
-      $("#required-error").show();
+      if ($("#denyOverloadReason").val() == "") {
+        $("#denyOverloadReason").focus();
+        $("#required-error").show();
         createAJAX = false
       } else {
         $('#required-error').hide();
@@ -433,7 +385,7 @@ function submitOverload(formHistoryID) {
       }
     } else {
       if ($('#approve').is(':checked')) {
-        status = 'Approved'
+        status = 'Approved';
       }
       if ($('#approveRel').is(':checked')) {
         status = 'Approved Reluctantly'
@@ -445,47 +397,100 @@ function submitOverload(formHistoryID) {
     }
     if (createAJAX == true) {
       overloadModalInfo['status'] = status;
+      overloadModalInfo['formType'] = 'Overload';
       var data = JSON.stringify(overloadModalInfo)
       $.ajax({
         method: "POST",
-        url: '/admin/overloadFormUpdate',
+        url: '/admin/modalFormUpdate',
         data: data,
         contentType: 'application/json',
         success: function(response) {
           location.reload();
         },
-        error: function(request,status,error){
+        error: function(request, status, error) {
           console.log(request.responseText);
         }
       });
     }
   } else {
-    $('#radioDiv').css('border', 'thin dotted red')
-    $('#radioDiv').delay(2000).queue(function(next) {
-      $(this).css('border', 'none');
-      next();
-    })
+    $('.status-warning').show();
+  }
+}
 
+function submitRelease(formHistoryID) {
+  /*
+  This method is used to check if the form is ready for submission, then
+  makes an AJAX call with the information needed to complete the submission
+  */
+  if ($('input[name=decision]:checked').length > 0) {
+    var createAJAX = true
+    var status = 'Pending'
+    var releaseModalInfo = {
+      'formHistoryID': formHistoryID
+    }
+    if ($('#denyRelease').is(':checked')) {
+      if ($("#denyReleaseReason").val() == "") {
+        $("#denyReleaseReason").focus();
+        $(".required-error").show();
+        createAJAX = false;
+      } else {
+        $('.required-error').hide();
+        status = 'Denied';
+        var denyReason = $('#denyReleaseReason').val();
+        releaseModalInfo['denialReason'] = denyReason;
+      }
+    } else {
+      if ($('#approveRelease').is(':checked')) {
+        status = 'Approved';
+      }
+      if ($('#releaseNotes').val() != '') {
+        var adminNotes = $('#releaseNotes').val();
+        releaseModalInfo['adminNotes'] = adminNotes;
+      }
+    }
+    if (createAJAX == true) {
+      releaseModalInfo['status'] = status;
+      releaseModalInfo['formType'] = "Release";
+      var data = JSON.stringify(releaseModalInfo)
+      $.ajax({
+        method: "POST",
+        url: '/admin/modalFormUpdate',
+        data: data,
+        contentType: 'application/json',
+        success: function(response) {
+          location.reload();
+        },
+        error: function(request, status, error) {
+          console.log(request.responseText);
+        }
+      });
+    }
+  } else {
+    $('.status-warning').show();
   }
 }
 
 function toggleNotesLog(laborStatusFormID) {
   /*
   This method toggles the 'Notes' log at the bottom of the
-  modal to show/hide it
+  'Overload' and 'Release' modal to show/hide it
   */
-  if ($('#logNotesDiv').css('display') == 'none') {
-    var overloadViewNotesID = '#overloadNote_' + String(laborStatusFormID)
-    $(overloadViewNotesID).html('Hide Notes')
+  if ($('.logNotesDiv').css('display') == 'none') {
+    var modalViewNotesID = '#modalNote_' + String(laborStatusFormID)
+    $(modalViewNotesID).html('Hide Notes')
     getNotes(laborStatusFormID)
-    $('#logNotesDiv').css('display', 'block')
+    $('.logNotesDiv').css('display', 'block')
   } else {
     notesCounter(laborStatusFormID)
-    $('#logNotesDiv').css('display', 'none')
+    $('.logNotesDiv').css('display', 'none')
   }
 }
 
 function notesCounter(laborStatusFormID){
+  /*
+  This method displays the number of admin notes a Labor
+  Status Form has
+  */
   var data = {'laborStatusFormID': laborStatusFormID}
   data = JSON.stringify(data)
   $.ajax({
@@ -495,9 +500,9 @@ function notesCounter(laborStatusFormID){
     contentType: 'application/json',
     success: function(response) {
       var viewNotesID = '#notes_' + String(laborStatusFormID)
-      var overloadViewNotesID = '#overloadNote_' + String(laborStatusFormID)
+      var modalViewNotesID = '#modalNote_' + String(laborStatusFormID)
       $(viewNotesID).html('View Notes (' + response['noteTotal'] + ')')
-      $(overloadViewNotesID).html('View Notes (' + response['noteTotal'] + ')')
+      $(modalViewNotesID).html('View Notes (' + response['noteTotal'] + ')')
     },
     error: function(request,status,error){
       console.log(request.responseText);

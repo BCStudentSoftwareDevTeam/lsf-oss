@@ -3,7 +3,7 @@ var display_failed = [];
 var laborStatusFormNote = null;
 
 $(document).ready(function(){
-  $("[data-toggle=\"tooltip\"]").tooltip();
+  $('[data-toggle="tooltip"]').tooltip();
   $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
   if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
     checkCompliance($("#selectedDepartment"));
@@ -305,7 +305,7 @@ function checkCompliance(obj) {
 // TABLE LABELS
 $("#contractHours").hide();
 $("#hoursPerWeek").hide();
-$("#JopTypes").hide();
+$("#JobTypes").hide();
 $("#plus").hide();
 $("#mytable").hide();
 $("#failedTable").hide();
@@ -317,12 +317,12 @@ function showAccessLevel(){ // Make Table labels appear
     if (isBreak == "True") { // Summer term or any other break period table labels
       $("#contractHours").show();
       $("#plus").show();
-      $("#jobType").hide();
+      $("#JobTypes").hide();
       $("#hoursPerWeek").hide();
     }
     else{ // normal semester like Fall or Spring table labels
       $("#hoursPerWeek").show();
-      $("#JopTypes").show();
+      $("#JobTypes").show();
       $("#plus").show();
       $("#contractHours").hide();
     }
@@ -574,8 +574,8 @@ function createAndFillTable(studentDict) {
   else {
     var selectedContractHoursName = $("#selectedContractHours").val();// For whatever reason this is undefined
   }
-  var notesGlyphicon = "<a data-toggle=\"modal\" onclick = \"showNotesModal(this)\" id= \"nGlyphicon\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
-  var removeIcon = "<a onclick= \"deleteRow(this)\" id=\"rGlyphicon\"><span class=\"glyphicon glyphicon-remove color-red\" style=\"color:red;\"></span></a>";
+  var notesGlyphicon = "<a href=\"#\" data-toggle=\"modal\" tabindex=\"0\" aria-label=\"View Notes\" onclick = \"showNotesModal(this)\" id= \"nGlyphicon\" ><span class=\"glyphicon glyphicon-edit\"></span></a>";
+  var removeIcon = "<a href=\"#\" onclick= \"deleteRow(this)\" tabindex=\"0\" aria-label=\"Remove Row\" id=\"rGlyphicon\"><span class=\"glyphicon glyphicon-remove\" style=\"color:red;\"></span></a>";
   var row = table.insertRow(-1);
   var cell1 = row.insertCell(0);
   var cell2 = row.insertCell(1);

@@ -64,7 +64,7 @@ def allPendingForms(formType):
         # only if a form is adjusted
         for allForms in formList:
             if allForms.modifiedForm: # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
-                if allForms.modifiedForm.fieldModified == "supervisor": # if supervisor field in adjust forms has been modified,
+                if allForms.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
                     newSupervisorID = allForms.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
                     newSupervisor = User.get(User.UserID == newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
@@ -112,6 +112,11 @@ def approved_and_denied_Forms():
 @admin.route('/admin/updateStatus/<raw_status>', methods=['POST'])
 def finalUpdateStatus(raw_status):
     ''' This method changes the status of the pending forms to approved '''
+    current_user = require_login()
+    if not current_user:                    # Not logged in
+        return render_template('errors/403.html')
+    if not current_user.isLaborAdmin:       # Not an admin
+        return render_template('errors/403.html')
 
     if raw_status == 'approved':
         new_status = "Approved"
@@ -121,7 +126,7 @@ def finalUpdateStatus(raw_status):
         print("Unknown status: ", raw_status)
         return jsonify({"success": False})
     try:
-        createdUser = User.get(username = cfg['user']['debug'])
+        createdUser = User.get(username = current_user.username)
         rsp = eval(request.data.decode("utf-8"))
         if new_status == 'Denied':
             # Index 1 will always hold the reject reason in the list, so we can
@@ -181,7 +186,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
     current_user = require_login()
     if not current_user:        # Not logged in
             return render_template('errors/403.html')
-    if form.modifiedForm.fieldModified == "supervisor":
+    if form.modifiedForm.fieldModified == "Supervisor":
         d, created = User.get_or_create(PIDM = form.modifiedForm.newValue)
         if not created:
             LSF.supervisor = d.UserID
@@ -316,7 +321,7 @@ def insertNotes(formId):
 @admin.route('/admin/overloadModal', methods=['POST'])
 def getOverloadModalData():
     """
-    This function will retrieve the data to populate the overload modal
+    This function will retrieve the data to populate the overload modal.
     """
     try:
         rsp = eval(request.data.decode("utf-8"))
@@ -361,23 +366,35 @@ def getOverloadModalData():
                                 })
             return jsonify(overloadModalInfo)
     except Exception as e:
-        print("error", e)
-        return jsonify({"Success": False})
+        print("Error Loading Data Into Overload Modal:",type(e).__name__ + ":", e)
+        return jsonify({"Success": False}), 500
 
-@admin.route('/admin/overloadFormUpdate', methods=['POST'])
-def updateOverloadForm():
+@admin.route('/admin/modalFormUpdate', methods=['POST'])
+def modalFormUpdate():
     """
-    This function will retrieve update the overload from using the
-    data entered into the modal.
+    This function will update the overload or release form based on the form
+    type and the data from the modal.
     """
     try:
+        current_user = require_login()
+        if not current_user:                    # Not logged in
+            return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:       # Not an admin
+            return render_template('errors/403.html')
+
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
             historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
-            overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
+            email = emailHandler(historyForm.formHistoryID)
             currentDate = datetime.now().strftime("%Y-%m-%d")
-            createdUser = User.get(username = cfg['user']['debug'])
+            createdUser = User.get(username = current_user.username)
             status = Status.get(Status.statusName == rsp['status'])
+            if rsp['formType'] == 'Overload':
+                overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
+                overloadForm.laborApproved = status.statusName
+                overloadForm.laborApprover = createdUser.UserID
+                overloadForm.laborReviewDate = currentDate
+                overloadForm.save()
             if 'denialReason' in rsp.keys():
                 # We only update the reject reason if one was given on the UI
                 historyForm.rejectReason = rsp['denialReason']
@@ -392,20 +409,25 @@ def updateOverloadForm():
                                 createdBy = createdUser.UserID,
                                 date = currentDate,
                                 notesContents = rsp['adminNotes'])
-            overloadForm.laborApproved = status.statusName
-            overloadForm.laborApprover = createdUser.UserID
-            overloadForm.laborReviewDate = currentDate
-            overloadForm.save()
             historyForm.status = status.statusName
             historyForm.reviewedBy = createdUser.UserID
             historyForm.reviewedDate = currentDate
             historyForm.save()
+            if rsp['formType'] == 'Overload':
+                if rsp['status'] == 'Approved' or rsp['status'] == 'Approved Reluctantly':
+                    email.LaborOverLoadFormApproved()
+                elif rsp['status'] == 'Denied':
+                    email.LaborOverLoadFormRejected()
+            elif rsp['formType'] == 'Release':
+                if rsp['status'] == 'Approved':
+                    email.laborReleaseFormApproved()
+                elif rsp['status'] == 'Denied':
+                    email.laborReleaseFormRejected()
 
             return jsonify({"Success": True})
     except Exception as e:
-        print("error", e)
-        return jsonify({"Success": False})
-
+        print("Error Updating Release/Overload Forms:",type(e).__name__ + ":", e)
+        return jsonify({"Success": False}),500
 
 @admin.route('/admin/sendVerificationEmail', methods=['POST'])
 def sendEmail():
@@ -437,13 +459,13 @@ def sendEmail():
             }
             return jsonify(newEmailInformation)
     except Exception as e:
-        print("error", e)
-        return jsonify({"Success": False})
+        print("Error sending verification email to SASS/Financial Aid:",type(e).__name__ + ":", e)
+        return jsonify({"Success": False}),500
 
 @admin.route('/admin/notesCounter', methods=['POST'])
 def getNotesCounter():
     """
-    This method will send an email to either SAAS or Financial Aid
+    This method retrieve the number of notes a labor status form has
     """
     try:
         rsp = eval(request.data.decode("utf-8"))
@@ -452,5 +474,5 @@ def getNotesCounter():
             noteDictionary = {'noteTotal': noteTotal}
             return jsonify(noteDictionary)
     except Exception as e:
-        print("Error selecting admin notes:", e)
+        print("Error selecting admin notes:",type(e).__name__ + ":", e)
         return jsonify({"Success": False}),500

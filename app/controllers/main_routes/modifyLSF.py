@@ -38,8 +38,13 @@ def modifyLSF(laborStatusKey):
     prefillposition = form.POSN_TITLE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
     prefillterm = form.termCode.termName
+    totalHours = 0
     if form.weeklyHours != None:
         prefillhours = form.weeklyHours
+        allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == form.termCode) & (LaborStatusForm.laborStatusFormID != laborStatusKey) & (LaborStatusForm.studentSupervisee.ID == form.studentSupervisee.ID))
+        if allTermForms:
+            for i in allTermForms:
+                totalHours += i.weeklyHours
     else:
         prefillhours = form.contractHours
     prefillnotes = form.supervisorNotes
@@ -49,11 +54,7 @@ def modifyLSF(laborStatusKey):
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
-    allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == form.termCode) & (LaborStatusForm.laborStatusFormID != laborStatusKey) & (LaborStatusForm.studentSupervisee.ID == form.studentSupervisee.ID))
-    totalHours = 0
-    if allTermForms:
-        for i in allTermForms:
-            totalHours += i.weeklyHours
+
 
     return render_template( 'main/modifyLSF.html',
 				            title=('modify LSF'),
@@ -81,6 +82,9 @@ def modifyLSF(laborStatusKey):
 def updateLSF(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
+        current_user = require_login()
+        if not current_user:        # Not logged in
+            return render_template('errors/403.html')
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
@@ -126,20 +130,26 @@ def updateLSF(laborStatusKey):
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
-                    user = User.get(User.username == cfg["user"]["debug"])
+                    user = User.get(User.username == current_user.username)
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
-                                                        createdBy = user.UserID,
+                                                        createdBy = current_user.UserID,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
-                    overloadEmail = emailHandler(newFormHistory.formHistoryID)
-                    overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+                    try:
+                        overloadEmail = emailHandler(newFormHistory.formHistoryID)
+                        overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+                    except Exception as e:
+                        print("Error on sending overload emails: ", e)
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
         changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
-        email = emailHandler(changedForm.formHistoryID)
-        email.laborStatusFormModified()
+        try:
+            email = emailHandler(changedForm.formHistoryID)
+            email.laborStatusFormModified()
+        except Exception as e:
+            print("Error on sending form modified emails: ", e)
         message = "Your Labor Status Form for {0} {1} has been modified.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
 
@@ -148,5 +158,5 @@ def updateLSF(laborStatusKey):
     except Exception as e:
         message = "An error occured. Your Labor Status Form for {0} {1} was not modified.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "danger")
-        # print(e)
+        print(e)
         return jsonify({"Success": False})

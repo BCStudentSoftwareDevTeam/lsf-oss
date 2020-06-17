@@ -66,6 +66,9 @@ def laborStatusForm(laborStatusKey = None):
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
     """ Create labor status form. Create labor history form. Most of the functions called here are in userInsertFunctions.py"""
+    currentUser = require_login()
+    if not currentUser:        # Not logged in
+        return render_template('errors/403.html')
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     all_forms = []
@@ -89,7 +92,7 @@ def userInsert():
         try:
             lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
             status = Status.get(Status.statusName == "Pending")
-            d, created = User.get_or_create(username = cfg['user']['debug'])
+            d, created = User.get_or_create(username = currentUser.username)
             creatorID = d.UserID
             createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
             try:

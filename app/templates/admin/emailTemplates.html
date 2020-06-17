@@ -3,13 +3,13 @@
 ​{% block scripts %}
 {{super()}}
 <script type=text/javascript src="{{url_for('static', filename='js/emailTemplates.js')}}"></script>
+<link rel="stylesheet" href="/static/css/tooltip.css" type="text/css"/>
 {% endblock %}
 
 {% block app_content %}
 
 <head>
   <script src="/static/js/ckeditor/ckeditor.js"></script>
-  <script src="/static/js/ckeditor/plugin.js"></script>
 </head>
 <a class="skipContent" href="#recipient" tabindex="1">Click to Skip</a>
 <h1 class="col-md-12" style="text-align:center">Email Templates</h1>
@@ -19,7 +19,10 @@
 </div>
 <div class="form-group col-md-6" margin-left="500px">
   <div class="form-group col-md-12">
-    <label for="Recipient">Recipient</label>
+      <div>
+          <p class="required-mark">* Marked fields are required</p>
+      </div>
+    <label for="Recipient"><span class="tooltip-right" data-tooltip="Required">Recipient<span class="required-mark">*</span></span></label>
       <select class="selectpicker"
         name='recipient'
         id='recipient'
@@ -33,7 +36,7 @@
      </select>
   </div>
   <div class="form-group col-md-12">
-    <label for="Form Type">Form Type</label>
+    <label for="Form Type"><span class="tooltip-right" data-tooltip="Required">Form Type<span class="required-mark">*</span></span></label>
       <select class="selectpicker"
         name='formType'
         id='formType'
@@ -46,7 +49,7 @@
      </select>
   </div>
   <div class="form-group col-md-12">
-    <label for="Action">Action</label>
+    <label for="Action"><span class="tooltip-right" data-tooltip="Required">Action<span class="required-mark">*</span></span></label>
       <select class="selectpicker"
         name='action'
         id='action'
@@ -58,7 +61,7 @@
      </select>
   </div>
   <div class="form-group col-md-12">
-  <label for="Subject">Subject</label>
+  <label for="Subject"><span class="tooltip-right" data-tooltip="Required">Subject<span class="required-mark">*</span></span></label>
     <input class="form-control"
       type="text"
       name='subject'
@@ -71,7 +74,7 @@
   </div>
 
   <div class="form-group col-md-12">
-  <label for="Body">Body</label>
+  <label for="Body"><span class="tooltip-right" data-tooltip="Required">Body<span class="required-mark">*</span></span></label>
   <textarea name="editor1" id="editor1"></textarea>
               <script>
                       CKEDITOR.replace( 'editor1' );
@@ -86,24 +89,9 @@
       <button type="button" id="submit" class="btn btn-success" onclick="saveChanges()">Save Changes</button>
   </div>
 
-  <div class="modal fade" id="modal" role="dialog" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Are you sure you want to save?</h4>
-        </div>
-        <div class="modal-body">
-          <p>Saving these changes will override the selected email template.</p>
-          <strong><p>You will not be able to revert back to the previous email template once the changes have been saved.</p></strong>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal" style="float:left">Close</button>
-          <button type="submit" name="submit" value="submit" class="btn btn-success" id="submitModal" onclick="postEmailTemplate()">Save Changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- Modal that will be rendered on the click of the submit button -->
+  {% include "snips/emailTemplatesModal.html" %}
+
 
 </div>
 
