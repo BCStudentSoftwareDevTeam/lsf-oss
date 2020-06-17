@@ -82,45 +82,21 @@ def userInsert():
             print("ERROR: ", e)
 
         student = Student.get(ID = tracyStudent.ID)
-        # student = tracyStudent
-        # query = Student.update(student).where(ID = rspFunctional[i]['stuBNumber'])
-        # query.execute()
 
-        # Updates the [insert] database with any updated attributes from [insert]
+        # Updates the student database with any updated attributes from TRACY
+        student.FIRST_NAME = tracyStudent.FIRST_NAME            # FIRST_NAME
+        student.LAST_NAME = tracyStudent.LAST_NAME              # LAST_NAME
+        student.CLASS_LEVEL = tracyStudent.CLASS_LEVEL          # CLASS_LEVEL
+        student.ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS    # ACADEMIC_FOCUS
+        student.MAJOR = tracyStudent.MAJOR                      # MAJOR
+        student.PROBATION = tracyStudent.PROBATION              # PROBATION
+        student.ADVISOR = tracyStudent.ADVISOR                  # ADVISOR
+        student.STU_EMAIL = tracyStudent.STU_EMAIL              # STU_EMAIL
+        student.STU_CPO = tracyStudent.STU_CPO                  # STU_CPO
+        student.LAST_POSN = tracyStudent.LAST_POSN              # LAST_POSN
+        student.LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM      # LAST_SUP_PIDM
 
-        # FIRST_NAME
-        # student.FIRST_NAME = Student.get(FIRST_NAME = tracyStudent.FIRST_NAME)
-        print("=======================================")
-        # print(STUDATA.get(ID = rspFunctional[i]['stuBNumber']))
-        # print(student == STUDATA.get(ID = rspFunctional[i]['stuBNumber']))
-        # print(tracyStudent.select("FIRST_NAME").where(tracyStudent.ID == student.ID).get())
-        print(tracyStudent.select().where().get())
-
-        # student.FIRST_NAME = tracyStudent.get(ID = tracyStudent.ID).FIRST_NAME
-        # # LAST_NAME
-        # student.LAST_NAME = tracyStudent.get(LAST_NAME = tracyStudent.LAST_NAME)
-        # # CLASS_LEVEL
-        # student.CLASS_LEVEL = Student.get(CLASS_LEVEL = tracyStudent.CLASS_LEVEL)
-        # # ACADEMIC_FOCUS
-        # student.ACADEMIC_FOCUS = Student.get(ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS)
-        # # MAJOR
-        # student.MAJOR = Student.get(MAJOR = tracyStudent.MAJOR)
-        # # PROBATION
-        # student.PROBATION = Student.get(PROBATION = tracyStudent.PROBATION)
-        # # ADVISOR
-        # student.ADVISOR = Student.get(ADVISOR = tracyStudent.ADVISOR)
-        # # STU_EMAIL
-        # student.STU_EMAIL = Student.get(STU_EMAIL = tracyStudent.STU_EMAIL)
-        # # STU_CPO
-        # student.STU_CPO = Student.get(STU_CPO = tracyStudent.STU_CPO)
-        # # LAST_POSN
-        # student.LAST_POSN = Student.get(LAST_POSN = tracyStudent.LAST_POSN)
-        # # LAST_SUP_PIDM
-        # student.LAST_SUP_PIDM = Student.get(LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
-        # # print(student)
-        # student.save()
-
-        print(type(student))
+        student.save()                                          #Saves to student database
 
         studentID = student.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
