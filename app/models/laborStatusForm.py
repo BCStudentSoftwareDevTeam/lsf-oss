@@ -23,6 +23,7 @@ class LaborStatusForm (baseModel):
     endDate                     = DateField(null=True)
     supervisorNotes             = CharField(null=True)              # null=True allows saving of null in db, and a supervisor may not always have notes
     laborDepartmentNotes        = CharField(null=True)
+    NAME                        = CharField()
 
 
     def __str__(self):
