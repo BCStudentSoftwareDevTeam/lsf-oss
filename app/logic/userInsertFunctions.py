@@ -32,7 +32,7 @@ def createUserFromTracy(username):
 
     email = "{}@berea.edu".format(username)
     try:
-        tracyUser = STUSTAFF.get(EMAIL=email)
+        tracyUser = STUSTAFF.get(STU_EMAIL=email)
     except DoesNotExist as e:
         raise InvalidUserException("{} not found in Tracy database".format(email))
 

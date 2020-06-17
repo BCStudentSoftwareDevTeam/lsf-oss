@@ -13,6 +13,11 @@ from flask import json, jsonify
 from flask import make_response
 import base64
 
+# if not admin and bnum not null:
+#   isStudent = True
+# elif not admin and bnum is null:
+#
+
 @main_bp.before_app_request
 def before_request():
     pass # TODO Do we need to do anything here? User stuff?
@@ -22,12 +27,18 @@ def index():
     current_user = require_login()
     if not current_user:
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin:       # Not an admin
+    if not current_user.isLaborAdmin and current_user.ID != None:   # logged in as a student
+        isStudent = True
         isLaborAdmin = False
+        departments = []
+    elif not current_user.isLaborAdmin and current_user.ID == None:       # logged in as a Supervisor
+        isLaborAdmin = False
+        isStudent = False
         # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
         departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
-    else:
+    else:   # logged in as an admin
         isLaborAdmin = True
+        isStudent = False
         # Grabs every single department that currently has at least one labor status form in it
         departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
 
@@ -131,7 +142,8 @@ def index():
                     inactiveSupervisees = inactiveSupervisees,
                     UserID = current_user,
                     currentUserDepartments = departments,
-                    isLaborAdmin = isLaborAdmin
+                    isLaborAdmin = isLaborAdmin,
+                    isStudent = isStudent
                           )
 
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])

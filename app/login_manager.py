@@ -39,10 +39,10 @@ def auth_user(env, username):
         return user
 
     except DoesNotExist as e:
-        description = env['description'].lower()
-        if description != 'student':
-            print("Adding {} to user table".format(username))
-            return createUserFromTracy(username)
-
-        else:
-            raise InvalidUserException("Students must be added as administrators before logging in. {} is a student.".format(username))
+        # description = env['description'].lower()
+        # if description != 'student':
+        print("Adding {} to user table".format(username))
+        return createUserFromTracy(username)
+        #
+        # else:
+        #     raise InvalidUserException("Students must be added as administrators before logging in. {} is a student.".format(username))

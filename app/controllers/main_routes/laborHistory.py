@@ -26,20 +26,19 @@ def laborhistory(id):
         current_user = require_login()
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
-
-        # if current_user.ID == id:
-            # isLaborAdmin = False
-            # authorizedUser = True
-            # student logged in
-
-
-        if not current_user.isLaborAdmin:
+        if current_user.ID == id:
             isLaborAdmin = False
+            isStudent = True
+            departmentsList = None
+        elif current_user.ID != id and not current_user.isLaborAdmin:
+            isLaborAdmin = False
+            isStudent = False
             authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.UserID)
             if authorizedUser == False:
                 return render_template('errors/403.html')
         else:
             isLaborAdmin = True
+            isStudent = False
             departmentsList = []
         student = Student.get(Student.ID == id)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
@@ -54,7 +53,8 @@ def laborhistory(id):
                                 studentForms = studentForms,
                                 formHistoryList = formHistoryList,
                                 departmentsList = departmentsList,
-                                isLaborAdmin = isLaborAdmin
+                                isLaborAdmin = isLaborAdmin,
+                                isStudent = isStudent
                               )
     except Exception as e:
         return render_template('errors/500.html')
@@ -110,11 +110,12 @@ def populateModal(statusKey):
                     form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
         for form in forms:
             if current_user.username != (form.createdBy.username or form.formID.supervisor.username):
-                buttonState = ButtonStatus.no_buttons
-                break
-            # elif current_user.ID == (form.studentSupervisee.ID):
-                # buttonState = None
-                # break
+                if current_user.ID == (form.formID.studentSupervisee.ID):  # If student is logged in then don't show a button
+                    buttonState = None
+                    break
+                else:
+                    buttonState = ButtonStatus.no_buttons # otherwise, show the notification
+                    break
             else:
                 if form.releaseForm != None:
                     if form.status.statusName == "Approved":
