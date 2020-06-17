@@ -1,8 +1,17 @@
+#from flask_sqlalchemy import SQLAlchemy
 from peewee import *
 import os
 
 # from app import login
 from app import load_config
+cfg = load_config('app/config/secret_config.yaml')
+
+sa_database_uri = ''
+#if app.config['ENV'] == 'production':
+    #sa_database_uri = ''
+
+#app.config['SQLALCHEMY_DATABASE_URI'] = ''
+#db = SQLAlchemy(app)
 
 
 def getMySQLDB():

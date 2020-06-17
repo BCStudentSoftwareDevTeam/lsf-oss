@@ -16,6 +16,10 @@ def has_no_empty_params(rule):
     arguments = rule.arguments if rule.arguments is not None else ()
     return len(defaults) >= len(arguments)
 
+class Test2:
+    def test_it_all(self, base_url, request):
+        assert True
+
 class Test_Routes:
         verbose = False
 

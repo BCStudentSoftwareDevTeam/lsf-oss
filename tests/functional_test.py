@@ -12,6 +12,7 @@ def has_no_empty_params(rule):
     arguments = rule.arguments if rule.arguments is not None else ()
     return len(defaults) >= len(arguments)
 
+@pytest.mark.skip(reason="not ready")
 class Test_Routes(MultipleBrowserTest):
         drivers = []
         def get_urls(self, method):

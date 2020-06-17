@@ -20,7 +20,6 @@ Flask-MySQL==1.4.0
 Flask-Mail
 flask-nav==0.6
 Flask-SQLAlchemy==2.4.0
-fpdf
 idna==2.8
 itsdangerous==1.1.0
 Jinja2==2.10.1
@@ -44,3 +43,10 @@ wtf-peewee==3.0.0
 WTForms==2.2.1
 XlsxWriter==1.1.8
 cx-Oracle==7.3.0
+fpdf
+pyodbc
+pytest-watch
+pytest-base-url
+selenium
+pytest-selenium
+webdriver_manager
