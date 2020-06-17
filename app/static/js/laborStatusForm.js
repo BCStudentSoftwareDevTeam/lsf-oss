@@ -57,7 +57,6 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
   });
 
 function checkIfFreshman() {
-  console.log("into checkIfFreshman");
   var jobType = $("#jobType").val();
   var wls = $("#position :selected").attr("data-wls")
   var classLevel = $("#student :selected").attr("data-stuCL");
@@ -338,10 +337,7 @@ $("#reviewButton").hide();
 // Table glyphicons
 function showNotesModal(glyphicon){// pops up Note Modal when notes glyphicon is clicked
   var rowParent = glyphicon.parentNode.parentNode;
-  console.log(rowParent);
   var table = document.getElementById("mytable").getElementsByTagName("tbody")[0];
-  console.log(table);
-  console.log(globalArrayOfStudents);
   for (var i = 0, row; row = table.rows[i]; i++) {
     if (rowParent === table.rows[i]) {
       $("#modal_text").val(globalArrayOfStudents[i].stuNotes);
@@ -731,8 +727,6 @@ function userInsert(){
            data: JSON.stringify(globalArrayOfStudents),
            contentType: "application/json",
            success: function(response) {
-               term = $("#selectedTerm").val();
-               var whichTerm = parseInt(term.toString().substr(-2));
                var isBreak = $('#selectedTerm').find('option:selected').attr('data-termBreak');
                modalList = [];
                for(var key = 0; key < globalArrayOfStudents.length; key++){
@@ -745,7 +739,6 @@ function userInsert(){
                    if (response.includes(false)){ // if there is even one false value in response
                        // var selectedContractHours = globalArrayOfStudents[key].stuWeeklyHours;
                        if (response[key] === false){ // Finds the form that has failed.
-                           // if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00){
                            if (isBreak == "True"){
                               display_failed.push(key);
                               var bigString = "<li>" +"<span class=\"glyphicon glyphicon-remove\" style=\"color:red\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
@@ -756,7 +749,6 @@ function userInsert(){
                            }
                        }
                        else{
-                            // if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
                             if (isBreak == "True"){
                                 var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                             }
@@ -773,7 +765,6 @@ function userInsert(){
                    $("#SubmitModal").modal("show");
                  }
                else{
-                    // if (whichTerm !== 11 && whichTerm !==12 && whichTerm !==00){
                     if (isBreak == "True"){
                     var bigString = "<li>" +"<span class=\"glyphicon glyphicon-ok\" style=\"color:green\"></span> " + studentName + " | " + position + " | " + selectedContractHours + " hours";
                   }
