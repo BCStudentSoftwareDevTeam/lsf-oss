@@ -12,12 +12,18 @@ from app.login_manager import *
 def contributors():
     current_user = require_login()
     if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
+        if current_user.ID != None:
+            isLaborAdmin = False
+            isStudent = True
+        else:
+            isLaborAdmin = False
+            isStudent = False
     else:
         isLaborAdmin = True
 
     contribs = load_config("app/config/contributors.yaml")
     return render_template("main/contributors.html",
            cfg=contribs,
-           isLaborAdmin = isLaborAdmin
+           isLaborAdmin = isLaborAdmin,
+           isStudent = isStudent
            )

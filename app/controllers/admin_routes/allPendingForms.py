@@ -28,8 +28,11 @@ def allPendingForms(formType):
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
-            isLaborAdmin = False
-            return render_template('errors/403.html',
+            if current_user.ID != None: # logged in as a student
+                return redirect('/laborHistory/' + current_user.ID)
+            else:
+                isLaborAdmin = False
+                return render_template('errors/403.html',
                                     isLaborAdmin = isLaborAdmin)
         else:
             isLaborAdmin = True

@@ -9,7 +9,7 @@ from flask_bootstrap import bootstrap_find_resource
 from app.models.Tracy.studata import*
 from app.models.Tracy.stuposn import *
 from app.models.department import *
-from flask import request
+from flask import request, redirect
 from flask import jsonify
 
 @admin.route('/admin/manageDepartments', methods=['GET'])
@@ -25,9 +25,12 @@ def manage_departments():
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
-            isLaborAdmin = False
-            return render_template('errors/403.html',
-                                    isLaborAdmin = isLaborAdmin)
+            if current_user.ID != None: # logged in as a student
+                return redirect('/laborHistory/' + current_user.ID)
+            else:
+                isLaborAdmin = False  # logged in as a supervisor
+                return render_template('errors/403.html',
+                                        isLaborAdmin = isLaborAdmin)
         else:
             isLaborAdmin = True
 

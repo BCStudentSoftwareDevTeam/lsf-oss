@@ -27,7 +27,10 @@ def adjustLSF(laborStatusKey):
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
+        if current_user.ID != None: # If a student is logged in and trying to get to this URL then send them back to their own page.
+            return redirect('/laborHistory/' + current_user.ID)
+        else:
+            isLaborAdmin = False
     else:
         isLaborAdmin = True
     currentDate = date.today()

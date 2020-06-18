@@ -6,7 +6,7 @@ from app.models.term import *
 import datetime
 from app.models.term import *
 from flask import json, jsonify
-from flask import request
+from flask import request, redirect
 from datetime import datetime, date
 from datetime import datetime
 import datetime
@@ -19,9 +19,12 @@ def term_Management():
     if not current_user:                    # Not logged in
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
-        return render_template('errors/403.html',
-                                isLaborAdmin = isLaborAdmin)
+        if current_user.ID != None: # logged in as a student
+            return redirect('/laborHistory/' + current_user.ID)
+        else:
+            isLaborAdmin = False  # logged in as a supervisor
+            return render_template('errors/403.html',
+                                    isLaborAdmin = isLaborAdmin)
     else:
         isLaborAdmin = True
 

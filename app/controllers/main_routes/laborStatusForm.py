@@ -28,8 +28,11 @@ def laborStatusForm(laborStatusKey = None):
     currentUser = require_login()
     if not currentUser:        # Not logged in
         return render_template('errors/403.html')
-    if not currentUser.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
+    if not currentUser.isLaborAdmin:       # Not an admin, either student or supervisor
+        if currentUser.ID != None: # TODO: How are we distinguishing students from supervisor? Currently it's being done using presence/absence of bnumber
+            return redirect('/laborHistory/' + currentUser.ID)
+        else:
+            isLaborAdmin = False
     else:
         isLaborAdmin = True
     # Logged in

@@ -23,7 +23,10 @@ def modifyLSF(laborStatusKey):
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
+        if current_user.ID != None: # TODO: How are we distinguishing students from supervisor? Currently it's being done using presence/absence of bnumber
+            return redirect('/laborHistory/' + current_user.ID)
+        else:
+            isLaborAdmin = False
     else:
         isLaborAdmin = True
     #If logged in....

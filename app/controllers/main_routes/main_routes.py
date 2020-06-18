@@ -8,7 +8,7 @@ from app.models.department import Department
 from app.models.term import Term
 from app.models.formHistory import FormHistory
 from datetime import datetime, date
-from flask import request
+from flask import request, redirect
 from flask import json, jsonify
 from flask import make_response
 import base64
@@ -27,18 +27,21 @@ def index():
     current_user = require_login()
     if not current_user:
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin and current_user.ID != None:   # logged in as a student
-        isStudent = True
-        isLaborAdmin = False
-        departments = []
-    elif not current_user.isLaborAdmin and current_user.ID == None:       # logged in as a Supervisor
-        isSupervisor = True
-        isLaborAdmin = False
-        # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
-        departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
+    # TODO: How are we distinguishing students from supervisor? Currently it's being done using presence/absence of bnumber
+    if not current_user.isLaborAdmin:
+         if current_user.ID != None:   # logged in as a student
+            isStudent = True
+            isLaborAdmin = False
+            departments = []
+            return redirect('/laborHistory/' + current_user.ID)
+         else:       # logged in as a Supervisor
+            isLaborAdmin = False
+            isStudent = False
+            # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
+            departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
     else:   # logged in as an admin
         isLaborAdmin = True
-        isSupervisor = False
+        isStudent = False
         # Grabs every single department that currently has at least one labor status form in it
         departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
 
