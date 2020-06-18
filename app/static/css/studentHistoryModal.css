@@ -73,3 +73,8 @@ p {
   margin-top: 0;
   margin-bottom: 0
 }
+
+.original-name {
+    visibility: hidden !important;
+    font-style: italic;
+}

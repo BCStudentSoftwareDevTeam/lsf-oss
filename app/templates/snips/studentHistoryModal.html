@@ -6,8 +6,7 @@
         <span class="h2 col-sm-9 modalHeader">
             {{form1.studentSupervisee.FIRST_NAME}} {{form1.studentSupervisee.LAST_NAME}}
             {% if form1.studentSupervisee.FIRST_NAME + " " + form1.studentSupervisee.LAST_NAME != form1.name %}
-            <br>
-            <span class="h4">Originally filed under "{{form1.name}}"</span>
+            <div class="original-name">Originally filed under "{{form1.name}}"</div>
             {% endif %}
         </span>
         {% endfor %}
