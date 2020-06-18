@@ -3,7 +3,13 @@
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         {% for form1 in statusForm %}
         <span style="text-align: right;"><button type="button" class="btn btn-default btn col-sm-2" id="print" onclick="fillPDF({{form1.laborStatusFormID}})"><span class="glyphicon glyphicon-print"></span> Print</button></span>
-        <span class="h2 col-sm-9 modalHeader">{{form1.studentSupervisee.FIRST_NAME}} {{form1.studentSupervisee.LAST_NAME}}</span>
+        <span class="h2 col-sm-9 modalHeader">
+            {{form1.studentSupervisee.FIRST_NAME}} {{form1.studentSupervisee.LAST_NAME}}
+            {% if form1.studentSupervisee.FIRST_NAME + " " + form1.studentSupervisee.LAST_NAME != form1.name %}
+            <br>
+            <span class="h4">Originally filed under "{{form1.name}}"</span>
+            {% endif %}
+        </span>
         {% endfor %}
       </div>
       <div class="modal-body" id="modalid">

@@ -92,9 +92,6 @@ def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department
     startDate = datetime.strptime(rspFunctional['stuStartDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
     endDate = datetime.strptime(rspFunctional['stuEndDate'], "%m/%d/%Y").strftime('%Y-%m-%d')
     # Creates the labor Status form
-    print("================================")
-    print(tracyStudent.FIRST_NAME + " " + tracyStudent.LAST_NAME)
-    print("================================")
     lsf = LaborStatusForm.create(termCode_id = term,
                                  studentSupervisee_id = studentID,
                                  supervisor_id = primarySupervisor,
@@ -108,7 +105,8 @@ def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department
                                  startDate = startDate,
                                  endDate = endDate,
                                  supervisorNotes = rspFunctional["stuNotes"],
-                                 laborDepartmentNotes = rspFunctional["stuLaborNotes"]
+                                 laborDepartmentNotes = rspFunctional["stuLaborNotes"],
+                                 name = rspFunctional["stuName"]
                                  )
 
     return lsf

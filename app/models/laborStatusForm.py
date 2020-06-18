@@ -7,6 +7,7 @@ from app.models.department import Department
 
 # All caps fields are pulled from TRACY
 class LaborStatusForm (baseModel):
+    name                        = CharField(null=True)
     laborStatusFormID           = PrimaryKeyField()
     termCode                    = ForeignKeyField(Term, on_delete="cascade")             # FK to term
     studentSupervisee           = ForeignKeyField(Student, on_delete="cascade")          # foreign key to student
@@ -23,7 +24,6 @@ class LaborStatusForm (baseModel):
     endDate                     = DateField(null=True)
     supervisorNotes             = CharField(null=True)              # null=True allows saving of null in db, and a supervisor may not always have notes
     laborDepartmentNotes        = CharField(null=True)
-    name                        = CharField()
 
 
     def __str__(self):
