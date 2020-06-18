@@ -32,13 +32,13 @@ def index():
         isLaborAdmin = False
         departments = []
     elif not current_user.isLaborAdmin and current_user.ID == None:       # logged in as a Supervisor
+        isSupervisor = True
         isLaborAdmin = False
-        isStudent = False
         # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
         departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
     else:   # logged in as an admin
         isLaborAdmin = True
-        isStudent = False
+        isSupervisor = False
         # Grabs every single department that currently has at least one labor status form in it
         departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
 
