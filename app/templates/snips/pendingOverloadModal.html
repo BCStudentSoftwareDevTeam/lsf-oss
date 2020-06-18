@@ -1,73 +1,88 @@
-<div class="modal fade" id="modalOverload" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable" role="document">
-    <div id="content" class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title" id="exampleModalLabel" align="center"><b>Labor Overload Form</b></h3>
-        <button type="button" class="close" data-dismiss="modal" onclick="overloadModalClose()" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <table id="overloadStudentTable" class="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">Student</th>
-              <th scope="col">Position</th>
-              <th scope="col">Hours</th>
-              <th scope="col">Supervisor</th>
-              <th scope="col">Department</th>
-            </tr>
-          </thead>
-          <tbody id="overloadStudentTableBody">
-          </tbody>
-        </table>
-        <table id="overloadDepartmentTable" class="table table-bordered">
-          <thead>
-            <tr>
-              <th scope="col">Department</th>
-              <th scope="col">Status</th>
-              <th scope="col">Last Email Sent</th>
-              <th scope="col">Email</th>
-            </tr>
-          </thead>
-          <tbody id="overloadDepartmentTableBody">
-          </tbody>
-        </table>
-        <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
-        <div id='radioDiv'>
-          <button id="modalNote_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes</button>
-          <label for="approve" class="radio-inline">
-            <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve</input>
-          </label>
-          <label for="approveRel" class="radio-inline">
-            <input type="radio" id="approveRel" name="decision" value="approveRel" onclick="displayModalTextArea(this.value)">Approve Reluctantly</input>
-          </label>
-          <label for="deny" class="radio-inline">
-            <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea(this.value)">Deny</input>
-          </label>
-        </div>
-        <div id="notesTextAreaOverload" class="notesTextArea">
-          <textarea id='overloadNotes' class="finalNote form-control" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
-        </div>
-        <div id="denyTextAreaOverload" class="denyTextArea" style="display:None">
-          <textarea id='denyOverloadReason' class="finalDeny form-control" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
-        </div>
-        <div class="logNotesDiv" style='display:none'>
-          <h4 class="supeNotesLabel col-md-4 control-label text-left" for="supervisor">Supervisor Notes: </h4>
-          <textarea class="notesText form-control" rows="2" cols="70" disabled> </textarea>
-          <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
-          <div class="notesLogArea"></div>
-        </div>
-        <p id="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
-      </div>
-      <div class="modal-footer">
-        <div class="col-sm-2" align="left">
-          <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal" onclick="overloadModalClose()">Close</button>
-        </div>
-        <div class="col-sm- floatright" align="right">
-          <button type="button" class="btn btn-success floatright" id="submitOverload" onclick="submitOverload({{allForms.formHistoryID}})">Submit</button>
-        </div>
-      </div>
-    </div>
+<div class="loader"></div>
+<div class="modal-header">
+  <h3 class="modal-title" id="exampleModalLabel" align="center"><b>Labor Overload Form</b></h3>
+</div>
+<div class="modal-body">
+  <table id="overloadStudentTable" class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Student</th>
+        <th scope="col">Position</th>
+        <th scope="col">Hours</th>
+        <th scope="col">Supervisor</th>
+        <th scope="col">Department</th>
+      </tr>
+    </thead>
+    <tbody id="overloadStudentTableBody">
+      {% for form in historyForm %}
+        <td>{{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}}</td>
+        <td>{{form.formID.POSN_TITLE}}</td>
+        <td>{{form.formID.weeklyHours}}</td>
+        <td>{{form.formID.supervisor.FIRST_NAME}} {{form.formID.supervisor.LAST_NAME}}</td>
+        <td>{{form.formID.department.DEPT_NAME}}</td>
+        <tr>
+          <td><strong>Overload Reason:</strong></td>
+          <td colspan="4">{{form.overloadForm.studentOverloadReason}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table id="overloadDepartmentTable" class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Department</th>
+        <th scope="col">Status</th>
+        <th scope="col">Last Email Sent</th>
+        <th scope="col">Email</th>
+      </tr>
+    </thead>
+    <tbody id="overloadDepartmentTableBody">
+      <tr>
+        <td>SAAS</td>
+        <td id="statusSAAS">{{departmentStatusInfo['SAASStatus']}}</td>
+        <td id="emailDateSAAS">{{departmentStatusInfo['SAASEmail']}}</td>
+        <td><button id="SAASEmail" value='{{formHistoryID}}' type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td>
+      </tr>
+      <tr>
+        <td>Financial Aid</td>
+        <td id="statusFinancialAid">{{departmentStatusInfo['financialAidStatus']}}</td>
+        <td id="emailDateFinancialAid">{{departmentStatusInfo['financialAidLastEmail']}}</td>
+        <td><button id="financialAidEmail" value="{{formHistoryID}}" type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
+  <div id='radioDiv'>
+    <button id="modalNote" onclick="toggleNotesLog()" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes</button>
+    <label for="approve" class="radio-inline">
+      <input type="radio" id="approve" name="" value="approve" onclick="displayModalTextArea(this.value)">Approve</input>
+    </label>
+    <label for="approveRel" class="radio-inline">
+      <input type="radio" id="approveRel" name="" value="approveRel" onclick="displayModalTextArea(this.value)">Approve Reluctantly</input>
+    </label>
+    <label for="deny" class="radio-inline">
+      <input type="radio" id="deny" name="" value="deny" onclick="displayModalTextArea(this.value)">Deny</input>
+    </label>
+  </div>
+  <div id="notesTextAreaOverload" class="notesTextArea">
+    <textarea id='overloadNotes' class="finalNote form-control" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
+  </div>
+  <div id="denyTextAreaOverload" class="denyTextArea" style="display:None">
+    <textarea id='denyOverloadReason' class="finalDeny form-control" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
+  </div>
+  <div class="logNotesDiv" style='display:none'>
+    <h4 class="supeNotesLabel col-md-4 control-label text-left" for="supervisor">Supervisor Notes: </h4>
+    <textarea class="notesText form-control" rows="2" cols="70" disabled> </textarea>
+    <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
+    <div class="notesLogArea"></div>
+  </div>
+  <p id="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
+</div>
+<div class="modal-footer">
+  <div class="col-sm-2" align="left">
+    <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal" onclick="overloadModalClose()">Close</button>
+  </div>
+  <div class="col-sm- floatright" align="right">
+      <button type="button" class="btn btn-success floatright" class="submitOverload" onclick="submitOverload()">Submit</button>
   </div>
 </div>

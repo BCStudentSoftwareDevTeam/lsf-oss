@@ -66,9 +66,23 @@
             {% for allForms in formList %}
             <tr id="tableData" class="tableData" align="center">
               {% if formType != "pendingOverload" and formType != "pendingRelease" %}
-              <td> {# APPROVE #}
-                <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value="{{allForms.formHistoryID}}" name="check[]" autocomplete="off" />
-              </td>
+                {% if allForms.formHistoryID in pendingOverloadFormPairs %}
+                  <td> {# REDIRECT #}
+                    {% with modalTarget = modalTarget %}
+                    {% endwith %}
+                    <a role="menuitem" href="#"
+                      <span id="{{pendingOverloadFormPairs[allForms.formHistoryID]}}"
+                        data-toggle="modal"
+                        data-target="#modalOverload_{{allForms.formHistoryID}}"
+                        onclick="loadOverloadModal({{pendingOverloadFormPairs[allForms.formHistoryID]}}, {{allForms.formID.laborStatusFormID}});"
+                       class="glyphicon glyphicon-exclamation-sign"
+                       style="color:red"></span></a>
+                  </td>
+                {% else %}
+                  <td> {# APPROVE #}
+                    <input type='checkbox' id='chk_{{allForms.formHistoryID}}' value="{{allForms.formHistoryID}}" name="check[]" autocomplete="off" />
+                  </td>
+                {% endif %}
               {% endif %}
               <td> {# TERM #}
                 {{allForms.formID.termCode.termName}}
@@ -113,15 +127,17 @@
                 {{allForms.createdBy.username}}  <br/> {{allForms.createdDate.strftime('%m/%d/%y')}}
               </td>
               <td> {# ACTION #}
+
                 {% if allForms.historyType.historyTypeName == 'Labor Overload Form' %}
-                {% with modalTarget = modalTarget %}
-                {% include "snips/pendingOverloadModal.html" %}
-                {% endwith %}
+                <div class="modal fade" id="overloadModal" role="dialog" data-backdrop="true" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-scrollable" role="document">
+                    <div id="content" class="modal-content">
+                    </div>
+                  </div>
+                </div>
                 {% endif %}
                 {% if allForms.historyType.historyTypeName == 'Labor Release Form' %}
-                {% with modalTarget = modalTarget %}
                 {% include "snips/pendingReleaseModal.html" %}
-                {% endwith %}
                 {% endif %}
                 <div class="dropdown">
                   {% include "snips/FormsDeny.html" %}
@@ -132,8 +148,6 @@
                     {% if allForms.historyType.historyTypeName == 'Labor Overload Form' %}
                     <li role="presentation"><a role="menuitem" href="#"
                       <span id="{{allForms.formHistoryID}}"
-                            data-toggle="modal"
-                            data-target="#modalOverload"
                             onclick="loadOverloadModal({{allForms.formHistoryID}}, {{allForms.formID.laborStatusFormID}});">Manage</span></a></li>
                     {% elif allForms.historyType.historyTypeName == 'Labor Release Form' %}
                     <li role="presentation"><a role="menuitem" href="#"
@@ -180,6 +194,7 @@
       </div>
     </div>
   </div>
+
 </div>
 
 {% endblock %}

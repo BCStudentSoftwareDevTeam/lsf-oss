@@ -183,7 +183,10 @@ class emailHandler():
                         subject = emailTemplateID.subject
                         )
         message.html = self.replaceText(emailTemplateID.body)
-        self.mail.send(message)
+        if app.config['ENV'] == 'production' or app.config['ALWAYS_SEND_MAIL']:
+            self.mail.send(message)
+        else:
+            print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
 
     def verifiedOverloadNotification(self):
         """ This email will be sent to Labor Admin when SAAS or Financial Aid Make

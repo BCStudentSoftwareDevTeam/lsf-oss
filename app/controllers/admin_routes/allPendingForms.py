@@ -16,7 +16,7 @@ from app.models.term import Term
 from app.logic.banner import Banner
 from app import cfg
 from datetime import datetime, date
-from flask import Flask, redirect, url_for, flash
+from flask import Flask, redirect, url_for, flash, make_response
 from app.models.Tracy.stuposn import STUPOSN
 
 
@@ -62,8 +62,24 @@ def allPendingForms(formType):
             pageTitle = "Pending Release Forms"
         formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
         # only if a form is adjusted
+        pendingOverloadFormPairs = {}
         for allForms in formList:
+            print("Outside of first check")
+            if allForms.historyType.historyTypeName == "Labor Status Form" or allForms.historyType.historyTypeName == "Modified Labor Form":
+                try:
+                    print("Inside of first check")
+                    overloadForm = FormHistory.select().where((FormHistory.formID == allForms.formID) & (FormHistory.historyType == "Labor Overload Form") & (FormHistory.status == "Pending")).get()
+                    if overloadForm:
+                        pendingOverloadFormPairs[allForms.formHistoryID] = overloadForm.formHistoryID
+                        # print(overloadForm.formHistoryID)
+                        # print(allForms.overloadForm)
+                        # allForms.overloadForm = overloadForm.formHistoryID
+                        # print(allForms.overloadForm)
+                except Exception as e:
+                    print('Error', e)
+            print("Past first check")
             if allForms.modifiedForm: # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
+                # We check if there is a pending overload form using the key of the modifed forms
                 if allForms.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
                     newSupervisorID = allForms.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
                     newSupervisor = User.get(User.UserID == newSupervisorID)
@@ -78,6 +94,7 @@ def allPendingForms(formType):
                     allForms.modifiedForm.newValue = newPosition.POSN_CODE +" (" + newPosition.WLS+")"
                     allForms.modifiedForm.oldValue = newPosition.POSN_TITLE
         users = User.select()
+        print(pendingOverloadFormPairs)
         return render_template( 'admin/allPendingForms.html',
                                 title=pageTitle,
                                 username=current_user.username,
@@ -89,7 +106,8 @@ def allPendingForms(formType):
                                 overloadFormCounter = overloadFormCounter,
                                 laborStatusFormCounter = laborStatusFormCounter,
                                 modifiedFormCounter  = modifiedFormCounter,
-                                releaseFormCounter = releaseFormCounter
+                                releaseFormCounter = releaseFormCounter,
+                                pendingOverloadFormPairs = pendingOverloadFormPairs
                                 )
     except Exception as e:
         print("error", e)
@@ -313,53 +331,44 @@ def insertNotes(formId):
         print("error", e)
         return jsonify({"Success": False})
 
-@admin.route('/admin/overloadModal', methods=['POST'])
-def getOverloadModalData():
+@admin.route('/admin/overloadModal/<formHistoryID>', methods=['GET'])
+def getOverloadModalData(formHistoryID):
     """
     This function will retrieve the data to populate the overload modal.
     """
     try:
-        rsp = eval(request.data.decode("utf-8"))
-        if rsp:
-            overloadModalInfo = {}
-            historyForm = FormHistory.get(FormHistory.formHistoryID == int(rsp[0]))
-            studentFirstName, studentLastName = historyForm.formID.studentSupervisee.FIRST_NAME, historyForm.formID.studentSupervisee.LAST_NAME
-            studentName = studentFirstName + " " + studentLastName
-            studentPosition = historyForm.formID.POSN_TITLE
-            studentHours = historyForm.formID.weeklyHours
-            studentDepartment = historyForm.formID.department.DEPT_NAME
-            studentSupervisorFirstName, studentSupervisorLastName  = historyForm.formID.supervisor.FIRST_NAME, historyForm.formID.supervisor.LAST_NAME
-            studentSupervisorName = studentSupervisorFirstName + ' ' + studentSupervisorLastName
-            studentOverloadReason = historyForm.overloadForm.studentOverloadReason
-            try:
-                SAASStatus = historyForm.overloadForm.SAASApproved.statusName
-                SAASLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'SAAS') & (EmailTracker.formID == historyForm.formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
-                SAASEmailDate = SAASLastEmail[0].date.strftime('%m/%d/%y')
-            except (AttributeError, IndexError):
-                # We expect to see the AttributeError and IndexError if there is no data,
-                # and in those cases we set the variables manually
-                SAASStatus = 'None'
-                SAASEmailDate = 'No Email Sent'
-            try:
-                financialAidStatus = historyForm.overloadForm.financialAidApproved.statusName
-                financialAidLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'Financial Aid') & (EmailTracker.formID == historyForm.formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
-                financialAidEmailDate = financialAidLastEmail[0].date.strftime('%m/%d/%y')
-            except (AttributeError, IndexError):
-                financialAidStatus = 'None'
-                financialAidEmailDate = 'No Email Sent'
-            overloadModalInfo.update({
-                                'stuName': studentName,
-                                'stuPosition': studentPosition,
-                                'stuDepartment': studentDepartment,
-                                'stuSupervisor': studentSupervisorName,
-                                'stuHours': studentHours,
-                                'studentOverloadReason': studentOverloadReason,
-                                'SAASEmail': SAASEmailDate,
-                                'SAASStatus': SAASStatus,
-                                'financialAidStatus': financialAidStatus,
-                                'financialAidLastEmail': financialAidEmailDate
-                                })
-            return jsonify(overloadModalInfo)
+        departmentStatusInfo = {}
+        print('Form ID:', formHistoryID)
+        historyForm = FormHistory.select().where(FormHistory.formHistoryID == int(formHistoryID))
+        try:
+            SAASStatus = historyForm[0].overloadForm.SAASApproved.statusName
+            SAASLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'SAAS') & (EmailTracker.formID == historyForm[0].formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
+            SAASEmailDate = SAASLastEmail[0].date.strftime('%m/%d/%y')
+        except (AttributeError, IndexError):
+            # We expect to see the AttributeError and IndexError if there is no data,
+            # and in those cases we set the variables manually
+            SAASStatus = 'None'
+            SAASEmailDate = 'No Email Sent'
+        try:
+            financialAidStatus = historyForm[0].overloadForm.financialAidApproved.statusName
+            financialAidLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'Financial Aid') & (EmailTracker.formID == historyForm[0].formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
+            financialAidEmailDate = financialAidLastEmail[0].date.strftime('%m/%d/%y')
+        except (AttributeError, IndexError):
+            financialAidStatus = 'None'
+            financialAidEmailDate = 'No Email Sent'
+        departmentStatusInfo.update({
+                            'SAASEmail': SAASEmailDate,
+                            'SAASStatus': SAASStatus,
+                            'financialAidStatus': financialAidStatus,
+                            'financialAidLastEmail': financialAidEmailDate
+                            })
+        resp = make_response(render_template('snips/pendingOverloadModal.html',
+                                            historyForm = historyForm,
+                                            departmentStatusInfo = departmentStatusInfo,
+                                            formHistoryID = historyForm[0].formHistoryID,
+                                            laborStatusFormID = historyForm[0].formID.laborStatusFormID
+                                            ))
+        return (resp)
     except Exception as e:
         print("Error Loading Data Into Overload Modal:",type(e).__name__ + ":", e)
         return jsonify({"Success": False}), 500
@@ -373,17 +382,45 @@ def modalFormUpdate():
     try:
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
+            print('Made it here')
             historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
+            print(historyForm)
             email = emailHandler(historyForm.formHistoryID)
             currentDate = datetime.now().strftime("%Y-%m-%d")
             createdUser = User.get(username = cfg['user']['debug'])
             status = Status.get(Status.statusName == rsp['status'])
             if rsp['formType'] == 'Overload':
+                print('Inside overload check')
+                print(historyForm.overloadForm.overloadFormID)
                 overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
+                print('Past here')
                 overloadForm.laborApproved = status.statusName
                 overloadForm.laborApprover = createdUser.UserID
                 overloadForm.laborReviewDate = currentDate
                 overloadForm.save()
+                try:
+                    print('Made it into try')
+                    pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending")).get()
+                    if pendingForm:
+                        pendingForm.status = status.statusName
+                        pendingForm.reviewedBy = createdUser.UserID
+                        pendingForm.reviewedDate = currentDate
+                        if 'denialReason' in rsp.keys():
+                            pendingForm.rejectReason = rsp['denialReason']
+                            AdminNotes.create(formID = pendingForm.formID.laborStatusFormID,
+                                            createdBy = createdUser.UserID,
+                                            date = currentDate,
+                                            notesContents = rsp['denialReason'])
+                        pendingForm.save()
+
+                        if pendingForm.historyType.historyTypeName == "Labor Status Form":
+                            email = emailHandler(pendingForm.formHistoryID)
+                            if rsp['status'] == 'Approved' or rsp['status'] == 'Approved Reluctantly':
+                                email.laborStatusFormApproved()
+                            elif rsp['status'] == 'Denied':
+                                email.laborStatusFormRejected()
+                except Exception as e:
+                    print(e)
             if 'denialReason' in rsp.keys():
                 # We only update the reject reason if one was given on the UI
                 historyForm.rejectReason = rsp['denialReason']
@@ -398,7 +435,7 @@ def modalFormUpdate():
                                 createdBy = createdUser.UserID,
                                 date = currentDate,
                                 notesContents = rsp['adminNotes'])
-            # historyForm.status = status.statusName
+            historyForm.status = status.statusName
             historyForm.reviewedBy = createdUser.UserID
             historyForm.reviewedDate = currentDate
             historyForm.save()
@@ -426,6 +463,7 @@ def sendEmail():
     try:
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
+            print('Made it in here okay')
             historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
             overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm)
             status = Status.get(Status.statusName == 'Pending')
@@ -438,9 +476,11 @@ def sendEmail():
                 overloadForm.financialAidApproved = status.statusName
                 overloadForm.save()
             # Lines 347-349 were left as comments because they require code from PR #89
-            # link = '/admin/financialAidOverloadApproval/' + str(rsp['formHistoryID'])
-            # email = emailHandler(historyForm.historyFormID)
-            # email.overloadVerification(recipient, link)
+            print('Before emial')
+            link = '/admin/financialAidOverloadApproval/' + str(rsp['formHistoryID'])
+            email = emailHandler(historyForm.formHistoryID)
+            email.overloadVerification(recipient, link)
+            print('After email')
             currentDate = datetime.now().strftime('%m/%d/%y')
             newEmailInformation = {'recipient': recipient,
                                     'emailDate': currentDate,
