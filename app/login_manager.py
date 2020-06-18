@@ -35,14 +35,20 @@ def auth_user(env, username):
     """
 
     try:
-        user = User.get(User.username == username)
+
+        try:
+            user = Employee.get(Employee.username == username)
+        except DoesNotExist as e:
+            user = Student.get(Student.username == username)
+        # user = User.get(User.username == username)
         return user
 
     except DoesNotExist as e:
-        # description = env['description'].lower()
-        # if description != 'student':
-        print("Adding {} to user table".format(username))
-        return createUserFromTracy(username)
-        #
-        # else:
-        #     raise InvalidUserException("Students must be added as administrators before logging in. {} is a student.".format(username))
+        description = env['description'].lower()
+        if description != 'student':
+            print("Adding {} to employee table".format(username))
+            return createEmployeeFromTracy(username)
+        else:
+            print("Adding {} to student table".format(username))
+            return createStudentFromTracy(username)
+            # raise InvalidUserException("Students must be added as administrators before logging in. {} is a student.".format(username))

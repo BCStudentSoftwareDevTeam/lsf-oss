@@ -26,16 +26,17 @@ def laborhistory(id):
         current_user = require_login()
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
-        if current_user.ID == id:
-            isLaborAdmin = False
-            isStudent = True
-            departmentsList = None
-        elif current_user.ID != id and not current_user.isLaborAdmin:
-            isLaborAdmin = False
-            isStudent = False
-            authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.UserID)
-            if authorizedUser == False:
-                return render_template('errors/403.html')
+        if not current_user.isLaborAdmin:
+            if current_user.Student:
+                isLaborAdmin = False
+                isStudent = True
+                departmentsList = None
+            elif current_user.Employee:
+                isLaborAdmin = False
+                isStudent = False
+                authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.UserID)
+                if authorizedUser == False:
+                    return render_template('errors/403.html')
         else:
             isLaborAdmin = True
             isStudent = False
@@ -111,7 +112,7 @@ def populateModal(statusKey):
         for form in forms:
             if current_user.username != (form.createdBy.username or form.formID.supervisor.username):
                 if current_user.ID == (form.formID.studentSupervisee.ID):  # If student is logged in then don't show a button
-                    buttonState = None
+                    buttonState = ButtonStatus.show_student_labor_eval_button
                     break
                 else:
                     buttonState = ButtonStatus.no_buttons # otherwise, show the notification

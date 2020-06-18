@@ -8,6 +8,7 @@ from app.models.formHistory import*
 from app.models.historyType import *
 from app.models.term import *
 from app.models.student import Student
+from app.models.employee import Employee
 from app.models.Tracy.studata import *
 from app.models.Tracy.stustaff import *
 from app.models.department import *
@@ -22,7 +23,7 @@ from app.logic.emailHandler import*
 class InvalidUserException(Exception):
     pass
 
-def createUserFromTracy(username):
+def createEmployeeFromTracy(username):
     """
         Attempts to add a user from the Tracy database to the application, based on the provided username.
         XXX Currently only handles adding staff. XXX
@@ -32,7 +33,7 @@ def createUserFromTracy(username):
 
     email = "{}@berea.edu".format(username)
     try:
-        tracyUser = STUSTAFF.get(STU_EMAIL=email)
+        tracyUser = STUSTAFF.get(EMAIL=email)
     except DoesNotExist as e:
         raise InvalidUserException("{} not found in Tracy database".format(email))
 
@@ -45,17 +46,50 @@ def createUserFromTracy(username):
         'EMAIL': email,
         'CPO': tracyUser.CPO,
         'ORG': tracyUser.ORG,
-        'DEPT_NAME': tracyUser.DEPT_NAME,
-        'isLaborAdmin': False,
-        'isFinancialAidAdmin': False,
-        'isSaasAdmin': False,
+        'DEPT_NAME': tracyUser.DEPT_NAME
     }
 
     try:
-        user = User.create(**data)
+        user = Employee.create(**data)
         return user
     except Exception as e:
         raise InvalidUserException("Adding {} to user table failed".format(username), e)
+
+def createStudentFromTracy(username):
+    """
+        Attempts to add a user from the Tracy database to the application, based on the provided username.
+        XXX Currently only handles adding staff. XXX
+
+        Raises InvalidUserException if this does not succeed.
+    """
+
+    email = "{}@berea.edu".format(username)
+    try:
+        tracyUser = STUDATA.get(STU_EMAIL=email)
+    except DoesNotExist as e:
+        raise InvalidUserException("{} not found in Tracy database".format(email))
+
+    data = {
+        'ID' = tracyStudent.ID,
+        'FIRST_NAME' = tracyStudent.FIRST_NAME,
+        'LAST_NAME' = tracyStudent.LAST_NAME,
+        'CLASS_LEVEL' = tracyStudent.CLASS_LEVEL,
+        'ACADEMIC_FOCUS' = tracyStudent.ACADEMIC_FOCUS,
+        'MAJOR' = tracyStudent.MAJOR,
+        'PROBATION' = tracyStudent.PROBATION,
+        'ADVISOR' = tracyStudent.ADVISOR,
+        'STU_EMAIL' = tracyStudent.STU_EMAIL,
+        'STU_CPO' = tracyStudent.STU_CPO,
+        'LAST_POSN' = tracyStudent.LAST_POSN,
+        'LAST_SUP_PIDM' = tracyStudent.LAST_SUP_PIDM
+    }
+
+    try:
+        user = Student.create(**data)
+        return user
+    except Exception as e:
+        raise InvalidUserException("Adding {} to user table failed".format(username), e)
+
 
 def getOrCreateStudentData(tracyStudent):
     """

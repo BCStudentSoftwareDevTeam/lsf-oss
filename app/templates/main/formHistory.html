@@ -21,6 +21,9 @@
     {% endif %}
 
     <div align= "center">
+      {% if isStudent == True %}
+        <div align="right" id="evaluation"><button type="button" class="btn btn-success" id="studentEvalExperience">Labor Experience Evaluation</button></div>
+      {% endif %}
       <table id="positionTable" >
         {% for form in studentForms %}
         <tr>
