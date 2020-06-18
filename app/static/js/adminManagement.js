@@ -1,5 +1,5 @@
 // Opens collapse menu for this page
-$('#admin').addClass('show');
+$("#admin").collapse("show");
 
 function modal(button) {
   if(button == "add" && $("#addlaborAdmin").val() != "") {

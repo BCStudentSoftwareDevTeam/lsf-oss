@@ -1,5 +1,6 @@
 // Opens collapse menu for this page
-$('#admin').addClass('show');
+// $("#admin").collapse("show");
+console.log((typeof $().modal == 'function'));
 
 $(document).ready( function(){
     x = $('#departmentsTable');
