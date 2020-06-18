@@ -361,17 +361,17 @@ function loadOverloadModal(formHistoryID, laborStatusFormID) {
   // });
 }
 
-function overloadModalClose(formHistoryID){// on close of overload modal we are clearing the table to prevent duplicate data.
-  console.log(formHistoryID);
-  $('#overloadStudentTableBody_' + String(formHistoryID)).empty();
-  $('#overloadDepartmentTableBody_' + String(formHistoryID)).empty();
+function overloadModalClose(){// on close of overload modal we are clearing the table to prevent duplicate data.
+  console.log('Made it into the close function');
+  // $('#overloadStudentTableBody_' + String(formHistoryID)).empty();
+  // $('#overloadDepartmentTableBody_' + String(formHistoryID)).empty();
 
-  laborOverloadID = [] // emptying the list, becuase otherwise will cause duplicate data.
+  // laborOverloadID = [] // emptying the list, becuase otherwise will cause duplicate data.
 }
 
 $('#modalOverload').on('hidden.bs.modal', function () {// makes the close functionality work when clicking otuside of the modal
-  console.log('Made it here');
-  // overloadModalClose();
+  // console.log('Made it here');
+  overloadModalClose();
 });
 
 function displayModalTextArea(radioValue) {
@@ -386,11 +386,13 @@ function displayModalTextArea(radioValue) {
     $('#banner-warning').hide();
     $('.denyTextArea').css('display', 'block')
     $('.notesTextArea').css('display', 'none')
+    $("#denyTextAreaOverload").addClass("has-error");
   } else {
     $('.finalDeny').val('');
     $('#banner-warning').show();
     $('.denyTextArea').css('display', 'none')
     $('.notesTextArea').css('display', 'block')
+    $("#denyTextAreaOverload").removeClass("has-error");
   }
 }
 
@@ -428,39 +430,39 @@ function sendEmail(formHistoryID, emailRecipient) {
   });
 }
 
-$(document).ready(function() {
-    $("#deny").click(function() {
-      /*
-      This method sets the reason for denial text area to Bootstrap "has-error"
-      to inform the user that the field is required for submission
-      */
-      $("#denyTextAreaOverload").addClass("has-error");
-    });
+// $(document).ready(function() {
+//     $("#deny").click(function() {
+//       /*
+//       This method sets the reason for denial text area to Bootstrap "has-error"
+//       to inform the user that the field is required for submission
+//       */
+//       $("#denyTextAreaOverload").addClass("has-error");
+//     });
+//
+//     $("#approve").click(function() {
+//         /*
+//         This method unsets the denial text area to Bootstrap "has-error"
+//         because the text area is no longer required
+//         */
+//         $("#denyTextAreaOverload").removeClass("has-error");
+//     });
+//
+//     $("#approveRel").click(function() {
+//         /*
+//         This method unsets the denial text area to Bootstrap "has-error"
+//         because the text area is no longer required
+//         */
+//         $("#denyTextAreaOverload").removeClass("has-error");
+//     });
+// });
 
-    $("#approve").click(function() {
-        /*
-        This method unsets the denial text area to Bootstrap "has-error"
-        because the text area is no longer required
-        */
-        $("#denyTextAreaOverload").removeClass("has-error");
-    });
-
-    $("#approveRel").click(function() {
-        /*
-        This method unsets the denial text area to Bootstrap "has-error"
-        because the text area is no longer required
-        */
-        $("#denyTextAreaOverload").removeClass("has-error");
-    });
-});
-
-function submitOverload(formHistoryID, laborStatusFormKey) {
+function submitOverload(formHistoryID) {
   /*
   This method is used to check if the form is ready for submission, then
   makes an AJAX call with the information needed to complete the submission
   */
-  if ($('input[name=' + String(laborStatusFormKey) + ']:checked').length > 0) {
-    var createAJAX = false
+  if ($('input[name=decision]:checked').length > 0) {
+    var createAJAX = true
     console.log("I'm in the wrong place");
     var status = 'Pending'
     var overloadModalInfo = {

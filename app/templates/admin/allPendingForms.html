@@ -72,8 +72,6 @@
                     {% endwith %}
                     <a role="menuitem" href="#"
                       <span id="{{pendingOverloadFormPairs[allForms.formHistoryID]}}"
-                        data-toggle="modal"
-                        data-target="#modalOverload_{{allForms.formHistoryID}}"
                         onclick="loadOverloadModal({{pendingOverloadFormPairs[allForms.formHistoryID]}}, {{allForms.formID.laborStatusFormID}});"
                        class="glyphicon glyphicon-exclamation-sign"
                        style="color:red"></span></a>
@@ -127,8 +125,7 @@
                 {{allForms.createdBy.username}}  <br/> {{allForms.createdDate.strftime('%m/%d/%y')}}
               </td>
               <td> {# ACTION #}
-
-                {% if allForms.historyType.historyTypeName == 'Labor Overload Form' %}
+                {% if allForms.historyType.historyTypeName != 'Labor Release Form' %}
                 <div class="modal fade" id="overloadModal" role="dialog" data-backdrop="true" tabindex="-1">
                   <div class="modal-dialog modal-dialog-scrollable" role="document">
                     <div id="content" class="modal-content">

@@ -53,15 +53,16 @@
   </table>
   <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
   <div id='radioDiv'>
-    <button id="modalNote" onclick="toggleNotesLog()" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes</button>
+    <!-- Need to pass in the notes counter from the notes counter method -->
+    <button id="modalNote_{{laborStatusFormID}}" onclick="toggleNotesLog({{laborStatusFormID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes ({{noteTotal}})</button>
     <label for="approve" class="radio-inline">
-      <input type="radio" id="approve" name="" value="approve" onclick="displayModalTextArea(this.value)">Approve</input>
+      <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve</input>
     </label>
     <label for="approveRel" class="radio-inline">
-      <input type="radio" id="approveRel" name="" value="approveRel" onclick="displayModalTextArea(this.value)">Approve Reluctantly</input>
+      <input type="radio" id="approveRel" name="decision" value="approveRel" onclick="displayModalTextArea(this.value)">Approve Reluctantly</input>
     </label>
     <label for="deny" class="radio-inline">
-      <input type="radio" id="deny" name="" value="deny" onclick="displayModalTextArea(this.value)">Deny</input>
+      <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea(this.value)">Deny</input>
     </label>
   </div>
   <div id="notesTextAreaOverload" class="notesTextArea">
@@ -69,6 +70,7 @@
   </div>
   <div id="denyTextAreaOverload" class="denyTextArea" style="display:None">
     <textarea id='denyOverloadReason' class="finalDeny form-control" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
+    <p id="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
   </div>
   <div class="logNotesDiv" style='display:none'>
     <h4 class="supeNotesLabel col-md-4 control-label text-left" for="supervisor">Supervisor Notes: </h4>
@@ -76,13 +78,12 @@
     <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
     <div class="notesLogArea"></div>
   </div>
-  <p id="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
 </div>
 <div class="modal-footer">
   <div class="col-sm-2" align="left">
     <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal" onclick="overloadModalClose()">Close</button>
   </div>
   <div class="col-sm- floatright" align="right">
-      <button type="button" class="btn btn-success floatright" class="submitOverload" onclick="submitOverload()">Submit</button>
+      <button type="button" class="btn btn-success floatright" class="submitOverload" onclick="submitOverload({{formHistoryID}})">Submit</button>
   </div>
 </div>

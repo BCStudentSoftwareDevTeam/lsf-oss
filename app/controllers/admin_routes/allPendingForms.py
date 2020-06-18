@@ -362,11 +362,13 @@ def getOverloadModalData(formHistoryID):
                             'financialAidStatus': financialAidStatus,
                             'financialAidLastEmail': financialAidEmailDate
                             })
+        noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
         resp = make_response(render_template('snips/pendingOverloadModal.html',
                                             historyForm = historyForm,
                                             departmentStatusInfo = departmentStatusInfo,
                                             formHistoryID = historyForm[0].formHistoryID,
-                                            laborStatusFormID = historyForm[0].formID.laborStatusFormID
+                                            laborStatusFormID = historyForm[0].formID.laborStatusFormID,
+                                            noteTotal = noteTotal
                                             ))
         return (resp)
     except Exception as e:
@@ -387,7 +389,7 @@ def modalFormUpdate():
             print(historyForm)
             email = emailHandler(historyForm.formHistoryID)
             currentDate = datetime.now().strftime("%Y-%m-%d")
-            createdUser = User.get(username = cfg['user']['debug'])
+            createdUser = User.get(username = cfg['user']['debug']) ### FIXME ###
             status = Status.get(Status.statusName == rsp['status'])
             if rsp['formType'] == 'Overload':
                 print('Inside overload check')
@@ -402,7 +404,8 @@ def modalFormUpdate():
                     print('Made it into try')
                     pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending")).get()
                     if pendingForm:
-                        pendingForm.status = status.statusName
+                        print('Made it into my pendingForm try')
+                        # pendingForm.status = status.statusName
                         pendingForm.reviewedBy = createdUser.UserID
                         pendingForm.reviewedDate = currentDate
                         if 'denialReason' in rsp.keys():
@@ -413,6 +416,7 @@ def modalFormUpdate():
                                             notesContents = rsp['denialReason'])
                         pendingForm.save()
 
+                        print('Made before LSF email')
                         if pendingForm.historyType.historyTypeName == "Labor Status Form":
                             email = emailHandler(pendingForm.formHistoryID)
                             if rsp['status'] == 'Approved' or rsp['status'] == 'Approved Reluctantly':
@@ -435,7 +439,7 @@ def modalFormUpdate():
                                 createdBy = createdUser.UserID,
                                 date = currentDate,
                                 notesContents = rsp['adminNotes'])
-            historyForm.status = status.statusName
+            # historyForm.status = status.statusName
             historyForm.reviewedBy = createdUser.UserID
             historyForm.reviewedDate = currentDate
             historyForm.save()
@@ -444,12 +448,13 @@ def modalFormUpdate():
                     email.LaborOverLoadFormApproved()
                 elif rsp['status'] == 'Denied':
                     email.LaborOverLoadFormRejected()
+                    print('Made it down here')
             elif rsp['formType'] == 'Release':
                 if rsp['status'] == 'Approved':
                     email.laborReleaseFormApproved()
                 elif rsp['status'] == 'Denied':
                     email.laborReleaseFormRejected()
-
+            print("Made it to the bottom of the modal")
             return jsonify({"Success": True})
     except Exception as e:
         print("Error Updating Release/Overload Forms:",type(e).__name__ + ":", e)
