@@ -63,21 +63,15 @@ def allPendingForms(formType):
         formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
         # only if a form is adjusted
         pendingOverloadFormPairs = {}
+        # or allForms.modifiedForm.fieldModified == "Weekly Hours":
         for allForms in formList:
-            print("Outside of first check")
-            if allForms.historyType.historyTypeName == "Labor Status Form" or allForms.historyType.historyTypeName == "Modified Labor Form":
+            if allForms.historyType.historyTypeName == "Labor Status Form" or (allForms.historyType.historyTypeName == "Modified Labor Form" and allForms.modifiedForm.fieldModified == "Weekly Hours"):
                 try:
-                    print("Inside of first check")
                     overloadForm = FormHistory.select().where((FormHistory.formID == allForms.formID) & (FormHistory.historyType == "Labor Overload Form") & (FormHistory.status == "Pending")).get()
                     if overloadForm:
                         pendingOverloadFormPairs[allForms.formHistoryID] = overloadForm.formHistoryID
-                        # print(overloadForm.formHistoryID)
-                        # print(allForms.overloadForm)
-                        # allForms.overloadForm = overloadForm.formHistoryID
-                        # print(allForms.overloadForm)
                 except Exception as e:
-                    print('Error', e)
-            print("Past first check")
+                    print('Expecting FormHistoryDoesNotExist Error:', type(e).__name__)
             if allForms.modifiedForm: # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
                 # We check if there is a pending overload form using the key of the modifed forms
                 if allForms.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
@@ -139,7 +133,7 @@ def finalUpdateStatus(raw_status):
         print("Unknown status: ", raw_status)
         return jsonify({"success": False})
     try:
-        createdUser = User.get(username = cfg['user']['debug'])
+        createdUser = require_login()
         rsp = eval(request.data.decode("utf-8"))
         if new_status == 'Denied':
             # Index 1 will always hold the reject reason in the list, so we can
@@ -338,7 +332,6 @@ def getOverloadModalData(formHistoryID):
     """
     try:
         departmentStatusInfo = {}
-        print('Form ID:', formHistoryID)
         historyForm = FormHistory.select().where(FormHistory.formHistoryID == int(formHistoryID))
         try:
             SAASStatus = historyForm[0].overloadForm.SAASApproved.statusName
@@ -358,14 +351,13 @@ def getOverloadModalData(formHistoryID):
             financialAidEmailDate = 'No Email Sent'
         try:
             currentPendingForm = FormHistory.select().where((FormHistory.formID == historyForm[0].formID) & (FormHistory.status == "Pending")).get()
+            print(currentPendingForm)
             if currentPendingForm:
                 pendingForm = True
                 pendingFormType = currentPendingForm.historyType.historyTypeName
                 if pendingFormType == "Modified Labor Form":
                     pendingFormType = "Labor Adjustment Form"
-                    modifiedFormNewHours = currentPendingForm.weeklyHours
         except (AttributeError, IndexError):
-            print('Is this an error?')
             pendingForm = False
             pendingFormType = False
         print("Pending Form: ", pendingForm)
@@ -383,8 +375,7 @@ def getOverloadModalData(formHistoryID):
                                             laborStatusFormID = historyForm[0].formID.laborStatusFormID,
                                             noteTotal = noteTotal,
                                             pendingForm = pendingForm,
-                                            pendingFormType = pendingFormType,
-                                            modifiedFormNewHours = modifiedFormNewHours
+                                            pendingFormType = pendingFormType
                                             ))
         return (resp)
     except Exception as e:
@@ -400,27 +391,23 @@ def modalFormUpdate():
     try:
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
-            print('Made it here')
             historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
-            print(historyForm)
             email = emailHandler(historyForm.formHistoryID)
             currentDate = datetime.now().strftime("%Y-%m-%d")
-            createdUser = User.get(username = cfg['user']['debug']) ### FIXME ###
+            createdUser = require_login()
             status = Status.get(Status.statusName == rsp['status'])
             if rsp['formType'] == 'Overload':
-                print('Inside overload check')
-                print(historyForm.overloadForm.overloadFormID)
                 overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
-                print('Past here')
                 overloadForm.laborApproved = status.statusName
                 overloadForm.laborApprover = createdUser.UserID
                 overloadForm.laborReviewDate = currentDate
                 overloadForm.save()
                 try:
-                    print('Made it into try')
                     pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending")).get()
-                    if pendingForm:
-                        print('Made it into my pendingForm try')
+                    if pendingForm.historyType.historyTypeName == "Modified Labor Form":
+                        if pendingForm.modifiedForm.fieldModified != "Weekly Hours":
+                            pendingForm = FormHistory.select().join(ModifiedForm).where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending") & (FormHistory.modifiedForm.fieldModified == "Weekly Hours")).get()
+                    if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Modified Labor Form" and pendingForm.modifiedForm.fieldModified == "Weekly Hours"):
                         # pendingForm.status = status.statusName
                         pendingForm.reviewedBy = createdUser.UserID
                         pendingForm.reviewedDate = currentDate
@@ -432,7 +419,6 @@ def modalFormUpdate():
                                             notesContents = rsp['denialReason'])
                         pendingForm.save()
 
-                        print('Made before LSF email')
                         if pendingForm.historyType.historyTypeName == "Labor Status Form":
                             email = emailHandler(pendingForm.formHistoryID)
                             if rsp['status'] == 'Approved' or rsp['status'] == 'Approved Reluctantly':
@@ -440,7 +426,7 @@ def modalFormUpdate():
                             elif rsp['status'] == 'Denied':
                                 email.laborStatusFormRejected()
                 except Exception as e:
-                    print(e)
+                    print('Expecting FormHistoryDoesNotExist Error:', type(e).__name__)
             if 'denialReason' in rsp.keys():
                 # We only update the reject reason if one was given on the UI
                 historyForm.rejectReason = rsp['denialReason']
@@ -464,7 +450,6 @@ def modalFormUpdate():
                     email.LaborOverLoadFormApproved()
                 elif rsp['status'] == 'Denied':
                     email.LaborOverLoadFormRejected()
-                    print('Made it down here')
             elif rsp['formType'] == 'Release':
                 if rsp['status'] == 'Approved':
                     email.laborReleaseFormApproved()

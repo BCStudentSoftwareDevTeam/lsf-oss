@@ -17,11 +17,7 @@
       {% for form in historyForm %}
         <td colspan="1">{{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}}</td>
         <td>{{form.formID.POSN_TITLE}}</td>
-        {% if pendingFormType == "Labor Adjustment Form" %}
-          <td><s aria-hidden="true"></s>{{form.formID.weeklyHours}}<br> {{modifiedFormNewHours}}</td>
-        {% else %}
-          <td>{{form.formID.weeklyHours}}</td>
-        {% endif %}
+        <td>{{form.formID.weeklyHours}}</td>
         <td>{{form.formID.supervisor.FIRST_NAME}} {{form.formID.supervisor.LAST_NAME}}</td>
         <td>{{form.formID.department.DEPT_NAME}}</td>
         <tr>
@@ -58,7 +54,7 @@
   <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
   <div id='radioDiv'>
     <!-- Need to pass in the notes counter from the notes counter method -->
-    <button id="modalNote_{{laborStatusFormID}}" onclick="toggleNotesLog({{laborStatusFormID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes ({{noteTotal}})</button>
+    <button id="modalNote_{{formHistoryID}}" onclick="toggleNotesLog({{laborStatusFormID}}, {{formHistoryID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes ({{noteTotal}})</button>
     <label for="approve" class="radio-inline">
       <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve</input>
     </label>
@@ -85,7 +81,7 @@
 </div>
 <div class="modal-footer">
   <div class="col-sm-2" align="left">
-    <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal" onclick="overloadModalClose()">Close</button>
+    <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal">Close</button>
   </div>
   {% if pendingForm == true %}
   <div class="col-sm-8" align="left">

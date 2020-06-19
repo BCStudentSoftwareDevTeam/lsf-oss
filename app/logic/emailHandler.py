@@ -139,7 +139,6 @@ class emailHandler():
                       "Labor Overload Form Approved For Supervisor")
 
     def LaborOverLoadFormRejected(self):
-        print('Made it inside of reject email')
         self.checkRecipient("Labor Overload Form Rejected For Student")
 
     def laborStatusFormSubmittedForBreak(self):
@@ -213,7 +212,6 @@ class emailHandler():
         if studentEmailPurpose != False:
             studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
             self.sendEmail(studentEmail, "student")
-            print('Do I come back here?')
         if self.primaryFormHistory is not None:
             primaryEmail = EmailTemplate.get(EmailTemplate.purpose == emailPurpose) # Jan
             secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose) # Scott
@@ -273,7 +271,6 @@ class emailHandler():
             self.mail.send(message)
         else:
             print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
-            print('Past the final check')
 
     # This method is responsible for replacing the keyword form the templates in the database with the data in the laborStatusForm
     def replaceText(self, form):

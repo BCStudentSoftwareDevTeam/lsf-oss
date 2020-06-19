@@ -319,60 +319,22 @@ function loadOverloadModal(formHistoryID, laborStatusFormID) {
   This method sends an AJAX call to recieve data used to populate
   the overload modal.
   */
-  console.log("Inside of Overload load");
-  console.log(this.id);
-  console.log(formHistoryID);
   $("#overloadModal").modal("show");
   $("#overloadModal").find('.modal-content').load('/admin/overloadModal/' + formHistoryID);
-  // console.log(laborStatusFormID);
-  // var laborOverloadID = []
-  // laborOverloadID.push(formHistoryID);
-  // var data = JSON.stringify(laborOverloadID);
-  // $.ajax({
-  //   type: "POST",
-  //   url: "/admin/overloadModal",
-  //   datatype: "json",
-  //   data: data,
-  //   contentType: 'application/json',
-  //   success: function(response) {
-  //     if (response) {
-  //       console.log(response);
-  //       var studentName = response['stuName']
-  //       var position = response['stuPosition']
-  //       var department = response['stuDepartment']
-  //       var supervisor = response['stuSupervisor']
-  //       var hours = response['stuHours']
-  //       var overloadReason = response['studentOverloadReason']
-  //       var emailDateSAAS = response['SAASEmail']
-  //       var statusSAAS = response['SAASStatus']
-  //       var emailDateFinancialAid = response['financialAidLastEmail']
-  //       var statusFinancialAid = response['financialAidStatus']
-  //       // $('#studentOverloadReason').append(overloadReason)
-  //       $('#overloadStudentTableBody_' + String(formHistoryID)).append('<tr><td>' + studentName + '</td><td>' + position + '</td><td>' + hours + '</td><td>' + supervisor + '</td><td>' + department + '</td></tr>'); //populate the denial modal for all pending forms
-        // $('#overloadStudentTableBody_' + String(formHistoryID)).append('<tr><td><strong>Overload Reason</strong></td><td colspan="4">' + overloadReason + '</td></tr>')
-        // $('#overloadDepartmentTableBody_' + String(formHistoryID)).append('<tr><td>SAAS</td><td id="statusSAAS">' + statusSAAS + '</td><td id="emailSAAS">' + emailDateSAAS + '</td><td><button id="SAASEmail" value=' + formHistoryID + ' type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td></tr>');
-        // $('#overloadDepartmentTableBody_' + String(formHistoryID)).append('<tr><td>Financial Aid</td><td id="statusFinancialAid">' + statusFinancialAid + '</td><td id="emailFinancialAid">' + emailDateFinancialAid + '</td><td><button id="financialAidEmail" value=' + formHistoryID + ' type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td></tr>');
-  //       $('#overloadNotes').data('formId', laborStatusFormID)
-  //     }
-  //   },
-  //   error: function(request, status, error) {
-  //     console.log(request.responseText);
-  //   }
-  // });
 }
 
-function overloadModalClose(){// on close of overload modal we are clearing the table to prevent duplicate data.
-  console.log('Made it into the close function');
-  // $('#overloadStudentTableBody_' + String(formHistoryID)).empty();
-  // $('#overloadDepartmentTableBody_' + String(formHistoryID)).empty();
+// function overloadModalClose(){// on close of overload modal we are clearing the table to prevent duplicate data.
+//   console.log('Made it into the close function');
+//   // $('#overloadStudentTableBody_' + String(formHistoryID)).empty();
+//   // $('#overloadDepartmentTableBody_' + String(formHistoryID)).empty();
+//
+//   // laborOverloadID = [] // emptying the list, becuase otherwise will cause duplicate data.
+// }
 
-  // laborOverloadID = [] // emptying the list, becuase otherwise will cause duplicate data.
-}
-
-$('#modalOverload').on('hidden.bs.modal', function () {// makes the close functionality work when clicking otuside of the modal
-  // console.log('Made it here');
-  overloadModalClose();
-});
+// $('#modalOverload').on('hidden.bs.modal', function () {// makes the close functionality work when clicking otuside of the modal
+//   // console.log('Made it here');
+//   overloadModalClose();
+// });
 
 function displayModalTextArea(radioValue) {
   /*
@@ -566,23 +528,24 @@ function submitRelease(formHistoryID) {
   }
 }
 
-function toggleNotesLog(laborStatusFormID) {
+function toggleNotesLog(laborStatusFormID, formHistoryID) {
   /*
   This method toggles the 'Notes' log at the bottom of the
   'Overload' and 'Release' modal to show/hide it
   */
+  console.log("Form ID:", formHistoryID);
   if ($('.logNotesDiv').css('display') == 'none') {
-    var modalViewNotesID = '#modalNote_' + String(laborStatusFormID)
+    var modalViewNotesID = '#modalNote_' + String(formHistoryID)
     $(modalViewNotesID).html('Hide Notes')
     getNotes(laborStatusFormID)
     $('.logNotesDiv').css('display', 'block')
   } else {
-    notesCounter(laborStatusFormID)
+    notesCounter(laborStatusFormID, formHistoryID)
     $('.logNotesDiv').css('display', 'none')
   }
 }
 
-function notesCounter(laborStatusFormID){
+function notesCounter(laborStatusFormID, formHistoryID){
   /*
   This method displays the number of admin notes a Labor
   Status Form has
@@ -595,8 +558,8 @@ function notesCounter(laborStatusFormID){
     data: data,
     contentType: 'application/json',
     success: function(response) {
-      var viewNotesID = '#notes_' + String(laborStatusFormID)
-      var modalViewNotesID = '#modalNote_' + String(laborStatusFormID)
+      var viewNotesID = '#notes_' + String(formHistoryID)
+      var modalViewNotesID = '#modalNote_' + String(formHistoryID)
       $(viewNotesID).html('View Notes (' + response['noteTotal'] + ')')
       $(modalViewNotesID).html('View Notes (' + response['noteTotal'] + ')')
     },
@@ -604,8 +567,4 @@ function notesCounter(laborStatusFormID){
       console.log(request.responseText);
     }
   });
-}
-
-function hello() {
-  console.log('Hello');
 }

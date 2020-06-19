@@ -80,12 +80,3 @@ a.hover_indicator:active {
   display: block;
   color: #000000;
 }
-
-.hide {
-  display:;
-}
-
-.icon-hover:hover + .hide {
-  display: block;
-  color: red;
-}
