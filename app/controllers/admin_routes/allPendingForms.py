@@ -356,6 +356,19 @@ def getOverloadModalData(formHistoryID):
         except (AttributeError, IndexError):
             financialAidStatus = 'None'
             financialAidEmailDate = 'No Email Sent'
+        try:
+            currentPendingForm = FormHistory.select().where((FormHistory.formID == historyForm[0].formID) & (FormHistory.status == "Pending")).get()
+            if currentPendingForm:
+                pendingForm = True
+                pendingFormType = currentPendingForm.historyType.historyTypeName
+                if pendingFormType == "Modified Labor Form":
+                    pendingFormType = "Labor Adjustment Form"
+                    modifiedFormNewHours = currentPendingForm.weeklyHours
+        except (AttributeError, IndexError):
+            print('Is this an error?')
+            pendingForm = False
+            pendingFormType = False
+        print("Pending Form: ", pendingForm)
         departmentStatusInfo.update({
                             'SAASEmail': SAASEmailDate,
                             'SAASStatus': SAASStatus,
@@ -368,7 +381,10 @@ def getOverloadModalData(formHistoryID):
                                             departmentStatusInfo = departmentStatusInfo,
                                             formHistoryID = historyForm[0].formHistoryID,
                                             laborStatusFormID = historyForm[0].formID.laborStatusFormID,
-                                            noteTotal = noteTotal
+                                            noteTotal = noteTotal,
+                                            pendingForm = pendingForm,
+                                            pendingFormType = pendingFormType,
+                                            modifiedFormNewHours = modifiedFormNewHours
                                             ))
         return (resp)
     except Exception as e:

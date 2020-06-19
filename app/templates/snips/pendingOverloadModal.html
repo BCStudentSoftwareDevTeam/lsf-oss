@@ -15,9 +15,13 @@
     </thead>
     <tbody id="overloadStudentTableBody">
       {% for form in historyForm %}
-        <td>{{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}}</td>
+        <td colspan="1">{{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}}</td>
         <td>{{form.formID.POSN_TITLE}}</td>
-        <td>{{form.formID.weeklyHours}}</td>
+        {% if pendingFormType == "Labor Adjustment Form" %}
+          <td><s aria-hidden="true"></s>{{form.formID.weeklyHours}}<br> {{modifiedFormNewHours}}</td>
+        {% else %}
+          <td>{{form.formID.weeklyHours}}</td>
+        {% endif %}
         <td>{{form.formID.supervisor.FIRST_NAME}} {{form.formID.supervisor.LAST_NAME}}</td>
         <td>{{form.formID.department.DEPT_NAME}}</td>
         <tr>
@@ -83,7 +87,12 @@
   <div class="col-sm-2" align="left">
     <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal" onclick="overloadModalClose()">Close</button>
   </div>
-  <div class="col-sm- floatright" align="right">
+  {% if pendingForm == true %}
+  <div class="col-sm-8" align="left">
+    <p style="text-align:center"><span class="glyphicon glyphicon-info-sign" style="color:blue;"></span><strong> The decision made will also apply to the current pending {{pendingFormType}} for the student.</strong></p>
+  </div>
+  {% endif %}
+  <div class="col-sm-2" align="right">
       <button type="button" class="btn btn-success floatright" class="submitOverload" onclick="submitOverload({{formHistoryID}})">Submit</button>
   </div>
 </div>
