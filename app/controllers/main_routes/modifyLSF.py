@@ -15,6 +15,7 @@ from flask import flash
 import base64
 from app import cfg
 from app.logic.emailHandler import*
+from app.models.supervisor import Supervisor
 
 @main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
 def modifyLSF(laborStatusKey):
@@ -23,9 +24,9 @@ def modifyLSF(laborStatusKey):
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:       # Not an admin
-        if current_user.ID != None: # TODO: How are we distinguishing students from supervisor? Currently it's being done using presence/absence of bnumber
-            return redirect('/laborHistory/' + current_user.ID)
-        else:
+        if current_user.Student:
+            return redirect('/laborHistory/' + current_user.Student.ID)
+        elif current_user.Supervisor:
             isLaborAdmin = False
     else:
         isLaborAdmin = True
@@ -94,7 +95,7 @@ def updateLSF(laborStatusKey):
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if k == "supervisor":
-                d, created = User.get_or_create(PIDM = int(rsp[k]['newValue']))
+                d, created = Supervisor.get_or_create(PIDM = int(rsp[k]['newValue']))
                 if not created:
                     LSF.supervisor = d.UserID
                 LSF.save()
@@ -102,7 +103,7 @@ def updateLSF(laborStatusKey):
                     tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
                     tracyEmail = tracyUser.EMAIL
                     tracyUsername = tracyEmail.find('@')
-                    user = User.get(User.PIDM == rsp[k]['newValue'])
+                    user = Supervisor.get(Supervisor.PIDM == rsp[k]['newValue'])
                     user.username   = tracyEmail[:tracyUsername]
                     user.FIRST_NAME = tracyUser.FIRST_NAME
                     user.LAST_NAME  = tracyUser.LAST_NAME
@@ -133,10 +134,9 @@ def updateLSF(laborStatusKey):
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
-                    user = User.get(User.username == current_user.username)
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
-                                                        createdBy = current_user.UserID,
+                                                        createdBy = current_user.Supervisor.UserID,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")

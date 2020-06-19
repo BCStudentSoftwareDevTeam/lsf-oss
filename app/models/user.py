@@ -1,4 +1,6 @@
 from app.models import *
+from app.models.student import Student
+from app.models.supervisor import Supervisor
 from peewee import CharField
 # from app import login
 
@@ -6,7 +8,8 @@ from peewee import CharField
 # Capitalized fields are originally pulled from tracy
 class User(baseModel):
     Student             = ForeignKeyField(Student, null=True)
-    Employee            = ForeignKeyField(Employee, null=True)
+    Supervisor          = ForeignKeyField(Supervisor, null=True)
+    username            = CharField(null=False)
     isLaborAdmin        = BooleanField(null=True)
     isFinancialAidAdmin = BooleanField(null=True)
     isSaasAdmin         = BooleanField(null=True)

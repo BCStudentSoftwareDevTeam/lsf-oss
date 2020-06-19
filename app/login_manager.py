@@ -2,7 +2,7 @@ from flask import request
 from app import cfg
 from app.controllers.errors_routes.handlers import *
 from app.models.user import User, DoesNotExist
-from app.logic.userInsertFunctions import createUserFromTracy, InvalidUserException
+from app.logic.userInsertFunctions import createUser, createSupervisorFromTracy, createStudentFromTracy, InvalidUserException
 
 def getUsernameFromEnv(env):
     envK = "eppn"
@@ -35,20 +35,17 @@ def auth_user(env, username):
     """
 
     try:
-
-        try:
-            user = Employee.get(Employee.username == username)
-        except DoesNotExist as e:
-            user = Student.get(Student.username == username)
-        # user = User.get(User.username == username)
+        user = User.get(User.username == username)
         return user
 
     except DoesNotExist as e:
         description = env['description'].lower()
+        supervisor = student = None
         if description != 'student':
-            print("Adding {} to employee table".format(username))
-            return createEmployeeFromTracy(username)
+            print("Adding {} to supervisor table".format(username))
+            supervisor = createSupervisorFromTracy(username)
         else:
             print("Adding {} to student table".format(username))
-            return createStudentFromTracy(username)
-            # raise InvalidUserException("Students must be added as administrators before logging in. {} is a student.".format(username))
+            student = createStudentFromTracy(username=username, bnumber=None)
+        print("Creating record for {} in user table".format(username))
+        return createUser(username, student=student, supervisor=supervisor)

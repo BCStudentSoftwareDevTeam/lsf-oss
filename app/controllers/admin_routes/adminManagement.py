@@ -5,6 +5,7 @@ from app.controllers.admin_routes import admin
 from flask import request
 from app.login_manager import require_login
 from flask import Flask, redirect, url_for, flash
+from app.models.supervisor import Supervisor
 
 @admin.route('/admin/adminManagement', methods=['GET'])
 # @login_required
@@ -14,21 +15,23 @@ def admin_Management():
     if not current_user:                    # Not logged in
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:       # Not an admin
-        if current_user.ID != None: # logged in as a student
-            return redirect('/laborHistory/' + current_user.ID)
-        else:
+        if current_user.Student: # logged in as a student
+            return redirect('/laborHistory/' + current_user.Student.ID)
+        elif current_user.Supervisor:
             isLaborAdmin = False
             return render_template('errors/403.html',
                                 isLaborAdmin = isLaborAdmin)
     else:
         isLaborAdmin = True
 
+    test = (User.select(Student, Supervisor).join(Student).join(Supervisor))
+    print('test', test)
     users = User.select()
     return render_template( 'admin/adminManagement.html',
                             title=('Admin Management'),
                            # username = username,
-                           isLaborAdmin = isLaborAdmin,
-                           users = users
+                            isLaborAdmin = isLaborAdmin,
+                            users = users
                          )
 
 
@@ -51,10 +54,11 @@ def manageLaborAdmin():
 def addLaborAdmin():
     if request.form.get('addAdmin') != "":
         newAdmins = request.form.get('addAdmin')   #this is taking the name in the select tag
+        print('newAdmins', newAdmins)
         newAdmin = User.get(User.username == newAdmins)
         newAdmin.isLaborAdmin = 1
         newAdmin.save()
-        message = "{0} {1} has been added as a Labor Admin".format(newAdmin.FIRST_NAME, newAdmin.LAST_NAME)
+        message = "{0} {1} has been added as a Labor Admin".format(newAdmin.Supervisor.FIRST_NAME, newAdmin.Supervisor.LAST_NAME)
         flash(message, "success")
 
 def removeLaborAdmin():
@@ -62,7 +66,7 @@ def removeLaborAdmin():
         user = User.get(User.username == request.form.get('removeAdmin'))   #this is taking the name in the select tag
         user.isLaborAdmin = 0
         user.save()
-        message = "{0} {1} has been removed as a Labor Admin".format(user.FIRST_NAME, user.LAST_NAME)
+        message = "{0} {1} has been removed as a Labor Admin".format(user.Supervisor.FIRST_NAME, user.Supervisor.LAST_NAME)
         flash(message, "danger")
 
 def addFinancialAdmin():
@@ -71,7 +75,7 @@ def addFinancialAdmin():
         newFinAidAdmin = User.get(User.username == newFinAidAdmins)
         newFinAidAdmin.isFinancialAidAdmin = 1
         newFinAidAdmin.save()
-        message = "{0} {1} has been added as a Financial Aid Admin".format(newFinAidAdmin.FIRST_NAME, newFinAidAdmin.LAST_NAME)
+        message = "{0} {1} has been added as a Financial Aid Admin".format(newFinAidAdmin.Supervisor.FIRST_NAME, newFinAidAdmin.Supervisor.LAST_NAME)
         flash(message, "success")
 
 def removeFinancialAdmin():
@@ -79,7 +83,7 @@ def removeFinancialAdmin():
         userFinAid = User.get(User.username == request.form.get('removeFinancialAidAdmin'))
         userFinAid.isFinancialAidAdmin = 0
         userFinAid.save()
-        message = "{0} {1} has been removed as a Financial Aid Admin".format(userFinAid.FIRST_NAME, userFinAid.LAST_NAME)
+        message = "{0} {1} has been removed as a Financial Aid Admin".format(userFinAid.Supervisor.FIRST_NAME, userFinAid.Supervisor.LAST_NAME)
         flash(message, "danger")
 
 def addSAASAdmin():
@@ -88,7 +92,7 @@ def addSAASAdmin():
         newSaasAdmin = User.get(User.username == newSaasAdmins)
         newSaasAdmin.isSaasAdmin = 1
         newSaasAdmin.save()
-        message = "{0} {1} has been added as a SAAS Admin".format(newSaasAdmin.FIRST_NAME, newSaasAdmin.LAST_NAME)
+        message = "{0} {1} has been added as a SAAS Admin".format(newSaasAdmin.Supervisor.FIRST_NAME, newSaasAdmin.Supervisor.LAST_NAME)
         flash(message, "success")
 
 def removeSAASAdmin():
@@ -96,5 +100,5 @@ def removeSAASAdmin():
         userSaas = User.get(User.username == request.form.get('removeSAASAdmin'))
         userSaas.isSaasAdmin = 0
         userSaas.save()
-        message = "{0} {1} has been removed as a SAAS Admin".format(userSaas.FIRST_NAME, userSaas.LAST_NAME)
+        message = "{0} {1} has been removed as a SAAS Admin".format(userSaas.Supervisor.FIRST_NAME, userSaas.Supervisor.LAST_NAME)
         flash(message, "danger")

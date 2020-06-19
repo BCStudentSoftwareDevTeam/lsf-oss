@@ -27,9 +27,9 @@ def adjustLSF(laborStatusKey):
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:       # Not an admin
-        if current_user.ID != None: # If a student is logged in and trying to get to this URL then send them back to their own page.
-            return redirect('/laborHistory/' + current_user.ID)
-        else:
+        if current_user.Student: # If a student is logged in and trying to get to this URL then send them back to their own page.
+            return redirect('/laborHistory/' + current_user.Student.ID)
+        elif current_user.Supervisor:
             isLaborAdmin = False
     else:
         isLaborAdmin = True
@@ -106,7 +106,7 @@ def sumbitModifiedForm(laborStatusKey):
             if k == "supervisorNotes":
                 ## New Entry in AdminNote Table
                 newNoteEntry = AdminNotes.create(formID=LSF.laborStatusFormID,
-                                                createdBy=current_user.UserID,
+                                                createdBy=current_user.Supervisor.UserID,
                                                 date=currentDate,
                                                 notesContents=rsp[k]["newValue"])
                 newNoteEntry.save()
@@ -121,7 +121,7 @@ def sumbitModifiedForm(laborStatusKey):
             formHistories = FormHistory.create( formID = laborStatusKey,
                                              historyType = historyType.historyTypeName,
                                              modifiedForm = modifiedforms.modifiedFormID,
-                                             createdBy   = current_user.UserID,
+                                             createdBy   = current_user.Supervisor.UserID,
                                              createdDate = date.today(),
                                              status      = status.statusName)
 
@@ -137,7 +137,7 @@ def sumbitModifiedForm(laborStatusKey):
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
-                                                        createdBy = current_user.UserID,
+                                                        createdBy = current_user.Supervisor.UserID,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")

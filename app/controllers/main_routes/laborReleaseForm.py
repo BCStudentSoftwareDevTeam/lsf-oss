@@ -24,9 +24,9 @@ def laborReleaseForm(laborStatusKey):
     if not current_user:
         render_template("errors/403.html")
     if not current_user.isLaborAdmin:       # Not an admin
-        if current_user.ID != None: # TODO: How are we distinguishing students from supervisor? Currently it's being done using presence/absence of bnumber
-            return redirect('/laborHistory/' + current_user.ID)
-        else:
+        if current_user.Student:
+            return redirect('/laborHistory/' + current_user.Student.ID)
+        elif current_user.Supervisor:
             isLaborAdmin = False
         # return render_template('errors/403.html')
     else:
@@ -66,7 +66,7 @@ def laborReleaseForm(laborStatusKey):
                                         releaseForm = newLaborReleaseForm.laborReleaseFormID,
                                         modifiedForm = None,
                                         overloadForm = None,
-                                        createdBy = current_user.UserID,
+                                        createdBy = current_user.Supervisor.UserID,
                                         createdDate = date.today(),
                                         reviewedDate = None,
                                         reviewedBy = None,

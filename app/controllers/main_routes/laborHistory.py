@@ -19,6 +19,7 @@ from fpdf import FPDF
 from app.logic.authorizationFunctions import*
 from app.models.Tracy.stuposn import STUPOSN
 from app.logic.buttonStatus import ButtonStatus
+from app.models.supervisor import Supervisor
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
@@ -31,10 +32,10 @@ def laborhistory(id):
                 isLaborAdmin = False
                 isStudent = True
                 departmentsList = None
-            elif current_user.Employee:
+            elif current_user.Supervisor:
                 isLaborAdmin = False
                 isStudent = False
-                authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.UserID)
+                authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.Supervisor.UserID)
                 if authorizedUser == False:
                     return render_template('errors/403.html')
         else:
@@ -92,12 +93,11 @@ def populateModal(statusKey):
         currentDate = datetime.date.today()
         pendingformType = None
         buttonState = None
-        current_user = current_user
         for form in forms:
             if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
                 if form.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
                     newSupervisorID = form.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
-                    newSupervisor = User.get(User.UserID == newSupervisorID)
+                    newSupervisor = Supervisor.get(Supervisor.UserID == newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     form.modifiedForm.oldValue = form.formID.supervisor.FIRST_NAME + " " + form.formID.supervisor.LAST_NAME # old supervisor name
@@ -110,13 +110,13 @@ def populateModal(statusKey):
                     form.modifiedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
                     form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
         for form in forms:
-            if current_user.username != (form.createdBy.username or form.formID.supervisor.username):
-                if current_user.ID == (form.formID.studentSupervisee.ID):  # If student is logged in then don't show a button
+            if current_user.Student:
+                if current_user.Student.ID == (form.formID.studentSupervisee.ID):  # If student is logged in then don't show a button
                     buttonState = ButtonStatus.show_student_labor_eval_button
                     break
-                else:
-                    buttonState = ButtonStatus.no_buttons # otherwise, show the notification
-                    break
+            elif current_user.Supervisor.UserID != (form.createdBy.UserID or form.formID.supervisor.UserID):
+                buttonState = ButtonStatus.no_buttons # otherwise, show the notification
+                break
             else:
                 if form.releaseForm != None:
                     if form.status.statusName == "Approved":

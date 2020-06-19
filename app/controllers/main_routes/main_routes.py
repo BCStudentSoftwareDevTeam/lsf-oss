@@ -27,18 +27,17 @@ def index():
     current_user = require_login()
     if not current_user:
         return render_template('errors/403.html')
-    # TODO: How are we distinguishing students from supervisor? Currently it's being done using presence/absence of bnumber
     if not current_user.isLaborAdmin:
-         if current_user.ID != None:   # logged in as a student
+         if current_user.Student:   # logged in as a student
             isStudent = True
             isLaborAdmin = False
             departments = []
-            return redirect('/laborHistory/' + current_user.ID)
-         else:       # logged in as a Supervisor
+            return redirect('/laborHistory/' + current_user.Student.ID)
+         elif current_user.Supervisor:       # logged in as a Supervisor
             isLaborAdmin = False
             isStudent = False
             # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
-            departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
+            departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == current_user.Supervisor.UserID) | (FormHistory.createdBy == current_user.Supervisor.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
     else:   # logged in as an admin
         isLaborAdmin = True
         isStudent = False
@@ -47,7 +46,7 @@ def index():
 
     todayDate = date.today()
     # Grabs all the labor status forms where the current user is the supervisor
-    formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.UserID).order_by(LaborStatusForm.endDate.desc())
+    formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.Supervisor.UserID).order_by(LaborStatusForm.endDate.desc())
 
     inactiveSupervisees = []
     currentSupervisees = []

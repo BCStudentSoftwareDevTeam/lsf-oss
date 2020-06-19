@@ -3,6 +3,7 @@ from app.models.term import Term
 from app.models.student import Student
 from app.models.user import User
 from app.models.department import Department
+from app.models.supervisor import Supervisor
 
 
 # All caps fields are pulled from TRACY
@@ -10,7 +11,7 @@ class LaborStatusForm (baseModel):
     laborStatusFormID           = PrimaryKeyField()
     termCode                    = ForeignKeyField(Term, on_delete="cascade")             # FK to term
     studentSupervisee           = ForeignKeyField(Student, on_delete="cascade")          # foreign key to student
-    supervisor                  = ForeignKeyField(User, on_delete="cascade")             # foreign key to user
+    supervisor                  = ForeignKeyField(Supervisor, on_delete="cascade")             # foreign key to supervisor
     department                  = ForeignKeyField(Department, on_delete="cascade")       # Foreign key to department
     #secondarySupervisor         = ForeignKeyField(User, null=True, on_delete="cascade")  # student may not always have a secondary #7/25/19: decided it was too                                                                                                 confusing language and we didnt even need to store this field..
     jobType                     = CharField()                       # Primary or secondary

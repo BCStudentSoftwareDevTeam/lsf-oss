@@ -28,7 +28,7 @@
           data-show-subtext="true" data-live-search="true" name="addAdmin">
             {% for user in users %}
               {% if user.isLaborAdmin == False or user.isLaborAdmin == None %}
-                <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+                <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Supervisor.FIRST_NAME}} {{user.Supervisor.LAST_NAME}}</option>
               {% endif %}
             {% endfor %}
           </select>
@@ -39,7 +39,7 @@
       data-show-subtext="true" data-live-search="true" name="removeAdmin">
         {% for user in users %}
           {% if user.isLaborAdmin == True %}
-            <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+            <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Supervisor.FIRST_NAME}} {{user.Supervisor.LAST_NAME}}</option>
           {% endif %}
         {% endfor %}
           </select>
@@ -55,8 +55,8 @@
       <select id="addFinAidAdmin" class="form-control selectpicker" title="Select User" data-width="258px"
       data-show-subtext="true" data-live-search="true" name="addFinancialAidAdmin">
         {% for user in users %}
-          {% if user.isFinancialAidAdmin == False or user.isFinancialAidAdmin == None %}
-          <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+          {% if user.isFinancialAidAdmin == False or user.isFinancialAidAdmin == None and user.Student == None %}
+          <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Supervisor.FIRST_NAME}} {{user.Supervisor.LAST_NAME}}</option>
           {% endif %}
         {% endfor %}
       </select>
@@ -68,7 +68,7 @@
    data-show-subtext="true" data-live-search="true" name="removeFinancialAidAdmin">
     {% for user in users %}     <!-- placeholder for emailTemplate table database -->
       {% if user.isFinancialAidAdmin == True %}
-        <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+        <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Supervisor.FIRST_NAME}} {{user.Supervisor.LAST_NAME}}</option>
       {% endif %}
     {% endfor %}
     </select>
@@ -84,8 +84,8 @@
       <select id="addSaasAdmin" class = "form-control selectpicker" title="Select User" data-width="258px"
       data-show-subtext="true" data-live-search="true" name="addSAASAdmin">
       {% for user in users %}     <!-- placeholder for emailTemplate table database -->
-        {% if user.isSaasAdmin == False or user.isSaasAdmin == None %}
-        <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+        {% if user.isSaasAdmin == False or user.isSaasAdmin == None and user.Student == None %}
+        <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Supervisor.FIRST_NAME}} {{user.Supervisor.LAST_NAME}}</option>
         {% endif %}
       {% endfor %}
       </select>
@@ -97,7 +97,7 @@
            data-show-subtext="true" data-live-search="true" name="removeSAASAdmin">
            {% for user in users %}     <!-- placeholder for emailTemplate table database -->
              {% if user.isSaasAdmin == True %}
-               <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.FIRST_NAME}} {{user.LAST_NAME}}</option>
+               <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Supervisor.FIRST_NAME}} {{user.Supervisor.LAST_NAME}}</option>
              {% endif %}
            {% endfor %}
            </select>

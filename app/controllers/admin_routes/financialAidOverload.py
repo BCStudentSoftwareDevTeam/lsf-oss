@@ -103,18 +103,18 @@ def formDenial(status):
         if rsp:
             ## New Entry in AdminNote Table
             newNoteEntry = AdminNotes.create(formID=selectedFormHistory.formID.laborStatusFormID,
-            createdBy=current_user.UserID, date=currentDate,
+            createdBy=current_user.Supervisor.UserID, date=currentDate,
             notesContents=rsp["denialNote"])
             newNoteEntry.save()
             ## Updating the overloadform Table
             if current_user.isFinancialAidAdmin:
                 selectedOverload.financialAidApproved = formStatus.statusName
-                selectedOverload.financialAidApprover = current_user.UserID
+                selectedOverload.financialAidApprover = current_user.Supervisor.UserID
                 selectedOverload.financialAidReviewDate = currentDate
                 selectedOverload.save()
             if current_user.isSaasAdmin:
                 selectedOverload.SAASApproved = formStatus.statusName
-                selectedOverload.SAASApprover = current_user.UserID
+                selectedOverload.SAASApprover = current_user.Supervisor.UserID
                 selectedOverload.SAASReviewDate = currentDate
                 selectedOverload.save()
         # email = emailHandler(rsp["formHistoryID"]) ## sending email to Labor Admin on any submission
