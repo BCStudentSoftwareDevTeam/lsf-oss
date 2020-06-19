@@ -216,14 +216,21 @@
       </thead>
       <tbody id='tbodyid'></tbody>
     </table>
-  <div class="col-md-12 " id="reviewButton">
+  <div class="col-md-12" id="reviewButton">
+    <div class="button-container">
+    <button type="button disable"
+            class="btn btn-danger"
+            name = "pageReset"
+            id="resetButton0"
+            value = "formSubmission"
+            onclick="pageResetConfirmation()">Reset</button>
     <button type="button disable"
             class="btn btn-primary"
             name = "formSubmission"
             id="reviewButton0"
             value = "formSubmission"
             onclick="reviewButtonFunctionality()">Review</button>
-
+    </div>
   </div>
   {% include "snips/LSFModals.html" %}
 </div>

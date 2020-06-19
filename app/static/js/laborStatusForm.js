@@ -678,6 +678,26 @@ function summerLaborWarning(){
         }
 }
 
+function pageResetConfirmation() {
+    // Pops up modal for confirming that the user wants to reset the page
+    $("#warningModal").modal('show');
+    $("#warningModalTitle").html("Reset Confirmation");
+    $("#warningModalText").html("<p>This action will reset every pending form on this \
+                                 page and empty all fields. Please confirm.</p>");
+    $("#warningModalButton").hide();
+    $("#resetConfirmButton").show();
+}
+
+$("#resetConfirmButton").click(function(){
+    // Handles page reset from confirmation modal
+    $("#warningModal").modal('hide');
+    globalArrayOfStudents = [];
+    $("#tbodyid tr").remove();
+    document.cookie = JSON.stringify(globalArrayOfStudents) + ";max-age=0;";
+    console.log(document.cookie);
+    location.reload();
+});
+
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
   $("#laborStatusForm").on("submit", function(e) {
     e.preventDefault();
