@@ -75,6 +75,7 @@ p {
 }
 
 .original-name {
-    visibility: hidden !important;
     font-style: italic;
+    font-size: 18px;
+    margin-top: 6px;
 }
