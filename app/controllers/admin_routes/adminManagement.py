@@ -24,8 +24,6 @@ def admin_Management():
     else:
         isLaborAdmin = True
 
-    test = (User.select(Student, Supervisor).join(Student).join(Supervisor))
-    print('test', test)
     users = User.select()
     return render_template( 'admin/adminManagement.html',
                             title=('Admin Management'),

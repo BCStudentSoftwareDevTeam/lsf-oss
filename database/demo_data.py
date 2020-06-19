@@ -6,6 +6,7 @@ This file will need to be changed if the format of models changes (new fields, d
 from datetime import *
 from app.models.Tracy.studata import STUDATA
 from app.models.student import Student
+from app.models.supervisor import Supervisor
 from app.models.Tracy.stuposn import STUPOSN
 from app.models.Tracy.stustaff import STUSTAFF
 from app.models.department import Department
@@ -238,7 +239,7 @@ print(" * staff added")
 def insert_to_users(staffs):
     for sta in staffs:
         try:
-            u = User()
+            u = Supervisor()
             u.PIDM = sta.PIDM
             u.FIRST_NAME = sta.FIRST_NAME
             u.LAST_NAME = sta.LAST_NAME
@@ -248,8 +249,8 @@ def insert_to_users(staffs):
             u.ID = sta.ID
             u.ORG = sta.ORG
             u.DEPT_NAME = sta.DEPT_NAME
-            if u.PIDM == 1:
-                u.isLaborAdmin = 1
+            # if u.PIDM == 1:
+            #     u.isLaborAdmin = 1
             u.save()
         except Exception as e:
             print(" * Failed to insert ", u.username, ": ", e)
@@ -262,7 +263,7 @@ insert_to_users(STUSTAFF.select())
 departments = [
             {
               "departmentID":1,
-              "DEPT_NAME": "Computer Science",
+              "DEPT_NAME": "Computer mScience",
               "ACCOUNT": "6740",
               "ORG": "2114",
               "departmentCompliance": 1
