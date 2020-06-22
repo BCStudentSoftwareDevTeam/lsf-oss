@@ -2,8 +2,8 @@ if [[ `pwd` =~ tests$ ]]; then
     cd ../
 fi
 
-BASE_URL=localhost:8080
-SENSITIVE_URL=lsf.berea.edu
+BASE_URL=http://localhost:8080
+SENSITIVE_URL=http://lsf.berea.edu
 VERBOSE="--verbose "
 
 FLAGS="${VERBOSE}--capture=no --disable-pytest-warnings --strict-markers --tb=short -rs"

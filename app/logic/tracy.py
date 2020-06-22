@@ -12,6 +12,9 @@ class Tracy():
     """
     A data access object for our Tracy queries.
     """
+
+    #######################################
+
     def __init__(self):
         secret_conf = get_secret_cfg()
 
@@ -32,6 +35,8 @@ class Tracy():
         except DoesNotExist:
             raise InvalidQueryException("B# {} not found in STUDATA".format(bnumber))
 
+    #######################################
+
     def getSupervisors(self):
         """
         Return a list of supervisor objects sorted alphabetically by first name
@@ -44,7 +49,6 @@ class Tracy():
 
         Throws an InvalidQueryException if the PIDM does not exist or an invalid value was given.
         """
-
         try:
             return STUSTAFF.get(STUSTAFF.PIDM == pidm)
         except DoesNotExist:
@@ -52,9 +56,26 @@ class Tracy():
         except ValueError:
             raise InvalidQueryException("PIDM must be an integer".format(pidm))
 
-    def getPositionsForDepartment(self, department: str):
+    #######################################
+
+    def getDepartments(self):
+        """
+        Return a list of departments, ordered by department name.
+        """
+        return STUPOSN.select(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT).distinct().order_by(STUPOSN.DEPT_NAME.asc())
+
+    def getPositionsFromDepartment(self, department: str):
         """
         Return a list of position objects for the given department name, sorted by position title
         """
         return STUPOSN.select().where(STUPOSN.DEPT_NAME == department).order_by(STUPOSN.POSN_TITLE.asc())
 
+    def getPositionFromCode(self, positionCode: str):
+        """
+        Return the position for a given position code.
+        """
+        try:
+            return STUPOSN.get(STUPOSN.POSN_CODE == positionCode)
+        except DoesNotExist:
+            raise InvalidQueryException("Position Code {} not found in STUPOSN".format(positionCode))
+            

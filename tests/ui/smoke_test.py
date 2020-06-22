@@ -57,6 +57,7 @@ class Test_Routes:
             ]
             self.url_runner(base_url, urls)
 
+        @pytest.mark.skip
         def test_post_routes(self, base_url, request):
             self.check_verbose_level(request)
             urls = [

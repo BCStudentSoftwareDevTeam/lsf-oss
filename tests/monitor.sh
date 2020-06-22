@@ -5,7 +5,7 @@ fi
 BUILD="$@"
 if [ -z "$BUILD" ]
 then
-	BUILD="fast";
+	BUILD="all";
 fi
 
 ptw --verbose -c --runner "bash tests/run_tests.sh $BUILD" --ext=".py,.sh"

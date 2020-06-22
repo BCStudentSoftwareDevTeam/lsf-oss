@@ -33,8 +33,6 @@ def laborStatusForm(laborStatusKey = None):
     else:
         isLaborAdmin = True
     # Logged in
-    wls = STUPOSN.select(STUPOSN.WLS).distinct() # getting WLS from TRACY
-    posnCode = STUPOSN.select(STUPOSN.POSN_CODE).distinct() # getting position code from TRACY
     students = STUDATA.select().order_by(STUDATA.FIRST_NAME.asc()) # getting student names from TRACY
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
     staffs = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # getting supervisors from TRACY

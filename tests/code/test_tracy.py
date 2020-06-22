@@ -49,10 +49,30 @@ class Test_Tracy:
             supervisor = tracy.getSupervisorFromPIDM(17)
 
     @pytest.mark.integration
-    def test_getPositionsForDepartment(self, tracy):
-        positions = tracy.getPositionsForDepartment("Computer Science")
+    def test_getPositionsFromDepartment(self, tracy):
+        positions = tracy.getPositionsFromDepartment("Computer Science")
 
         assert ['S61408','S61407','S61421','S61419'] == [p.POSN_CODE for p in positions]
 
-        positions = tracy.getPositionsForDepartment("Underwater Basket-Weaving")
+        positions = tracy.getPositionsFromDepartment("Underwater Basket-Weaving")
         assert [] == [p.POSN_CODE for p in positions]
+
+    @pytest.mark.integration
+    def test_getDepartments(self, tracy):
+        departments = tracy.getDepartments()
+        assert ['Biology','Computer Science','Mathematics','Technology and Applied Design'] == [d.DEPT_NAME for d in departments]
+        assert '2107' == departments[0].ORG
+        assert '6740' == departments[0].ACCOUNT
+
+    @pytest.mark.integration
+    def test_getPositionFromCode(self, tracy):
+        position = tracy.getPositionFromCode("S61427")
+        assert 'Teaching Associate' == position.POSN_TITLE
+        assert '2' == position.WLS
+
+        with pytest.raises(InvalidQueryException):
+            position = tracy.getPositionFromCode("eleven")
+
+        with pytest.raises(InvalidQueryException):
+            position = tracy.getPositionFromCode(17)
+

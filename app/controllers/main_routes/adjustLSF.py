@@ -55,7 +55,6 @@ def adjustLSF(laborStatusKey):
     #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
     supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
     positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == prefilldepartment)
-    wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
     allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == form.termCode) & (LaborStatusForm.laborStatusFormID != laborStatusKey) & (LaborStatusForm.studentSupervisee.ID == form.studentSupervisee.ID))
@@ -79,7 +78,6 @@ def adjustLSF(laborStatusKey):
                             prefillnotes = prefillnotes,
                             supervisors = supervisors,
                             positions = positions,
-                            wls = wls,
                             form = form,
                             oldSupervisor = oldSupervisor,
                             isLaborAdmin = isLaborAdmin,
