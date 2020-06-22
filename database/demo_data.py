@@ -263,7 +263,7 @@ insert_to_users(STUSTAFF.select())
 departments = [
             {
               "departmentID":1,
-              "DEPT_NAME": "Computer mScience",
+              "DEPT_NAME": "Computer Science",
               "ACCOUNT": "6740",
               "ORG": "2114",
               "departmentCompliance": 1
