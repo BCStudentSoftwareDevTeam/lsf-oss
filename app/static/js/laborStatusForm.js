@@ -682,8 +682,8 @@ function pageResetConfirmation() {
     // Pops up modal for confirming that the user wants to reset the page
     $("#warningModal").modal('show');
     $("#warningModalTitle").html("Reset Confirmation");
-    $("#warningModalText").html("<p>This action will reset every pending form on this \
-                                 page and empty all fields. Please confirm.</p>");
+    $("#warningModalText").html("<p>This action will remove all forms in the table \
+                                 and empty all form fields.</p>");
     $("#warningModalButton").hide();
     $("#resetConfirmButton").show();
 }
