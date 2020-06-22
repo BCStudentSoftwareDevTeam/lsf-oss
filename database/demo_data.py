@@ -227,7 +227,7 @@ staffs = [
             "FIRST_NAME":"Brian",
             "LAST_NAME" : "Ramsay",
             "EMAIL"  :"ramsayb2@berea.edu",
-            "CPO":"6301",
+            "CPO":"6305",
             "ORG":"2114",
             "DEPT_NAME": "Computer Science"
             },

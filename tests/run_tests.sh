@@ -2,12 +2,12 @@ if [[ `pwd` =~ tests$ ]]; then
     cd ../
 fi
 
-export VERIFY_BASE_URL=true
-export PYTEST_BASE_URL=http://localhost:8080
-
+BASE_URL=localhost:8080
+SENSITIVE_URL=lsf.berea.edu
 VERBOSE="--verbose "
-VERBOSE=
-FLAGS="${VERBOSE}--capture=no --disable-pytest-warnings --strict-markers"
+
+FLAGS="${VERBOSE}--capture=no --disable-pytest-warnings --strict-markers --tb=short -rs"
+UI_URLS="--verify-base-url --base-url $BASE_URL --sensitive-url $SENSITIVE_URL"
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -21,9 +21,9 @@ function header {
 # ui
 function ui {
 	header smoke
-	python -m pytest $FLAGS tests/smoke_test.py
+	python -m pytest $FLAGS $UI_URLS tests/ui/smoke_test.py 
 	header functional
-	python -m pytest $FLAGS tests/functional_test.py
+	python -m pytest $FLAGS $UI_URLS tests/ui/functional_test.py
 }
 
 # no-ui
@@ -36,6 +36,7 @@ function no-ui {
 }
 
 case "$1" in
+	"") ;&
 	all)
 		no-ui
 		ui
