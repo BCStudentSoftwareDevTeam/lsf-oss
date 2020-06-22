@@ -45,22 +45,23 @@ def adjustLSF(laborStatusKey):
     prefillposition = form.POSN_CODE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
     prefillterm = form.termCode.termName
+    totalHours = 0
     if form.weeklyHours != None:
         prefillhours = form.weeklyHours
+        allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == form.termCode) & (LaborStatusForm.laborStatusFormID != laborStatusKey) & (LaborStatusForm.studentSupervisee.ID == form.studentSupervisee.ID))
+        if allTermForms:
+            for i in allTermForms:
+                totalHours += i.weeklyHours
     else:
         prefillhours = form.contractHours
     prefillnotes = form.supervisorNotes
 
-    #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
+    #These are the data fields to populate our dropdowns(Supervisor. Position)
     supervisors = Tracy().getSupervisors()
     positions = Tracy().getPositionsFromDepartment(prefilldepartment)
+
     #Step 3: send data to front to populate html
     oldSupervisor = Tracy().getSupervisorFromPIDM(form.supervisor.PIDM)
-    allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == form.termCode) & (LaborStatusForm.laborStatusFormID != laborStatusKey) & (LaborStatusForm.studentSupervisee.ID == form.studentSupervisee.ID))
-    totalHours = 0
-    if allTermForms:
-        for i in allTermForms:
-            totalHours += i.weeklyHours
 
     return render_template( 'main/adjustLSF.html',
 				            title=('adjust LSF'),
@@ -88,6 +89,9 @@ def adjustLSF(laborStatusKey):
 def sumbitModifiedForm(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
+        current_user = require_login()
+        if not current_user:        # Not logged in
+            return render_template('errors/403.html')
         currentDate = datetime.now().strftime("%Y-%m-%d")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
@@ -97,7 +101,7 @@ def sumbitModifiedForm(laborStatusKey):
             if k == "supervisorNotes":
                 ## New Entry in AdminNote Table
                 newNoteEntry = AdminNotes.create(formID=LSF.laborStatusFormID,
-                                                createdBy=createdbyid.UserID,
+                                                createdBy=current_user.UserID,
                                                 date=currentDate,
                                                 notesContents=rsp[k]["newValue"])
                 newNoteEntry.save()
@@ -109,12 +113,10 @@ def sumbitModifiedForm(laborStatusKey):
                                                 )
             historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
             status = Status.get(Status.statusName == "Pending")
-            username = cfg['user']['debug']
-            createdbyid = User.get(User.username == username)
             formHistories = FormHistory.create( formID = laborStatusKey,
                                              historyType = historyType.historyTypeName,
                                              modifiedForm = modifiedforms.modifiedFormID,
-                                             createdBy   = createdbyid.UserID,
+                                             createdBy   = current_user.UserID,
                                              createdDate = date.today(),
                                              status      = status.statusName)
 
@@ -128,18 +130,22 @@ def sumbitModifiedForm(laborStatusKey):
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
-                    user = User.get(User.username == cfg["user"]["debug"])
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
-                                                        createdBy = user.UserID,
+                                                        createdBy = current_user.UserID,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
-        # TODO: emails are commented out for testing purposes
-        #             overloadEmail = emailHandler(formHistories.formHistoryID)
-        #             overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
-        # email = emailHandler(formHistories.formHistoryID)
-        # email.laborStatusFormModified()
+                    try:
+                        overloadEmail = emailHandler(formHistories.formHistoryID)
+                        overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+                    except Exception as e:
+                        print("Error on sending overload form emails: ", e)
+        try:
+            email = emailHandler(formHistories.formHistoryID)
+            email.laborStatusFormModified()
+        except Exception as e:
+            print("Error on sending adjustment form emails: ", e)
         message = "Your Labor Adjustment Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
 

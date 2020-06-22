@@ -1,3 +1,6 @@
+// Opens collapse menu for this page
+$('#admin').addClass('show');
+
 $('a.hover_indicator').click(function(e){
   e.preventDefault(); // prevents click on '#' link from jumping to top of the page.
 });
@@ -5,6 +8,7 @@ $('a.hover_indicator').click(function(e){
 $(document).ready(function() {
   // If the overload tab has been selected, then we need to restrict the
   // ordering functionality on different headers
+
   if ($('#overloadTab').hasClass('active') || $('#releaseTab').hasClass('active')) {
     targetsList = [8]
   } else if ($('#modifiedTab').hasClass('active')) {

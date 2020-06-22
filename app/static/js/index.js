@@ -182,7 +182,7 @@ function changeButtonColor(ID) {
 // show the sub-sidebar only on this page
 $("div.laborStudentChoice").show();
 
-document.getElementById("myStudents").addEventListener("click",function(){
+$("#myStudents").on("click keypress",function(){
   // When the 'My Students' tab in the sidebar is clicked, this Function
   // hides and shows the correct buttons for that page, filter the datatable,
   // and shows the correct checkboxes that should show in the modal
@@ -213,9 +213,9 @@ document.getElementById("myStudents").addEventListener("click",function(){
   $(".currentDepartmentModal").attr("disabled", true);
   $(".currentStudentModal").removeAttr("disabled");
   $('#portalTitle').text("Current Students");
-}, false);
+});
 
-document.getElementById("department").addEventListener("click",function(){
+$("#department").on("click keypress", function(e){
   // When the 'My Department' tab in the sidebar is clicked, this Function
   // hides and shows the correct buttons for that page, filter the datatable,
   // and shows the correct checkboxes that should show in the modal
@@ -247,12 +247,12 @@ document.getElementById("department").addEventListener("click",function(){
 
   // If the select picker already has a department selected when the page is loaded,
   // then we want to populate the data table with the selected department
-  var departmentDropDown = document.getElementById("departmentDropDown");
-  var departmentSelected = departmentDropDown.options[departmentDropDown.selectedIndex].value;
+  var departmentDropDown = $("#departmentDropDown");
+  var departmentSelected = $('option:selected', departmentDropDown).attr('value');
   if (departmentSelected) {
     populateTable()
   }
-}, false);
+});
 
 // Listen for click on toggle checkbox
 $('#select-all').click(function(event) {
@@ -286,8 +286,8 @@ function populateTable(){
   // and the modal with the correct data from that department
 
   // This grabs the department selected from the select picker
-  var departmentDropDown = document.getElementById("departmentDropDown");
-  var departmentSelected = departmentDropDown.options[departmentDropDown.selectedIndex].value;
+  var departmentDropDown = $("#departmentDropDown");
+  var departmentSelected = $('option:selected', departmentDropDown).attr('value');
 
   // AJAX call sends our controller the department choosen, and the controller
   // should send back the data we need as JSON

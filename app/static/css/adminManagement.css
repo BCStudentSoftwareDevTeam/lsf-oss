@@ -13,7 +13,7 @@ select {
 
 
 #header {
-  margin-bottom: 30px
+  margin-bottom: 30px;
 }
 
 #titleBlock {
@@ -29,4 +29,7 @@ select {
 }
  p {
    font-size: large;
+ }
+ #ManageAdminInfo {
+   font-size: 18px;
  }
