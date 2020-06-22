@@ -33,7 +33,7 @@ def laborhistory(id):
                 isStudent = True
                 departmentsList = None
             elif current_user.Supervisor:
-                isLaborAdmin = False
+                isLaborAdmin = True
                 isStudent = False
                 authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.Supervisor.UserID)
                 if authorizedUser == False:
@@ -48,6 +48,8 @@ def laborhistory(id):
         for form in studentForms:
             formHistoryList = formHistoryList + str(form.laborStatusFormID) + ","
         formHistoryList = formHistoryList[0:-1]
+        print('Is Student:', isStudent)
+        print("Is Labor Admin", isLaborAdmin)
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,

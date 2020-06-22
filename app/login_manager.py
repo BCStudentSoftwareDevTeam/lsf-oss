@@ -17,6 +17,7 @@ def getUsernameFromEnv(env):
 
 def require_login():
     env = request.environ
+    # print("What is ENV?", "========", env)
     username = getUsernameFromEnv(env)
 
     try:
@@ -35,11 +36,15 @@ def auth_user(env, username):
     """
 
     try:
+        print('Username:', username)
         user = User.get(User.username == username)
+        # print(env, "is env")
         return user
 
     except DoesNotExist as e:
-        description = env['description'].lower()
+
+        # description = env['description'].lower()
+        description = "student"
         supervisor = student = None
         if description != 'student':
             print("Adding {} to supervisor table".format(username))

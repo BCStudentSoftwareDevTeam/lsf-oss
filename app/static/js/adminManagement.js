@@ -1,3 +1,6 @@
+// Opens collapse menu for this page
+$("#admin").collapse("show");
+
 function modal(button) {
   if(button == "add" && $("#addlaborAdmin").val() != "") {
     $("h2").html("Labor Administrators");

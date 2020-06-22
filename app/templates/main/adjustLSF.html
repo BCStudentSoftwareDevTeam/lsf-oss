@@ -9,6 +9,7 @@
   <!-- These are the outside links for the effective date calendar-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/static/css/tooltip.css" type="text/css"/>
 
 </head>
 
@@ -29,7 +30,7 @@
          </div>
        </div>
        <div class="form-group">
-         <label for="supervisor" class="field"><span class="tooltip-right" data-tooltip="Required">Supervisor<span class="required-mark"> *</span></span></label>
+         <label for="supervisor" class="field"><span class="tooltip-right" data-tooltip="Required">Supervisor<span class="required-mark">*</span></span></label>
          <div class="change">
            <select required type="supervisor"
                             class="selectpicker form-control newValue"
@@ -50,7 +51,7 @@
          </div>
        </div>
        <div class="form-group">
-         <label for="POSN_CODE" class="field"><span class="tooltip-right" data-tooltip="Required">Position<span class="required-mark"> *</span></span></label>
+         <label for="POSN_CODE" class="field"><span class="tooltip-right" data-tooltip="Required">Position<span class="required-mark">*</span></span></label>
          <div  class="change">
            <select required type="POSN_CODE"
                             class="selectpicker form-control newValue"
@@ -82,7 +83,7 @@
      </div>
      <div id="contractHoursDiv" class="form-group newValue">
         <!-- Contract hours for breaks -->
-           <label for="contractHours"><span class="tooltip-right" data-tooltip="Required">Contract Hours<span class="required-mark"> *</span></span></label>
+           <label for="contractHours"><span class="tooltip-right" data-tooltip="Required">Contract Hours<span class="required-mark">*</span></span></label>
            <div  class="change">
              <input class="form-control quantity newValue disable"
                      type = "number"
@@ -98,7 +99,7 @@
           </div>
         </div>
       <div id="weeklyHoursDiv" class="form-group">
-             <label for="weeklyHours"><span class="tooltip-right" data-tooltip="Required">Hours Per Week<span class="required-mark"> *</span></span></label>
+             <label for="weeklyHours"><span class="tooltip-right" data-tooltip="Required">Hours Per Week<span class="required-mark">*</span></span></label>
              <div  class="change">
                <select  type="number"
                         class="selectpicker form-control newValue"
@@ -114,7 +115,7 @@
            </div>
 
     <div class="form-group" id= "dateDiv">
-    <label for="datetimepicker" class="required-asterisk"><span class="tooltip-right" data-tooltip="Required">Date Needed<span class="required-mark"> *</span></span></label>
+    <label for="datetimepicker" class="required-asterisk"><span class="tooltip-right" data-tooltip="Required">Date Needed<span class="required-mark">*</span></span></label>
       <div class="input-group date"  class="change">
         <input type="text" class="form-control effectiveDate" id="datetimepicker0" placeholder="MM/DD/YYYY" required > <!--Should prefill with todays date though// effective date does not have old/new value comparison-->
         <span class="input-group-addon">
@@ -123,7 +124,7 @@
       </div>
      </div>
      <div class="form-group" >
-       <label for="supervisorNotes"><span class="tooltip-right" data-tooltip="Required">Notes<span class="required-mark"> *</span></span></label>
+       <label for="supervisorNotes"><span class="tooltip-right" data-tooltip="Required">Notes<span class="required-mark">*</span></span></label>
        <div class ="change">
          <textarea name="supervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue">{{prefillnotes}}</textarea>
           <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}"></input>
