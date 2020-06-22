@@ -17,7 +17,6 @@ from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
 from fpdf import FPDF
 from app.logic.authorizationFunctions import*
-from app.models.Tracy.stuposn import STUPOSN
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
@@ -92,7 +91,7 @@ def populateModal(statusKey):
                     form.modifiedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
                 if form.modifiedForm.fieldModified == "Position": # if position field has been modified in adjust form then retriev position name.
                     newPositionCode = form.modifiedForm.newValue
-                    newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode)
+                    newPosition = Tracy().getPositionFromCode(newPositionCode)
                     # temporarily storing the new position name in new value, and old position name in old value
                     # because we want to show these information in the hmtl template.
                     form.modifiedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"

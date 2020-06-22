@@ -1,4 +1,4 @@
-from app.config.loadConfig import*
+from app.config.loadConfig import get_secret_cfg 
 from peewee import DoesNotExist
 from app.models.Tracy.stuposn import STUPOSN
 from app.models.Tracy.studata import STUDATA
