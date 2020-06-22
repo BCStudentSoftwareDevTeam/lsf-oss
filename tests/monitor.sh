@@ -8,4 +8,4 @@ then
 	BUILD="all";
 fi
 
-ptw --verbose -c --runner "bash tests/run_tests.sh $BUILD" --ext=".py,.sh"
+ptw --verbose -c --runner "bash tests/run_tests.sh $BUILD" --ext=".py,.sh,.html"
