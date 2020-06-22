@@ -13,7 +13,7 @@
 
 <div align="center" >
   <h1>Manage Administrators</h1>
-  <span id="ManageAdminInfo">Add or Remove administrators here</span>
+  <span id="ManageAdminInfo">Add or Remove Administrators here</span>
 </div>
 
 {# This is for adding is labor admins #}
@@ -28,7 +28,11 @@
           data-show-subtext="true" data-live-search="true" name="addAdmin">
             {% for user in users %}
               {% if user.isLaborAdmin == False or user.isLaborAdmin == None %}
-                <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Supervisor.FIRST_NAME}} {{user.Supervisor.LAST_NAME}}</option>
+                {% if user.Student != None %}
+                  <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Student.FIRST_NAME}} {{user.Student.LAST_NAME}}</option>
+                {% elif user.Supervisor != None %}
+                  <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Supervisor.FIRST_NAME}} {{user.Supervisor.LAST_NAME}}</option>
+                {% endif %}
               {% endif %}
             {% endfor %}
           </select>
@@ -39,7 +43,11 @@
       data-show-subtext="true" data-live-search="true" name="removeAdmin">
         {% for user in users %}
           {% if user.isLaborAdmin == True %}
-            <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Supervisor.FIRST_NAME}} {{user.Supervisor.LAST_NAME}}</option>
+            {% if user.Student != None %}
+              <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Student.FIRST_NAME}} {{user.Student.LAST_NAME}}</option>
+            {% elif user.Supervisor != None %}
+              <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Supervisor.FIRST_NAME}} {{user.Supervisor.LAST_NAME}}</option>
+            {% endif %}
           {% endif %}
         {% endfor %}
           </select>

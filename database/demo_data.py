@@ -914,4 +914,89 @@ adminNotes = [
 AdminNotes.insert_many(adminNotes).on_conflict_replace().execute()
 print(" * laborOfficeNotes added")
 
+users = [
+        {
+        "Student": None,
+        "Supervisor": 1,
+        "username": "heggens",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": 2,
+        "username": "pearcej",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": 3,
+        "username": "nakazawam",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": 4,
+        "username": "hoffmanm",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": 5,
+        "username": "jonesj",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": 6,
+        "username": "ramsayb2",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": "B00730361",
+        "Supervisor": None,
+        "username": "jamalie",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": "B00734292",
+        "Supervisor": None,
+        "username": "cruzg",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": "B00785329",
+        "Supervisor": None,
+        "username": "adamskg",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": "B00841417",
+        "Supervisor": None,
+        "username": "bryantal",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        }
+        ]
+User.insert_many(users).on_conflict_replace().execute()
+print(" * users added")
+
 print("Dummy data added")

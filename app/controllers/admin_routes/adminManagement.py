@@ -56,7 +56,10 @@ def addLaborAdmin():
         newAdmin = User.get(User.username == newAdmins)
         newAdmin.isLaborAdmin = 1
         newAdmin.save()
-        message = "{0} {1} has been added as a Labor Admin".format(newAdmin.Supervisor.FIRST_NAME, newAdmin.Supervisor.LAST_NAME)
+        if newAdmin.Student:
+            message = "{0} {1} has been added as a Labor Admin".format(newAdmin.Student.FIRST_NAME, newAdmin.Student.LAST_NAME)
+        elif newAdmin.Supervisor:
+            message = "{0} {1} has been added as a Labor Admin".format(newAdmin.Supervisor.FIRST_NAME, newAdmin.Supervisor.LAST_NAME)
         flash(message, "success")
 
 def removeLaborAdmin():
@@ -64,7 +67,10 @@ def removeLaborAdmin():
         user = User.get(User.username == request.form.get('removeAdmin'))   #this is taking the name in the select tag
         user.isLaborAdmin = 0
         user.save()
-        message = "{0} {1} has been removed as a Labor Admin".format(user.Supervisor.FIRST_NAME, user.Supervisor.LAST_NAME)
+        if user.Student:
+            message = "{0} {1} has been added as a Labor Admin".format(user.Student.FIRST_NAME, user.Student.LAST_NAME)
+        elif user.Supervisor:
+            message = "{0} {1} has been added as a Labor Admin".format(user.Supervisor.FIRST_NAME, user.Supervisor.LAST_NAME)
         flash(message, "danger")
 
 def addFinancialAdmin():

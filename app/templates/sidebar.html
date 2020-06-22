@@ -50,7 +50,7 @@
                     </div>
                 </a>
             </div>
-            {% if isLaborAdmin == true %}
+            {% if isLaborAdmin == True %}
             <!-- If the current user is an admin, then we want to
                 create the 'Administration' tab in the sidebar for them.-->
               <div class="panel-group" id="accordion">
@@ -77,9 +77,31 @@
                   </div>
 
               </div>
-            </div>
+            {% elif isStudent == True %}
+              <div class="container-fluid">
+                  <div class="panel-group" >
+                      <div class="panel panel-default">
+                        <a>
+                            <div class="panel-heading">
+                                <h4>Labor History</h4>
+                            </div>
+                        </a>
+                    </div>
+                  </div>
+               </div>
+               <div class="container-fluid">
+                   <div class="panel-group" >
+                       <div class="panel panel-default">
+                         <a>
+                             <div class="panel-heading">
+                                 <h4>Labor Evaluation History</h4>
+                             </div>
+                         </a>
+                     </div>
+                   </div>
+                </div>
             {% endif %}
-      {% endif %}
+          {% endif %}
             <div class="panel panel-default">
                 <a href="{{ '/' if env == 'development' else '/Shibboleth.sso/Logout' }}">
                     <div class="panel-heading">
@@ -90,5 +112,6 @@
                 </a>
             </div>
 
+        </div>
     </nav>
 </div>
