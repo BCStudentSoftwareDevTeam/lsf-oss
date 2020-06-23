@@ -50,3 +50,4 @@ pytest-base-url
 selenium
 pytest-selenium
 webdriver_manager
+sqlalchemy_pyodbc_mssql
