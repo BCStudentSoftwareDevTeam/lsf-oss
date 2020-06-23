@@ -20,19 +20,19 @@ function header {
 
 # ui
 function ui {
-	header smoke
-	python -m pytest $FLAGS $UI_URLS tests/ui/smoke_test.py 
-	header functional
-	python -m pytest $FLAGS $UI_URLS tests/ui/functional_test.py
+	header UI
+	python -m pytest $FLAGS $UI_URLS tests/ui/smoke_test.py tests/ui/functional_test.py
+	#header functional
+	#python -m pytest $FLAGS $UI_URLS tests/ui/functional_test.py
 }
 
 # no-ui
 function no-ui {
-	header unit
-	python -m pytest $FLAGS -m unit
+	header non-UI
+	python -m pytest $FLAGS -m "unit or integration"
 
-	header integration
-	python -m pytest $FLAGS -m integration
+	#header integration
+	#python -m pytest $FLAGS -m integration
 }
 
 case "$1" in
