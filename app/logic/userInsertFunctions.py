@@ -104,7 +104,8 @@ def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department
                                  startDate = startDate,
                                  endDate = endDate,
                                  supervisorNotes = rspFunctional["stuNotes"],
-                                 laborDepartmentNotes = rspFunctional["stuLaborNotes"]
+                                 laborDepartmentNotes = rspFunctional["stuLaborNotes"],
+                                 studentName = rspFunctional["stuName"]
                                  )
 
     return lsf

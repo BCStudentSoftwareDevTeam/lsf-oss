@@ -29,7 +29,7 @@ ul li{
 <tr>
   {% for form in statusForm %}
   <td>{{form.studentSupervisee.ID}} </td>
-  <td>{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}}</td>
+  <td>{{form.studentName}}</td>
   <td>{{form.termCode.termName}}</td>
   {% endfor %}
 </tr>
