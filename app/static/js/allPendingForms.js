@@ -323,18 +323,11 @@ function loadOverloadModal(formHistoryID, laborStatusFormID) {
   $("#overloadModal").find('.modal-content').load('/admin/overloadModal/' + formHistoryID);
 }
 
-// function overloadModalClose(){// on close of overload modal we are clearing the table to prevent duplicate data.
-//   console.log('Made it into the close function');
-//   // $('#overloadStudentTableBody_' + String(formHistoryID)).empty();
-//   // $('#overloadDepartmentTableBody_' + String(formHistoryID)).empty();
-//
-//   // laborOverloadID = [] // emptying the list, becuase otherwise will cause duplicate data.
-// }
+function loadReleaseModal(formHistoryID, laborStatusFormID) {
+  $("#modalRelease").modal("show");
+  $("#modalRelease").find('.modal-content').load('/admin/releaseModal/' + formHistoryID);
 
-// $('#modalOverload').on('hidden.bs.modal', function () {// makes the close functionality work when clicking otuside of the modal
-//   // console.log('Made it here');
-//   overloadModalClose();
-// });
+}
 
 function displayModalTextArea(radioValue) {
   /*
@@ -367,7 +360,6 @@ function sendEmail(formHistoryID, emailRecipient) {
     'formHistoryID': formHistoryID,
     'emailRecipient': emailRecipient
   }
-  console.log(emailTrackerInfo);
   data = JSON.stringify(emailTrackerInfo)
   $.ajax({
     method: "POST",
@@ -392,32 +384,6 @@ function sendEmail(formHistoryID, emailRecipient) {
   });
 }
 
-// $(document).ready(function() {
-//     $("#deny").click(function() {
-//       /*
-//       This method sets the reason for denial text area to Bootstrap "has-error"
-//       to inform the user that the field is required for submission
-//       */
-//       $("#denyTextAreaOverload").addClass("has-error");
-//     });
-//
-//     $("#approve").click(function() {
-//         /*
-//         This method unsets the denial text area to Bootstrap "has-error"
-//         because the text area is no longer required
-//         */
-//         $("#denyTextAreaOverload").removeClass("has-error");
-//     });
-//
-//     $("#approveRel").click(function() {
-//         /*
-//         This method unsets the denial text area to Bootstrap "has-error"
-//         because the text area is no longer required
-//         */
-//         $("#denyTextAreaOverload").removeClass("has-error");
-//     });
-// });
-
 function submitOverload(formHistoryID) {
   /*
   This method is used to check if the form is ready for submission, then
@@ -425,7 +391,6 @@ function submitOverload(formHistoryID) {
   */
   if ($('input[name=decision]:checked').length > 0) {
     var createAJAX = true
-    console.log("I'm in the wrong place");
     var status = 'Pending'
     var overloadModalInfo = {
       'formHistoryID': formHistoryID
@@ -533,7 +498,6 @@ function toggleNotesLog(laborStatusFormID, formHistoryID) {
   This method toggles the 'Notes' log at the bottom of the
   'Overload' and 'Release' modal to show/hide it
   */
-  console.log("Form ID:", formHistoryID);
   if ($('.logNotesDiv').css('display') == 'none') {
     var modalViewNotesID = '#modalNote_' + String(formHistoryID)
     $(modalViewNotesID).html('Hide Notes')

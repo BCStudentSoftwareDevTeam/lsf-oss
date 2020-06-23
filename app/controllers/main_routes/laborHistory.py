@@ -75,7 +75,7 @@ def populateModal(statusKey):
     to put on the modal depending on what form is in the history.
     """
     try:
-        forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc())
+        forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         currentDate = datetime.date.today()
         buttonState = None
@@ -165,7 +165,7 @@ def populateModal(statusKey):
                                             ))
         return (resp)
     except Exception as e:
-        # print(e)
+        print(e)
         return render_template('errors/500.html')
         return (jsonify({"Success": False}))
 
@@ -195,10 +195,7 @@ def withdraw_form():
     try:
         rsp = eval(request.data.decode("utf-8"))
         student = LaborStatusForm.get(rsp["FormID"])
-        print(student)
         selectedPendingForms = FormHistory.select().join(Status).where(FormHistory.formID == rsp["FormID"]).where(FormHistory.status.statusName == "Pending").order_by(FormHistory.historyType.asc())
-        for i in selectedPendingForms:
-            print(i.formID.laborStatusFormID, i.formHistoryID)
         for form in selectedPendingForms:
             if form.historyType.historyTypeName == "Labor Status Form":
                 historyFormToDelete = FormHistory.get(FormHistory.formHistoryID == form.formHistoryID)
@@ -210,32 +207,11 @@ def withdraw_form():
                 overloadFormToDelete = OverloadForm.get(OverloadForm.overloadFormID == form.overloadForm.overloadFormID)
                 overloadFormToDelete.delete_instance()
                 historyFormToDelete.delete_instance()
-            # try:
-            #
-            #     # OverloadForm.get(OverloadForm.overloadFormID == form.overloadForm.overloadFormID).delete_instance()
-            #     # form.delete_instance()
-            #     pass
-            # except:
-            #     pass
-            # # try:
-            # #     ModifiedForm.get(ModifiedForm.modifiedFormID == form.modifiedForm.modifiedFormID).delete_instance()
-            # #     form.delete_instance()
-            # # except:
-            # #     pass
-            # try:
-            #     # if form.historyType.historyTypeName == "Labor Status Form":
-            #     #     formID = form.formID.laborStatusFormID
-            #     #     form.delete_instance()
-            #     #     LaborStatusForm.get(formID).delete_instance()
-            #     pass
-            # except:
-            #     pass
-        print('Loop good')
         message = "Your selected form for {0} {1} has been withdrawn.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
         return jsonify({"Success":True, "url":"/"})
     except Exception as e:
-        # print(e)
+        print(e)
         message = "An error occured. Your selected form for {0} {1} was not withdrawn.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "danger")
         return jsonify({"Success": False, "url":"/"})

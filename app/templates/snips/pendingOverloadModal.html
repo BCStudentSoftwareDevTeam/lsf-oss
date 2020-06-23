@@ -41,13 +41,13 @@
         <td>SAAS</td>
         <td id="statusSAAS">{{departmentStatusInfo['SAASStatus']}}</td>
         <td id="emailDateSAAS">{{departmentStatusInfo['SAASEmail']}}</td>
-        <td><button id="SAASEmail" value='{{formHistoryID}}' type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td>
+        <td><button id="SAASEmail" value='{{formHistoryID}}' type="button" class ="btn btn-info col-sm-12" onclick="sendEmail(this.value, this.id)">Send Email</button></td>
       </tr>
       <tr>
         <td>Financial Aid</td>
         <td id="statusFinancialAid">{{departmentStatusInfo['financialAidStatus']}}</td>
         <td id="emailDateFinancialAid">{{departmentStatusInfo['financialAidLastEmail']}}</td>
-        <td><button id="financialAidEmail" value="{{formHistoryID}}" type="button" class ="btn btn-info" onclick="sendEmail(this.value, this.id)">Send Email</button></td>
+        <td><button id="financialAidEmail" value="{{formHistoryID}}" type="button" class ="btn btn-info col-sm-12" onclick="sendEmail(this.value, this.id)">Send Email</button></td>
       </tr>
     </tbody>
   </table>

@@ -88,7 +88,6 @@ def allPendingForms(formType):
                     allForms.modifiedForm.newValue = newPosition.POSN_CODE +" (" + newPosition.WLS+")"
                     allForms.modifiedForm.oldValue = newPosition.POSN_TITLE
         users = User.select()
-        print(pendingOverloadFormPairs)
         return render_template( 'admin/allPendingForms.html',
                                 title=pageTitle,
                                 username=current_user.username,
@@ -351,7 +350,6 @@ def getOverloadModalData(formHistoryID):
             financialAidEmailDate = 'No Email Sent'
         try:
             currentPendingForm = FormHistory.select().where((FormHistory.formID == historyForm[0].formID) & (FormHistory.status == "Pending")).get()
-            print(currentPendingForm)
             if currentPendingForm:
                 pendingForm = True
                 pendingFormType = currentPendingForm.historyType.historyTypeName
@@ -360,7 +358,6 @@ def getOverloadModalData(formHistoryID):
         except (AttributeError, IndexError):
             pendingForm = False
             pendingFormType = False
-        print("Pending Form: ", pendingForm)
         departmentStatusInfo.update({
                             'SAASEmail': SAASEmailDate,
                             'SAASStatus': SAASStatus,
@@ -380,6 +377,26 @@ def getOverloadModalData(formHistoryID):
         return (resp)
     except Exception as e:
         print("Error Loading Data Into Overload Modal:",type(e).__name__ + ":", e)
+        return jsonify({"Success": False}), 500
+
+@admin.route('/admin/releaseModal/<formHistoryID>', methods=['GET'])
+def getReleaseModalData(formHistoryID):
+    """
+    This function will retrieve the data to populate the release modal.
+    """
+    try:
+        historyForm = FormHistory.select().where(FormHistory.formHistoryID == int(formHistoryID))
+        noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
+
+        resp = make_response(render_template('snips/pendingReleaseModal.html',
+                                            historyForm = historyForm,
+                                            formHistoryID = historyForm[0].formHistoryID,
+                                            laborStatusFormID = historyForm[0].formID.laborStatusFormID,
+                                            noteTotal = noteTotal
+                                            ))
+        return (resp)
+    except Exception as e:
+        print("Error Loading Data Into Release Modal:",type(e).__name__ + ":", e)
         return jsonify({"Success": False}), 500
 
 @admin.route('/admin/modalFormUpdate', methods=['POST'])
@@ -408,7 +425,7 @@ def modalFormUpdate():
                         if pendingForm.modifiedForm.fieldModified != "Weekly Hours":
                             pendingForm = FormHistory.select().join(ModifiedForm).where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending") & (FormHistory.modifiedForm.fieldModified == "Weekly Hours")).get()
                     if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Modified Labor Form" and pendingForm.modifiedForm.fieldModified == "Weekly Hours"):
-                        # pendingForm.status = status.statusName
+                        pendingForm.status = status.statusName
                         pendingForm.reviewedBy = createdUser.UserID
                         pendingForm.reviewedDate = currentDate
                         if 'denialReason' in rsp.keys():
@@ -441,7 +458,7 @@ def modalFormUpdate():
                                 createdBy = createdUser.UserID,
                                 date = currentDate,
                                 notesContents = rsp['adminNotes'])
-            # historyForm.status = status.statusName
+            historyForm.status = status.statusName
             historyForm.reviewedBy = createdUser.UserID
             historyForm.reviewedDate = currentDate
             historyForm.save()
@@ -455,7 +472,6 @@ def modalFormUpdate():
                     email.laborReleaseFormApproved()
                 elif rsp['status'] == 'Denied':
                     email.laborReleaseFormRejected()
-            print("Made it to the bottom of the modal")
             return jsonify({"Success": True})
     except Exception as e:
         print("Error Updating Release/Overload Forms:",type(e).__name__ + ":", e)
@@ -469,7 +485,6 @@ def sendEmail():
     try:
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
-            print('Made it in here okay')
             historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
             overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm)
             status = Status.get(Status.statusName == 'Pending')
@@ -482,11 +497,9 @@ def sendEmail():
                 overloadForm.financialAidApproved = status.statusName
                 overloadForm.save()
             # Lines 347-349 were left as comments because they require code from PR #89
-            print('Before emial')
             link = '/admin/financialAidOverloadApproval/' + str(rsp['formHistoryID'])
             email = emailHandler(historyForm.formHistoryID)
             email.overloadVerification(recipient, link)
-            print('After email')
             currentDate = datetime.now().strftime('%m/%d/%y')
             newEmailInformation = {'recipient': recipient,
                                     'emailDate': currentDate,

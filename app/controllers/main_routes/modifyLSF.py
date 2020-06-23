@@ -148,5 +148,5 @@ def updateLSF(laborStatusKey):
     except Exception as e:
         message = "An error occured. Your Labor Status Form for {0} {1} was not modified.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "danger")
-        # print(e)
+        print(e)
         return jsonify({"Success": False})
