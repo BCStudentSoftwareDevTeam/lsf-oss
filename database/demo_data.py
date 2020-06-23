@@ -232,6 +232,16 @@ staffs = [
             "ORG":"2114",
             "DEPT_NAME": "Computer Science"
             },
+            {
+            "PIDM":7,
+            "ID": "B00841417",
+            "FIRST_NAME":"Alex",
+            "LAST_NAME" : "Bryant",
+            "EMAIL"  :"bryantal@berea.edu",
+            "CPO":"420",
+            "ORG":"2114",
+            "DEPT_NAME": "Computer Science"
+            }
         ]
 stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
 print(" * staff added")
@@ -989,7 +999,7 @@ users = [
         },
         {
         "Student": "B00841417",
-        "Supervisor": None,
+        "Supervisor": 7,
         "username": "bryantal",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,

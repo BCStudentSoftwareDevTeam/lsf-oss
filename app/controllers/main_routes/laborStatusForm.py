@@ -65,7 +65,8 @@ def laborStatusForm(laborStatusKey = None):
                             terms = terms,
                             staffs = staffs,
                             departments = departments,
-                            isLaborAdmin = isLaborAdmin)
+                            isLaborAdmin = isLaborAdmin,
+                            current_user = currentUser)
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():

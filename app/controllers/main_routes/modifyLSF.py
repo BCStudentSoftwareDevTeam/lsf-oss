@@ -24,7 +24,7 @@ def modifyLSF(laborStatusKey):
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:       # Not an admin
-        if current_user.Student:
+        if current_user.Student and not current_user.Supervisor:
             return redirect('/laborHistory/' + current_user.Student.ID)
         elif current_user.Supervisor:
             isLaborAdmin = False

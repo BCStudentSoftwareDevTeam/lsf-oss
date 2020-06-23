@@ -13,7 +13,7 @@
 <div align= "center">
   <h1>Labor History</h1>
     <span id="studentName">{{student.FIRST_NAME}} {{student.LAST_NAME}}</span>
-    {% if isStudent == False %}
+    {% if isStudent != True and   %}
       <form method="POST" action="/laborHistory/download">
         <input hidden name="listOfForms" value="{{formHistoryList}}" />
         <div align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success" id="downloadButton">Download</button></div>
@@ -21,7 +21,7 @@
     {% endif %}
 
     <div align= "center">
-      {% if isStudent == True %}
+      {% if isStudent == True and current_user.Student.ID == Student.ID %}
         <div align="right" id="evaluation"><button type="button" class="btn btn-success" id="studentEvalExperience">Labor Experience Evaluation</button></div>
       {% endif %}
       <table id="positionTable" >
@@ -55,7 +55,7 @@
   </div>
 </div>
 <!-- Modal End -->
-  {% if isStudent == False %}
+  {% if isStudent == False and current_user.Student.ID != Student.ID %}
     <div align= "left"><button class='btn btn-danger' id="returnbutton" onclick="window.history.back()">Return</button></div>
   {% endif %}
 {% endblock %}

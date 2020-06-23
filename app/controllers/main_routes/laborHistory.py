@@ -28,19 +28,34 @@ def laborhistory(id):
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:
-            if current_user.Student:
+            if current_user.Student and not current_user.Supervisor:
                 isLaborAdmin = False
                 isStudent = True
                 departmentsList = None
-            elif current_user.Supervisor:
+            elif current_user.Supervisor and not current_user.Student:
                 isLaborAdmin = True
                 isStudent = False
                 authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.Supervisor.UserID)
                 if authorizedUser == False:
                     return render_template('errors/403.html')
+            elif current_user.Supervisor and current_user.Student:
+                print("Hitting inside of last check")
+                isLaborAdmin = False
+                isStudent = True
+                if current_user.Student.ID == id:
+                    departmentsList = None
+                    pass
+                else:
+                    authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.Supervisor.UserID)
+                    print("Made it past here")
+                    if authorizedUser == False:
+                        return render_template('errors/403.html')
         else:
             isLaborAdmin = True
-            isStudent = False
+            if current_user.Student:
+                isStudent = True
+            else:
+                isStudent = False
             departmentsList = []
         student = Student.get(Student.ID == id)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
@@ -58,7 +73,8 @@ def laborhistory(id):
                                 formHistoryList = formHistoryList,
                                 departmentsList = departmentsList,
                                 isLaborAdmin = isLaborAdmin,
-                                isStudent = isStudent
+                                isStudent = isStudent,
+                                current_user = current_user
                               )
     except Exception as e:
         return render_template('errors/500.html')
