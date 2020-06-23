@@ -73,3 +73,9 @@ p {
   margin-top: 0;
   margin-bottom: 0
 }
+
+.original-name {
+    font-style: italic;
+    font-size: 18px;
+    margin-top: 6px;
+}
