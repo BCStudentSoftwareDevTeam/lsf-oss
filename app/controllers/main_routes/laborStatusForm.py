@@ -66,6 +66,9 @@ def laborStatusForm(laborStatusKey = None):
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
     """ Create labor status form. Create labor history form. Most of the functions called here are in userInsertFunctions.py"""
+    currentUser = require_login()
+    if not currentUser:        # Not logged in
+        return render_template('errors/403.html')
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     all_forms = []
@@ -79,6 +82,22 @@ def userInsert():
             print("ERROR: ", e)
 
         student = Student.get(ID = tracyStudent.ID)
+
+        # Updates the student database with any updated attributes from TRACY
+        student.FIRST_NAME = tracyStudent.FIRST_NAME            # FIRST_NAME
+        student.LAST_NAME = tracyStudent.LAST_NAME              # LAST_NAME
+        student.CLASS_LEVEL = tracyStudent.CLASS_LEVEL          # CLASS_LEVEL
+        student.ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS    # ACADEMIC_FOCUS
+        student.MAJOR = tracyStudent.MAJOR                      # MAJOR
+        student.PROBATION = tracyStudent.PROBATION              # PROBATION
+        student.ADVISOR = tracyStudent.ADVISOR                  # ADVISOR
+        student.STU_EMAIL = tracyStudent.STU_EMAIL              # STU_EMAIL
+        student.STU_CPO = tracyStudent.STU_CPO                  # STU_CPO
+        student.LAST_POSN = tracyStudent.LAST_POSN              # LAST_POSN
+        student.LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM      # LAST_SUP_PIDM
+
+        student.save()                                          #Saves to student database
+
         studentID = student.ID
         d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.UserID
@@ -89,7 +108,7 @@ def userInsert():
         try:
             lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
             status = Status.get(Status.statusName == "Pending")
-            d, created = User.get_or_create(username = cfg['user']['debug'])
+            d, created = User.get_or_create(username = currentUser.username)
             creatorID = d.UserID
             createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
             try:

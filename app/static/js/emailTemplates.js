@@ -1,3 +1,6 @@
+// Opens collapse menu for this page
+$("#admin").collapse("show");
+
 var emailTemplateArray;
 
 $(document).ready(function() {

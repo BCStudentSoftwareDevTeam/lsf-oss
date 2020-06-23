@@ -1,6 +1,6 @@
 <div class="loader"></div>
       <div class="modal-header">
-        <h3 class="modal-title" id="exampleModalLabel" align="center"><b>Labor Release Form</b></h3>
+        <h3 class="modal-title" id="exampleModalLabel" align="center"><strong>Labor Release Form</strong></h3>
       </div>
       <div class="modal-body">
         <table id="releaseStudentTable" class="table table-bordered">
@@ -49,18 +49,18 @@
           <button id="modalNote_{{formHistoryID}}" onclick="toggleNotesLog({{laborStatusFormID}}, {{formHistoryID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes ({{noteTotal}})</button>
           <span>Status:<span aria-hidden="true" style="color:red"><strong>*</strong></span></span>
           <label for="approveRelease" class="radio-inline">
-            <input type="radio" id="approveRelease" class='release' name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve
+            <input type="radio" id="approveRelease" class='release' name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve</input>
           </label>
           <label for="denyRelease" class="radio-inline">
-            <input type="radio" id="denyRelease" class='release' name="decision" value="deny" onclick="displayModalTextArea(this.value, this.class)">Deny
+            <input type="radio" id="denyRelease" class='release' name="decision" value="deny" onclick="displayModalTextArea(this.value, this.class)">Deny</input>
           </label>
         </div>
         <div id="notesTextAreaRelease" class="notesTextArea">
           <textarea id='releaseNotes' class="finalNote" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
-          <p id="banner-warning" style="color:blue;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b>Please ensure the student's form has been updated in <strong>Banner</strong> before approving the release form.</b></p>
+          <p id="banner-warning" style="color:blue;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>Please ensure the student's form has been updated in <strong>Banner</strong> before approving the release form.</strong></p>
         </div>
         <div id="denyTextAreaRelease" class="denyTextArea" style="display:None">
-          <p class="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
+          <p class="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong> This field is required</strong></p>
           <textarea id='denyReleaseReason' class="finalDeny" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
         </div>
         <div class="logNotesDiv" style='display:none'>

@@ -28,15 +28,54 @@ textarea {
 }
 
 p {
-   margin:0
+   margin:0;
+   padding-left: 0px;
   }
 
 .releaseReasonTextArea {
     overflow: -moz-scrollbars-vertical;
-    overflow-y: scroll;
+    overflow-y: auto;
     }
 
 .rejectReasonTextArea {
     overflow: -moz-scrollbars-vertical;
-    overflow-y: scroll;
+    overflow-y: auto;
     }
+
+.nopadding {
+  margin-left: -15px;
+}
+
+.row {
+  margin-left: -15px;
+}
+
+.col-sm-2 {
+  margin-left: -5px;
+}
+
+.smallDataMargin {
+  margin-left: 25px;
+  margin-bottom: 10px;
+}
+
+.leftMargin {
+  margin-left: 25px;
+}
+
+.overloadBottom {
+  margin-left: -15px;
+  margin-bottom: 70px;
+}
+
+.modalHeader {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 0
+}
+
+.original-name {
+    font-style: italic;
+    font-size: 18px;
+    margin-top: 6px;
+}
