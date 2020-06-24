@@ -65,7 +65,7 @@ def adjustLSF(laborStatusKey):
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
 
     return render_template( 'main/adjustLSF.html',
-				            title=('adjust LSF'),
+				            title=('Adjust Labor Status Form'),
                             username = current_user,
                             superviser_id = superviser_id,
                             prefillstudent = prefillstudent,

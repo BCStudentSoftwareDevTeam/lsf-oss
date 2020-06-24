@@ -2,7 +2,7 @@
 
 {% block styles %}
     {{super()}}
-    <link rel="stylesheet" type="text/css" href="/static/css/adjustLSF.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/alterLSF.css" />
 {% endblock %}
 
 {% block scripts %}
@@ -14,7 +14,7 @@
 
 <a class="skipContent" href="#supervisor" tabindex="1">Click to Skip</a>
 <div align="center">
-  <h2>Adjust Labor Status Form</h2>
+  <h2>{{title}}</h2>
 </div>
  <form id="modifyLSF">
    <div class="container">
@@ -23,19 +23,18 @@
        </div>
    <div class="floatleft">
        <div class="form-group">
-         <label for="Student">Student:</label> <!--User CANNOT edit-->
+         <label for="Student">Student</label> <!--User CANNOT edit-->
          <div>
-           <input type="Student" class="form-control" id="Student" value="{{prefillstudent}}" disabled> <!--User CANNOT edit-->
+           <input type="text" class="form-control" id="Student" value="{{prefillstudent}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
-         <label for="supervisor" class="field"><span class="tooltip-right" data-tooltip="Required">Supervisor<span class="required-mark">*</span></span></label>
+         <label for="supervisor" class="field"><span class="tooltip-right" data-tooltip="Required">Supervisor<span class="required-mark"> *</span></span></label>
          <div class="change">
-           <select required type="supervisor"
-                            class="selectpicker form-control newValue"
-                            id="supervisor"
-                            data-live-search="true"
-                            >
+           <select required
+                class="selectpicker form-control newValue"
+                id="supervisor"
+                data-live-search="true">
                 {% for sup in supervisors %}
                     <option title="{{sup.FIRST_NAME}} {{sup.LAST_NAME}}" value="{{sup.PIDM}}" {% if form.supervisor.PIDM == sup.PIDM %} selected {% endif %}>{{sup.FIRST_NAME}} {{sup.LAST_NAME}}</option>
                 {% endfor %}
@@ -44,45 +43,45 @@
          </div>
        </div>
        <div class="form-group">
-         <label for="Department">Department:</label> <!--User CANNOT edit-->
+         <label for="Department">Department</label> <!--User CANNOT edit-->
          <div>
-           <input type="Department" class="form-control" id="Department" value="{{prefilldepartment}}" disabled> <!--User CANNOT edit-->
+           <input type="text" class="form-control" id="Department" value="{{prefilldepartment}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
        <div class="form-group">
-         <label for="POSN_CODE" class="field"><span class="tooltip-right" data-tooltip="Required">Position<span class="required-mark">*</span></span></label>
+         <label for="Position" class="field"><span class="tooltip-right" data-tooltip="Required">Position<span class="required-mark"> *</span></span></label>
          <div  class="change">
-           <select required type="POSN_CODE"
-                            class="selectpicker form-control newValue"
-                            id="POSN_CODE"
-                            data-live-search="true"
-                            onchange="fillHoursPerWeek()">
-                  {% for position in positions %}
-                    <option value="{{position.POSN_CODE}}" data-wls={{position.WLS}} {% if position.POSN_CODE == prefillposition %} selected {% endif %} >{{position.POSN_TITLE}} ({{position.WLS}})</option>
-                  {% endfor %}
+           <select required
+                class="selectpicker form-control newValue"
+                id="Position"
+                data-live-search="true"
+                onchange="fillHoursPerWeek()">
+                {% for position in positions %}
+                <option value="{{position.POSN_CODE}}" data-wls={{position.WLS}} {% if position.POSN_CODE == prefillposition %} selected {% endif %} >{{position.POSN_TITLE}} ({{position.WLS}})</option>
+                {% endfor %}
            </select>
            <input hidden class = "oldValue"  id= "prefillposition" value="{{prefillposition}}"></input>
          </div>
        </div>
        <!-- This selectpicker will be disabled if term is for a break, since jobtype is always Secondary-->
        <div class="form-group">
-         <label for="jobType">Job Type:</label> <!--User CANNOT edit-->
+         <label for="jobType">Job Type</label> <!--User CANNOT edit-->
          <div>
-           <input type="jobType" class="form-control" id="jobType" value="{{prefilljobtype}}" disabled> <!--User CANNOT edit-->
+           <input type="text" class="form-control" id="jobType" value="{{prefilljobtype}}" disabled> <!--User CANNOT edit-->
          </div>
        </div>
    </div>
   <div class= "floatright" >
      <div class="form-group">
-       <label for="Term">Term:</label> <!--User CANNOT edit-->
+       <label for="Term">Term</label> <!--User CANNOT edit-->
        <div >
-         <input type="Term" class="form-control" id="Term" value="{{prefillterm}}"disabled> <!--User CANNOT edit-->
+         <input type="text" class="form-control" id="Term" value="{{prefillterm}}"disabled> <!--User CANNOT edit-->
          <input hidden id= "termCode" value="{{form.termCode}}"> </input>
        </div>
      </div>
      <div id="contractHoursDiv" class="form-group newValue">
         <!-- Contract hours for breaks -->
-           <label for="contractHours"><span class="tooltip-right" data-tooltip="Required">Contract Hours<span class="required-mark">*</span></span></label>
+           <label for="contractHours"><span class="tooltip-right" data-tooltip="Required">Contract Hours<span class="required-mark"> *</span></span></label>
            <div  class="change">
              <input class="form-control quantity newValue disable"
                      type = "number"
@@ -94,27 +93,27 @@
                      value = "{{prefillhours}}"
                      oninput="this.value = Math.abs(this.value); this.value = parseInt(this.value)||0">
              </input>
-             <input hidden class = "oldValue"  id= "oldContractHours" value="{{prefillhours}}">  </input>
+             <input hidden class = "oldValue"  id= "oldContractHours" value="{{prefillhours}}"></input>
           </div>
         </div>
-      <div id="weeklyHoursDiv" class="form-group">
-             <label for="weeklyHours"><span class="tooltip-right" data-tooltip="Required">Hours Per Week<span class="required-mark">*</span></span></label>
-             <div  class="change">
-               <select  type="number"
-                        class="selectpicker form-control newValue"
-                        id="weeklyHours"
-                        name='selectedHoursPerWeek'
-                        data-live-search="true"
-                        title = "{{prefillhours}}"
-                        onchange="checkWLS20()">
-               </select>
-               <input hidden class = "oldValue"  id= "oldWeeklyHours" value="{{prefillhours}}">  </input>
-               <input hidden class = "totalHours"  id= "totalHours" value="{{totalHours}}"></input>
-             </div>
-           </div>
+        <div id="weeklyHoursDiv" class="form-group">
+            <label for="weeklyHours"><span class="tooltip-right" data-tooltip="Required">Hours Per Week<span class="required-mark"> *</span></span></label>
+            <div  class="change">
+                <select  type="number"
+                         class="selectpicker form-control newValue"
+                         id="weeklyHours"
+                         name='selectedHoursPerWeek'
+                         data-live-search="true"
+                         title = "{{prefillhours}}"
+                         onchange="checkWLS20()">
+                </select>
+                <input hidden class = "oldValue"  id= "oldWeeklyHours" value="{{prefillhours}}">  </input>
+                <input hidden class = "totalHours"  id= "totalHours" value="{{totalHours}}"></input>
+            </div>
+        </div>
 
     <div class="form-group" id= "dateDiv">
-    <label for="datetimepicker" class="required-asterisk"><span class="tooltip-right" data-tooltip="Required">Date Needed<span class="required-mark">*</span></span></label>
+    <label for="datetimepicker" class="required-asterisk"><span class="tooltip-right" data-tooltip="Required">Date Needed<span class="required-mark"> *</span></span></label>
       <div class="input-group date"  class="change">
         <input type="text" class="form-control effectiveDate" id="datetimepicker0" placeholder="MM/DD/YYYY" required > <!--Should prefill with todays date though// effective date does not have old/new value comparison-->
         <span class="input-group-addon">
@@ -123,7 +122,7 @@
       </div>
      </div>
      <div class="form-group" >
-       <label for="supervisorNotes"><span class="tooltip-right" data-tooltip="Required">Notes<span class="required-mark">*</span></span></label>
+       <label for="supervisorNotes"><span class="tooltip-right" data-tooltip="Required">Notes<span class="required-mark"> *</span></span></label>
        <div class ="change">
          <textarea name="supervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue">{{prefillnotes}}</textarea>
           <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}"></input>
@@ -134,7 +133,7 @@
 
     <div class="container">
       <div class="floatleft">
-        <button type="cancel" class="btn btn-danger" onclick="window.history.go(-1); return false;">Cancel</button>
+        <button type="button" class="btn btn-danger" onclick="window.history.go(-1); return false;">Cancel</button>
       </div>
       <div class="submitbutton">
         <button id="submit" type="button" class="btn btn-success" onclick="checkForChange()">Submit Changes</button>
@@ -143,6 +142,7 @@
     {% include "snips/adjustLSFNoChange.html" %}
     {% include "snips/adjustLSFSubmit.html" %}
     {% include "snips/ReviewForm.html" %}
+
  </form>
 
 {% endblock %}

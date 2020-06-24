@@ -32,12 +32,11 @@ function jobPositionDisable(){
   }
 }
 
-
 function fillHoursPerWeek(){ // prefill hours per week select picker
   var defaultValue = $("#oldWeeklyHours").val();
   var selectedHoursPerWeek = $("#weeklyHours");
   var jobType = $("#jobType").val();
-  var wls = $("#POSN_CODE option:selected").attr("data-wls");
+  var wls = $("#Position option:selected").attr("data-wls");
   if (selectedHoursPerWeek){
        var list = ["10", "12", "15", "20"];
        if (jobType == "Secondary") {
@@ -75,7 +74,7 @@ function checkForChange(){
   var oldSupervisor = $("#prefillsupervisor").val();
   var newSupervisor = $("#supervisor").val();
   var oldPostition = $("#prefillposition").val();
-  var newPostition = $("#POSN_CODE").val();
+  var newPostition = $("#Position").val();
   var date = $("#datetimepicker0").val();
   var oldNotes = $("#oldNotes").val();
   var newNotes = $("#supervisorNotes").val();

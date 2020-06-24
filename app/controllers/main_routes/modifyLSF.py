@@ -35,7 +35,7 @@ def modifyLSF(laborStatusKey):
     prefillsupervisorID = form.supervisor.PIDM
     superviser_id = form.supervisor.UserID
     prefilldepartment = form.department.DEPT_NAME
-    prefillposition = form.POSN_TITLE #+ " " +"("+ form.WLS + ")"
+    prefillposition = form.POSN_CODE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
     prefillterm = form.termCode.termName
     totalHours = 0
@@ -57,7 +57,7 @@ def modifyLSF(laborStatusKey):
 
 
     return render_template( 'main/modifyLSF.html',
-				            title=('modify LSF'),
+				            title=('Modify Labor Status Form'),
                             username = current_user,
                             superviser_id = superviser_id,
                             prefillstudent = prefillstudent,
