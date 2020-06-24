@@ -1,35 +1,24 @@
 h1, label{
   text-align: center;
 }
-h4 {
-  text-align: center;
-  margin-bottom: 50px;
-}
 
 select {
   position: relative;
   margin-bottom: 50px;
 }
 
-
 #header {
   margin-bottom: 30px;
-}
-
-#titleBlock {
-  position: relative;
-  left: 130px;
 }
 
 .form-group {
   margin-bottom: 30px;
 }
+
 .btn {
-      width: 25%;
+    width: 25%;
 }
- p {
-   font-size: large;
- }
+
  #ManageAdminInfo {
    font-size: 18px;
  }

@@ -1,25 +1,27 @@
 {% extends "base.html" %}
 
+{% block styles %}
+{{super()}}
+  <link href="/static/css/adminManagement.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+    <script type="text/javascript" src="{{url_for('static', filename='js/adminManagement.js') }}"></script>
+{% endblock %}
+
 {% block app_content %}
-
-<head>
-<link href="/static/css/adminManagement.css" rel="stylesheet" type="text/css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-</head>
-
+<div class="container">
 <a class="skipContent" href="#addlaborAdmin" tabindex="1">Click to Skip</a>
 <form id="titleBlock" action="/adminManagement/userInsert" method="POST">
 
-<div align="center" >
-  <h1>Manage Administrators</h1>
-  <span id="ManageAdminInfo">Add or Remove administrators here</span>
-</div>
+    <div align="center" >
+      <h1>Manage Administrators</h1>
+      <span id="ManageAdminInfo">Add or Remove administrators here</span>
+    </div>
 
 {# This is for adding is labor admins #}
 
-
-<div class="container">
   <div class="row">
       <div id="borders" class="col-sm-4">
         <h3 id="header">Labor Administrators</h3>
@@ -105,12 +107,12 @@
        </div>
      </div>
   </div>
-</div>
+
 
 <!-- Modal that will be rendered on the click of the submit button -->
 {% include "snips/adminManagementModal.html" %}
 
-</form>
-<script src="/static/js/adminManagement.js"></script>
+    </form>
+</div>
 
 {% endblock %}

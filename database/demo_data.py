@@ -357,6 +357,7 @@ print(" * terms added")
 LaborStatusForm.insert([{
             "laborStatusFormID": 2,
             "termCode_id": "202000",
+            "studentName": "Alex Bryant",
             "studentSupervisee_id": "B00841417",
             "supervisor_id": 1,
             "department_id": 1,
