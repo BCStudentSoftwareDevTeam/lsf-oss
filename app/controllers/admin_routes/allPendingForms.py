@@ -70,8 +70,10 @@ def allPendingForms(formType):
                     overloadForm = FormHistory.select().where((FormHistory.formID == allForms.formID) & (FormHistory.historyType == "Labor Overload Form") & (FormHistory.status == "Pending")).get()
                     if overloadForm:
                         pendingOverloadFormPairs[allForms.formHistoryID] = overloadForm.formHistoryID
+                except DoesNotExist:
+                    pass
                 except Exception as e:
-                    print('Expecting FormHistoryDoesNotExist Error:', type(e).__name__)
+                    print(e)
             if allForms.modifiedForm: # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
                 # We check if there is a pending overload form using the key of the modifed forms
                 if allForms.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
@@ -103,8 +105,8 @@ def allPendingForms(formType):
                                 pendingOverloadFormPairs = pendingOverloadFormPairs
                                 )
     except Exception as e:
-        print("error", e)
-        return render_template('errors/500.html')
+        print(e)
+        return render_template('errors/500.html'), jsonify({"Success": False}),500
 
 @admin.route('/admin/checkedForms', methods=['POST'])
 def approved_and_denied_Forms():
@@ -117,8 +119,8 @@ def approved_and_denied_Forms():
             approved_details =  modal_approval_and_denial_data(rsp)
             return jsonify(approved_details)
     except Exception as e:
-        print("error", e)
-        return jsonify({"Success": False})
+        print(e)
+        return jsonify({"Success": False}),500
 
 @admin.route('/admin/updateStatus/<raw_status>', methods=['POST'])
 def finalUpdateStatus(raw_status):
@@ -165,7 +167,7 @@ def finalUpdateStatus(raw_status):
                 overrideOriginalStatusFormOnAdjustmentFormApproval(history_type_data, LSF)
         return jsonify({"success": True})
     except Exception as e:
-        print("Error preparing form for status update:",type(e).__name__ + ":", e)
+        print("Error preparing form for status update:", e)
         return jsonify({"success": False})
 
     # BANNER
@@ -176,7 +178,7 @@ def finalUpdateStatus(raw_status):
             save_status = conn.insert(labor_forms)
 
         except Exception as e:
-            print("Unable to update BANNER:",type(e).__name__ + ":", e)
+            print("Unable to update BANNER:", e)
             save_status = False
 
     if save_status:
@@ -370,7 +372,7 @@ def getOverloadModalData(formHistoryID):
                             'financialAidLastEmail': financialAidEmailDate
                             })
         noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
-        resp = make_response(render_template('snips/pendingOverloadModal.html',
+        resp = render_template('snips/pendingOverloadModal.html',
                                             historyForm = historyForm,
                                             departmentStatusInfo = departmentStatusInfo,
                                             formHistoryID = historyForm[0].formHistoryID,
@@ -378,10 +380,10 @@ def getOverloadModalData(formHistoryID):
                                             noteTotal = noteTotal,
                                             pendingForm = pendingForm,
                                             pendingFormType = pendingFormType
-                                            ))
+                                            )
         return (resp)
     except Exception as e:
-        print("Error Loading Data Into Overload Modal:",type(e).__name__ + ":", e)
+        print("Error Loading Data Into Overload Modal:", e)
         return jsonify({"Success": False}), 500
 
 @admin.route('/admin/releaseModal/<formHistoryID>', methods=['GET'])
@@ -391,17 +393,17 @@ def getReleaseModalData(formHistoryID):
     """
     try:
         historyForm = FormHistory.select().where(FormHistory.formHistoryID == int(formHistoryID))
-        noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
+        #noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
 
-        resp = make_response(render_template('snips/pendingReleaseModal.html',
+        resp = render_template('snips/pendingReleaseModal.html',
                                             historyForm = historyForm,
                                             formHistoryID = historyForm[0].formHistoryID,
                                             laborStatusFormID = historyForm[0].formID.laborStatusFormID,
                                             noteTotal = noteTotal
-                                            ))
+                                            )
         return (resp)
     except Exception as e:
-        print("Error Loading Data Into Release Modal:",type(e).__name__ + ":", e)
+        print("Error Loading Data Into Release Modal:", e)
         return jsonify({"Success": False}), 500
 
 @admin.route('/admin/modalFormUpdate', methods=['POST'])
@@ -449,12 +451,14 @@ def modalFormUpdate():
 
                         if pendingForm.historyType.historyTypeName == "Labor Status Form":
                             email = emailHandler(pendingForm.formHistoryID)
-                            if rsp['status'] == 'Approved' or rsp['status'] == 'Approved Reluctantly':
+                            if rsp['status'] in ['Approved', 'Approved Reluctantly']:
                                 email.laborStatusFormApproved()
                             elif rsp['status'] == 'Denied':
                                 email.laborStatusFormRejected()
+                except DoesNotExist:
+                    pass
                 except Exception as e:
-                    print('Expecting FormHistoryDoesNotExist Error:', type(e).__name__)
+                    print(e)
             if 'denialReason' in rsp.keys():
                 # We only update the reject reason if one was given on the UI
                 historyForm.rejectReason = rsp['denialReason']
@@ -474,7 +478,7 @@ def modalFormUpdate():
             historyForm.reviewedDate = currentDate
             historyForm.save()
             if rsp['formType'] == 'Overload':
-                if rsp['status'] == 'Approved' or rsp['status'] == 'Approved Reluctantly':
+                if rsp['status'] in ['Approved', 'Approved Reluctantly']:
                     email.LaborOverLoadFormApproved()
                 elif rsp['status'] == 'Denied':
                     email.LaborOverLoadFormRejected()
@@ -485,7 +489,7 @@ def modalFormUpdate():
                     email.laborReleaseFormRejected()
             return jsonify({"Success": True})
     except Exception as e:
-        print("Error Updating Release/Overload Forms:",type(e).__name__ + ":", e)
+        print("Error Updating Release/Overload Forms:", e)
         return jsonify({"Success": False}),500
 
 @admin.route('/admin/sendVerificationEmail', methods=['POST'])
@@ -518,7 +522,7 @@ def sendEmail():
             }
             return jsonify(newEmailInformation)
     except Exception as e:
-        print("Error sending verification email to SASS/Financial Aid:",type(e).__name__ + ":", e)
+        print("Error sending verification email to SASS/Financial Aid:", e)
         return jsonify({"Success": False}),500
 
 @admin.route('/admin/notesCounter', methods=['POST'])
@@ -533,5 +537,5 @@ def getNotesCounter():
             noteDictionary = {'noteTotal': noteTotal}
             return jsonify(noteDictionary)
     except Exception as e:
-        print("Error selecting admin notes:",type(e).__name__ + ":", e)
+        print("Error selecting admin notes:", e)
         return jsonify({"Success": False}),500

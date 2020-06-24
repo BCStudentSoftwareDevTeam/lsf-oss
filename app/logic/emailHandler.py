@@ -209,7 +209,7 @@ class emailHandler():
         The method then checks whether to send the email to only the primary or both the primary and secondary supervisors.
         The method sendEmail is then called to handle the actual sending of the emails.
         """
-        if studentEmailPurpose != False:
+        if studentEmailPurpose:
             studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
             self.sendEmail(studentEmail, "student")
         if self.primaryFormHistory is not None:
@@ -217,10 +217,10 @@ class emailHandler():
             secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose) # Scott
             self.sendEmail(secondaryEmail, "breakPrimary")
             self.sendEmail(primaryEmail, "supervisor")
-        if emailPurpose != False or secondaryEmailPurpose != False:
+        if emailPurpose or secondaryEmailPurpose:
             if self.laborStatusForm.jobType == 'Secondary':
                 # If contract hours != None
-                if secondaryEmailPurpose != False:
+                if secondaryEmailPurpose:
                     secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
                     self.sendEmail(secondaryEmail, "secondary")
                 else:
