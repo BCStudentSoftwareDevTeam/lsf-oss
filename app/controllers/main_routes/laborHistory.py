@@ -28,26 +28,24 @@ def laborhistory(id):
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:
+            isLaborAdmin = False
             if current_user.Student and not current_user.Supervisor:
-                isLaborAdmin = False
                 isStudent = True
                 departmentsList = None
+                if current_user.Student.ID != id:
+                    return redirect('/laborHistory/' + current_user.Student.ID)
             elif current_user.Supervisor and not current_user.Student:
-                isLaborAdmin = True
                 isStudent = False
                 authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.Supervisor.UserID)
                 if authorizedUser == False:
                     return render_template('errors/403.html')
             elif current_user.Supervisor and current_user.Student:
-                print("Hitting inside of last check")
-                isLaborAdmin = False
                 isStudent = True
                 if current_user.Student.ID == id:
                     departmentsList = None
                     pass
                 else:
                     authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.Supervisor.UserID)
-                    print("Made it past here")
                     if authorizedUser == False:
                         return render_template('errors/403.html')
         else:
@@ -58,13 +56,12 @@ def laborhistory(id):
                 isStudent = False
             departmentsList = []
         student = Student.get(Student.ID == id)
+        studentUser = User.get(User.Student == student)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         formHistoryList = ""
         for form in studentForms:
             formHistoryList = formHistoryList + str(form.laborStatusFormID) + ","
         formHistoryList = formHistoryList[0:-1]
-        print('Is Student:', isStudent)
-        print("Is Labor Admin", isLaborAdmin)
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,
@@ -74,9 +71,11 @@ def laborhistory(id):
                                 departmentsList = departmentsList,
                                 isLaborAdmin = isLaborAdmin,
                                 isStudent = isStudent,
-                                current_user = current_user
+                                current_user = current_user,
+                                studentUserName = studentUser.username
                               )
     except Exception as e:
+        print('Error:', e)
         return render_template('errors/500.html')
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
@@ -108,6 +107,7 @@ def populateModal(statusKey):
             return render_template('errors/403.html')
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
+        student = User.get(User.Student == statusForm[0].studentSupervisee)
         currentDate = datetime.date.today()
         pendingformType = None
         buttonState = None
@@ -128,7 +128,7 @@ def populateModal(statusKey):
                     form.modifiedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
                     form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
         for form in forms:
-            if current_user.Student:
+            if current_user.Student and current_user.username == student.username:
                 if current_user.Student.ID == (form.formID.studentSupervisee.ID):  # If student is logged in then don't show a button
                     buttonState = ButtonStatus.show_student_labor_eval_button
                     break
@@ -136,6 +136,7 @@ def populateModal(statusKey):
                 buttonState = ButtonStatus.no_buttons # otherwise, show the notification
                 break
             else:
+                print('Inside of else')
                 if form.releaseForm != None:
                     if form.status.statusName == "Approved":
                         if currentDate <= form.formID.endDate:
@@ -172,7 +173,9 @@ def populateModal(statusKey):
                         pendingformType = form.historyType.historyTypeName
                         break
                 if form.historyType.historyTypeName == "Labor Status Form":
+                    print('Are we here')
                     if form.status.statusName == "Pending":
+                        print('Should be here')
                         buttonState = ButtonStatus.show_withdraw_modify_buttons
                         break
                     elif form.status.statusName == "Denied":
@@ -193,6 +196,7 @@ def populateModal(statusKey):
                         else:
                             buttonState = ButtonStatus.show_rehire_button
                             break
+        print(buttonState)
         resp = make_response(render_template('snips/studentHistoryModal.html',
                                             forms = forms,
                                             statusForm = statusForm,
