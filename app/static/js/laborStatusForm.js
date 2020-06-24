@@ -115,7 +115,7 @@ function fillDates(response) { // prefill term start and term end
     var isBreak = response[key]["isBreak"];
     var isSummer = response[key]["isSummer"];
     if (primaryCutOff){
-      if (isBreak == true){
+      if (isBreak){
         if (date > primaryCutOff){
         msgFlash("The deadline to add break positions has ended.", "fail");
         $("#break-cutoff-warning").show();
@@ -219,7 +219,7 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
  $("#position").change(function(){
    //this is just getting the value that is selected
    var wls = $("#position").find("option:selected").attr("data-wls");
-   var isBreak = $("#selectedTerm").find("option:selected").data("termBreak");
+   var isBreak = $("#selectedTerm").find("option:selected").data("termbreak");
    //We only want to show the modal if the selected term is 'Spring', 'Fall', or 'AY'
    if (!isBreak) {
      if (wls >= 5) {
@@ -255,7 +255,7 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
 function checkWLS() {
   var wls = $("#position").find("option:selected").attr("data-wls");
   var hoursPerWeek = $("#selectedHoursPerWeek").val();
-  var isBreak = $("#selectedTerm").find("option:selected").data("termBreak");
+  var isBreak = $("#selectedTerm").find("option:selected").data("termbreak");
   //We only want to show the modal if the selected term is 'Spring', 'Fall', or 'AY'
   if (!isBreak) {
     if (wls >= 5 && hoursPerWeek < 15 ) {
@@ -313,7 +313,7 @@ $("#failedTable").hide();
 
 function showAccessLevel(){ // Make Table labels appear
   if ($("#selectedSupervisor").val() && $("#selectedDepartment").val() && $("#selectedTerm").val()){
-    var isBreak = $("#selectedTerm").find("option:selected").data("termBreak");
+    var isBreak = $("#selectedTerm").find("option:selected").data("termbreak");
     if (isBreak) { // Summer term or any other break period table labels
       $("#contractHours").show();
       $("#plus").show();
@@ -417,7 +417,7 @@ function createStuDict(){
   var supervisorID = $("#selectedSupervisor").find("option:selected").attr("value");
   var department = $("#selectedDepartment").find("option:selected").text();
   var termCodeSelected = $("#selectedTerm").find("option:selected").val();
-  var isBreak = $("#selectedTerm").find("option:selected").data("termBreak")
+  var isBreak = $("#selectedTerm").find("option:selected").data("termbreak")
   var studentName = $("#student option:selected" ).text();
   if (!studentName){
     return false;
@@ -622,6 +622,7 @@ function isOneLaborStatusForm(studentDict){
       url: url,
       dataType: "json",
       success: function (response){
+        console.log(response);
         if(response["ShowModal"] == true){
         // if they already have one lsf or multiple (response if false) then show modal reminding the new supervisor of 40 hour mark rule.
           $("#warningModalTitle").text("Warning");
@@ -662,9 +663,8 @@ function summerLaborWarning(){
   if (isSummer){
     $("#SummerContract").modal('show');
     return true;
-  } else if (
-      //checks if any break has been clicked and generates a modal
-      isBreak && !isSummer){
+    //checks if any break has been clicked and generates a modal
+  } else if (isBreak && !isSummer){
       $("#warningModalTitle").html("Reminder");
       $("#warningModalText").html("Students may only work up to 40 hours a week during break periods.");
       $("#warningModal").modal('show');
