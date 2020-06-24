@@ -93,10 +93,6 @@ a {
   color: #1c78bb;
 }
 
-a:hover {
-  color: #fff;
-}
-
 .btn-newcolor { /* for contributors page */
   background-color: #1c78c0;
   color: #ffffff;
