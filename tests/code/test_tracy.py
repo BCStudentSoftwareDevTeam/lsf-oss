@@ -1,7 +1,6 @@
 import pytest
 from app.logic.tracy import Tracy
 from app.logic.tracy import InvalidQueryException
-from peewee import DoesNotExist
 
 @pytest.fixture(scope='class')
 def tracy(request):
@@ -47,6 +46,20 @@ class Test_Tracy:
 
         with pytest.raises(InvalidQueryException):
             supervisor = tracy.getSupervisorFromPIDM(17)
+
+    @pytest.mark.integration
+    def test_getSupervisorFromEmail(self, tracy):
+        supervisor = tracy.getSupervisorFromEmail("nakazawam@berea.edu")
+        assert 'Mario' == supervisor.FIRST_NAME
+
+        supervisor = tracy.getSupervisorFromEmail("heggens@berea.edu")
+        assert 'Scott' == supervisor.FIRST_NAME
+
+        with pytest.raises(InvalidQueryException):
+            supervisor = tracy.getSupervisorFromEmail("nakazawamasdfd.com")
+
+        with pytest.raises(InvalidQueryException):
+            supervisor = tracy.getSupervisorFromEmail(17)
 
     @pytest.mark.integration
     def test_getPositionsFromDepartment(self, tracy):

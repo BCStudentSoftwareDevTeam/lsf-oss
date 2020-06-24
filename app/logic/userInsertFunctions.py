@@ -8,7 +8,6 @@ from app.models.formHistory import*
 from app.models.historyType import *
 from app.models.term import *
 from app.models.student import Student
-from app.models.Tracy.stustaff import *
 from app.models.department import *
 from flask import json, jsonify
 from flask import request
@@ -31,7 +30,7 @@ def createUserFromTracy(username):
 
     email = "{}@berea.edu".format(username)
     try:
-        tracyUser = STUSTAFF.get(EMAIL=email)
+        tracyUser = Tracy().getSupervisorFromEmail(email)
     except DoesNotExist as e:
         raise InvalidUserException("{} not found in Tracy database".format(email))
 

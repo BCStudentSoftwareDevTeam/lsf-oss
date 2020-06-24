@@ -57,6 +57,18 @@ class Tracy():
 
         return supervisor
 
+    def getSupervisorFromEmail(self, email: str):
+        """
+        Return the supervisor with the given email.
+
+        Throws an InvalidQueryException if the given email address does not exist.
+        """
+        supervisor = STUSTAFF.query.filter(STUSTAFF.EMAIL == email).first()
+        if supervisor is None:
+            raise InvalidQueryException("Email {} not found in STUSTAFF".format(email))
+
+        return supervisor
+
     #######################################
 
     def getDepartments(self):
@@ -64,7 +76,8 @@ class Tracy():
         Return a list of departments, ordered by department name.
         """
         #return STUPOSN.query.select([STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT]).distinct().order_by(STUPOSN.DEPT_NAME.asc())
-        return STUPOSN.query.with_entities(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT).distinct().order_by(STUPOSN.DEPT_NAME).all()
+        return STUPOSN.query.with_entities(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT) \
+                            .distinct().order_by(STUPOSN.DEPT_NAME).all()
 
     def getPositionsFromDepartment(self, department: str):
         """
