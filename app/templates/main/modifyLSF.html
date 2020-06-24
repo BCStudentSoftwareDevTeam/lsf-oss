@@ -57,7 +57,7 @@
                 data-live-search="true"
                 onchange="fillHoursPerWeek()">
                 {% for position in positions %}
-                <option value="{{position.POSN_CODE}}" data-wls={{position.WLS}} {% if position.POSN_CODE == prefillposition %} selected {% endif %} >{{position.POSN_TITLE}} ({{position.WLS}})</option>
+                <option value="{{position.POSN_CODE}}" data-wls={{position.WLS}} {% if position.POSN_CODE == prefillposition %} selected {% endif %} >{{position.POSN_CODE}} ({{position.WLS}})</option>
                 {% endfor %}
            </select>
            <input hidden class = "oldValue"  id= "prefillposition" value="{{prefillposition}}"></input>
