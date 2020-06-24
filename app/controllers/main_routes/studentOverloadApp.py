@@ -30,9 +30,9 @@ def studentOverloadApp(formId):
     today = date.today()
     todayYear = today.year
     termYear = todayYear * 100
-    termsinYear = Term.select(Term).where(Term.termCode.between(termYear-1, termYear + 15))
+    termsInYear = Term.select(Term).where(Term.termCode.between(termYear-1, termYear + 15))
     TermsNeeded=[]
-    for term in termsinYear:
+    for term in termsInYear:
         if term.isBreak == False:
             TermsNeeded.append(term.termCode)
     studentSecondaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
