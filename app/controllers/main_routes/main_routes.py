@@ -54,7 +54,9 @@ def index():
 
     todayDate = date.today()
     # Grabs all the labor status forms where the current user is the supervisor
-    formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.Supervisor.UserID).order_by(LaborStatusForm.endDate.desc())
+    formsBySupervisees = []
+    if current_user.Supervisor != None:
+        formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.Supervisor.UserID).order_by(LaborStatusForm.endDate.desc())
 
     inactiveSupervisees = []
     currentSupervisees = []

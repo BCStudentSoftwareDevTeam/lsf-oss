@@ -20,6 +20,10 @@ def email_templates():
                                 isLaborAdmin = isLaborAdmin)
     else:
         isLaborAdmin = True
+        if current_user.Student:
+            isStudent = True
+        else:
+            isStudent = False
     emailTemplateID = EmailTemplate.select()
     purpose = EmailTemplate.select(EmailTemplate.purpose).distinct()
     formType = EmailTemplate.select(EmailTemplate.formType).distinct()
@@ -36,7 +40,9 @@ def email_templates():
                             subject = subject,
                             recipient = recipient,
                             body = body,
-                            isLaborAdmin = isLaborAdmin
+                            isLaborAdmin = isLaborAdmin,
+                            isStudent = isStudent,
+                            current_user = current_user
                           )
 
 @admin.route('/admin/emailTemplates/getEmailArray/', methods=['GET'])

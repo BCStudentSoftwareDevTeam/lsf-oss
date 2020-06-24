@@ -27,6 +27,10 @@ def term_Management():
                                     isLaborAdmin = isLaborAdmin)
     else:
         isLaborAdmin = True
+        if current_user.Student:
+            isStudent = True
+        else:
+            isStudent = False
 
     terms = Term.select()
     listOfTerms = Term.select()
@@ -37,7 +41,9 @@ def term_Management():
                              title=('Term Management'),
                              terms = terms,
                              isLaborAdmin = isLaborAdmin,
-                             listOfTerms = accordionTerms()
+                             listOfTerms = accordionTerms(),
+                             isStudent = isStudent,
+                             current_user = current_user
                           )
 
 def createTerms(termList, iteration):

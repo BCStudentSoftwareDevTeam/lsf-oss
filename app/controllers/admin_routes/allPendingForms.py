@@ -25,7 +25,6 @@ from app.models.supervisor import Supervisor
 def allPendingForms(formType):
     try:
         current_user = require_login()
-
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
@@ -37,6 +36,10 @@ def allPendingForms(formType):
                                     isLaborAdmin = isLaborAdmin)
         else:
             isLaborAdmin = True
+            if current_user.Student:
+                isStudent = True
+            else:
+                isStudent = False
         formList = None
         historyType = None
         pageTitle = ""
@@ -93,7 +96,9 @@ def allPendingForms(formType):
                                 overloadFormCounter = overloadFormCounter,
                                 laborStatusFormCounter = laborStatusFormCounter,
                                 modifiedFormCounter  = modifiedFormCounter,
-                                releaseFormCounter = releaseFormCounter
+                                releaseFormCounter = releaseFormCounter,
+                                isStudent = isStudent,
+                                current_user = current_user
                                 )
     except Exception as e:
         print("error", e)

@@ -23,13 +23,18 @@ def admin_Management():
                                 isLaborAdmin = isLaborAdmin)
     else:
         isLaborAdmin = True
+        if current_user.Student:
+            isStudent = True
+        else:
+            isStudent = False
 
     users = User.select()
     return render_template( 'admin/adminManagement.html',
                             title=('Admin Management'),
                            # username = username,
                             isLaborAdmin = isLaborAdmin,
-                            users = users
+                            users = users,
+                            current_user = current_user
                          )
 
 
