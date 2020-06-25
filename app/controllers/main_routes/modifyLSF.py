@@ -137,11 +137,13 @@ def updateLSF(laborStatusKey):
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
+
                     try:
                         overloadEmail = emailHandler(newFormHistory.formHistoryID)
                         overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
                     except Exception as e:
                         print("Error on sending overload emails: ", e)
+
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
         changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)

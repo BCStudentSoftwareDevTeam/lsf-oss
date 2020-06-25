@@ -16,7 +16,7 @@ from app.models.term import Term
 from app.logic.banner import Banner
 from app import cfg
 from datetime import datetime, date
-from flask import Flask, redirect, url_for, flash, make_response
+from flask import Flask, redirect, url_for, flash
 from app.models.Tracy.stuposn import STUPOSN
 
 
@@ -106,7 +106,7 @@ def allPendingForms(formType):
                                 )
     except Exception as e:
         print(e)
-        return render_template('errors/500.html'), jsonify({"Success": False}),500
+        return render_template('errors/500.html'), 500
 
 @admin.route('/admin/checkedForms', methods=['POST'])
 def approved_and_denied_Forms():
@@ -328,8 +328,8 @@ def insertNotes(formId):
             return jsonify({"Success": False})
 
     except Exception as e:
-        print("error", e)
-        return jsonify({"Success": False})
+        print(e)
+        return jsonify({"Success": False}), 500
 
 @admin.route('/admin/overloadModal/<formHistoryID>', methods=['GET'])
 def getOverloadModalData(formHistoryID):
@@ -372,7 +372,7 @@ def getOverloadModalData(formHistoryID):
                             'financialAidLastEmail': financialAidEmailDate
                             })
         noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
-        resp = render_template('snips/pendingOverloadModal.html',
+        return render_template('snips/pendingOverloadModal.html',
                                             historyForm = historyForm,
                                             departmentStatusInfo = departmentStatusInfo,
                                             formHistoryID = historyForm[0].formHistoryID,
@@ -381,10 +381,8 @@ def getOverloadModalData(formHistoryID):
                                             pendingForm = pendingForm,
                                             pendingFormType = pendingFormType
                                             )
-        return (resp)
     except Exception as e:
-        print("Error Loading Data Into Overload Modal:", e)
-        return jsonify({"Success": False}), 500
+        return render_template('errors/500.html'), 500
 
 @admin.route('/admin/releaseModal/<formHistoryID>', methods=['GET'])
 def getReleaseModalData(formHistoryID):
@@ -393,18 +391,15 @@ def getReleaseModalData(formHistoryID):
     """
     try:
         historyForm = FormHistory.select().where(FormHistory.formHistoryID == int(formHistoryID))
-        #noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
-
-        resp = render_template('snips/pendingReleaseModal.html',
+        noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
+        return render_template('snips/pendingReleaseModal.html',
                                             historyForm = historyForm,
                                             formHistoryID = historyForm[0].formHistoryID,
                                             laborStatusFormID = historyForm[0].formID.laborStatusFormID,
                                             noteTotal = noteTotal
                                             )
-        return (resp)
     except Exception as e:
-        print("Error Loading Data Into Release Modal:", e)
-        return jsonify({"Success": False}), 500
+        return render_template('errors/500.html'), 500
 
 @admin.route('/admin/modalFormUpdate', methods=['POST'])
 def modalFormUpdate():

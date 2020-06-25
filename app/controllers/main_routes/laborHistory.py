@@ -173,7 +173,7 @@ def populateModal(statusKey):
                                             ))
         return (resp)
     except Exception as e:
-        print(e)
+        print("Error on button state: ", e)
         return (jsonify({"Success": False}))
 
 @main_bp.route('/laborHistory/modal/printPdf/<statusKey>', methods=['GET'])
