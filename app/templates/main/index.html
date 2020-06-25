@@ -33,7 +33,7 @@ and hide the department select picker. -->
 <div class="col-md-2" align="center" id="userDepartments">
   <select class="selectpicker" id="departmentDropDown" onchange="populateTable()" title="Department" data-width="100%">
     {% for formHistory in currentUserDepartments %}
-      {% if current_user.isLaborAdmin == 1 %}
+      {% if currentUser.isLaborAdmin == 1 %}
       <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
       {% else %}
         <!-- We want to populate the select picker with the first option if the user is not an admin -->

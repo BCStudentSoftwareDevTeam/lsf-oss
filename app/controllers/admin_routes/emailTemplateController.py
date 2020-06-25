@@ -8,25 +8,15 @@ from flask import Flask, redirect, url_for, flash, jsonify, json, request, flash
 @admin.route('/admin/emailTemplates', methods=['GET'])
 # @login_required
 def email_templates():
-    current_user = require_login()
-    if not current_user:                    # Not logged in
+    currentUser = require_login()
+    if not currentUser:                    # Not logged in
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin:       # Not a labor admin
-        isLaborAdmin = False
-        if current_user.Student: # logged in as a student
-            isStudent = True
-            return redirect('/laborHistory/' + current_user.Student.ID)
-        elif current_user.Supervisor:
+    if not currentUser.isLaborAdmin:       # Not a labor admin
+        if currentUser.Student: # logged in as a student
+            return redirect('/laborHistory/' + currentUser.Student.ID)
+        elif currentUser.Supervisor:
             return render_template('errors/403.html',
-                                isLaborAdmin = isLaborAdmin,
-                                isStudent = isStudent,
-                                current_user = current_user)
-    else:
-        isLaborAdmin = True
-        if current_user.Student:
-            isStudent = True
-        else:
-            isStudent = False
+                                currentUser = currentUser)
     emailTemplateID = EmailTemplate.select()
     purpose = EmailTemplate.select(EmailTemplate.purpose).distinct()
     formType = EmailTemplate.select(EmailTemplate.formType).distinct()
@@ -43,9 +33,7 @@ def email_templates():
                             subject = subject,
                             recipient = recipient,
                             body = body,
-                            isLaborAdmin = isLaborAdmin,
-                            isStudent = isStudent,
-                            current_user = current_user
+                            currentUser = currentUser
                           )
 
 @admin.route('/admin/emailTemplates/getEmailArray/', methods=['GET'])

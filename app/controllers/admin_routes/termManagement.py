@@ -15,25 +15,15 @@ import datetime
 # @login_required
 
 def term_Management():
-    current_user = require_login()
-    if not current_user:                    # Not logged in
+    currentUser = require_login()
+    if not currentUser:                    # Not logged in
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
-        if current_user.Student: # logged in as a student
-            isStudent = True
-            return redirect('/laborHistory/' + current_user.Student.ID)
-        elif current_user.Supervisor: # logged in as a supervisor
+    if not currentUser.isLaborAdmin:       # Not an admin
+        if currentUser.Student: # logged in as a student
+            return redirect('/laborHistory/' + currentUser.Student.ID)
+        elif currentUser.Supervisor:
             return render_template('errors/403.html',
-                                    isLaborAdmin = isLaborAdmin,
-                                    isStudent = isStudent,
-                                    current_user = current_user)
-    else:
-        isLaborAdmin = True
-        if current_user.Student:
-            isStudent = True
-        else:
-            isStudent = False
+                                currentUser = currentUser)
 
     terms = Term.select()
     listOfTerms = Term.select()
@@ -43,10 +33,8 @@ def term_Management():
     return render_template( 'admin/termManagement.html',
                              title=('Term Management'),
                              terms = terms,
-                             isLaborAdmin = isLaborAdmin,
                              listOfTerms = accordionTerms(),
-                             isStudent = isStudent,
-                             current_user = current_user
+                             currentUser = currentUser
                           )
 
 def createTerms(termList, iteration):

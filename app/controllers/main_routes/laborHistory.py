@@ -24,36 +24,20 @@ from app.models.supervisor import Supervisor
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
     try:
-        current_user = require_login()
-        if not current_user:                    # Not logged in
+        currentUser = require_login()
+        if not currentUser:                    # Not logged in
             return render_template('errors/403.html')
-        if not current_user.isLaborAdmin:
-            isLaborAdmin = False
-            if current_user.Student and not current_user.Supervisor:
-                isStudent = True
+        if not currentUser.isLaborAdmin:
+            if currentUser.Student and not currentUser.Supervisor:
                 departmentsList = None
-                if current_user.Student.ID != id:
-                    return redirect('/laborHistory/' + current_user.Student.ID)
-            elif current_user.Supervisor and not current_user.Student:
-                isStudent = False
-                authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.Supervisor.UserID)
+                if currentUser.Student.ID != id:
+                    return redirect('/laborHistory/' + currentUser.Student.ID)
+            elif currentUser.Supervisor:
+                authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, currentUser.Supervisor.UserID)
                 if authorizedUser == False:
-                    return render_template('errors/403.html')
-            elif current_user.Supervisor and current_user.Student:
-                isStudent = True
-                if current_user.Student.ID == id:
-                    departmentsList = None
-                    pass
-                else:
-                    authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.Supervisor.UserID)
-                    if authorizedUser == False:
-                        return render_template('errors/403.html')
+                    return render_template('errors/403.html',
+                                            currentUser = currentUser)
         else:
-            isLaborAdmin = True
-            if current_user.Student:
-                isStudent = True
-            else:
-                isStudent = False
             departmentsList = []
         student = Student.get(Student.ID == id)
         studentUser = User.get(User.Student == student)
@@ -65,18 +49,17 @@ def laborhistory(id):
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,
-                                username=current_user.username,
+                                username=currentUser.username,
                                 studentForms = studentForms,
                                 formHistoryList = formHistoryList,
                                 departmentsList = departmentsList,
-                                isLaborAdmin = isLaborAdmin,
-                                isStudent = isStudent,
-                                current_user = current_user,
+                                currentUser = currentUser,
                                 studentUserName = studentUser.username
                               )
     except Exception as e:
         print('Error:', e)
-        return render_template('errors/500.html')
+        return render_template('errors/500.html',
+                                currentUser = currentUser)
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
 def downloadFormHistory():
@@ -84,6 +67,7 @@ def downloadFormHistory():
     This function is called when the download button is pressed.  It runs a function for writing to an excel sheet that is in download.py.
     This function downloads the created excel sheet of the history from the page.
     """
+    currentUser = require_login()
     try:
         data = request.form
         historyList = data["listOfForms"].split(',')
@@ -92,7 +76,8 @@ def downloadFormHistory():
         filename = completePath.split('/').pop()
         return send_file(completePath, mimetype='text/csv', as_attachment=True, attachment_filename=filename)
     except:
-        return render_template('errors/500.html')
+        return render_template('errors/500.html',
+                                currentUser = currentUser)
 
 @main_bp.route('/laborHistory/modal/<statusKey>', methods=['GET'])
 def populateModal(statusKey):
@@ -102,9 +87,10 @@ def populateModal(statusKey):
     to put on the modal depending on what form is in the history.
     """
     try:
-        current_user = require_login()
-        if not current_user:                    # Not logged in
-            return render_template('errors/403.html')
+        currentUser = require_login()
+        if not currentUser:                    # Not logged in
+            return render_template('errors/403.html',
+                                    currentUser = currentUser)
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         student = User.get(User.Student == statusForm[0].studentSupervisee)
@@ -128,11 +114,11 @@ def populateModal(statusKey):
                     form.modifiedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
                     form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
         for form in forms:
-            if current_user.Student and current_user.username == student.username:
-                if current_user.Student.ID == (form.formID.studentSupervisee.ID):  # If student is logged in then don't show a button
+            if currentUser.Student and currentUser.username == student.username:
+                if currentUser.Student.ID == (form.formID.studentSupervisee.ID):  # If student is logged in then don't show a button
                     buttonState = ButtonStatus.show_student_labor_eval_button
                     break
-            elif current_user.Supervisor.UserID != (form.createdBy.UserID or form.formID.supervisor.UserID):
+            elif currentUser.Supervisor.UserID != (form.createdBy.UserID or form.formID.supervisor.UserID):
                 buttonState = ButtonStatus.no_buttons # otherwise, show the notification
                 break
             else:

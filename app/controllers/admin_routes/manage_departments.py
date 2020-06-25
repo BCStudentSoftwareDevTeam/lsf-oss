@@ -20,46 +20,30 @@ def manage_departments():
     Returns the departments to be used in the HTML for the manage departments page.
     """
     try:
-        current_user = require_login()
-
-        if not current_user:                    # Not logged in
+        currentUser = require_login()
+        if not currentUser:                    # Not logged in
             return render_template('errors/403.html')
-        if not current_user.isLaborAdmin:       # Not an admin
-            isLaborAdmin = False
-            if current_user.Student: # logged in as a student
-                isStudent = True
-                return redirect('/laborHistory/' + current_user.Student.ID)
-            elif current_user.Supervisor:  # logged in as a supervisor
+        if not currentUser.isLaborAdmin:       # Not an admin
+            if currentUser.Student: # logged in as a student
+                return redirect('/laborHistory/' + currentUser.Student.ID)
+            elif currentUser.Supervisor:
                 return render_template('errors/403.html',
-                                        isLaborAdmin = isLaborAdmin,
-                                        isStudent = isStudent,
-                                        current_user = current_user)
-        else:
-            isLaborAdmin = True
-            if current_user.Student:
-                isStudent = True
-            else:
-                isStudent = False
+                                    currentUser = currentUser)
 
-        # users = User.select()
         departmentTracy = STUPOSN.select(STUPOSN.DEPT_NAME, STUPOSN.ORG, STUPOSN.ACCOUNT).distinct()
-        # tracyDepartmentList = []
         for dept in departmentTracy:
             d, created = Department.get_or_create(DEPT_NAME = dept.DEPT_NAME, ACCOUNT=dept.ACCOUNT, ORG = dept.ORG)
-            #d.ACCOUNT = dept.ACCOUNT
-            #d.ORG = dept.ORG
             d.save()
         department = Department.select()
         return render_template( 'admin/manageDepartments.html',
                                 title = ("Manage Departments"),
                                 department = department,
-                                isLaborAdmin = isLaborAdmin,
-                                isStudent = isStudent,
-                                current_user = current_user
+                                currentUser = currentUser
                                 )
     except Exception as e:
-        print("error", e)
-        return render_template('errors/500.html')
+        print("Error Loading all Departments", e)
+        return render_template('errors/500.html',
+                                currentUser = currentUser)
 
 
 @admin.route('/admin/complianceStatus', methods=['POST'])

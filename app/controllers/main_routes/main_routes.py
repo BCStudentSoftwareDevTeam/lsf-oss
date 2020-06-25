@@ -13,10 +13,6 @@ from flask import json, jsonify
 from flask import make_response
 import base64
 
-# if not admin and bnum not null:
-#   isStudent = True
-# elif not admin and bnum is null:
-#
 
 @main_bp.before_app_request
 def before_request():
@@ -24,15 +20,15 @@ def before_request():
 
 @main_bp.route('/', methods=['GET', 'POST'])
 def index():
-    current_user = require_login()
-    if not current_user:
+    currentUser = require_login()
+    if not currentUser:
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin:
-        if current_user.Student and not current_user.Supervisor:   # logged in as a student
-            return redirect('/laborHistory/' + current_user.Student.ID)
-        if current_user.Supervisor:       # logged in as a Supervisor
+    if not currentUser.isLaborAdmin:
+        if currentUser.Student and not currentUser.Supervisor:   # logged in as a student
+            return redirect('/laborHistory/' + currentUser.Student.ID)
+        if currentUser.Supervisor:       # logged in as a Supervisor
             # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
-            departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == current_user.Supervisor.UserID) | (FormHistory.createdBy == current_user.Supervisor.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
+            departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == currentUser.Supervisor.UserID) | (FormHistory.createdBy == currentUser.Supervisor.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
     else:   # logged in as an admin
         # Grabs every single department that currently has at least one labor status form in it
         departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
@@ -40,8 +36,8 @@ def index():
     todayDate = date.today()
     # Grabs all the labor status forms where the current user is the supervisor
     formsBySupervisees = []
-    if current_user.Supervisor != None:
-        formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.Supervisor.UserID).order_by(LaborStatusForm.endDate.desc())
+    if currentUser.Supervisor != None:
+        formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == currentUser.Supervisor.UserID).order_by(LaborStatusForm.endDate.desc())
 
     inactiveSupervisees = []
     currentSupervisees = []
@@ -137,9 +133,9 @@ def index():
                     currentSupervisees = currentSupervisees,
                     pastSupervisees = pastSupervisees,
                     inactiveSupervisees = inactiveSupervisees,
-                    UserID = current_user,
+                    UserID = currentUser,
                     currentUserDepartments = departments,
-                    current_user = current_user
+                    currentUser = currentUser
                           )
 
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])

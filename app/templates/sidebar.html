@@ -1,10 +1,10 @@
 <div id="sidebar" class="col-sm-2">
     <nav class="navbar">
-      {% if current_user.Student != None %}
+      {% if currentUser.Student != None %}
       <div class="container-fluid">
           <div class="panel-group" >
               <div class="panel panel-default">
-                <a href='/laborHistory/{{current_user.Student.ID}}'>
+                <a href='/laborHistory/{{currentUser.Student.ID}}'>
                     <div class="panel-heading">
                         <h4>Labor History</h4>
                     </div>
@@ -24,7 +24,7 @@
            </div>
         </div>
       {% endif %}
-      {% if current_user.isLaborAdmin == 1 %}
+      {% if currentUser.isLaborAdmin == 1 %}
       <!-- If the current user is an admin, then we want to
           create the 'Administration' tab in the sidebar for them.-->
       <div class="container-fluid">
@@ -78,7 +78,7 @@
         </div>
       </div>
       {% endif %}
-      {% if current_user.isLaborAdmin != 1 and current_user.Supervisor != None %}
+      {% if currentUser.isLaborAdmin != 1 and currentUser.Supervisor != None %}
       <div class="container-fluid">
         <div class="panel-group" >
             <div class="panel panel-default">

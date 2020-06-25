@@ -24,25 +24,15 @@ from app.models.supervisor import Supervisor
 @admin.route('/admin/pendingForms/<formType>',  methods=['GET'])
 def allPendingForms(formType):
     try:
-        current_user = require_login()
-        if not current_user:                    # Not logged in
+        currentUser = require_login()
+        if not currentUser:                    # Not logged in
             return render_template('errors/403.html')
-        if not current_user.isLaborAdmin:       # Not an admin
-            isLaborAdmin = False
-            if current_user.Student:
-                isStudent = True
-                return redirect('/laborHistory/' + current_user.Student.ID)
-            elif current_user.Supervisor:
+        if not currentUser.isLaborAdmin:       # Not an admin
+            if currentUser.Student: # logged in as a student
+                return redirect('/laborHistory/' + currentUser.Student.ID)
+            elif currentUser.Supervisor:
                 return render_template('errors/403.html',
-                                    isLaborAdmin = isLaborAdmin,
-                                    current_user = current_user,
-                                    isStudent = isStudent)
-        else:
-            isLaborAdmin = True
-            if current_user.Student:
-                isStudent = True
-            else:
-                isStudent = False
+                                    currentUser = currentUser)
         formList = None
         historyType = None
         pageTitle = ""
@@ -90,22 +80,21 @@ def allPendingForms(formType):
         users = Supervisor.select()
         return render_template( 'admin/allPendingForms.html',
                                 title=pageTitle,
-                                username=current_user.username,
+                                username=currentUser.username,
                                 users=users,
                                 formList = formList,
                                 formType= formType,
                                 modalTarget = approvalTarget,
-                                isLaborAdmin = isLaborAdmin,
                                 overloadFormCounter = overloadFormCounter,
                                 laborStatusFormCounter = laborStatusFormCounter,
                                 modifiedFormCounter  = modifiedFormCounter,
                                 releaseFormCounter = releaseFormCounter,
-                                isStudent = isStudent,
-                                current_user = current_user
+                                currentUser = currentUser
                                 )
     except Exception as e:
-        print("error", e)
-        return render_template('errors/500.html')
+        print("Error Loading all Pending Forms:", e)
+        return render_template('errors/500.html',
+                                currentUser = currentUser)
 
 @admin.route('/admin/checkedForms', methods=['POST'])
 def approved_and_denied_Forms():
@@ -128,7 +117,8 @@ def finalUpdateStatus(raw_status):
     if not current_user:                    # Not logged in
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:       # Not an admin
-        return render_template('errors/403.html')
+        return render_template('errors/403.html',
+                                currentUser = current_user)
 
     if raw_status == 'approved':
         new_status = "Approved"
@@ -282,7 +272,8 @@ def getNotes(formid):
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html')
+            return render_template('errors/403.html',
+                                    currentUser = current_user)
         supervisorNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid) # Gets Supervisor note
         notes = AdminNotes.select().where(AdminNotes.formID == formid) # Gets labor department notes from the laborofficenotes table
         notesDict = {}          # Stores the both types of notes
@@ -310,7 +301,8 @@ def insertNotes(formId):
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html')
+            return render_template('errors/403.html',
+                                    currentUser = current_user)
         rsp = eval(request.data.decode("utf-8"))
         stripresponse = rsp.strip()
         currentDate = datetime.now().strftime("%Y-%m-%d")  # formats the date to match the peewee format for the database
@@ -387,10 +379,6 @@ def modalFormUpdate():
     """
     try:
         current_user = require_login()
-        if not current_user:                    # Not logged in
-            return render_template('errors/403.html')
-        if not current_user.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html')
 
         rsp = eval(request.data.decode("utf-8"))
         if rsp:

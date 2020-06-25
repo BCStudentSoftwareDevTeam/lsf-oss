@@ -18,13 +18,13 @@ def financialAidOverload(overloadKey):
     '''
     This function prefills all the information for a student's current job and overload request.
     '''
-    current_user = require_login() #we need to check to see if the person logged in is SAAS or FinancialAid
+    currentUser = require_login() #we need to check to see if the person logged in is SAAS or FinancialAid
 
-    if not current_user: # Not logged in
+    if not currentUser: # Not logged in
         return render_template('errors/403.html')
-    if not (current_user.isFinancialAidAdmin or current_user.isSaasAdmin): # Not an admin
+    if not (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin): # Not an admin
         return render_template('errors/403.html',
-                                current_user = current_user)
+                                currentUser = currentUser)
 
     overloadForm = FormHistory.get(FormHistory.overloadForm == overloadKey) # get access to overload form
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID) # get the labor status form that is tied to the overload form
@@ -64,7 +64,7 @@ def financialAidOverload(overloadKey):
 
 # will need to add term to the interface and then have a prefill variable
     return render_template( 'admin/financialAidOverload.html',
-                        username = current_user,
+                        username = currentUser,
                         overload = overloadForm,
                         studentName = studentName,
                         studentBnum = studentBnum,
@@ -77,7 +77,7 @@ def financialAidOverload(overloadKey):
                         contractDate = contractDate,
                         overloadPosition = overloadPosition,
                         totalOverloadHours = totalOverloadHours,
-                        current_user = current_user
+                        currentUser = currentUser
                       )
 
 @admin.route("/admin/financialAidOverloadApproval/<status>", methods=["POST"])
@@ -89,7 +89,8 @@ def formDenial(status):
         if not current_user: # Not logged in
             return render_template('errors/403.html')
         if not (current_user.isFinancialAidAdmin or current_user.isSaasAdmin): # Not an admin
-            return render_template('errors/403.html')
+            return render_template('errors/403.html',
+                                    currentUser = current_user)
         if status == "denied":
             newStatus = "Denied"
         elif status == "approved":
