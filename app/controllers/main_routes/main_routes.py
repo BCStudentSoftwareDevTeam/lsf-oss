@@ -29,26 +29,11 @@ def index():
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:
         if current_user.Student and not current_user.Supervisor:   # logged in as a student
-            isStudent = True
-            isLaborAdmin = False
-            departments = []
             return redirect('/laborHistory/' + current_user.Student.ID)
-        elif current_user.Supervisor and not current_user.Student:       # logged in as a Supervisor
-            isLaborAdmin = False
-            isStudent = False
-            # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
-            departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == current_user.Supervisor.UserID) | (FormHistory.createdBy == current_user.Supervisor.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
-        elif current_user.Supervisor and current_user.Student:
-            isLaborAdmin = False
-            isStudent = True
+        if current_user.Supervisor:       # logged in as a Supervisor
             # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
             departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == current_user.Supervisor.UserID) | (FormHistory.createdBy == current_user.Supervisor.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
     else:   # logged in as an admin
-        isLaborAdmin = True
-        if current_user.Student:
-            isStudent = True
-        elif current_user.Supervisor and not current_user.Student:
-            isStudent = False
         # Grabs every single department that currently has at least one labor status form in it
         departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
 
@@ -154,8 +139,6 @@ def index():
                     inactiveSupervisees = inactiveSupervisees,
                     UserID = current_user,
                     currentUserDepartments = departments,
-                    isLaborAdmin = isLaborAdmin,
-                    isStudent = isStudent,
                     current_user = current_user
                           )
 

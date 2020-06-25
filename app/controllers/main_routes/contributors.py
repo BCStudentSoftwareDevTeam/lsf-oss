@@ -13,22 +13,9 @@ def contributors():
     current_user = require_login()
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
-        if current_user.Student:
-            isStudent = True
-        else:
-            isStudent = False
-    else:
-        if current_user.Student:
-            isStudent = True
-        else:
-            isStudent = False
 
     contribs = load_config("app/config/contributors.yaml")
     return render_template("main/contributors.html",
            cfg=contribs,
-           isLaborAdmin = isLaborAdmin,
-           isStudent = isStudent,
            current_user = current_user
            )
