@@ -30,12 +30,21 @@ def laborStatusForm(laborStatusKey = None):
     if not currentUser:        # Not logged in
         return render_template('errors/403.html')
     if not currentUser.isLaborAdmin:       # Not an admin, either student or supervisor
-        if currentUser.Student:
+        isLaborAdmin = False
+        if currentUser.Student and not currentUser.Supervisor:
+            isStudent = True
             return redirect('/laborHistory/' + currentUser.Student.ID)
-        elif currentUser.Supervisor:
-            isLaborAdmin = False
+        elif currentUser.Supervisor and not currentUser.Student:
+            isStudent = False
+        elif currentUser.Student and currentUser.Supervisor:
+            isStudent = True
     else:
         isLaborAdmin = True
+        if currentUser.Student:
+            isStudent = True
+        else:
+            isStudent = False
+
     # Logged in
     wls = STUPOSN.select(STUPOSN.WLS).distinct() # getting WLS from TRACY
     posnCode = STUPOSN.select(STUPOSN.POSN_CODE).distinct() # getting position code from TRACY
@@ -66,7 +75,8 @@ def laborStatusForm(laborStatusKey = None):
                             staffs = staffs,
                             departments = departments,
                             isLaborAdmin = isLaborAdmin,
-                            current_user = currentUser)
+                            current_user = currentUser,
+                            isStudent = isStudent)
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():

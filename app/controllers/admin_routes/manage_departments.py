@@ -25,12 +25,15 @@ def manage_departments():
         if not current_user:                    # Not logged in
             return render_template('errors/403.html')
         if not current_user.isLaborAdmin:       # Not an admin
+            isLaborAdmin = False
             if current_user.Student: # logged in as a student
+                isStudent = True
                 return redirect('/laborHistory/' + current_user.Student.ID)
-            elif current_user.Supervisor:
-                isLaborAdmin = False  # logged in as a supervisor
+            elif current_user.Supervisor:  # logged in as a supervisor
                 return render_template('errors/403.html',
-                                        isLaborAdmin = isLaborAdmin)
+                                        isLaborAdmin = isLaborAdmin,
+                                        isStudent = isStudent,
+                                        current_user = current_user)
         else:
             isLaborAdmin = True
             if current_user.Student:

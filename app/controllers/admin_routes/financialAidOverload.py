@@ -23,7 +23,8 @@ def financialAidOverload(overloadKey):
     if not current_user: # Not logged in
         return render_template('errors/403.html')
     if not (current_user.isFinancialAidAdmin or current_user.isSaasAdmin): # Not an admin
-        return render_template('errors/403.html')
+        return render_template('errors/403.html',
+                                current_user = current_user)
 
     overloadForm = FormHistory.get(FormHistory.overloadForm == overloadKey) # get access to overload form
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID) # get the labor status form that is tied to the overload form
@@ -75,7 +76,8 @@ def financialAidOverload(overloadKey):
                         laborOfficeNotes = laborOfficeNotes,
                         contractDate = contractDate,
                         overloadPosition = overloadPosition,
-                        totalOverloadHours = totalOverloadHours
+                        totalOverloadHours = totalOverloadHours,
+                        current_user = current_user
                       )
 
 @admin.route("/admin/financialAidOverloadApproval/<status>", methods=["POST"])

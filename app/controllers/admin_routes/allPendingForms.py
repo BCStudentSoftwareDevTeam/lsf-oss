@@ -30,10 +30,13 @@ def allPendingForms(formType):
         if not current_user.isLaborAdmin:       # Not an admin
             isLaborAdmin = False
             if current_user.Student:
+                isStudent = True
                 return redirect('/laborHistory/' + current_user.Student.ID)
             elif current_user.Supervisor:
                 return render_template('errors/403.html',
-                                    isLaborAdmin = isLaborAdmin)
+                                    isLaborAdmin = isLaborAdmin,
+                                    current_user = current_user,
+                                    isStudent = isStudent)
         else:
             isLaborAdmin = True
             if current_user.Student:
