@@ -3,7 +3,7 @@ var display_failed = [];
 var laborStatusFormNote = null;
 
 $(document).ready(function(){
-  $("[data-toggle=\"tooltip\"]").tooltip();
+  $('[data-toggle="tooltip"]').tooltip();
   $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
   if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
     checkCompliance($("#selectedDepartment"));
@@ -306,7 +306,7 @@ function checkCompliance(obj) {
 // TABLE LABELS
 $("#contractHours").hide();
 $("#hoursPerWeek").hide();
-$("#JopTypes").hide();
+$("#JobTypes").hide();
 $("#plus").hide();
 $("#mytable").hide();
 $("#failedTable").hide();
@@ -319,12 +319,12 @@ function showAccessLevel(){ // Make Table labels appear
     if (whichTerm != 11 && whichTerm !=12 && whichTerm !=00) { // Summer term or any other break period table labels
       $("#contractHours").show();
       $("#plus").show();
-      $("#jobType").hide();
+      $("#JobTypes").hide();
       $("#hoursPerWeek").hide();
     }
     else{ // normal semester like Fall or Spring table labels
       $("#hoursPerWeek").show();
-      $("#JopTypes").show();
+      $("#JobTypes").show();
       $("#plus").show();
       $("#contractHours").hide();
     }
@@ -677,6 +677,29 @@ function summerLaborWarning(){
       return true;
         }
 }
+
+function pageResetConfirmation() {
+    // Pops up modal for confirming that the user wants to reset the page
+    $("#warningModal").modal('show');
+    $("#warningModalTitle").html("Reset Confirmation");
+    $("#warningModalText").html("<p>This action will remove all forms in the table \
+                                 and empty all form fields.</p>");
+    $("#warningModalButton").hide();
+    $("#resetConfirmButton").show();
+}
+
+$("#resetConfirmButton").click(function(){
+    // Handles page reset from confirmation modal
+    $("#warningModal").modal('hide');
+    globalArrayOfStudents = [];
+    $("#tbodyid tr").remove();
+    document.cookie = JSON.stringify(globalArrayOfStudents) + ";max-age=0;";
+    console.log(document.cookie);
+    location.reload();
+    // $("#dateTimePicker1").datepicker("refresh");
+    $("#dateTimePicker1")._clearDate();
+    $("#dateTimePicker2").datepicker("refresh");
+});
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
   $("#laborStatusForm").on("submit", function(e) {

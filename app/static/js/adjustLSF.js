@@ -116,7 +116,7 @@ function buttonListener(laborStatusKey) {
     contentType: 'application/json',
     data: JSON.stringify(finalDict),
     success: function(response) {
-      window.location.href = response["url"];
+      window.location.href = document.referrer;
     }
   })
 }

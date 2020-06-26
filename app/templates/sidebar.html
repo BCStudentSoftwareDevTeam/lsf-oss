@@ -1,0 +1,72 @@
+<div id="sidebar" class="col-sm-2">
+    <nav class="navbar">
+        <div class="container-fluid">
+          <!-- Logo -->
+          <div id="logo"><img src="/static/labor-logo.png" title="Labor Program Logo" /></div>
+          </div>
+          <div class="panel-group" >
+              <div class="panel panel-default">
+                  <a href="/">
+                      <div class="panel-heading">
+                          <h4>Supervisor Portal</h4>
+                      </div>
+                  </a>
+                  <div id="supervisorNavBar" class="laborStudentChoice" style="display:none">
+                      <ul id="supervisordropdown" class="panel panel-default">
+                          <a><li class="panel-heading" id="myStudents" tabindex="0"><h4>My Students</h4></li></a>
+                          <a><li class="panel-heading" id="department" tabindex="0"><h4>Department Students</h4></li></a>
+                      </ul>
+
+                  </div>
+
+              </div>
+
+          </div>
+            <div class="panel panel-default">
+                <a href="/laborstatusform">
+                    <div class="panel-heading">
+                        <h4>New Labor Status Form</h4>
+                    </div>
+                </a>
+            </div>
+            {% if isLaborAdmin == True %}
+            <!-- If the current user is an admin, then we want to
+                create the 'Administration' tab in the sidebar for them.-->
+              <div class="panel-group" id="accordion">
+                  <div class="panel panel-default">
+                      <a id="admin-toggle" data-toggle="collapse" href="#admin">
+                          <div class="panel-heading">
+                              <h4>Administration</h4>
+                          </div>
+                      </a>
+                      <div id="admin" class="panel-collapse collapse">
+
+                        <ul id="admindropdown" class="panel panel-default">
+                          <a href="/admin/pendingForms/pendingLabor"><li class="panel-heading"><h4>Pending Forms</h4></li></a>
+                          {#  <a href="/admin/adminOverload"><li class="panel-heading"><h4>Overload Forms</h4></li></a> #}
+                          {#  <a href="/"><li class="panel-heading"><h4>Past Forms</h4></li></a> #}
+                          <a href="/admin/termManagement"><li class="panel-heading"><h4>Manage Terms</h4></li></a>
+                          <a href="/admin/manageDepartments"><li class="panel-heading"><h4>Manage Departments</h4></li></a>
+                          <a href="/admin/adminManagement"><li class="panel-heading"><h4>Manage Administrators</h4></li></a>
+                          <a href="/admin/emailTemplates"><li class="panel-heading"><h4>Manage Email Templates</h4></li></a>
+                        </ul>
+
+                      </div>
+
+                  </div>
+
+              </div>
+            {% endif %}
+            <div class="panel panel-default">
+                <a href="{{ '/' if env == 'development' else '/Shibboleth.sso/Logout' }}">
+                    <div class="panel-heading">
+                        <h4>
+                            Logout
+                        </h4>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </nav>
+</div>

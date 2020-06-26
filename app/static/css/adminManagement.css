@@ -3,10 +3,6 @@
 h1, label{
   text-align: center;
 }
-h4 {
-  text-align: center;
-  margin-bottom: 50px;
-}
 
 select {
   position: relative;
@@ -32,6 +28,7 @@ select {
   padding-top: 20px;
 }
 
+<<<<<<< HEAD
 #borders2 {
   border-style: solid;
   border-width: thin;
@@ -49,16 +46,21 @@ select {
 #titleBlock {
   position: relative;
   left: 0px;
+
+#header {
+  margin-bottom: 30px;
+
 }
 
 .form-group {
   margin-bottom: 30px;
 
 }
- p {
-   font-size: large;
- }
 
 .btn {
-      width: 25%;
+    width: 25%;
 }
+
+ #ManageAdminInfo {
+   font-size: 18px;
+ }
