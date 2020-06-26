@@ -24,8 +24,8 @@ from app.models.adminNotes import AdminNotes
 #############################
 studentsTracy = [
                 {
-                "PIDM":"1",
                 "ID":"B00730361",
+                "PIDM":"1",
                 "FIRST_NAME":"Elaheh",
                 "LAST_NAME":"Jamali",
                 "CLASS_LEVEL":"Junior",
@@ -38,8 +38,9 @@ studentsTracy = [
                 "LAST_POSN":"Media Technician",
                 "LAST_SUP_PIDM":"7"
                 },
-                {"PIDM":"2",
+                {
                 "ID":"B00841417",
+                "PIDM":"2",
                 "FIRST_NAME":"Alex",
                 "LAST_NAME":"Bryant",
                 "CLASS_LEVEL":"Senior",
@@ -53,8 +54,8 @@ studentsTracy = [
                 "LAST_SUP_PIDM":"7"
                 },
                 {
-                "PIDM":"3",
                 "ID":"B00734292",
+                "PIDM":"3",
                 "FIRST_NAME":"Guillermo",
                 "LAST_NAME":"Cruz",
                 "CLASS_LEVEL":"Junior",
@@ -68,8 +69,8 @@ studentsTracy = [
                 "LAST_SUP_PIDM":"7"
                 },
                 {
-                "PIDM":"4",
                 "ID":"B00785329",
+                "PIDM":"4",
                 "FIRST_NAME":"Kat",
                 "LAST_NAME":"Adams",
                 "CLASS_LEVEL":"Senior",
@@ -86,7 +87,6 @@ studentsTracy = [
 STUDATA.insert_many(studentsTracy).on_conflict_replace().execute()
 students = []
 for student in studentsTracy:
-    del student["PIDM"]
     students.append(student)
 Student.insert_many(students).on_conflict_replace().execute()
 print(" * students (TRACY) added")
@@ -170,8 +170,8 @@ print(" * positions (TRACY) added")
 staffs = [
 
             {
-            "PIDM":1,
             "ID": "B12361006",
+            "PIDM":1,
             "FIRST_NAME":"Scott",
             "LAST_NAME" : "Heggen",
             "EMAIL"  :"heggens@berea.edu",
@@ -181,8 +181,8 @@ staffs = [
             },
 
             {
-            "PIDM":2,
             "ID": "B12365892",
+            "PIDM":2,
             "FIRST_NAME":"Jan",
             "LAST_NAME" : "Pearce",
             "EMAIL"  :"pearcej@berea.edu",
@@ -192,8 +192,8 @@ staffs = [
             },
 
             {
-            "PIDM":3,
             "ID": "B1236236",
+            "PIDM":3,
             "FIRST_NAME":"Mario",
             "LAST_NAME" : "Nakazawa",
             "EMAIL"  :"nakazawam@berea.edu",
@@ -203,8 +203,8 @@ staffs = [
             },
 
             {
-            "PIDM":4,
             "ID": "B1236237",
+            "PIDM":4,
             "FIRST_NAME":"Megan",
             "LAST_NAME" : "Hoffman",
             "EMAIL"  :"hoffmanm@berea.edu",
@@ -213,8 +213,8 @@ staffs = [
             "DEPT_NAME": "Biology"
             },
             {
-            "PIDM":5,
             "ID": "B12365893",
+            "PIDM":5,
             "FIRST_NAME":"Jasmine",
             "LAST_NAME" : "Jones",
             "EMAIL"  :"jonesj@berea.edu",
@@ -223,8 +223,8 @@ staffs = [
             "DEPT_NAME": "Computer Science"
             },
             {
-            "PIDM":6,
             "ID": "B00005893",
+            "PIDM":6,
             "FIRST_NAME":"Brian",
             "LAST_NAME" : "Ramsay",
             "EMAIL"  :"ramsayb2@berea.edu",
@@ -233,8 +233,8 @@ staffs = [
             "DEPT_NAME": "Computer Science"
             },
             {
-            "PIDM":7,
             "ID": "B00841417",
+            "PIDM":7,
             "FIRST_NAME":"Alex",
             "LAST_NAME" : "Bryant",
             "EMAIL"  :"bryantal@berea.edu",
@@ -244,27 +244,33 @@ staffs = [
             }
         ]
 stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
-print(" * staff added")
+print(" * (TRACY) staff added")
 
 def insert_to_users(staffs):
     for sta in staffs:
         try:
+            # print(sta)
             u = Supervisor()
+            u.ID = sta.ID
             u.PIDM = sta.PIDM
             u.FIRST_NAME = sta.FIRST_NAME
             u.LAST_NAME = sta.LAST_NAME
-            u.username = sta.EMAIL.split("@")[0]
+            # u.username = sta.EMAIL.split("@")[0]
             u.EMAIL = sta.EMAIL
             u.CPO = sta.CPO
-            u.ID = sta.ID
             u.ORG = sta.ORG
             u.DEPT_NAME = sta.DEPT_NAME
             # if u.PIDM == 1:
             #     u.isLaborAdmin = 1
             u.save()
+            print("Supervisor", u)
+
         except Exception as e:
+            print('Am i in the Exception?')
             print(" * Failed to insert ", u.username, ": ", e)
-insert_to_users(STUSTAFF.select())
+Supervisor.insert_many(staffs).on_conflict_replace().execute()
+print(" * staff added")
+# insert_to_users(STUSTAFF.select())
 
 
 #############################
@@ -342,20 +348,20 @@ terms = [
             {
             "termCode":"202000",
             "termName": "AY 2020-2021",
-            "termStart":"2020-01-01",
-            "termEnd" : "2020-05-01",
+            "termStart":"2020-08-01",
+            "termEnd" : "2021-05-01",
             "termState": 1,
-            "primaryCutOff": "2020-05-01",
-            "adjustmentCutOff": "2020-01-01"
+            "primaryCutOff": "2020-09-01",
+            "adjustmentCutOff": "2020-09-01"
             },
             {
             "termCode":"202001",
             "termName": "Thanksgiving Break 2020",
-            "termStart":"2019-11-21",
-            "termEnd" : "2019-11-29",
+            "termStart":"2020-08-01",
+            "termEnd" : "2021-05-01",
             "termState": 0,
-            "primaryCutOff": "2019-11-21",
-            "adjustmentCutOff": "2019-11-22"
+            "primaryCutOff": "2020-09-01",
+            "adjustmentCutOff": "2020-09-01"
             }
        ]
 Term.insert_many(terms).on_conflict_replace().execute()
@@ -368,7 +374,7 @@ LaborStatusForm.insert([{
             "laborStatusFormID": 2,
             "termCode_id": "202000",
             "studentSupervisee_id": "B00841417",
-            "supervisor_id": 1,
+            "supervisor_id": "B12361006",
             "department_id": 1,
             "jobType": "Primary",
             "WLS": 1,
@@ -382,7 +388,7 @@ FormHistory.insert([{
             "formHistoryID": 2,
             "formID_id": "2",
             "historyType_id": "Labor Status Form",
-            "createdBy_id": 1,
+            "createdBy_id": "B12361006",
             "createdDate": "2020-04-14",
             "status_id": "Pending"
         }]).on_conflict_replace().execute()
@@ -910,14 +916,14 @@ adminNotes = [
             "noteHistoryID": 1,
             "formID_id": 2,
             "date":"2020-01-01",
-            "createdBy" : 1,
+            "createdBy" : "B12361006",
             "notesContents": "This is the first note"
             },
             {
             "noteHistoryID": 2,
             "formID_id": 2,
             "date":"2020-02-01",
-            "createdBy" : 1,
+            "createdBy" : "B12361006",
             "notesContents": "This is the second note"
             },
        ]
@@ -927,7 +933,7 @@ print(" * laborOfficeNotes added")
 users = [
         {
         "Student": None,
-        "Supervisor": 1,
+        "Supervisor": "B12361006",
         "username": "heggens",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
@@ -935,7 +941,7 @@ users = [
         },
         {
         "Student": None,
-        "Supervisor": 2,
+        "Supervisor": "B12365892",
         "username": "pearcej",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
@@ -943,7 +949,7 @@ users = [
         },
         {
         "Student": None,
-        "Supervisor": 3,
+        "Supervisor": "B1236236",
         "username": "nakazawam",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
@@ -951,7 +957,7 @@ users = [
         },
         {
         "Student": None,
-        "Supervisor": 4,
+        "Supervisor": "B1236237",
         "username": "hoffmanm",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
@@ -959,7 +965,7 @@ users = [
         },
         {
         "Student": None,
-        "Supervisor": 5,
+        "Supervisor": "B12365893",
         "username": "jonesj",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
@@ -967,7 +973,7 @@ users = [
         },
         {
         "Student": None,
-        "Supervisor": 6,
+        "Supervisor": "B00005893",
         "username": "ramsayb2",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
@@ -999,7 +1005,7 @@ users = [
         },
         {
         "Student": "B00841417",
-        "Supervisor": 7,
+        "Supervisor": "B00841417",
         "username": "bryantal",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
