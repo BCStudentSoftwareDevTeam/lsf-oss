@@ -182,7 +182,7 @@ def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
     isMoreLSF_dict = {}
     storeLsfFormsID = []
     if isOneLSF != None:
-        if len(list(positions)) >= 1 : # If student has one or more than one lsf
+        if len(list(positions)) >= 1: # If student has one or more than one lsf
             isMoreLSF_dict["ShowModal"] = True # show modal when the student has one or more than one lsf
             if len(list(positions)) == 1: # if there is only one labor status form then send email to the supervisor and student
                 laborStatusFormID = positions[0].laborStatusFormID

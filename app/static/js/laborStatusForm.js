@@ -622,7 +622,6 @@ function isOneLaborStatusForm(studentDict){
       url: url,
       dataType: "json",
       success: function (response){
-        console.log(response);
         if(response["ShowModal"] == true){
         // if they already have one lsf or multiple (response if false) then show modal reminding the new supervisor of 40 hour mark rule.
           $("#warningModalTitle").text("Warning");
@@ -658,8 +657,8 @@ function checkTotalHours(studentDict, databasePositions) {// gets sum of the tot
 
 //Triggered when summer labor is clicked when making a New Labor Status Form
 function summerLaborWarning(){
-  var isBreak = $("#selectedTerm").find("option:selected").data("termBreak");
-  var isSummer = $("#selectedTerm").find("option:selected").data("termSummer");
+  var isBreak = $("#selectedTerm").find("option:selected").data("termbreak");
+  var isSummer = $("#selectedTerm").find("option:selected").data("termsummer");
   if (isSummer){
     $("#SummerContract").modal('show');
     return true;
@@ -710,7 +709,7 @@ function reviewButtonFunctionality() { // Triggred when Review button is clicked
 }
 
 function createModalContent() { // Populates Submit Modal with Student information from the table
-  var isBreak = $('#selectedTerm').find('option:selected').data('termBreak');
+  var isBreak = $('#selectedTerm').find('option:selected').data('termbreak');
   modalList = [];
   if (isBreak){
     for (var i = 0; i < globalArrayOfStudents.length; i++) {
@@ -750,7 +749,7 @@ function userInsert(){
            data: JSON.stringify(globalArrayOfStudents),
            contentType: "application/json",
            success: function(response) {
-               var isBreak = $('#selectedTerm').find('option:selected').data('termBreak');
+               var isBreak = $('#selectedTerm').find('option:selected').data('termbreak');
                modalList = [];
                for(var key = 0; key < globalArrayOfStudents.length; key++){
                    var studentName = globalArrayOfStudents[key].stuName;

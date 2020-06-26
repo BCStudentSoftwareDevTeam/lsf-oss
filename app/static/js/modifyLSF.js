@@ -7,8 +7,8 @@ $("#contractHoursDiv").hide();
 $("#weeklyHoursDiv").hide();
 
 function jobPositionDisable(){
-  var isBreak = $("#termBreak").eq(0).val();
-  if (isBreak == "True"){
+  var isBreak = $("#termBreak").data('termbreak');
+  if (isBreak){
     $("#jobType").prop("disabled", true);
     $("#jobType").val("Secondary");
     $("#contractHoursDiv").show();
