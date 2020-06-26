@@ -274,6 +274,95 @@ print(" * staff added")
 
 
 #############################
+# Users
+#############################
+users = [
+        {
+        "Student": None,
+        "Supervisor": "B12361006",
+        "username": "heggens",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": "B12365892",
+        "username": "pearcej",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": "B1236236",
+        "username": "nakazawam",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": "B1236237",
+        "username": "hoffmanm",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": "B12365893",
+        "username": "jonesj",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": "B00005893",
+        "username": "ramsayb2",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": "B00730361",
+        "Supervisor": None,
+        "username": "jamalie",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": "B00734292",
+        "Supervisor": None,
+        "username": "cruzg",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": "B00785329",
+        "Supervisor": None,
+        "username": "adamskg",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": "B00841417",
+        "Supervisor": "B00841417",
+        "username": "bryantal",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        }
+        ]
+User.insert_many(users).on_conflict_replace().execute()
+print(" * users added")
+
+
+#############################
 # Department
 #############################
 departments = [
@@ -388,7 +477,7 @@ FormHistory.insert([{
             "formHistoryID": 2,
             "formID_id": "2",
             "historyType_id": "Labor Status Form",
-            "createdBy_id": "B12361006",
+            "createdBy_id": 1,
             "createdDate": "2020-04-14",
             "status_id": "Pending"
         }]).on_conflict_replace().execute()
@@ -916,103 +1005,18 @@ adminNotes = [
             "noteHistoryID": 1,
             "formID_id": 2,
             "date":"2020-01-01",
-            "createdBy" : "B12361006",
+            "createdBy" : 1,
             "notesContents": "This is the first note"
             },
             {
             "noteHistoryID": 2,
             "formID_id": 2,
             "date":"2020-02-01",
-            "createdBy" : "B12361006",
+            "createdBy" : 1,
             "notesContents": "This is the second note"
             },
        ]
 AdminNotes.insert_many(adminNotes).on_conflict_replace().execute()
 print(" * laborOfficeNotes added")
-
-users = [
-        {
-        "Student": None,
-        "Supervisor": "B12361006",
-        "username": "heggens",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "Student": None,
-        "Supervisor": "B12365892",
-        "username": "pearcej",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "Student": None,
-        "Supervisor": "B1236236",
-        "username": "nakazawam",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "Student": None,
-        "Supervisor": "B1236237",
-        "username": "hoffmanm",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "Student": None,
-        "Supervisor": "B12365893",
-        "username": "jonesj",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "Student": None,
-        "Supervisor": "B00005893",
-        "username": "ramsayb2",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "Student": "B00730361",
-        "Supervisor": None,
-        "username": "jamalie",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "Student": "B00734292",
-        "Supervisor": None,
-        "username": "cruzg",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "Student": "B00785329",
-        "Supervisor": None,
-        "username": "adamskg",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "Student": "B00841417",
-        "Supervisor": "B00841417",
-        "username": "bryantal",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        }
-        ]
-User.insert_many(users).on_conflict_replace().execute()
-print(" * users added")
 
 print("Dummy data added")

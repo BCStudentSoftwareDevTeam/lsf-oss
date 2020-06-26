@@ -85,6 +85,7 @@ def userInsert():
         studentID = student.ID
         d, created = Supervisor.get_or_create(PIDM = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.UserID
+        ## Using the supervisor object, grab the user object where User.Supervisor.ID == d.ID
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])

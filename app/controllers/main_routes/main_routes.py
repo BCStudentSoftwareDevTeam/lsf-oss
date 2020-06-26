@@ -28,7 +28,7 @@ def index():
             return redirect('/laborHistory/' + currentUser.Student.ID)
         if currentUser.Supervisor:       # logged in as a Supervisor
             # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
-            departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == currentUser.Supervisor.UserID) | (FormHistory.createdBy == currentUser.Supervisor.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
+            departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser.Supervisor.ID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
     else:   # logged in as an admin
         # Grabs every single department that currently has at least one labor status form in it
         departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
@@ -37,7 +37,7 @@ def index():
     # Grabs all the labor status forms where the current user is the supervisor
     formsBySupervisees = []
     if currentUser.Supervisor != None:
-        formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == currentUser.Supervisor.UserID).order_by(LaborStatusForm.endDate.desc())
+        formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == currentUser.Supervisor.ID).order_by(LaborStatusForm.endDate.desc())
 
     inactiveSupervisees = []
     currentSupervisees = []
