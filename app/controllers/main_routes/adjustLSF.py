@@ -2,6 +2,7 @@ from app.controllers.main_routes import *
 from app.controllers.main_routes.main_routes import *
 from app.controllers.main_routes.laborHistory import *
 from app.models.formHistory import FormHistory
+from app.models.adminNotes import AdminNotes
 from app.models.user import User
 from app.models.Tracy.studata import *
 from app.models.Tracy.stustaff import *
@@ -14,11 +15,8 @@ from flask import json, jsonify
 from flask import request
 from flask import flash
 import base64
-from datetime import date
 from app import cfg
 from app.logic.emailHandler import*
-from app.models.adminNotes import AdminNotes
-
 
 @main_bp.route('/adjustLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
 def adjustLSF(laborStatusKey):
@@ -122,7 +120,7 @@ def sumbitModifiedForm(laborStatusKey):
                                              createdDate = date.today(),
                                              status      = status.statusName)
 
-            if k == "Weekly Hours":
+            if k == "weeklyHours":
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
                 totalHours = 0
                 if allTermForms:

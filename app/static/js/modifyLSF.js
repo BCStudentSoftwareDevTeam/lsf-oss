@@ -73,7 +73,7 @@ function checkForChange(){
     finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor}
   }
   if(oldPostition != newPostition){
-    finalDict["Position"] = {"oldValue": oldPostition, "newValue": newPostition}
+    finalDict["position"] = {"oldValue": oldPostition, "newValue": newPostition}
   }
   if(oldNotes != newNotes){
     finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes}

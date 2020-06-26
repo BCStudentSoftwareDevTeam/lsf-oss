@@ -112,8 +112,8 @@
             </div>
         </div>
 
-
-{% if title == "Adjust Labor Status Form" %}
+    <!-- This conditional will add the datetime picker for Adjust LSF instances -->
+    {% if title == "Adjust Labor Status Form" %}
     <div class="form-group" id= "dateDiv">
     <label for="datetimepicker" class="required-asterisk"><span class="tooltip-right" data-tooltip="Required">Date Needed<span class="required-mark"> *</span></span></label>
       <div class="input-group date"  class="change">
@@ -123,15 +123,10 @@
         </span>
       </div>
      </div>
-{% endif %}
-
+     {% endif %}
 
      <div class="form-group" >
-
        <label for="supervisorNotes"> {% if title == "Adjust Labor Status Form" %}<span class="tooltip-right" data-tooltip="Required">Notes<span class="required-mark"> *</span></span> {% endif %} </label>
-
-
-
        <div class ="change">
          <textarea name="supervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue">{{prefillnotes}}</textarea>
           <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}"></input>
