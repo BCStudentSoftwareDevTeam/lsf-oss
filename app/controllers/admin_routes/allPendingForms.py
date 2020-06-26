@@ -106,7 +106,7 @@ def allPendingForms(formType):
                                 )
     except Exception as e:
         print(e)
-        return render_template('errors/500.html'), 500
+        return render_template('errors/500.html'),500
 
 @admin.route('/admin/checkedForms', methods=['POST'])
 def approved_and_denied_Forms():

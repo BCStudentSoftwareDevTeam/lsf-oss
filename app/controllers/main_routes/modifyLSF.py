@@ -144,8 +144,8 @@ def updateLSF(laborStatusKey):
                     except Exception as e:
                         print("Error on sending overload emails: ", e)
                 elif previousTotalHours > 15 and newTotalHours <= 15:   # This will delete an overload form after the hours are modified
-                    deleteOverloadForm = FormHistory.select().where((FormHistory.formID.laborStatusFormID == laborStatusKey) & (FormHistory.historyType == "Labor Overload Form"))
-                    deleteOverloadForm = OverloadForm.select().where(OverloadForm.overloadFormID == deleteOverloadForm.overloadForm.overloadFormID)
+                    deleteOverloadForm = FormHistory.get((FormHistory.formID == laborStatusKey) & (FormHistory.historyType == "Labor Overload Form"))
+                    deleteOverloadForm = OverloadForm.get(OverloadForm.overloadFormID == deleteOverloadForm.overloadForm.overloadFormID)
                     deleteOverloadForm.delete_instance()
 
                 LSF.weeklyHours = int(rsp[k]['newValue'])
