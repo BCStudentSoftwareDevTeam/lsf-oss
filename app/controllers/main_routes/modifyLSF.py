@@ -129,7 +129,7 @@ def updateLSF(laborStatusKey):
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
-                    user = User.get(User.username == current_user.username)
+                    # user = User.get(User.username == current_user.username)
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
                                                         createdBy = current_user.UserID,
@@ -140,7 +140,7 @@ def updateLSF(laborStatusKey):
                         overloadEmail = emailHandler(newFormHistory.formHistoryID)
                         overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
                     except Exception as e:
-                        print("Error on sending overload emails: ", e)
+                        print("An error occured while attempting to send overload form emails: ", e)
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
         changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
@@ -148,14 +148,14 @@ def updateLSF(laborStatusKey):
             email = emailHandler(changedForm.formHistoryID)
             email.laborStatusFormModified()
         except Exception as e:
-            print("Error on sending form modified emails: ", e)
-        message = "Your Labor Status Form for {0} {1} has been modified.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+            print("An error occured while attempting to send adjustment form emails: ", e)
+        message = "Your Labor Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
 
-        return jsonify({"Success":True})
+        return jsonify({"Success": True})
 
     except Exception as e:
-        message = "An error occured. Your Labor Status Form for {0} {1} was not modified.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        message = "An error occured. Your Labor Form(s) for {0} {1} was not submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "danger")
-        print(e)
+        print("An error occured during form submission:", e)
         return jsonify({"Success": False})

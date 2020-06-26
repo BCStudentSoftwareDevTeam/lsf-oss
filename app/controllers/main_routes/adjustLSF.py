@@ -140,18 +140,19 @@ def sumbitModifiedForm(laborStatusKey):
                         overloadEmail = emailHandler(formHistories.formHistoryID)
                         overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
                     except Exception as e:
-                        print("Error on sending overload form emails: ", e)
+                        print("An error occured while attempting to send overload form emails: ", e)
         try:
             email = emailHandler(formHistories.formHistoryID)
             email.laborStatusFormModified()
         except Exception as e:
-            print("Error on sending adjustment form emails: ", e)
-        message = "Your Labor Adjustment Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+            print("An error occured while attempting to send adjustment form emails: ", e)
+        message = "Your Labor Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
 
-        return jsonify({"Success":True, "url":"/laborHistory/" + student.studentSupervisee.ID})
+        return jsonify({"Success": True, "url":"/laborHistory/" + student.studentSupervisee.ID})
+
     except Exception as e:
-        message = "An error occured. Your Labor Adjustment Form(s) for {0} {1} was not submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        message = "An error occured. Your Labor Form(s) for {0} {1} was not submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "danger")
-        print("Error Occured On Adjustment Form Submission:", e)
+        print("An error occured during form submission:", e)
         return jsonify({"Success": False})

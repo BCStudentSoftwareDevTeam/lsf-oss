@@ -114,10 +114,6 @@ def submitAlteredLSF(laborStatusKey):
                                  .get().status_id)
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-
-
-
-
             if k == "supervisor" and formStatus == "Pending":       # Only executes if the form is a modifyLSF
                 d, created = User.get_or_create(PIDM = int(rsp[k]['newValue']))
                 if not created:
@@ -143,9 +139,6 @@ def submitAlteredLSF(laborStatusKey):
                 LSF.POSN_TITLE = rsp[k]['newValue']
                 LSF.save()
 
-
-
-
             if formStatus == "Approved":
                 if k == "supervisorNotes":
                     ## New Entry in AdminNote Table
@@ -167,7 +160,7 @@ def submitAlteredLSF(laborStatusKey):
                                                    createdBy    = current_user.UserID,
                                                    createdDate  = date.today(),
                                                    status       = status.statusName)
-            elif k == "supervisorNotes":
+            elif formStatus = "Pending":
                 if k == "supervisorNotes":
                     LSF.supervisorNotes = rsp[k]['newValue']
                     LSF.save()
@@ -193,20 +186,30 @@ def submitAlteredLSF(laborStatusKey):
                                                         status = "Pending")
                     try:
                         overloadEmail = emailHandler(formHistories.formHistoryID)
+                        # overloadEmail = emailHandler(newFormHistory.formHistoryID)        <-- Version included in modifyLSF **TODO:** Test these two versions (they may be the same)
                         overloadEmail.LaborOverLoadFormSubmitted("http://{0}/".format(request.host) + "studentOverloadApp/" + str(newFormHistory.formHistoryID))
                     except Exception as e:
-                        print("Error on sending overload form emails: ", e)
+                        print("An error occured while attempting to send overload form emails: ", e)
         try:
             email = emailHandler(formHistories.formHistoryID)
+            # email = emailHandler(changedForm.formHistoryID)       <-- Version included in modifyLSF.py
             email.laborStatusFormModified()
         except Exception as e:
-            print("Error on sending adjustment form emails: ", e)
-        message = "Your Labor Adjustment Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+            print("An error occured while attempting to send adjustment form emails: ", e)
+        message = "Your labor {0} form(s) for {1} {2} have been {3}.".format("status" if formStatus == "Pending" else "adjustment",
+                                                                             student.studentSupervisee.FIRST_NAME,
+                                                                             student.studentSupervisee.LAST_NAME,
+                                                                             "modified" if formStatus == "Pending" else "submitted")
         flash(message, "success")
+        if formStatus == "Approved":
+            return jsonify({"Success": True, "url":"/laborHistory/" + student.studentSupervisee.ID})
+        else:
+            return jsonify({"Success": True})
 
-        return jsonify({"Success":True, "url":"/laborHistory/" + student.studentSupervisee.ID})
     except Exception as e:
-        message = "An error occured. Your Labor Adjustment Form(s) for {0} {1} was not submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        message = "An error occured. Your labor {0} form(s) for {1} {2} were not submitted.".format("status" if formStatus == "Pending" else "adjustment",
+                                                                                                    student.studentSupervisee.FIRST_NAME,
+                                                                                                    student.studentSupervisee.LAST_NAME)
         flash(message, "danger")
-        print("Error Occured On Adjustment Form Submission:", e)
+        print("An error occured during form submission:", e)
         return jsonify({"Success": False})
