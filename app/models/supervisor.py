@@ -5,11 +5,10 @@ from peewee import CharField
 
 # Capitalized fields are originally pulled from tracy
 class Supervisor(baseModel):
-    UserID              = PrimaryKeyField()
-    PIDM                = IntegerField(null=False)
+    ID                  = CharField(primary_key=True)  #B-number
+    PIDM                = IntegerField(null=False)  # from Tracy
     FIRST_NAME          = CharField(null=True)
     LAST_NAME           = CharField(null=True)
-    ID                  = CharField(null=True)  #B-number
     EMAIL               = CharField(null=True)
     CPO                 = CharField(null=True)
     ORG                 = CharField(null=True)
