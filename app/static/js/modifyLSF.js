@@ -41,6 +41,8 @@ function fillHoursPerWeek(){ // prefill hours per week select picker
   }
 }
 
+var finalDict = {};
+
 function checkWLS20(){
   totalhours = $("#totalHours").val();
   weeklyHours = $("#weeklyHours").val();
@@ -53,8 +55,6 @@ function checkWLS20(){
     $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
   }
 }
-
-var finalDict = {};
 
 function checkForChange(){
   var oldSupervisor = $("#prefillsupervisor").val();

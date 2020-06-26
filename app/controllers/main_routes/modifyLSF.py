@@ -55,8 +55,7 @@ def modifyLSF(laborStatusKey):
     #Step 3: send data to front to populate html
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
 
-
-    return render_template( 'main/modifyLSF.html',
+    return render_template( 'main/alterLSF.html',
 				            title=('Modify Labor Status Form'),
                             username = current_user,
                             superviser_id = superviser_id,
