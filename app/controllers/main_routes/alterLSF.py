@@ -160,7 +160,7 @@ def submitAlteredLSF(laborStatusKey):
                                                    createdBy    = current_user.UserID,
                                                    createdDate  = date.today(),
                                                    status       = status.statusName)
-            elif formStatus = "Pending":
+            elif formStatus == "Pending":
                 if k == "supervisorNotes":
                     LSF.supervisorNotes = rsp[k]['newValue']
                     LSF.save()
@@ -185,11 +185,17 @@ def submitAlteredLSF(laborStatusKey):
                                                         createdDate = date.today(),
                                                         status = "Pending")
                     try:
+                        print("=====================")
+                        print(newFormHistory == formHistories)
+                        print("=====================")
                         overloadEmail = emailHandler(formHistories.formHistoryID)
                         # overloadEmail = emailHandler(newFormHistory.formHistoryID)        <-- Version included in modifyLSF **TODO:** Test these two versions (they may be the same)
                         overloadEmail.LaborOverLoadFormSubmitted("http://{0}/".format(request.host) + "studentOverloadApp/" + str(newFormHistory.formHistoryID))
                     except Exception as e:
                         print("An error occured while attempting to send overload form emails: ", e)
+        #         LSF.weeklyHours = int(rsp[k]['newValue'])
+        #         LSF.save()
+        # changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
         try:
             email = emailHandler(formHistories.formHistoryID)
             # email = emailHandler(changedForm.formHistoryID)       <-- Version included in modifyLSF.py

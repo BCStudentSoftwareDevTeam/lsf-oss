@@ -113,7 +113,7 @@ def sumbitModifiedForm(laborStatusKey):
                                                 )
             historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
             status = Status.get(Status.statusName == "Pending")
-            formHistories = FormHistory.create( formID = laborStatusKey,
+            formHistories = FormHistory.create(formID = laborStatusKey,
                                              historyType = historyType.historyTypeName,
                                              modifiedForm = modifiedforms.modifiedFormID,
                                              createdBy   = current_user.UserID,
@@ -130,7 +130,7 @@ def sumbitModifiedForm(laborStatusKey):
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
-                    newFormHistory = FormHistory.create( formID = laborStatusKey,
+                    newFormHistory = FormHistory.create(formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
                                                         createdBy = current_user.UserID,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,

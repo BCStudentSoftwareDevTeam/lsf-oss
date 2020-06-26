@@ -96,7 +96,7 @@ function checkForChange(){
 
 function buttonListener(laborStatusKey) {
   $.ajax({
-    url: "/modifyLSF/updateLSF/" + laborStatusKey,
+    url: "/alterLSF/updateLSF/" + laborStatusKey,
     method: "POST",
     contentType: 'application/json',
     data: JSON.stringify(finalDict),
