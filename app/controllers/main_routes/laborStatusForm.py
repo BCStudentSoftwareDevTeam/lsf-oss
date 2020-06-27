@@ -165,7 +165,7 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
 
     positionsList = []
     for item in positions:
-        statusHistory = FormHistory.get(FormHistory.formID == item.laborStatusFormID)
+        statusHistory = FormHistory.select().where(FormHistory.formID == item.laborStatusFormID).order_by(FormHistory.formHistoryID.desc()).get()
         positionsDict = {}
         positionsDict["weeklyHours"] = item.weeklyHours
         positionsDict["contractHours"] = item.contractHours
@@ -175,7 +175,9 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
         positionsDict["primarySupervisorName"] = item.supervisor.FIRST_NAME
         positionsDict["primarySupervisorLastName"] = item.supervisor.LAST_NAME
         positionsDict["positionStatus"] = statusHistory.status.statusName
+        positionsDict["positionHistory"] = statusHistory.historyType.historyTypeName
         positionsList.append(positionsDict)
+        print(statusHistory)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
 
 def checkForSecondLSFBreak(termCode, student, isOneLSF=None):

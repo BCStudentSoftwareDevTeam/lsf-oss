@@ -492,10 +492,18 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
     success: function (response){
         status_list = []
         rejectionStatus = ["Approved", "Approved Relunctantly", "Pending"]
+        form_list = []
+        formType = ["Labor Status Form", "Modified Labor Form", "Labor Overload Form", "Labor Release Form"]
         for (key in response) {
           status_list.push(response[key]["positionStatus"]);
+          form_list.push(response[key]["positionHistory"]);
         }
+        console.log(status_list);
+        console.log(form_list);
         if(Object.keys(response).length > 0) { // If the submited form is not the first form recorded for that student
+          if (reponse[0]["positionHistory"] == "Labor Release Form" && response[0]["positionStatus"] == "Approved") {
+            initialLSFInsert(studentDict, response, status_list)
+          } else {}
               if (studentDict.stuJobType == "Primary" && (status_list.some((val) => rejectionStatus.indexOf(val) !== -1))){ // if the student already has a primary and it is not denied show error modal
                   $("#warningModalTitle").html("Insert Rejected");
                   $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
@@ -511,7 +519,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
                 }
               }
              else{
-              initialLSFInsert(studentDict, response, status_list) // If the precious primary position is Denied allow the user to continue with the new primary LSF
+              initialLSFInsert(studentDict, response, status_list) // If the previous primary position is Denied allow the user to continue with the new primary LSF
             }
         }
         else {
