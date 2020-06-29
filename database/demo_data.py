@@ -281,7 +281,7 @@ users = [
         "Student": None,
         "Supervisor": "B12361006",
         "username": "heggens",
-        "isLaborAdmin": None,
+        "isLaborAdmin": 1,
         "isFinancialAidAdmin": None,
         "isSaasAdmin": None
         },

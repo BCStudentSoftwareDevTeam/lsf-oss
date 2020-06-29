@@ -143,7 +143,7 @@ def finalUpdateStatus(raw_status):
             labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == history_type)
             labor_forms.status = Status.get(Status.statusName == new_status)
             labor_forms.reviewedDate = date.today()
-            labor_forms.reviewedBy = current_user.Supervisor.UserID
+            labor_forms.reviewedBy = current_user
             if new_status == 'Denied':
                 labor_forms.rejectReason = denyReason
             labor_forms.save()
@@ -190,7 +190,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
     if form.modifiedForm.fieldModified == "Supervisor":
         d, created = Supervisor.get_or_create(PIDM = form.modifiedForm.newValue)
         if not created:
-            LSF.supervisor = d.UserID
+            LSF.supervisor = d.ID
         LSF.save()
         if created:
             tracyUser = STUSTAFF.get(STUSTAFF.PIDM == form.modifiedForm.newValue)
@@ -228,7 +228,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             newLaborOverloadForm = OverloadForm.create(studentOverloadReason = None)
             newFormHistory = FormHistory.create( formID = LSF.laborStatusFormID,
                                                 historyType = "Labor Overload Form",
-                                                createdBy = current_user.Supervisor.UserID,
+                                                createdBy = current_user,
                                                 overloadForm = newLaborOverloadForm.overloadFormID,
                                                 createdDate = date.today(),
                                                 status = "Pending")
@@ -308,7 +308,7 @@ def insertNotes(formId):
         currentDate = datetime.now().strftime("%Y-%m-%d")  # formats the date to match the peewee format for the database
 
         if stripresponse:
-            AdminNotes.create(formID=formId, createdBy=current_user.Supervisor.UserID, date=currentDate, notesContents=stripresponse) # creates a new entry in the laborOfficeNotes table
+            AdminNotes.create(formID=formId, createdBy=current_user, date=currentDate, notesContents=stripresponse) # creates a new entry in the laborOfficeNotes table
 
             return jsonify({"Success": True})
 

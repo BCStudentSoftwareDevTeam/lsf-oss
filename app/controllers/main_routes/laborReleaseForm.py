@@ -61,7 +61,7 @@ def laborReleaseForm(laborStatusKey):
                                         releaseForm = newLaborReleaseForm.laborReleaseFormID,
                                         modifiedForm = None,
                                         overloadForm = None,
-                                        createdBy = currentUser.Supervisor.UserID,
+                                        createdBy = currentUser,
                                         createdDate = date.today(),
                                         reviewedDate = None,
                                         reviewedBy = None,

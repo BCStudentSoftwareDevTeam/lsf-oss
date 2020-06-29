@@ -84,8 +84,9 @@ def userInsert():
         student = Student.get(ID = tracyStudent.ID)
         studentID = student.ID
         d, created = Supervisor.get_or_create(PIDM = rspFunctional[i]['stuSupervisorID'])
-        primarySupervisor = d.UserID
+        primarySupervisor = d.ID
         ## Using the supervisor object, grab the user object where User.Supervisor.ID == d.ID
+
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
@@ -94,7 +95,7 @@ def userInsert():
             lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
             status = Status.get(Status.statusName == "Pending")
             # d, created = Supervisor.get_or_create(username = currentUser.username)
-            creatorID = currentUser.Supervisor.UserID
+            creatorID = currentUser
             createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
             try:
                 emailDuringBreak(checkForSecondLSFBreak(term, studentID, "lsf"), term)
