@@ -501,9 +501,10 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
         console.log(status_list);
         console.log(form_list);
         if(Object.keys(response).length > 0) { // If the submited form is not the first form recorded for that student
-          if (reponse[0]["positionHistory"] == "Labor Release Form" && response[0]["positionStatus"] == "Approved") {
-            initialLSFInsert(studentDict, response, status_list)
-          } else {}
+          // if (reponse[0]["positionHistory"] == "Labor Release Form" && response[0]["positionStatus"] == "Approved") {
+          //   initialLSFInsert(studentDict, response, status_list)
+          // // } else {}
+          if (form_list[0] !== "Labor Release Form") {
               if (studentDict.stuJobType == "Primary" && (status_list.some((val) => rejectionStatus.indexOf(val) !== -1))){ // if the student already has a primary and it is not denied show error modal
                   $("#warningModalTitle").html("Insert Rejected");
                   $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
@@ -521,6 +522,10 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
              else{
               initialLSFInsert(studentDict, response, status_list) // If the previous primary position is Denied allow the user to continue with the new primary LSF
             }
+          }
+          else{
+            initialLSFInsert(studentDict, response, status_list)
+          }
         }
         else {
           initialLSFInsert(studentDict, response) // If the form being submitted for the student is the initial form for that specific term
@@ -529,14 +534,18 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
   });
 }
 
-function initialLSFInsert(studentDict, response, status_list = []){ //Add student info to the table if they have no previous lfs's in the database
+function initialLSFInsert(studentDict, response, status_list = []){ //Add student info to the table if they have no previous lsf's in the database
   var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
   if(studentDict.stuJobType == "Primary"){
     if (checkDuplicate(studentDict) == true){
+      console.log("befor hours")
       checkTotalHours(studentDict, response);
+      console.log("after hours")
       // should create table based on the last position status
       if (status_list == [] || (!status_list.includes("Approved"))) {
+        console.log("checkoing status list")
         createAndFillTable(studentDict);
+        console.log("created and filled table")
       }
     }
     else {
