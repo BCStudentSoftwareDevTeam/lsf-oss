@@ -420,6 +420,9 @@ def modalFormUpdate():
                     email.LaborOverLoadFormRejected()
             elif rsp['formType'] == 'Release':
                 if rsp['status'] == 'Approved':
+                    LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == historyForm.formID)
+                    removeWeeklyHours = LaborStatusForm.update({LaborStatusForm.weeklyHours: None}).where(LaborStatusForm.weeklyHours == LSF.weeklyHours)
+                    removeWeeklyHours.execute()
                     email.laborReleaseFormApproved()
                 elif rsp['status'] == 'Denied':
                     email.laborReleaseFormRejected()
@@ -428,6 +431,7 @@ def modalFormUpdate():
     except Exception as e:
         print("Error Updating Release/Overload Forms:",type(e).__name__ + ":", e)
         return jsonify({"Success": False}),500
+
 
 @admin.route('/admin/sendVerificationEmail', methods=['POST'])
 def sendEmail():

@@ -177,7 +177,6 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
         positionsDict["positionStatus"] = statusHistory.status.statusName
         positionsDict["positionHistory"] = statusHistory.historyType.historyTypeName
         positionsList.append(positionsDict)
-        print(statusHistory)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
 
 def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
