@@ -112,8 +112,8 @@ def submitAlteredLSF(laborStatusKey):
                                  .join(LaborStatusForm)
                                  .where(FormHistory.formID == laborStatusKey)
                                  .get().status_id)
-        for k in rsp:
-            LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey) # TODO: Move this outside the loop if possible
+        # for k in rsp:
+        #     LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey) # TODO: Move this outside the loop if possible
         #     if k == "supervisor" and formStatus == "Pending":       # Only executes if the form is a modifyLSF
         #         d, created = User.get_or_create(PIDM = int(rsp[k]['newValue']))
         #         if not created:
@@ -224,8 +224,8 @@ def submitAlteredLSF(laborStatusKey):
         # else:
         #     return jsonify({"Success": True})
 
-        # ========== Modify ==========
 
+        # ========== Modify ==========
         if formStatus == "Pending":
             for k in rsp:
                 LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
@@ -293,10 +293,13 @@ def submitAlteredLSF(laborStatusKey):
 
             return jsonify({"Success": True})
 
-        # ========== Adjust ==========
 
+        # ========== Adjust ==========
         if formStatus == "Approved":
             for k in rsp:
+                print("===========")
+                print(type(rsp))
+                print("===========")
                 LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
                 if k == "supervisorNotes":
                     ## New Entry in AdminNote Table
