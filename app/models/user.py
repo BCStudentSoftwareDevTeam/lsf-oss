@@ -7,6 +7,7 @@ from peewee import CharField
 
 # Capitalized fields are originally pulled from tracy
 class User(baseModel):
+    userID              = PrimaryKeyField()
     Student             = ForeignKeyField(Student, null=True)
     Supervisor          = ForeignKeyField(Supervisor, null=True)
     username            = CharField(null=False)

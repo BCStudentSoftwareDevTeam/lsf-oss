@@ -7,7 +7,6 @@ from app.models.status import Status
 from app.models.user import User
 from app.models.historyType import HistoryType
 from app.models.supervisor import Supervisor
-from app.models.user import User
 
 class FormHistory(baseModel):
     formHistoryID       = PrimaryKeyField()

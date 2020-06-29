@@ -44,9 +44,9 @@ def laborStatusForm(laborStatusKey = None):
     if laborStatusKey != None:
         selectedLSForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         selectedFormHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
-        creator = selectedFormHistory.createdBy.UserID
-        supervisor = selectedLSForm.supervisor.UserID
-        if currentUser.Supervisor.UserID == supervisor or currentUser.Supervisor.UserID == creator:
+        creator = selectedFormHistory.createdBy.Supervisor.ID
+        supervisor = selectedLSForm.supervisor.ID
+        if currentUser.Supervisor.ID == supervisor or currentUser.Supervisor.ID == creator:
             forms = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey) # getting labor status form id, to prepopulate laborStatusForm.
         else:
             forms = None

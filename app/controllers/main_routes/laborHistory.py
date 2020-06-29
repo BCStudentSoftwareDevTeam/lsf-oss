@@ -33,7 +33,7 @@ def laborhistory(id):
                 if currentUser.Student.ID != id:
                     return redirect('/laborHistory/' + currentUser.Student.ID)
             elif currentUser.Supervisor:
-                authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, currentUser.Supervisor.UserID)
+                authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, currentUser, currentUser.Supervisor.ID)
                 if authorizedUser == False:
                     return render_template('errors/403.html',
                                             currentUser = currentUser)
@@ -101,7 +101,7 @@ def populateModal(statusKey):
             if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
                 if form.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
                     newSupervisorID = form.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
-                    newSupervisor = Supervisor.get(Supervisor.UserID == newSupervisorID)
+                    newSupervisor = Supervisor.get(Supervisor.ID == newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     form.modifiedForm.oldValue = form.formID.supervisor.FIRST_NAME + " " + form.formID.supervisor.LAST_NAME # old supervisor name
@@ -118,7 +118,7 @@ def populateModal(statusKey):
                 if currentUser.Student.ID == (form.formID.studentSupervisee.ID):  # If student is logged in then don't show a button
                     buttonState = ButtonStatus.show_student_labor_eval_button
                     break
-            elif currentUser.Supervisor.UserID != (form.createdBy.UserID or form.formID.supervisor.UserID):
+            elif currentUser.Supervisor.ID != (form.createdBy.Supervisor.ID or form.formID.supervisor.ID):
                 buttonState = ButtonStatus.no_buttons # otherwise, show the notification
                 break
             else:
