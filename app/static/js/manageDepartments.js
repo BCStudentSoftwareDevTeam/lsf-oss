@@ -1,3 +1,6 @@
+// Opens collapse menu for this page
+$("#admin").collapse("show");
+
 $(document).ready( function(){
     x = $('#departmentsTable');
     //console.log(x);

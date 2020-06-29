@@ -38,8 +38,13 @@ def modifyLSF(laborStatusKey):
     prefillposition = form.POSN_TITLE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
     prefillterm = form.termCode.termName
+    totalHours = 0
     if form.weeklyHours != None:
         prefillhours = form.weeklyHours
+        allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == form.termCode) & (LaborStatusForm.laborStatusFormID != laborStatusKey) & (LaborStatusForm.studentSupervisee.ID == form.studentSupervisee.ID))
+        if allTermForms:
+            for i in allTermForms:
+                totalHours += i.weeklyHours
     else:
         prefillhours = form.contractHours
     prefillnotes = form.supervisorNotes
@@ -49,11 +54,7 @@ def modifyLSF(laborStatusKey):
     wls = STUPOSN.select(STUPOSN.WLS).distinct()
     #Step 3: send data to front to populate html
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
-    allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == form.termCode) & (LaborStatusForm.laborStatusFormID != laborStatusKey) & (LaborStatusForm.studentSupervisee.ID == form.studentSupervisee.ID))
-    totalHours = 0
-    if allTermForms:
-        for i in allTermForms:
-            totalHours += i.weeklyHours
+
 
     return render_template( 'main/modifyLSF.html',
 				            title=('modify LSF'),

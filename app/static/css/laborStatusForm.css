@@ -88,8 +88,8 @@ selectpicker, label {
   padding-left: 26px;
 }
 
-#reviewButton0 {
-  float: right;
+.button-container{
+    float: right;
 }
 
 .glyphicon-question-sign  {
@@ -112,4 +112,8 @@ selectpicker, label {
 
 #doneButton {
   display: none;
+}
+
+#resetConfirmButton {
+    display: none;
 }

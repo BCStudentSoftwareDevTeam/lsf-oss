@@ -1,3 +1,6 @@
+// Opens collapse menu for this page
+$("#admin").collapse("show");
+
 $('a.hover_indicator').click(function(e){
   e.preventDefault(); // prevents click on '#' link from jumping to top of the page.
 });
@@ -5,6 +8,7 @@ $('a.hover_indicator').click(function(e){
 $(document).ready(function() {
   // If the overload tab has been selected, then we need to restrict the
   // ordering functionality on different headers
+
   if ($('#overloadTab').hasClass('active') || $('#releaseTab').hasClass('active')) {
     targetsList = [8]
   } else if ($('#modifiedTab').hasClass('active')) {
@@ -416,32 +420,6 @@ function sendEmail(formHistoryID, emailRecipient) {
     }
   });
 }
-
-$(document).ready(function() {
-    $("#deny").click(function() {
-      /*
-      This method sets the reason for denial text area to Bootstrap "has-error"
-      to inform the user that the field is required for submission
-      */
-      $("#denyTextAreaOverload").addClass("has-error");
-    });
-
-    $("#approve").click(function() {
-        /*
-        This method unsets the denial text area to Bootstrap "has-error"
-        because the text area is no longer required
-        */
-        $("#denyTextAreaOverload").removeClass("has-error");
-    });
-
-    $("#approveRel").click(function() {
-        /*
-        This method unsets the denial text area to Bootstrap "has-error"
-        because the text area is no longer required
-        */
-        $("#denyTextAreaOverload").removeClass("has-error");
-    });
-});
 
 function submitOverload(formHistoryID) {
   /*
