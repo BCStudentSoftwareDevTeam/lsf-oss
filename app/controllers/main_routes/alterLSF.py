@@ -113,104 +113,244 @@ def submitAlteredLSF(laborStatusKey):
                                  .where(FormHistory.formID == laborStatusKey)
                                  .get().status_id)
         for k in rsp:
-            LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-            if k == "supervisor" and formStatus == "Pending":       # Only executes if the form is a modifyLSF
-                d, created = User.get_or_create(PIDM = int(rsp[k]['newValue']))
-                if not created:
-                    LSF.supervisor = d.UserID
-                LSF.save()
-                if created:
-                    tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
-                    tracyEmail = tracyUser.EMAIL
-                    tracyUsername = tracyEmail.find('@')
-                    user = User.get(User.PIDM == rsp[k]['newValue'])
-                    user.username   = tracyEmail[:tracyUsername]
-                    user.FIRST_NAME = tracyUser.FIRST_NAME
-                    user.LAST_NAME  = tracyUser.LAST_NAME
-                    user.EMAIL      = tracyUser.EMAIL
-                    user.CPO        = tracyUser.CPO
-                    user.ORG        = tracyUser.ORG
-                    user.DEPT_NAME  = tracyUser.DEPT_NAME
-                    user.ID         = tracyUser.ID
-                    user.save()
-                    LSF.supervisor = d.PIDM
-                    LSF.save()
-            if k == "POSN_TITLE" and formStatus == "Pending": # Only executes if the form is a modifyLSF
-                LSF.POSN_TITLE = rsp[k]['newValue']
-                LSF.save()
+            LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey) # TODO: Move this outside the loop if possible
+        #     if k == "supervisor" and formStatus == "Pending":       # Only executes if the form is a modifyLSF
+        #         d, created = User.get_or_create(PIDM = int(rsp[k]['newValue']))
+        #         if not created:
+        #             LSF.supervisor = d.UserID
+        #         LSF.save()
+        #         if created:
+        #             tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
+        #             tracyEmail = tracyUser.EMAIL
+        #             tracyUsername = tracyEmail.find('@')
+        #             user = User.get(User.PIDM == rsp[k]['newValue'])
+        #             user.username   = tracyEmail[:tracyUsername]
+        #             user.FIRST_NAME = tracyUser.FIRST_NAME
+        #             user.LAST_NAME  = tracyUser.LAST_NAME
+        #             user.EMAIL      = tracyUser.EMAIL
+        #             user.CPO        = tracyUser.CPO
+        #             user.ORG        = tracyUser.ORG
+        #             user.DEPT_NAME  = tracyUser.DEPT_NAME
+        #             user.ID         = tracyUser.ID
+        #             user.save()
+        #             LSF.supervisor = d.PIDM
+        #             LSF.save()
+        #     if k == "POSN_TITLE" and formStatus == "Pending": # Only executes if the form is a modifyLSF
+        #         LSF.POSN_TITLE = rsp[k]['newValue']
+        #         LSF.save()
+        #
+        #     # print("=====================")
+        #     # formHistories = FormHistory.create(formID       = laborStatusKey,
+        #     #                                    historyType  = historyType.historyTypeName,
+        #     #                                    modifiedForm = modifiedforms.modifiedFormID,
+        #     #                                    createdBy    = current_user.UserID,
+        #     #                                    createdDate  = date.today(),
+        #     #                                    status       = status.statusName)
+        #     # print(newFormHistory == formHistories)
+        #     # print("=====================")
+        #
 
-            if formStatus == "Approved":
-                if k == "supervisorNotes":
-                    ## New Entry in AdminNote Table
-                    newNoteEntry = AdminNotes.create(formID         = LSF.laborStatusFormID,
-                                                     createdBy      = current_user.UserID,
-                                                     date           = currentDate,
-                                                     notesContents  = rsp[k]["newValue"])
-                    newNoteEntry.save()
-                else:
-                    modifiedforms = ModifiedForm.create(fieldModified = k,
-                                                        oldValue      = rsp[k]["oldValue"],
-                                                        newValue      = rsp[k]["newValue"],
-                                                        effectiveDate = datetime.strptime(rsp[k]["date"], "%m/%d/%Y").strftime("%Y-%m-%d"))
-                historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
-                status = Status.get(Status.statusName == "Pending")
-                formHistories = FormHistory.create(formID       = laborStatusKey,
-                                                   historyType  = historyType.historyTypeName,
-                                                   modifiedForm = modifiedforms.modifiedFormID,
-                                                   createdBy    = current_user.UserID,
-                                                   createdDate  = date.today(),
-                                                   status       = status.statusName)
-            elif formStatus == "Pending":
+
+
+
+
+        #     if formStatus == "Approved":
+        #         if k == "supervisorNotes":
+        #             ## New Entry in AdminNote Table
+        #             newNoteEntry = AdminNotes.create(formID        = LSF.laborStatusFormID,
+        #                                              createdBy     = current_user.UserID,
+        #                                              date          = currentDate,
+        #                                              notesContents = rsp[k]["newValue"])
+        #             newNoteEntry.save()
+        #         else:
+        #             modifiedforms = ModifiedForm.create(fieldModified = k,
+        #                                                 oldValue      = rsp[k]["oldValue"],
+        #                                                 newValue      = rsp[k]["newValue"],
+        #                                                 effectiveDate = datetime.strptime(rsp[k]["date"], "%m/%d/%Y").strftime("%Y-%m-%d"))
+        #         historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
+        #         status = Status.get(Status.statusName == "Pending")
+        #         formHistories = FormHistory.create(formID       = laborStatusKey,
+        #                                            historyType  = historyType.historyTypeName,
+        #                                            modifiedForm = modifiedforms.modifiedFormID,
+        #                                            createdBy    = current_user.UserID,
+        #                                            createdDate  = date.today(),
+        #                                            status       = status.statusName)
+        #     elif formStatus == "Pending":
+        #         if k == "supervisorNotes":
+        #             LSF.supervisorNotes = rsp[k]['newValue']
+        #             LSF.save()
+        #         if k == "contractHours":
+        #             LSF.contractHours = int(rsp[k]['newValue'])
+        #             LSF.save()
+        #
+        #     if k == "weeklyHours":
+        #         allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
+        #         totalHours = 0
+        #         if allTermForms:
+        #             for i in allTermForms:
+        #                 totalHours += i.weeklyHours
+        #         previousTotalHours = totalHours + int(rsp[k]["oldValue"])
+        #         newTotalHours = totalHours + int(rsp[k]["newValue"])
+        #         if previousTotalHours <= 15 and newTotalHours > 15:
+        #             newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
+        #             newFormHistory = FormHistory.create(formID = laborStatusKey,
+        #                                                 historyType = "Labor Overload Form",
+        #                                                 createdBy = current_user.UserID,
+        #                                                 overloadForm = newLaborOverloadForm.overloadFormID,
+        #                                                 createdDate = date.today(),
+        #                                                 status = "Pending")
+        #             try:
+        #                 overloadEmail = emailHandler(formHistories.formHistoryID)
+        #                 # overloadEmail = emailHandler(newFormHistory.formHistoryID)        <-- Version included in modifyLSF **TODO:** Test these two versions (they may be the same)
+        #                 overloadEmail.LaborOverLoadFormSubmitted("http://{0}/".format(request.host) + "studentOverloadApp/" + str(newFormHistory.formHistoryID))
+        #             except Exception as e:
+        #                 print("An error occured while attempting to send overload form emails: ", e)
+        # #         LSF.weeklyHours = int(rsp[k]['newValue'])
+        # #         LSF.save()
+        # # changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
+        # try:
+        #     email = emailHandler(formHistories.formHistoryID)
+        #     # email = emailHandler(changedForm.formHistoryID)       <-- Version included in modifyLSF.py
+        #     email.laborStatusFormModified()
+        # except Exception as e:
+        #     print("An error occured while attempting to send adjustment form emails: ", e)
+        # message = "Your labor {0} form(s) for {1} {2} have been {3}.".format("status" if formStatus == "Pending" else "adjustment",
+        #                                                                      student.studentSupervisee.FIRST_NAME,
+        #                                                                      student.studentSupervisee.LAST_NAME,
+        #                                                                      "modified" if formStatus == "Pending" else "submitted")
+        # flash(message, "success")
+        # if formStatus == "Approved":
+        #     return jsonify({"Success": True, "url":"/laborHistory/" + student.studentSupervisee.ID})
+        # else:
+        #     return jsonify({"Success": True})
+
+        # ========== Modify ==========
+
+        if formStatus == "Pending":
+            for k in rsp:
+                LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+                if k == "supervisor":
+                    d, created = User.get_or_create(PIDM = int(rsp[k]['newValue']))
+                    if not created:
+                        LSF.supervisor = d.UserID
+                    LSF.save()
+                    if created:
+                        tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
+                        tracyEmail = tracyUser.EMAIL
+                        tracyUsername = tracyEmail.find('@')
+                        user = User.get(User.PIDM == rsp[k]['newValue'])
+                        user.username   = tracyEmail[:tracyUsername]
+                        user.FIRST_NAME = tracyUser.FIRST_NAME
+                        user.LAST_NAME  = tracyUser.LAST_NAME
+                        user.EMAIL      = tracyUser.EMAIL
+                        user.CPO        = tracyUser.CPO
+                        user.ORG        = tracyUser.ORG
+                        user.DEPT_NAME  = tracyUser.DEPT_NAME
+                        user.ID         = tracyUser.ID
+                        user.save()
+                        LSF.supervisor = d.PIDM
+                        LSF.save()
+                if k == "POSN_TITLE":
+                    LSF.POSN_TITLE = rsp[k]['newValue']
+                    LSF.save()
                 if k == "supervisorNotes":
                     LSF.supervisorNotes = rsp[k]['newValue']
                     LSF.save()
                 if k == "contractHours":
                     LSF.contractHours = int(rsp[k]['newValue'])
                     LSF.save()
+                if k == "weeklyHours":
+                    allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
+                    totalHours = 0
+                    if allTermForms:
+                        for i in allTermForms:
+                            totalHours += i.weeklyHours
+                    previousTotalHours = totalHours + int(rsp[k]['oldValue'])
+                    newTotalHours = totalHours + int(rsp[k]['newValue'])
+                    if previousTotalHours <= 15 and newTotalHours > 15:
+                        newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
+                        newFormHistory = FormHistory.create(formID = laborStatusKey,
+                                                            historyType = "Labor Overload Form",
+                                                            createdBy = current_user.UserID,
+                                                            overloadForm = newLaborOverloadForm.overloadFormID,
+                                                            createdDate = date.today(),
+                                                            status = "Pending")
+                        try:
+                            overloadEmail = emailHandler(newFormHistory.formHistoryID)
+                            overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+                        except Exception as e:
+                            print("An error occured while attempting to send overload form emails: ", e)
+                    LSF.weeklyHours = int(rsp[k]['newValue'])
+                    LSF.save()
+            changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
+            try:
+                email = emailHandler(changedForm.formHistoryID)
+                email.laborStatusFormModified()
+            except Exception as e:
+                print("An error occured while attempting to send adjustment form emails: ", e)
+            message = "Your Labor Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+            flash(message, "success")
 
-            if k == "weeklyHours":
-                allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
-                totalHours = 0
-                if allTermForms:
-                    for i in allTermForms:
-                        totalHours += i.weeklyHours
-                previousTotalHours = totalHours + int(rsp[k]["oldValue"])
-                newTotalHours = totalHours + int(rsp[k]["newValue"])
-                if previousTotalHours <= 15 and newTotalHours > 15:
-                    newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
-                    newFormHistory = FormHistory.create( formID = laborStatusKey,
-                                                        historyType = "Labor Overload Form",
-                                                        createdBy = current_user.UserID,
-                                                        overloadForm = newLaborOverloadForm.overloadFormID,
-                                                        createdDate = date.today(),
-                                                        status = "Pending")
-                    try:
-                        print("=====================")
-                        print(newFormHistory == formHistories)
-                        print("=====================")
-                        overloadEmail = emailHandler(formHistories.formHistoryID)
-                        # overloadEmail = emailHandler(newFormHistory.formHistoryID)        <-- Version included in modifyLSF **TODO:** Test these two versions (they may be the same)
-                        overloadEmail.LaborOverLoadFormSubmitted("http://{0}/".format(request.host) + "studentOverloadApp/" + str(newFormHistory.formHistoryID))
-                    except Exception as e:
-                        print("An error occured while attempting to send overload form emails: ", e)
-        #         LSF.weeklyHours = int(rsp[k]['newValue'])
-        #         LSF.save()
-        # changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
-        try:
-            email = emailHandler(formHistories.formHistoryID)
-            # email = emailHandler(changedForm.formHistoryID)       <-- Version included in modifyLSF.py
-            email.laborStatusFormModified()
-        except Exception as e:
-            print("An error occured while attempting to send adjustment form emails: ", e)
-        message = "Your labor {0} form(s) for {1} {2} have been {3}.".format("status" if formStatus == "Pending" else "adjustment",
-                                                                             student.studentSupervisee.FIRST_NAME,
-                                                                             student.studentSupervisee.LAST_NAME,
-                                                                             "modified" if formStatus == "Pending" else "submitted")
-        flash(message, "success")
-        if formStatus == "Approved":
-            return jsonify({"Success": True, "url":"/laborHistory/" + student.studentSupervisee.ID})
-        else:
             return jsonify({"Success": True})
+
+        # ========== Adjust ==========
+
+        if formStatus == "Approved":
+            for k in rsp:
+                LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+                if k == "supervisorNotes":
+                    ## New Entry in AdminNote Table
+                    newNoteEntry = AdminNotes.create(formID=LSF.laborStatusFormID,
+                                                    createdBy=current_user.UserID,
+                                                    date=currentDate,
+                                                    notesContents=rsp[k]["newValue"])
+                    newNoteEntry.save()
+                else:
+                    modifiedforms = ModifiedForm.create(fieldModified = k,
+                                                    oldValue      =  rsp[k]['oldValue'],
+                                                    newValue      =  rsp[k]['newValue'],
+                                                    effectiveDate =  datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d')
+                                                    )
+                historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
+                status = Status.get(Status.statusName == "Pending")
+                formHistories = FormHistory.create(formID = laborStatusKey,
+                                                 historyType = historyType.historyTypeName,
+                                                 modifiedForm = modifiedforms.modifiedFormID,
+                                                 createdBy   = current_user.UserID,
+                                                 createdDate = date.today(),
+                                                 status      = status.statusName)
+
+                if k == "weeklyHours":
+                    allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
+                    totalHours = 0
+                    if allTermForms:
+                        for i in allTermForms:
+                            totalHours += i.weeklyHours
+                    previousTotalHours = totalHours + int(rsp[k]['oldValue'])
+                    newTotalHours = totalHours + int(rsp[k]['newValue'])
+                    if previousTotalHours <= 15 and newTotalHours > 15:
+                        newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
+                        newFormHistory = FormHistory.create(formID = laborStatusKey,
+                                                            historyType = "Labor Overload Form",
+                                                            createdBy = current_user.UserID,
+                                                            overloadForm = newLaborOverloadForm.overloadFormID,
+                                                            createdDate = date.today(),
+                                                            status = "Pending")
+                        try:
+                            overloadEmail = emailHandler(formHistories.formHistoryID)
+                            overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+                        except Exception as e:
+                            print("An error occured while attempting to send overload form emails: ", e)
+            try:
+                email = emailHandler(formHistories.formHistoryID)
+                email.laborStatusFormModified()
+            except Exception as e:
+                print("An error occured while attempting to send adjustment form emails: ", e)
+            message = "Your Labor Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+            flash(message, "success")
+
+            return jsonify({"Success": True, "url":"/laborHistory/" + student.studentSupervisee.ID})
+
 
     except Exception as e:
         message = "An error occured. Your labor {0} form(s) for {1} {2} were not submitted.".format("status" if formStatus == "Pending" else "adjustment",
