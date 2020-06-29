@@ -382,6 +382,7 @@ def getOverloadModalData(formHistoryID):
                                             pendingFormType = pendingFormType
                                             )
     except Exception as e:
+        print("Error Populating Overload Modal:", e)
         return render_template('errors/500.html'), 500
 
 @admin.route('/admin/releaseModal/<formHistoryID>', methods=['GET'])
@@ -399,6 +400,7 @@ def getReleaseModalData(formHistoryID):
                                             noteTotal = noteTotal
                                             )
     except Exception as e:
+        print("Error Populating Release Modal:", e)
         return render_template('errors/500.html'), 500
 
 @admin.route('/admin/modalFormUpdate', methods=['POST'])
