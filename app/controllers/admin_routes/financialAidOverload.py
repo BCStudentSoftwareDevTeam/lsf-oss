@@ -55,10 +55,6 @@ def financialAidOverload(overloadKey):
     totalOverloadHours = lsfForm.weeklyHours + totalHours["primaryHours"] + totalHours["secondaryHours"]
     studentOverloadReason = overloadForm.overloadForm.studentOverloadReason
     laborOfficeNotes = lsfForm.laborDepartmentNotes
-    today = date.today()
-    termYear = today.year
-    termCodeYear = Term.select(Term.termCode).where(Term.termCode.between(termYear-1, termYear + 15))
-    currentTerm = str(lsfForm.termCode.termCode)[-2:]
     contractDate = "{} - {}".format(lsfForm.startDate.strftime('%m/%d/%Y'), lsfForm.endDate.strftime('%m/%d/%Y'))
 
 # will need to add term to the interface and then have a prefill variable

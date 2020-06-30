@@ -37,7 +37,7 @@ def modifyLSF(laborStatusKey):
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_CODE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
-    prefillterm = form.termCode.termName
+    prefillterm = form.termCode
     totalHours = 0
     if form.weeklyHours != None:
         prefillhours = form.weeklyHours
@@ -135,11 +135,17 @@ def updateLSF(laborStatusKey):
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
+
                     try:
                         overloadEmail = emailHandler(newFormHistory.formHistoryID)
                         overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
                     except Exception as e:
                         print("An error occured while attempting to send overload form emails: ", e)
+                elif previousTotalHours > 15 and newTotalHours <= 15:   # This will delete an overload form after the hours are modified
+                    deleteOverloadForm = FormHistory.get((FormHistory.formID == laborStatusKey) & (FormHistory.historyType == "Labor Overload Form"))
+                    deleteOverloadForm = OverloadForm.get(OverloadForm.overloadFormID == deleteOverloadForm.overloadForm.overloadFormID)
+                    deleteOverloadForm.delete_instance()
+
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
         changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)

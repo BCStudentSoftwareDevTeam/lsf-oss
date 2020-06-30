@@ -114,15 +114,24 @@ def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department
 
 def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     """
-    Creates an overload form and a form history if the request needs an overload, otherwise, creates only a form history
+    Creates a 'Labor Status Form' and then if the request needs an overload we create
+    a 'Labor Overload Form'. Emails are sent based on whether the form is an 'Overload Form'
     rspFunctional: a dictionary containing all the data submitted in the LSF page
     lsf: stores the new instance of a labor status form
     creatorID: id of the user submitting the labor status form
     status: status of the labor status form (e.g. Pending, etc.)
     """
-    # If the LSF is an overload form, create its history as such and an overload form
+    # We create a 'Labor Status Form' first, then we check to see if a 'Labor Overload Form'
+    # needs to be created
+    historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
+    FormHistory.create( formID = lsf.laborStatusFormID,
+                        historyType = historyType.historyTypeName,
+                        overloadForm = None,
+                        createdBy   = creatorID,
+                        createdDate = date.today(),
+                            status      = status.statusName)
     if rspFunctional.get("isItOverloadForm") == "True":
-        historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
+        overloadHistoryType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
         newLaborOverloadForm = OverloadForm.create( studentOverloadReason = None,
                                                     financialAidApproved = None,
                                                     financialAidApprover = None,
@@ -134,28 +143,22 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
                                                     laborApprover = None,
                                                     laborReviewDate = None)
         formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
-                                            historyType = historyType.historyTypeName,
+                                            historyType = overloadHistoryType.historyTypeName,
                                             overloadForm = newLaborOverloadForm.overloadFormID,
                                             createdBy   = creatorID,
                                             createdDate = date.today(),
                                             status      = status.statusName)
-        # email = emailHandler(formOverload.formHistoryID)
-        # email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
-    else: # If not overload, create its history as a regular LSF
-        historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-        FormHistory.create( formID = lsf.laborStatusFormID,
-                            historyType = historyType.historyTypeName,
-                            overloadForm = None,
-                            createdBy   = creatorID,
-                            createdDate = date.today(),
-                            status      = status.statusName)
+        email = emailHandler(formOverload.formHistoryID)
+        email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+    else:
+        email = emailHandler(FormHistory.formHistoryID)
+        email.laborStatusFormSubmitted()
 
 def emailDuringBreak(secondLSFBreak, term):
     """
     Sending emails during break period
     """
-    termCode = str(term)[-2:]
-    if termCode not in ["11", "12", "00"]: # If not a regular term (Academic Year, Fall, or Spring)
+    if term.isBreak:
         isOneLSF = json.loads(secondLSFBreak)
         formHistory = FormHistory.get(FormHistory.formHistoryID == isOneLSF['formHistoryID'])
         if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
