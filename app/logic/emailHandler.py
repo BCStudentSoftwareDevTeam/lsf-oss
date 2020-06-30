@@ -183,7 +183,10 @@ class emailHandler():
                         subject = emailTemplateID.subject
                         )
         message.html = self.replaceText(emailTemplateID.body)
-        self.mail.send(message)
+        if app.config['ENV'] == 'production' or app.config['ALWAYS_SEND_MAIL']:
+            self.mail.send(message)
+        else:
+            print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
 
     def verifiedOverloadNotification(self):
         """ This email will be sent to Labor Admin when SAAS or Financial Aid Make
@@ -206,7 +209,7 @@ class emailHandler():
         The method then checks whether to send the email to only the primary or both the primary and secondary supervisors.
         The method sendEmail is then called to handle the actual sending of the emails.
         """
-        if studentEmailPurpose != False:
+        if studentEmailPurpose:
             studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
             self.sendEmail(studentEmail, "student")
         if self.primaryFormHistory is not None:
@@ -214,10 +217,10 @@ class emailHandler():
             secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose) # Scott
             self.sendEmail(secondaryEmail, "breakPrimary")
             self.sendEmail(primaryEmail, "supervisor")
-        else:
+        if emailPurpose or secondaryEmailPurpose:
             if self.laborStatusForm.jobType == 'Secondary':
                 # If contract hours != None
-                if secondaryEmailPurpose != False:
+                if secondaryEmailPurpose:
                     secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
                     self.sendEmail(secondaryEmail, "secondary")
                 else:
