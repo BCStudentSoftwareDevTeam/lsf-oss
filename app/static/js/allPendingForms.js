@@ -252,66 +252,6 @@ function finalDeny() {
   }
 }
 
-function createTabledataDictionary() { // puts all of the forms into dictionaries
-  var listDictAJAX = [];
-  $('#statusForms tr').has('td').each(function() {
-    /* Get the input box values first */
-    var supervisor = $("#selectedSupervisor").val();
-    var department = $("#selectedDepartment").val();
-    var term = $("#selectedTerm").val();
-    var whichTerm = term.toString().substr(-2);
-    var startDate = $("#dateTimePicker1").val();
-    var endDate = $("#dateTimePicker2").val();
-    var positionCode = $("#position_code").attr("data-posn");
-    var listDict = [];
-    listDict.push(supervisor, department, term, startDate, endDate, positionCode);
-    var headersLabel = ["Supervisor", "Department", "Term", "Start Date", "End Date", "Position Code"];
-    var tableDataDict = {};
-    for (var i in listDict) {
-      tableDataDict[headersLabel[i]] = listDict[i];
-    }
-
-    /* If it's a break, get table values */
-    if (whichTerm != 11 && whichTerm != 12 && whichTerm != 00) {
-      tableDataDict["Job Type"] = "Secondary";
-      var headers_2_data = ["Student", "Position", "Contract Hours"];
-      $('td', $(this)).each(function(index, item) {
-        var aTag = $.parseHTML($(item).html());
-        if (!$(aTag).hasClass('remove')) {
-          var notes = $(aTag).data('note');
-          tableDataDict["Supervisor Notes"] = notes;
-          tableDataDict[headers_2_data[index]] = $(item).html();
-        }
-      });
-      listDictAJAX.push(tableDataDict);
-      var allTableDataDict = {};
-      for (var key in listDictAJAX) {
-        allTableDataDict[key] = listDictAJAX[key];
-      }
-    }
-    /* If it's academic year, get the table values */
-    else {
-      var headersData = ["Student", "Position", "Job Type", "Hours Per Week"];
-      $('td', $(this)).each(function(index, item) {
-        var aTag = $.parseHTML($(item).html());
-        if (!$(aTag).hasClass('remove')) {
-          var notes = $(aTag).data('note');
-          tableDataDict["Supervisor Notes"] = notes;
-          tableDataDict[headersData[index]] = $(item).html();
-        }
-      });
-      listDictAJAX.push(tableDataDict);
-      var allTableDataDict = {}; // this is the dictionary that contains all the forms
-      for (var key in listDictAJAX) {
-        allTableDataDict[key] = listDictAJAX[key];
-      }
-    }
-  });
-
-  delete allTableDataDict["0"]; // gets rid of the first dictionary that contains table labels
-  return allTableDataDict;
-}
-
 function clearTextArea() { //makes sure that it empties text areas and p tags when modal is closed
   $("#notesText").empty();
   $("#laborNotesText").empty();

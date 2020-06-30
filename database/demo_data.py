@@ -354,7 +354,8 @@ terms = [
             "termEnd" : "2019-11-29",
             "termState": 0,
             "primaryCutOff": "2019-11-21",
-            "adjustmentCutOff": "2019-11-22"
+            "adjustmentCutOff": "2019-11-22",
+            "isBreak": 1
             }
        ]
 Term.insert_many(terms).on_conflict_replace().execute()
