@@ -76,13 +76,13 @@ def allPendingForms(formType):
                     print(e)
             if allForms.modifiedForm: # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
                 # We check if there is a pending overload form using the key of the modifed forms
-                if allForms.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
+                if allForms.modifiedForm.fieldModified == "supervisor": # if supervisor field in adjust forms has been modified,
                     newSupervisorID = allForms.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
                     newSupervisor = User.get(User.UserID == newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     allForms.modifiedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
-                if allForms.modifiedForm.fieldModified == "Position": # if position field has been modified in adjust form then retriev position name.
+                if allForms.modifiedForm.fieldModified == "position": # if position field has been modified in adjust form then retriev position name.
                     newPositionCode = allForms.modifiedForm.newValue
                     newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode)
                     # temporarily storing the position code and wls in new value, and position name in old value
@@ -199,7 +199,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
     current_user = require_login()
     if not current_user:        # Not logged in
             return render_template('errors/403.html')
-    if form.modifiedForm.fieldModified == "Supervisor":
+    if form.modifiedForm.fieldModified == "supervisor":
         d, created = User.get_or_create(PIDM = form.modifiedForm.newValue)
         if not created:
             LSF.supervisor = d.UserID

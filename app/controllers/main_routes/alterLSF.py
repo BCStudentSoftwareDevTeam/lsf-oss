@@ -55,7 +55,7 @@ def alterLSF(laborStatusKey):
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_CODE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
-    prefillterm = form.termCode.termName
+    prefillterm = form.termCode
     totalHours = 0
     if form.weeklyHours != None:
         prefillhours = form.weeklyHours
