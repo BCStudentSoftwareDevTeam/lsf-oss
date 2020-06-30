@@ -162,19 +162,15 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
                 isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
         return jsonify(isMoreLSF_dict)
 
+    approvedPositions = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form")
     positionsList = []
-    for item in positions:
-        statusHistory = FormHistory.select().where(FormHistory.formID == item.laborStatusFormID).order_by(FormHistory.formHistoryID.desc()).get()
+    for item in approvedPositions:
+        statusHistory = FormHistory.select().where(FormHistory.formID == item.formID).order_by(FormHistory.formHistoryID.desc()).get()
         positionsDict = {}
-        positionsDict["weeklyHours"] = item.weeklyHours
-        positionsDict["contractHours"] = item.contractHours
-        positionsDict["jobType"] = item.jobType
-        positionsDict["POSN_TITLE"] = item.POSN_TITLE
-        positionsDict["POSN_CODE"] = item.POSN_CODE
-        positionsDict["primarySupervisorName"] = item.supervisor.FIRST_NAME
-        positionsDict["primarySupervisorLastName"] = item.supervisor.LAST_NAME
-        positionsDict["positionStatus"] = statusHistory.status.statusName
-        positionsDict["positionHistory"] = statusHistory.historyType.historyTypeName
+        positionsDict["positionStatus"] = item.status.statusName
+        positionsDict["formName"] = statusHistory.historyType.historyTypeName
+        if statusHistory.historyType.historyTypeName == "Labor Release Form":
+            positionsDict["releaseStatus"] = statusHistory.status.statusName
         positionsList.append(positionsDict)
     return json.dumps(positionsList) #json.dumps(primaryPositionsDict)
 

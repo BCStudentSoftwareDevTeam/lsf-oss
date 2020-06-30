@@ -482,54 +482,45 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
   return true;
 }
 
-function checkPrimaryPositionToCreateTheTable(studentDict){
+function checkPrimaryPositionToCreateTheTable(studentDict) {
   var term = $("#selectedTerm").val();
-  var url = "/laborstatusform/getstudents/" + term +"/" +studentDict.stuBNumber;
+  var url = "/laborstatusform/getstudents/" + term + "/" + studentDict.stuBNumber;
   $.ajax({
-    url: url,
-    dataType: "json",
-    success: function (response){
-        status_list = []
-        rejectionStatus = ["Approved", "Approved Relunctantly", "Pending"]
-        form_list = []
-        for (key in response) {
-          status_list.push(response[key]["positionStatus"]);
-          form_list.push(response[key]["positionHistory"]);
-        }
-        if(Object.keys(response).length > 0) {
-          if (form_list[0] !== "Labor Release Form") {
-              if (studentDict.stuJobType == "Primary" && (status_list.some((val) => rejectionStatus.indexOf(val) !== -1))){ // if the student already has a primary and it is not denied show error modal
-                  $("#warningModalTitle").html("Insert Rejected");
-                  $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
-                  $("#warningModal").modal("show");
-              }
-              else if(studentDict.stuJobType == "Secondary" && (status_list.some((val) => rejectionStatus.indexOf(val) !== -1))){ // If it is secondary allow adding LSF
+      url: url,
+      dataType: "json",
+      success: function(response) {
+        if (Object.keys(response).length > 0) {
+          console.log("inside first condition");
+          // if (form_list[0] !== "Labor Release Form") {
+          if (studentDict.stuJobType == "Primary" && response[0]["positionStatus"] != "Denied") { // if the student already has a primary and it is not denied show error modal
+              if (response[0]["formName"] == "Labor Release Form" && response[0]["releaseStatus"] == "Approved") {
+                console.log('Add to the table');
                 if (checkDuplicate(studentDict) == true) {
-                  (studentDict, response);
-                  createAndFillTable(studentDict);
-                }
-                else {
-                  insertRejectedModal(studentDict);
-                }
-              }
-             else{
-              initialLSFInsert(studentDict, response, status_list) // If the previous primary position is Denied allow the user to continue with the new primary LSF
+                    checkTotalHours(studentDict, response);
+                    createAndFillTable(studentDict);
+                  } else {
+                insertRejectedModal(studentDict);
+                 }
+              } else {
+            $("#warningModalTitle").html("Insert Rejected");
+            $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
+            $("#warningModal").modal("show");
             }
-          }
-          else {
-            if (checkDuplicate(studentDict) == true){
-            checkTotalHours(studentDict, response);
-            createAndFillTable(studentDict);
-            }
-            else {
+          } else if (studentDict.stuJobType == "Secondary" && response[0]["positionStatus"] != "Denied") { // If it is secondary allow adding LSF
+            if (checkDuplicate(studentDict) == true) {
+              checkTotalHours(studentDict, response);
+              createAndFillTable(studentDict);
+            } else {
               insertRejectedModal(studentDict);
             }
+          } else {
+            initialLSFInsert(studentDict, response, status_list) // If the previous primary position is Denied allow the user to continue with the new primary LSF
           }
+      }
+      else {
+        initialLSFInsert(studentDict, response) // If the form being submitted for the student is the initial form for that specific term
         }
-        else {
-          initialLSFInsert(studentDict, response) // If the form being submitted for the student is the initial form for that specific term
-        }
-    }
+      }
   });
 }
 
