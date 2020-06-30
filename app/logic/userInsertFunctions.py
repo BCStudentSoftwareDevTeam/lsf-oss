@@ -154,8 +154,7 @@ def emailDuringBreak(secondLSFBreak, term):
     """
     Sending emails during break period
     """
-    termCode = str(term)[-2:]
-    if termCode not in ["11", "12", "00"]: # If not a regular term (Academic Year, Fall, or Spring)
+    if term.isBreak:
         isOneLSF = json.loads(secondLSFBreak)
         formHistory = FormHistory.get(FormHistory.formHistoryID == isOneLSF['formHistoryID'])
         if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student

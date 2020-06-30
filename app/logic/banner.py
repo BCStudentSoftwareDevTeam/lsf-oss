@@ -13,9 +13,9 @@ class Banner():
         if app.config['ENV'] == 'production':
             self.database_exists = True
             try:
-                self.conn = cx_Oracle.connect( 
-                        banner_cfg["user"], 
-                        banner_cfg["password"], 
+                self.conn = cx_Oracle.connect(
+                        banner_cfg["user"],
+                        banner_cfg["password"],
                         "{url}:{port}/{sid}".format(**banner_cfg))
                 print("BANNER connection initialized. Oracle version {}".format(self.conn.version))
 
@@ -40,42 +40,42 @@ class Banner():
 
     def insert(self, formHistory):
         """
-        Add an official labor status form to BANNER. If no database connection exists, this method will act as 
+        Add an official labor status form to BANNER. If no database connection exists, this method will act as
         though the insert succeeds.
-        
+
         Returns True if the insert succeeds, and False otherwise. A secondary return value also returns the execute() result.
-        
+
         E.g., (result, cursor) = conn.insert(data)
         """
 
         if self.database_exists:
             # https://bitbucket.org/laborstudents/labor-status-forms/raw/bdcbaae27a2a13b8ff4351b1e63327c52151edf5/Admin/PendingLaborStatusForms.aspx.cs
-            # All break positions should have 8 as the hours per day value. 
-            # Hours (PZRLABRSTAT_HOUR) cannot be null in the Banner DB 
+            # All break positions should have 8 as the hours per day value.
+            # Hours (PZRLABRSTAT_HOUR) cannot be null in the Banner DB
 
             # term_type is SUM, BRK or REG
-            stmt = """INSERT INTO pzrlabrstat (PZRLABRSTAT_FORM_ID, PZRLABRSTAT_SUPERVISEE, PZRLABRSTAT_SUPERVISOR, PZRLABRSTAT_JOBTYPE, PZRLABRSTAT_POSTION, PZRLABRSTAT_HOUR, PZRLABRSTAT_CONTRACT_HRS, PZRLABRSTAT_START_DATE, PZRLABRSTAT_CREATE_DATE, PZRLABRSTAT_BREAK) 
-                VALUES ( :formID, :studentID, :superID, :jobType, :position, :hours, :contract_hours, 
+            stmt = """INSERT INTO pzrlabrstat (PZRLABRSTAT_FORM_ID, PZRLABRSTAT_SUPERVISEE, PZRLABRSTAT_SUPERVISOR, PZRLABRSTAT_JOBTYPE, PZRLABRSTAT_POSTION, PZRLABRSTAT_HOUR, PZRLABRSTAT_CONTRACT_HRS, PZRLABRSTAT_START_DATE, PZRLABRSTAT_CREATE_DATE, PZRLABRSTAT_BREAK)
+                VALUES ( :formID, :studentID, :superID, :jobType, :position, :hours, :contract_hours,
                          TO_DATE(:start_date,'yyyy-mm-dd'), systimestamp, :term_type )"""
 
             form = formHistory.formID
-            termCode = str(form.termCode.termCode)[-2:]
+            term = form.termCode
             termType = "REG"
             contractHours = form.contractHours
             hours = form.weeklyHours
-            if termCode in ['01','02','03']:
+            if term.isBreak and not term.isSummer:
                 termType = "BRK"
                 hours = 8
-            elif  termCode == '13':
+            elif term.isSummer:
                 termType = "SUM"
                 hours = 8
 
             jobType = form.formID.jobType[0] # We only want the first character, 'P' or 'S'
-            
+
             params = {
                 ":formID": form.laborStatusFormID,
                 ":studentID": form.studentSupervisee,
-                ":superID": form.supervisor.ID, 
+                ":superID": form.supervisor.ID,
                 ":jobType": jobType,
                 ":position": form.POSN_CODE,
                 ":hours": hours,
