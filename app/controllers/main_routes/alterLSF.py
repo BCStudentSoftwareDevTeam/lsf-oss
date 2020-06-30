@@ -12,6 +12,7 @@ from app import cfg
 from app.logic.emailHandler import *
 from app.login_manager import require_login
 from flask_bootstrap import bootstrap_find_resource
+from app.login_manager import require_login
 from datetime import *
 from flask import json, jsonify
 from flask import request
@@ -19,10 +20,10 @@ from flask import flash
 import base64
 
 
-@main_bp.route("/alterLSF/<laborStatusKey>", methods=["GET"]) #History modal called it laborStatusKey
+@main_bp.route("/alterLSF/<laborStatusKey>", methods=["GET"])
 def alterLSF(laborStatusKey):
     """
-    This function gets all the form's data and populates the front end with it
+    This function gets all the form's data and populates the front end
     """
     current_user = require_login()
     if not current_user:        # Not logged in
@@ -113,7 +114,7 @@ def submitAlteredLSF(laborStatusKey):
                                  .where(FormHistory.formID == laborStatusKey)
                                  .get().status_id)
 
-        modifiedforms = ""
+        # modifiedforms = ""
         formHistories = ""
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
@@ -129,11 +130,13 @@ def submitAlteredLSF(laborStatusKey):
                                                      notesContents = rsp[k]["newValue"])
                     newNoteEntry.save()
                     continue
-            else:
+            # This creates the modified form entry for every changed field for an adjustment submission
+            elif formStatus == "Approved":
                 modifiedforms = ModifiedForm.create(fieldModified = k,
                                                     oldValue      = rsp[k]['oldValue'],
                                                     newValue      = rsp[k]['newValue'],
                                                     effectiveDate = datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d'))
+                formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
 
             if k == "supervisor":
                 if formStatus == "Pending":
@@ -157,21 +160,21 @@ def submitAlteredLSF(laborStatusKey):
                         user.save()
                         LSF.supervisor = d.PIDM
                         LSF.save()
-                elif formStatus == "Approved":
-                    formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
+                # elif formStatus == "Approved":
+                #     formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
 
             if k == "position":
                 if formStatus == "Pending":
                     LSF.POSN_TITLE = rsp[k]['newValue']
                     LSF.save()
-                elif formStatus == "Approved":
-                    formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
+                # elif formStatus == "Approved":
+                #     formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
             if k == "contractHours":
                 if formStatus == "Pending":
                     LSF.contractHours = int(rsp[k]['newValue'])
                     LSF.save()
-                elif formStatus == "Approved":
-                    formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
+                # elif formStatus == "Approved":
+                #     formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
             if k == "weeklyHours":
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
                 totalHours = 0
@@ -205,7 +208,9 @@ def submitAlteredLSF(laborStatusKey):
             email.laborStatusFormModified()
         except Exception as e:
             print("An error occured while attempting to send adjustment form emails: ", e)
-        message = "Your Labor Form(s) for {0} {1} have been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        message = "Your labor {0} form(s) for {1} {2} have been submitted.".format("adjustment" if formStatus == "Approved" else "modification",
+                                                                                   student.studentSupervisee.FIRST_NAME,
+                                                                                   student.studentSupervisee.LAST_NAME)
         flash(message, "success")
 
         if formStatus == "Pending":
