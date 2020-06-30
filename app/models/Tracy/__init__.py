@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from app import load_config, app
 import urllib3
 from urllib.parse import quote
@@ -21,4 +22,4 @@ if app.config['ENV'] == 'production':
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = uri
 db = SQLAlchemy(app)
-
+migrate = Migrate(app, db)
