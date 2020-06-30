@@ -30,11 +30,28 @@ $(document).ready(function() {
     // "dom": '<"top"fl>rt<"bottom"p><"clear">'
   });
 
+// CHECK ALL CHECKBOX ON APPROVE BUTTON
+  $('#checkAll').change(function(){
+    $(".approveCheckbox").prop('checked', $(this).prop("checked"));
+  });
+
+  $('.approveCheckbox').change(function(){
+	   //uncheck "check all" if one of the listed checkbox item is unchecked
+  	if(this.checked == false){
+  		$("#checkAll")[0].checked = false;
+    }
+  	 //check "check all" if all checkbox items are checked
+  	if ($('.approveCheckbox:checked').length == $('.approveCheckbox').length ){
+  		  $("#checkAll")[0].checked = true;
+  	}
+  });
+
 });
+
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
-  var getChecked = $('input:checked').each(function() {
+  var getChecked = $('.approveCheckbox:checked').each(function() {
     labor_details_ids.push(this.value);
   });
 
