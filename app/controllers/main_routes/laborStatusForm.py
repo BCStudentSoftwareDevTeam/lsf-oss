@@ -29,8 +29,9 @@ def laborStatusForm(laborStatusKey = None):
     currentUser = require_login()
     if not currentUser:        # Not logged in
         return render_template('errors/403.html')
-    if currentUser.Student and not currentUser.Supervisor:
-        return redirect('/laborHistory/' + currentUser.Student.ID)
+    if not currentUser.isLaborAdmin:
+        if currentUser.Student and not currentUser.Supervisor:
+            return redirect('/laborHistory/' + currentUser.Student.ID)
 
     # Logged in
     wls = STUPOSN.select(STUPOSN.WLS).distinct() # getting WLS from TRACY
@@ -50,7 +51,6 @@ def laborStatusForm(laborStatusKey = None):
             forms = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey) # getting labor status form id, to prepopulate laborStatusForm.
         else:
             forms = None
-            return render_template('errors/403.html')
     else:
         forms = None
     return render_template( 'main/laborStatusForm.html',
@@ -85,8 +85,6 @@ def userInsert():
         studentID = student.ID
         d, created = Supervisor.get_or_create(PIDM = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.ID
-        ## Using the supervisor object, grab the user object where User.Supervisor.ID == d.ID
-
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])

@@ -57,7 +57,7 @@ def laborhistory(id):
                                 studentUserName = studentUser.username
                               )
     except Exception as e:
-        print('Error:', e)
+        print("Erorr Loading Student Labor History", e)
         return render_template('errors/500.html',
                                 currentUser = currentUser)
 

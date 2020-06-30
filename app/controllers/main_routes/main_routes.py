@@ -140,7 +140,7 @@ def index():
                         currentUser = currentUser
                               )
     except Exception as e:
-        print('Error Loading:', e)
+        print('Error Supervisor Portal:', e)
 
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
 def populateDepartment(departmentSelected):
