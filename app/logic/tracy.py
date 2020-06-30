@@ -75,7 +75,6 @@ class Tracy():
         """
         Return a list of departments, ordered by department name.
         """
-        #return STUPOSN.query.select([STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT]).distinct().order_by(STUPOSN.DEPT_NAME.asc())
         return STUPOSN.query.with_entities(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT) \
                             .distinct().order_by(STUPOSN.DEPT_NAME).all()
 
