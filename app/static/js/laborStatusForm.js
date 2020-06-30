@@ -497,8 +497,6 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
           status_list.push(response[key]["positionStatus"]);
           form_list.push(response[key]["positionHistory"]);
         }
-        console.log(status_list);
-        console.log(form_list);
         if(Object.keys(response).length > 0) {
           if (form_list[0] !== "Labor Release Form") {
               if (studentDict.stuJobType == "Primary" && (status_list.some((val) => rejectionStatus.indexOf(val) !== -1))){ // if the student already has a primary and it is not denied show error modal
@@ -524,6 +522,9 @@ function checkPrimaryPositionToCreateTheTable(studentDict){
             checkTotalHours(studentDict, response);
             createAndFillTable(studentDict);
             }
+            else {
+              insertRejectedModal(studentDict);
+            }
           }
         }
         else {
@@ -537,14 +538,10 @@ function initialLSFInsert(studentDict, response, status_list = []){ //Add studen
   var termCodeLastTwo = (studentDict).stuTermCode.slice(-2);
   if(studentDict.stuJobType == "Primary"){
     if (checkDuplicate(studentDict) == true){
-      console.log("befor hours")
       checkTotalHours(studentDict, response);
-      console.log("after hours")
       // should create table based on the last position status
       if (status_list == [] || (!status_list.includes("Approved"))) {
-        console.log("checkoing status list")
         createAndFillTable(studentDict);
-        console.log("created and filled table")
       }
     }
     else {

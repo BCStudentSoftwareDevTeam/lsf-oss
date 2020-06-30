@@ -420,9 +420,9 @@ def modalFormUpdate():
                     email.LaborOverLoadFormRejected()
             elif rsp['formType'] == 'Release':
                 if rsp['status'] == 'Approved':
-                    LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == historyForm.formID)
-                    removeWeeklyHours = LaborStatusForm.update({LaborStatusForm.weeklyHours: None}).where(LaborStatusForm.weeklyHours == LSF.weeklyHours)
-                    removeWeeklyHours.execute()
+                    # LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == historyForm.formID)
+                    # removeWeeklyHours = LaborStatusForm.update({LaborStatusForm.weeklyHours: None}).where(LaborStatusForm.weeklyHours == LSF.weeklyHours)
+                    # removeWeeklyHours.execute()
                     email.laborReleaseFormApproved()
                 elif rsp['status'] == 'Denied':
                     email.laborReleaseFormRejected()
