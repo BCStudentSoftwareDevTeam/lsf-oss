@@ -52,15 +52,15 @@ def createTerms(termList, iteration):
             elif i == 1:
                 termList.create(termCode = (code + 11), termName = ("Fall " + str(termYear)))
             elif i == 2:
-                termList.create(termCode = (code + 1), termName = ("Thanksgiving Break " + str(termYear)))
+                termList.create(termCode = (code + 1), termName = ("Thanksgiving Break " + str(termYear)), isBreak = True)
             elif i == 3:
-                termList.create(termCode = (code + 2), termName = ("Christmas Break " + str(termYear)))
+                termList.create(termCode = (code + 2), termName = ("Christmas Break " + str(termYear)), isBreak = True)
             elif i == 4:
                 termList.create(termCode = (code + 12), termName = ("Spring " + str(termYear + 1)))
             elif i == 5:
-                termList.create(termCode = (code + 3), termName = ("Spring Break " + str(termYear + 1)))
+                termList.create(termCode = (code + 3), termName = ("Spring Break " + str(termYear + 1)), isBreak = True)
             elif i == 6:
-                termList.create(termCode = (code + 13), termName = ("Summer " + str(termYear + 1)))
+                termList.create(termCode = (code + 13), termName = ("Summer " + str(termYear + 1)), isBreak = True, isSummer = True)
         except Exception as e:
              print("You failed to create a term in the " + str(termYear) + " AY. This is likely expected.")
 
