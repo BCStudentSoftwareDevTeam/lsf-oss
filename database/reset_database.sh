@@ -10,6 +10,7 @@ mysql -u root -proot --execute="CREATE DATABASE IF NOT EXISTS \`UTE\`; CREATE US
 
 rm -rf lsf_migrations
 rm -rf tracy_migrations
+rm -rf migrations.json
 
 echo "Creating database schema"
 ./migrate_db.sh

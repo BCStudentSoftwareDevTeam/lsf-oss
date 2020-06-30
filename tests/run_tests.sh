@@ -6,7 +6,7 @@ BASE_URL=http://localhost:8080
 SENSITIVE_URL=http://lsf.berea.edu
 VERBOSE="--verbose "
 
-FLAGS="${VERBOSE}--capture=no --disable-pytest-warnings --strict-markers --tb=short -rs"
+FLAGS="${VERBOSE}--capture=no --disable-pytest-warnings --strict-markers --tb=line -rs"
 UI_URLS="--verify-base-url --base-url $BASE_URL --sensitive-url $SENSITIVE_URL"
 
 RED='\033[0;31m'
@@ -36,7 +36,10 @@ function no-ui {
 }
 
 case "$1" in
-	"") ;&
+	"")
+		no-ui
+		ui
+		;;
 	all)
 		no-ui
 		ui
