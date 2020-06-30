@@ -113,6 +113,7 @@ def submitAlteredLSF(laborStatusKey):
                                  .where(FormHistory.formID == laborStatusKey)
                                  .get().status_id)
 
+        modifiedforms = ""
         formHistories = ""
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
@@ -122,12 +123,17 @@ def submitAlteredLSF(laborStatusKey):
                     LSF.save()
                 elif formStatus == "Approved":
                     ## New Entry in AdminNote Table
-                    newNoteEntry = AdminNotes.create(formID=LSF.laborStatusFormID,
-                                                    createdBy=current_user.UserID,
-                                                    date=currentDate,
-                                                    notesContents=rsp[k]["newValue"])
+                    newNoteEntry = AdminNotes.create(formID        = LSF.laborStatusFormID,
+                                                     createdBy     = current_user.UserID,
+                                                     date          = currentDate,
+                                                     notesContents = rsp[k]["newValue"])
                     newNoteEntry.save()
                     continue
+            else:
+                modifiedforms = ModifiedForm.create(fieldModified = k,
+                                                    oldValue      = rsp[k]['oldValue'],
+                                                    newValue      = rsp[k]['newValue'],
+                                                    effectiveDate = datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d'))
 
             if k == "supervisor":
                 if formStatus == "Pending":
@@ -152,20 +158,20 @@ def submitAlteredLSF(laborStatusKey):
                         LSF.supervisor = d.PIDM
                         LSF.save()
                 elif formStatus == "Approved":
-                    formHistories = createFormHistory(laborStatusKey, rsp, k, current_user)
+                    formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
 
             if k == "position":
                 if formStatus == "Pending":
                     LSF.POSN_TITLE = rsp[k]['newValue']
                     LSF.save()
                 elif formStatus == "Approved":
-                    formHistories = createFormHistory(laborStatusKey, rsp, k, current_user)
+                    formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
             if k == "contractHours":
                 if formStatus == "Pending":
                     LSF.contractHours = int(rsp[k]['newValue'])
                     LSF.save()
                 elif formStatus == "Approved":
-                    formHistories = createFormHistory(laborStatusKey, rsp, k, current_user)
+                    formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
             if k == "weeklyHours":
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
                 totalHours = 0
@@ -176,12 +182,12 @@ def submitAlteredLSF(laborStatusKey):
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
-                    newFormHistory = FormHistory.create(formID = laborStatusKey,
-                                                        historyType = "Labor Overload Form",
-                                                        createdBy = current_user.UserID,
+                    newFormHistory = FormHistory.create(formID       = laborStatusKey,
+                                                        historyType  = "Labor Overload Form",
+                                                        createdBy    = current_user.UserID,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
-                                                        createdDate = date.today(),
-                                                        status = "Pending")
+                                                        createdDate  = date.today(),
+                                                        status       = "Pending")
                     try:
                         if formStatus == "Pending":
                             overloadEmail = emailHandler(newFormHistory.formHistoryID)
@@ -199,7 +205,7 @@ def submitAlteredLSF(laborStatusKey):
             email.laborStatusFormModified()
         except Exception as e:
             print("An error occured while attempting to send adjustment form emails: ", e)
-        message = "Your Labor Form(s) for {0} {1} has been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        message = "Your Labor Form(s) for {0} {1} have been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
 
         if formStatus == "Pending":
@@ -215,21 +221,32 @@ def submitAlteredLSF(laborStatusKey):
         print("An error occured during form submission:", e)
         return jsonify({"Success": False})
 
-def createFormHistory(laborStatusKey, rsp, k, current_user):
+def createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms):
     """
     Creates appropriate form history entries in the formHistory table
     """
-    modifiedforms = ModifiedForm.create(fieldModified = k,
-                                        oldValue      = rsp[k]['oldValue'],
-                                        newValue      = rsp[k]['newValue'],
-                                        effectiveDate = datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d')
-                                        )
+    print("\n===============\n")
+    print("rsp:", rsp)
+    print("k:", k)
+    print("current_user:", current_user)
+    print("\n===============\n")
+
     historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
     status = Status.get(Status.statusName == "Pending")
-    formHistories = FormHistory.create(formID = laborStatusKey,
-                                     historyType = historyType.historyTypeName,
-                                     modifiedForm = modifiedforms.modifiedFormID,
-                                     createdBy   = current_user.UserID,
-                                     createdDate = date.today(),
-                                     status      = status.statusName)
+    formHistories = FormHistory.create(formID       = laborStatusKey,
+                                       historyType  = historyType.historyTypeName,
+                                       modifiedForm = modifiedforms.modifiedFormID,
+                                       createdBy    = current_user.UserID,
+                                       createdDate  = date.today(),
+                                       status       = status.statusName)
+    print("\n===============\n")
+    # print(formHistories)
+    print("!!!!! formHistories !!!!!", formHistories)
+    print("laborStatusKey:", laborStatusKey)
+    print("historyType.historyTypeName:", historyType.historyTypeName)
+    print("modifiedforms.modifiedFormID:", modifiedforms.modifiedFormID)
+    print("current_user.UserID:", current_user.UserID)
+    print("date.today():", date.today())
+    print("status.statusName:", status.statusName)
+    print("\n===============\n")
     return formHistories
