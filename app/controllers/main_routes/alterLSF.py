@@ -113,8 +113,6 @@ def submitAlteredLSF(laborStatusKey):
                                  .join(LaborStatusForm)
                                  .where(FormHistory.formID == laborStatusKey)
                                  .get().status_id)
-
-        # modifiedforms = ""
         formHistories = ""
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
@@ -160,21 +158,16 @@ def submitAlteredLSF(laborStatusKey):
                         user.save()
                         LSF.supervisor = d.PIDM
                         LSF.save()
-                # elif formStatus == "Approved":
-                #     formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
 
             if k == "position":
                 if formStatus == "Pending":
                     LSF.POSN_TITLE = rsp[k]['newValue']
                     LSF.save()
-                # elif formStatus == "Approved":
-                #     formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
-            if k == "contractHours":
+
                 if formStatus == "Pending":
                     LSF.contractHours = int(rsp[k]['newValue'])
                     LSF.save()
-                # elif formStatus == "Approved":
-                #     formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
+
             if k == "weeklyHours":
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
                 totalHours = 0
@@ -217,10 +210,11 @@ def submitAlteredLSF(laborStatusKey):
                                                                                    student.studentSupervisee.LAST_NAME)
         flash(message, "success")
 
-        if formStatus == "Pending":
-            return jsonify({"Success": True})
-        elif formStatus == "Approved":
-            return jsonify({"Success": True, "url":"/laborHistory/" + student.studentSupervisee.ID})
+        # if formStatus == "Pending":
+        #     return jsonify({"Success": True})
+        # elif formStatus == "Approved":
+        #     return jsonify({"Success": True, "url":"/laborHistory/" + student.studentSupervisee.ID})
+        return jsonify({"Success": True})
 
     except Exception as e:
         message = "An error occured. Your labor {0} form(s) for {1} {2} were not submitted.".format("status" if formStatus == "Pending" else "adjustment",
@@ -228,18 +222,12 @@ def submitAlteredLSF(laborStatusKey):
                                                                                                     student.studentSupervisee.LAST_NAME)
         flash(message, "danger")
         print("An error occured during form submission:", e)
-        return jsonify({"Success": False})
+        return jsonify({"Success": False}), 500
 
 def createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms):
     """
     Creates appropriate form history entries in the formHistory table
     """
-    print("\n===============\n")
-    print("rsp:", rsp)
-    print("k:", k)
-    print("current_user:", current_user)
-    print("\n===============\n")
-
     historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
     status = Status.get(Status.statusName == "Pending")
     formHistories = FormHistory.create(formID       = laborStatusKey,
@@ -248,14 +236,4 @@ def createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms):
                                        createdBy    = current_user.UserID,
                                        createdDate  = date.today(),
                                        status       = status.statusName)
-    print("\n===============\n")
-    # print(formHistories)
-    print("!!!!! formHistories !!!!!", formHistories)
-    print("laborStatusKey:", laborStatusKey)
-    print("historyType.historyTypeName:", historyType.historyTypeName)
-    print("modifiedforms.modifiedFormID:", modifiedforms.modifiedFormID)
-    print("current_user.UserID:", current_user.UserID)
-    print("date.today():", date.today())
-    print("status.statusName:", status.statusName)
-    print("\n===============\n")
     return formHistories

@@ -13,7 +13,7 @@ $("#datetimepicker0").datepicker({
 });
 $("#datetimepicker0").datepicker("setDate", "date");
 
-$('.glyphicon-calendar').click(function() {
+$(".glyphicon-calendar").click(function() {
     $("#datetimepicker0").focus();
 });
 
@@ -54,19 +54,19 @@ function fillHoursPerWeek(){ // prefill hours per week select picker
   }
 }
 
-var effectiveDate = $("#datetimepicker0").datepicker('getDate');
+var effectiveDate = $("#datetimepicker0").datepicker("getDate");
 var finalDict = {};
 
 function checkWLS20(){
   totalhours = $("#totalHours").val();
   weeklyHours = $("#weeklyHours").val();
   if(weeklyHours == "20"){
-    $('#OverloadModal').modal('show');
-    $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
+    $("#OverloadModal").modal("show");
+    $("#overloadModalButton").attr("data-target", "") // prevent a Primary Modal from showing up
   }
   else if(Number(totalhours) + Number(weeklyHours) > 15) {
-    $('#OverloadModal').modal('show');
-    $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
+    $("#OverloadModal").modal("show");
+    $("#overloadModalButton").attr("data-target", "") // prevent a Primary Modal from showing up
   }
 }
 
@@ -78,10 +78,10 @@ function checkForChange(){
   var date = $("#datetimepicker0").val();
   var oldNotes = $("#oldNotes").val();
   var newNotes = $("#supervisorNotes").val();
-  var oldContractHours = $('#oldContractHours').val();
-  var newContractHours = $('#contractHours').val();
-  var oldWeeklyHours = $('#oldWeeklyHours').val();
-  var newWeeklyHours = $('#weeklyHours').val();
+  var oldContractHours = $("#oldContractHours").val();
+  var newContractHours = $("#contractHours").val();
+  var oldWeeklyHours = $("#oldWeeklyHours").val();
+  var newWeeklyHours = $("#weeklyHours").val();
 
   if(oldSupervisor != newSupervisor){
     finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor, "date": date}
@@ -99,20 +99,21 @@ function checkForChange(){
     finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours, "date": date}
   }
 
-  if (JSON.stringify(finalDict) !== '{}'){
-    $('#submitModal').modal('show');
+  if (JSON.stringify(finalDict) !== "{}"){
+    $("#submitModal").modal("show");
     return finalDict
   }
-  if (JSON.stringify(finalDict) == '{}'){
-    $('#NochangeModal').modal('show');
+  if (JSON.stringify(finalDict) == "{}"){
+    $("#NochangeModal").modal("show");
   }
 }
 
 function buttonListener(laborStatusKey) {
+  event.preventDefault();
   $.ajax({
     url: "/alterLSF/submitAlteredLSF/" + laborStatusKey,
     method: "POST",
-    contentType: 'application/json',
+    contentType: "application/json",
     data: JSON.stringify(finalDict),
     success: function(response) {
       window.location.href = document.referrer;

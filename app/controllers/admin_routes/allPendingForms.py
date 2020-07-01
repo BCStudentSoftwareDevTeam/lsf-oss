@@ -219,7 +219,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             user.save()
             LSF.supervisor = d.PIDM
             LSF.save()
-    if form.modifiedForm.fieldModified == "POSN_CODE":
+    if form.modifiedForm.fieldModified == "position":
         LSF.POSN_CODE = form.modifiedForm.newValue
         position = STUPOSN.get(STUPOSN.POSN_CODE == form.modifiedForm.newValue)
         LSF.POSN_TITLE = position.POSN_TITLE
