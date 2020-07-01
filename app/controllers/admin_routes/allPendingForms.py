@@ -6,7 +6,7 @@ from app.controllers.admin_routes import admin
 from app.controllers.errors_routes.handlers import *
 from app.models.laborReleaseForm import LaborReleaseForm
 from app.models.laborStatusForm import LaborStatusForm
-from app.models.modifiedForm import ModifiedForm
+from app.models.adjustedForm import AdjustedForm
 from app.models.emailTracker import EmailTracker
 from app.models.overloadForm import OverloadForm
 from app.models.adminNotes import AdminNotes
@@ -38,7 +38,7 @@ def allPendingForms(formType):
         pageTitle = ""
         approvalTarget = ""
         laborStatusFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Status Form')).count()
-        modifiedFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Modified Labor Form')).count()
+        adjustedFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Adjusted Labor Form')).count()
         releaseFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Release Form')).count()
         overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
         if formType == "pendingLabor":
@@ -47,8 +47,8 @@ def allPendingForms(formType):
             pageTitle = "Pending Labor Status Forms"
 
         elif formType == "pendingAdjustment":
-            historyType = "Modified Labor Form"
-            approvalTarget = "denyModifiedFormsModal"
+            historyType = "Adjusted Labor Form"
+            approvalTarget = "denyAdjustedFormsModal"
             pageTitle = "Pending Adjustment Forms"
 
         elif formType == "pendingOverload":
@@ -63,9 +63,9 @@ def allPendingForms(formType):
         formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
         # only if a form is adjusted
         pendingOverloadFormPairs = {}
-        # or allForms.modifiedForm.fieldModified == "Weekly Hours":
+        # or allForms.adjustedForm.fieldAdjusted == "Weekly Hours":
         for allForms in formList:
-            if allForms.historyType.historyTypeName == "Labor Status Form" or (allForms.historyType.historyTypeName == "Modified Labor Form" and allForms.modifiedForm.fieldModified == "Weekly Hours"):
+            if allForms.historyType.historyTypeName == "Labor Status Form" or (allForms.historyType.historyTypeName == "Adjusted Labor Form" and allForms.adjustedForm.fieldAdjusted == "Weekly Hours"):
                 try:
                     overloadForm = FormHistory.select().where((FormHistory.formID == allForms.formID) & (FormHistory.historyType == "Labor Overload Form") & (FormHistory.status == "Pending")).get()
                     if overloadForm:
@@ -74,21 +74,21 @@ def allPendingForms(formType):
                     pass
                 except Exception as e:
                     print(e)
-            if allForms.modifiedForm: # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in modified table
+            if allForms.adjustedForm: # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in adjusted table
                 # We check if there is a pending overload form using the key of the modifed forms
-                if allForms.modifiedForm.fieldModified == "supervisor": # if supervisor field in adjust forms has been modified,
-                    newSupervisorID = allForms.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
+                if allForms.adjustedForm.fieldAdjusted == "supervisor": # if supervisor field in adjust forms has been adjusted,
+                    newSupervisorID = allForms.adjustedForm.newValue    # use the supervisor pidm in the field adjusted to find supervisor in User table.
                     newSupervisor = User.get(User.UserID == newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
-                    allForms.modifiedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
-                if allForms.modifiedForm.fieldModified == "position": # if position field has been modified in adjust form then retriev position name.
-                    newPositionCode = allForms.modifiedForm.newValue
+                    allForms.adjustedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
+                if allForms.adjustedForm.fieldAdjusted == "position": # if position field has been changed in adjust form then retriev position name.
+                    newPositionCode = allForms.adjustedForm.newValue
                     newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode)
                     # temporarily storing the position code and wls in new value, and position name in old value
                     # because we want to show these information in the hmtl template.
-                    allForms.modifiedForm.newValue = newPosition.POSN_CODE +" (" + newPosition.WLS+")"
-                    allForms.modifiedForm.oldValue = newPosition.POSN_TITLE
+                    allForms.adjustedForm.newValue = newPosition.POSN_CODE +" (" + newPosition.WLS+")"
+                    allForms.adjustedForm.oldValue = newPosition.POSN_TITLE
         users = User.select()
         return render_template( 'admin/allPendingForms.html',
                                 title=pageTitle,
@@ -100,7 +100,7 @@ def allPendingForms(formType):
                                 isLaborAdmin = isLaborAdmin,
                                 overloadFormCounter = overloadFormCounter,
                                 laborStatusFormCounter = laborStatusFormCounter,
-                                modifiedFormCounter  = modifiedFormCounter,
+                                adjustedFormCounter  = adjustedFormCounter,
                                 releaseFormCounter = releaseFormCounter,
                                 pendingOverloadFormPairs = pendingOverloadFormPairs
                                 )
@@ -160,7 +160,7 @@ def finalUpdateStatus(raw_status):
                 labor_forms.rejectReason = denyReason
             labor_forms.save()
 
-            if history_type == "Modified Labor Form" and new_status == "Approved":
+            if history_type == "Adjusted Labor Form" and new_status == "Approved":
                 # This function is triggered whenever an adjustment form is approved.
                 # The following function overrides the original data in lsf with the new data from adjustment form.
                 LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == history_type_data.formID) # getting the specific labor status form
@@ -194,21 +194,21 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
     This function checks whether an Adjustment Form is approved. If yes, it overrides the information
     in the original Labor Status Form with the new information coming from approved Adjustment Form.
 
-    The only fields that will ever be modified in an adjustment form are: supervisor, position, and hours.
+    The only fields that will ever be changed in an adjustment form are: supervisor, position, and hours.
     """
     current_user = require_login()
     if not current_user:        # Not logged in
             return render_template('errors/403.html')
-    if form.modifiedForm.fieldModified == "supervisor":
-        d, created = User.get_or_create(PIDM = form.modifiedForm.newValue)
+    if form.adjustedForm.fieldAdjusted == "supervisor":
+        d, created = User.get_or_create(PIDM = form.adjustedForm.newValue)
         if not created:
             LSF.supervisor = d.UserID
         LSF.save()
         if created:
-            tracyUser = STUSTAFF.get(STUSTAFF.PIDM == form.modifiedForm.newValue)
+            tracyUser = STUSTAFF.get(STUSTAFF.PIDM == form.adjustedForm.newValue)
             tracyEmail = tracyUser.EMAIL
             tracyUsername = tracyEmail.find('@')
-            user = User.get(User.PIDM == form.modifiedForm.newValue)
+            user = User.get(User.PIDM == form.adjustedForm.newValue)
             user.username   = tracyEmail[:tracyUsername]
             user.FIRST_NAME = tracyUser.FIRST_NAME
             user.LAST_NAME  = tracyUser.LAST_NAME
@@ -219,23 +219,23 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             user.save()
             LSF.supervisor = d.PIDM
             LSF.save()
-    if form.modifiedForm.fieldModified == "position":
-        LSF.POSN_CODE = form.modifiedForm.newValue
-        position = STUPOSN.get(STUPOSN.POSN_CODE == form.modifiedForm.newValue)
+    if form.adjustedForm.fieldAdjusted == "position":
+        LSF.POSN_CODE = form.adjustedForm.newValue
+        position = STUPOSN.get(STUPOSN.POSN_CODE == form.adjustedForm.newValue)
         LSF.POSN_TITLE = position.POSN_TITLE
         LSF.WLS = position.WLS
         LSF.save()
-    if form.modifiedForm.fieldModified == "contractHours":
-        LSF.contractHours = form.modifiedForm.newValue
+    if form.adjustedForm.fieldAdjusted == "contractHours":
+        LSF.contractHours = form.adjustedForm.newValue
         LSF.save()
-    if form.modifiedForm.fieldModified == "weeklyHours":
+    if form.adjustedForm.fieldAdjusted == "weeklyHours":
         allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
         totalHours = 0
         if allTermForms:
             for i in allTermForms:
                 totalHours += i.weeklyHours
-        previousTotalHours = totalHours + int(form.modifiedForm.newValue)
-        newTotalHours = totalHours + int(form.modifiedForm.newValue)
+        previousTotalHours = totalHours + int(form.adjustedForm.newValue)
+        newTotalHours = totalHours + int(form.adjustedForm.newValue)
         if previousTotalHours <= 15 and newTotalHours > 15:
             newLaborOverloadForm = OverloadForm.create(studentOverloadReason = None)
             user = User.get(User.username == current_user)
@@ -248,7 +248,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
          # TODO: emails are commented out for testing purposes
             # overloadEmail = emailHandler(newFormHistory.formHistoryID)
             # overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
-        LSF.weeklyHours = int(form.modifiedForm.newValue)
+        LSF.weeklyHours = int(form.adjustedForm.newValue)
         LSF.save()
 
 
@@ -360,7 +360,7 @@ def getOverloadModalData(formHistoryID):
             if currentPendingForm:
                 pendingForm = True
                 pendingFormType = currentPendingForm.historyType.historyTypeName
-                if pendingFormType == "Modified Labor Form":
+                if pendingFormType == "Adjusted Labor Form":
                     pendingFormType = "Labor Adjustment Form"
         except (AttributeError, IndexError):
             pendingForm = False
@@ -431,10 +431,10 @@ def modalFormUpdate():
                 overloadForm.save()
                 try:
                     pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending")).get()
-                    if pendingForm.historyType.historyTypeName == "Modified Labor Form":
-                        if pendingForm.modifiedForm.fieldModified != "Weekly Hours":
-                            pendingForm = FormHistory.select().join(ModifiedForm).where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending") & (FormHistory.modifiedForm.fieldModified == "Weekly Hours")).get()
-                    if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Modified Labor Form" and pendingForm.modifiedForm.fieldModified == "Weekly Hours"):
+                    if pendingForm.historyType.historyTypeName == "Adjusted Labor Form":
+                        if pendingForm.adjustedForm.fieldAdjusted != "Weekly Hours":
+                            pendingForm = FormHistory.select().join(AdjustedForm).where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending") & (FormHistory.adjustedForm.fieldAdjusted == "Weekly Hours")).get()
+                    if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Adjusted Labor Form" and pendingForm.adjustedForm.fieldAdjusted == "Weekly Hours"):
                         pendingForm.status = status.statusName
                         pendingForm.reviewedBy = createdUser.UserID
                         pendingForm.reviewedDate = currentDate

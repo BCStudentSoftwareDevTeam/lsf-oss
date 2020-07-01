@@ -7,7 +7,7 @@ from app.models.user import User
 from app.models.Tracy.studata import *
 from app.models.Tracy.stustaff import *
 from app.models.Tracy.stuposn import *
-from app.models.modifiedForm import *
+from app.models.adjustedForm import *
 from app import cfg
 from app.logic.emailHandler import *
 from app.login_manager import require_login
@@ -128,13 +128,13 @@ def submitAlteredLSF(laborStatusKey):
                                                      notesContents = rsp[k]["newValue"])
                     newNoteEntry.save()
                     continue
-            # This creates the modified form entry for every changed field for an adjustment submission
+            # This creates the adjusted form entry for every changed field for an adjustment submission
             elif formStatus == "Approved":
-                modifiedforms = ModifiedForm.create(fieldModified = k,
+                adjustedforms = AdjustedForm.create(fieldAdjusted = k,
                                                     oldValue      = rsp[k]['oldValue'],
                                                     newValue      = rsp[k]['newValue'],
                                                     effectiveDate = datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d'))
-                formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms)
+                formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, adjustedforms)
 
             if k == "supervisor":
                 if formStatus == "Pending":
@@ -192,7 +192,7 @@ def submitAlteredLSF(laborStatusKey):
                         overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
                     except Exception as e:
                         print("An error occured while attempting to send overload form emails: ", e)
-                elif previousTotalHours > 15 and newTotalHours <= 15:   # This will delete an overload form after the hours are modified
+                elif previousTotalHours > 15 and newTotalHours <= 15:   # This will delete an overload form after the hours are changed
                     deleteOverloadForm = FormHistory.get((FormHistory.formID == laborStatusKey) & (FormHistory.historyType == "Labor Overload Form"))
                     deleteOverloadForm = OverloadForm.get(OverloadForm.overloadFormID == deleteOverloadForm.overloadForm.overloadFormID)
                     deleteOverloadForm.delete_instance()
@@ -202,7 +202,7 @@ def submitAlteredLSF(laborStatusKey):
         changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
         try:
             email = emailHandler(changedForm.formHistoryID)
-            email.laborStatusFormModified()
+            email.laborStatusFormAdjusted()
         except Exception as e:
             print("An error occured while attempting to send adjustment form emails: ", e)
         message = "Your labor {0} form(s) for {1} {2} have been submitted.".format("adjustment" if formStatus == "Approved" else "modification",
@@ -224,15 +224,15 @@ def submitAlteredLSF(laborStatusKey):
         print("An error occured during form submission:", e)
         return jsonify({"Success": False}), 500
 
-def createFormHistory(laborStatusKey, rsp, k, current_user, modifiedforms):
+def createFormHistory(laborStatusKey, rsp, k, current_user, adjustedforms):
     """
     Creates appropriate form history entries in the formHistory table
     """
-    historyType = HistoryType.get(HistoryType.historyTypeName == "Modified Labor Form")
+    historyType = HistoryType.get(HistoryType.historyTypeName == "adjusted Labor Form")
     status = Status.get(Status.statusName == "Pending")
     formHistories = FormHistory.create(formID       = laborStatusKey,
                                        historyType  = historyType.historyTypeName,
-                                       modifiedForm = modifiedforms.modifiedFormID,
+                                       adjustedForm = adjustedforms.adjustedFormID,
                                        createdBy    = current_user.UserID,
                                        createdDate  = date.today(),
                                        status       = status.statusName)

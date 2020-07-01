@@ -61,7 +61,7 @@ def laborReleaseForm(laborStatusKey):
                                         formID = laborStatusForiegnKey.laborStatusFormID,
                                         historyType = historytype.historyTypeName,
                                         releaseForm = newLaborReleaseForm.laborReleaseFormID,
-                                        modifiedForm = None,
+                                        adjustedForm = None,
                                         overloadForm = None,
                                         createdBy = current_user.UserID,
                                         createdDate = date.today(),

@@ -25,7 +25,7 @@
         {% endfor %}
         </div>
         {% for form in forms %}
-          {% if form.modifiedForm == None and form.releaseForm == None and form.overloadForm == None %}
+          {% if form.adjustedForm == None and form.releaseForm == None and form.overloadForm == None %}
             {% if form.reviewedDate == None %}
               <div class="h4 nopadding">
                 <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
@@ -104,7 +104,7 @@
                 </div>
                 </div>
               </div>
-          {% elif form.modifiedForm != None %}
+          {% elif form.adjustedForm != None %}
           {% if form.reviewedDate == None %}
             <div class="h4 nopadding">
               <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
@@ -134,7 +134,7 @@
             </div>
           {% endif %}
             <div class="row">
-              <p class="col-sm-11 smallDataMargin">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</p>
+              <p class="col-sm-11 smallDataMargin">{{form.adjustedForm.fieldAdjusted}} changed from {{form.adjustedForm.oldValue}} to {{form.adjustedForm.newValue}}</p>
             </div>
 
           {% elif form.overloadForm != None %}
