@@ -129,7 +129,7 @@ def index():
 
             # Returns the file path so the button will download the file
             return send_file(completePath,as_attachment=True, attachment_filename=filename)
-        print('Current User', currentUser)
+        print('Current User Admin Status:', currentUser.isLaborAdmin)
         return render_template( 'main/index.html',
     				    title=('Home'),
                         currentSupervisees = currentSupervisees,
