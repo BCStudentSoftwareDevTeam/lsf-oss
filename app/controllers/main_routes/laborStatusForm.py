@@ -162,11 +162,15 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
                 isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
         return jsonify(isMoreLSF_dict)
 
-    approvedPositions = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form")
+    approvedPositions = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form", FormHistory.formID.jobType == "Primary").order_by(FormHistory.formHistoryID.desc())
+    # for i in approvedPositions:
+    #     print("Labor Form Type", i.historyType.historyTypeName)
     positionsList = []
     for item in approvedPositions:
         statusHistory = FormHistory.select().where(FormHistory.formID == item.formID).order_by(FormHistory.formHistoryID.desc()).get()
         positionsDict = {}
+        positionsDict["jobType"] = item.formID.jobType
+        positionsDict["weeklyHours"] = item.formID.weeklyHours
         positionsDict["positionStatus"] = item.status.statusName
         positionsDict["formName"] = statusHistory.historyType.historyTypeName
         if statusHistory.historyType.historyTypeName == "Labor Release Form":
@@ -208,3 +212,12 @@ def checkCompliance(department):
     for dept in depts:
         deptDict['Department'] = {'Department Compliance': dept.departmentCompliance}
     return json.dumps(deptDict)
+
+@main_bp.route("/laborstatusform/checktotalhours/<termCode>/<student>/<weeklyHours>", methods=["GET"])
+def checkTotalHours(termCode, student, weeklyHours):
+    positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    totalHours = 0
+    print(weeklyHours)
+    for item in positions:
+        totalHours = int(weeklyHours) + item.weeklyHours
+    return json.dumps(totalHours)
