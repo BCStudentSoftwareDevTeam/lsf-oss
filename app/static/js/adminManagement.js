@@ -1,5 +1,6 @@
 // Opens collapse menu for this page
 $("#admin").collapse("show");
+$('#addLaborAdmin').autoComplete();
 
 function modal(button) {
   if(button == "add" && $("#addlaborAdmin").val() != "") {

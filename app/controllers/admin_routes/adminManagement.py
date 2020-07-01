@@ -22,11 +22,17 @@ def admin_Management():
                                 currentUser = currentUser)
 
     users = User.select()
+    print('Does this print twice?')
     return render_template( 'admin/adminManagement.html',
                             title=('Admin Management'),
                             users = users,
                             currentUser = currentUser
                          )
+
+@admin.route("/adminManagement/autoCompleteLaborAdmin.json", methods=['GET'])
+def autoCompleteLaborAdmin():
+    print(q)
+    print('Inside of the new route')
 
 
 @admin.route("/adminManagement/userInsert", methods=['POST'])
