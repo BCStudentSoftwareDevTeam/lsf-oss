@@ -1,14 +1,16 @@
 {% extends "base.html" %}
 
+{% block styles %}
+{{super()}}
+  <link href="/static/css/adminManagement.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+    <script type="text/javascript" src="{{url_for('static', filename='js/adminManagement.js') }}"></script>
+{% endblock %}
+
 {% block app_content %}
-
-<head>
-<link href="/static/css/adminManagement.css" rel="stylesheet" type="text/css">
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/xcash/bootstrap-autocomplete@master/dist/latest/bootstrap-autocomplete.min.js"></script>
-</head>
-
 <a class="skipContent" href="#addlaborAdmin" tabindex="1">Click to Skip</a>
 <form id="titleBlock" action="/adminManagement/userInsert" method="POST">
 
@@ -25,8 +27,8 @@
       <div id="borders" class="col-sm-4">
         <h3 id="header">Labor Administrators</h3>
         <div class="form-group">
-          <select id="addlaborAdmin" class="form-control selectpicker basicAutoSelect" title="Select User" data-width="258px"
-          data-show-subtext="true" data-live-search="true" name="addAdmin" autocomplete="off" placeholder="Type to search">
+          <select id="addlaborAdmin" class="form-control selectpicker" title="Select User" data-width="258px"
+          data-show-subtext="true" data-live-search="true" name="addAdmin">
             {% for user in users %}
               {% if user.isLaborAdmin == False or user.isLaborAdmin == None %}
                 {% if user.Student != None %}
