@@ -1,14 +1,14 @@
 <!-- Modal -->
-<div class="modal fade" id="approvalModal" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+<div class="modal fade" id="approvalModal" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="approvalModalLabel" aria-describedby="approveModalBody">
 <div class="modal-dialog" role="document">
   <div class="modal-content">
     <div class="modal-header">
-      <h5 class="modal-title" id="exampleModalLabel" align="center"><strong>Form(s) ready for Approval</strong></h5>
+      <h5 class="modal-title" id="approvalModalLabel" align="center"><strong>Form(s) ready for Approval</strong></h5>
       <button type="button" class="close" data-dismiss="modal" onclick="approvalModalClose()" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body" id="approveModalBody">
       <!-- putting info into modal using table for better viewing -->
       <table id="classTable" class="table table-bordered">
         <thead>
