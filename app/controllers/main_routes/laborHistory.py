@@ -115,9 +115,8 @@ def populateModal(statusKey):
                     form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
         for form in forms:
             if currentUser.Student and currentUser.username == student.username:
-                if currentUser.Student.ID == (form.formID.studentSupervisee.ID):  # If student is logged in then don't show a button
-                    buttonState = ButtonStatus.show_student_labor_eval_button
-                    break
+                buttonState = ButtonStatus.show_student_labor_eval_button
+                break
             elif currentUser.Supervisor.ID != (form.createdBy.Supervisor.ID or form.formID.supervisor.ID):
                 buttonState = ButtonStatus.no_buttons # otherwise, show the notification
                 break
@@ -193,7 +192,7 @@ def populateModal(statusKey):
                                             ))
         return (resp)
     except Exception as e:
-        print(e)
+        print("Error on button state: ", e)
         return (jsonify({"Success": False}))
 
 @main_bp.route('/laborHistory/modal/printPdf/<statusKey>', methods=['GET'])
@@ -223,23 +222,16 @@ def withdraw_form():
         student = LaborStatusForm.get(rsp["FormID"])
         selectedPendingForms = FormHistory.select().join(Status).where(FormHistory.formID == rsp["FormID"]).where(FormHistory.status.statusName == "Pending").order_by(FormHistory.historyType.asc())
         for form in selectedPendingForms:
-            try:
-                OverloadForm.get(OverloadForm.overloadFormID == form.overloadForm.overloadFormID).delete_instance()
-                form.delete_instance()
-            except:
-                pass
-            try:
-                ModifiedForm.get(ModifiedForm.modifiedFormID == form.modifiedForm.modifiedFormID).delete_instance()
-                form.delete_instance()
-            except:
-                pass
-            try:
-                if form.historyType.historyTypeName == "Labor Status Form":
-                    formID = form.formID.laborStatusFormID
-                    form.delete_instance()
-                    LaborStatusForm.get(formID).delete_instance()
-            except:
-                pass
+            if form.historyType.historyTypeName == "Labor Status Form":
+                historyFormToDelete = FormHistory.get(FormHistory.formHistoryID == form.formHistoryID)
+                laborStatusFormToDelete = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == form.formID.laborStatusFormID)
+                historyFormToDelete.delete_instance()
+                laborStatusFormToDelete.delete_instance()
+            elif form.historyType.historyTypeName == "Labor overloadForm Form":
+                historyFormToDelete = FormHistory.get(FormHistory.formHistoryID == form.formHistoryID)
+                overloadFormToDelete = OverloadForm.get(OverloadForm.overloadFormID == form.overloadForm.overloadFormID)
+                overloadFormToDelete.delete_instance()
+                historyFormToDelete.delete_instance()
         message = "Your selected form for {0} {1} has been withdrawn.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
         return jsonify({"Success":True, "url":"/"})

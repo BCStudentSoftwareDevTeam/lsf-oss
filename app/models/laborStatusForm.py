@@ -8,6 +8,7 @@ from app.models.supervisor import Supervisor
 
 # All caps fields are pulled from TRACY
 class LaborStatusForm (baseModel):
+    studentName                 = CharField(null=True)
     laborStatusFormID           = PrimaryKeyField()
     termCode                    = ForeignKeyField(Term, on_delete="cascade")             # FK to term
     studentSupervisee           = ForeignKeyField(Student, on_delete="cascade")          # foreign key to student

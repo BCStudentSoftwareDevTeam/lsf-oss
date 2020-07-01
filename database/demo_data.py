@@ -450,7 +450,8 @@ terms = [
             "termEnd" : "2021-05-01",
             "termState": 0,
             "primaryCutOff": "2020-09-01",
-            "adjustmentCutOff": "2020-09-01"
+            "adjustmentCutOff": "2020-09-01",
+            "isBreak": 1
             }
        ]
 Term.insert_many(terms).on_conflict_replace().execute()
@@ -462,6 +463,7 @@ print(" * terms added")
 LaborStatusForm.insert([{
             "laborStatusFormID": 2,
             "termCode_id": "202000",
+            "studentName": "Alex Bryant",
             "studentSupervisee_id": "B00841417",
             "supervisor_id": "B12361006",
             "department_id": 1,

@@ -82,13 +82,29 @@ def userInsert():
             print("ERROR: ", e)
 
         student = Student.get(ID = tracyStudent.ID)
+
+        # Updates the student database with any updated attributes from TRACY
+        student.FIRST_NAME = tracyStudent.FIRST_NAME            # FIRST_NAME
+        student.LAST_NAME = tracyStudent.LAST_NAME              # LAST_NAME
+        student.CLASS_LEVEL = tracyStudent.CLASS_LEVEL          # CLASS_LEVEL
+        student.ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS    # ACADEMIC_FOCUS
+        student.MAJOR = tracyStudent.MAJOR                      # MAJOR
+        student.PROBATION = tracyStudent.PROBATION              # PROBATION
+        student.ADVISOR = tracyStudent.ADVISOR                  # ADVISOR
+        student.STU_EMAIL = tracyStudent.STU_EMAIL              # STU_EMAIL
+        student.STU_CPO = tracyStudent.STU_CPO                  # STU_CPO
+        student.LAST_POSN = tracyStudent.LAST_POSN              # LAST_POSN
+        student.LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM      # LAST_SUP_PIDM
+
+        student.save()                                          #Saves to student database
+
         studentID = student.ID
         d, created = Supervisor.get_or_create(PIDM = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.ID
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
-        term = d.termCode
+        term = d
         try:
             lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
             status = Status.get(Status.statusName == "Pending")
@@ -96,7 +112,7 @@ def userInsert():
             creatorID = currentUser
             createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
             try:
-                emailDuringBreak(checkForSecondLSFBreak(term, studentID, "lsf"), term)
+                emailDuringBreak(checkForSecondLSFBreak(term.termCode, studentID, "lsf"), term)
             except Exception as e:
                 print("Error on sending emails during break: " + str(e))
 
@@ -117,9 +133,9 @@ def getDates(termcode):
         end  = date.termEnd
         primaryCutOff = date.primaryCutOff
         if primaryCutOff is None:
-            datesDict[date.termCode] = {"Term Code": date.termCode,"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
+            datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
         else:
-            datesDict[date.termCode] = {"Term Code": date.termCode, "Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y")}
+            datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y"), "isBreak": date.isBreak, "isSummer": date.isSummer}
     return json.dumps(datesDict)
 
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
@@ -136,7 +152,6 @@ def getPositions(department):
 def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
-
     isMoreLSF_dict = {}
     if isOneLSF !=None:
         isMoreLSF_dict["Status"] = True # student does not have any previous lsf's
@@ -167,7 +182,7 @@ def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
     isMoreLSF_dict = {}
     storeLsfFormsID = []
     if isOneLSF != None:
-        if len(list(positions)) >= 1 : # If student has one or more than one lsf
+        if len(list(positions)) >= 1: # If student has one or more than one lsf
             isMoreLSF_dict["ShowModal"] = True # show modal when the student has one or more than one lsf
             if len(list(positions)) == 1: # if there is only one labor status form then send email to the supervisor and student
                 laborStatusFormID = positions[0].laborStatusFormID
