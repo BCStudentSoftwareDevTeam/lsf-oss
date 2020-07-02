@@ -37,7 +37,7 @@ def modifyLSF(laborStatusKey):
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
     prefillsupervisorID = form.supervisor.PIDM
-    superviser_id = form.supervisor.UserID
+    superviser_id = form.supervisor.ID
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_TITLE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
@@ -78,8 +78,8 @@ def modifyLSF(laborStatusKey):
                             wls = wls,
                             form = form,
                             oldSupervisor = oldSupervisor,
-                            isLaborAdmin = isLaborAdmin,
-                            totalHours = totalHours
+                            totalHours = totalHours,
+                            currentUser = current_user
                           )
 
 @main_bp.route("/modifyLSF/updateLSF/<laborStatusKey>", methods=['POST'])
@@ -97,7 +97,7 @@ def updateLSF(laborStatusKey):
             if k == "supervisor":
                 d, created = Supervisor.get_or_create(PIDM = int(rsp[k]['newValue']))
                 if not created:
-                    LSF.supervisor = d.UserID
+                    LSF.supervisor = d.ID
                 LSF.save()
                 if created:
                     tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
@@ -136,7 +136,7 @@ def updateLSF(laborStatusKey):
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
-                                                        createdBy = current_user.Supervisor.UserID,
+                                                        createdBy = current_user,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")

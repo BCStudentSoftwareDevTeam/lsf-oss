@@ -27,12 +27,8 @@ def adjustLSF(laborStatusKey):
     if not current_user:        # Not logged in
         return render_template('errors/403.html')
     if not current_user.isLaborAdmin:       # Not an admin
-        if current_user.Student: # If a student is logged in and trying to get to this URL then send them back to their own page.
+        if current_user.Student and not current_user.Supervisor: # If a student is logged in and trying to get to this URL then send them back to their own page.
             return redirect('/laborHistory/' + current_user.Student.ID)
-        elif current_user.Supervisor:
-            isLaborAdmin = False
-    else:
-        isLaborAdmin = True
     currentDate = date.today()
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
@@ -45,7 +41,7 @@ def adjustLSF(laborStatusKey):
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
     prefillsupervisorID = form.supervisor.PIDM
-    superviser_id = form.supervisor.UserID
+    superviser_id = form.supervisor.ID
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_CODE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
@@ -85,8 +81,8 @@ def adjustLSF(laborStatusKey):
                             wls = wls,
                             form = form,
                             oldSupervisor = oldSupervisor,
-                            isLaborAdmin = isLaborAdmin,
-                            totalHours = totalHours
+                            totalHours = totalHours,
+                            currentUser = current_user
                           )
 
 
@@ -106,7 +102,7 @@ def sumbitModifiedForm(laborStatusKey):
             if k == "supervisorNotes":
                 ## New Entry in AdminNote Table
                 newNoteEntry = AdminNotes.create(formID=LSF.laborStatusFormID,
-                                                createdBy=current_user.Supervisor.UserID,
+                                                createdBy=current_user,
                                                 date=currentDate,
                                                 notesContents=rsp[k]["newValue"])
                 newNoteEntry.save()
@@ -121,7 +117,7 @@ def sumbitModifiedForm(laborStatusKey):
             formHistories = FormHistory.create( formID = laborStatusKey,
                                              historyType = historyType.historyTypeName,
                                              modifiedForm = modifiedforms.modifiedFormID,
-                                             createdBy   = current_user.Supervisor.UserID,
+                                             createdBy   = current_user,
                                              createdDate = date.today(),
                                              status      = status.statusName)
 
@@ -137,7 +133,7 @@ def sumbitModifiedForm(laborStatusKey):
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
-                                                        createdBy = current_user.Supervisor.UserID,
+                                                        createdBy = current_user,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
