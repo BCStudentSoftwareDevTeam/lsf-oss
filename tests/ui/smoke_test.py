@@ -48,11 +48,11 @@ class Test_Routes:
                 ("/laborReleaseForm/2", None),
                 ("/laborstatusform/2", None),
                 ("/laborHistory/2", None),
-                ("/adjustLSF/2", None),
-                ("/modifyLSF/2", None),
+                ("/alterLSF/2", None),
             ]
             self.url_runner(base_url, urls)
 
+        @pytest.mark.skip(reason="Not complete")
         def test_post_routes(self, base_url, request):
             self.check_verbose_level(request)
             urls = [

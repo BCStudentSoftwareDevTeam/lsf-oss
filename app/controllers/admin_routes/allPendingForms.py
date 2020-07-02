@@ -14,10 +14,10 @@ from app.logic.emailHandler import *
 from app.models.formHistory import *
 from app.models.term import Term
 from app.logic.banner import Banner
+from app.logic.tracy import Tracy
 from app import cfg
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
-from app.models.Tracy.stuposn import STUPOSN
 
 
 @admin.route('/admin/pendingForms/<formType>',  methods=['GET'])
@@ -82,13 +82,15 @@ def allPendingForms(formType):
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     allForms.adjustedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
+
                 if allForms.adjustedForm.fieldAdjusted == "position": # if position field has been changed in adjust form then retriev position name.
                     newPositionCode = allForms.adjustedForm.newValue
-                    newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode)
+                    newPosition = Tracy().getPositionFromCode(newPositionCode)
                     # temporarily storing the position code and wls in new value, and position name in old value
                     # because we want to show these information in the hmtl template.
                     allForms.adjustedForm.newValue = newPosition.POSN_CODE +" (" + newPosition.WLS+")"
                     allForms.adjustedForm.oldValue = newPosition.POSN_TITLE
+
         users = User.select()
         return render_template( 'admin/allPendingForms.html',
                                 title=pageTitle,
@@ -205,7 +207,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             LSF.supervisor = d.UserID
         LSF.save()
         if created:
-            tracyUser = STUSTAFF.get(STUSTAFF.PIDM == form.adjustedForm.newValue)
+            tracyUser = Tracy().getSupervisorFromPIDM(form.adjustedForm.newValue)
             tracyEmail = tracyUser.EMAIL
             tracyUsername = tracyEmail.find('@')
             user = User.get(User.PIDM == form.adjustedForm.newValue)
@@ -219,15 +221,18 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             user.save()
             LSF.supervisor = d.PIDM
             LSF.save()
+
     if form.adjustedForm.fieldAdjusted == "position":
         LSF.POSN_CODE = form.adjustedForm.newValue
-        position = STUPOSN.get(STUPOSN.POSN_CODE == form.adjustedForm.newValue)
+        position = Tracy().getPositionFromCode(form.adjustedForm.newValue)
         LSF.POSN_TITLE = position.POSN_TITLE
         LSF.WLS = position.WLS
         LSF.save()
+
     if form.adjustedForm.fieldAdjusted == "contractHours":
         LSF.contractHours = form.adjustedForm.newValue
         LSF.save()
+
     if form.adjustedForm.fieldAdjusted == "weeklyHours":
         allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
         totalHours = 0

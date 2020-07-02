@@ -23,5 +23,6 @@ if [[ ! -e app/config/secret_config.yaml ]]; then
 	echo "If your database has not been set up, you will need to run database/reset_database.sh"
 fi
 
+export FLASK_APP=app.py
 export FLASK_ENV=development
 export FLASK_RUN_PORT=8080

@@ -1,13 +1,12 @@
 <!-- START OF MODAL adding notes -->
-<div class="modal fade" id="NotesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel">
+<div class="modal fade" id="NotesModal" tabindex="-1" role="dialog" aria-labelledby="notesModalLabel" aria-describedby="noteModalBody">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick= "clearTextArea()"><span aria-hidden="true">&times;</span></button>
         <h3 class="modal-title" id="notesModalLabel">Labor Office Notes </h3>
-
       </div>
-      <div class="modal-body" >
+      <div class="modal-body" id="noteModalBody">
         <div id="notesDiv">
            <h4 class="supeNotesLabel col-md-4 control-label text-left" for ="supervisor">Supervisor Notes: </h4>
               <textarea class="notesText" rows="2" cols="70" disabled> </textarea>
@@ -16,14 +15,12 @@
           <h4 class=" control-label text-left" id="notesLogTitle" for="notesLog">Notes Log:</h4>
               <div class="notesLogArea"></div>
         </div>
-
-
+      </div>
       <div class="modal-footer">
-  <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
-  <button type="button" class="btn btn-primary" value="laborNotesText" data-dismiss="modal" id="saveNotes" onclick="notesInsert(this.value, this.id)">Save Notes</button>
-</div>
-</div>
-</div>
-</div>
+        <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal" onclick= "clearTextArea()">Close</button>
+        <button type="button" class="btn btn-primary" value="laborNotesText" data-dismiss="modal" id="saveNotes" onclick="notesInsert(this.value, this.id)">Save Notes</button>
+      </div>
+    </div>
+  </div>
 </div> {# Move div ending here if tabbing breaks #}
 <!-- END OF MODAL -->
