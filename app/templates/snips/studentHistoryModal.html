@@ -13,17 +13,35 @@
       </div>
       <div class="modal-body" id="modalid">
         {% for form1 in statusForm %}
-        <div id="currentData">
-          <div class= "h4" align="center">{{form1.termCode.termName}} | {{form1.department.DEPT_NAME}} Dept. | {{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}} </div>
-          <div class= "h4" align="center">
-          {{form1.jobType}} | {{form1.POSN_TITLE}} | {{form1.POSN_CODE}} | WLS {{form1.WLS}} |
-          {% if form1.weeklyHours == None %}
-          {{form1.contractHours}} Hours</div>
-          {% else %}
-          {{form1.weeklyHours}} Hours Per Week</div>
-          {% endif %}
+          <dl class="dl-horizontal">
+              <dt>Term</dt>
+              <dd>{{form1.termCode.termName}}</dd>
+
+              <dt>Department</dt>
+              <dd>{{form1.department.DEPT_NAME}}</dd>
+
+              <dt>Supervisor</dt>
+              <dd>{{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}}</dd>
+
+              <dt>Job Type</dt>
+              <dd>{{form1.jobType}}</dd>
+
+              <dt>Position (WLS)</dt>
+              <dd>{{form1.POSN_TITLE}} ({{form1.WLS}})</dd>
+
+              <dt>Position Code</dt>
+              <dd>{{form1.POSN_CODE}}</dd>
+
+              <dt>Hours</dt>
+              <dd>
+                {% if form1.weeklyHours == None %}
+                  {{form1.contractHours}}
+                {% else %}
+                  {{form1.weeklyHours}}
+                {% endif %}
+              </dd>
         {% endfor %}
-        </div>
+
         {% for form in forms %}
           {% if form.modifiedForm == None and form.releaseForm == None and form.overloadForm == None %}
             {% if form.reviewedDate == None %}
