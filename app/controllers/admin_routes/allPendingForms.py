@@ -101,7 +101,8 @@ def allPendingForms(formType):
                                 laborStatusFormCounter = laborStatusFormCounter,
                                 modifiedFormCounter  = modifiedFormCounter,
                                 releaseFormCounter = releaseFormCounter,
-                                currentUser = currentUser
+                                currentUser = currentUser,
+                                pendingOverloadFormPairs = pendingOverloadFormPairs
                                 )
     except Exception as e:
         print("Error Loading all Pending Forms:", e)
