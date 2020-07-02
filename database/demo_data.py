@@ -88,15 +88,12 @@ studentsTracy = [
 ]
 students = []
 for student in studentsTracy:
-<<<<<<< HEAD
-=======
     # Add to Tracy db
     db.session.add(STUDATA(**student))
     db.session.commit()
 
     # Set up lsf db data
     del student["PIDM"]
->>>>>>> development
     students.append(student)
 Student.insert_many(students).on_conflict_replace().execute()
 print(" * students (TRACY) added")
@@ -256,9 +253,30 @@ staffs = [
             "DEPT_NAME": "Computer Science"
             }
         ]
-<<<<<<< HEAD
-stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
-print(" * (TRACY) staff added")
+for staff in staffs:
+    # Add to Tracy db
+    db.session.add(STUSTAFF(**staff))
+    db.session.commit()
+
+    # Add to users
+    try:
+        u = User()
+        u.PIDM = staff['PIDM']
+        u.FIRST_NAME = staff['FIRST_NAME']
+        u.LAST_NAME = staff['LAST_NAME']
+        u.username = staff['EMAIL'].split("@")[0]
+        u.EMAIL = staff['EMAIL']
+        u.CPO = staff['CPO']
+        u.ID = staff['ID']
+        u.ORG = staff['ORG']
+        u.DEPT_NAME = staff['DEPT_NAME']
+        if u.PIDM == 1:
+            u.isLaborAdmin = 1
+        u.save()
+    except Exception as e:
+        print(" * Failed to insert ", u.username, ": ", e)
+
+print(" * staff added")
 
 Supervisor.insert_many(staffs).on_conflict_replace().execute()
 print(" * staff added")
@@ -352,32 +370,7 @@ users = [
         ]
 User.insert_many(users).on_conflict_replace().execute()
 print(" * users added")
-=======
-for staff in staffs:
-    # Add to Tracy db
-    db.session.add(STUSTAFF(**staff))
-    db.session.commit()
 
-    # Add to users
-    try:
-        u = User()
-        u.PIDM = staff['PIDM']
-        u.FIRST_NAME = staff['FIRST_NAME']
-        u.LAST_NAME = staff['LAST_NAME']
-        u.username = staff['EMAIL'].split("@")[0]
-        u.EMAIL = staff['EMAIL']
-        u.CPO = staff['CPO']
-        u.ID = staff['ID']
-        u.ORG = staff['ORG']
-        u.DEPT_NAME = staff['DEPT_NAME']
-        if u.PIDM == 1:
-            u.isLaborAdmin = 1
-        u.save()
-    except Exception as e:
-        print(" * Failed to insert ", u.username, ": ", e)
-
-print(" * staff added")
->>>>>>> development
 
 
 #############################
