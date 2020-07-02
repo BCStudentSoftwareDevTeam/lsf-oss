@@ -17,8 +17,8 @@ from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
 from fpdf import FPDF
 from app.logic.authorizationFunctions import*
-from app.models.Tracy.stuposn import STUPOSN
 from app.logic.buttonStatus import ButtonStatus
+from app.logic.tracy import Tracy
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
@@ -94,13 +94,15 @@ def populateModal(statusKey):
                     # because we want to show the supervisor name in the hmtl template.
                     form.adjustedForm.oldValue = form.formID.supervisor.FIRST_NAME + " " + form.formID.supervisor.LAST_NAME # old supervisor name
                     form.adjustedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
+
                 if form.adjustedForm.fieldAdjusted == "Position": # if position field has been changed in adjust form then retriev position name.
                     newPositionCode = form.adjustedForm.newValue
-                    newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode)
+                    newPosition = Tracy().getPositionFromCode(newPositionCode)
                     # temporarily storing the new position name in new value, and old position name in old value
                     # because we want to show these information in the hmtl template.
                     form.adjustedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
                     form.adjustedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
+
         for form in forms:
             if current_user.username != (form.createdBy.username or form.formID.supervisor.username):
                 buttonState = ButtonStatus.no_buttons

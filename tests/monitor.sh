@@ -2,4 +2,10 @@ if [[ `pwd` =~ tests$ ]]; then
     cd ../
 fi
 
-ptw --verbose -c --runner "sh tests/run_tests.sh" --ext=".py,.sh"
+BUILD="$@"
+if [ -z "$BUILD" ]
+then
+	BUILD="all";
+fi
+
+ptw --verbose -c --runner "bash tests/run_tests.sh $BUILD" --ext=".py,.sh,.html"
