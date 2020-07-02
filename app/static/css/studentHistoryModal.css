@@ -22,6 +22,21 @@ textarea {
   height:350px;
   overflow:auto;
 }
+dl {
+  display: grid;
+  grid-template-columns: 8ch auto;
+}
+dt {
+  grid-column-start: 1;
+}
+dd {
+  grid-column-start: 2;
+}
+.dl-horizontal dt{
+  width: 240px;
+  text-align: right;
+  overflow: auto;
+}
 
 .modal-footer{
   text-align: center;

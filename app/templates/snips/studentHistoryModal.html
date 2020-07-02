@@ -11,27 +11,28 @@
         </span>
         {% endfor %}
       </div>
-      <div class="modal-body" id="modalid">    
+      <div class="modal-body" id="modalid">
         {% for form1 in statusForm %}
           <dl class="dl-horizontal row">
-              <dt class="col-xs-3">Term</dt>
-              <dd class="col-xs-9">{{form1.termCode.termName}}</dd>
+              <dt class="col-xs-4">Term</dt>
+              <dd class="col-xs-8">{{form1.termCode.termName}}</dd>
 
-              <dt class="col-xs-3">Department</dt>
-              <dd class="col-xs-9">{{form1.department.DEPT_NAME}}</dd>
+              <dt class="col-xs-4">Department</dt>
+              <dd class="col-xs-8">{{form1.department.DEPT_NAME}}</dd>
 
-              <dt class="col-xs-3">Supervisor</dt>
-              <dd class="col-xs-9" >{{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}}</dd>
+              <dt class="col-xs-4">Supervisor</dt>
+              <dd class="col-xs-8" >{{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}}</dd>
 
-              <dt class="col-xs-3">Job Type (Hours)</dt>
-              <dd class="col-xs-9" >{{form1.jobType}} ({% if form1.weeklyHours == None %}
+              <dt class="col-xs-4">Job Type (Hours)</dt>
+              <dd class="col-xs-8" >{{form1.jobType}} ({% if form1.weeklyHours == None %}
                                       {{form1.contractHours}}
                                     {% else %}
                                       {{form1.weeklyHours}}
                                     {% endif %})</dd>
 
-              <dt class="col-xs-3">Position Code - Position (WLS)</dt>
-              <dd class="col-xs-9">{{form1.POSN_CODE}} - {{form1.POSN_TITLE}} ({{form1.WLS}})</dd>
+              <dt class="col-xs-4">Position Code - Position (WLS)</dt>
+              <dd class="col-xs-8">{{form1.POSN_CODE}} - {{form1.POSN_TITLE}} ({{form1.WLS}})</dd>
+              </dl>
         {% endfor %}
 
         {% for form in forms %}
