@@ -9,10 +9,7 @@ from app.models.formHistory import *
 from app.models.historyType import *
 from app.models.term import *
 from app.models.student import Student
-from app.models.Tracy.studata import *
-from app.models.Tracy.stustaff import *
 from app.models.department import *
-from app.models.Tracy.stuposn import STUPOSN
 from flask import json, jsonify
 from flask import request
 from datetime import datetime, date
@@ -21,6 +18,7 @@ from app import cfg
 from app.logic.emailHandler import*
 from app.logic.userInsertFunctions import*
 from app.models.supervisor import Supervisor
+from app.logic.tracy import Tracy
 
 @main_bp.route('/laborstatusform', methods=['GET'])
 @main_bp.route('/laborstatusform/<laborStatusKey>', methods=['GET'])
@@ -34,12 +32,10 @@ def laborStatusForm(laborStatusKey = None):
             return redirect('/laborHistory/' + currentUser.Student.ID)
 
     # Logged in
-    wls = STUPOSN.select(STUPOSN.WLS).distinct() # getting WLS from TRACY
-    posnCode = STUPOSN.select(STUPOSN.POSN_CODE).distinct() # getting position code from TRACY
-    students = STUDATA.select().order_by(STUDATA.FIRST_NAME.asc()) # getting student names from TRACY
+    students = Tracy().getStudents()
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
-    staffs = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # getting supervisors from TRACY
-    departments = STUPOSN.select(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT).distinct() # getting department names from TRACY
+    staffs = Tracy().getSupervisors()
+    departments = Tracy().getDepartments()
 
     # Only prepopulate form if current user is the supervisor or creator of the form.
     if laborStatusKey != None:
@@ -73,9 +69,10 @@ def userInsert():
     rspFunctional = json.loads(rsp)
     all_forms = []
     for i in range(len(rspFunctional)):
-        tracyStudent = STUDATA.get(ID = rspFunctional[i]['stuBNumber']) #Gets student info from Tracy
-        #Tries to get a student with the followin information from the database
-        #if the student doesn't exist, it tries to create a student with that same information
+        tracyStudent = Tracy().getStudentFromBNumber(rspFunctional[i]['stuBNumber'])
+
+        # Tries to get a student with the following information from the database
+        # if the student doesn't exist, it tries to create a student with that same information
         try:
             createStudentFromTracy(username=None, bnumber=tracyStudent)
         except Exception as e:
@@ -141,7 +138,7 @@ def getDates(termcode):
 @main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
 def getPositions(department):
     """ Get all of the positions that are in the selected department """
-    positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == department)
+    positions = Tracy().getPositionsFromDepartment(department)
     positionDict = {}
     for position in positions:
         positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}

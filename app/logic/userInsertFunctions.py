@@ -9,16 +9,14 @@ from app.models.historyType import *
 from app.models.term import *
 from app.models.student import Student
 from app.models.supervisor import Supervisor
-from app.models.Tracy.studata import *
-from app.models.Tracy.stustaff import *
 from app.models.department import *
-from app.models.Tracy.stuposn import STUPOSN
 from flask import json, jsonify
 from flask import request
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 from app import cfg
-from app.logic.emailHandler import*
+from app.logic.emailHandler import emailHandler
+from app.logic.tracy import Tracy, InvalidQueryException
 
 class InvalidUserException(Exception):
     pass
@@ -53,7 +51,7 @@ def createSupervisorFromTracy(username):
 
     email = "{}@berea.edu".format(username)
     try:
-        tracyUser = STUSTAFF.get(EMAIL=email)
+        tracyUser = Tracy().getSupervisorFromEmail(email)
     except DoesNotExist as e:
         raise InvalidUserException("{} not found in Tracy database".format(email))
 

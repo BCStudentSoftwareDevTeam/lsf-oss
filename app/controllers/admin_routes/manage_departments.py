@@ -6,11 +6,10 @@ from app.controllers.errors_routes.handlers import *
 #from app.models.manageDepartments import *
 from app.models.term import *
 from flask_bootstrap import bootstrap_find_resource
-from app.models.Tracy.studata import*
-from app.models.Tracy.stuposn import *
 from app.models.department import *
 from flask import request, redirect
 from flask import jsonify
+from app.logic.tracy import Tracy
 
 @admin.route('/admin/manageDepartments', methods=['GET'])
 # @login_required
@@ -30,7 +29,7 @@ def manage_departments():
                 return render_template('errors/403.html',
                                     currentUser = currentUser)
 
-        departmentTracy = STUPOSN.select(STUPOSN.DEPT_NAME, STUPOSN.ORG, STUPOSN.ACCOUNT).distinct()
+        departmentTracy = Tracy().getDepartments()
         for dept in departmentTracy:
             d, created = Department.get_or_create(DEPT_NAME = dept.DEPT_NAME, ACCOUNT=dept.ACCOUNT, ORG = dept.ORG)
             d.save()

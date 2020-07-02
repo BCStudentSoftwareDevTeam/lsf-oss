@@ -3,9 +3,6 @@ from app.controllers.main_routes.main_routes import *
 from app.controllers.main_routes.laborHistory import *
 from app.models.formHistory import FormHistory
 from app.models.user import User
-from app.models.Tracy.studata import *
-from app.models.Tracy.stustaff import *
-from app.models.Tracy.stuposn import *
 from app.models.modifiedForm import *
 from flask_bootstrap import bootstrap_find_resource
 from app.login_manager import require_login
@@ -17,6 +14,7 @@ import base64
 from datetime import date
 from app import cfg
 from app.logic.emailHandler import*
+from app.logic.tracy import Tracy
 from app.models.adminNotes import AdminNotes
 
 
@@ -56,12 +54,13 @@ def adjustLSF(laborStatusKey):
     else:
         prefillhours = form.contractHours
     prefillnotes = form.supervisorNotes
-    #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
-    supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
-    positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == prefilldepartment)
-    wls = STUPOSN.select(STUPOSN.WLS).distinct()
+
+    #These are the data fields to populate our dropdowns(Supervisor. Position)
+    supervisors = Tracy().getSupervisors()
+    positions = Tracy().getPositionsFromDepartment(prefilldepartment)
+
     #Step 3: send data to front to populate html
-    oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
+    oldSupervisor = Tracy().getSupervisorFromPIDM(form.supervisor.PIDM)
 
     return render_template( 'main/adjustLSF.html',
 				            title=('adjust LSF'),
@@ -78,7 +77,6 @@ def adjustLSF(laborStatusKey):
                             prefillnotes = prefillnotes,
                             supervisors = supervisors,
                             positions = positions,
-                            wls = wls,
                             form = form,
                             oldSupervisor = oldSupervisor,
                             totalHours = totalHours,

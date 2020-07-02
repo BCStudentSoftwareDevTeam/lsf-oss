@@ -2,9 +2,7 @@ from app.controllers.main_routes import *
 from app.controllers.main_routes.main_routes import *
 from app.controllers.main_routes.laborHistory import *
 from app.models.user import User
-from app.models.Tracy.studata import *
-from app.models.Tracy.stustaff import *
-from app.models.Tracy.stuposn import *
+from app.logic.tracy import Tracy
 from app.models.modifiedForm import *
 from flask_bootstrap import bootstrap_find_resource
 from app.login_manager import require_login
@@ -52,13 +50,13 @@ def modifyLSF(laborStatusKey):
     else:
         prefillhours = form.contractHours
     prefillnotes = form.supervisorNotes
-    #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
-    supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
-    positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == prefilldepartment)
-    wls = STUPOSN.select(STUPOSN.WLS).distinct()
-    #Step 3: send data to front to populate html
-    oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
 
+    #These are the data fields to populate our dropdowns(Supervisor. Position)
+    supervisors = Tracy().getSupervisors()
+    positions = Tracy().getPositionsFromDepartment(prefilldepartment)
+
+    #Step 3: send data to front to populate html
+    oldSupervisor = Tracy().getSupervisorFromPIDM(form.supervisor.PIDM)
 
     return render_template( 'main/modifyLSF.html',
 				            title=('modify LSF'),
@@ -75,7 +73,6 @@ def modifyLSF(laborStatusKey):
                             prefillnotes = prefillnotes,
                             supervisors = supervisors,
                             positions = positions,
-                            wls = wls,
                             form = form,
                             oldSupervisor = oldSupervisor,
                             totalHours = totalHours,
@@ -100,7 +97,7 @@ def updateLSF(laborStatusKey):
                     LSF.supervisor = d.ID
                 LSF.save()
                 if created:
-                    tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
+                    tracyUser = Tracy().getSupervisorFromPIDM(rsp[k]['newValue'])
                     tracyEmail = tracyUser.EMAIL
                     tracyUsername = tracyEmail.find('@')
                     user = Supervisor.get(Supervisor.PIDM == rsp[k]['newValue'])

@@ -1,7 +1,3 @@
-#pip install peewee==3.9.6
-#pip install peewee-migrations==0.3.18
-
-rm -f migrations.json 2> /dev/null
 
 pem init
 
