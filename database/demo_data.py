@@ -246,28 +246,6 @@ staffs = [
 stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
 print(" * (TRACY) staff added")
 
-def insert_to_users(staffs):
-    for sta in staffs:
-        try:
-            # print(sta)
-            u = Supervisor()
-            u.ID = sta.ID
-            u.PIDM = sta.PIDM
-            u.FIRST_NAME = sta.FIRST_NAME
-            u.LAST_NAME = sta.LAST_NAME
-            # u.username = sta.EMAIL.split("@")[0]
-            u.EMAIL = sta.EMAIL
-            u.CPO = sta.CPO
-            u.ORG = sta.ORG
-            u.DEPT_NAME = sta.DEPT_NAME
-            # if u.PIDM == 1:
-            #     u.isLaborAdmin = 1
-            u.save()
-            print("Supervisor", u)
-
-        except Exception as e:
-            print('Am i in the Exception?')
-            print(" * Failed to insert ", u.username, ": ", e)
 Supervisor.insert_many(staffs).on_conflict_replace().execute()
 print(" * staff added")
 # insert_to_users(STUSTAFF.select())
