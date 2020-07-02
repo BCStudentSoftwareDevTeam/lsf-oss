@@ -13,26 +13,31 @@
       </div>
       <div class="modal-body" id="modalid">
         {% for form1 in statusForm %}
-          <dl class="dl-horizontal row">
-              <dt class="col-xs-4">Term</dt>
-              <dd class="col-xs-8">{{form1.termCode.termName}}</dd>
-
-              <dt class="col-xs-4">Department</dt>
-              <dd class="col-xs-8">{{form1.department.DEPT_NAME}}</dd>
-
-              <dt class="col-xs-4">Supervisor</dt>
-              <dd class="col-xs-8" >{{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}}</dd>
-
-              <dt class="col-xs-4">Job Type (Hours)</dt>
-              <dd class="col-xs-8" >{{form1.jobType}} ({% if form1.weeklyHours == None %}
-                                      {{form1.contractHours}}
-                                    {% else %}
-                                      {{form1.weeklyHours}}
-                                    {% endif %})</dd>
-
-              <dt class="col-xs-4">Position Code - Position (WLS)</dt>
-              <dd class="col-xs-8">{{form1.POSN_CODE}} - {{form1.POSN_TITLE}} ({{form1.WLS}})</dd>
-              </dl>
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>Term</th>
+                <th> Department</th>
+                <th>Supervisor</th>
+                <th>Job Type (Hours)</th>
+                <th>Position Code - <br>Position (WLS)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>{{form1.termCode.termName}}</td>
+                <td>{{form1.department.DEPT_NAME}}</td>
+                <td>{{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}}</td>
+                <td>{{form1.jobType}} ({% if form1.weeklyHours == None %}
+                                        {{form1.contractHours}}
+                                      {% else %}
+                                        {{form1.weeklyHours}}
+                                      {% endif %})
+                </td>
+                <td>{{form1.POSN_CODE}} - {{form1.POSN_TITLE}} ({{form1.WLS}})</td>
+              </tr>
+            </tbody>
+          </table>
         {% endfor %}
 
         {% for form in forms %}
