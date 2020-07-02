@@ -18,9 +18,8 @@ $(".glyphicon-calendar").click(function() {
 });
 
 function jobPositionDisable(){
-  var termcode = $("#termCode").eq(0).val();
-  var specificTerm = termcode.toString().substr(-2);
-  if (specificTerm != 11 && specificTerm != 12 && specificTerm != 00){
+  var isBreak = $("#termBreak").data('termbreak');
+  if (isBreak){
     $("#jobType").prop("disabled", true);
     $("#jobType").val("Secondary");
     $("#contractHoursDiv").show();
@@ -36,7 +35,7 @@ function fillHoursPerWeek(){ // prefill hours per week select picker
   var defaultValue = $("#oldWeeklyHours").val();
   var selectedHoursPerWeek = $("#weeklyHours");
   var jobType = $("#jobType").val();
-  var wls = $("#Position option:selected").attr("data-wls");
+  var wls = $("#position option:selected").attr("data-wls");
   if (selectedHoursPerWeek){
        var list = ["10", "12", "15", "20"];
        if (jobType == "Secondary") {
@@ -74,7 +73,7 @@ function checkForChange(){
   var oldSupervisor = $("#prefillsupervisor").val();
   var newSupervisor = $("#supervisor").val();
   var oldPostition = $("#prefillposition").val();
-  var newPostition = $("#Position").val();
+  var newPostition = $("#position").val();
   var date = $("#datetimepicker0").val();
   var oldNotes = $("#oldNotes").val();
   var newNotes = $("#supervisorNotes").val();
