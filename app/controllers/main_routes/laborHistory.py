@@ -28,11 +28,11 @@ def laborhistory(id):
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html')
         if not currentUser.isLaborAdmin:
+            departmentsList = None
             if currentUser.Student and not currentUser.Supervisor:
-                departmentsList = None
                 if currentUser.Student.ID != id:
                     return redirect('/laborHistory/' + currentUser.Student.ID)
-            elif currentUser.Supervisor:
+            elif currentUser.Supervisor and not currentUser.Student:
                 authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, currentUser, currentUser.Supervisor.ID)
                 if authorizedUser == False:
                     return render_template('errors/403.html',
