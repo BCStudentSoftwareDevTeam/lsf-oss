@@ -39,7 +39,7 @@ def alterLSF(laborStatusKey):
     # If todays date is greater than the adjustment cut off date on the term and the form is an adjustment LSF,
     # then we do not want to give users access to the adjustment page
 
-    # Query the status of the form to determine if modify or adjust LSF
+    # Query the status of the form to determine if correction or adjust LSF
     formStatus = (FormHistory.select(FormHistory, LaborStatusForm)
                              .join(LaborStatusForm)
                              .where(FormHistory.formID == laborStatusKey)
@@ -74,7 +74,7 @@ def alterLSF(laborStatusKey):
     oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
 
     return render_template( "main/alterLSF.html",
-				            title=("Adjust Labor Status Form" if formStatus == "Approved" else "Modify Labor Status Form"),
+				            title=("Adjust Labor Status Form" if formStatus == "Approved" else "Labor Status Correction Form"),
                             username = current_user,
                             superviser_id = superviser_id,
                             prefillstudent = prefillstudent,

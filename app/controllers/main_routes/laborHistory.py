@@ -127,7 +127,7 @@ def populateModal(statusKey):
                             break
                 if form.overloadForm != None:
                     if form.status.statusName == "Pending":
-                        buttonState = ButtonStatus.show_withdraw_modify_buttons
+                        buttonState = ButtonStatus.show_withdraw_correction_buttons
                         break
                     if form.status.statusName == "Denied":
                         if currentDate <= form.formID.endDate:
@@ -143,7 +143,7 @@ def populateModal(statusKey):
                         break
                 if form.historyType.historyTypeName == "Labor Status Form":
                     if form.status.statusName == "Pending":
-                        buttonState = ButtonStatus.show_withdraw_modify_buttons
+                        buttonState = ButtonStatus.show_withdraw_correction_buttons
                         break
                     elif form.status.statusName == "Denied":
                         if currentDate <= form.formID.endDate:
