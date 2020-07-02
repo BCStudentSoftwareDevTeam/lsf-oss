@@ -1,8 +1,8 @@
 <div class="loader"></div>
 <div class="modal-header">
-  <h3 class="modal-title" id="exampleModalLabel" align="center"><b>Labor Overload Form</b></h3>
+  <h3 class="modal-title" id="overloadModalLabel" align="center"><b>Labor Overload Form</b></h3>
 </div>
-<div class="modal-body">
+<div class="modal-body" id="overloadModalBody">
   <table id="overloadStudentTable" class="table table-bordered">
     <thead>
       <tr>
@@ -78,17 +78,22 @@
     <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
     <div class="notesLogArea"></div>
   </div>
+  {% if pendingForm == true %}
+  <div class="row" style="margin-top:7px;">
+   <div class="col-sm-1" style="padding:0px;">
+     <span class="glyphicon glyphicon-info-sign" style="color:blue;"></span>
+   </div>
+   <div class="col-sm-11" align="left" style="padding:0px;">
+     <p role="alert" id="alertText"><strong> The decision made will also apply to the current pending {{pendingFormType}} for the student.</strong></p>
+   </div>
+ </div>
+  {% endif %}
 </div>
 <div class="modal-footer">
-  <div class="col-sm-2" align="left">
+  <div class="col-sm-6" align="left">
     <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal">Close</button>
   </div>
-  {% if pendingForm == true %}
-  <div class="col-sm-8" align="left">
-    <p style="text-align:center"><span class="glyphicon glyphicon-info-sign" style="color:blue;"></span><strong> The decision made will also apply to the current pending {{pendingFormType}} for the student.</strong></p>
-  </div>
-  {% endif %}
-  <div class="col-sm-2" align="right">
+  <div class="col-sm-6" align="right">
       <button type="button" class="btn btn-success floatright" class="submitOverload" onclick="submitOverload({{formHistoryID}})">Submit</button>
   </div>
 </div>
