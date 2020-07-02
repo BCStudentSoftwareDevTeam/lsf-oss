@@ -1,6 +1,4 @@
 from app.models import *
-from app.models.Tracy.studata import STUDATA
-from app.models.student import Student
 
 
 # All caps fields are pulled from TRACY
