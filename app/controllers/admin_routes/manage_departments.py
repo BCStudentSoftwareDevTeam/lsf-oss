@@ -59,5 +59,5 @@ def complianceStatusCheck():
             department.save()
             return jsonify({"Success": True})
     except Exception as e:
-        #print(e)
+        print(e)
         return jsonify({"Success": False})

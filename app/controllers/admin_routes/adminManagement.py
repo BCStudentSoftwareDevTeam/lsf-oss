@@ -22,17 +22,11 @@ def admin_Management():
                                 currentUser = currentUser)
 
     users = User.select()
-    print('Does this print twice?')
     return render_template( 'admin/adminManagement.html',
                             title=('Admin Management'),
                             users = users,
                             currentUser = currentUser
                          )
-
-@admin.route("/adminManagement/autoCompleteLaborAdmin.json", methods=['GET'])
-def autoCompleteLaborAdmin():
-    print(q)
-    print('Inside of the new route')
 
 
 @admin.route("/adminManagement/userInsert", methods=['POST'])
@@ -54,7 +48,6 @@ def manageLaborAdmin():
 def addLaborAdmin():
     if request.form.get('addAdmin') != "":
         newAdmins = request.form.get('addAdmin')   #this is taking the name in the select tag
-        print('newAdmins', newAdmins)
         newAdmin = User.get(User.username == newAdmins)
         newAdmin.isLaborAdmin = 1
         newAdmin.save()

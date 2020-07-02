@@ -121,7 +121,6 @@ def populateModal(statusKey):
                 buttonState = ButtonStatus.no_buttons # otherwise, show the notification
                 break
             else:
-                print('Inside of else')
                 if form.releaseForm != None:
                     if form.status.statusName == "Approved":
                         if currentDate <= form.formID.endDate:
@@ -158,9 +157,7 @@ def populateModal(statusKey):
                         pendingformType = form.historyType.historyTypeName
                         break
                 if form.historyType.historyTypeName == "Labor Status Form":
-                    print('Are we here')
                     if form.status.statusName == "Pending":
-                        print('Should be here')
                         buttonState = ButtonStatus.show_withdraw_modify_buttons
                         break
                     elif form.status.statusName == "Denied":
@@ -181,7 +178,6 @@ def populateModal(statusKey):
                         else:
                             buttonState = ButtonStatus.show_rehire_button
                             break
-        print(buttonState)
         resp = make_response(render_template('snips/studentHistoryModal.html',
                                             forms = forms,
                                             statusForm = statusForm,

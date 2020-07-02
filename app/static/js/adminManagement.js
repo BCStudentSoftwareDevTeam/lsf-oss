@@ -1,12 +1,5 @@
 // Opens collapse menu for this page
 $("#admin").collapse("show");
-$("#addLaborAdmin input").on("change", function(){
-  console.log("Hello world");
-})
-
-function hello() {
-  console.log("Hello funtion")
-}
 
 function modal(button) {
   if(button == "add" && $("#addlaborAdmin").val() != "") {
