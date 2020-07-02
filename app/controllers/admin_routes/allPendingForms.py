@@ -422,7 +422,7 @@ def modalFormUpdate():
             if rsp['formType'] == 'Overload':
                 overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
                 overloadForm.laborApproved = status.statusName
-                overloadForm.laborApprover = current_user.Supervisor.UserID
+                overloadForm.laborApprover = current_user
                 overloadForm.laborReviewDate = currentDate
                 overloadForm.save()
                 try:
@@ -432,12 +432,12 @@ def modalFormUpdate():
                             pendingForm = FormHistory.select().join(ModifiedForm).where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending") & (FormHistory.modifiedForm.fieldModified == "Weekly Hours")).get()
                     if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Modified Labor Form" and pendingForm.modifiedForm.fieldModified == "Weekly Hours"):
                         pendingForm.status = status.statusName
-                        pendingForm.reviewedBy = createdUser.UserID
+                        pendingForm.reviewedBy = current_user
                         pendingForm.reviewedDate = currentDate
                         if 'denialReason' in rsp.keys():
                             pendingForm.rejectReason = rsp['denialReason']
                             AdminNotes.create(formID = pendingForm.formID.laborStatusFormID,
-                                            createdBy = createdUser.UserID,
+                                            createdBy = current_user,
                                             date = currentDate,
                                             notesContents = rsp['denialReason'])
                         pendingForm.save()
@@ -457,17 +457,17 @@ def modalFormUpdate():
                 historyForm.rejectReason = rsp['denialReason']
                 historyForm.save()
                 AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
-                                createdBy = current_user.Supervisor.UserID,
+                                createdBy = current_user,
                                 date = currentDate,
                                 notesContents = rsp['denialReason'])
             if 'adminNotes' in rsp.keys():
                 # We only add admin notes if there was a note made on the UI
                 AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
-                                createdBy = current_user.Supervisor.UserID,
+                                createdBy = current_user,
                                 date = currentDate,
                                 notesContents = rsp['adminNotes'])
             historyForm.status = status.statusName
-            historyForm.reviewedBy = current_user.Supervisor.UserID
+            historyForm.reviewedBy = current_user
             historyForm.reviewedDate = currentDate
             historyForm.save()
             if rsp['formType'] == 'Overload':
