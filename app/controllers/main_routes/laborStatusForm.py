@@ -151,8 +151,12 @@ def getPositions(department):
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
 def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
+    print("before rsp")
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
+    print("after rsp/before rspFunctional")
     rspFunctional = json.loads(rsp)
+    print("after rspFunctional")
+    term = Term.get(Term.termCode == termCode)
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
     isMoreLSF_dict = {}
     if isOneLSF != None:
@@ -164,63 +168,45 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
                 isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
         return jsonify(isMoreLSF_dict)
 
-    lastPrimaryPosition = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form", FormHistory.formID.jobType == "Primary").order_by(FormHistory.formHistoryID.desc()).get()
-    statusHistory = FormHistory.select().where(FormHistory.formID == lastPrimaryPosition.formID).order_by(FormHistory.formHistoryID.desc()).get()
-    positionsDict = {}
-    positionsDict["jobType"] = lastPrimaryPosition.formID.jobType
-    positionsDict["weeklyHours"] = lastPrimaryPosition.formID.weeklyHours
-    positionsDict["positionStatus"] = lastPrimaryPosition.status.statusName
-    positionsDict["formName"] = statusHistory.historyType.historyTypeName
-    if statusHistory.historyType.historyTypeName == "Labor Release Form":
-        positionsDict["releaseStatus"] = statusHistory.status.statusName
+    try:
+        lastPrimaryPosition = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form", FormHistory.formID.jobType == "Primary").order_by(FormHistory.formHistoryID.desc()).get()
+    except DoesNotExist:
+        lastPrimaryPosition = None
 
-    """
-    if hiring for primary:
-        check if student has previous primary
-            if they do, check if they have release form
-                if they do, check if its approved:
-                    if yes then rehire
-                    if no then dont rehire
-                if not, then dont rehire
-            if not, the dont rehire
-        if not, then hire
-    if hiring for secondary:
-        check if they have primary First
-            check if its approved
-                check if they have a release form
-                    check if release form is Approved
-                    if yes, dont hire secondary
-                    if no, hire for secondary
-                if not, hire for secondary
-            if not, dont hire for secondary
-        if not, dont hire for secondary
-    """
-    """
-    if hiring for primary and last primary is not denied
-        check if release form exist and it's approved
-            if yes then rehire
-        if no, then dont rehire
-    if denied, hire
-    """
+    if not lastPrimaryPosition:
+        approvedRelease = None
+    else:
+        try:
+            approvedRelease = FormHistory.select().where(FormHistory.formID == lastPrimaryPosition.formID, FormHistory.historyType == "Labor Release Form", FormHistory.status == "Approved").order_by(FormHistory.formHistoryID.desc()).get()
+        except DoesNotExist:
+            approvedRelease = None
+
     finalStatus = ""
-    if lastPrimaryPosition:
-        if rspFunctional["stuJobType"] == "Primary" and positionsDict["positionStatus"] != "Denied":
-            if positionsDict["formName"] == "Labor Release Form" and positionsDict["releaseStatus"] == "Approved":
-                finalStatus = "rehire"
+    if not term.isBreak:
+        if lastPrimaryPosition and not approvedRelease:
+            if rspFunctional == "Primary":
+                if lastPrimaryPosition.status.statusName == "Denied":
+                    finalStatus = "hire"
+                else:
+                    finalStatus = "no hire"
             else:
-                finalStatus = "no rehire"
-        elif rspFunctional["stuJobType"] == "Secondary" and positionsDict["positionStatus"] != "Denied":
-            if positionsDict["formName"] == "Labor Release Form" and positionsDict["releaseStatus"] == "Approved":
+                if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
+                    finalStatus = "hire"
+                else:
+                    finalStatus = "no hire for secondary"
+        elif lastPrimaryPosition and approvedRelease:
+            if rspFunctional == "Primary":
+                finalStatus = "hire"
+            else:
                 finalStatus = "no hire for secondary"
-            else:
-                finalStatus = "hire for secondary"
         else:
-            finalStatus = "no rehire"
+            if rspFunctional == "Primary":
+                finalStatus = "hire"
+            else:
+                finalStatus = "no hire for secondary"
     else:
         finalStatus = "hire"
-
-
-    return json.dumps(positionsDict) #json.dumps(primaryPositionsDict)
+    return json.dumps(finalStatus)
 
 def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
@@ -257,17 +243,22 @@ def checkCompliance(department):
         deptDict['Department'] = {'Department Compliance': dept.departmentCompliance}
     return json.dumps(deptDict)
 
-@main_bp.route("/laborstatusform/checktotalhours/<termCode>/<student>/<weeklyHours>", methods=["GET"])
-def checkTotalHours(termCode, student, weeklyHours):
+@main_bp.route("/laborstatusform/checktotalhours/<termCode>/<student>/<weeklyHours>/<contractHours>", methods=["GET"])
+def checkTotalHours(termCode, student, weeklyHours, contractHours):
     """ Counts the total number of hours for the student after the new lsf filled. """
-    positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    positions = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form", (FormHistory.status == "Approved" or FormHistory.status == "Approved Reluctantly"))
+    term = Term.get(Term.termCode == termCode)
     totalHours = 0
-    print(weeklyHours)
     for item in positions:
-        formID = item.laborStatusFormID
+        formID = item.formID
         releasedForm = FormHistory.select().where(FormHistory.formID == formID, FormHistory.historyType == "Labor Release Form", FormHistory.status == "Approved")
         if not releasedForm:
-            totalHours = totalHours + item.weeklyHours
-    totalHours = totalHours + int(weeklyHours)
-    print(totalHours)
+            if term.isBreak:
+                totalHours = totalHours + item.contractHours
+            else:
+                totalHours = totalHours + item.weeklyHours
+    if term.isBreak:
+        totalHours = totalHours + int(contractHours)
+    else:
+        totalHours = totalHours + int(weeklyHours)
     return json.dumps(totalHours)
