@@ -14,10 +14,10 @@ from app.logic.emailHandler import *
 from app.models.formHistory import *
 from app.models.term import Term
 from app.logic.banner import Banner
+from app.logic.tracy import Tracy
 from app import cfg
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
-from app.models.Tracy.stuposn import STUPOSN
 
 
 @admin.route('/admin/pendingForms/<formType>',  methods=['GET'])
@@ -84,7 +84,7 @@ def allPendingForms(formType):
                     allForms.modifiedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
                 if allForms.modifiedForm.fieldModified == "Position": # if position field has been modified in adjust form then retriev position name.
                     newPositionCode = allForms.modifiedForm.newValue
-                    newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode)
+                    newPosition = Tracy().getPositionFromCode(newPositionCode)
                     # temporarily storing the position code and wls in new value, and position name in old value
                     # because we want to show these information in the hmtl template.
                     allForms.modifiedForm.newValue = newPosition.POSN_CODE +" (" + newPosition.WLS+")"
@@ -205,7 +205,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             LSF.supervisor = d.UserID
         LSF.save()
         if created:
-            tracyUser = STUSTAFF.get(STUSTAFF.PIDM == form.modifiedForm.newValue)
+            tracyUser = Tracy().getSupervisorFromPIDM(form.modifiedForm.newValue)
             tracyEmail = tracyUser.EMAIL
             tracyUsername = tracyEmail.find('@')
             user = User.get(User.PIDM == form.modifiedForm.newValue)
@@ -221,7 +221,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             LSF.save()
     if form.modifiedForm.fieldModified == "POSN_CODE":
         LSF.POSN_CODE = form.modifiedForm.newValue
-        position = STUPOSN.get(STUPOSN.POSN_CODE == form.modifiedForm.newValue)
+        position = Tracy().getPositionFromCode(form.modifiedForm.newValue)
         LSF.POSN_TITLE = position.POSN_TITLE
         LSF.WLS = position.WLS
         LSF.save()

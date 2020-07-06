@@ -5,9 +5,10 @@ This file will need to be changed if the format of models changes (new fields, d
 
 from datetime import *
 from app.models.Tracy.studata import STUDATA
-from app.models.student import Student
 from app.models.Tracy.stuposn import STUPOSN
 from app.models.Tracy.stustaff import STUSTAFF
+from app.models.Tracy import db
+from app.models.student import Student
 from app.models.department import Department
 from app.models.user import User
 from app.models.status import Status
@@ -82,9 +83,13 @@ studentsTracy = [
                 "LAST_SUP_PIDM":"7"
                 }
 ]
-STUDATA.insert_many(studentsTracy).on_conflict_replace().execute()
 students = []
 for student in studentsTracy:
+    # Add to Tracy db
+    db.session.add(STUDATA(**student))
+    db.session.commit()
+
+    # Set up lsf db data
     del student["PIDM"]
     students.append(student)
 Student.insert_many(students).on_conflict_replace().execute()
@@ -159,7 +164,10 @@ positions = [
             "DEPT_NAME":"Biology"
             }
 ]
-STUPOSN.insert_many(positions).on_conflict_replace().execute()
+# Add to Tracy db
+for position in positions:
+    db.session.add(STUPOSN(**position))
+    db.session.commit()
 
 print(" * positions (TRACY) added")
 
@@ -227,33 +235,35 @@ staffs = [
             "FIRST_NAME":"Brian",
             "LAST_NAME" : "Ramsay",
             "EMAIL"  :"ramsayb2@berea.edu",
-            "CPO":"6301",
+            "CPO":"6305",
             "ORG":"2114",
             "DEPT_NAME": "Computer Science"
             },
         ]
-stustaff = STUSTAFF.insert_many(staffs).on_conflict_replace().execute()
-print(" * staff added")
+for staff in staffs:
+    # Add to Tracy db
+    db.session.add(STUSTAFF(**staff))
+    db.session.commit()
 
-def insert_to_users(staffs):
-    for sta in staffs:
-        try:
-            u = User()
-            u.PIDM = sta.PIDM
-            u.FIRST_NAME = sta.FIRST_NAME
-            u.LAST_NAME = sta.LAST_NAME
-            u.username = sta.EMAIL.split("@")[0]
-            u.EMAIL = sta.EMAIL
-            u.CPO = sta.CPO
-            u.ID = sta.ID
-            u.ORG = sta.ORG
-            u.DEPT_NAME = sta.DEPT_NAME
-            if u.PIDM == 1:
-                u.isLaborAdmin = 1
-            u.save()
-        except Exception as e:
-            print(" * Failed to insert ", u.username, ": ", e)
-insert_to_users(STUSTAFF.select())
+    # Add to users
+    try:
+        u = User()
+        u.PIDM = staff['PIDM']
+        u.FIRST_NAME = staff['FIRST_NAME']
+        u.LAST_NAME = staff['LAST_NAME']
+        u.username = staff['EMAIL'].split("@")[0]
+        u.EMAIL = staff['EMAIL']
+        u.CPO = staff['CPO']
+        u.ID = staff['ID']
+        u.ORG = staff['ORG']
+        u.DEPT_NAME = staff['DEPT_NAME']
+        if u.PIDM == 1:
+            u.isLaborAdmin = 1
+        u.save()
+    except Exception as e:
+        print(" * Failed to insert ", u.username, ": ", e)
+
+print(" * staff added")
 
 
 #############################

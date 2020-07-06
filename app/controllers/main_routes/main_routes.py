@@ -3,7 +3,6 @@ from app.controllers.main_routes import *
 from app.controllers.main_routes.download import ExcelMaker
 from app.login_manager import *
 from app.models.laborStatusForm import LaborStatusForm
-from app.models.Tracy.studata import STUDATA
 from app.models.department import Department
 from app.models.term import Term
 from app.models.formHistory import FormHistory
@@ -25,11 +24,20 @@ def index():
     if not current_user.isLaborAdmin:       # Not an admin
         isLaborAdmin = False
         # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
-        departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
+        departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME) \
+                        .join_from(FormHistory, LaborStatusForm) \
+                        .join_from(LaborStatusForm, Department) \
+                        .where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)) \
+                        .order_by(FormHistory.formID.department.DEPT_NAME.asc()) \
+                        .distinct()
     else:
         isLaborAdmin = True
         # Grabs every single department that currently has at least one labor status form in it
-        departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME).join_from(FormHistory, LaborStatusForm).join_from(LaborStatusForm, Department).order_by(FormHistory.formID.department.DEPT_NAME.asc()).distinct()
+        departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME) \
+                        .join_from(FormHistory, LaborStatusForm) \
+                        .join_from(LaborStatusForm, Department) \
+                        .order_by(FormHistory.formID.department.DEPT_NAME.asc()) \
+                        .distinct()
 
     todayDate = date.today()
     # Grabs all the labor status forms where the current user is the supervisor
@@ -43,7 +51,7 @@ def index():
 
     for supervisee in formsBySupervisees: # go through all the form in the formsBySupervisees
         try:
-            tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
+            tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
 
         except: # if they are inactive
             for student in inactiveSupervisees:
@@ -155,7 +163,7 @@ def populateDepartment(departmentSelected):
 
         for supervisee in formsByDept: # go through all the form in the formsBySupervisees
             try:
-                tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
+                tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
 
             except: # if they are inactive
                 for student in inactiveDepStudent:
