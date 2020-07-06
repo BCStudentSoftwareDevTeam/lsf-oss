@@ -29,7 +29,7 @@
           <select id="addlaborAdmin" class="form-control selectpicker" title="Select User" data-width="258px"
           data-show-subtext="true" data-live-search="true" name="addAdmin">
             {% for user in users %}
-              {% if user.isLaborAdmin == False or user.isLaborAdmin == None %}
+              {% if not user.isLaborAdmin %}
                 {% if user.Student %}
                   <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Student.FIRST_NAME}} {{user.Student.LAST_NAME}}</option>
                 {% elif user.Supervisor %}
@@ -44,10 +44,10 @@
     <select id="removelaborAdmin" class = "form-control selectpicker" title="Current Labor Admins" data-width="258px"
       data-show-subtext="true" data-live-search="true" name="removeAdmin">
         {% for user in users %}
-          {% if user.isLaborAdmin == True %}
-            {% if user.Student != None %}
+          {% if user.isLaborAdmin %}
+            {% if user.Student %}
               <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Student.FIRST_NAME}} {{user.Student.LAST_NAME}}</option>
-            {% elif user.Supervisor != None %}
+            {% elif user.Supervisor %}
               <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Supervisor.FIRST_NAME}} {{user.Supervisor.LAST_NAME}}</option>
             {% endif %}
           {% endif %}
