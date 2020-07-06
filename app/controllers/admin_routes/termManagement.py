@@ -21,8 +21,7 @@ def term_Management():
         if currentUser.Student: # logged in as a student
             return redirect('/laborHistory/' + currentUser.Student.ID)
         elif currentUser.Supervisor:
-            return render_template('errors/403.html',
-                                currentUser = currentUser)
+            return render_template('errors/403.html', currentUser = currentUser), 403
 
     terms = Term.select()
     listOfTerms = Term.select()

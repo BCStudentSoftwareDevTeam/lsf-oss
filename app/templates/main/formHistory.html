@@ -13,7 +13,7 @@
 <div align= "center">
   <h1>Labor History</h1>
     <span id="studentName">{{student.FIRST_NAME}} {{student.LAST_NAME}}</span>
-    {% if currentUser.Student == None or currentUser.username != studentUserName %}
+    {% if not currentUser.Student or currentUser.username != studentUserName %}
       <form method="POST" action="/laborHistory/download">
         <input hidden name="listOfForms" value="{{formHistoryList}}" />
         <div align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success" id="downloadButton">Download</button></div>
@@ -21,14 +21,14 @@
     {% endif %}
 
     <div align= "center">
-      {% if currentUser.Student != None and currentUser.username == studentUserName %}
+      {% if currentUser.Student and currentUser.username == studentUserName %}
         <div align="right" id="evaluation"><button type="button" class="btn btn-success" id="studentEvalExperience">Labor Experience Evaluation</button></div>
       {% endif %}
       <table id="positionTable" >
         {% for form in studentForms %}
         <tr>
           <!-- If a user is a labor admin, then the value boolean is true, and allows admin access to all of a student's labor history. -->
-          {% if currentUser.isLaborAdmin == 1 or currentUser.Student != None %}
+          {% if currentUser.isLaborAdmin or not currentUser.Student %}
             <td id="{{form.laborStatusFormID}}" class="modalLink" value="true">
           {% else %}
           <!-- If user is not an admin, then iterate through student forms to determine

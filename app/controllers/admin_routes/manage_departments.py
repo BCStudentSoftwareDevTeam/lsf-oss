@@ -26,8 +26,7 @@ def manage_departments():
             if currentUser.Student: # logged in as a student
                 return redirect('/laborHistory/' + currentUser.Student.ID)
             elif currentUser.Supervisor:
-                return render_template('errors/403.html',
-                                    currentUser = currentUser)
+                return render_template('errors/403.html', currentUser = currentUser), 403
 
         departmentTracy = Tracy().getDepartments()
         for dept in departmentTracy:
@@ -41,8 +40,7 @@ def manage_departments():
                                 )
     except Exception as e:
         print("Error Loading all Departments", e)
-        return render_template('errors/500.html',
-                                currentUser = currentUser)
+        return render_template('errors/500.html', currentUser = currentUser), 500
 
 
 @admin.route('/admin/complianceStatus', methods=['POST'])

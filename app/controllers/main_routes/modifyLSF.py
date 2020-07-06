@@ -18,13 +18,13 @@ from app.models.supervisor import Supervisor
 @main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
 def modifyLSF(laborStatusKey):
     ''' This function gets all the form's data and populates the front end with it'''
-    current_user = require_login()
-    if not current_user:        # Not logged in
+    currentUser = require_login()
+    if not currentUser:        # Not logged in
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin:       # Not an admin
-        if current_user.Student and not current_user.Supervisor:
-            return redirect('/laborHistory/' + current_user.Student.ID)
-        elif current_user.Supervisor:
+    if not currentUser.isLaborAdmin:       # Not an admin
+        if currentUser.Student and not currentUser.Supervisor:
+            return redirect('/laborHistory/' + currentUser.Student.ID)
+        elif currentUser.Supervisor:
             isLaborAdmin = False
     else:
         isLaborAdmin = True
@@ -60,7 +60,7 @@ def modifyLSF(laborStatusKey):
 
     return render_template( 'main/modifyLSF.html',
 				            title=('modify LSF'),
-                            username = current_user,
+                            username = currentUser,
                             superviser_id = superviser_id,
                             prefillstudent = prefillstudent,
                             prefillsupervisor = prefillsupervisor,
@@ -76,15 +76,15 @@ def modifyLSF(laborStatusKey):
                             form = form,
                             oldSupervisor = oldSupervisor,
                             totalHours = totalHours,
-                            currentUser = current_user
+                            currentUser = currentUser
                           )
 
 @main_bp.route("/modifyLSF/updateLSF/<laborStatusKey>", methods=['POST'])
 def updateLSF(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
-        current_user = require_login()
-        if not current_user:        # Not logged in
+        currentUser = require_login()
+        if not currentUser:        # Not logged in
             return render_template('errors/403.html')
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
@@ -133,7 +133,7 @@ def updateLSF(laborStatusKey):
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
-                                                        createdBy = current_user,
+                                                        createdBy = currentUser,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")

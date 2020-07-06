@@ -74,7 +74,7 @@ def userInsert():
         # Tries to get a student with the following information from the database
         # if the student doesn't exist, it tries to create a student with that same information
         try:
-            createStudentFromTracy(username=None, bnumber=tracyStudent)
+            createStudentFromTracy(tracyStudent)
         except Exception as e:
             print("ERROR: ", e)
 

@@ -68,26 +68,29 @@ def createSupervisorFromTracy(username):
         return user
     except Exception as e:
         raise InvalidUserException("Adding {} to user table failed".format(username), e)
-
-def createStudentFromTracy(username, bnumber):
+def studentTracyCheck(username):
     """
-        Attempts to add a user from the Tracy database to the application, based on the provided username.
-        XXX Currently only handles adding staff. XXX
+        Checks to see if username of student is in Tracy database, based on the provided username from Shibboleth.
 
         Raises InvalidUserException if this does not succeed.
     """
-    if username:
-        email = "{}@berea.edu".format(username)
-        try:
-            tracyStudent = STUDATA.get(STU_EMAIL=email)
-        except DoesNotExist as e:
-            raise InvalidUserException("{} not found in Tracy database".format(email))
-    else:
-        tracyStudent = bnumber
+    email = "{}@berea.edu".format(username)
+    try:
+        tracyStudent = STUDATA.get(STU_EMAIL=email)
+        return tracyStudent
+    except DoesNotExist as e:
+        raise InvalidUserException("{} not found in Tracy database".format(email))
 
+def createStudentFromTracy(tracyStudentObject):
+    """
+        Attempts to add a user from the Tracy database to the application, based on the provided object from the Tracy student database.
+
+        Raises InvalidUserException if this does not succeed.
+    """
     try:
         # user -> has an object of get_or_create()
         # created -> has a boolean value, is created or not.
+        tracyStudent = tracyStudentObject
         user, created = Student.get_or_create( ID = tracyStudent.ID,
                                             FIRST_NAME = tracyStudent.FIRST_NAME,
                                             LAST_NAME = tracyStudent.LAST_NAME,
@@ -103,6 +106,7 @@ def createStudentFromTracy(username, bnumber):
         return user
     except Exception as e:
         raise InvalidUserException("Adding {} to user table failed".format(username), e)
+
 
 def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional):
     """

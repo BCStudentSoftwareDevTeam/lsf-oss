@@ -34,8 +34,7 @@ def laborhistory(id):
             elif currentUser.Supervisor and not currentUser.Student:
                 authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, currentUser, currentUser.Supervisor.ID)
                 if authorizedUser == False:
-                    return render_template('errors/403.html',
-                                            currentUser = currentUser)
+                    return render_template('errors/403.html', currentUser = currentUser), 403
         else:
             departmentsList = []
         student = Student.get(Student.ID == id)
@@ -57,8 +56,7 @@ def laborhistory(id):
                               )
     except Exception as e:
         print("Erorr Loading Student Labor History", e)
-        return render_template('errors/500.html',
-                                currentUser = currentUser)
+        return render_template('errors/500.html', currentUser = currentUser), 500
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
 def downloadFormHistory():
@@ -75,8 +73,7 @@ def downloadFormHistory():
         filename = completePath.split('/').pop()
         return send_file(completePath, mimetype='text/csv', as_attachment=True, attachment_filename=filename)
     except:
-        return render_template('errors/500.html',
-                                currentUser = currentUser)
+        return render_template('errors/500.html', currentUser = currentUser), 500
 
 @main_bp.route('/laborHistory/modal/<statusKey>', methods=['GET'])
 def populateModal(statusKey):
@@ -88,8 +85,7 @@ def populateModal(statusKey):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
-            return render_template('errors/403.html',
-                                    currentUser = currentUser)
+            return render_template('errors/403.html', currentUser = currentUser), 403
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         student = User.get(User.Student == statusForm[0].studentSupervisee)

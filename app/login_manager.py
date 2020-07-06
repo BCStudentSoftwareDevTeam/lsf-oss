@@ -50,6 +50,6 @@ def auth_user(env, username):
             supervisor = createSupervisorFromTracy(username)
         else:
             print("Adding {} to student table".format(username))
-            student = createStudentFromTracy(username=username, bnumber=None)
+            student = studentTracyCheck(username)
         print("Creating record for {} in user table".format(username))
         return createUser(username, student=student, supervisor=supervisor)

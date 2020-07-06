@@ -31,7 +31,7 @@ def index():
                 departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME) \
                                 .join_from(FormHistory, LaborStatusForm) \
                                 .join_from(LaborStatusForm, Department) \
-                                .where((FormHistory.formID.supervisor == current_user.UserID) | (FormHistory.createdBy == current_user.UserID)) \
+                                .where((FormHistory.formID.supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser)) \
                                 .order_by(FormHistory.formID.department.DEPT_NAME.asc()) \
                                 .distinct()
         else:   # logged in as an admin
@@ -46,7 +46,7 @@ def index():
         # Grabs all the labor status forms where the current user is the supervisor
         formsBySupervisees = []
         if currentUser.Supervisor != None:
-            formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == current_user.UserID).order_by(LaborStatusForm.endDate.desc())
+            formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == currentUser.Supervisor.ID).order_by(LaborStatusForm.endDate.desc())
 
         inactiveSupervisees = []
         currentSupervisees = []
@@ -108,7 +108,6 @@ def index():
                     if request.form.get(name):
                         value.append(request.form.get(name))
             except NameError as e:
-                print(e)
                 print("The runtime error happens because a department has not yet been selected.")
             for form in currentSupervisees:
                 name = str(form.laborStatusFormID)

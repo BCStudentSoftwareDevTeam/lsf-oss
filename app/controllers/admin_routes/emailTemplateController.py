@@ -15,8 +15,7 @@ def email_templates():
         if currentUser.Student: # logged in as a student
             return redirect('/laborHistory/' + currentUser.Student.ID)
         elif currentUser.Supervisor:
-            return render_template('errors/403.html',
-                                currentUser = currentUser)
+            return render_template('errors/403.html', currentUser = currentUser), 403
     emailTemplateID = EmailTemplate.select()
     purpose = EmailTemplate.select(EmailTemplate.purpose).distinct()
     formType = EmailTemplate.select(EmailTemplate.formType).distinct()
