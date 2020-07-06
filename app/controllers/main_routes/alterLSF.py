@@ -161,9 +161,9 @@ def submitAlteredLSF(laborStatusKey):
                     LSF.POSN_TITLE = rsp[k]['newValue']
                     LSF.save()
 
-                if formStatus == "Pending":
-                    LSF.contractHours = int(rsp[k]['newValue'])
-                    LSF.save()
+            if k == "contractHours":
+                LSF.contractHours = int(rsp[k]['newValue'])
+                LSF.save()
 
             if k == "weeklyHours":
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
@@ -206,11 +206,6 @@ def submitAlteredLSF(laborStatusKey):
                                                                                    student.studentSupervisee.FIRST_NAME,
                                                                                    student.studentSupervisee.LAST_NAME)
         flash(message, "success")
-
-        # if formStatus == "Pending":
-        #     return jsonify({"Success": True})
-        # elif formStatus == "Approved":
-        #     return jsonify({"Success": True, "url":"/laborHistory/" + student.studentSupervisee.ID})
         return jsonify({"Success": True})
 
     except Exception as e:
@@ -225,7 +220,7 @@ def createFormHistory(laborStatusKey, rsp, k, current_user, adjustedforms):
     """
     Creates appropriate form history entries in the formHistory table
     """
-    historyType = HistoryType.get(HistoryType.historyTypeName == "adjusted Labor Form")
+    historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Adjustment Form")
     status = Status.get(Status.statusName == "Pending")
     formHistories = FormHistory.create(formID       = laborStatusKey,
                                        historyType  = historyType.historyTypeName,

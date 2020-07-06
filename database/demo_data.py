@@ -328,7 +328,7 @@ types = [
             },
             {"historyTypeName":"Labor Release Form"
             },
-            {"historyTypeName":"Adjusted Labor Form"
+            {"historyTypeName":"Labor Adjustment Form"
             }
         ]
 HistoryType.insert_many(types).on_conflict_replace().execute()

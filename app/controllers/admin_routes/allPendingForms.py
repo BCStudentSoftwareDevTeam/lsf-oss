@@ -38,7 +38,7 @@ def allPendingForms(formType):
         pageTitle = ""
         approvalTarget = ""
         laborStatusFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Status Form')).count()
-        adjustedFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Adjusted Labor Form')).count()
+        adjustedFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Adjustment Form')).count()
         releaseFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Release Form')).count()
         overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
         if formType == "pendingLabor":
@@ -47,7 +47,7 @@ def allPendingForms(formType):
             pageTitle = "Pending Labor Status Forms"
 
         elif formType == "pendingAdjustment":
-            historyType = "Adjusted Labor Form"
+            historyType = "Labor Adjustment Form"
             approvalTarget = "denyAdjustedFormsModal"
             pageTitle = "Pending Adjustment Forms"
 
@@ -65,7 +65,7 @@ def allPendingForms(formType):
         pendingOverloadFormPairs = {}
         # or allForms.adjustedForm.fieldAdjusted == "Weekly Hours":
         for allForms in formList:
-            if allForms.historyType.historyTypeName == "Labor Status Form" or (allForms.historyType.historyTypeName == "Adjusted Labor Form" and allForms.adjustedForm.fieldAdjusted == "Weekly Hours"):
+            if allForms.historyType.historyTypeName == "Labor Status Form" or (allForms.historyType.historyTypeName == "Labor Adjustment Form" and allForms.adjustedForm.fieldAdjusted == "Weekly Hours"):
                 try:
                     overloadForm = FormHistory.select().where((FormHistory.formID == allForms.formID) & (FormHistory.historyType == "Labor Overload Form") & (FormHistory.status == "Pending")).get()
                     if overloadForm:
@@ -162,7 +162,7 @@ def finalUpdateStatus(raw_status):
                 labor_forms.rejectReason = denyReason
             labor_forms.save()
 
-            if history_type == "Adjusted Labor Form" and new_status == "Approved":
+            if history_type == "Labor Adjustment Form" and new_status == "Approved":
                 # This function is triggered whenever an adjustment form is approved.
                 # The following function overrides the original data in lsf with the new data from adjustment form.
                 LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == history_type_data.formID) # getting the specific labor status form
@@ -230,6 +230,9 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
         LSF.save()
 
     if form.adjustedForm.fieldAdjusted == "contractHours":
+        print("=================")
+        print(form.adjustedForm.fieldAdjusted)
+        print("=================")
         LSF.contractHours = form.adjustedForm.newValue
         LSF.save()
 
@@ -365,8 +368,6 @@ def getOverloadModalData(formHistoryID):
             if currentPendingForm:
                 pendingForm = True
                 pendingFormType = currentPendingForm.historyType.historyTypeName
-                if pendingFormType == "Adjusted Labor Form":
-                    pendingFormType = "Labor Adjustment Form"
         except (AttributeError, IndexError):
             pendingForm = False
             pendingFormType = False
@@ -436,10 +437,10 @@ def modalFormUpdate():
                 overloadForm.save()
                 try:
                     pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending")).get()
-                    if pendingForm.historyType.historyTypeName == "Adjusted Labor Form":
+                    if pendingForm.historyType.historyTypeName == "Labor Adjustment Form":
                         if pendingForm.adjustedForm.fieldAdjusted != "Weekly Hours":
                             pendingForm = FormHistory.select().join(AdjustedForm).where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending") & (FormHistory.adjustedForm.fieldAdjusted == "Weekly Hours")).get()
-                    if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Adjusted Labor Form" and pendingForm.adjustedForm.fieldAdjusted == "Weekly Hours"):
+                    if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Labor Adjustment Form" and pendingForm.adjustedForm.fieldAdjusted == "Weekly Hours"):
                         pendingForm.status = status.statusName
                         pendingForm.reviewedBy = createdUser.UserID
                         pendingForm.reviewedDate = currentDate
