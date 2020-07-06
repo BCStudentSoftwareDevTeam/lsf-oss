@@ -2,16 +2,6 @@
   overflow: auto;
 }
 
-/* .studentInfoTable {
-  width: 100%;
-}
-
-.studentInfoTable th, td {
-  border: 1px solid #dddddd;
-  padding: 5px;
-  text-align: left;
-} */
-
 textarea {
   align: left;
   padding-left: 0;

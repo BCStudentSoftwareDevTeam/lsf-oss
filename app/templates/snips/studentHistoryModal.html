@@ -13,33 +13,29 @@
       </div>
       <div class="modal-body" id="modalid">
         {% for form1 in statusForm %}
-          <table class="table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>Term</th>
-                <th> Department</th>
-                <th>Supervisor</th>
-                <th>Job Type (Hours)</th>
-                <th>Position Code - <br>Position (WLS)</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{{form1.termCode.termName}}</td>
-                <td>{{form1.department.DEPT_NAME}}</td>
-                <td>{{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}}</td>
-                <td>{{form1.jobType}} ({% if form1.weeklyHours == None %}
-                                        {{form1.contractHours}}
-                                      {% else %}
-                                        {{form1.weeklyHours}}
-                                      {% endif %})
-                </td>
-                <td>{{form1.POSN_CODE}} - {{form1.POSN_TITLE}} ({{form1.WLS}})</td>
-              </tr>
-            </tbody>
-          </table>
-        {% endfor %}
+          <dl class="row">
+            <dt class="col-sm-3">Term</dt>
+            <dd class="col-sm-9">{{form1.termCode.termName}}</dd>
 
+            <dt class="col-sm-3">Department</dt>
+            <dd class="col-sm-9">{{form1.department.DEPT_NAME}}</dd>
+
+            <dt class="col-sm-3">Supervisor</dt>
+            <dd class="col-sm-9">{{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}}</dd>
+
+            <dt class="col-sm-3">Job Type (Hours)</dt>
+            <dd class="col-sm-9">{{form1.jobType}} ({% if form1.weeklyHours == None %}
+                                    {{form1.contractHours}}
+                                  {% else %}
+                                    {{form1.weeklyHours}}
+                                  {% endif %})
+            </dd>
+
+            <dt class="col-sm-3">Position (WLS)</dt>
+            <dd class="col-sm-9">{{form1.POSN_CODE}} - {{form1.POSN_TITLE}} ( {{form1.WLS}} )</dd>
+          </dl>
+        {% endfor %}
+        <hr>
         {% for form in forms %}
           {% if form.modifiedForm == None and form.releaseForm == None and form.overloadForm == None %}
             {% if form.reviewedDate == None %}
