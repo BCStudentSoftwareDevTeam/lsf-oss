@@ -47,7 +47,7 @@ class Test_Routes:
                 ("/studentOverloadApp/2", None),
                 ("/laborReleaseForm/2", None),
                 ("/laborstatusform/2", None),
-                ("/laborHistory/2", None),
+                ("/laborHistory/B00730361", None),
                 ("/adjustLSF/2", None),
                 ("/modifyLSF/2", None),
             ]

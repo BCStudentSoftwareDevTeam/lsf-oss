@@ -20,14 +20,12 @@ from app.logic.emailHandler import*
 # @login_required
 
 def laborReleaseForm(laborStatusKey):
-    current_user = require_login()
-    if not current_user:
+    currentUser = require_login()
+    if not currentUser:
         render_template("errors/403.html")
-    if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
-        # return render_template('errors/403.html')
-    else:
-        isLaborAdmin = True
+    if not currentUser.isLaborAdmin:       # Not an admin
+        if currentUser.Student and not currentUser.Supervisor:
+            return redirect('/laborHistory/' + currentUser.Student.ID)
 
     forms = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == laborStatusKey)
 
@@ -63,7 +61,7 @@ def laborReleaseForm(laborStatusKey):
                                         releaseForm = newLaborReleaseForm.laborReleaseFormID,
                                         modifiedForm = None,
                                         overloadForm = None,
-                                        createdBy = current_user.UserID,
+                                        createdBy = currentUser,
                                         createdDate = date.today(),
                                         reviewedDate = None,
                                         reviewedBy = None,
@@ -86,5 +84,5 @@ def laborReleaseForm(laborStatusKey):
     return render_template('main/laborReleaseForm.html',
 				            title=('Labor Release Form'),
                             forms = forms,
-                            isLaborAdmin = isLaborAdmin
+                            currentUser = currentUser
                           )

@@ -33,8 +33,8 @@ class Test_Tracy:
     @pytest.mark.integration
     def test_getSupervisors(self, tracy):
         supervisors = tracy.getSupervisors()
-        assert ['Brian','Jan','Jasmine','Mario','Megan','Scott'] == [s.FIRST_NAME for s in supervisors]
-        assert ['6305','6301','6301','6302','6303','6300'] == [s.CPO for s in supervisors]
+        assert ['Alex','Brian','Jan','Jasmine','Mario','Megan','Scott'] == [s.FIRST_NAME for s in supervisors]
+        assert ['420','6305','6301','6301','6302','6303','6300'] == [s.CPO for s in supervisors]
 
     @pytest.mark.integration
     def test_getSupervisorFromPIDM(self, tracy):
