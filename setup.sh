@@ -3,7 +3,7 @@
 # Create a virtual machine virtual environment
 if [ ! -d venv ]
 then
-  python3 -m venv venv 
+  python3 -m venv venv
 fi
 
 . venv/bin/activate
@@ -23,6 +23,9 @@ if [[ ! -e app/config/secret_config.yaml ]]; then
 	echo "If your database has not been set up, you will need to run database/reset_database.sh"
 fi
 
+export PYTHON_VERSION=`python -c 'import sys; version=sys.version_info[:3]; print("{0}.{1}.{2}".format(*version))'`
 export FLASK_APP=app.py
 export FLASK_ENV=development
 export FLASK_RUN_PORT=8080
+
+echo `python -c 'import sys; version=sys.version_info[:3]; print("{0}.{1}.{2}".format(*version))'`
