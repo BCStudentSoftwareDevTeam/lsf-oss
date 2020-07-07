@@ -2,7 +2,7 @@ from flask import request
 from app import cfg
 from app.controllers.errors_routes.handlers import *
 from app.models.user import User, DoesNotExist
-from app.logic.userInsertFunctions import createUserFromTracy, InvalidUserException
+from app.logic.userInsertFunctions import createUser, createSupervisorFromTracy, createStudentFromTracy, InvalidUserException
 
 def getUsernameFromEnv(env):
     envK = "eppn"
@@ -39,10 +39,17 @@ def auth_user(env, username):
         return user
 
     except DoesNotExist as e:
+        """
+        This exception cannot be tested in development env because we cannot run Shibboleth,
+        but the demo data is set up so that this exception should never happen inside of development env.
+        """
         description = env['description'].lower()
+        supervisor = student = None
         if description != 'student':
-            print("Adding {} to user table".format(username))
-            return createUserFromTracy(username)
-
+            print("Adding {} to supervisor table".format(username))
+            supervisor = createSupervisorFromTracy(username)
         else:
-            raise InvalidUserException("Students must be added as administrators before logging in. {} is a student.".format(username))
+            print("Adding {} to student table".format(username))
+            student = studentTracyCheck(username)
+        print("Creating record for {} in user table".format(username))
+        return createUser(username, student=student, supervisor=supervisor)

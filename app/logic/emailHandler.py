@@ -6,6 +6,7 @@ from app.models.laborReleaseForm import*
 from app.models.laborStatusForm import*
 from app.models.overloadForm import*
 from app.models.formHistory import*
+from app.models.user import*
 from datetime import datetime
 from app.models.emailTracker import *
 import string
@@ -34,7 +35,7 @@ class emailHandler():
         self.formHistory = FormHistory.get(FormHistory.formHistoryID == formHistoryKey)
         self.laborStatusForm = self.formHistory.formID
         self.studentEmail = self.laborStatusForm.studentSupervisee.STU_EMAIL
-        self.creatorEmail = self.formHistory.createdBy.EMAIL
+        self.creatorEmail = self.formHistory.createdBy.Supervisor.EMAIL
         self.supervisorEmail = self.laborStatusForm.supervisor.EMAIL
         self.date = self.laborStatusForm.startDate.strftime("%m/%d/%Y")
         self.weeklyHours = str(self.laborStatusForm.weeklyHours)
@@ -274,7 +275,7 @@ class emailHandler():
 
     # This method is responsible for replacing the keyword form the templates in the database with the data in the laborStatusForm
     def replaceText(self, form):
-        form = form.replace("@@Creator@@", self.formHistory.createdBy.FIRST_NAME + " " + self.formHistory.createdBy.LAST_NAME)
+        form = form.replace("@@Creator@@", self.formHistory.createdBy.Supervisor.FIRST_NAME + " " + self.formHistory.createdBy.Supervisor.LAST_NAME)
         # 'Supervisor' is the supervisor on the current laborStatusForm that correspond to the formID we passed in when creating the class
         form = form.replace("@@Supervisor@@", self.laborStatusForm.supervisor.FIRST_NAME + " " + self.laborStatusForm.supervisor.LAST_NAME)
         # 'Primary Supervisor' is the primary supervisor of the student who's laborStatusForm is passed in the initializer

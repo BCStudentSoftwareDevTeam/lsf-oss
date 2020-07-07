@@ -13,26 +13,31 @@
 <div align= "center">
   <h1>Labor History</h1>
     <span id="studentName">{{student.FIRST_NAME}} {{student.LAST_NAME}}</span>
-    <form method="POST" action="/laborHistory/download">
-      <input hidden name="listOfForms" value="{{formHistoryList}}" />
-      <div align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success" id="downloadButton">Download</button></div>
-    </form>
+    {% if not currentUser.Student or currentUser.username != studentUserName %}
+      <form method="POST" action="/laborHistory/download">
+        <input hidden name="listOfForms" value="{{formHistoryList}}" />
+        <div align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success" id="downloadButton">Download</button></div>
+      </form>
+    {% endif %}
 
     <div align= "center">
+      {% if currentUser.Student and currentUser.username == studentUserName %}
+        <div align="right" id="evaluation"><button type="button" class="btn btn-success" id="studentEvalExperience">Labor Experience Evaluation</button></div>
+      {% endif %}
       <table id="positionTable" >
         {% for form in studentForms %}
         <tr>
-          <!-- If a user is a labor admin, then the value boolean is true, and allows admin access to all student's labor history. -->
-          {% if isLaborAdmin == True %}
+          <!-- If a user is a labor admin, then the value boolean is true, and allows admin access to all of a student's labor history. -->
+          {% if currentUser.isLaborAdmin or not currentUser.Student %}
             <td id="{{form.laborStatusFormID}}" class="modalLink" value="true">
           {% else %}
           <!-- If user is not an admin, then iterate through student forms to determine
           what departments the user has access to in the list and restrict access to departments not on list. -->
               {% if form.department.departmentID in departmentsList %}
-              <td id="{{form.laborStatusFormID}}" class="modalLink" value="true">
-            {% else %}
-              <td id="{{form.laborStatusFormID}}" class="modalLink" value="false">
-            {% endif %}
+                <td id="{{form.laborStatusFormID}}" class="modalLink" value="true">
+              {% else %}
+                <td id="{{form.laborStatusFormID}}" class="modalLink" value="false">
+              {% endif %}
           {% endif %}
             <a href="#" tabindex="0"><span class="h4">{{form.termCode.termName}} - {{form.department.DEPT_NAME}} Dept.</span></a>
             <p class="h6" id="second-line">{{form.jobType}} - {{form.POSN_TITLE}} ({{form.POSN_CODE}})</p>
@@ -50,6 +55,7 @@
   </div>
 </div>
 <!-- Modal End -->
-
-  <div align= "left"><button class='btn btn-danger' id="returnbutton" onclick="window.history.back()">Return</button></div>
+  {% if currentUser.Student == None or currentUser.username != studentUserName %}
+    <div align= "left"><button class='btn btn-danger' id="returnbutton" onclick="window.history.back()">Return</button></div>
+  {% endif %}
 {% endblock %}

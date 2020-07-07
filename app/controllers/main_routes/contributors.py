@@ -10,14 +10,12 @@ from app.login_manager import *
 
 @app.route("/contributors", methods = ["GET"])
 def contributors():
-    current_user = require_login()
-    if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
-    else:
-        isLaborAdmin = True
+    currentUser = require_login()
+    if not currentUser:        # Not logged in
+        return render_template('errors/403.html')
 
     contribs = load_config("app/config/contributors.yaml")
     return render_template("main/contributors.html",
            cfg=contribs,
-           isLaborAdmin = isLaborAdmin
+           currentUser = currentUser
            )

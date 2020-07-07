@@ -15,8 +15,9 @@ from flask import request
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 from app import cfg
-from app.logic.emailHandler import emailHandler
-from app.logic.userInsertFunctions import *
+from app.logic.emailHandler import*
+from app.logic.userInsertFunctions import*
+from app.models.supervisor import Supervisor
 from app.logic.tracy import Tracy
 
 @main_bp.route('/laborstatusform', methods=['GET'])
@@ -26,10 +27,10 @@ def laborStatusForm(laborStatusKey = None):
     currentUser = require_login()
     if not currentUser:        # Not logged in
         return render_template('errors/403.html')
-    if not currentUser.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
-    else:
-        isLaborAdmin = True
+    if not currentUser.isLaborAdmin:
+        if currentUser.Student and not currentUser.Supervisor:
+            return redirect('/laborHistory/' + currentUser.Student.ID)
+
     # Logged in
     students = Tracy().getStudents()
     terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
@@ -40,13 +41,12 @@ def laborStatusForm(laborStatusKey = None):
     if laborStatusKey != None:
         selectedLSForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         selectedFormHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
-        creator = selectedFormHistory.createdBy.username
-        supervisor = selectedLSForm.supervisor.username
-        if currentUser.username == supervisor or currentUser.username == creator:
+        creator = selectedFormHistory.createdBy.Supervisor.ID
+        supervisor = selectedLSForm.supervisor.ID
+        if currentUser.Supervisor.ID == supervisor or currentUser.Supervisor.ID == creator:
             forms = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey) # getting labor status form id, to prepopulate laborStatusForm.
         else:
             forms = None
-            return render_template('errors/403.html')
     else:
         forms = None
     return render_template( 'main/laborStatusForm.html',
@@ -57,7 +57,7 @@ def laborStatusForm(laborStatusKey = None):
                             terms = terms,
                             staffs = staffs,
                             departments = departments,
-                            isLaborAdmin = isLaborAdmin)
+                            currentUser = currentUser)
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
@@ -74,7 +74,7 @@ def userInsert():
         # Tries to get a student with the following information from the database
         # if the student doesn't exist, it tries to create a student with that same information
         try:
-            getOrCreateStudentData(tracyStudent)
+            createStudentFromTracy(tracyStudent)
         except Exception as e:
             print("ERROR: ", e)
 
@@ -96,8 +96,8 @@ def userInsert():
         student.save()                                          #Saves to student database
 
         studentID = student.ID
-        d, created = User.get_or_create(UserID = rspFunctional[i]['stuSupervisorID'])
-        primarySupervisor = d.UserID
+        d, created = Supervisor.get_or_create(PIDM = rspFunctional[i]['stuSupervisorID'])
+        primarySupervisor = d.ID
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
         department = d.departmentID
         d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
@@ -105,8 +105,8 @@ def userInsert():
         try:
             lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
             status = Status.get(Status.statusName == "Pending")
-            d, created = User.get_or_create(username = currentUser.username)
-            creatorID = d.UserID
+            # d, created = Supervisor.get_or_create(username = currentUser.username)
+            creatorID = currentUser
             createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
             try:
                 emailDuringBreak(checkForSecondLSFBreak(term.termCode, studentID, "lsf"), term)
