@@ -139,6 +139,7 @@ def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department
                                  laborDepartmentNotes = rspFunctional["stuLaborNotes"],
                                  studentName = rspFunctional["stuName"]
                                  )
+    print('Labor Status Form Created', lsf)
 
     return lsf
 
@@ -160,7 +161,8 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
                         overloadForm = None,
                         createdBy   = creatorID,
                         createdDate = date.today(),
-                            status      = status.statusName)
+                        status      = status.statusName)
+    print('What ID is being sent here?', FormHistory)
     if rspFunctional.get("isItOverloadForm") == "True":
         overloadHistoryType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
         newLaborOverloadForm = OverloadForm.create( studentOverloadReason = None,
@@ -182,8 +184,9 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
         email = emailHandler(formOverload.formHistoryID)
         email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
     else:
-        email = emailHandler(FormHistory.formHistoryID)
-        email.laborStatusFormSubmitted()
+        print('What ID is being sent?', FormHistory)
+        # email = emailHandler(FormHistory.formHistoryID)
+        # email.laborStatusFormSubmitted()
 
 def emailDuringBreak(secondLSFBreak, term):
     """
