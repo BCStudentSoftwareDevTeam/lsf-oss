@@ -151,12 +151,6 @@ def getPositions(department):
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
 def checkForPrimaryPosition(termCode, student, isOneLSF=None):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
-    print("before rsp")
-    rsp = (request.data).decode("utf-8")  # This turns byte data into a string
-    print("after rsp/before rspFunctional")
-    rspFunctional = json.loads(rsp)
-    print("after rspFunctional")
-    term = Term.get(Term.termCode == termCode)
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
     isMoreLSF_dict = {}
     if isOneLSF != None:
@@ -168,6 +162,9 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
                 isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
         return jsonify(isMoreLSF_dict)
 
+    rsp = (request.data).decode("utf-8")  # This turns byte data into a string
+    rspFunctional = json.loads(rsp)
+    term = Term.get(Term.termCode == termCode)
     try:
         lastPrimaryPosition = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form", FormHistory.formID.jobType == "Primary").order_by(FormHistory.formHistoryID.desc()).get()
     except DoesNotExist:
@@ -188,22 +185,22 @@ def checkForPrimaryPosition(termCode, student, isOneLSF=None):
                 if lastPrimaryPosition.status.statusName == "Denied":
                     finalStatus = "hire"
                 else:
-                    finalStatus = "no hire"
+                    finalStatus = "noHire"
             else:
                 if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
                     finalStatus = "hire"
                 else:
-                    finalStatus = "no hire for secondary"
+                    finalStatus = "noHireForSecondary"
         elif lastPrimaryPosition and approvedRelease:
             if rspFunctional == "Primary":
                 finalStatus = "hire"
             else:
-                finalStatus = "no hire for secondary"
+                finalStatus = "noHireForSecondary"
         else:
             if rspFunctional == "Primary":
                 finalStatus = "hire"
             else:
-                finalStatus = "no hire for secondary"
+                finalStatus = "noHireForSecondary"
     else:
         finalStatus = "hire"
     return json.dumps(finalStatus)
@@ -245,7 +242,7 @@ def checkCompliance(department):
 
 @main_bp.route("/laborstatusform/checktotalhours/<termCode>/<student>/<weeklyHours>/<contractHours>", methods=["GET"])
 def checkTotalHours(termCode, student, weeklyHours, contractHours):
-    """ Counts the total number of hours for the student after the new lsf filled. """
+    """ Counts the total number of hours for the student after the new lsf is filled. """
     positions = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form", (FormHistory.status == "Approved" or FormHistory.status == "Approved Reluctantly"))
     term = Term.get(Term.termCode == termCode)
     totalHours = 0
@@ -254,9 +251,9 @@ def checkTotalHours(termCode, student, weeklyHours, contractHours):
         releasedForm = FormHistory.select().where(FormHistory.formID == formID, FormHistory.historyType == "Labor Release Form", FormHistory.status == "Approved")
         if not releasedForm:
             if term.isBreak:
-                totalHours = totalHours + item.contractHours
+                totalHours = totalHours + item.formID.contractHours
             else:
-                totalHours = totalHours + item.weeklyHours
+                totalHours = totalHours + item.formID.weeklyHours
     if term.isBreak:
         totalHours = totalHours + int(contractHours)
     else:

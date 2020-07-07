@@ -29,8 +29,6 @@ $(document).ready(function(){
     showAccessLevel($("#selectedTerm"));
     disableTermSupervisorDept();
   }
-
-
 });
 
 $("#laborStatusForm").submit(function(event) {
@@ -484,7 +482,6 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
 
 function checkPrimaryPositionToCreateTheTable(studentDict) {
   var term = $("#selectedTerm").val();
-  console.log(studentDict.stuJobType);
   var url = "/laborstatusform/getstudents/" + term + "/" + studentDict.stuBNumber;
   var data = JSON.stringify(studentDict.stuJobType);
   $.ajax({
@@ -494,24 +491,11 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
     dataType: "json",
     contentType: "application/json",
     success: function(response) {
-      console.log(response);
       switch (response) {
         case "hire":
           initialLSFInsert(studentDict);
           break
-        //   break;
-        // case "rehire":
-        //   initialLSFInsert(studentDict);
-        //   break;
-        // case "hire for secondary":
-        //   if (checkDuplicate(studentDict) == true) {
-        //       checkTotalHours(studentDict);
-        //       createAndFillTable(studentDict);
-        //   }else{
-        //     insertRejectedModal(studentDict);
-        //   }
-        //   break;
-        case "no hire for secondary":
+        case "noHireForSecondary":
           $("#warningModalTitle").html("Insert Rejected");
           $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
           $("#warningModal").modal("show");
@@ -522,48 +506,12 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
           $("#warningModal").modal("show");
           break;
       }
-
-//       if (Object.keys(response).length > 0) {
-//         if (studentDict.stuJobType == "Primary" && response["positionStatus"] != "Denied") { // if the student already has a primary and it is not denied show error modal
-//           if (response["formName"] == "Labor Release Form" && response["releaseStatus"] == "Approved") {
-//             if (checkDuplicate(studentDict) == true) {
-//               checkTotalHours(studentDict);
-//               createAndFillTable(studentDict);
-//             }else{
-//               insertRejectedModal(studentDict);
-//             }
-//           }else{
-//             $("#warningModalTitle").html("Insert Rejected");
-//             $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
-//             $("#warningModal").modal("show");
-//           }
-//         }else if (studentDict.stuJobType == "Secondary" && response["positionStatus"] == "Approved"){ // If it is secondary allow adding LSF
-//           if (response["formName"] == "Labor Release Form" && response["releaseStatus"] == "Denied") {
-//             if (checkDuplicate(studentDict) == true) {
-//               checkTotalHours(studentDict);
-//               createAndFillTable(studentDict);
-//             }else{
-//               insertRejectedModal(studentDict);
-//             }
-//           }else{
-//             $("#warningModalTitle").html("Insert Rejected");
-//             $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
-//             $("#warningModal").modal("show");
-//           }
-//         }else{
-//           initialLSFInsert(studentDict, response, response[0]["positionStatus"]) // If the previous primary position is Denied allow the user to continue with the new primary LSF
-//         }
-//       }else{
-//         initialLSFInsert(studentDict, response) // If the form being submitted for the student is the initial form for that specific term
-// //       }
      }
    });
  }
 
 
 function initialLSFInsert(studentDict){ //Add student info to the table if they have no previous lsf's in the database
-  //var isBreak = (studentDict).isTermBreak;
-  //if(studentDict.stuJobType == "Primary"){
   if (checkDuplicate(studentDict) == true){
       checkTotalHours(studentDict);
       createAndFillTable(studentDict);
@@ -571,37 +519,6 @@ function initialLSFInsert(studentDict){ //Add student info to the table if they 
   else {
     insertRejectedModal(studentDict);
   }
-  //}
-  // else { //primary needed for the normal term
-  //   if (!isBreak){
-  //     if (checkDuplicate(studentDict) == true){
-  //         checkTotalHours(studentDict);
-  //         createAndFillTable(studentDict);
-  //     }
-  //     else {
-  //         insertRejectedModal(studentDict);
-  //     }
-  //        else {
-  //         $("#warningModalTitle").html("Insert Rejected");
-  //         $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
-  //         $("#warningModal").modal("show");
-  //       }
-  //   else {
-  //     $("#warningModalTitle").html("Insert Rejected");
-  //     $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
-  //     $("#warningModal").modal("show");
-  //     }
-  //   }
-  //   else { // No primary needed for break periods, therefore, allow adding a new form.
-  //     if (checkDuplicate(studentDict) == true){
-  //       checkTotalHours(studentDict);
-  //       createAndFillTable(studentDict);
-  //     }
-  //     else {
-  //       insertRejectedModal(studentDict);
-  //     }
-  //   }
-  // }
 }
 
 function insertRejectedModal(studentDict){ // Reject Adding a new form when the form is already in the table
@@ -686,31 +603,9 @@ function isOneLaborStatusForm(studentDict){
   }
 }
 
-// function checkTotalHours(studentDict, databasePositions) {// gets sum of the total weekly hours + the ones in the table from the database
-//     var isBreak = $("#selectedTerm").find("option:selected").data("termbreak");
-//     totalHoursCount = studentDict.stuWeeklyHours;
-//     for (i = 0; i < globalArrayOfStudents.length; i++){
-//       if (globalArrayOfStudents[i].stuName == studentDict.stuName){ // checks all the forms in the table that are for one student and sums up the total hour (in the table)
-//         totalHoursCount = totalHoursCount + globalArrayOfStudents[i].stuWeeklyHours;
-//       }
-//     }
-//     for (i = 0; i < databasePositions.length; i++){
-//       if (databasePositions[i]["positionStatus"] != "Denied"){
-//         totalHoursCount = totalHoursCount + databasePositions[i]["weeklyHours"]; // gets the total hours a student have both in database and in the table
-//       }
-//   }
-//   if (totalHoursCount > (15) && !isBreak){
-//     studentDict.isItOverloadForm = "True";
-//     $('#OverloadModal').modal('show');
-//   }
-//   studentDict.stuTotalHours = totalHoursCount
-//   return true;
-// }
-
 function checkTotalHours(studentDict) {
   var termCode = $("#selectedTerm").val()
   var isBreak = $("#selectedTerm").find("option:selected").data("termbreak");
-  console.log(studentDict.stuWeeklyHours);
   $.ajax({
     url: "/laborstatusform/checktotalhours/" + termCode +"/"+ studentDict.stuBNumber +"/"+ studentDict.stuWeeklyHours +"/"+ studentDict.stuContractHours,
     dataType: "json",
@@ -719,9 +614,7 @@ function checkTotalHours(studentDict) {
         studentDict.isItOverloadForm = "True";
         $("#OverloadModal").modal('show');
       }
-      studentDict.stuTotalHours = response
-      console.log(studentDict.stuTotalHours);
-      console.log(studentDict.isItOverloadForm);
+      studentDict.stuTotalHours = response;
       return true;
     }
   });
