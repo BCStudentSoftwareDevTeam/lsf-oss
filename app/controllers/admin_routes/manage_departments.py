@@ -7,7 +7,7 @@ from app.controllers.errors_routes.handlers import *
 from app.models.term import *
 from flask_bootstrap import bootstrap_find_resource
 from app.models.department import *
-from flask import request
+from flask import request, redirect
 from flask import jsonify
 from app.logic.tracy import Tracy
 
@@ -19,32 +19,28 @@ def manage_departments():
     Returns the departments to be used in the HTML for the manage departments page.
     """
     try:
-        current_user = require_login()
-
-        if not current_user:                    # Not logged in
+        currentUser = require_login()
+        if not currentUser:                    # Not logged in
             return render_template('errors/403.html')
-        if not current_user.isLaborAdmin:       # Not an admin
-            isLaborAdmin = False
-            return render_template('errors/403.html',
-                                    isLaborAdmin = isLaborAdmin)
-        else:
-            isLaborAdmin = True
+        if not currentUser.isLaborAdmin:       # Not an admin
+            if currentUser.Student: # logged in as a student
+                return redirect('/laborHistory/' + currentUser.Student.ID)
+            elif currentUser.Supervisor:
+                return render_template('errors/403.html', currentUser = currentUser), 403
 
         departmentTracy = Tracy().getDepartments()
         for dept in departmentTracy:
             d, created = Department.get_or_create(DEPT_NAME = dept.DEPT_NAME, ACCOUNT=dept.ACCOUNT, ORG = dept.ORG)
-            #d.ACCOUNT = dept.ACCOUNT
-            #d.ORG = dept.ORG
             d.save()
         department = Department.select()
         return render_template( 'admin/manageDepartments.html',
                                 title = ("Manage Departments"),
                                 department = department,
-                                isLaborAdmin = isLaborAdmin
+                                currentUser = currentUser
                                 )
     except Exception as e:
-        print("error", e)
-        return render_template('errors/500.html')
+        print("Error Loading all Departments", e)
+        return render_template('errors/500.html', currentUser = currentUser), 500
 
 
 @admin.route('/admin/complianceStatus', methods=['POST'])
@@ -60,5 +56,5 @@ def complianceStatusCheck():
             department.save()
             return jsonify({"Success": True})
     except Exception as e:
-        #print(e)
+        print(e)
         return jsonify({"Success": False})

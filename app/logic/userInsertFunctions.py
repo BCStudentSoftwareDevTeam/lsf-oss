@@ -8,6 +8,7 @@ from app.models.formHistory import*
 from app.models.historyType import *
 from app.models.term import *
 from app.models.student import Student
+from app.models.supervisor import Supervisor
 from app.models.department import *
 from flask import json, jsonify
 from flask import request
@@ -20,7 +21,27 @@ from app.logic.tracy import Tracy, InvalidQueryException
 class InvalidUserException(Exception):
     pass
 
-def createUserFromTracy(username):
+def createUser(username, student, supervisor):
+    """
+    Attempts to add a user from the Tracy database to the User table, based on whether the user is Supervisor or Student.
+
+    Raises InvalidUserException if this does not succeed.
+    """
+    try:
+        d, created = User.get_or_create( Student = student,
+                                         Supervisor = supervisor,
+                                         username = username,
+                                         isLaborAdmin = None,
+                                         isFinancialAidAdmin = None,
+                                         isSaasAdmin = None)
+    except Exception as e:
+        raise InvalidUserException("Adding {} to user table failed".format(username), e)
+
+    # else if both: ??? : TOOO: IF a student becomes a supervisor, we don't want to create a separate user entry.
+    #   We want to keep the previous entry and link up the user's supervisor entry in supervisor table to the user table.
+
+
+def createSupervisorFromTracy(username):
     """
         Attempts to add a user from the Tracy database to the application, based on the provided username.
         XXX Currently only handles adding staff. XXX
@@ -34,45 +55,57 @@ def createUserFromTracy(username):
     except DoesNotExist as e:
         raise InvalidUserException("{} not found in Tracy database".format(email))
 
-    data = {
-        'PIDM': tracyUser.PIDM,
-        'username': username,
-        'FIRST_NAME': tracyUser.FIRST_NAME,
-        'LAST_NAME': tracyUser.LAST_NAME,
-        'ID': tracyUser.ID,
-        'EMAIL': email,
-        'CPO': tracyUser.CPO,
-        'ORG': tracyUser.ORG,
-        'DEPT_NAME': tracyUser.DEPT_NAME,
-        'isLaborAdmin': False,
-        'isFinancialAidAdmin': False,
-        'isSaasAdmin': False,
-    }
-
     try:
-        user = User.create(**data)
+        user, created = Supervisor.get_or_create(
+                                    PIDM = tracyUser.PIDM,
+                                    FIRST_NAME = tracyUser.FIRST_NAME,
+                                    LAST_NAME = tracyUser.LAST_NAME,
+                                    ID = tracyUser.ID,
+                                    EMAIL = email,
+                                    CPO = tracyUser.CPO,
+                                    ORG = tracyUser.ORG,
+                                    DEPT_NAME = tracyUser.DEPT_NAME)
         return user
     except Exception as e:
         raise InvalidUserException("Adding {} to user table failed".format(username), e)
+def studentTracyCheck(username):
+    """
+        Checks to see if username of student is in Tracy database, based on the provided username from Shibboleth.
 
-def getOrCreateStudentData(tracyStudent):
+        Raises InvalidUserException if this does not succeed.
     """
-    Get a student with the followin information from the database
-    if the student doesn't exist, it tries to create a student with that same information
-    tracyStudent: object with all the student's information from Tracy
+    email = "{}@berea.edu".format(username)
+    try:
+        tracyStudent = STUDATA.get(STU_EMAIL=email)
+        return tracyStudent
+    except DoesNotExist as e:
+        raise InvalidUserException("{} not found in Tracy database".format(email))
+
+def createStudentFromTracy(tracyStudentObject):
     """
-    d, created = Student.get_or_create( ID = tracyStudent.ID,
-                                        FIRST_NAME = tracyStudent.FIRST_NAME,
-                                        LAST_NAME = tracyStudent.LAST_NAME,
-                                        CLASS_LEVEL = tracyStudent.CLASS_LEVEL,
-                                        ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS,
-                                        MAJOR = tracyStudent.MAJOR,
-                                        PROBATION = tracyStudent.PROBATION,
-                                        ADVISOR = tracyStudent.ADVISOR,
-                                        STU_EMAIL = tracyStudent.STU_EMAIL,
-                                        STU_CPO = tracyStudent.STU_CPO,
-                                        LAST_POSN = tracyStudent.LAST_POSN,
-                                        LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
+        Attempts to add a user from the Tracy database to the application, based on the provided object from the Tracy student database.
+
+        Raises InvalidUserException if this does not succeed.
+    """
+    try:
+        # user -> has an object of get_or_create()
+        # created -> has a boolean value, is created or not.
+        tracyStudent = tracyStudentObject
+        user, created = Student.get_or_create( ID = tracyStudent.ID,
+                                            FIRST_NAME = tracyStudent.FIRST_NAME,
+                                            LAST_NAME = tracyStudent.LAST_NAME,
+                                            CLASS_LEVEL = tracyStudent.CLASS_LEVEL,
+                                            ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS,
+                                            MAJOR = tracyStudent.MAJOR,
+                                            PROBATION = tracyStudent.PROBATION,
+                                            ADVISOR = tracyStudent.ADVISOR,
+                                            STU_EMAIL = tracyStudent.STU_EMAIL,
+                                            STU_CPO = tracyStudent.STU_CPO,
+                                            LAST_POSN = tracyStudent.LAST_POSN,
+                                            LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
+        return user
+    except Exception as e:
+        raise InvalidUserException("Adding {} to user table failed".format(username), e)
 
 
 def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional):

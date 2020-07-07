@@ -18,12 +18,12 @@ def financialAidOverload(overloadKey):
     '''
     This function prefills all the information for a student's current job and overload request.
     '''
-    current_user = require_login() #we need to check to see if the person logged in is SAAS or FinancialAid
+    currentUser = require_login() #we need to check to see if the person logged in is SAAS or FinancialAid
 
-    if not current_user: # Not logged in
+    if not currentUser: # Not logged in
         return render_template('errors/403.html')
-    if not (current_user.isFinancialAidAdmin or current_user.isSaasAdmin): # Not an admin
-        return render_template('errors/403.html')
+    if not (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin): # Not an admin
+        return render_template('errors/403.html', currentUser = currentUser), 403
 
     overloadForm = FormHistory.get(FormHistory.overloadForm == overloadKey) # get access to overload form
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID) # get the labor status form that is tied to the overload form
@@ -59,7 +59,7 @@ def financialAidOverload(overloadKey):
 
 # will need to add term to the interface and then have a prefill variable
     return render_template( 'admin/financialAidOverload.html',
-                        username = current_user,
+                        username = currentUser,
                         overload = overloadForm,
                         studentName = studentName,
                         studentBnum = studentBnum,
@@ -71,7 +71,8 @@ def financialAidOverload(overloadKey):
                         laborOfficeNotes = laborOfficeNotes,
                         contractDate = contractDate,
                         overloadPosition = overloadPosition,
-                        totalOverloadHours = totalOverloadHours
+                        totalOverloadHours = totalOverloadHours,
+                        currentUser = currentUser
                       )
 
 @admin.route("/admin/financialAidOverloadApproval/<status>", methods=["POST"])
@@ -79,11 +80,11 @@ def formDenial(status):
     ''' This fucntion will get the status (Approved/Denied) and make the appropriate
     changes in the database for that specific overload form'''
     try:
-        current_user = require_login() #we need to check to see if the person logged in is SAAS or FinancialAid
-        if not current_user: # Not logged in
+        currentUser = require_login() #we need to check to see if the person logged in is SAAS or FinancialAid
+        if not currentUser: # Not logged in
             return render_template('errors/403.html')
-        if not (current_user.isFinancialAidAdmin or current_user.isSaasAdmin): # Not an admin
-            return render_template('errors/403.html')
+        if not (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin): # Not an admin
+            return render_template('errors/403.html', currentUser = currentUser), 403
         if status == "denied":
             newStatus = "Denied"
         elif status == "approved":
@@ -99,18 +100,18 @@ def formDenial(status):
         if rsp:
             ## New Entry in AdminNote Table
             newNoteEntry = AdminNotes.create(formID=selectedFormHistory.formID.laborStatusFormID,
-            createdBy=current_user.UserID, date=currentDate,
+            createdBy=currentUser, date=currentDate,
             notesContents=rsp["denialNote"])
             newNoteEntry.save()
             ## Updating the overloadform Table
-            if current_user.isFinancialAidAdmin:
+            if currentUser.isFinancialAidAdmin:
                 selectedOverload.financialAidApproved = formStatus.statusName
-                selectedOverload.financialAidApprover = current_user.UserID
+                selectedOverload.financialAidApprover = currentUser
                 selectedOverload.financialAidReviewDate = currentDate
                 selectedOverload.save()
-            if current_user.isSaasAdmin:
+            if currentUser.isSaasAdmin:
                 selectedOverload.SAASApproved = formStatus.statusName
-                selectedOverload.SAASApprover = current_user.UserID
+                selectedOverload.SAASApprover = currentUser
                 selectedOverload.SAASReviewDate = currentDate
                 selectedOverload.save()
         # email = emailHandler(rsp["formHistoryID"]) ## sending email to Labor Admin on any submission

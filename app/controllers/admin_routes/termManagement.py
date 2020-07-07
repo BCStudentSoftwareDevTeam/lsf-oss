@@ -5,7 +5,7 @@ from app.login_manager import require_login
 from app.models.term import Term
 import datetime
 from flask import json, jsonify
-from flask import request
+from flask import request, redirect
 from datetime import datetime, date
 from datetime import datetime
 import datetime
@@ -14,15 +14,14 @@ import datetime
 # @login_required
 
 def term_Management():
-    current_user = require_login()
-    if not current_user:                    # Not logged in
+    currentUser = require_login()
+    if not currentUser:                    # Not logged in
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
-        return render_template('errors/403.html',
-                                isLaborAdmin = isLaborAdmin)
-    else:
-        isLaborAdmin = True
+    if not currentUser.isLaborAdmin:       # Not an admin
+        if currentUser.Student: # logged in as a student
+            return redirect('/laborHistory/' + currentUser.Student.ID)
+        elif currentUser.Supervisor:
+            return render_template('errors/403.html', currentUser = currentUser), 403
 
     terms = Term.select()
     listOfTerms = Term.select()
@@ -32,8 +31,8 @@ def term_Management():
     return render_template( 'admin/termManagement.html',
                              title=('Term Management'),
                              terms = terms,
-                             isLaborAdmin = isLaborAdmin,
-                             listOfTerms = accordionTerms()
+                             listOfTerms = accordionTerms(),
+                             currentUser = currentUser
                           )
 
 def createTerms(termList, iteration):

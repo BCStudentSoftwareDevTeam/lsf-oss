@@ -26,5 +26,6 @@ pem add app.models.historyType.HistoryType
 pem add app.models.visitTracker.VisitTracker
 pem add app.models.emailTracker.EmailTracker
 pem add app.models.adminNotes.AdminNotes
+pem add app.models.supervisor.Supervisor
 pem watch
 pem migrate
