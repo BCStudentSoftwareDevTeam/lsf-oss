@@ -9,6 +9,7 @@ from app.logic.emailHandler import *
 from app.login_manager import require_login
 from app.logic.tracy import Tracy
 from app.models.adminNotes import AdminNotes
+from app.models.supervisor import Supervisor
 from app.login_manager import require_login
 from datetime import date, datetime
 from flask import json, jsonify
@@ -22,13 +23,13 @@ def alterLSF(laborStatusKey):
     """
     This function gets all the form's data and populates the front end
     """
-    current_user = require_login()
-    if not current_user:        # Not logged in
+    currentUser = require_login()
+    if not currentUser:        # Not logged in
         return render_template("errors/403.html")
-    if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
-    else:
-        isLaborAdmin = True
+    if not currentUser.isLaborAdmin:       # Not an admin
+        if currentUser.Student and not currentUser.Supervisor: # If a student is logged in and trying to get to this URL then send them back to their own page.
+            return redirect("/laborHistory/" + currentUser.Student.ID)
+
     currentDate = date.today()
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
@@ -43,12 +44,12 @@ def alterLSF(laborStatusKey):
                              .get().status_id)
 
     if currentDate > form.termCode.adjustmentCutOff and formStatus == "Approved":
-        return render_template("errors/403.html")
+        return render_template("errors/403.html", currentUser = currentUser)
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
     prefillsupervisorID = form.supervisor.PIDM
-    superviser_id = form.supervisor.UserID
+    superviser_id = form.supervisor.ID
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_CODE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
@@ -73,7 +74,7 @@ def alterLSF(laborStatusKey):
 
     return render_template( "main/alterLSF.html",
 				            title=("Adjust Labor Status Form" if formStatus == "Approved" else "Labor Status Correction Form"),
-                            username = current_user,
+                            username = currentUser,
                             superviser_id = superviser_id,
                             prefillstudent = prefillstudent,
                             prefillsupervisor = prefillsupervisor,
@@ -88,8 +89,8 @@ def alterLSF(laborStatusKey):
                             positions = positions,
                             form = form,
                             oldSupervisor = oldSupervisor,
-                            isLaborAdmin = isLaborAdmin,
-                            totalHours = totalHours
+                            totalHours = totalHours,
+                            currentUser = currentUser
                           )
 
 
@@ -99,8 +100,8 @@ def submitAlteredLSF(laborStatusKey):
     Submits an altered LSF form and creates a formHistory entry if appropriate
     """
     try:
-        current_user = require_login()
-        if not current_user:        # Not logged in
+        currentUser = require_login()
+        if not currentUser:        # Not logged in
             return render_template("errors/403.html")
         currentDate = datetime.now().strftime("%Y-%m-%d")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
@@ -120,7 +121,7 @@ def submitAlteredLSF(laborStatusKey):
                 elif formStatus == "Approved":
                     ## New Entry in AdminNote Table
                     newNoteEntry = AdminNotes.create(formID        = LSF.laborStatusFormID,
-                                                     createdBy     = current_user.UserID,
+                                                     createdBy     = currentUser,
                                                      date          = currentDate,
                                                      notesContents = rsp[k]["newValue"])
                     newNoteEntry.save()
@@ -131,7 +132,7 @@ def submitAlteredLSF(laborStatusKey):
                                                     oldValue      = rsp[k]['oldValue'],
                                                     newValue      = rsp[k]['newValue'],
                                                     effectiveDate = datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d'))
-                formHistories = createFormHistory(laborStatusKey, rsp, k, current_user, adjustedforms)
+                formHistories = createFormHistory(laborStatusKey, rsp, k, currentUser, adjustedforms)
 
             if k == "supervisor":
                 if formStatus == "Pending":
@@ -177,7 +178,7 @@ def submitAlteredLSF(laborStatusKey):
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
                     newFormHistory = FormHistory.create(formID       = laborStatusKey,
                                                         historyType  = "Labor Overload Form",
-                                                        createdBy    = current_user.UserID,
+                                                        createdBy    = currentUser,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate  = date.today(),
                                                         status       = "Pending")
@@ -216,7 +217,7 @@ def submitAlteredLSF(laborStatusKey):
         print("An error occured during form submission:", e)
         return jsonify({"Success": False}), 500
 
-def createFormHistory(laborStatusKey, rsp, k, current_user, adjustedforms):
+def createFormHistory(laborStatusKey, rsp, k, currentUser, adjustedforms):
     """
     Creates appropriate form history entries in the formHistory table
     """
@@ -225,7 +226,7 @@ def createFormHistory(laborStatusKey, rsp, k, current_user, adjustedforms):
     formHistories = FormHistory.create(formID       = laborStatusKey,
                                        historyType  = historyType.historyTypeName,
                                        adjustedForm = adjustedforms.adjustedFormID,
-                                       createdBy    = current_user.UserID,
+                                       createdBy    = currentUser,
                                        createdDate  = date.today(),
                                        status       = status.statusName)
     return formHistories
