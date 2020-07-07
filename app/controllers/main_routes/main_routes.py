@@ -167,7 +167,7 @@ def populateDepartment(departmentSelected):
             try:
                 tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
 
-            except Exception as e: # if they are inactive
+            except InvalidQueryException: # if they are inactive
                 for student in inactiveDepStudent:
                     if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
                         student_processed = True
