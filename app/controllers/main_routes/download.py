@@ -1,7 +1,6 @@
 from flask import flash
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import *
-from app.models.Tracy.studata import STUDATA
 import csv
 from app.controllers.main_routes.main_routes import *
 

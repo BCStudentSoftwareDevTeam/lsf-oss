@@ -1,10 +1,9 @@
 from app.controllers.admin_routes import *
-from app.models.user import *
+from app.models.user import User
 from app.controllers.admin_routes import admin
 from app.login_manager import require_login
-from app.models.term import *
+from app.models.term import Term
 import datetime
-from app.models.term import *
 from flask import json, jsonify
 from flask import request
 from datetime import datetime, date
