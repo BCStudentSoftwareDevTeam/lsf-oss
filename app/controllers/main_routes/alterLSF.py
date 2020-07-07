@@ -114,7 +114,7 @@ def submitAlteredLSF(laborStatusKey):
         formHistories = ""
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-            if k == "supervisorNotes":
+            if k == "Supervisor Notes":
                 if formStatus == "Pending":
                     LSF.supervisorNotes = rsp[k]['newValue']
                     LSF.save()
@@ -134,7 +134,7 @@ def submitAlteredLSF(laborStatusKey):
                                                     effectiveDate = datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d'))
                 formHistories = createFormHistory(laborStatusKey, rsp, k, currentUser, adjustedforms)
 
-            if k == "supervisor":
+            if k == "Supervisor":
                 if formStatus == "Pending":
                     d, created = User.get_or_create(PIDM = int(rsp[k]['newValue']))
                     if not created:
@@ -157,16 +157,16 @@ def submitAlteredLSF(laborStatusKey):
                         LSF.supervisor = d.PIDM
                         LSF.save()
 
-            if k == "position":
+            if k == "Position":
                 if formStatus == "Pending":
                     LSF.POSN_TITLE = rsp[k]['newValue']
                     LSF.save()
 
-            if k == "contractHours":
+            if k == "Contract Hours":
                 LSF.contractHours = int(rsp[k]['newValue'])
                 LSF.save()
 
-            if k == "weeklyHours":
+            if k == "Weekly Hours":
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
                 totalHours = 0
                 if allTermForms:

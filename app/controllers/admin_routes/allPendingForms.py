@@ -83,7 +83,7 @@ def allPendingForms(formType):
                     # because we want to show the supervisor name in the hmtl template.
                     allForms.adjustedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
 
-                if allForms.adjustedForm.fieldAdjusted == "position": # if position field has been changed in adjust form then retriev position name.
+                if allForms.adjustedForm.fieldAdjusted == "Position": # if position field has been changed in adjust form then retriev position name.
                     newPositionCode = allForms.adjustedForm.newValue
                     newPosition = Tracy().getPositionFromCode(newPositionCode)
                     # temporarily storing the position code and wls in new value, and position name in old value
@@ -220,21 +220,18 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             LSF.supervisor = d.PIDM
             LSF.save()
 
-    if form.adjustedForm.fieldAdjusted == "position":
+    if form.adjustedForm.fieldAdjusted == "Position":
         LSF.POSN_CODE = form.adjustedForm.newValue
         position = Tracy().getPositionFromCode(form.adjustedForm.newValue)
         LSF.POSN_TITLE = position.POSN_TITLE
         LSF.WLS = position.WLS
         LSF.save()
 
-    if form.adjustedForm.fieldAdjusted == "contractHours":
-        print("=================")
-        print(form.adjustedForm.fieldAdjusted)
-        print("=================")
+    if form.adjustedForm.fieldAdjusted == "Contract Hours":
         LSF.contractHours = form.adjustedForm.newValue
         LSF.save()
 
-    if form.adjustedForm.fieldAdjusted == "weeklyHours":
+    if form.adjustedForm.fieldAdjusted == "Weekly Hours":
         allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
         totalHours = 0
         if allTermForms:
