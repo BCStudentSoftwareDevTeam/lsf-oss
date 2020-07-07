@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+# Check Python version number
+if (("$((`python -c 'import sys; print(sys.version_info[0])'` >= 3))")); then
+    if (("$((`python -c 'import sys; print(sys.version_info[1])'` >= 6))")); then
+        echo "Python version meets system requirements (3.6 or newer)"
+    else
+        echo "Your version of Python is not up to date. Please update to Python 3.6 or newer"; return 1
+    fi
+else
+    echo "Your version of Python is not up to date. Please update to Python 3.6 or newer"; return 1
+fi
+
+
 # Create a virtual machine virtual environment
 if [ ! -d venv ]
 then
@@ -23,9 +35,6 @@ if [[ ! -e app/config/secret_config.yaml ]]; then
 	echo "If your database has not been set up, you will need to run database/reset_database.sh"
 fi
 
-export PYTHON_VERSION=`python -c 'import sys; version=sys.version_info[:3]; print("{0}.{1}.{2}".format(*version))'`
 export FLASK_APP=app.py
 export FLASK_ENV=development
 export FLASK_RUN_PORT=8080
-
-echo `python -c 'import sys; version=sys.version_info[:3]; print("{0}.{1}.{2}".format(*version))'`
