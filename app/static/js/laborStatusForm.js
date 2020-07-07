@@ -406,7 +406,7 @@ function searchDataToPrepareToCheckPrimaryPosition() { // displays table when pl
   else  {
     disableTermSupervisorDept();
     checkPrimaryPositionToCreateTheTable(studentDict);
-    //isOneLaborStatusForm(studentDict);
+    //isOneLaborStatusForm(studentDict);  // this is to be fixed on issue 184
      }
   }
 
@@ -657,9 +657,6 @@ $("#resetConfirmButton").click(function(){
     document.cookie = JSON.stringify(globalArrayOfStudents) + ";max-age=0;";
     console.log(document.cookie);
     location.reload();
-    // $("#dateTimePicker1").datepicker("refresh");
-    $("#dateTimePicker1")._clearDate();
-    $("#dateTimePicker2").datepicker("refresh");
 });
 
 function reviewButtonFunctionality() { // Triggred when Review button is clicked and checks if fields are filled out.
