@@ -10,6 +10,8 @@ from datetime import datetime, date
 from flask import request, redirect
 from flask import json, jsonify
 from flask import make_response
+from app.logic.tracy import Tracy
+from app.logic.tracy import InvalidQueryException
 import base64
 
 
@@ -56,9 +58,9 @@ def index():
 
         for supervisee in formsBySupervisees: # go through all the form in the formsBySupervisees
             try:
-                tracy_supervisee = STUDATA.get(STUDATA.ID == supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
+                tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
 
-            except: # if they are inactive
+            except InvalidQueryException: # if they are inactive
                 for student in inactiveSupervisees:
                     if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
                         student_processed = True
@@ -171,7 +173,7 @@ def populateDepartment(departmentSelected):
             try:
                 tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
 
-            except: # if they are inactive
+            except InvalidQueryException: # if they are inactive
                 for student in inactiveDepStudent:
                     if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
                         student_processed = True

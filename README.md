@@ -1,5 +1,9 @@
 # Rework of Labor Status Forms .NET into a Flask application
 
+## Requirements
+Python 3.6+
+unixodbc-dev
+
 ## Developing on Labor Status Forms
 1. Pull down the repo: git clone <URL>
 2. Run ```source setup.sh```
