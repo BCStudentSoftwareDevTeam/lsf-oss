@@ -10,6 +10,8 @@ from datetime import datetime, date
 from flask import request
 from flask import json, jsonify
 from flask import make_response
+from app.logic.tracy import Tracy
+from app.logic.tracy import InvalidQueryException
 import base64
 
 @main_bp.before_app_request
@@ -53,7 +55,7 @@ def index():
         try:
             tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
 
-        except: # if they are inactive
+        except InvalidQueryException: # if they are inactive
             for student in inactiveSupervisees:
                 if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
                     student_processed = True
@@ -78,7 +80,7 @@ def index():
                             currentSupervisees.append(supervisee)
                     else:
                         currentSupervisees.append(supervisee)
-        finally:# it will run at the end regardless of whether or no the excpet statement or else statement is met.
+        finally:# it will run at the end regardless of whether or not the except statement or else statement is met.
             student_processed = False  # Resets state machine.
 
     # On the click of the download button, 'POST' method will send all checked boxes from modal to excel maker
@@ -165,7 +167,7 @@ def populateDepartment(departmentSelected):
             try:
                 tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
 
-            except: # if they are inactive
+            except InvalidQueryException: # if they are inactive
                 for student in inactiveDepStudent:
                     if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
                         student_processed = True
