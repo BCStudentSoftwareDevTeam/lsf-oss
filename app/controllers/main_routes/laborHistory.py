@@ -31,12 +31,11 @@ def laborhistory(id):
             departmentsList = []
             allStudentDepartments = LaborStatusForm.select(LaborStatusForm.department).where(LaborStatusForm.studentSupervisee == id).distinct()
             for i in allStudentDepartments:
-                print(i)
                 departmentsList.append(i.department.departmentID)
             if currentUser.Student and not currentUser.Supervisor:
                 if currentUser.Student.ID != id:
                     return redirect('/laborHistory/' + currentUser.Student.ID)
-            elif currentUser.Supervisor and not currentUser.Student:
+            if currentUser.Supervisor and not currentUser.Student:
                 authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, currentUser, currentUser.Supervisor.ID)
                 if authorizedUser == False:
                     return render_template('errors/403.html', currentUser = currentUser), 403
