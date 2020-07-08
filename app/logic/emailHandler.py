@@ -78,7 +78,6 @@ class emailHandler():
                                 False,
                                 "Secondary Position Labor Status Form Submitted")
         else:
-            print('Sending Else Conditional')
             self.checkRecipient("Labor Status Form Submitted For Student",
                           "Primary Position Labor Status Form Submitted")
 
@@ -212,30 +211,34 @@ class emailHandler():
         The method sendEmail is then called to handle the actual sending of the emails.
         """
         if studentEmailPurpose:
-            print('Sending email to student')
             studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
-            print('Grabbing student email')
             self.sendEmail(studentEmail, "student")
+            print("SEND EMAIL TO STUDENT")
         if self.primaryFormHistory is not None:
             primaryEmail = EmailTemplate.get(EmailTemplate.purpose == emailPurpose) # Jan
             secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose) # Scott
             self.sendEmail(secondaryEmail, "breakPrimary")
+            print("SEND EMAIL TO BREAK PRIMARY")
             self.sendEmail(primaryEmail, "supervisor")
+            print("SEND EMAIL TO BREAK SECONDARY")
         if emailPurpose or secondaryEmailPurpose:
             if self.laborStatusForm.jobType == 'Secondary':
                 # If contract hours != None
                 if secondaryEmailPurpose:
                     secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
                     self.sendEmail(secondaryEmail, "secondary")
+                    print("SEND EMAIL FOR SECONDARY EMAIL PURPOSE")
                 else:
                     primaryEmail = EmailTemplate.get(EmailTemplate.purpose == emailPurpose)
                     self.sendEmail(primaryEmail, "supervisor")
+                    print("send email for emailPurpose")
             else:
                 primaryEmail = EmailTemplate.get(EmailTemplate.purpose == emailPurpose)
                 if primaryEmail.audience == "Labor Office":
                     self.sendEmail(primaryEmail, "Labor Office")
                 else:
                     self.sendEmail(primaryEmail, "supervisor")
+                    print("send email to supervisor for primary")
 
 
     # Depending on the parameter 'sendTo', this method will send the email either to the Primary, Secondary, or the Student
@@ -243,11 +246,9 @@ class emailHandler():
         formTemplate = template.body
         formTemplate = self.replaceText(formTemplate)
         if sendTo == "student":
-            print('about to send to student')
             message = Message(template.subject,
                 recipients=[self.studentEmail])
             recipient = 'Student'
-            print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
         elif sendTo == "secondary":
             message = Message(template.subject,
                 recipients=[self.supervisorEmail, self.primaryEmail])

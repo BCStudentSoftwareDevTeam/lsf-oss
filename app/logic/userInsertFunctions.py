@@ -139,8 +139,6 @@ def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department
                                  laborDepartmentNotes = rspFunctional["stuLaborNotes"],
                                  studentName = rspFunctional["stuName"]
                                  )
-    print('Labor Status Form Created', lsf)
-
     return lsf
 
 
@@ -156,13 +154,12 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     # We create a 'Labor Status Form' first, then we check to see if a 'Labor Overload Form'
     # needs to be created
     historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-    FormHistory.create( formID = lsf.laborStatusFormID,
+    formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
                         historyType = historyType.historyTypeName,
                         overloadForm = None,
                         createdBy   = creatorID,
                         createdDate = date.today(),
                         status      = status.statusName)
-    print('What ID is being sent here?', FormHistory)
     if rspFunctional.get("isItOverloadForm") == "True":
         overloadHistoryType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
         newLaborOverloadForm = OverloadForm.create( studentOverloadReason = None,
@@ -184,9 +181,10 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
         email = emailHandler(formOverload.formHistoryID)
         email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
     else:
-        print('What ID is being sent?', FormHistory)
-        # email = emailHandler(FormHistory.formHistoryID)
-        # email.laborStatusFormSubmitted()
+        if not formHistory.formID.termCode.isBreak:
+            print("extra emails")
+            email = emailHandler(formHistory.formHistoryID)
+            email.laborStatusFormSubmitted()
 
 def emailDuringBreak(secondLSFBreak, term):
     """
@@ -196,9 +194,12 @@ def emailDuringBreak(secondLSFBreak, term):
         isOneLSF = json.loads(secondLSFBreak)
         formHistory = FormHistory.get(FormHistory.formHistoryID == isOneLSF['formHistoryID'])
         if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
+            print("two jobs")
             for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
                 email = emailHandler(formHistory.formHistoryID, lsfID)
                 email.notifySecondLaborStatusFormSubmittedForBreak()
+                print("emails being sent out")
         else: # Student has only one lsf, send email to student and supervisor
+            print("one job")
             email = emailHandler(formHistory.formHistoryID)
             email.laborStatusFormSubmittedForBreak()

@@ -155,8 +155,14 @@ def finalUpdateStatus(raw_status):
             labor_forms.status = Status.get(Status.statusName == new_status)
             labor_forms.reviewedDate = date.today()
             labor_forms.reviewedBy = currentUser
+            email = emailHandler(labor_forms.formHistoryID)
             if new_status == 'Denied':
                 labor_forms.rejectReason = denyReason
+                labor_forms.save()
+                if history_type == "Labor Status Form":
+                    email.laborStatusFormRejected()
+            if new_status == "Approved" and history_type == "Labor Status Form":
+                email.laborStatusFormApproved()
             labor_forms.save()
 
             if history_type == "Modified Labor Form" and new_status == "Approved":
@@ -175,7 +181,6 @@ def finalUpdateStatus(raw_status):
         try:
             conn = Banner()
             save_status = conn.insert(labor_forms)
-
         except Exception as e:
             print("Unable to update BANNER:", e)
             save_status = False
