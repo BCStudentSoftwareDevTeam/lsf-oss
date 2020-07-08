@@ -29,10 +29,7 @@ def laborhistory(id):
             return render_template('errors/403.html')
 
         if not currentUser.isLaborAdmin:
-            departmentsList = []
-            allStudentDepartments = LaborStatusForm.select(LaborStatusForm.department).where(LaborStatusForm.studentSupervisee == id).distinct()
-            for i in allStudentDepartments:
-                departmentsList.append(i.department.departmentID)
+            departmentsList = laborHistoryAuthorizeUser(id, currentUser)
             if currentUser.Student and not currentUser.Supervisor:
                 if currentUser.Student.ID != id:
                     return redirect('/laborHistory/' + currentUser.Student.ID)
