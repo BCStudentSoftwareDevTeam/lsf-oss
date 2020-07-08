@@ -20,6 +20,7 @@ from app.logic.authorizationFunctions import*
 from app.logic.buttonStatus import ButtonStatus
 from app.models.supervisor import Supervisor
 
+
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
     try:
