@@ -97,7 +97,7 @@ def populateModal(statusKey):
             if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
                 if form.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
                     newSupervisorID = form.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
-                    newSupervisor = Supervisor.get(Supervisor.ID == newSupervisorID)
+                    newSupervisor = Supervisor.get(Supervisor.PIDM == newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     form.modifiedForm.oldValue = form.formID.supervisor.FIRST_NAME + " " + form.formID.supervisor.LAST_NAME # old supervisor name
@@ -107,8 +107,8 @@ def populateModal(statusKey):
                     newPosition = Tracy().getPositionFromCode(newPositionCode)
                     # temporarily storing the new position name in new value, and old position name in old value
                     # because we want to show these information in the hmtl template.
-                    form.modifiedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
-                    form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
+                    form.modifiedForm.newValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
+                    form.modifiedForm.oldValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
         for form in forms:
             if currentUser.Student and currentUser.username == student.username:
                 buttonState = ButtonStatus.show_student_labor_eval_button
