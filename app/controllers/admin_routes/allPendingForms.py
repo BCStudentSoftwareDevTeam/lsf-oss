@@ -271,18 +271,18 @@ def modal_approval_and_denial_data(approval_ids):
         student_hours = student_details.weeklyHours
         student_hours_ch = student_details.contractHours
 
-        if formHistory.modifiedForm:
-            if formHistory.modifiedForm.fieldModified == "Position":
-                position = Tracy().getPositionFromCode(formHistory.modifiedForm.newValue)
+        if formHistory.adjustedForm:
+            if formHistory.adjustedForm.fieldAdjusted == "position":
+                position = Tracy().getPositionFromCode(formHistory.adjustedForm.newValue)
                 student_pos = position.POSN_TITLE
-            if formHistory.modifiedForm.fieldModified == "Supervisor":
-                supervisor = Supervisor.get(Supervisor.PIDM == formHistory.modifiedForm.newValue)
+            if formHistory.adjustedForm.fieldAdjusted == "supervisor":
+                supervisor = Supervisor.get(Supervisor.PIDM == formHistory.adjustedForm.newValue)
                 supervisor_firstname, supervisor_lastname = supervisor.FIRST_NAME, supervisor.LAST_NAME
                 supervisor_name = str(supervisor_firstname) +" "+ str(supervisor_lastname)
-            if formHistory.modifiedForm.fieldModified == "Weekly Hours":
-                student_hours = formHistory.modifiedForm.newValue
-            if formHistory.modifiedForm.fieldModified == "Contract Hours":
-                student_hours_ch = formHistory.modifiedForm.newValue
+            if formHistory.adjustedForm.fieldAdjusted == "weeklyHours":
+                student_hours = formHistory.adjustedForm.newValue
+            if formHistory.adjustedForm.fieldAdjusted == "contractHours":
+                student_hours_ch = formHistory.adjustedForm.newValue
 
         tempList = []
         tempList.append(student_name)

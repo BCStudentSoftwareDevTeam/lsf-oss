@@ -88,7 +88,7 @@
                 <a href="#" aria-label="{{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}}" class="hover_indicator"> {{allForms.formID.department.DEPT_NAME}} </a>
               </td>
               <td> {# SUPERVISOR #}
-                {% if allForms.adjustedForm.fieldAdjusted == "Supervisor" %}
+                {% if allForms.adjustedForm.fieldAdjusted == "supervisor" %}
                   <s aria-hidden="true">{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</s> <br/> {{allForms.adjustedForm.newValue}}
                 {% else %}
                   {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
@@ -98,7 +98,7 @@
                 <a href="#" aria-label="{{allForms.formID.studentSupervisee.ID}}" class="hover_indicator"> {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}</a>
               </td>
               <td> {# POSITON AND WLS #}
-                {% if allForms.adjustedForm.fieldAdjusted == "Position"%}
+                {% if allForms.adjustedForm.fieldAdjusted == "position"%}
                   <s aria-hidden="true"><a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a></s><br/>
                   <a href="#" aria-label="{{allForms.adjustedForm.oldValue}}" class="hover_indicator"> {{allForms.adjustedForm.newValue}}</a>
                 {% else %}
@@ -106,7 +106,7 @@
                 {% endif %}
               </td>
               <td> {# HOURS #}
-                {% if allForms.adjustedForm.fieldAdjusted == "Weekly Hours"  or  allForms.adjustedForm.fieldAdjusted == "Contract Hours" %}
+                {% if allForms.adjustedForm.fieldAdjusted == "weeklyHours"  or  allForms.adjustedForm.fieldAdjusted == "contractHours" %}
                   <s aria-hidden="true">{% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}</s> <br> {{allForms.adjustedForm.newValue}}
                 {% else %}
                   {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}

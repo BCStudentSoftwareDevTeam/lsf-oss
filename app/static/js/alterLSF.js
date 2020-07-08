@@ -18,7 +18,7 @@ $(".glyphicon-calendar").click(function() {
 });
 
 function jobPositionDisable(){
-  var isBreak = $("#termBreak").data('termbreak');
+  var isBreak = $("#termBreak").data("termbreak");
   if (isBreak){
     $("#jobType").prop("disabled", true);
     $("#jobType").val("Secondary");
@@ -73,7 +73,7 @@ function checkForChange(){
   var oldSupervisor = $("#prefillsupervisor").val();
   var newSupervisor = $("#supervisor").val();
   var oldPostition = $("#prefillposition").val();
-  var newPostition = $("#position").val();
+  var newPosition = $("#position").val();
   var date = $("#datetimepicker0").val();
   var oldNotes = $("#oldNotes").val();
   var newNotes = $("#supervisorNotes").val();
@@ -85,8 +85,8 @@ function checkForChange(){
   if(oldSupervisor != newSupervisor){
     finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor, "date": date}
   }
-  if(oldPostition != newPostition){
-    finalDict["position"] = {"oldValue": oldPostition, "newValue": newPostition, "date": date}
+  if(oldPostition != newPosition){
+    finalDict["position"] = {"oldValue": oldPostition, "newValue": newPosition, "date": date}
   }
   if(oldNotes != newNotes){
     finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes, "date": date}
