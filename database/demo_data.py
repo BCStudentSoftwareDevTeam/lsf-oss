@@ -258,7 +258,23 @@ for staff in staffs:
     db.session.add(STUSTAFF(**staff))
     db.session.commit()
 
-print(" * Tracy staff added")
+    # Add to users
+    try:
+        u = User()
+        u.PIDM = staff['PIDM']
+        u.FIRST_NAME = staff['FIRST_NAME']
+        u.LAST_NAME = staff['LAST_NAME']
+        u.username = staff['EMAIL'].split("@")[0]
+        u.EMAIL = staff['EMAIL']
+        u.CPO = staff['CPO']
+        u.ID = staff['ID']
+        u.ORG = staff['ORG']
+        u.DEPT_NAME = staff['DEPT_NAME']
+        if u.PIDM in [1,6]:
+            u.isLaborAdmin = 1
+        u.save()
+    except Exception as e:
+        print(" * Failed to insert ", u.username, ": ", e)
 
 Supervisor.insert_many(staffs).on_conflict_replace().execute()
 print(" * staff added")
