@@ -66,9 +66,24 @@ class emailHandler():
             if e.__class__.__name__ != "AttributeError":
                 print (e)
 
+    def send(self, message: Message):
+        if app.config['ENV'] == 'production' or app.config['ALWAYS_SEND_MAIL']:
+
+            # If we have set an override address
+            if app.config['MAIL_OVERRIDE_ALL']:
+                message.html = "<b>Original message intended for {}.</b>".format(", ".join(message.recipients))
+                message.recipients = [app.config['MAIL_OVERRIDE_ALL']]
+
+            self.mail.send(message)
+
+        else:
+            print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
+
+
+
     # The methods of this class each handle a different email situation. Some of the methods need to handle
     # "primary" and "secondary" forms differently, but a majority do not need to differentiate between the two.
-    # Every method will use the replaceText and sendEmail methods to acomplish the email sending.
+    # Every method will use the replaceText and sendEmail methods to accomplish the email sending.
     # The email templates are stored inside of the emailHandler model, and depending on which email template
     # is pulled from the model, and replaceText method will replace the neccesary keywords with the correct data.
     # The sendEmail method will handle all of the email sending once the email template has been populated.
@@ -184,10 +199,8 @@ class emailHandler():
                         subject = emailTemplateID.subject
                         )
         message.html = self.replaceText(emailTemplateID.body)
-        if app.config['ENV'] == 'production' or app.config['ALWAYS_SEND_MAIL']:
-            self.mail.send(message)
-        else:
-            print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
+
+        self.send(message)
 
     def verifiedOverloadNotification(self):
         """ This email will be sent to Labor Admin when SAAS or Financial Aid Make
@@ -202,7 +215,8 @@ class emailHandler():
                         subject = emailTemplateID.subject
                         )
         message.html = self.replaceText(emailTemplateID.body)
-        self.mail.send(message)
+
+        self.send(message)
 
     def checkRecipient(self, studentEmailPurpose=False, emailPurpose=False, secondaryEmailPurpose=False):
         """
@@ -268,10 +282,7 @@ class emailHandler():
                         subject = template.subject
                         )
 
-        if app.config['ENV'] == 'production' or app.config['ALWAYS_SEND_MAIL']:
-            self.mail.send(message)
-        else:
-            print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
+        self.send(message)
 
     # This method is responsible for replacing the keyword form the templates in the database with the data in the laborStatusForm
     def replaceText(self, form):
