@@ -65,7 +65,6 @@ def allPendingForms(formType):
         pendingOverloadFormPairs = {}
         # or allForms.adjustedForm.fieldAdjusted == "Weekly Hours":
         for allForms in formList:
-            print(allForms)
             if allForms.historyType.historyTypeName == "Labor Status Form" or (allForms.historyType.historyTypeName == "Labor Adjustment Form" and allForms.adjustedForm.fieldAdjusted == "weeklyHours"):
                 try:
                     overloadForm = FormHistory.select().where((FormHistory.formID == allForms.formID) & (FormHistory.historyType == "Labor Overload Form") & (FormHistory.status == "Pending")).get()

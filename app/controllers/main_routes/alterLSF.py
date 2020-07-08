@@ -127,7 +127,7 @@ def submitAlteredLSF(laborStatusKey):
                     newNoteEntry.save()
                     continue
             # This creates the adjusted form entry for every changed field for an adjustment submission
-            elif formStatus == "approved":
+            elif formStatus == "Approved":
                 adjustedforms = AdjustedForm.create(fieldAdjusted = k,
                                                     oldValue      = rsp[k]['oldValue'],
                                                     newValue      = rsp[k]['newValue'],
@@ -140,7 +140,6 @@ def submitAlteredLSF(laborStatusKey):
                                                    createdBy    = currentUser,
                                                    createdDate  = date.today(),
                                                    status       = status.statusName)
-                continue
 
             if k == "supervisor":
                 if formStatus == "Pending":
