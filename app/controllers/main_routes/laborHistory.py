@@ -33,7 +33,7 @@ def laborhistory(id):
             if currentUser.Student and not currentUser.Supervisor:
                 if currentUser.Student.ID != id:
                     return redirect('/laborHistory/' + currentUser.Student.ID)
-            if currentUser.Supervisor and not currentUser.Student:
+            elif currentUser.Supervisor and not currentUser.Student:
                 authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, currentUser, currentUser.Supervisor.ID)
                 if authorizedUser == False:
                     return render_template('errors/403.html', currentUser = currentUser), 403
