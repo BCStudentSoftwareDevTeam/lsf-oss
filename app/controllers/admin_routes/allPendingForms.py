@@ -218,16 +218,16 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             user.save()
             LSF.supervisor = d.PIDM
             LSF.save()
-    if form.modifiedForm.fieldModified == "POSN_CODE":
+    if form.modifiedForm.fieldModified == "Position":
         LSF.POSN_CODE = form.modifiedForm.newValue
         position = Tracy().getPositionFromCode(form.modifiedForm.newValue)
         LSF.POSN_TITLE = position.POSN_TITLE
         LSF.WLS = position.WLS
         LSF.save()
-    if form.modifiedForm.fieldModified == "contractHours":
+    if form.modifiedForm.fieldModified == "Contract Hours":
         LSF.contractHours = form.modifiedForm.newValue
         LSF.save()
-    if form.modifiedForm.fieldModified == "weeklyHours":
+    if form.modifiedForm.fieldModified == "Weekly Hours":
         allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
         totalHours = 0
         if allTermForms:
@@ -253,8 +253,10 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
 #method extracts data from the data base to papulate pending form approvale modal
 def modal_approval_and_denial_data(approval_ids):
     ''' This method grabs the data that populated the on approve modal for lsf'''
+    
     id_list = []
     for formHistoryID in approval_ids:
+        formHistory = FormHistory.get(FormHistory.formHistoryID == int(formHistoryID))
         fhistory_id = LaborStatusForm.select().join(FormHistory).where(FormHistory.formHistoryID == int(formHistoryID)).get()
         student_details = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == fhistory_id)
         student_firstname, student_lastname = student_details.studentSupervisee.FIRST_NAME, student_details.studentSupervisee.LAST_NAME
@@ -264,6 +266,20 @@ def modal_approval_and_denial_data(approval_ids):
         supervisor_name = str(supervisor_firstname) +" "+ str(supervisor_lastname)
         student_hours = student_details.weeklyHours
         student_hours_ch = student_details.contractHours
+
+        if formHistory.modifiedForm:
+            if formHistory.modifiedForm.fieldModified == "Position":
+                position = Tracy().getPositionFromCode(formHistory.modifiedForm.newValue)
+                student_pos = position.POSN_TITLE
+            if formHistory.modifiedForm.fieldModified == "Supervisor":
+                supervisor = Supervisor.get(Supervisor.PIDM == formHistory.modifiedForm.newValue)
+                supervisor_firstname, supervisor_lastname = supervisor.FIRST_NAME, supervisor.LAST_NAME
+                supervisor_name = str(supervisor_firstname) +" "+ str(supervisor_lastname)
+            if formHistory.modifiedForm.fieldModified == "Weekly Hours":
+                student_hours = formHistory.modifiedForm.newValue
+            if formHistory.modifiedForm.fieldModified == "Contract Hours":
+                student_hours_ch = formHistory.modifiedForm.newValue
+
         tempList = []
         tempList.append(student_name)
         tempList.append(student_pos)
@@ -272,6 +288,7 @@ def modal_approval_and_denial_data(approval_ids):
         tempList.append(str(student_hours_ch))
         id_list.append(tempList)
     return(id_list)
+
 
 @admin.route('/admin/getNotes/<formid>', methods=['GET'])
 def getNotes(formid):
