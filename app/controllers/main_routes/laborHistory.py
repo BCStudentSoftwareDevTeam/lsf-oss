@@ -21,6 +21,7 @@ from app.logic.authorizationFunctions import*
 from app.logic.buttonStatus import ButtonStatus
 from app.logic.tracy import Tracy
 from app.models.supervisor import Supervisor
+from app.logic.tracy import Tracy
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
