@@ -26,8 +26,13 @@ def laborhistory(id):
         currentUser = require_login()
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html')
+
         if not currentUser.isLaborAdmin:
             departmentsList = []
+            allStudentDepartments = LaborStatusForm.select(LaborStatusForm.department).where(LaborStatusForm.studentSupervisee == id).distinct()
+            for i in allStudentDepartments:
+                print(i)
+                departmentsList.append(i.department.departmentID)
             if currentUser.Student and not currentUser.Supervisor:
                 if currentUser.Student.ID != id:
                     return redirect('/laborHistory/' + currentUser.Student.ID)
