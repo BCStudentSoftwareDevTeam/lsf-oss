@@ -27,7 +27,7 @@ def laborhistory(id):
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html')
         if not currentUser.isLaborAdmin:
-            departmentsList = None
+            departmentsList = []
             if currentUser.Student and not currentUser.Supervisor:
                 if currentUser.Student.ID != id:
                     return redirect('/laborHistory/' + currentUser.Student.ID)
