@@ -71,7 +71,7 @@ class emailHandler():
 
             # If we have set an override address
             if app.config['MAIL_OVERRIDE_ALL']:
-                message.html = "<b>Original message intended for {}.</b>".format(", ".join(message.recipients))
+                message.html = "<b>Original message intended for {}.</b>".format(", ".join(message.recipients)) + message.html
                 message.recipients = [app.config['MAIL_OVERRIDE_ALL']]
 
             self.mail.send(message)
