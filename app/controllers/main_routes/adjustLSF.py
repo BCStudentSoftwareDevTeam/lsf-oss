@@ -3,9 +3,6 @@ from app.controllers.main_routes.main_routes import *
 from app.controllers.main_routes.laborHistory import *
 from app.models.formHistory import FormHistory
 from app.models.user import User
-from app.models.Tracy.studata import *
-from app.models.Tracy.stustaff import *
-from app.models.Tracy.stuposn import *
 from app.models.modifiedForm import *
 from flask_bootstrap import bootstrap_find_resource
 from app.login_manager import require_login
@@ -17,19 +14,19 @@ import base64
 from datetime import date
 from app import cfg
 from app.logic.emailHandler import*
+from app.logic.tracy import Tracy
 from app.models.adminNotes import AdminNotes
 
 
 @main_bp.route('/adjustLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
 def adjustLSF(laborStatusKey):
     ''' This function gets all the form's data and populates the front end with it'''
-    current_user = require_login()
-    if not current_user:        # Not logged in
+    currentUser = require_login()
+    if not currentUser:        # Not logged in
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
-    else:
-        isLaborAdmin = True
+    if not currentUser.isLaborAdmin:       # Not an admin
+        if currentUser.Student and not currentUser.Supervisor: # If a student is logged in and trying to get to this URL then send them back to their own page.
+            return redirect('/laborHistory/' + currentUser.Student.ID)
     currentDate = date.today()
     #If logged in....
     #Step 1: get form attached to the student (via labor history modal)
@@ -37,16 +34,16 @@ def adjustLSF(laborStatusKey):
     # If todays date is greater than the adjustment cut off date on the term, then we do not want to
     # give users access to the adjustment page
     if currentDate > form.termCode.adjustmentCutOff:
-        return render_template('errors/403.html')
+        return render_template('errors/403.html', currentUser = currentUser)
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
     prefillsupervisorID = form.supervisor.PIDM
-    superviser_id = form.supervisor.UserID
+    superviser_id = form.supervisor.ID
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_CODE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
-    prefillterm = form.termCode.termName
+    prefillterm = form.termCode
     totalHours = 0
     if form.weeklyHours != None:
         prefillhours = form.weeklyHours
@@ -57,16 +54,17 @@ def adjustLSF(laborStatusKey):
     else:
         prefillhours = form.contractHours
     prefillnotes = form.supervisorNotes
-    #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
-    supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
-    positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == prefilldepartment)
-    wls = STUPOSN.select(STUPOSN.WLS).distinct()
+
+    #These are the data fields to populate our dropdowns(Supervisor. Position)
+    supervisors = Tracy().getSupervisors()
+    positions = Tracy().getPositionsFromDepartment(prefilldepartment)
+
     #Step 3: send data to front to populate html
-    oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
+    oldSupervisor = Tracy().getSupervisorFromPIDM(form.supervisor.PIDM)
 
     return render_template( 'main/adjustLSF.html',
 				            title=('adjust LSF'),
-                            username = current_user,
+                            username = currentUser,
                             superviser_id = superviser_id,
                             prefillstudent = prefillstudent,
                             prefillsupervisor = prefillsupervisor,
@@ -79,11 +77,10 @@ def adjustLSF(laborStatusKey):
                             prefillnotes = prefillnotes,
                             supervisors = supervisors,
                             positions = positions,
-                            wls = wls,
                             form = form,
                             oldSupervisor = oldSupervisor,
-                            isLaborAdmin = isLaborAdmin,
-                            totalHours = totalHours
+                            totalHours = totalHours,
+                            currentUser = currentUser
                           )
 
 
@@ -91,8 +88,8 @@ def adjustLSF(laborStatusKey):
 def sumbitModifiedForm(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
-        current_user = require_login()
-        if not current_user:        # Not logged in
+        currentUser = require_login()
+        if not currentUser:        # Not logged in
             return render_template('errors/403.html')
         currentDate = datetime.now().strftime("%Y-%m-%d")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
@@ -103,7 +100,7 @@ def sumbitModifiedForm(laborStatusKey):
             if k == "supervisorNotes":
                 ## New Entry in AdminNote Table
                 newNoteEntry = AdminNotes.create(formID=LSF.laborStatusFormID,
-                                                createdBy=current_user.UserID,
+                                                createdBy=currentUser,
                                                 date=currentDate,
                                                 notesContents=rsp[k]["newValue"])
                 newNoteEntry.save()
@@ -118,7 +115,7 @@ def sumbitModifiedForm(laborStatusKey):
             formHistories = FormHistory.create( formID = laborStatusKey,
                                              historyType = historyType.historyTypeName,
                                              modifiedForm = modifiedforms.modifiedFormID,
-                                             createdBy   = current_user.UserID,
+                                             createdBy   = currentUser,
                                              createdDate = date.today(),
                                              status      = status.statusName)
 
@@ -134,7 +131,7 @@ def sumbitModifiedForm(laborStatusKey):
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
-                                                        createdBy = current_user.UserID,
+                                                        createdBy = currentUser,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")

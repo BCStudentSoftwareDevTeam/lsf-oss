@@ -43,7 +43,16 @@
 <div class="floatleft">
   <div class="form-group ">
     <label for="selectedSupervisor">
-      <span class="tooltip-right" data-tooltip="Required">Supervisor <span class="required-mark">*</span> <span tabindex="0" type="button" id="supervisorInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one supervisor at a time"></span></label>
+      <span class="tooltip-right" data-tooltip="Required" aria-describedby="supervisorInfo">Supervisor <span class="required-mark">*</span>
+      <span tabindex="0"
+            type="button"
+            id="supervisorInfo"
+            class="glyphicon glyphicon-question-sign"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Forms can only be submitted for one supervisor at a time"
+            aria-hidden="false"></span>
+      </label>
         <select class="selectpicker form-control"
                 name='supervisor'
                 id='selectedSupervisor'
@@ -58,7 +67,16 @@
   </div>
   <div class="form-group" id="departmentClass">
     <!--selectpicker for department-->
-    <label for="selectedDepartment"><span class="tooltip-right" data-tooltip="Required">Department <span class="required-mark">*</span> </span><span tabindex="0" type="button" id="departmentInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted for one department at a time"></span></label>
+    <label for="selectedDepartment" aria-describedby="departmentInfo"><span class="tooltip-right" data-tooltip="Required">Department <span class="required-mark">*</span> </span>
+      <span tabindex="0"
+            type="button"
+            id="departmentInfo"
+            class="glyphicon glyphicon-question-sign"
+            data-toggle="tooltip"
+            data-placement="top"
+            title="Forms can only be submitted for one department at a time"
+            aria-hidden="false"></span>
+    </label>
         <select class="selectpicker"
                 name='department'
                 id='selectedDepartment'
@@ -75,7 +93,16 @@
   </div>
   <div class="form-group {% if forms %} has-error {% endif %}  ">
     <!-- selectpicker for term  -->
-      <label for="selectedTerm"><span class="tooltip-right" data-tooltip="Required">Term <span class="required-mark">*</span> </span><span tabindex="0" type="button" id="termInfo" class="glyphicon glyphicon-question-sign" data-toggle="tooltip" data-placement="top" title="Forms can only be submitted to one term at a time"></span></label>
+      <label for="selectedTerm" aria-describedby="termInfo"><span class="tooltip-right" data-tooltip="Required">Term <span class="required-mark">*</span> </span>
+        <span tabindex="0"
+              type="button"
+              id="termInfo"
+              class="glyphicon glyphicon-question-sign"
+              data-toggle="tooltip"
+              data-placement="top"
+              title="Forms can only be submitted to one term at a time"
+              aria-hidden="false"></span>
+      </label>
             <select class="selectpicker disable"
                     name='term'
                     id='selectedTerm'
@@ -86,7 +113,7 @@
                     onchange = "showAccessLevel(); preFilledDate(this); summerLaborWarning()">
                 <option value = "" disabled selected>Select a Term</option>
             {% for term in terms %}
-                <option value = "{{term.termCode}}" data-termCode = "{{term.termCode}}">{{term.termName}}</option>
+                <option value = "{{term.termCode}}" data-termSummer = "{{term.isSummer|lower}}" data-termBreak = "{{term.isBreak|lower}}">{{term.termName}}</option>
             {% endfor %}
           </select>
   </div>

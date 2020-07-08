@@ -12,8 +12,8 @@ from app.logic.emailHandler import*
 @main_bp.route('/studentOverloadApp/<formId>', methods=['GET']) # the form ID here is the ID from formHistory table
 # @login_required
 def studentOverloadApp(formId):
-    current_user = require_login()
-    if not current_user:        # Not logged in
+    currentUser = require_login()
+    if not currentUser:        # Not logged in
         return render_template('errors/403.html')
     overloadForm = FormHistory.get(FormHistory.formHistoryID == formId)
 
@@ -30,12 +30,11 @@ def studentOverloadApp(formId):
     today = date.today()
     todayYear = today.year
     termYear = todayYear * 100
-    termCodeYear = Term.select(Term.termCode).where(Term.termCode.between(termYear-1, termYear + 15))
-    currentTerm = str(lsfForm.termCode.termCode)[-2:]
+    termsInYear = Term.select(Term).where(Term.termCode.between(termYear-1, termYear + 15))
     TermsNeeded=[]
-    for term in termCodeYear:
-        if str(term)[-2:] == "11" or str(term)[-2:] == "12" or str(term)[-2:]== "00":
-            TermsNeeded.append(term)
+    for term in termsInYear:
+        if term.isBreak == False:
+            TermsNeeded.append(term.termCode)
     studentSecondaryLabor = LaborStatusForm.select(LaborStatusForm.laborStatusFormID).where(LaborStatusForm.studentSupervisee_id == prefillStudentBnum,
                                                                                                LaborStatusForm.jobType == "Secondary",
                                                                                                LaborStatusForm.termCode.in_(TermsNeeded))
@@ -63,7 +62,7 @@ def studentOverloadApp(formId):
     totalFormHours = totalCurrentHours + prefillHoursOverload
     return render_template( 'main/studentOverloadApp.html',
 				            title=('student Overload Application'),
-                            username = current_user,
+                            username = currentUser,
                             overloadForm = overloadForm,
                             prefillStudentName = prefillStudentName,
                             prefillStudentBnum = prefillStudentBnum,
@@ -76,7 +75,8 @@ def studentOverloadApp(formId):
                             currentPrimary = formIDPrimary,
                             currentSecondary = formIDSecondary,
                             totalCurrentHours = totalCurrentHours,
-                            totalFormHours = totalFormHours
+                            totalFormHours = totalFormHours,
+                            currentUser = currentUser
                           )
 
 @main_bp.route('/studentOverloadApp/update', methods=['POST'])

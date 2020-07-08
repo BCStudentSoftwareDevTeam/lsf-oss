@@ -3,7 +3,7 @@ from app.models.formHistory import *
 from app.models.status import *
 
 
-def laborHistoryAuthorizeUser(id, UserID):
+def laborHistoryAuthorizeUser(id, UserID, supervisorID):
     """
     If the current user is not an admin, then we can only allow them to see the labor history of a
     given BNumber if the BNumber is tied to a labor status form that is tied to a department where the
@@ -13,7 +13,7 @@ def laborHistoryAuthorizeUser(id, UserID):
         authorizedUser = False
         status = Status.get(Status.statusName == "Approved")
         allStudentDepartments = LaborStatusForm.select(LaborStatusForm.department).where(LaborStatusForm.studentSupervisee == id).distinct()
-        allUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == UserID) | (FormHistory.createdBy == UserID)).distinct()
+        allUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == supervisorID) | (FormHistory.createdBy == UserID)).distinct()
         for userDepartment in allUserDepartments:
             for studentDepartment in allStudentDepartments:
                 if userDepartment.formID.department == studentDepartment.department:

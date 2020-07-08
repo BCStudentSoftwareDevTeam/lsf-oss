@@ -1,10 +1,8 @@
-<div class="modal fade" id="modalRelease" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable" role="document">
-    <div id="content" class="modal-content">
+<div class="loader"></div>
       <div class="modal-header">
-        <h3 class="modal-title" id="exampleModalLabel" align="center"><strong>Labor Release Form</strong></h3>
+        <h3 class="modal-title" align="center"><strong>Labor Release Form</strong></h3>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" id="releaseModalBody">
         <table id="releaseStudentTable" class="table table-bordered">
           <thead>
             <tr>
@@ -16,16 +14,13 @@
             </tr>
           </thead>
           <tbody>
+            {% for form in historyForm %}
             <tr>
-              <td style="text-align:center">{{allForms.formID.studentSupervisee.FIRST_NAME}} {{allForms.formID.studentSupervisee.LAST_NAME}} ({{allForms.formID.studentSupervisee.ID}})</td>
-              <td style="text-align:center">{{allForms.formID.POSN_TITLE}} ({{allForms.formID.POSN_CODE}})</td>
-              {% if allForms.formID.weeklyHours == None %}
-              <td style="text-align:center">{{allForms.formID.contractHours}}</td>
-              {% else %}
-              <td style="text-align:center">{{allForms.formID.weeklyHours}}</td>
-              {% endif %}
-              <td style="text-align:center">{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}} ({{allForms.formID.supervisor.ID}})</td>
-              <td style="text-align:center">{{allForms.formID.department.DEPT_NAME}} ({{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}})</td>
+              <td colspan="1">{{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}}</td>
+              <td>{{form.formID.POSN_TITLE}}</td>
+              <td>{{form.formID.weeklyHours}}</td>
+              <td>{{form.formID.supervisor.FIRST_NAME}} {{form.formID.supervisor.LAST_NAME}}</td>
+              <td>{{form.formID.department.DEPT_NAME}}</td>
             </tr>
           </tbody>
         </table>
@@ -39,19 +34,19 @@
           </thead>
           <tbody>
             <tr>
-              <td style="text-align:center">{{allForms.releaseForm.conditionAtRelease}}</td>
-              <td style="text-align:center">{{allForms.releaseForm.releaseDate.strftime('%m/%d/%y')}}</td>
-              <td style="text-align:center">{{allForms.createdDate.strftime('%m/%d/%y')}}</td>
+              <td style="text-align:center">{{form.releaseForm.conditionAtRelease}}</td>
+              <td style="text-align:center">{{form.releaseForm.releaseDate.strftime('%m/%d/%y')}}</td>
+              <td style="text-align:center">{{form.createdDate.strftime('%m/%d/%y')}}</td>
             </tr>
             <tr>
               <td style="text-align: center"><strong>Release Reason</strong></td>
-              <td colspan='2'>{{allForms.releaseForm.reasonForRelease}}</td>
+              <td colspan='2'>{{form.releaseForm.reasonForRelease}}</td>
             </tr>
           </tbody>
         </table>
         <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
         <div id='radioDivRelease'>
-          <button id="modalNote_{{allForms.formID.laborStatusFormID}}" onclick="toggleNotesLog({{allForms.formID.laborStatusFormID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View</button>
+          <button id="modalNote_{{formHistoryID}}" onclick="toggleNotesLog({{laborStatusFormID}}, {{formHistoryID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes ({{noteTotal}})</button>
           <span>Status:<span aria-hidden="true" style="color:red"><strong>*</strong></span></span>
           <label for="approveRelease" class="radio-inline">
             <input type="radio" id="approveRelease" class='release' name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve</input>
@@ -80,9 +75,7 @@
           <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal" onclick="location.reload()">Close</button>
         </div>
         <div class="col-sm- floatright" align="right">
-          <button type="button" class="btn btn-success floatright" id="submitRelease" onclick="submitRelease({{allForms.formHistoryID}})">Submit</button>
+          <button type="button" class="btn btn-success floatright" id="submitRelease" onclick="submitRelease({{form.formHistoryID}})">Submit</button>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+      {% endfor %}

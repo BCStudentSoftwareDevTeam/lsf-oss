@@ -17,24 +17,29 @@ from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
 from fpdf import FPDF
 from app.logic.authorizationFunctions import*
-from app.models.Tracy.stuposn import STUPOSN
 from app.logic.buttonStatus import ButtonStatus
+from app.models.supervisor import Supervisor
+from app.logic.tracy import Tracy
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
     try:
-        current_user = require_login()
-        if not current_user:                    # Not logged in
+        currentUser = require_login()
+        if not currentUser:                    # Not logged in
             return render_template('errors/403.html')
-        if not current_user.isLaborAdmin:
-            isLaborAdmin = False
-            authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, current_user.UserID)
-            if authorizedUser == False:
-                return render_template('errors/403.html')
+        if not currentUser.isLaborAdmin:
+            departmentsList = None
+            if currentUser.Student and not currentUser.Supervisor:
+                if currentUser.Student.ID != id:
+                    return redirect('/laborHistory/' + currentUser.Student.ID)
+            elif currentUser.Supervisor and not currentUser.Student:
+                authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, currentUser, currentUser.Supervisor.ID)
+                if authorizedUser == False:
+                    return render_template('errors/403.html', currentUser = currentUser), 403
         else:
-            isLaborAdmin = True
             departmentsList = []
         student = Student.get(Student.ID == id)
+        studentUser = User.get(User.Student == student)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         formHistoryList = ""
         for form in studentForms:
@@ -43,14 +48,16 @@ def laborhistory(id):
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,
-                                username=current_user.username,
+                                username=currentUser.username,
                                 studentForms = studentForms,
                                 formHistoryList = formHistoryList,
                                 departmentsList = departmentsList,
-                                isLaborAdmin = isLaborAdmin
+                                currentUser = currentUser,
+                                studentUserName = studentUser.username
                               )
     except Exception as e:
-        return render_template('errors/500.html')
+        print("Error Loading Student Labor History", e)
+        return render_template('errors/500.html', currentUser = currentUser), 500
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
 def downloadFormHistory():
@@ -58,6 +65,7 @@ def downloadFormHistory():
     This function is called when the download button is pressed.  It runs a function for writing to an excel sheet that is in download.py.
     This function downloads the created excel sheet of the history from the page.
     """
+    currentUser = require_login()
     try:
         data = request.form
         historyList = data["listOfForms"].split(',')
@@ -66,7 +74,7 @@ def downloadFormHistory():
         filename = completePath.split('/').pop()
         return send_file(completePath, mimetype='text/csv', as_attachment=True, attachment_filename=filename)
     except:
-        return render_template('errors/500.html')
+        return render_template('errors/500.html', currentUser = currentUser), 500
 
 @main_bp.route('/laborHistory/modal/<statusKey>', methods=['GET'])
 def populateModal(statusKey):
@@ -76,34 +84,37 @@ def populateModal(statusKey):
     to put on the modal depending on what form is in the history.
     """
     try:
-        current_user = require_login()
-        if not current_user:                    # Not logged in
-            return render_template('errors/403.html')
+        currentUser = require_login()
+        if not currentUser:                    # Not logged in
+            return render_template('errors/403.html', currentUser = currentUser), 403
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
+        student = User.get(User.Student == statusForm[0].studentSupervisee)
         currentDate = datetime.date.today()
         pendingformType = None
         buttonState = None
-        current_user = current_user
         for form in forms:
             if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
                 if form.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
                     newSupervisorID = form.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
-                    newSupervisor = User.get(User.UserID == newSupervisorID)
+                    newSupervisor = Supervisor.get(Supervisor.ID == newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     form.modifiedForm.oldValue = form.formID.supervisor.FIRST_NAME + " " + form.formID.supervisor.LAST_NAME # old supervisor name
                     form.modifiedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
                 if form.modifiedForm.fieldModified == "Position": # if position field has been modified in adjust form then retriev position name.
                     newPositionCode = form.modifiedForm.newValue
-                    newPosition = STUPOSN.get(STUPOSN.POSN_CODE == newPositionCode)
+                    newPosition = Tracy().getPositionFromCode(newPositionCode)
                     # temporarily storing the new position name in new value, and old position name in old value
                     # because we want to show these information in the hmtl template.
                     form.modifiedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
                     form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
         for form in forms:
-            if current_user.username != (form.createdBy.username or form.formID.supervisor.username):
-                buttonState = ButtonStatus.no_buttons
+            if currentUser.Student and currentUser.username == student.username:
+                buttonState = ButtonStatus.show_student_labor_eval_button
+                break
+            elif currentUser.Supervisor.ID != (form.createdBy.Supervisor.ID or form.formID.supervisor.ID):
+                buttonState = ButtonStatus.no_buttons # otherwise, show the notification
                 break
             else:
                 if form.releaseForm != None:
@@ -173,7 +184,7 @@ def populateModal(statusKey):
                                             ))
         return (resp)
     except Exception as e:
-        print(e)
+        print("Error on button state: ", e)
         return (jsonify({"Success": False}))
 
 @main_bp.route('/laborHistory/modal/printPdf/<statusKey>', methods=['GET'])
@@ -203,23 +214,16 @@ def withdraw_form():
         student = LaborStatusForm.get(rsp["FormID"])
         selectedPendingForms = FormHistory.select().join(Status).where(FormHistory.formID == rsp["FormID"]).where(FormHistory.status.statusName == "Pending").order_by(FormHistory.historyType.asc())
         for form in selectedPendingForms:
-            try:
-                OverloadForm.get(OverloadForm.overloadFormID == form.overloadForm.overloadFormID).delete_instance()
-                form.delete_instance()
-            except:
-                pass
-            try:
-                ModifiedForm.get(ModifiedForm.modifiedFormID == form.modifiedForm.modifiedFormID).delete_instance()
-                form.delete_instance()
-            except:
-                pass
-            try:
-                if form.historyType.historyTypeName == "Labor Status Form":
-                    formID = form.formID.laborStatusFormID
-                    form.delete_instance()
-                    LaborStatusForm.get(formID).delete_instance()
-            except:
-                pass
+            if form.historyType.historyTypeName == "Labor Status Form":
+                historyFormToDelete = FormHistory.get(FormHistory.formHistoryID == form.formHistoryID)
+                laborStatusFormToDelete = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == form.formID.laborStatusFormID)
+                historyFormToDelete.delete_instance()
+                laborStatusFormToDelete.delete_instance()
+            elif form.historyType.historyTypeName == "Labor overloadForm Form":
+                historyFormToDelete = FormHistory.get(FormHistory.formHistoryID == form.formHistoryID)
+                overloadFormToDelete = OverloadForm.get(OverloadForm.overloadFormID == form.overloadForm.overloadFormID)
+                overloadFormToDelete.delete_instance()
+                historyFormToDelete.delete_instance()
         message = "Your selected form for {0} {1} has been withdrawn.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
         return jsonify({"Success":True, "url":"/"})

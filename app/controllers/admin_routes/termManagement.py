@@ -1,12 +1,11 @@
 from app.controllers.admin_routes import *
-from app.models.user import *
+from app.models.user import User
 from app.controllers.admin_routes import admin
 from app.login_manager import require_login
-from app.models.term import *
+from app.models.term import Term
 import datetime
-from app.models.term import *
 from flask import json, jsonify
-from flask import request
+from flask import request, redirect
 from datetime import datetime, date
 from datetime import datetime
 import datetime
@@ -15,15 +14,14 @@ import datetime
 # @login_required
 
 def term_Management():
-    current_user = require_login()
-    if not current_user:                    # Not logged in
+    currentUser = require_login()
+    if not currentUser:                    # Not logged in
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
-        return render_template('errors/403.html',
-                                isLaborAdmin = isLaborAdmin)
-    else:
-        isLaborAdmin = True
+    if not currentUser.isLaborAdmin:       # Not an admin
+        if currentUser.Student: # logged in as a student
+            return redirect('/laborHistory/' + currentUser.Student.ID)
+        elif currentUser.Supervisor:
+            return render_template('errors/403.html', currentUser = currentUser), 403
 
     terms = Term.select()
     listOfTerms = Term.select()
@@ -33,8 +31,8 @@ def term_Management():
     return render_template( 'admin/termManagement.html',
                              title=('Term Management'),
                              terms = terms,
-                             isLaborAdmin = isLaborAdmin,
-                             listOfTerms = accordionTerms()
+                             listOfTerms = accordionTerms(),
+                             currentUser = currentUser
                           )
 
 def createTerms(termList, iteration):
@@ -52,15 +50,15 @@ def createTerms(termList, iteration):
             elif i == 1:
                 termList.create(termCode = (code + 11), termName = ("Fall " + str(termYear)))
             elif i == 2:
-                termList.create(termCode = (code + 1), termName = ("Thanksgiving Break " + str(termYear)))
+                termList.create(termCode = (code + 1), termName = ("Thanksgiving Break " + str(termYear)), isBreak = True)
             elif i == 3:
-                termList.create(termCode = (code + 2), termName = ("Christmas Break " + str(termYear)))
+                termList.create(termCode = (code + 2), termName = ("Christmas Break " + str(termYear)), isBreak = True)
             elif i == 4:
                 termList.create(termCode = (code + 12), termName = ("Spring " + str(termYear + 1)))
             elif i == 5:
-                termList.create(termCode = (code + 3), termName = ("Spring Break " + str(termYear + 1)))
+                termList.create(termCode = (code + 3), termName = ("Spring Break " + str(termYear + 1)), isBreak = True)
             elif i == 6:
-                termList.create(termCode = (code + 13), termName = ("Summer " + str(termYear + 1)))
+                termList.create(termCode = (code + 13), termName = ("Summer " + str(termYear + 1)), isBreak = True, isSummer = True)
         except Exception as e:
              print("You failed to create a term in the " + str(termYear) + " AY. This is likely expected.")
 

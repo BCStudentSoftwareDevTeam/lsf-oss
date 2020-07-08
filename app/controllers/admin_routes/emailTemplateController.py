@@ -8,15 +8,14 @@ from flask import Flask, redirect, url_for, flash, jsonify, json, request, flash
 @admin.route('/admin/emailTemplates', methods=['GET'])
 # @login_required
 def email_templates():
-    current_user = require_login()
-    if not current_user:                    # Not logged in
+    currentUser = require_login()
+    if not currentUser:                    # Not logged in
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin:       # Not a labor admin
-        isLaborAdmin = False
-        return render_template('errors/403.html',
-                                isLaborAdmin = isLaborAdmin)
-    else:
-        isLaborAdmin = True
+    if not currentUser.isLaborAdmin:       # Not a labor admin
+        if currentUser.Student: # logged in as a student
+            return redirect('/laborHistory/' + currentUser.Student.ID)
+        elif currentUser.Supervisor:
+            return render_template('errors/403.html', currentUser = currentUser), 403
     emailTemplateID = EmailTemplate.select()
     purpose = EmailTemplate.select(EmailTemplate.purpose).distinct()
     formType = EmailTemplate.select(EmailTemplate.formType).distinct()
@@ -33,7 +32,7 @@ def email_templates():
                             subject = subject,
                             recipient = recipient,
                             body = body,
-                            isLaborAdmin = isLaborAdmin
+                            currentUser = currentUser
                           )
 
 @admin.route('/admin/emailTemplates/getEmailArray/', methods=['GET'])
@@ -88,7 +87,6 @@ def postEmail():
         email.subject = request.form["purpose"]
         email.save()
         message = "The Email Template '{0} {1} {2}' has been successfully updated.".format(email.audience, email.formType, email.action)
-        print(message)
         flash(message, "success")
         return (jsonify({"Success": True}))
     except Exception as e:

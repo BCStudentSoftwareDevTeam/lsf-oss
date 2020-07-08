@@ -1,7 +1,3 @@
-#pip install peewee==3.9.6
-#pip install peewee-migrations==0.3.18
-
-rm -f migrations.json 2> /dev/null
 
 pem init
 
@@ -30,5 +26,6 @@ pem add app.models.historyType.HistoryType
 pem add app.models.visitTracker.VisitTracker
 pem add app.models.emailTracker.EmailTracker
 pem add app.models.adminNotes.AdminNotes
+pem add app.models.supervisor.Supervisor
 pem watch
 pem migrate

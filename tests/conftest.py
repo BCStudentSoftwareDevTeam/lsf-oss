@@ -38,7 +38,7 @@ def chrome_driver_init(request):
     chrome_driver.close()
 
 @pytest.mark.usefixtures("ff_driver_init")
-@pytest.mark.usefixtures("chrome_driver_init")
+#@pytest.mark.usefixtures("chrome_driver_init")
 class MultipleBrowserTest:
     drivers = []
     pass

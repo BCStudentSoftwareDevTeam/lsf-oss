@@ -2,9 +2,7 @@ from app.controllers.main_routes import *
 from app.controllers.main_routes.main_routes import *
 from app.controllers.main_routes.laborHistory import *
 from app.models.user import User
-from app.models.Tracy.studata import *
-from app.models.Tracy.stustaff import *
-from app.models.Tracy.stuposn import *
+from app.logic.tracy import Tracy
 from app.models.modifiedForm import *
 from flask_bootstrap import bootstrap_find_resource
 from app.login_manager import require_login
@@ -15,15 +13,19 @@ from flask import flash
 import base64
 from app import cfg
 from app.logic.emailHandler import*
+from app.models.supervisor import Supervisor
 
 @main_bp.route('/modifyLSF/<laborStatusKey>', methods=['GET']) #History modal called it laborStatusKey
 def modifyLSF(laborStatusKey):
     ''' This function gets all the form's data and populates the front end with it'''
-    current_user = require_login()
-    if not current_user:        # Not logged in
+    currentUser = require_login()
+    if not currentUser:        # Not logged in
         return render_template('errors/403.html')
-    if not current_user.isLaborAdmin:       # Not an admin
-        isLaborAdmin = False
+    if not currentUser.isLaborAdmin:       # Not an admin
+        if currentUser.Student and not currentUser.Supervisor:
+            return redirect('/laborHistory/' + currentUser.Student.ID)
+        elif currentUser.Supervisor:
+            isLaborAdmin = False
     else:
         isLaborAdmin = True
     #If logged in....
@@ -33,11 +35,11 @@ def modifyLSF(laborStatusKey):
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
     prefillsupervisorID = form.supervisor.PIDM
-    superviser_id = form.supervisor.UserID
+    superviser_id = form.supervisor.ID
     prefilldepartment = form.department.DEPT_NAME
     prefillposition = form.POSN_TITLE #+ " " +"("+ form.WLS + ")"
     prefilljobtype = form.jobType
-    prefillterm = form.termCode.termName
+    prefillterm = form.termCode
     totalHours = 0
     if form.weeklyHours != None:
         prefillhours = form.weeklyHours
@@ -48,17 +50,17 @@ def modifyLSF(laborStatusKey):
     else:
         prefillhours = form.contractHours
     prefillnotes = form.supervisorNotes
-    #These are the data fields to populate our dropdowns(Supervisor. Position, WLS,)
-    supervisors = STUSTAFF.select().order_by(STUSTAFF.FIRST_NAME.asc()) # modeled after LaborStatusForm.py
-    positions = STUPOSN.select().where(STUPOSN.DEPT_NAME == prefilldepartment)
-    wls = STUPOSN.select(STUPOSN.WLS).distinct()
-    #Step 3: send data to front to populate html
-    oldSupervisor = STUSTAFF.get(form.supervisor.PIDM)
 
+    #These are the data fields to populate our dropdowns(Supervisor. Position)
+    supervisors = Tracy().getSupervisors()
+    positions = Tracy().getPositionsFromDepartment(prefilldepartment)
+
+    #Step 3: send data to front to populate html
+    oldSupervisor = Tracy().getSupervisorFromPIDM(form.supervisor.PIDM)
 
     return render_template( 'main/modifyLSF.html',
 				            title=('modify LSF'),
-                            username = current_user,
+                            username = currentUser,
                             superviser_id = superviser_id,
                             prefillstudent = prefillstudent,
                             prefillsupervisor = prefillsupervisor,
@@ -71,19 +73,18 @@ def modifyLSF(laborStatusKey):
                             prefillnotes = prefillnotes,
                             supervisors = supervisors,
                             positions = positions,
-                            wls = wls,
                             form = form,
                             oldSupervisor = oldSupervisor,
-                            isLaborAdmin = isLaborAdmin,
-                            totalHours = totalHours
+                            totalHours = totalHours,
+                            currentUser = currentUser
                           )
 
 @main_bp.route("/modifyLSF/updateLSF/<laborStatusKey>", methods=['POST'])
 def updateLSF(laborStatusKey):
     """ Create Modified Labor Form and Form History"""
     try:
-        current_user = require_login()
-        if not current_user:        # Not logged in
+        currentUser = require_login()
+        if not currentUser:        # Not logged in
             return render_template('errors/403.html')
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
@@ -91,15 +92,15 @@ def updateLSF(laborStatusKey):
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if k == "supervisor":
-                d, created = User.get_or_create(PIDM = int(rsp[k]['newValue']))
+                d, created = Supervisor.get_or_create(PIDM = int(rsp[k]['newValue']))
                 if not created:
-                    LSF.supervisor = d.UserID
+                    LSF.supervisor = d.ID
                 LSF.save()
                 if created:
-                    tracyUser = STUSTAFF.get(STUSTAFF.PIDM == rsp[k]['newValue'])
+                    tracyUser = Tracy().getSupervisorFromPIDM(rsp[k]['newValue'])
                     tracyEmail = tracyUser.EMAIL
                     tracyUsername = tracyEmail.find('@')
-                    user = User.get(User.PIDM == rsp[k]['newValue'])
+                    user = Supervisor.get(Supervisor.PIDM == rsp[k]['newValue'])
                     user.username   = tracyEmail[:tracyUsername]
                     user.FIRST_NAME = tracyUser.FIRST_NAME
                     user.LAST_NAME  = tracyUser.LAST_NAME
@@ -130,18 +131,23 @@ def updateLSF(laborStatusKey):
                 newTotalHours = totalHours + int(rsp[k]['newValue'])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
-                    user = User.get(User.username == current_user.username)
                     newFormHistory = FormHistory.create( formID = laborStatusKey,
                                                         historyType = "Labor Overload Form",
-                                                        createdBy = current_user.UserID,
+                                                        createdBy = currentUser,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate = date.today(),
                                                         status = "Pending")
+
                     try:
                         overloadEmail = emailHandler(newFormHistory.formHistoryID)
                         overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
                     except Exception as e:
                         print("Error on sending overload emails: ", e)
+                elif previousTotalHours > 15 and newTotalHours <= 15:   # This will delete an overload form after the hours are modified
+                    deleteOverloadForm = FormHistory.get((FormHistory.formID == laborStatusKey) & (FormHistory.historyType == "Labor Overload Form"))
+                    deleteOverloadForm = OverloadForm.get(OverloadForm.overloadFormID == deleteOverloadForm.overloadForm.overloadFormID)
+                    deleteOverloadForm.delete_instance()
+
                 LSF.weeklyHours = int(rsp[k]['newValue'])
                 LSF.save()
         changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
