@@ -12,6 +12,7 @@ from app.login_manager import require_login
 from flask import json
 from flask import make_response
 import datetime
+import re
 from datetime import date
 from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
@@ -94,22 +95,24 @@ def populateModal(statusKey):
         pendingformType = None
         buttonState = None
         for form in forms:
-            if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
-                if form.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
-                    newSupervisorID = form.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
+            if form.adjustedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in adjusted table
+                if form.adjustedForm.fieldAdjusted == "supervisor": # if supervisor field in adjust forms has been changed,
+                    newSupervisorID = form.adjustedForm.newValue    # use the supervisor pidm in the field adjusted to find supervisor in User table.
                     newSupervisor = Supervisor.get(Supervisor.ID == newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     form.adjustedForm.oldValue = form.formID.supervisor.FIRST_NAME + " " + form.formID.supervisor.LAST_NAME # old supervisor name
                     form.adjustedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
 
-                if form.adjustedForm.fieldAdjusted == "Position": # if position field has been changed in adjust form then retriev position name.
+                if form.adjustedForm.fieldAdjusted == "position": # if position field has been changed in adjust form then retriev position name.
                     newPositionCode = form.adjustedForm.newValue
                     newPosition = Tracy().getPositionFromCode(newPositionCode)
                     # temporarily storing the new position name in new value, and old position name in old value
                     # because we want to show these information in the hmtl template.
                     form.adjustedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
                     form.adjustedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
+                # Converts the field adjusted value out of camelcase into a more readable format to be displayed on the front end
+                form.adjustedForm.fieldAdjusted = re.sub(r"(\w)([A-Z])", r"\1 \2", form.adjustedForm.fieldAdjusted).title()
 
         for form in forms:
             if currentUser.Student and currentUser.username == student.username:

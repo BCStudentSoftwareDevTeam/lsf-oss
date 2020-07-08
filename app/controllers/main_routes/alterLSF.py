@@ -114,7 +114,7 @@ def submitAlteredLSF(laborStatusKey):
         formHistories = ""
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-            if k == "Supervisor Notes":
+            if k == "supervisorNotes":
                 if formStatus == "Pending":
                     LSF.supervisorNotes = rsp[k]['newValue']
                     LSF.save()
@@ -127,14 +127,22 @@ def submitAlteredLSF(laborStatusKey):
                     newNoteEntry.save()
                     continue
             # This creates the adjusted form entry for every changed field for an adjustment submission
-            elif formStatus == "Approved":
+            elif formStatus == "approved":
                 adjustedforms = AdjustedForm.create(fieldAdjusted = k,
                                                     oldValue      = rsp[k]['oldValue'],
                                                     newValue      = rsp[k]['newValue'],
                                                     effectiveDate = datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d'))
-                formHistories = createFormHistory(laborStatusKey, rsp, k, currentUser, adjustedforms)
+                historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Adjustment Form")
+                status = Status.get(Status.statusName == "Pending")
+                formHistories = FormHistory.create(formID       = laborStatusKey,
+                                                   historyType  = historyType.historyTypeName,
+                                                   adjustedForm = adjustedforms.adjustedFormID,
+                                                   createdBy    = currentUser,
+                                                   createdDate  = date.today(),
+                                                   status       = status.statusName)
+                continue
 
-            if k == "Supervisor":
+            if k == "supervisor":
                 if formStatus == "Pending":
                     d, created = User.get_or_create(PIDM = int(rsp[k]['newValue']))
                     if not created:
@@ -157,16 +165,16 @@ def submitAlteredLSF(laborStatusKey):
                         LSF.supervisor = d.PIDM
                         LSF.save()
 
-            if k == "Position":
+            if k == "position":
                 if formStatus == "Pending":
                     LSF.POSN_TITLE = rsp[k]['newValue']
                     LSF.save()
 
-            if k == "Contract Hours":
+            if k == "contractHours":
                 LSF.contractHours = int(rsp[k]['newValue'])
                 LSF.save()
 
-            if k == "Weekly Hours":
+            if k == "weeklyHours":
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
                 totalHours = 0
                 if allTermForms:
@@ -216,17 +224,3 @@ def submitAlteredLSF(laborStatusKey):
         flash(message, "danger")
         print("An error occured during form submission:", e)
         return jsonify({"Success": False}), 500
-
-def createFormHistory(laborStatusKey, rsp, k, currentUser, adjustedforms):
-    """
-    Creates appropriate form history entries in the formHistory table
-    """
-    historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Adjustment Form")
-    status = Status.get(Status.statusName == "Pending")
-    formHistories = FormHistory.create(formID       = laborStatusKey,
-                                       historyType  = historyType.historyTypeName,
-                                       adjustedForm = adjustedforms.adjustedFormID,
-                                       createdBy    = currentUser,
-                                       createdDate  = date.today(),
-                                       status       = status.statusName)
-    return formHistories
