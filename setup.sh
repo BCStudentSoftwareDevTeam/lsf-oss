@@ -1,30 +1,27 @@
 #!/usr/bin/env bash
 
-# Check Python version number
-if (("$((`python -c 'import sys; print(sys.version_info[0])'` >= 3))")); then
-    if (("$((`python -c 'import sys; print(sys.version_info[1])'` >= 6))")); then
-        echo "Python version meets system requirements (3.6 or newer)"
-    else
-        echo "Your version of Python is not up to date. Please update to Python 3.6 or newer"; return 1
-    fi
+# Check for correct python version
+VERSION=`python3 --version | awk '{print $2}'`
+if [ "${VERSION:0:1}" -ne "3" ] || [ "${VERSION:2:1}" -lt "6" ] || [ "${VERSION:2:1}" -gt "8" ]; then
+	echo "You must use Python 3.6 - 3.8. You are using $VERSION"
+	echo "When upgrading, remember to install python3.X-dev and python3.X-venv"
+	return 1
 else
-    echo "Your version of Python is not up to date. Please update to Python 3.6 or newer"; return 1
+	echo -e "You are using Python $VERSION"
 fi
 
-
-# Create a virtual machine virtual environment
+# Create a virtual environment for dependencies
 if [ ! -d venv ]
 then
   python3 -m venv venv
 fi
-
 . venv/bin/activate
 
 # upgrade pip
 python3 -m pip install --upgrade pip #added python-m for pip installs (source setup overwrite for venv)
 
+# install requirements
 python3 -m pip install -r requirements.txt
-
 # To generate a new requirements.txt file, run "pip freeze > requirements.txt"
 
 echo
