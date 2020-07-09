@@ -166,6 +166,7 @@ def finalUpdateStatus(raw_status):
                 # The following function overrides the original data in lsf with the new data from adjustment form.
                 LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == history_type_data.formID) # getting the specific labor status form
                 overrideOriginalStatusFormOnAdjustmentFormApproval(history_type_data, LSF)
+                print('overrideOriginalStatusFormOnAdjustmentFormApproval', overrideOriginalStatusFormOnAdjustmentFormApproval)
         return jsonify({"success": True})
     except Exception as e:
         print("Error preparing form for status update:", e)
