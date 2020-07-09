@@ -3,7 +3,7 @@ from app.models.formHistory import *
 from app.models.status import *
 
 
-def laborHistoryAuthorizeUser(id, UserID, supervisorID=None):
+def authorizeUser_findAllDepartments(id, UserID, supervisorID=None):
     """
     If the current user is not an admin, and they are a supervisor,
     then we can only allow them to see the labor history of a
