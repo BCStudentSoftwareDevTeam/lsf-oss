@@ -112,6 +112,7 @@ def submitAlteredLSF(laborStatusKey):
                                  .where(FormHistory.formID == laborStatusKey)
                                  .get().status_id)
         formHistories = ""
+        adjustedforms = None
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if k == "supervisorNotes":
@@ -186,6 +187,7 @@ def submitAlteredLSF(laborStatusKey):
                     newFormHistory = FormHistory.create(formID       = laborStatusKey,
                                                         historyType  = "Labor Overload Form",
                                                         createdBy    = currentUser,
+                                                        modifiedForm = adjustedforms.adjustedFormID,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate  = date.today(),
                                                         status       = "Pending")
