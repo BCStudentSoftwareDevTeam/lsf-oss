@@ -15,6 +15,7 @@ from app.models.term import Term
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
 from app.models.adminNotes import AdminNotes
+from app.models.emailTemplate import EmailTemplate
 
 print("Inserting data for demo and testing purposes")
 
