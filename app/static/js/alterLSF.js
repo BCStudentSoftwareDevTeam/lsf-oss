@@ -13,12 +13,12 @@ $("#datetimepicker0").datepicker({
 });
 $("#datetimepicker0").datepicker("setDate", "date");
 
-$('.glyphicon-calendar').click(function() {
+$(".glyphicon-calendar").click(function() {
     $("#datetimepicker0").focus();
 });
 
 function jobPositionDisable(){
-  var isBreak = $("#termBreak").data('termbreak');
+  var isBreak = $("#termBreak").data("termbreak");
   if (isBreak){
     $("#jobType").prop("disabled", true);
     $("#jobType").val("Secondary");
@@ -31,12 +31,11 @@ function jobPositionDisable(){
   }
 }
 
-
 function fillHoursPerWeek(){ // prefill hours per week select picker
   var defaultValue = $("#oldWeeklyHours").val();
   var selectedHoursPerWeek = $("#weeklyHours");
   var jobType = $("#jobType").val();
-  var wls = $("#POSN_CODE option:selected").attr("data-wls");
+  var wls = $("#position option:selected").attr("data-wls");
   if (selectedHoursPerWeek){
        var list = ["10", "12", "15", "20"];
        if (jobType == "Secondary") {
@@ -54,19 +53,19 @@ function fillHoursPerWeek(){ // prefill hours per week select picker
   }
 }
 
-var effectiveDate = $("#datetimepicker0").datepicker('getDate');
+var effectiveDate = $("#datetimepicker0").datepicker("getDate");
 var finalDict = {};
 
 function checkWLS20(){
   totalhours = $("#totalHours").val();
   weeklyHours = $("#weeklyHours").val();
   if(weeklyHours == "20"){
-    $('#OverloadModal').modal('show');
-    $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
+    $("#OverloadModal").modal("show");
+    $("#overloadModalButton").attr("data-target", "") // prevent a Primary Modal from showing up
   }
   else if(Number(totalhours) + Number(weeklyHours) > 15) {
-    $('#OverloadModal').modal('show');
-    $('#overloadModalButton').attr('data-target', '') // prevent a Primary Modal from showing up
+    $("#OverloadModal").modal("show");
+    $("#overloadModalButton").attr("data-target", "") // prevent a Primary Modal from showing up
   }
 }
 
@@ -74,45 +73,46 @@ function checkForChange(){
   var oldSupervisor = $("#prefillsupervisor").val();
   var newSupervisor = $("#supervisor").val();
   var oldPostition = $("#prefillposition").val();
-  var newPostition = $("#POSN_CODE").val();
+  var newPosition = $("#position").val();
   var date = $("#datetimepicker0").val();
   var oldNotes = $("#oldNotes").val();
   var newNotes = $("#supervisorNotes").val();
-  var oldContractHours = $('#oldContractHours').val();
-  var newContractHours = $('#contractHours').val();
-  var oldWeeklyHours = $('#oldWeeklyHours').val();
-  var newWeeklyHours = $('#weeklyHours').val();
+  var oldContractHours = $("#oldContractHours").val();
+  var newContractHours = $("#contractHours").val();
+  var oldWeeklyHours = $("#oldWeeklyHours").val();
+  var newWeeklyHours = $("#weeklyHours").val();
 
   if(oldSupervisor != newSupervisor){
-    finalDict["Supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor, "date": date}
+    finalDict["supervisor"] = {"oldValue": oldSupervisor, "newValue": newSupervisor, "date": date}
   }
-  if(oldPostition != newPostition){
-    finalDict["Position"] = {"oldValue": oldPostition, "newValue": newPostition, "date": date}
+  if(oldPostition != newPosition){
+    finalDict["position"] = {"oldValue": oldPostition, "newValue": newPosition, "date": date}
   }
   if(oldNotes != newNotes){
     finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes, "date": date}
   }
   if(oldContractHours != newContractHours && newWeeklyHours == ""){
-    finalDict["Contract Hours"] = {"oldValue": oldContractHours, "newValue": newContractHours, "date": date}
+    finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours, "date": date}
   }
   if(oldWeeklyHours != newWeeklyHours && newContractHours == ""){
-    finalDict["Weekly Hours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours, "date": date}
+    finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours, "date": date}
   }
 
-  if (JSON.stringify(finalDict) !== '{}'){
-    $('#submitModal').modal('show');
+  if (JSON.stringify(finalDict) !== "{}"){
+    $("#submitModal").modal("show");
     return finalDict
   }
-  if (JSON.stringify(finalDict) == '{}'){
-    $('#NochangeModal').modal('show');
+  if (JSON.stringify(finalDict) == "{}"){
+    $("#NochangeModal").modal("show");
   }
 }
 
 function buttonListener(laborStatusKey) {
+  event.preventDefault();
   $.ajax({
-    url: "/adjustLSF/submitModifiedForm/" + laborStatusKey,
+    url: "/alterLSF/submitAlteredLSF/" + laborStatusKey,
     method: "POST",
-    contentType: 'application/json',
+    contentType: "application/json",
     data: JSON.stringify(finalDict),
     success: function(response) {
       window.location.href = document.referrer;
