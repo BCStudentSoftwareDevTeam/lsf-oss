@@ -56,6 +56,6 @@
 </div>
 <!-- Modal End -->
   {% if currentUser.Student == None or currentUser.username != studentUserName %}
-    <div align= "left"><button class='btn btn-danger' id="returnbutton" onclick="window.history.back()">Return</button></div>
+    <div align= "left"><button class='btn btn-danger' id="returnbutton" onclick="location.replace('/')">Return</button></div>
   {% endif %}
 {% endblock %}
