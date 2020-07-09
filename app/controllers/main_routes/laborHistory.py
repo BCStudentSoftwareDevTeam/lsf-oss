@@ -100,8 +100,8 @@ def populateModal(statusKey):
                 if form.adjustedForm.fieldAdjusted == "supervisor": # if supervisor field in adjust forms has been changed,
                     newSupervisorID = form.adjustedForm.newValue    # use the supervisor pidm in the field adjusted to find supervisor in User table.
                     oldSupervisorID = form.adjustedForm.oldValue
-                    newSupervisor = Supervisor.get(Supervisor.PIDM == newSupervisorID)
-                    oldSupervisor = Supervisor.get(Supervisor.PIDM == oldSupervisorID)
+                    newSupervisor = Supervisor.get(Supervisor.ID == newSupervisorID)
+                    oldSupervisor = Supervisor.get(Supervisor.ID == oldSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     form.adjustedForm.oldValue = oldSupervisor.FIRST_NAME + " " + oldSupervisor.LAST_NAME # old supervisor name
