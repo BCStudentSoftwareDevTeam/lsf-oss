@@ -176,6 +176,7 @@ def submitAlteredLSF(laborStatusKey):
 
             if k == "weeklyHours":
                 allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
+                print(adjustedforms.adjustedFormID)
                 totalHours = 0
                 if allTermForms:
                     for i in allTermForms:
@@ -187,7 +188,7 @@ def submitAlteredLSF(laborStatusKey):
                     newFormHistory = FormHistory.create(formID       = laborStatusKey,
                                                         historyType  = "Labor Overload Form",
                                                         createdBy    = currentUser,
-                                                        modifiedForm = adjustedforms.adjustedFormID,
+                                                        adjustedForm = adjustedforms.adjustedFormID,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate  = date.today(),
                                                         status       = "Pending")

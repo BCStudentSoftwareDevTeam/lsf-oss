@@ -232,25 +232,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
         LSF.save()
 
     if form.adjustedForm.fieldAdjusted == "weeklyHours":
-        allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
-        totalHours = 0
-        if allTermForms:
-            for i in allTermForms:
-                totalHours += i.weeklyHours
-        previousTotalHours = totalHours + int(form.adjustedForm.newValue)
-        newTotalHours = totalHours + int(form.adjustedForm.newValue)
-        if previousTotalHours <= 15 and newTotalHours > 15:
-            newLaborOverloadForm = OverloadForm.create(studentOverloadReason = None)
-            newFormHistory = FormHistory.create( formID = LSF.laborStatusFormID,
-                                                historyType = "Labor Overload Form",
-                                                createdBy = currentUser,
-                                                overloadForm = newLaborOverloadForm.overloadFormID,
-                                                createdDate = date.today(),
-                                                status = "Pending")
-         # TODO: emails are commented out for testing purposes
-            # overloadEmail = emailHandler(newFormHistory.formHistoryID)
-            # overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
-        LSF.weeklyHours = int(form.adjustedForm.newValue)
+        LSF.weeklyHours = form.adjustedForm.newValue
         LSF.save()
 
 
