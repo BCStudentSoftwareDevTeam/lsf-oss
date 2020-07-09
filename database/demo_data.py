@@ -443,9 +443,6 @@ FormHistory.insert([{
 
 
 #############################
-<<<<<<< HEAD
-# admin Notes
-=======
 #emailtemplates
 #############################
 emailtemps= [
@@ -961,7 +958,6 @@ print(" * emailtemplates added")
 
 #############################
 #emailtemplates
->>>>>>> b83676669f1702e1da6267f8e9dc089ad7d42b7b
 #############################
 adminNotes = [
             {
