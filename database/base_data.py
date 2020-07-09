@@ -32,7 +32,7 @@ types = [
             },
             {"historyTypeName":"Labor Release Form"
             },
-            {"historyTypeName":"Modified Labor Form"
+            {"historyTypeName":"Labor Adjustment Form"
             }
         ]
 HistoryType.insert_many(types).on_conflict_replace().execute()
@@ -254,19 +254,19 @@ emailtemps= [
                 },
                 #LSF modified
                 {
-                "purpose":"Labor Status Form Modified For Student",
+                "purpose":"Labor Status Form Adjusted For Student",
                 "formType":"Labor Status Form",
-                "action":"Modified",
-                "subject":"Labor Status Form Modified",
+                "action":"Adjusted",
+                "subject":"Labor Status Form Adjusted",
                 "body":'''
                             ''',
                 "audience":"Student"
                 },
                 {
-                "purpose":"Labor Status Form Modified For Supervisor",
+                "purpose":"Labor Status Form Adjusted For Supervisor",
                 "formType":"Labor Status Form",
-                "action":"Modified",
-                "subject":"Labor Status Form Modified",
+                "action":"Adjusted",
+                "subject":"Labor Status Form Adjusted",
                 "body":'''
                             ''',
                 "audience":"Supervisor"
