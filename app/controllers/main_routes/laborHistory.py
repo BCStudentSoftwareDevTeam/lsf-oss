@@ -110,8 +110,8 @@ def populateModal(statusKey):
                     newPosition = Tracy().getPositionFromCode(newPositionCode)
                     # temporarily storing the new position name in new value, and old position name in old value
                     # because we want to show these information in the hmtl template.
-                    form.modifiedForm.newValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
-                    form.modifiedForm.oldValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
+                    form.adjustedForm.newValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
+                    form.adjustedForm.oldValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
                 # Converts the field adjusted value out of camelcase into a more readable format to be displayed on the front end
                 form.adjustedForm.fieldAdjusted = re.sub(r"(\w)([A-Z])", r"\1 \2", form.adjustedForm.fieldAdjusted).title()
 
