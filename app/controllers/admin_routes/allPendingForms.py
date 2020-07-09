@@ -253,7 +253,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
 #method extracts data from the data base to papulate pending form approvale modal
 def modal_approval_and_denial_data(approval_ids):
     ''' This method grabs the data that populated the on approve modal for lsf'''
-    
+
     id_list = []
     for formHistoryID in approval_ids:
         formHistory = FormHistory.get(FormHistory.formHistoryID == int(formHistoryID))
@@ -310,12 +310,12 @@ def getNotes(formid):
             listOfNotes = []
             for i in range(len(notes)):
                 formattedDate = notes[len(notes) -  i - 1].date.strftime('%m/%d/%Y')   # formatting date in the database to display MM/DD/YYYY
-                listOfNotes.append("<dl class='dl-horizontal text-left'> <b>" + formattedDate + " | <i>" + notes[len(notes) -  i - 1].createdBy.FIRST_NAME[0] + ". " + notes[len(notes) -  i - 1].createdBy.LAST_NAME + "</i> | </b> " + notes[len(notes) -  i - 1].notesContents + "</dl>")
+                listOfNotes.append("<dl class='dl-horizontal text-left'> <b>" + formattedDate + " | <i>" + notes[len(notes) -  i - 1].createdBy.Supervisor.FIRST_NAME[0] + ". " + notes[len(notes) -  i - 1].createdBy.Supervisor.LAST_NAME + "</i> | </b> " + notes[len(notes) -  i - 1].notesContents + "</dl>")
             notesDict["laborDepartmentNotes"] = listOfNotes
         return jsonify(notesDict)     # return as JSON
 
     except Exception as e:
-        print("error", e)
+        print("Error on getting notes: ", e)
         return jsonify({"Success": False})
 
 @admin.route('/admin/notesInsert/<formId>', methods=['POST'])
