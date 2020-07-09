@@ -78,7 +78,7 @@ def allPendingForms(formType):
                 # We check if there is a pending overload form using the key of the modifed forms
                 if allForms.adjustedForm.fieldAdjusted == "supervisor": # if supervisor field in adjust forms has been changed,
                     newSupervisorID = allForms.adjustedForm.newValue    # use the supervisor pidm in the field adjusted to find supervisor in User table.
-                    newSupervisor = Supervisor.get(Supervisor.PIDM == newSupervisorID)
+                    newSupervisor = Supervisor.get(Supervisor.ID == newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     allForms.adjustedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
@@ -200,7 +200,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
     if not currentUser:        # Not logged in
             return render_template('errors/403.html')
     if form.adjustedForm.fieldAdjusted == "supervisor":
-        d, created = Supervisor.get_or_create(PIDM = form.adjustedForm.newValue)
+        d, created = Supervisor.get_or_create(ID = form.adjustedForm.newValue)
         if not created:
             LSF.supervisor = d.ID
         LSF.save()
@@ -208,7 +208,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             tracyUser = Tracy().getSupervisorFromPIDM(form.adjustedForm.newValue)
             tracyEmail = tracyUser.EMAIL
             tracyUsername = tracyEmail.find('@')
-            user = Supervisor.get(Supervisor.PIDM == form.adjustedForm.newValue)
+            user = Supervisor.get(Supervisor.ID == form.adjustedForm.newValue)
             user.username   = tracyEmail[:tracyUsername]
             user.FIRST_NAME = tracyUser.FIRST_NAME
             user.LAST_NAME  = tracyUser.LAST_NAME
@@ -217,7 +217,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             user.ORG        = tracyUser.ORG
             user.DEPT_NAME  = tracyUser.DEPT_NAME
             user.save()
-            LSF.supervisor = d.PIDM
+            LSF.supervisor = d.ID
             LSF.save()
 
     if form.adjustedForm.fieldAdjusted == "position":
@@ -276,7 +276,7 @@ def modal_approval_and_denial_data(approval_ids):
                 position = Tracy().getPositionFromCode(formHistory.adjustedForm.newValue)
                 student_pos = position.POSN_TITLE
             if formHistory.adjustedForm.fieldAdjusted == "supervisor":
-                supervisor = Supervisor.get(Supervisor.PIDM == formHistory.adjustedForm.newValue)
+                supervisor = Supervisor.get(Supervisor.ID == formHistory.adjustedForm.newValue)
                 supervisor_firstname, supervisor_lastname = supervisor.FIRST_NAME, supervisor.LAST_NAME
                 supervisor_name = str(supervisor_firstname) +" "+ str(supervisor_lastname)
             if formHistory.adjustedForm.fieldAdjusted == "weeklyHours":

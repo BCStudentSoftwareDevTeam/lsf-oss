@@ -99,19 +99,23 @@ def populateModal(statusKey):
             if form.adjustedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in adjusted table
                 if form.adjustedForm.fieldAdjusted == "supervisor": # if supervisor field in adjust forms has been changed,
                     newSupervisorID = form.adjustedForm.newValue    # use the supervisor pidm in the field adjusted to find supervisor in User table.
+                    oldSupervisorID = form.adjustedForm.oldValue
                     newSupervisor = Supervisor.get(Supervisor.ID == newSupervisorID)
+                    oldSupervisor = Supervisor.get(Supervisor.ID == oldSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
-                    form.adjustedForm.oldValue = form.formID.supervisor.FIRST_NAME + " " + form.formID.supervisor.LAST_NAME # old supervisor name
+                    form.adjustedForm.oldValue = oldSupervisor.FIRST_NAME + " " + oldSupervisor.LAST_NAME # old supervisor name
                     form.adjustedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
 
                 if form.adjustedForm.fieldAdjusted == "position": # if position field has been changed in adjust form then retriev position name.
                     newPositionCode = form.adjustedForm.newValue
+                    oldPositionCode = form.adjustedForm.oldValue
                     newPosition = Tracy().getPositionFromCode(newPositionCode)
+                    oldPosition = Tracy().getPositionFromCode(oldPositionCode)
                     # temporarily storing the new position name in new value, and old position name in old value
                     # because we want to show these information in the hmtl template.
-                    form.adjustedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
-                    form.adjustedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
+                    form.adjustedForm.newValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
+                    form.adjustedForm.oldValue = oldPosition.POSN_TITLE + " (" + oldPosition.WLS+")"
                 # Converts the field adjusted value out of camelcase into a more readable format to be displayed on the front end
                 form.adjustedForm.fieldAdjusted = re.sub(r"(\w)([A-Z])", r"\1 \2", form.adjustedForm.fieldAdjusted).title()
 
