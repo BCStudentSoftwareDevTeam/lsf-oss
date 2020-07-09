@@ -24,15 +24,12 @@
             <dd class="col-sm-9">{{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}}</dd>
 
             <dt class="col-sm-3">Job Type (Hours)</dt>
-            <dd class="col-sm-9">{{form1.jobType}} ({% if form1.weeklyHours == None %}
-                                    {{form1.contractHours}}
-                                  {% else %}
-                                    {{form1.weeklyHours}}
-                                  {% endif %})
+            <dd class="col-sm-9">{{form1.jobType}}
+              ({% if form1.weeklyHours == None %}{{form1.contractHours}}{% else %}{{form1.weeklyHours}}{% endif %})
             </dd>
 
             <dt class="col-sm-3">Position (WLS)</dt>
-            <dd class="col-sm-9">{{form1.POSN_CODE}} - {{form1.POSN_TITLE}} ( {{form1.WLS}} )</dd>
+            <dd class="col-sm-9">{{form1.POSN_CODE}} - {{form1.POSN_TITLE}} ({{form1.WLS}})</dd>
           </dl>
         {% endfor %}
         <hr>
