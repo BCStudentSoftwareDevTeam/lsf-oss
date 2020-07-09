@@ -166,7 +166,10 @@ def submitAlteredLSF(laborStatusKey):
 
             if k == "position":
                 if formStatus == "Pending":
-                    LSF.POSN_TITLE = rsp[k]['newValue']
+                    position = Tracy().getPositionFromCode(rsp[k]['newValue'])
+                    LSF.POSN_CODE = position.POSN_CODE
+                    LSF.POSN_TITLE = position.POSN_TITLE
+                    LSF.WLS = position.WLS
                     LSF.save()
 
             if k == "contractHours":
