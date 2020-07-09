@@ -37,7 +37,7 @@
         {% endfor %}
         <hr>
         {% for form in forms %}
-          {% if form.modifiedForm == None and form.releaseForm == None and form.overloadForm == None %}
+          {% if form.adjustedForm == None and form.releaseForm == None and form.overloadForm == None %}
             {% if form.reviewedDate == None %}
               <div class="h4 nopadding">
                 <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
@@ -116,7 +116,7 @@
                 </div>
                 </div>
               </div>
-          {% elif form.modifiedForm != None %}
+          {% elif form.adjustedForm != None %}
           {% if form.reviewedDate == None %}
             <div class="h4 nopadding">
               <div class="col-sm-3">{{form.createdDate.strftime('%m-%d-%Y')}}</div>
@@ -146,7 +146,7 @@
             </div>
           {% endif %}
             <div class="row">
-              <p class="col-sm-11 smallDataMargin">{{form.modifiedForm.fieldModified}} changed from {{form.modifiedForm.oldValue}} to {{form.modifiedForm.newValue}}</p>
+              <p class="col-sm-11 smallDataMargin">{{form.adjustedForm.fieldAdjusted}} changed from {{form.adjustedForm.oldValue}} to {{form.adjustedForm.newValue}}</p>
             </div>
 
           {% elif form.overloadForm != None %}
@@ -195,19 +195,19 @@
           <div class = "col-sm-12">
           <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form1.laborStatusFormID}})">Withdraw</button>
           </div>
-        {% elif buttonState == ButtonStatus.show_withdraw_modify_buttons %}
+        {% elif buttonState == ButtonStatus.show_withdraw_correction_buttons %}
         <div class = "col-sm-6">
         <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form1.laborStatusFormID}})">Withdraw</button>
         </div>
         <div class = "col-sm-6">
-        <a id="modify" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Modify</button></a>
+        <a id="alter" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Correct</button></a>
         </div>
         {% elif buttonState == ButtonStatus.show_release_adjustment_rehire_buttons %}
         <div class = "col-sm-4" style="text-align: right">
         <a id="release" href="#"><button type="button" class="btn btn-danger" onclick="redirection({{form1.laborStatusFormID}})">Release</button></a>
         </div>
         <div class = "col-sm-4">
-        <a id="adjust" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Adjustment</button></a>
+        <a id="alter" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Adjustment</button></a>
         </div>
         <div class = "col-sm-4" style="text-align:left">
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success" onclick="redirection({{form1.laborStatusFormID}})">Rehire</button></a>
