@@ -1,4 +1,4 @@
-from app.config.loadConfig import get_secret_cfg 
+from app.config.loadConfig import get_secret_cfg
 from peewee import DoesNotExist
 from app.models.Tracy import db
 from app.models.Tracy.stuposn import STUPOSN
@@ -93,4 +93,3 @@ class Tracy():
             raise InvalidQueryException("Position Code {} not found in STUPOSN".format(positionCode))
 
         return position
-            

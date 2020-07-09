@@ -17,7 +17,7 @@ class EmailTemplate (baseModel):
 #1:When labor status form is submitted: send to student
 #2:When LSF is approved: send to supervisor and student
 #3:When LSF is rejected: send to supervisor and student
-#4:When LSF is modified: send to supervisor and student (?)
+#4:When LSF is adjusted: send to supervisor and student (?)
 #Pending
 #5:When a pending form is modified: send to supervisor and student
 #LRF

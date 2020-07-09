@@ -11,13 +11,13 @@ $(document).ready(function() {
 
   if ($('#overloadTab').hasClass('active') || $('#releaseTab').hasClass('active')) {
     targetsList = [8]
-  } else if ($('#modifiedTab').hasClass('active')) {
+  } else if ($('#adjustedTab').hasClass('active')) {
     targetsList = [0, 10]
   } else {
     targetsList = [0, 9]
   }
   // If overload tab has been clicked, then we
-  $('#pendingForms, #statusForms, #modifiedForms, #releaseForms').DataTable({
+  $('#pendingForms, #statusForms, #adjustedForms, #releaseForms').DataTable({
     'columnDefs': [{
       'orderable': false,
       'targets': targetsList
@@ -60,7 +60,7 @@ function insertApprovals() {
   if (!atLeastOneIsChecked) {
     $("#approveSelected").prop("disabled", true);
     $("#approvePendingForm").prop("disabled", true);
-    $("#modifiedApproval").prop("disabled", true);
+    $("#adjustedApproval").prop("disabled", true);
     $("#approveOverload").prop("disabled", true);
     $("#approveRelease").prop("disabled", true);
 

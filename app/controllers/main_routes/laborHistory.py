@@ -12,13 +12,16 @@ from app.login_manager import require_login
 from flask import json
 from flask import make_response
 import datetime
+import re
 from datetime import date
 from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
 from fpdf import FPDF
 from app.logic.authorizationFunctions import*
 from app.logic.buttonStatus import ButtonStatus
+from app.logic.tracy import Tracy
 from app.models.supervisor import Supervisor
+from app.logic.tracy import Tracy
 
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
@@ -95,21 +98,29 @@ def populateModal(statusKey):
         pendingformType = None
         buttonState = None
         for form in forms:
-            if form.modifiedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in modified table
-                if form.modifiedForm.fieldModified == "Supervisor": # if supervisor field in adjust forms has been modified,
-                    newSupervisorID = form.modifiedForm.newValue    # use the supervisor pidm in the field modified to find supervisor in User table.
+            if form.adjustedForm != None:  # If a form has been adjusted then we want to retrieve supervisors names using the new and old values stored in adjusted table
+                if form.adjustedForm.fieldAdjusted == "supervisor": # if supervisor field in adjust forms has been changed,
+                    newSupervisorID = form.adjustedForm.newValue    # use the supervisor pidm in the field adjusted to find supervisor in User table.
+                    oldSupervisorID = form.adjustedForm.oldValue
                     newSupervisor = Supervisor.get(Supervisor.ID == newSupervisorID)
+                    oldSupervisor = Supervisor.get(Supervisor.ID == oldSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
-                    form.modifiedForm.oldValue = form.formID.supervisor.FIRST_NAME + " " + form.formID.supervisor.LAST_NAME # old supervisor name
-                    form.modifiedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
-                if form.modifiedForm.fieldModified == "Position": # if position field has been modified in adjust form then retriev position name.
-                    newPositionCode = form.modifiedForm.newValue
+                    form.adjustedForm.oldValue = oldSupervisor.FIRST_NAME + " " + oldSupervisor.LAST_NAME # old supervisor name
+                    form.adjustedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
+
+                if form.adjustedForm.fieldAdjusted == "position": # if position field has been changed in adjust form then retriev position name.
+                    newPositionCode = form.adjustedForm.newValue
+                    oldPositionCode = form.adjustedForm.oldValue
                     newPosition = Tracy().getPositionFromCode(newPositionCode)
+                    oldPosition = Tracy().getPositionFromCode(oldPositionCode)
                     # temporarily storing the new position name in new value, and old position name in old value
                     # because we want to show these information in the hmtl template.
-                    form.modifiedForm.newValue = form.formID.POSN_TITLE + " (" + form.formID.WLS+")"
-                    form.modifiedForm.oldValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
+                    form.adjustedForm.newValue = newPosition.POSN_TITLE + " (" + newPosition.WLS+")"
+                    form.adjustedForm.oldValue = oldPosition.POSN_TITLE + " (" + oldPosition.WLS+")"
+                # Converts the field adjusted value out of camelcase into a more readable format to be displayed on the front end
+                form.adjustedForm.fieldAdjusted = re.sub(r"(\w)([A-Z])", r"\1 \2", form.adjustedForm.fieldAdjusted).title()
+
         for form in forms:
             if currentUser.Student and currentUser.username == student.username:
                 buttonState = ButtonStatus.show_student_labor_eval_button
@@ -139,7 +150,7 @@ def populateModal(statusKey):
                             break
                 if form.overloadForm != None:
                     if form.status.statusName == "Pending":
-                        buttonState = ButtonStatus.show_withdraw_modify_buttons
+                        buttonState = ButtonStatus.show_withdraw_correction_buttons
                         break
                     if form.status.statusName == "Denied":
                         if currentDate <= form.formID.endDate:
@@ -148,14 +159,14 @@ def populateModal(statusKey):
                         elif currentDate > form.formID.endDate:
                             buttonState = ButtonStatus.show_rehire_button
                             break
-                if form.modifiedForm != None:
+                if form.adjustedForm != None:
                     if form.status.statusName == "Pending":
                         buttonState = ButtonStatus.no_buttons_pending_forms
                         pendingformType = form.historyType.historyTypeName
                         break
                 if form.historyType.historyTypeName == "Labor Status Form":
                     if form.status.statusName == "Pending":
-                        buttonState = ButtonStatus.show_withdraw_modify_buttons
+                        buttonState = ButtonStatus.show_withdraw_correction_buttons
                         break
                     elif form.status.statusName == "Denied":
                         if currentDate <= form.formID.endDate:

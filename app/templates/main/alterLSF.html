@@ -2,21 +2,21 @@
 
 {% block styles %}
     {{super()}}
-    <link rel="stylesheet" type="text/css" href="/static/css/modifyLSF.css" /> <!--jquery and js file called in code below-->
+    <link rel="stylesheet" type="text/css" href="/static/css/alterLSF.css" />
 {% endblock %}
 
 {% block scripts %}
     {{super()}}
-    <script language="JavaScript" type="text/javascript" src="/static/js/modifyLSF.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/static/js/alterLSF.js"></script>
 {% endblock %}
 
 {% block app_content %}
 
 <a class="skipContent" href="#supervisor" tabindex="1">Click to Skip</a>
 <div align="center">
-  <h2>Modify Labor Status Form</h2>
+  <h2>{{title}}</h2>
 </div>
- <form id="modifyLSF">
+ <form id="alterLSF">
    <div class="container">
        <div>
            <p class="required-mark">* Marked fields are required</p>
@@ -29,18 +29,17 @@
          </div>
        </div>
        <div class="form-group">
-         <label for="supervisor" class="field"><span class="tooltip-right" data-tooltip="Required">Supervisor<span class="required-mark">*</span></span></label>
+         <label for="supervisor" class="field"><span class="tooltip-right" data-tooltip="Required">Supervisor<span class="required-mark"> *</span></span></label>
          <div class="change">
            <select required
                 class="selectpicker form-control newValue"
                 id="supervisor"
-                data-live-search="true"
-                >
+                data-live-search="true">
                 {% for sup in supervisors %}
-                    <option title="{{sup.FIRST_NAME}} {{sup.LAST_NAME}}" value="{{sup.PIDM}}" {% if form.supervisor.PIDM == sup.PIDM %} selected {% endif %}>{{sup.FIRST_NAME}} {{sup.LAST_NAME}}</option>
+                    <option title="{{sup.FIRST_NAME}} {{sup.LAST_NAME}}" value="{{sup.ID}}" {% if form.supervisor.ID == sup.ID %} selected {% endif %}>{{sup.FIRST_NAME}} {{sup.LAST_NAME}}</option>
                 {% endfor %}
            </select>
-            <input hidden class = "oldValue"  id= "prefillsupervisor"value="{{oldSupervisor.PIDM}}" > </input> <!-- stores value of original-->
+            <input hidden class = "oldValue"  id= "prefillsupervisor"value="{{oldSupervisor.ID}}" > </input> <!-- stores value of original-->
          </div>
        </div>
        <div class="form-group">
@@ -50,16 +49,16 @@
          </div>
        </div>
        <div class="form-group">
-         <label for="POSN_TITLE" class="field"><span class="tooltip-right" data-tooltip="Required">Position<span class="required-mark">*</span></span></label>
+         <label for="position" class="field"><span class="tooltip-right" data-tooltip="Required">Position<span class="required-mark"> *</span></span></label>
          <div  class="change">
            <select required
-                  class="selectpicker form-control newValue"
-                  id="POSN_TITLE"
-                  data-live-search="true"
-                  onchange="fillHoursPerWeek()">
-                  {% for position in positions %}
-                    <option value="{{position.POSN_TITLE}}" data-wls={{position.WLS}} {% if position.POSN_TITLE == prefillposition %} selected {% endif %} >{{position.POSN_TITLE}} ({{position.WLS}})</option>
-                  {% endfor %}
+                class="selectpicker form-control newValue"
+                id="position"
+                data-live-search="true"
+                onchange="fillHoursPerWeek()">
+                {% for position in positions %}
+                <option value="{{position.POSN_CODE}}" data-wls={{position.WLS}} {% if position.POSN_CODE == prefillposition %} selected {% endif %} >{{position.POSN_TITLE}} ({{position.WLS}})</option>
+                {% endfor %}
            </select>
            <input hidden class = "oldValue"  id= "prefillposition" value="{{prefillposition}}"></input>
          </div>
@@ -82,7 +81,7 @@
      </div>
      <div id="contractHoursDiv" class="form-group newValue">
         <!-- Contract hours for breaks -->
-           <label for="contractHours"><span class="tooltip-right" data-tooltip="Required">Contract Hours<span class="required-mark">*</span></span></label>
+           <label for="contractHours"><span class="tooltip-right" data-tooltip="Required">Contract Hours<span class="required-mark"> *</span></span></label>
            <div  class="change">
              <input class="form-control quantity newValue disable"
                      type = "number"
@@ -97,27 +96,39 @@
              <input hidden class = "oldValue"  id= "oldContractHours" value="{{prefillhours}}"></input>
           </div>
         </div>
-     <div id="weeklyHoursDiv" class="form-group">
-            <label for="weeklyHours"><span class="tooltip-right" data-tooltip="Required">Hours Per Week<span class="required-mark">*</span></span></label>
+        <div id="weeklyHoursDiv" class="form-group">
+            <label for="weeklyHours"><span class="tooltip-right" data-tooltip="Required">Hours Per Week<span class="required-mark"> *</span></span></label>
             <div  class="change">
-              <select  type="number"
-                       class="selectpicker form-control newValue"
-                       id="weeklyHours"
-                       name='selectedHoursPerWeek'
-                       data-live-search="true"
-                       title = "{{prefillhours}}"
-                       onchange="checkWLS20()">
-              </select>
-              <input hidden class = "oldValue"  id= "oldWeeklyHours" value="{{prefillhours}}">  </input>
-              <input hidden class = "totalHours"  id= "totalHours" value="{{totalHours}}"></input>
-              {% include "snips/ReviewForm.html" %}
+                <select  type="number"
+                         class="selectpicker form-control newValue"
+                         id="weeklyHours"
+                         name='selectedHoursPerWeek'
+                         data-live-search="true"
+                         title = "{{prefillhours}}"
+                         onchange="checkWLS20()">
+                </select>
+                <input hidden class = "oldValue"  id= "oldWeeklyHours" value="{{prefillhours}}">  </input>
+                <input hidden class = "totalHours"  id= "totalHours" value="{{totalHours}}"></input>
             </div>
-          </div>
+        </div>
+
+    <!-- This conditional will add the datetime picker for Adjust LSF instances -->
+    {% if title == "Adjust Labor Status Form" %}
+    <div class="form-group" id= "dateDiv">
+    <label for="datetimepicker" class="required-asterisk"><span class="tooltip-right" data-tooltip="Required">Date Needed<span class="required-mark"> *</span></span></label>
+      <div class="input-group date"  class="change">
+        <input type="text" class="form-control effectiveDate" id="datetimepicker0" placeholder="MM/DD/YYYY" required > <!--Should prefill with todays date though// effective date does not have old/new value comparison-->
+        <span class="input-group-addon">
+          <span class="glyphicon glyphicon-calendar"></span>
+        </span>
+      </div>
+     </div>
+     {% endif %}
 
      <div class="form-group" >
-       <label for="supervisorNotes">Notes</label>
+       <label for="supervisorNotes"> {% if title == "Adjust Labor Status Form" %}<span class="tooltip-right" data-tooltip="Required">Notes<span class="required-mark"> *</span></span> {% endif %} </label>
        <div class ="change">
-         <textarea name="supervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue">{{prefillnotes}}</textarea>
+         <textarea required name="supervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue">{{prefillnotes}}</textarea>
           <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}"></input>
        </div>
      </div>
@@ -130,10 +141,12 @@
       </div>
       <div class="submitbutton">
         <button id="submit" type="button" class="btn btn-success" onclick="checkForChange()">Submit Changes</button>
-        {% include "snips/adjustLSFNoChange.html" %}
-        {% include "snips/adjustLSFSubmit.html" %}
       </div>
     </div>
+    {% include "snips/adjustLSFNoChange.html" %}
+    {% include "snips/adjustLSFSubmit.html" %}
+    {% include "snips/LSFModals.html" %}
 
  </form>
+
 {% endblock %}
