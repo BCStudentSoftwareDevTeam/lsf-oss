@@ -207,7 +207,7 @@ def submitAlteredLSF(laborStatusKey):
         changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
         try:
             email = emailHandler(changedForm.formHistoryID)
-            email.laborStatusFormAdjusted()
+            email.laborStatusFormModified()
         except Exception as e:
             print("An error occured while attempting to send adjustment form emails: ", e)
         message = "Your labor {0} form(s) for {1} {2} have been submitted.".format("adjustment" if formStatus == "Approved" else "modification",

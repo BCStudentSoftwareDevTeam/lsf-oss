@@ -53,6 +53,7 @@ def laborReleaseForm(laborStatusKey):
                                         reasonForRelease = releaseReason
                                         )
             historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Release Form")
+            formHistoryID = FormHistory.get(FormHistory.formID == laborStatusKey) #need formHistoryID for emailHandler
             status = Status.get(Status.statusName == "Pending")
             laborStatusForiegnKey = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             newFormHistory = FormHistory.create(
@@ -68,6 +69,8 @@ def laborReleaseForm(laborStatusKey):
                                         status = status.statusName,
                                         rejectReason = None
                                         )
+            email = emailHandler(formHistoryID.formHistoryID)
+            email.laborReleaseFormSubmitted()
             # Once all the forms are created, the user gets redirected to the
             # home page and gets a flash message telling them the forms were
             # submiteds
@@ -76,7 +79,7 @@ def laborReleaseForm(laborStatusKey):
             return redirect(url_for("main.index"))
 
         except Exception as e:
-            print(e)
+            print("Error: ", e)
             message = "An error has occurred. Your Labor Release Form for {0} {1} was not submitted.".format(laborStatusForiegnKey.studentSupervisee.FIRST_NAME, laborStatusForiegnKey.studentSupervisee.LAST_NAME)
             flash(message, "danger")
             return redirect(url_for("main.index"))
