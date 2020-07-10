@@ -16,18 +16,22 @@ def authorizedDepartmentsForUser(id, UserID, supervisorID=None):
         departmentsList = []
         allStudentDepartments = LaborStatusForm.select(LaborStatusForm.department).where(LaborStatusForm.studentSupervisee == id).distinct()
         if supervisorID:
-            authorizedUser = False
+            # authorizedUser = False
             status = Status.get(Status.statusName == "Approved")
             allUserDepartments = FormHistory.select(FormHistory.formID.department).join_from(FormHistory, LaborStatusForm).where((FormHistory.formID.supervisor == supervisorID) | (FormHistory.createdBy == UserID)).distinct()
-            for userDepartment in allUserDepartments:
-                for studentDepartment in allStudentDepartments:
-                    if userDepartment.formID.department == studentDepartment.department:
-                        authorizedUser = True
-                        break
 
-            for i in allUserDepartments:
-                departmentsList.append(i.formID.department.departmentID)
-            return(authorizedUser, departmentsList)
+            return allUserDepartments.intersection(allStudentDepartments)
+
+
+            # for userDepartment in allUserDepartments:
+            #     for studentDepartment in allStudentDepartments:
+            #         if userDepartment.formID.department == studentDepartment.department:
+            #             authorizedUser = True
+            #             break
+            #
+            # for i in allUserDepartments:
+            #     departmentsList.append(i.formID.department.departmentID)
+            # return(departmentsList, authorizedUser)
         else:
             for form in allStudentDepartments:
                 departmentsList.append(form.department.departmentID)
