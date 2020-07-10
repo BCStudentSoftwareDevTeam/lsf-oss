@@ -129,34 +129,12 @@ def populateModal(statusKey):
             else:
                 if form.releaseForm != None:
                     if form.status.statusName == "Approved":
-                        if currentDate <= form.formID.endDate:
-                            buttonState = ButtonStatus.show_rehire_button
-                            break
-                        elif currentDate > form.formID.endDate:
-                            buttonState = ButtonStatus.show_rehire_button
-                            break
+                        buttonState = ButtonStatus.show_rehire_button
+                        break
                     elif form.status.statusName == "Pending":
                         buttonState = ButtonStatus.no_buttons_pending_forms
                         pendingformType = form.historyType.historyTypeName
                         break
-                    elif form.status.statusName == "Denied":
-                        if currentDate <= form.formID.endDate:
-                            buttonState = ButtonStatus.show_release_adjustment_rehire_buttons
-                            break
-                        elif currentDate > form.formID.endDate:
-                            buttonState = ButtonStatus.show_rehire_button
-                            break
-                if form.overloadForm != None:
-                    if form.status.statusName == "Pending":
-                        buttonState = ButtonStatus.show_withdraw_correction_buttons
-                        break
-                    if form.status.statusName == "Denied":
-                        if currentDate <= form.formID.endDate:
-                            buttonState = ButtonStatus.show_rehire_button
-                            break
-                        elif currentDate > form.formID.endDate:
-                            buttonState = ButtonStatus.show_rehire_button
-                            break
                 if form.adjustedForm != None:
                     if form.status.statusName == "Pending":
                         buttonState = ButtonStatus.no_buttons_pending_forms
@@ -167,12 +145,8 @@ def populateModal(statusKey):
                         buttonState = ButtonStatus.show_withdraw_correction_buttons
                         break
                     elif form.status.statusName == "Denied":
-                        if currentDate <= form.formID.endDate:
-                            buttonState = ButtonStatus.show_rehire_button
-                            break
-                        elif currentDate > form.formID.endDate:
-                            buttonState = ButtonStatus.show_rehire_button
-                            break
+                        buttonState = ButtonStatus.show_rehire_button
+                        break
                     elif form.status.statusName == "Approved":
                         if currentDate <= form.formID.endDate:
                             if currentDate > form.formID.termCode.adjustmentCutOff:
@@ -229,7 +203,7 @@ def withdraw_form():
                 laborStatusFormToDelete = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == form.formID.laborStatusFormID)
                 historyFormToDelete.delete_instance()
                 laborStatusFormToDelete.delete_instance()
-            elif form.historyType.historyTypeName == "Labor overloadForm Form":
+            elif form.historyType.historyTypeName == "Labor Overload Form":
                 historyFormToDelete = FormHistory.get(FormHistory.formHistoryID == form.formHistoryID)
                 overloadFormToDelete = OverloadForm.get(OverloadForm.overloadFormID == form.overloadForm.overloadFormID)
                 overloadFormToDelete.delete_instance()
