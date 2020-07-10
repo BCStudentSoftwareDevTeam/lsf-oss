@@ -473,6 +473,23 @@ emailtemps= [
                 "audience":"Supervisor"
                 },
                 {
+                "purpose":"Break Labor Status Form Approved for Student",
+                "formType":"Break Labor Status Form",
+                "action":"Approved",
+                "subject":"Labor Status Form Approved",
+                "body":'''
+                            ''',
+                "audience":"Student"
+                },
+                {"purpose":"Break Labor Status Form Approved For Supervisor", 
+                "formType":"Break Labor Status Form",
+                "action":"Approved",
+                "subject":"Labor Status Form Approved",
+                "body":'''
+                            ''',
+                "audience":"Supervisor"
+                },
+                {
                 "purpose":"Break Labor Status Form Submitted For Supervisor on Second LSF", #Original name: Break Labor Status Form Submitted For Supervisor on Second LSF
                 "formType":"Second Break Labor Status Form",
                 "action":"Submitted",

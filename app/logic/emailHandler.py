@@ -98,6 +98,7 @@ class emailHandler():
 
     def laborStatusFormApproved(self):
         if self.laborStatusForm.jobType == 'Secondary':
+            #if its not a break term:
             self.checkRecipient("Labor Status Form Approved For Student",
                                 False,
                                 "Secondary Position Labor Status Form Approved")
@@ -114,9 +115,9 @@ class emailHandler():
             self.checkRecipient("Labor Status Form Rejected For Student",
                           "Primary Position Labor Status Form Rejected")
 
-    def laborStatusFormModified(self):
-        self.checkRecipient("Labor Status Form Modified For Student",
-                      "Labor Status Form Modified For Supervisor")
+    def laborStatusFormAdjusted(self):
+        self.checkRecipient("Labor Status Form Adjusted For Student",
+                      "Labor Status Form Adjusted For Supervisor")
 
     def laborReleaseFormSubmitted(self):
         self.checkRecipient("Labor Release Form Submitted For Student",
@@ -160,8 +161,13 @@ class emailHandler():
 
     def laborStatusFormSubmittedForBreak(self):
         # This is a normal form submission on break
+        print("inside laborStatusFormSubmittedForBreak")
         self.checkRecipient("Break Labor Status Form Submitted For Student",
                             "Break Labor Status Form Submitted For Supervisor")
+
+    def laborStatusFormApprovedforBreak(self):
+        self.checkRecipient("Break Labor Status Form Approved For Student",
+                            "Break Labor Status Form Approved For Supervisor")
 
     def notifySecondLaborStatusFormSubmittedForBreak(self):
         # This is the submission
@@ -226,18 +232,23 @@ class emailHandler():
         The method sendEmail is then called to handle the actual sending of the emails.
         """
         if studentEmailPurpose:
+            print("inside studentEmailPurpose condtional")
             studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
             self.sendEmail(studentEmail, "student")
         if self.primaryFormHistory:
             primaryEmail = EmailTemplate.get(EmailTemplate.purpose == emailPurpose) # Jan
             self.sendEmail(primaryEmail, "supervisor")
         if emailPurpose or secondaryEmailPurpose:
+            print("inside emailPurpose conditional")
             if self.laborStatusForm.jobType == 'Secondary':
+                print("inside secondary jobtype conditional")
                 # If contract hours != None
                 if secondaryEmailPurpose:
+                    print("inside secondaryEmailPurpose conditional")
                     secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
                     self.sendEmail(secondaryEmail, "secondary")
                 else:
+                    print("inside else for secondaryEmailPurpose")
                     primaryEmail = EmailTemplate.get(EmailTemplate.purpose == emailPurpose)
                     self.sendEmail(primaryEmail, "supervisor")
             else:
@@ -256,6 +267,7 @@ class emailHandler():
                 recipients=[self.studentEmail])
             recipient = 'Student'
         elif sendTo == "secondary":
+            print("sendTo is secondary")
             message = Message(template.subject,
                 recipients=[self.supervisorEmail, self.primaryEmail])
             recipient = 'Secondary Supervisor'
@@ -268,6 +280,7 @@ class emailHandler():
                 recipients=[self.primarySupervisorEmail])
             recipient = 'Primary Break Supervisor'
         elif sendTo == 'supervisor':
+            print("sendTo is supervisor")
             message = Message(template.subject,
                 recipients=[self.supervisorEmail])
             recipient = 'Primary Supervisor'

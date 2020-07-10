@@ -204,15 +204,16 @@ def submitAlteredLSF(laborStatusKey):
                 if formStatus == "Pending":
                     LSF.weeklyHours = int(rsp[k]['newValue'])
                     LSF.save()
-        changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
-        try:
-            email = emailHandler(changedForm.formHistoryID)
-            email.laborStatusFormModified()
-        except Exception as e:
-            print("An error occured while attempting to send adjustment form emails: ", e)
-        message = "Your labor {0} form(s) for {1} {2} have been submitted.".format("adjustment" if formStatus == "Approved" else "modification",
-                                                                                   student.studentSupervisee.FIRST_NAME,
-                                                                                   student.studentSupervisee.LAST_NAME)
+        if formStatus == "Approved":
+            changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
+            try:
+                email = emailHandler(changedForm.formHistoryID)
+                email.laborStatusFormAdjusted()
+            except Exception as e:
+                print("An error occured while attempting to send adjustment form emails: ", e)
+            message = "Your labor adjustment form(s) for {0} {1} have been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+        else:
+            message = "Your labor status form for {0} {1} has been modified.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
         return jsonify({"Success": True})
 
