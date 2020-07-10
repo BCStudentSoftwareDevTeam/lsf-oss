@@ -205,7 +205,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             LSF.supervisor = d.ID
         LSF.save()
         if created:
-            tracyUser = Tracy().getSupervisorFromPIDM(form.adjustedForm.newValue)
+            tracyUser = Tracy().getSupervisorFromID(form.adjustedForm.newValue)
             tracyEmail = tracyUser.EMAIL
             tracyUsername = tracyEmail.find('@')
             user = Supervisor.get(Supervisor.PIDM == form.adjustedForm.newValue)
