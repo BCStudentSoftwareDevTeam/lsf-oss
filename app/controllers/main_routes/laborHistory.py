@@ -131,24 +131,6 @@ def populateModal(statusKey):
                         buttonState = ButtonStatus.no_buttons_pending_forms
                         pendingformType = form.historyType.historyTypeName
                         break
-                    elif form.status.statusName == "Denied":
-                        if currentDate <= form.formID.endDate:
-                            buttonState = ButtonStatus.show_release_adjustment_rehire_buttons
-                            break
-                        elif currentDate > form.formID.endDate:
-                            buttonState = ButtonStatus.show_rehire_button
-                            break
-                # if form.overloadForm != None:
-                #     if form.status.statusName == "Pending":
-                #         buttonState = ButtonStatus.show_withdraw_correction_buttons
-                #         break
-                #     if form.status.statusName == "Denied":
-                #         if currentDate <= form.formID.endDate:
-                #             buttonState = ButtonStatus.show_rehire_button
-                #             break
-                #         elif currentDate > form.formID.endDate:
-                #             buttonState = ButtonStatus.show_rehire_button
-                #             break
                 if form.adjustedForm != None:
                     if form.status.statusName == "Pending":
                         buttonState = ButtonStatus.no_buttons_pending_forms
