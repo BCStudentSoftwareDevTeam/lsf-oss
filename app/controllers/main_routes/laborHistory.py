@@ -17,7 +17,6 @@ from datetime import date
 from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
 from fpdf import FPDF
-from app.logic.authorizationFunctions import*
 from app.logic.buttonStatus import ButtonStatus
 from app.logic.tracy import Tracy
 from app.models.supervisor import Supervisor
