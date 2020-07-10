@@ -15,6 +15,7 @@ from flask import request
 from datetime import datetime, date
 from app.logic.emailHandler import*
 
+
 @main_bp.route('/laborReleaseForm/<laborStatusKey>', methods=['GET', 'POST'])
 # @main_bp.route('/laborReleaseForm', methods=['GET', 'POST'])
 # @login_required
@@ -80,9 +81,8 @@ def laborReleaseForm(laborStatusKey):
             message = "An error has occurred. Your Labor Release Form for {0} {1} was not submitted.".format(laborStatusForiegnKey.studentSupervisee.FIRST_NAME, laborStatusForiegnKey.studentSupervisee.LAST_NAME)
             flash(message, "danger")
             return redirect(url_for("main.index"))
-
+    print('Right before I load template')
     return render_template('main/laborReleaseForm.html',
 				            title=('Labor Release Form'),
-                            forms = forms,
-                            currentUser = currentUser
+                            forms = forms
                           )

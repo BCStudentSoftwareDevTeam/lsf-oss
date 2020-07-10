@@ -31,8 +31,7 @@ def email_templates():
                             formType = formType,
                             subject = subject,
                             recipient = recipient,
-                            body = body,
-                            currentUser = currentUser
+                            body = body
                           )
 
 @admin.route('/admin/emailTemplates/getEmailArray/', methods=['GET'])

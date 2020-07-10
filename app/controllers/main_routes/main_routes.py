@@ -144,8 +144,7 @@ def index():
                         pastSupervisees = pastSupervisees,
                         inactiveSupervisees = inactiveSupervisees,
                         UserID = currentUser,
-                        currentUserDepartments = departments,
-                        currentUser = currentUser
+                        currentUserDepartments = departments
                               )
     except Exception as e:
         print('Error Supervisor Portal:', e)

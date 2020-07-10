@@ -44,7 +44,7 @@ def alterLSF(laborStatusKey):
                              .get().status_id)
 
     if currentDate > form.termCode.adjustmentCutOff and formStatus == "Approved":
-        return render_template("errors/403.html", currentUser = currentUser)
+        return render_template("errors/403.html")
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
@@ -89,8 +89,7 @@ def alterLSF(laborStatusKey):
                             positions = positions,
                             form = form,
                             oldSupervisor = oldSupervisor,
-                            totalHours = totalHours,
-                            currentUser = currentUser
+                            totalHours = totalHours
                           )
 
 

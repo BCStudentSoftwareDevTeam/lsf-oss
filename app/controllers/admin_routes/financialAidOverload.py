@@ -23,7 +23,7 @@ def financialAidOverload(overloadKey):
     if not currentUser: # Not logged in
         return render_template('errors/403.html')
     if not (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin): # Not an admin
-        return render_template('errors/403.html', currentUser = currentUser), 403
+        return render_template('errors/403.html'), 403
 
     overloadForm = FormHistory.get(FormHistory.overloadForm == overloadKey) # get access to overload form
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID) # get the labor status form that is tied to the overload form
@@ -71,8 +71,7 @@ def financialAidOverload(overloadKey):
                         laborOfficeNotes = laborOfficeNotes,
                         contractDate = contractDate,
                         overloadPosition = overloadPosition,
-                        totalOverloadHours = totalOverloadHours,
-                        currentUser = currentUser
+                        totalOverloadHours = totalOverloadHours
                       )
 
 @admin.route("/admin/financialAidOverloadApproval/<status>", methods=["POST"])
@@ -84,7 +83,7 @@ def formDenial(status):
         if not currentUser: # Not logged in
             return render_template('errors/403.html')
         if not (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin): # Not an admin
-            return render_template('errors/403.html', currentUser = currentUser), 403
+            return render_template('errors/403.html'), 403
         if status == "denied":
             newStatus = "Denied"
         elif status == "approved":

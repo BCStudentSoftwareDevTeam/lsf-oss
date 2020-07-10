@@ -75,8 +75,7 @@ def studentOverloadApp(formId):
                             currentPrimary = formIDPrimary,
                             currentSecondary = formIDSecondary,
                             totalCurrentHours = totalCurrentHours,
-                            totalFormHours = totalFormHours,
-                            currentUser = currentUser
+                            totalFormHours = totalFormHours
                           )
 
 @main_bp.route('/studentOverloadApp/update', methods=['POST'])

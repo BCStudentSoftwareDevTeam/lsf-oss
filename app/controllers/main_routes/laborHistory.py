@@ -37,7 +37,7 @@ def laborhistory(id):
             elif currentUser.Supervisor and not currentUser.Student:
                 authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, currentUser, currentUser.Supervisor.ID)
                 if authorizedUser == False:
-                    return render_template('errors/403.html', currentUser = currentUser), 403
+                    return render_template('errors/403.html'), 403
         else:
             departmentsList = []
         student = Student.get(Student.ID == id)
@@ -54,12 +54,11 @@ def laborhistory(id):
                                 studentForms = studentForms,
                                 formHistoryList = formHistoryList,
                                 departmentsList = departmentsList,
-                                currentUser = currentUser,
                                 studentUserName = studentUser.username
                               )
     except Exception as e:
         print("Error Loading Student Labor History", e)
-        return render_template('errors/500.html', currentUser = currentUser), 500
+        return render_template('errors/500.html'), 500
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
 def downloadFormHistory():
@@ -67,7 +66,6 @@ def downloadFormHistory():
     This function is called when the download button is pressed.  It runs a function for writing to an excel sheet that is in download.py.
     This function downloads the created excel sheet of the history from the page.
     """
-    currentUser = require_login()
     try:
         data = request.form
         historyList = data["listOfForms"].split(',')
@@ -76,7 +74,7 @@ def downloadFormHistory():
         filename = completePath.split('/').pop()
         return send_file(completePath, mimetype='text/csv', as_attachment=True, attachment_filename=filename)
     except:
-        return render_template('errors/500.html', currentUser = currentUser), 500
+        return render_template('errors/500.html'), 500
 
 @main_bp.route('/laborHistory/modal/<statusKey>', methods=['GET'])
 def populateModal(statusKey):
@@ -88,7 +86,7 @@ def populateModal(statusKey):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
-            return render_template('errors/403.html', currentUser = currentUser), 403
+            return render_template('errors/403.html'), 403
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         student = User.get(User.Student == statusForm[0].studentSupervisee)

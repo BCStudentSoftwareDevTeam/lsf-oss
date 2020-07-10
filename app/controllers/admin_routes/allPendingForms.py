@@ -32,7 +32,7 @@ def allPendingForms(formType):
             if currentUser.Student: # logged in as a student
                 return redirect('/laborHistory/' + currentUser.Student.ID)
             elif currentUser.Supervisor:
-                return render_template('errors/403.html', currentUser = currentUser), 403
+                return render_template('errors/403.html'), 403
         formList = None
         historyType = None
         pageTitle = ""
@@ -102,12 +102,11 @@ def allPendingForms(formType):
                                 laborStatusFormCounter = laborStatusFormCounter,
                                 adjustedFormCounter  = adjustedFormCounter,
                                 releaseFormCounter = releaseFormCounter,
-                                currentUser = currentUser,
                                 pendingOverloadFormPairs = pendingOverloadFormPairs
                                 )
     except Exception as e:
         print("Error Loading all Pending Forms:", e)
-        return render_template('errors/500.html', currentUser = currentUser), 500
+        return render_template('errors/500.html'), 500
 
 @admin.route('/admin/checkedForms', methods=['POST'])
 def approved_and_denied_Forms():
@@ -130,7 +129,7 @@ def finalUpdateStatus(raw_status):
     if not currentUser:                    # Not logged in
         return render_template('errors/403.html')
     if not currentUser.isLaborAdmin:       # Not an admin
-        return render_template('errors/403.html', currentUser = currentUser), 403
+        return render_template('errors/403.html'), 403
 
     if raw_status == 'approved':
         new_status = "Approved"
@@ -304,7 +303,7 @@ def getNotes(formid):
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html')
         if not currentUser.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html', currentUser = currentUser), 403
+            return render_template('errors/403.html'), 403
         supervisorNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid) # Gets Supervisor note
         notes = AdminNotes.select().where(AdminNotes.formID == formid) # Gets labor department notes from the laborofficenotes table
         notesDict = {}          # Stores the both types of notes
@@ -332,7 +331,7 @@ def insertNotes(formId):
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html')
         if not currentUser.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html', currentUser = currentUser), 403
+            return render_template('errors/403.html'), 403
         rsp = eval(request.data.decode("utf-8"))
         stripresponse = rsp.strip()
         currentDate = datetime.now().strftime("%Y-%m-%d")  # formats the date to match the peewee format for the database
@@ -401,7 +400,7 @@ def getOverloadModalData(formHistoryID):
                                             )
     except Exception as e:
         print("Error Populating Overload Modal:", e)
-        return render_template('errors/500.html', currentUser = currentUser), 500
+        return render_template('errors/500.html'), 500
 
 @admin.route('/admin/releaseModal/<formHistoryID>', methods=['GET'])
 def getReleaseModalData(formHistoryID):
@@ -409,7 +408,6 @@ def getReleaseModalData(formHistoryID):
     This function will retrieve the data to populate the release modal.
     """
     try:
-        currentUser = require_login()
         historyForm = FormHistory.select().where(FormHistory.formHistoryID == int(formHistoryID))
         noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
         return render_template('snips/pendingReleaseModal.html',
@@ -420,7 +418,7 @@ def getReleaseModalData(formHistoryID):
                                             )
     except Exception as e:
         print("Error Populating Release Modal:", e)
-        return render_template('errors/500.html', currentUser = currentUser), 500
+        return render_template('errors/500.html'), 500
 
 @admin.route('/admin/modalFormUpdate', methods=['POST'])
 def modalFormUpdate():
