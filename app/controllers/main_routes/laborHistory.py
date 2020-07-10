@@ -30,63 +30,32 @@ def laborhistory(id):
         currentUser = require_login()
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html')
-
-        # Labor Admins
-        #  - Can see every student page
-        #  - interact with all student forms in list
-        # Students
-        #  - Can only see their page
-        #  - interact with all student forms in list
-        # Supervisors
-        #  - Can only see pages where they were the supervisor in the same department as a student's form
-        #    OR they created a form in the same department
-        #
-        # if not currentUser.isLaborAdmin:
-        #     departmentsList = authorizedDepartmentsForUser(id, currentUser)
-        #     if currentUser.Student and not currentUser.Supervisor:
-        #         if currentUser.Student.ID != id:
-        #             return redirect('/laborHistory/' + currentUser.Student.ID)
-        #     elif currentUser.Supervisor and not currentUser.Student:
-        #         authorizedUser, departmentsList = authorizedDepartmentsForUser(id, currentUser, currentUser.Supervisor.ID)
-        #         if departmentsList == []:
-        #             return render_template('errors/403.html', currentUser = currentUser), 403
-        # else:
-        #     departmentsList = []
-
-
-        # studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         student = Student.get(Student.ID == id)
-        studentUser = User.get(User.Student == student)
-        studentForms = FormHistory.select().where(FormHistory.formID.studentSupervisee == student.ID).order_by(FormHistory.createdDate.desc())
-        authorizedForms = studentForms
-        print("authorizedForms", authorizedForms)
+        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
+        authorizedForms = set(studentForms)
         if not currentUser.isLaborAdmin:
             # View only your own form history
             if currentUser.Student and not currentUser.Supervisor:
                 if currentUser.Student.ID != id:
                     return redirect('/laborHistory/' + currentUser.Student.ID)
-            elif currentUser.Supervisor and not currentUser.Student:
-                supervisorForms = FormHistory.select().where((FormHistory.formID.supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser.userID)).distinct()
-                authorizedForms = studentForms.intersection(supervisorForms)
-                print("supervisor", authorizedForms)
-                # Supervisor cannot view any forms for this student
+
+            elif currentUser.Supervisor:
+                supervisorForms = LaborStatusForm.select() \
+                                  .join_from(LaborStatusForm, FormHistory) \
+                                  .where((LaborStatusForm.supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser)) \
+                                  .distinct()
+                authorizedForms = set(studentForms).intersection(set(supervisorForms))
                 if len(authorizedForms) == 0:
                     return render_template('errors/403.html', currentUser = currentUser), 403
-        # studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
-        laborStatusFormList = ','.join([str(form.formID.laborStatusFormID) for form in studentForms])
-        # for form in studentForms:
-        #     formHistoryList = formHistoryList + str(form.laborStatusFormID) + ","
-        # formHistoryList = formHistoryList[0:-1]
+        laborStatusFormList = ','.join([str(form.laborStatusFormID) for form in studentForms])
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,
                                 username=currentUser.username,
-                                studentForms = studentForms,
                                 laborStatusFormList = laborStatusFormList,
                                 authorizedForms = authorizedForms,
-                                # departmentsList = departmentsList,
                                 currentUser = currentUser,
-                                studentUserName = studentUser.username
+                                studentUserName = User.get(User.Student == student).username
                               )
     except Exception as e:
         print("Error Loading Student Labor History", e)

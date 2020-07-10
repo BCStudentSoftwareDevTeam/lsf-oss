@@ -25,22 +25,12 @@
         <div align="right" id="evaluation"><button type="button" class="btn btn-success" id="studentEvalExperience">Labor Experience Evaluation</button></div>
       {% endif %}
       <table id="positionTable" >
-        {% for form in studentForms %}
+        {% for form in authorizedForms %}
         <tr>
           <!-- If a user is a labor admin, then the value boolean is true, and allows admin access to all of a student's labor history. -->
-          {% if currentUser.isLaborAdmin or not currentUser.Student %}
-            <td id="{{form.formID.laborStatusFormID}}" class="modalLink" value="true">
-          {% else %}
-          <!-- If user is not an admin, then iterate through student forms to determine
-          what departments the user has access to in the list and restrict access to departments not on list. -->
-              {% if form in authorizedForms %}
-                <td id="{{form.formID.laborStatusFormID}}" class="modalLink" value="true">
-              {% else %}
-                <td id="{{form.formID.laborStatusFormID}}" class="modalLink" value="false">
-              {% endif %}
-          {% endif %}
+          <td id="{{form.laborStatusFormID}}" class="modalLink" value="true">
             <a href="#" tabindex="0"><span class="h4">{{form.termCode.termName}} - {{form.department.DEPT_NAME}} Dept.</span></a>
-            <p class="h6" id="second-line">{{form.formID.jobType}} - {{form.formID.POSN_TITLE}} ({{form.formID.POSN_CODE}})</p>
+            <p class="h6" id="second-line">{{form.jobType}} - {{form.POSN_TITLE}} ({{form.POSN_CODE}})</p>
           </td>
         </tr>
         {% endfor %}
