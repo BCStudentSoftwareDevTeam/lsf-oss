@@ -150,6 +150,7 @@ def finalUpdateStatus(raw_status):
 
         for id in rsp:
             history_type_data = FormHistory.get(FormHistory.formHistoryID == int(id))
+            print("formhistory", history_type_data.adjustedForm)
             history_type = str(history_type_data.historyType)
 
             labor_forms = FormHistory.get(FormHistory.formHistoryID == int(id), FormHistory.historyType == history_type)
@@ -161,10 +162,11 @@ def finalUpdateStatus(raw_status):
             labor_forms.save()
 
             if history_type_data.adjustedForm and new_status == "Approved":
-                print(history_type_data.adjustedForm)
+                print("isAdjusted",history_type_data.adjustedForm)
                 # This function is triggered whenever an adjustment form is approved.
                 # The following function overrides the original data in lsf with the new data from adjustment form.
                 LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == history_type_data.formID) # getting the specific labor status form
+                print("LSF")
                 overrideOriginalStatusFormOnAdjustmentFormApproval(history_type_data, LSF)
                 print('overrideOriginalStatusFormOnAdjustmentFormApproval', overrideOriginalStatusFormOnAdjustmentFormApproval)
         return jsonify({"success": True})
@@ -198,6 +200,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
 
     The only fields that will ever be changed in an adjustment form are: supervisor, position, and hours.
     """
+    print("inside function")
     currentUser = require_login()
     if not currentUser:        # Not logged in
             return render_template('errors/403.html')
@@ -230,11 +233,12 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
         LSF.save()
 
     if form.adjustedForm.fieldAdjusted == "contractHours":
-        LSF.contractHours = form.adjustedForm.newValue
+        LSF.contractHours = int(form.adjustedForm.newValue)
         LSF.save()
 
     if form.adjustedForm.fieldAdjusted == "weeklyHours":
-        LSF.weeklyHours = form.adjustedForm.newValue
+        print("weekly hours", form.adjustedForm.newValue)
+        LSF.weeklyHours = int(form.adjustedForm.newValue)
         LSF.save()
 
 
@@ -419,7 +423,9 @@ def modalFormUpdate():
 
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
+            print("Here")
             historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
+            print("historyForm", historyForm)
             email = emailHandler(historyForm.formHistoryID)
             currentDate = datetime.now().strftime("%Y-%m-%d")
             status = Status.get(Status.statusName == rsp['status'])
@@ -431,9 +437,15 @@ def modalFormUpdate():
                 overloadForm.save()
                 try:
                     pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending")).get()
-                    if pendingForm.historyType.historyTypeName == "Labor Adjustment Form":
-                        if pendingForm.adjustedForm.fieldAdjusted != "weeklyHours":
-                            pendingForm = FormHistory.select().join(AdjustedForm).where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending") & (FormHistory.adjustedForm.fieldAdjusted == "weeklyHours")).get()
+                    print("pendingForm", pendingForm)
+                    if historyForm.adjustedForm:
+                        LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == historyForm.formID)
+                        print("pending overload")
+                        if historyForm.adjustedForm.fieldAdjusted == "weeklyHours":
+                            # print("weeklyHours", historyForm.fieldAdjusted)
+                            LSF.weeklyHours = pendingForm.adjustedForm.newValue
+                            LSF.save()
+                            # pendingForm = FormHistory.select().join(AdjustedForm).where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending") & (FormHistory.adjustedForm.fieldAdjusted == "weeklyHours")).get()
                     if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Labor Adjustment Form" and pendingForm.adjustedForm.fieldAdjusted == "weeklyHours"):
                         pendingForm.status = status.statusName
                         pendingForm.reviewedBy = currentUser
