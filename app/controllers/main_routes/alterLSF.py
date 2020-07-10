@@ -169,7 +169,7 @@ def submitAlteredLSF(laborStatusKey):
                         supervisor.ORG = tracyUser.ORG
                         supervisor.DEPT_NAME = tracyUser.DEPT_NAME
                         supervisor.save()
-                        LSF.supervisor = d.PIDM
+                        LSF.supervisor = d.ID
                         LSF.save()
 
             if k == "position":
