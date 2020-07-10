@@ -66,11 +66,14 @@ def alterLSF(laborStatusKey):
     prefillnotes = form.supervisorNotes
 
     #These are the data fields to populate our dropdowns(Supervisor. Position)
+    print('ERROR: HERE I AM ==========================================================')
     supervisors = Tracy().getSupervisors()
+    print('ERROR: HERE I AM PART 2 ==========================================================')
     positions = Tracy().getPositionsFromDepartment(prefilldepartment)
-
+    print('ERROR: HERE I AM PART 3 ==========================================================')
     #Step 3: send data to front to populate html
     oldSupervisor = Tracy().getSupervisorFromPIDM(form.supervisor.ID)
+    print('ERROR: HERE I AM PART 4 ==========================================================')
 
     return render_template( "main/alterLSF.html",
 				            title=("Adjust Labor Status Form" if formStatus == "Approved" else "Labor Status Correction Form"),
