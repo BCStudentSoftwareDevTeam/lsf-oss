@@ -160,7 +160,7 @@ def finalUpdateStatus(raw_status):
                 labor_forms.rejectReason = denyReason
             labor_forms.save()
 
-            if  history_type == "Labor Adjustment Form" and new_status == "Approved":
+            if history_type == "Labor Adjustment Form" and new_status == "Approved":
                 # This function is triggered whenever an adjustment form is approved.
                 # The following function overrides the original data in lsf with the new data from adjustment form.
                 LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == history_type_data.formID) # getting the specific labor status form

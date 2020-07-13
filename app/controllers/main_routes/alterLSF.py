@@ -144,7 +144,7 @@ def submitAlteredLSF(laborStatusKey):
 
             if k == "supervisor":
                 if formStatus == "Pending":
-                    d, created = Supervisor.get_or_create(PIDM = int(rsp[k]['newValue']))
+                    d, created = Supervisor.get_or_create(ID = int(rsp[k]['newValue']))
                     if not created:
                         LSF.supervisor = d.ID
                     LSF.save()
