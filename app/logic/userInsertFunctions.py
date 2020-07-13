@@ -109,6 +109,8 @@ def createStudentFromTracyObj(tracyStudent):
                                     LAST_POSN = tracyStudent.LAST_POSN,
                                     LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)[0]
     except Exception as e:
+        print("ERROR: THIS IS THE ERROR >>>>>>>>>>>>>>>>")
+        print('ERROR: WHAT IS THIS >>>>>>>>>>>>>>>>>>>>>>>', e)
         raise InvalidUserException("Adding {} to user table failed".format(username), e)
 
 
