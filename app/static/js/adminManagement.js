@@ -37,7 +37,7 @@ function modal(button) {
     document.getElementById("submitModal").setAttribute("value", "removeAid");
     $("#modal").modal("show");
   }
-  else if(button == "remove2" && $("#removesSaasAdmin").val() != "") {
+  else if(button == "remove2" && $("#removeSaasAdmin").val() != "") {
     $("h2").html("SAAS Administrators");
     $("p").html("Are you sure you want to remove " + $("#removeSaasAdmin option:selected").text() + " as a SAAS Administrator?");
     document.getElementById("submitModal").setAttribute("name", "removeSaas");

@@ -62,9 +62,9 @@ def removeLaborAdmin():
         user.isLaborAdmin = 0
         user.save()
         if user.Student:
-            message = "{0} {1} has been added as a Labor Admin".format(user.Student.FIRST_NAME, user.Student.LAST_NAME)
+            message = "{0} {1} has been removed as a Labor Admin".format(user.Student.FIRST_NAME, user.Student.LAST_NAME)
         elif user.Supervisor:
-            message = "{0} {1} has been added as a Labor Admin".format(user.Supervisor.FIRST_NAME, user.Supervisor.LAST_NAME)
+            message = "{0} {1} has been removed as a Labor Admin".format(user.Supervisor.FIRST_NAME, user.Supervisor.LAST_NAME)
         flash(message, "danger")
 
 def addFinancialAdmin():
