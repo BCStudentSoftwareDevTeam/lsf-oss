@@ -218,7 +218,9 @@ def checkForSecondLSFBreak(termCode, student, isOneLSF=None):
                 isMoreLSF_dict["Status"] = False
                 for item in positions: # add all the previous lsf ID's
                     storeLsfFormsID.append(item.laborStatusFormID) # store all of the previous labor status forms for break
+                    print("laborStatusFormID: ", item.laborStatusFormID)
                 laborStatusFormID = storeLsfFormsID.pop() #save all the previous lsf ID's except the one currently created. Pop removes the one created right now.
+                print("laborStatusFormID: ", laborStatusFormID)
                 formHistoryID = FormHistory.get(FormHistory.formID == laborStatusFormID)
                 isMoreLSF_dict['formHistoryID'] = formHistoryID.formHistoryID
                 isMoreLSF_dict["lsfFormID"] = storeLsfFormsID

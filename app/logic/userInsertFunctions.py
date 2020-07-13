@@ -182,7 +182,6 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
         email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
     else:
         if not formHistory.formID.termCode.isBreak:
-            print("extra emails")
             email = emailHandler(formHistory.formHistoryID)
             email.laborStatusFormSubmitted()
 
@@ -194,12 +193,10 @@ def emailDuringBreak(secondLSFBreak, term):
         isOneLSF = json.loads(secondLSFBreak)
         formHistory = FormHistory.get(FormHistory.formHistoryID == isOneLSF['formHistoryID'])
         if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
-            print("two jobs")
             for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
+            # IF FOR LOOP IS NOT USEFUL, PASS THE POPPED LSF ID FROM secondLSFBreak
                 email = emailHandler(formHistory.formHistoryID, lsfID)
-                email.notifySecondLaborStatusFormSubmittedForBreak()
-                print("emails being sent out")
+            email.notifyExtraLaborStatusFormSubmittedForBreak()
         else: # Student has only one lsf, send email to student and supervisor
-            print("one job")
             email = emailHandler(formHistory.formHistoryID)
-            email.laborStatusFormSubmittedForBreak()
+            email.laborStatusFormSubmitted()

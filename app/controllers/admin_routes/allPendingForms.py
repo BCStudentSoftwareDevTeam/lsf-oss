@@ -163,10 +163,7 @@ def finalUpdateStatus(raw_status):
                 if history_type == "Labor Status Form":
                     email.laborStatusFormRejected()
             if new_status == "Approved" and history_type == "Labor Status Form":
-                if labor_forms.formID.termCode.isBreak:
-                    email.laborStatusFormApprovedforBreak()
-                else:
-                    email.laborStatusFormApproved()
+                email.laborStatusFormApproved()
             labor_forms.save()
 
             if history_type == "Labor Adjustment Form" and new_status == "Approved":

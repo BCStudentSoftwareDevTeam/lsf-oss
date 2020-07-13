@@ -397,6 +397,15 @@ emailtemps= [
                             ''',
                 "audience":"Student"
                 },
+                {
+                "purpose":"Labor Overload Form Rejected For Supervisor",
+                "formType":"Labor Overload Form",
+                "action":"Rejected",
+                "subject":"Labor Overload Form Rejected",
+                "body":'''
+                            ''',
+                "audience":"Supervisor"
+                },
                 #SAAS
                 {
                 "purpose":"SAAS and Financial Aid Office",
@@ -481,7 +490,7 @@ emailtemps= [
                             ''',
                 "audience":"Student"
                 },
-                {"purpose":"Break Labor Status Form Approved For Supervisor", 
+                {"purpose":"Break Labor Status Form Approved For Supervisor",
                 "formType":"Break Labor Status Form",
                 "action":"Approved",
                 "subject":"Labor Status Form Approved",
@@ -490,7 +499,24 @@ emailtemps= [
                 "audience":"Supervisor"
                 },
                 {
-                "purpose":"Break Labor Status Form Submitted For Supervisor on Second LSF", #Original name: Break Labor Status Form Submitted For Supervisor on Second LSF
+                "purpose":"Break Labor Status Form Rejected for Student",
+                "formType":"Break Labor Status Form",
+                "action":"Rejected",
+                "subject":"Labor Status Form Rejected",
+                "body":'''
+                            ''',
+                "audience":"Student"
+                },
+                {"purpose":"Break Labor Status Form Rejected For Supervisor",
+                "formType":"Break Labor Status Form",
+                "action":"Rejected",
+                "subject":"Labor Status Form Rejected",
+                "body":'''
+                            ''',
+                "audience":"Supervisor"
+                },
+                {
+                "purpose":"Break Labor Status Form Submitted For Supervisor on Additional LSF", #Original name: Break Labor Status Form Submitted For Supervisor on Second LSF
                 "formType":"Second Break Labor Status Form",
                 "action":"Submitted",
                 "subject":"Labor Status Form Received",
@@ -523,8 +549,8 @@ emailtemps= [
                             ''',
                 "audience":"Supervisor"
                 },
-                {"purpose":"Break Labor Status Form Submitted For Second Supervisor", # Original name: Break Labor Status Form Submitted For Second Supervisor
-                "formType":"Second Break Labor Status Form",
+                {"purpose":"Break Labor Status Form Submitted For Additional Supervisor", # Original name: Break Labor Status Form Submitted For Second Supervisor
+                "formType":"Additional Break Labor Status Form",
                 "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@PrimarySupervisor@@</strong>,</p>
