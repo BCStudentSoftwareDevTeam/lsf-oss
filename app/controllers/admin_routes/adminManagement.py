@@ -13,18 +13,17 @@ def admin_Management():
 # username = load_user('heggens')
     currentUser = require_login()
     if not currentUser:                    # Not logged in
-        return render_template('errors/403.html')
+        return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:       # Not an admin
         if currentUser.Student: # logged in as a student
             return redirect('/laborHistory/' + currentUser.Student.ID)
         elif currentUser.Supervisor:
-            return render_template('errors/403.html', currentUser = currentUser), 403
+            return render_template('errors/403.html'), 403
 
     users = User.select()
     return render_template( 'admin/adminManagement.html',
                             title=('Admin Management'),
-                            users = users,
-                            currentUser = currentUser
+                            users = users
                          )
 
 
