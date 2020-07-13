@@ -429,7 +429,7 @@ def modalFormUpdate():
                 overloadForm.save()
                 try:
                     pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending")).get()
-                    if historyForm.adjustedForm:
+                    if historyForm.adjustedForm and rsp['status'] == "Approved":
                         LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == historyForm.formID)
                         if historyForm.adjustedForm.fieldAdjusted == "weeklyHours":
                             LSF.weeklyHours = pendingForm.adjustedForm.newValue
