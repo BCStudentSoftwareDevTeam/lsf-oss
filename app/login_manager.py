@@ -33,8 +33,6 @@ def auth_user(env, username):
     Ensure that the user has permission to access the application. If the user is permitted,
     ensure that a user entry is created in the user table from the Tracy data.
     """
-    username = 'nakazawam'
-
     try:
         user = User.get(User.username == username)
         return user
