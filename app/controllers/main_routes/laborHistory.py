@@ -28,7 +28,7 @@ def laborhistory(id):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
         if not currentUser.isLaborAdmin:
             departmentsList = None
             if currentUser.Student and not currentUser.Supervisor:

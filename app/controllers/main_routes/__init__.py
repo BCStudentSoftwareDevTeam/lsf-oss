@@ -4,7 +4,7 @@ from app.login_manager import require_login
 
 main_bp = Blueprint('main', __name__)
 @main_bp.context_processor
-def inject_user():
+def injectUser():
     currentUser = require_login()
     return {'currentUser': currentUser}
 

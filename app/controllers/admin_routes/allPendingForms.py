@@ -27,7 +27,7 @@ def allPendingForms(formType):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
         if not currentUser.isLaborAdmin:       # Not an admin
             if currentUser.Student: # logged in as a student
                 return redirect('/laborHistory/' + currentUser.Student.ID)
@@ -127,7 +127,7 @@ def finalUpdateStatus(raw_status):
     ''' This method changes the status of the pending forms to approved '''
     currentUser = require_login()
     if not currentUser:                    # Not logged in
-        return render_template('errors/403.html')
+        return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:       # Not an admin
         return render_template('errors/403.html'), 403
 
@@ -197,7 +197,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
     """
     currentUser = require_login()
     if not currentUser:        # Not logged in
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
     if form.adjustedForm.fieldAdjusted == "supervisor":
         d, created = Supervisor.get_or_create(ID = form.adjustedForm.newValue)
         if not created:
@@ -301,7 +301,7 @@ def getNotes(formid):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
         if not currentUser.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html'), 403
         supervisorNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid) # Gets Supervisor note
@@ -329,7 +329,7 @@ def insertNotes(formId):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
         if not currentUser.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html'), 403
         rsp = eval(request.data.decode("utf-8"))
@@ -429,7 +429,7 @@ def modalFormUpdate():
     try:
         currentUser = require_login()
         if not currentUser:
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
 
         rsp = eval(request.data.decode("utf-8"))
         if rsp:

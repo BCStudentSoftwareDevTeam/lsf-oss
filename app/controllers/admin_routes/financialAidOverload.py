@@ -21,7 +21,7 @@ def financialAidOverload(overloadKey):
     currentUser = require_login() #we need to check to see if the person logged in is SAAS or FinancialAid
 
     if not currentUser: # Not logged in
-        return render_template('errors/403.html')
+        return render_template('errors/403.html'), 403
     if not (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin): # Not an admin
         return render_template('errors/403.html'), 403
 
@@ -81,7 +81,7 @@ def formDenial(status):
     try:
         currentUser = require_login() #we need to check to see if the person logged in is SAAS or FinancialAid
         if not currentUser: # Not logged in
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
         if not (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin): # Not an admin
             return render_template('errors/403.html'), 403
         if status == "denied":

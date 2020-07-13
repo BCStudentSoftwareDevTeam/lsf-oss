@@ -14,7 +14,7 @@ from app.logic.emailHandler import*
 def studentOverloadApp(formId):
     currentUser = require_login()
     if not currentUser:        # Not logged in
-        return render_template('errors/403.html')
+        return render_template('errors/403.html'), 403
     overloadForm = FormHistory.get(FormHistory.formHistoryID == formId)
 
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)

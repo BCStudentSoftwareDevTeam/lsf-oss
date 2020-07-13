@@ -23,7 +23,7 @@ from app.logic.emailHandler import*
 def laborReleaseForm(laborStatusKey):
     currentUser = require_login()
     if not currentUser:
-        render_template("errors/403.html")
+        render_template("errors/403.html"), 403
     if not currentUser.isLaborAdmin:       # Not an admin
         if currentUser.Student and not currentUser.Supervisor:
             return redirect('/laborHistory/' + currentUser.Student.ID)

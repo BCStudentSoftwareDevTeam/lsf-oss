@@ -4,8 +4,7 @@ from app.login_manager import require_login
 
 admin = Blueprint('admin', __name__)
 @admin.context_processor
-def inject_user():
-    print("I'm in admin routes")
+def injectUser():
     currentUser = require_login()
     return {'currentUser': currentUser}
 
