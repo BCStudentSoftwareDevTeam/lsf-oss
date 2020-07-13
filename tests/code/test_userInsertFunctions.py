@@ -13,21 +13,21 @@ def test_createSupervisorFromTracy():
         supervisor = createSupervisorFromTracy(username="B12361006")
 
     with pytest.raises(InvalidQueryException):
-        supervisor = createSupervisorFromTracy(id="heggens")
+        supervisor = createSupervisorFromTracy(bnumber="heggens")
 
-    supervisor = createSupervisorFromTracy(username="heggens", id="B12361006")
+    supervisor = createSupervisorFromTracy(username="heggens", bnumber="B12361006")
     assert supervisor.FIRST_NAME == "Scott"
 
-    supervisor = createSupervisorFromTracy(username="", id="B12361006")
+    supervisor = createSupervisorFromTracy(username="", bnumber="B12361006")
     assert supervisor.FIRST_NAME == "Scott"
 
-    supervisor = createSupervisorFromTracy(id="B12361006")
+    supervisor = createSupervisorFromTracy(bnumber="B12361006")
     assert supervisor.FIRST_NAME == "Scott"
 
     supervisor = createSupervisorFromTracy(username="heggens")
     assert supervisor.FIRST_NAME == "Scott"
 
-    supervisor = createSupervisorFromTracy(username="heggens", id="")
+    supervisor = createSupervisorFromTracy(username="heggens", bnumber="")
     assert supervisor.FIRST_NAME == "Scott"
 
     supervisor = createSupervisorFromTracy("heggens")
