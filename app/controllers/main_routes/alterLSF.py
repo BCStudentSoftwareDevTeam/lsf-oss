@@ -139,37 +139,10 @@ def submitAlteredLSF(laborStatusKey):
                 if formStatus == "Pending":
                     # d, created = User.get_or_create(Supervisor = rsp[k]["newValue"])
                     # d, created = Supervisor.get_or_create(ID = rsp[k]["newValue"])
-                    supervisor = Tracy().getSupervisorFromID(rsp[k]["newValue"])
+                    supervisor = createSupervisorFromID(rsp[k]["newValue"])
+                    user = createUser(username, supervisor=supervisor)
                     LSF.supervisor = supervisor.ID
-
-                    print("/////////////////////////////////")
-                    print(supervisor.ID)
-                    print("/////////////////////////////////")
-                    # tracyUser = Tracy().getSupervisorFromID(rsp[k]["newValue"])
-                    createSupervisorFromTracy(supervisor.username)
-                    createUser(rsp[k]["newValue"], False, tracyUser.ID)
                     LSF.save()
-
-                    #
-                    #     tracyEmail = tracyUser.EMAIL
-                    #     tracyUsername = tracyEmail.find("@")
-                    #     user = User.get(User.userID == rsp[k]["newValue"])
-                    #     user.username   = tracyEmail[:tracyUsername]
-                    #     user.Supervisor = tracyUser.ID
-                    #     user.save()
-                    #
-                    #
-                    #
-                    #     supervisor = Supervisor.get_or_create(ID = tracyUser.ID)
-                    #     supervisor.FIRST_NAME = tracyUser.LAST_NAME
-                    #     supervisor.LAST_NAME = tracyUser.FIRST_NAME
-                    #     supervisor.EMAIL = tracyUser.EMAIL
-                    #     supervisor.CPO = tracyUser.CPO
-                    #     supervisor.ORG = tracyUser.ORG
-                    #     supervisor.DEPT_NAME = tracyUser.DEPT_NAME
-                    #     supervisor.save()
-                    #     LSF.supervisor = d.ID
-                    #     LSF.save()
 
             if k == "position":
                 if formStatus == "Pending":
