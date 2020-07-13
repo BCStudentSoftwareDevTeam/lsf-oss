@@ -51,7 +51,7 @@ def alterLSF(laborStatusKey):
     prefillsupervisorPIDM = form.supervisor.PIDM
     superviser_id = form.supervisor.ID
     prefilldepartment = form.department.DEPT_NAME
-    prefillposition = form.POSN_CODE #+ " " +"("+ form.WLS + ")"
+    prefillposition = form.POSN_CODE
     prefilljobtype = form.jobType
     prefillterm = form.termCode
     totalHours = 0
@@ -152,17 +152,7 @@ def submitAlteredLSF(laborStatusKey):
                         tracyUser = Tracy().getSupervisorFromPIDM(rsp[k]['newValue'])
                         tracyEmail = tracyUser.EMAIL
                         tracyUsername = tracyEmail.find('@')
-                        user = User.get(User.PIDM == rsp[k]['newValue'])
-                        user.username   = tracyEmail[:tracyUsername]
-                        user.FIRST_NAME = tracyUser.FIRST_NAME
-                        user.LAST_NAME  = tracyUser.LAST_NAME
-                        user.EMAIL      = tracyUser.EMAIL
-                        user.CPO        = tracyUser.CPO
-                        user.ORG        = tracyUser.ORG
-                        user.DEPT_NAME  = tracyUser.DEPT_NAME
-                        user.save()
-                        LSF.supervisor = d.ID
-                        LSF.save()
+                        createSupervisorFromTracy(tracyUsername)
 
             if k == "position":
                 if formStatus == "Pending":

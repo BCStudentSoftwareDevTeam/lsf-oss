@@ -208,17 +208,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             tracyUser = Tracy().getSupervisorFromPIDM(form.adjustedForm.newValue)
             tracyEmail = tracyUser.EMAIL
             tracyUsername = tracyEmail.find('@')
-            user = Supervisor.get(Supervisor.ID == form.adjustedForm.newValue)
-            user.username   = tracyEmail[:tracyUsername]
-            user.FIRST_NAME = tracyUser.FIRST_NAME
-            user.LAST_NAME  = tracyUser.LAST_NAME
-            user.EMAIL      = tracyUser.EMAIL
-            user.CPO        = tracyUser.CPO
-            user.ORG        = tracyUser.ORG
-            user.DEPT_NAME  = tracyUser.DEPT_NAME
-            user.save()
-            LSF.supervisor = d.ID
-            LSF.save()
+            createSupervisorFromTracy(tracyUsername)
 
     if form.adjustedForm.fieldAdjusted == "position":
         LSF.POSN_CODE = form.adjustedForm.newValue
