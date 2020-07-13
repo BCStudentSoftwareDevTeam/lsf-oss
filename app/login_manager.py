@@ -33,23 +33,23 @@ def auth_user(env, username):
     Ensure that the user has permission to access the application. If the user is permitted,
     ensure that a user entry is created in the user table from the Tracy data.
     """
-
     try:
         user = User.get(User.username == username)
         return user
 
     except DoesNotExist as e:
         """
-        This exception cannot be tested in development env because we cannot run Shibboleth,
+        This exception cannot be tested naturally in development env because we cannot run Shibboleth,
         but the demo data is set up so that this exception should never happen inside of development env.
         """
         description = env['description'].lower()
         supervisor = student = None
-        if description != 'student':
+        if description == 'student':
+            print("Adding {} to student table".format(username))
+            student = createStudentFromTracy(username)
+        else:
             print("Adding {} to supervisor table".format(username))
             supervisor = createSupervisorFromTracy(username)
-        else:
-            print("Adding {} to student table".format(username))
-            student = studentTracyCheck(username)
+
         print("Creating record for {} in user table".format(username))
         return createUser(username, student=student, supervisor=supervisor)

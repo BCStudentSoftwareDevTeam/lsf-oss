@@ -26,7 +26,7 @@ Flask-Mail==0.9.1
 Flask-Migrate==2.5.2
 Flask-MySQL==1.4.0
 flask-nav==0.6
-Flask-SQLAlchemy==2.4.0
+Flask-SQLAlchemy==2.4.3
 fpdf==1.7.2
 idna==2.8
 importlib-metadata==1.7.0

@@ -31,6 +31,17 @@ class Test_Tracy:
             student = tracy.getStudentFromBNumber(17)
 
     @pytest.mark.integration
+    def test_getStudentFromEmail(self, tracy):
+        student = tracy.getStudentFromEmail("cruzg@berea.edu")
+        assert 'Guillermo' == student.FIRST_NAME
+
+        with pytest.raises(InvalidQueryException):
+            student = tracy.getStudentFromEmail("jimmyjoe@place.biz")
+
+        with pytest.raises(InvalidQueryException):
+            student = tracy.getStudentFromEmail(17)
+
+    @pytest.mark.integration
     def test_getSupervisors(self, tracy):
         supervisors = tracy.getSupervisors()
         assert ['Alex','Brian','Jan','Jasmine','Mario','Megan','Scott'] == [s.FIRST_NAME for s in supervisors]
