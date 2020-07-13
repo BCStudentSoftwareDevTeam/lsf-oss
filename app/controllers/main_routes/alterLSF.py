@@ -135,22 +135,17 @@ def submitAlteredLSF(laborStatusKey):
                                                    createdDate  = date.today(),
                                                    status       = status.statusName)
 
-            if k == "supervisor":
-                if formStatus == "Pending":
-                    # d, created = User.get_or_create(Supervisor = rsp[k]["newValue"])
-                    # d, created = Supervisor.get_or_create(ID = rsp[k]["newValue"])
-                    supervisor = createSupervisorFromID(rsp[k]["newValue"])
-                    user = createUser(username, supervisor=supervisor)
-                    LSF.supervisor = supervisor.ID
-                    LSF.save()
+            if k == "supervisor" and formStatus == "Pending":
+                supervisor = createSupervisorFromTracy(id=rsp[k]["newValue"])
+                LSF.supervisor = supervisor.ID
+                LSF.save()
 
-            if k == "position":
-                if formStatus == "Pending":
-                    position = Tracy().getPositionFromCode(rsp[k]["newValue"])
-                    LSF.POSN_CODE = position.POSN_CODE
-                    LSF.POSN_TITLE = position.POSN_TITLE
-                    LSF.WLS = position.WLS
-                    LSF.save()
+            if k == "position" and formStatus == "Pending":
+                position = Tracy().getPositionFromCode(rsp[k]["newValue"])
+                LSF.POSN_CODE = position.POSN_CODE
+                LSF.POSN_TITLE = position.POSN_TITLE
+                LSF.WLS = position.WLS
+                LSF.save()
 
             if k == "contractHours":
                 LSF.contractHours = int(rsp[k]["newValue"])

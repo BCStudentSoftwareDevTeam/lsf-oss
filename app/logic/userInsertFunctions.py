@@ -48,26 +48,35 @@ def createUser(username, student=None, supervisor=None):
     return user
 
 
-def createSupervisorFromTracy(username):
+def createSupervisorFromTracy(username=None, id=None):
     """
         Attempts to add a user from the Tracy database to the application, based on the provided username.
         XXX Currently only handles adding staff. XXX
 
         Raises InvalidUserException if this does not succeed.
     """
+    if not username and not id:
+        raise InvalidUserException("No arguments provided to createSupervisorFromTracy()")
 
-    email = "{}@berea.edu".format(username)
-    try:
-        tracyUser = Tracy().getSupervisorFromEmail(email)
-    except DoesNotExist as e:
-        raise InvalidUserException("{} not found in Tracy database".format(email))
+    if not username:
+        try:
+            tracyUser = Tracy().getSupervisorFromID(id)
+        except DoesNotExist as e:
+            raise InvalidUserException("{} not found in Tracy database".format(id))
+
+    elif not id:
+        email = "{}@berea.edu".format(username)
+        try:
+            tracyUser = Tracy().getSupervisorFromEmail(email)
+        except DoesNotExist as e:
+            raise InvalidUserException("{} not found in Tracy database".format(email))
 
     try:
         return Supervisor.get_or_create(PIDM = tracyUser.PIDM,
                                         FIRST_NAME = tracyUser.FIRST_NAME,
                                         LAST_NAME = tracyUser.LAST_NAME,
                                         ID = tracyUser.ID.strip(),
-                                        EMAIL = email,
+                                        EMAIL = tracyUser.EMAIL,
                                         CPO = tracyUser.CPO,
                                         ORG = tracyUser.ORG,
                                         DEPT_NAME = tracyUser.DEPT_NAME)[0]

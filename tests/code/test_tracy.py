@@ -99,4 +99,3 @@ class Test_Tracy:
 
         with pytest.raises(InvalidQueryException):
             position = tracy.getPositionFromCode(17)
-
