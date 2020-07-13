@@ -194,13 +194,13 @@ def submitAlteredLSF(laborStatusKey):
 
                 # Second Scenario:
                 # Old hours = original labor status form hours -> 10
-                # new hours = adjusted hours -> 10
+                # new hours = adjusted hours in secondary form -> 10
                 # total hours = old hours + new hours
 
 
 
-                allTermForms = FormHistory.select() \
-                               .join_from(FormHistory, LaborStatusForm) \
+                allTermForms = LaborStatusForm.select() \
+                               .join_from(LaborStatusForm, FormHistory) \
                                .join_from(LaborStatusForm, Student) \
                                .where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID) & (FormHistory.status != "Denied") )
 
@@ -208,18 +208,14 @@ def submitAlteredLSF(laborStatusKey):
                 # allTermForms = LaborStatusForm.select() \
                 #                .join_from(LaborStatusForm, Student) \
                 #                .where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID) & )
-                totalHours = 0
+                previousTotalHours = 0
                 if allTermForms:
-                    for historyForm in allTermForms:
-                        print("form type", historyForm.historyType.historyTypeName)
-                        print("weeklyHours", historyForm.formID.weeklyHours)
-                        totalHours += historyForm.formID.weeklyHours
-                print("totalHours", totalHours)
-                print("oldValue", int(rsp[k]['oldValue']))
-                print("newValue", int(rsp[k]['newValue']))
-                previousTotalHours = totalHours + int(rsp[k]['oldValue'])
+                    for statusForm in allTermForms:
+                        print("weeklyHours", statusForm.weeklyHours)
+                        previousTotalHours += historyForm.weeklyHours
                 print("previousTotalHours", previousTotalHours)
-                newTotalHours = totalHours + int(rsp[k]['newValue'])
+                print("newValue", int(rsp[k]['newValue']))
+                newTotalHours = previousTotalHours + int(rsp[k]['newValue'])
                 print("newTotalHours", newTotalHours)
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
