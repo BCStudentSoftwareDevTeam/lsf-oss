@@ -175,54 +175,25 @@ def submitAlteredLSF(laborStatusKey):
                 LSF.save()
 
             if k == "weeklyHours":
-
-                # When is this condition triggered:
-                # 1. When a form is modified
-                # 2. When a form is adjusted
-
-                # Different scenarios:
-                # 1. When a labor status form hours is changed to 20
-                # 1.1. Modification -> override original lsf weeklyHours to 20
-                # 1.2. Adjustment -> change total hours to new hours
-
-                # 2. When a student has a 10 hour primary and a 5 hour secondary,but then secondary is changed to 10 hours.
-
-                # First Scenario:
-                # Old hours = original labor status form hours -> 10, 12, 15
-                # new hours = change one -> 20
-                # total hours = new hours
-
-                # Second Scenario:
-                # Old hours = original labor status form hours -> 10
-                # new hours = adjusted hours in secondary form -> 10
-                # total hours = old hours + new hours
-
-
-
                 allTermForms = LaborStatusForm.select() \
-                               .join_from(LaborStatusForm, FormHistory) \
                                .join_from(LaborStatusForm, Student) \
-                               .where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID) & (FormHistory.status != "Denied") )
-
-
-                # allTermForms = LaborStatusForm.select() \
-                #                .join_from(LaborStatusForm, Student) \
-                #                .where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID) & )
+                               .join_from(LaborStatusForm, FormHistory) \
+                               .where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID) & (FormHistory.status != "Denied") & (FormHistory.historyType == "Labor Status Form"))
                 previousTotalHours = 0
                 if allTermForms:
                     for statusForm in allTermForms:
-                        print("weeklyHours", statusForm.weeklyHours)
-                        previousTotalHours += historyForm.weeklyHours
-                print("previousTotalHours", previousTotalHours)
-                print("newValue", int(rsp[k]['newValue']))
+                        previousTotalHours += statusForm.weeklyHours
                 newTotalHours = previousTotalHours + int(rsp[k]['newValue'])
-                print("newTotalHours", newTotalHours)
                 if previousTotalHours <= 15 and newTotalHours > 15:
+                    if formStatus == "Pending":
+                        adjustedForm = None
+                    elif formStatus == "Approved":
+                        adjustedForm = adjustedforms.adjustedFormID
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
                     newFormHistory = FormHistory.create(formID       = laborStatusKey,
                                                         historyType  = "Labor Overload Form",
                                                         createdBy    = currentUser,
-                                                        adjustedForm = adjustedforms.adjustedFormID,
+                                                        adjustedForm = adjustedForm,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate  = date.today(),
                                                         status       = "Pending")
