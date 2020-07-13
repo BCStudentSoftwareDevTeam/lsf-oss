@@ -78,7 +78,7 @@ def alterLSF(laborStatusKey):
                             superviser_id = superviser_id,
                             prefillstudent = prefillstudent,
                             prefillsupervisor = prefillsupervisor,
-                            prefillsupervisorID = prefillsupervisorID,
+                            prefillsupervisorPIDM = prefillsupervisorPIDM,
                             prefilldepartment = prefilldepartment,
                             prefillposition = prefillposition,
                             prefilljobtype = prefilljobtype,
@@ -146,11 +146,9 @@ def submitAlteredLSF(laborStatusKey):
                 if formStatus == "Pending":
                     # d, created = User.get_or_create(Supervisor = rsp[k]['newValue'])
                     d, created = Supervisor.get_or_create(ID = rsp[k]['newValue'])
-                    print("===================")
                     if not created:
                         LSF.supervisor = d.ID
                     LSF.save()
-                    print("===================")
                     if created:
                         print("This ran")
                         tracyUser = Tracy().getSupervisorFromID(rsp[k]['newValue'])
@@ -174,7 +172,10 @@ def submitAlteredLSF(laborStatusKey):
 
             if k == "position":
                 if formStatus == "Pending":
-                    LSF.POSN_TITLE = rsp[k]['newValue']
+                    position = Tracy().getPositionFromCode(rsp[k]['newValue'])
+                    LSF.POSN_CODE = position.POSN_CODE
+                    LSF.POSN_TITLE = position.POSN_TITLE
+                    LSF.WLS = position.WLS
                     LSF.save()
 
             if k == "contractHours":
