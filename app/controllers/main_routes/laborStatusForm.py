@@ -26,7 +26,7 @@ def laborStatusForm(laborStatusKey = None):
     """ Render labor Status Form, and pre-populate LaborStatusForm page with the correct information when redirected from Labor History."""
     currentUser = require_login()
     if not currentUser:        # Not logged in
-        return render_template('errors/403.html')
+        return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:
         if currentUser.Student and not currentUser.Supervisor:
             return redirect('/laborHistory/' + currentUser.Student.ID)
@@ -56,15 +56,14 @@ def laborStatusForm(laborStatusKey = None):
                             students = students,
                             terms = terms,
                             staffs = staffs,
-                            departments = departments,
-                            currentUser = currentUser)
+                            departments = departments)
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
     """ Create labor status form. Create labor history form. Most of the functions called here are in userInsertFunctions.py"""
     currentUser = require_login()
     if not currentUser:        # Not logged in
-        return render_template('errors/403.html')
+        return render_template('errors/403.html'), 403
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     all_forms = []

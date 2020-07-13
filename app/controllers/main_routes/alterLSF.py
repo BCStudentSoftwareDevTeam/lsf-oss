@@ -25,7 +25,7 @@ def alterLSF(laborStatusKey):
     """
     currentUser = require_login()
     if not currentUser:        # Not logged in
-        return render_template("errors/403.html")
+        return render_template("errors/403.html"), 403
     if not currentUser.isLaborAdmin:       # Not an admin
         if currentUser.Student and not currentUser.Supervisor: # If a student is logged in and trying to get to this URL then send them back to their own page.
             return redirect("/laborHistory/" + currentUser.Student.ID)
@@ -41,7 +41,7 @@ def alterLSF(laborStatusKey):
     formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
 
     if currentDate > form.termCode.adjustmentCutOff and formStatus == "Approved":
-        return render_template("errors/403.html", currentUser = currentUser)
+        return render_template("errors/403.html"), 403
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
     prefillstudent = form.studentSupervisee.FIRST_NAME + " "+ form.studentSupervisee.LAST_NAME+" ("+form.studentSupervisee.ID+")"
     prefillsupervisor = form.supervisor.FIRST_NAME +" "+ form.supervisor.LAST_NAME
@@ -86,8 +86,7 @@ def alterLSF(laborStatusKey):
                             positions = positions,
                             form = form,
                             oldSupervisor = oldSupervisor,
-                            totalHours = totalHours,
-                            currentUser = currentUser
+                            totalHours = totalHours
                           )
 
 
@@ -99,7 +98,7 @@ def submitAlteredLSF(laborStatusKey):
     try:
         currentUser = require_login()
         if not currentUser:        # Not logged in
-            return render_template("errors/403.html")
+            return render_template("errors/403.html"), 403
         currentDate = datetime.now().strftime("%Y-%m-%d")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)

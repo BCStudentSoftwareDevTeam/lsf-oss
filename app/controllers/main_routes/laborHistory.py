@@ -28,7 +28,7 @@ def laborhistory(id):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
         student = Student.get(Student.ID == id)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
         authorizedForms = set(studentForms)
@@ -37,7 +37,6 @@ def laborhistory(id):
             if currentUser.Student and not currentUser.Supervisor:
                 if currentUser.Student.ID != id:
                     return redirect('/laborHistory/' + currentUser.Student.ID)
-
             elif currentUser.Supervisor:
                 supervisorForms = LaborStatusForm.select() \
                                   .join_from(LaborStatusForm, FormHistory) \
@@ -45,7 +44,7 @@ def laborhistory(id):
                                   .distinct()
                 authorizedForms = set(studentForms).intersection(set(supervisorForms))
                 if len(authorizedForms) == 0:
-                    return render_template('errors/403.html', currentUser = currentUser), 403
+                    return render_template('errors/403.html'), 403
         laborStatusFormList = ','.join([str(form.laborStatusFormID) for form in studentForms])
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
@@ -53,12 +52,11 @@ def laborhistory(id):
                                 username=currentUser.username,
                                 laborStatusFormList = laborStatusFormList,
                                 authorizedForms = authorizedForms,
-                                currentUser = currentUser,
                                 studentUserName = User.get(User.Student == student).username
                               )
     except Exception as e:
         print("Error Loading Student Labor History", e)
-        return render_template('errors/500.html', currentUser = currentUser), 500
+        return render_template('errors/500.html'), 500
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
 def downloadFormHistory():
@@ -66,7 +64,6 @@ def downloadFormHistory():
     This function is called when the download button is pressed.  It runs a function for writing to an excel sheet that is in download.py.
     This function downloads the created excel sheet of the history from the page.
     """
-    currentUser = require_login()
     try:
         data = request.form
         historyList = data["listOfForms"].split(',')
@@ -75,7 +72,7 @@ def downloadFormHistory():
         filename = completePath.split('/').pop()
         return send_file(completePath, mimetype='text/csv', as_attachment=True, attachment_filename=filename)
     except:
-        return render_template('errors/500.html', currentUser = currentUser), 500
+        return render_template('errors/500.html'), 500
 
 @main_bp.route('/laborHistory/modal/<statusKey>', methods=['GET'])
 def populateModal(statusKey):
@@ -87,7 +84,7 @@ def populateModal(statusKey):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
-            return render_template('errors/403.html', currentUser = currentUser), 403
+            return render_template('errors/403.html'), 403
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
         student = User.get(User.Student == statusForm[0].studentSupervisee)
