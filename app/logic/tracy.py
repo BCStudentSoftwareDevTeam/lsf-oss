@@ -51,7 +51,7 @@ class Tracy():
 
         Throws an InvalidQueryException if the given ID does not exist.
         """
-        supervisor = STUSTAFF.query.filter(STUSTAFF.ID == id)
+        supervisor = STUSTAFF.query.filter(STUSTAFF.ID == id).first()
         if supervisor is None:
             raise InvalidQueryException("ID {} not found in STUSTAFF".format(id))
 
