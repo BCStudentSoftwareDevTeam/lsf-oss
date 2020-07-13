@@ -17,11 +17,11 @@ from datetime import date
 from app import cfg
 from app.controllers.main_routes.download import ExcelMaker
 from fpdf import FPDF
-from app.logic.authorizationFunctions import*
 from app.logic.buttonStatus import ButtonStatus
 from app.logic.tracy import Tracy
 from app.models.supervisor import Supervisor
 from app.logic.tracy import Tracy
+
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
@@ -29,32 +29,30 @@ def laborhistory(id):
         currentUser = require_login()
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html'), 403
+        student = Student.get(Student.ID == id)
+        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
+        authorizedForms = set(studentForms)
         if not currentUser.isLaborAdmin:
-            departmentsList = None
+            # View only your own form history
             if currentUser.Student and not currentUser.Supervisor:
                 if currentUser.Student.ID != id:
                     return redirect('/laborHistory/' + currentUser.Student.ID)
-            elif currentUser.Supervisor and not currentUser.Student:
-                authorizedUser, departmentsList = laborHistoryAuthorizeUser(id, currentUser, currentUser.Supervisor.ID)
-                if authorizedUser == False:
+            elif currentUser.Supervisor:
+                supervisorForms = LaborStatusForm.select() \
+                                  .join_from(LaborStatusForm, FormHistory) \
+                                  .where((LaborStatusForm.supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser)) \
+                                  .distinct()
+                authorizedForms = set(studentForms).intersection(set(supervisorForms))
+                if len(authorizedForms) == 0:
                     return render_template('errors/403.html'), 403
-        else:
-            departmentsList = []
-        student = Student.get(Student.ID == id)
-        studentUser = User.get(User.Student == student)
-        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
-        formHistoryList = ""
-        for form in studentForms:
-            formHistoryList = formHistoryList + str(form.laborStatusFormID) + ","
-        formHistoryList = formHistoryList[0:-1]
+        laborStatusFormList = ','.join([str(form.laborStatusFormID) for form in studentForms])
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,
                                 username=currentUser.username,
-                                studentForms = studentForms,
-                                formHistoryList = formHistoryList,
-                                departmentsList = departmentsList,
-                                studentUserName = studentUser.username
+                                laborStatusFormList = laborStatusFormList,
+                                authorizedForms = authorizedForms,
+                                studentUserName = User.get(User.Student == student).username
                               )
     except Exception as e:
         print("Error Loading Student Labor History", e)

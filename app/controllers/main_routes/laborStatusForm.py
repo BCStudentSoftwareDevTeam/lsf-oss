@@ -73,9 +73,10 @@ def userInsert():
         # Tries to get a student with the following information from the database
         # if the student doesn't exist, it tries to create a student with that same information
         try:
-            createStudentFromTracy(tracyStudent)
-        except Exception as e:
-            print("ERROR: ", e)
+            createStudentFromTracyObj(tracyStudent)
+        except InvalidUserException as e:
+            print(e)
+            return "", 500
 
         student = Student.get(ID = tracyStudent.ID)
 

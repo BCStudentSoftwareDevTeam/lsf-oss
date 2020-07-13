@@ -147,7 +147,9 @@ def index():
                         currentUserDepartments = departments
                               )
     except Exception as e:
-        print('Error Supervisor Portal:', e)
+        #TODO We have to return some sort of error page
+        print('Error in Supervisor Portal:', e)
+        return "",500
 
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
 def populateDepartment(departmentSelected):
