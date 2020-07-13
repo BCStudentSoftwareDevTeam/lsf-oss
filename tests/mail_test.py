@@ -1,3 +1,4 @@
+import pytest
 from app import app
 from flask_mail import Mail, Message
 from app.config.loadConfig import get_secret_cfg
