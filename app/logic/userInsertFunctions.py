@@ -56,15 +56,15 @@ def createSupervisorFromTracy(username=None, id=None):
         Raises InvalidUserException if this does not succeed.
     """
     if not username and not id:
-        raise InvalidUserException("No arguments provided to createSupervisorFromTracy()")
+        raise ValueError("No arguments provided to createSupervisorFromTracy()")
 
-    if not username:
+    if id:
         try:
             tracyUser = Tracy().getSupervisorFromID(id)
         except DoesNotExist as e:
             raise InvalidUserException("{} not found in Tracy database".format(id))
 
-    elif not id:
+    else:    # Executes if no ID is provided
         email = "{}@berea.edu".format(username)
         try:
             tracyUser = Tracy().getSupervisorFromEmail(email)
