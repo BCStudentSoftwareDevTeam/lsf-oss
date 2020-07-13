@@ -122,9 +122,6 @@ def populateModal(statusKey):
             if currentUser.Student and currentUser.username == student.username:
                 buttonState = ButtonStatus.show_student_labor_eval_button
                 break
-            elif (currentUser.Supervisor.ID != form.createdBy.Supervisor.ID) and (currentUser.Supervisor.ID != form.formID.supervisor.ID):
-                buttonState = ButtonStatus.no_buttons # otherwise, show the notification
-                break
             else:
                 if form.releaseForm != None:
                     if form.status.statusName == "Approved":
