@@ -435,7 +435,10 @@ def modalFormUpdate():
                             LSF.weeklyHours = pendingForm.adjustedForm.newValue
                             LSF.save()
                     if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Labor Adjustment Form" and pendingForm.adjustedForm.fieldAdjusted == "weeklyHours"):
-                        pendingForm.status = status.statusName
+                        if status.statusName == "Approved Reluctantly":
+                            pendingForm.status = "Approved"
+                        else:
+                            pendingForm.status = status.statusName
                         pendingForm.reviewedBy = currentUser
                         pendingForm.reviewedDate = currentDate
                         if 'denialReason' in rsp.keys():
