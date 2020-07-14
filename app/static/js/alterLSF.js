@@ -98,13 +98,14 @@ function checkForChange(){
     finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours, "date": date}
   }
 
-  if (JSON.stringify(finalDict) !== "{}"){
+  if (JSON.stringify(finalDict) == "{}" || (Object.keys(finalDict).length == 1 && Object.keys(finalDict) == "supervisorNotes")){
+    $("#NochangeModal").modal("show");
+  }
+  else if (JSON.stringify(finalDict) !== "{}"){
     $("#submitModal").modal("show");
     return finalDict
   }
-  if (JSON.stringify(finalDict) == "{}"){
-    $("#NochangeModal").modal("show");
-  }
+
 }
 
 function buttonListener(laborStatusKey) {
