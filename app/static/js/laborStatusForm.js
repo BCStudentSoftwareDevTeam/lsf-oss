@@ -597,9 +597,10 @@ function isOneLaborStatusForm(studentDict){
           response["previousSupervisorNames"].forEach(element => names += element + ', ');
           supervisorsNames = names.trim().replace(/.$/,".")
 
-          $("#warningModalTitle").text("Warning");
-          $("#warningModalText").html(response["studentName"] + " is already working with " + supervisorsNames +"<br><br> " + "Rules for Break LSF");
-          $("#warningModal").modal('show');
+          $("#summerContractTitle").text("Warning");
+          $("#additionalLSFWarning").html("<strong>"+response["studentName"] + " is already working with " + supervisorsNames +"</strong><br><br>");
+          $('#summerContractAccept').html('Okay')
+          $("#SummerContract").modal('show');
         }
       }
     });
