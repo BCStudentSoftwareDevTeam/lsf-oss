@@ -96,7 +96,7 @@ def userInsert():
         student.save()                                          #Saves to student database
 
         studentID = student.ID
-        d, created = Supervisor.get_or_create(ID = rspFunctional[i]['stuSupervisorID'])
+        d = createSupervisorFromTracy(bnumber=rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.ID
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
         department = d.departmentID
@@ -111,10 +111,12 @@ def userInsert():
             try:
                 emailDuringBreak(checkForSecondLSFBreak(term.termCode, studentID, "lsf"), term)
             except Exception as e:
+                raise e
                 print("Error on sending emails during break: " + str(e))
 
             all_forms.append(True)
         except Exception as e:
+            raise e
             all_forms.append(False)
             print("ERROR on creating Labor Status Form/Overload Form" + str(e))
 
