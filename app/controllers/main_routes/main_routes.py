@@ -24,7 +24,7 @@ def index():
     try:
         currentUser = require_login()
         if not currentUser:
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
         if not currentUser.isLaborAdmin:
             if currentUser.Student and not currentUser.Supervisor:   # logged in as a student
                 return redirect('/laborHistory/' + currentUser.Student.ID)
@@ -144,11 +144,12 @@ def index():
                         pastSupervisees = pastSupervisees,
                         inactiveSupervisees = inactiveSupervisees,
                         UserID = currentUser,
-                        currentUserDepartments = departments,
-                        currentUser = currentUser
+                        currentUserDepartments = departments
                               )
     except Exception as e:
-        print('Error Supervisor Portal:', e)
+        #TODO We have to return some sort of error page
+        print('Error in Supervisor Portal:', e)
+        return "",500
 
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
 def populateDepartment(departmentSelected):

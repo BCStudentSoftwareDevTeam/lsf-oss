@@ -15,6 +15,7 @@ from flask import request
 from datetime import datetime, date
 from app.logic.emailHandler import*
 
+
 @main_bp.route('/laborReleaseForm/<laborStatusKey>', methods=['GET', 'POST'])
 # @main_bp.route('/laborReleaseForm', methods=['GET', 'POST'])
 # @login_required
@@ -22,7 +23,7 @@ from app.logic.emailHandler import*
 def laborReleaseForm(laborStatusKey):
     currentUser = require_login()
     if not currentUser:
-        render_template("errors/403.html")
+        render_template("errors/403.html"), 403
     if not currentUser.isLaborAdmin:       # Not an admin
         if currentUser.Student and not currentUser.Supervisor:
             return redirect('/laborHistory/' + currentUser.Student.ID)
@@ -59,7 +60,7 @@ def laborReleaseForm(laborStatusKey):
                                         formID = laborStatusForiegnKey.laborStatusFormID,
                                         historyType = historytype.historyTypeName,
                                         releaseForm = newLaborReleaseForm.laborReleaseFormID,
-                                        modifiedForm = None,
+                                        adjustedForm = None,
                                         overloadForm = None,
                                         createdBy = currentUser,
                                         createdDate = date.today(),
@@ -80,9 +81,7 @@ def laborReleaseForm(laborStatusKey):
             message = "An error has occurred. Your Labor Release Form for {0} {1} was not submitted.".format(laborStatusForiegnKey.studentSupervisee.FIRST_NAME, laborStatusForiegnKey.studentSupervisee.LAST_NAME)
             flash(message, "danger")
             return redirect(url_for("main.index"))
-
     return render_template('main/laborReleaseForm.html',
 				            title=('Labor Release Form'),
-                            forms = forms,
-                            currentUser = currentUser
+                            forms = forms
                           )

@@ -7,15 +7,14 @@ from app.models.Tracy.studata import *
 from app import *
 from app.login_manager import *
 
-
 @app.route("/contributors", methods = ["GET"])
 def contributors():
     currentUser = require_login()
     if not currentUser:        # Not logged in
-        return render_template('errors/403.html')
+        return render_template('errors/403.html', currentUser = currentUser), 403
 
     contribs = load_config("app/config/contributors.yaml")
     return render_template("main/contributors.html",
-           cfg=contribs,
+           cfg = contribs,
            currentUser = currentUser
            )

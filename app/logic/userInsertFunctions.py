@@ -17,93 +17,105 @@ from flask import Flask, redirect, url_for, flash
 from app import cfg
 from app.logic.emailHandler import emailHandler
 from app.logic.tracy import Tracy, InvalidQueryException
+from peewee import DoesNotExist
 
 class InvalidUserException(Exception):
     pass
 
-def createUser(username, student, supervisor):
+def createUser(username, student=None, supervisor=None):
     """
-    Attempts to add a user from the Tracy database to the User table, based on whether the user is Supervisor or Student.
+    Retrieves or creates a user in the User table and updates Supervisor and/or Student as requested.
 
     Raises InvalidUserException if this does not succeed.
     """
+
+    if not student and not supervisor:
+        raise InvalidUserException("A User should be connected to Student or Supervisor")
+
     try:
-        d, created = User.get_or_create( Student = student,
-                                         Supervisor = supervisor,
-                                         username = username,
-                                         isLaborAdmin = None,
-                                         isFinancialAidAdmin = None,
-                                         isSaasAdmin = None)
+        user = User.get_or_create(username=username)[0]
+
     except Exception as e:
         raise InvalidUserException("Adding {} to user table failed".format(username), e)
 
-    # else if both: ??? : TOOO: IF a student becomes a supervisor, we don't want to create a separate user entry.
-    #   We want to keep the previous entry and link up the user's supervisor entry in supervisor table to the user table.
+    if student:
+        user.Student = student.ID # Not sure why assigning the object doesn't work...
+    if supervisor:
+        user.Supervisor = supervisor.ID
+
+    user.save()
+
+    return user
 
 
-def createSupervisorFromTracy(username):
+def createSupervisorFromTracy(username=None, bnumber=None):
     """
         Attempts to add a user from the Tracy database to the application, based on the provided username.
-        XXX Currently only handles adding staff. XXX
 
         Raises InvalidUserException if this does not succeed.
     """
+    if not username and not bnumber:
+        raise ValueError("No arguments provided to createSupervisorFromTracy()")
 
-    email = "{}@berea.edu".format(username)
-    try:
-        tracyUser = Tracy().getSupervisorFromEmail(email)
-    except DoesNotExist as e:
-        raise InvalidUserException("{} not found in Tracy database".format(email))
+    if bnumber:
+        try:
+            tracyUser = Tracy().getSupervisorFromID(bnumber)
+        except DoesNotExist as e:
+            raise InvalidUserException("{} not found in Tracy database".format(bnumber))
+
+    else:    # Executes if no ID is provided
+        email = "{}@berea.edu".format(username)
+        try:
+            tracyUser = Tracy().getSupervisorFromEmail(email)
+        except DoesNotExist as e:
+            raise InvalidUserException("{} not found in Tracy database".format(email))
 
     try:
-        user, created = Supervisor.get_or_create(
-                                    PIDM = tracyUser.PIDM,
-                                    FIRST_NAME = tracyUser.FIRST_NAME,
-                                    LAST_NAME = tracyUser.LAST_NAME,
-                                    ID = tracyUser.ID,
-                                    EMAIL = email,
-                                    CPO = tracyUser.CPO,
-                                    ORG = tracyUser.ORG,
-                                    DEPT_NAME = tracyUser.DEPT_NAME)
-        return user
+        return Supervisor.get_or_create(PIDM = tracyUser.PIDM,
+                                        FIRST_NAME = tracyUser.FIRST_NAME,
+                                        LAST_NAME = tracyUser.LAST_NAME,
+                                        ID = tracyUser.ID.strip(),
+                                        EMAIL = tracyUser.EMAIL,
+                                        CPO = tracyUser.CPO,
+                                        ORG = tracyUser.ORG,
+                                        DEPT_NAME = tracyUser.DEPT_NAME)[0]
     except Exception as e:
-        raise InvalidUserException("Adding {} to user table failed".format(username), e)
-def studentTracyCheck(username):
+        raise InvalidUserException("Adding {} to Supervisor table failed".format(username), e)
+
+def createStudentFromTracy(username):
     """
-        Checks to see if username of student is in Tracy database, based on the provided username from Shibboleth.
+        Checks to see if username of student is in Tracy database, based on the provided username.
 
         Raises InvalidUserException if this does not succeed.
     """
     email = "{}@berea.edu".format(username)
     try:
-        tracyStudent = STUDATA.get(STU_EMAIL=email)
-        return tracyStudent
+        tracyStudent = Tracy().getStudentFromEmail(email)
     except DoesNotExist as e:
         raise InvalidUserException("{} not found in Tracy database".format(email))
 
-def createStudentFromTracy(tracyStudentObject):
+    return createStudentFromTracyObj(tracyStudent)
+
+def createStudentFromTracyObj(tracyStudent):
     """
-        Attempts to add a user from the Tracy database to the application, based on the provided object from the Tracy student database.
+        Attempts to add a student from the Tracy database to the application, based on the provided object from the Tracy student database.
 
         Raises InvalidUserException if this does not succeed.
     """
     try:
-        # user -> has an object of get_or_create()
-        # created -> has a boolean value, is created or not.
-        tracyStudent = tracyStudentObject
-        user, created = Student.get_or_create( ID = tracyStudent.ID,
-                                            FIRST_NAME = tracyStudent.FIRST_NAME,
-                                            LAST_NAME = tracyStudent.LAST_NAME,
-                                            CLASS_LEVEL = tracyStudent.CLASS_LEVEL,
-                                            ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS,
-                                            MAJOR = tracyStudent.MAJOR,
-                                            PROBATION = tracyStudent.PROBATION,
-                                            ADVISOR = tracyStudent.ADVISOR,
-                                            STU_EMAIL = tracyStudent.STU_EMAIL,
-                                            STU_CPO = tracyStudent.STU_CPO,
-                                            LAST_POSN = tracyStudent.LAST_POSN,
-                                            LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
-        return user
+        return Student.get_or_create(ID = tracyStudent.ID.strip(),
+                                    PIDM = tracyStudent.PIDM,
+                                    FIRST_NAME = tracyStudent.FIRST_NAME,
+                                    LAST_NAME = tracyStudent.LAST_NAME,
+                                    CLASS_LEVEL = tracyStudent.CLASS_LEVEL,
+                                    ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS,
+                                    MAJOR = tracyStudent.MAJOR,
+                                    PROBATION = tracyStudent.PROBATION,
+                                    ADVISOR = tracyStudent.ADVISOR,
+                                    STU_EMAIL = tracyStudent.STU_EMAIL,
+                                    STU_CPO = tracyStudent.STU_CPO,
+                                    LAST_POSN = tracyStudent.LAST_POSN,
+                                    LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)[0]
     except Exception as e:
         raise InvalidUserException("Adding {} to user table failed".format(username), e)
 

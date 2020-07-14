@@ -25,8 +25,8 @@
       <li id='laborTab' {% if formType == "pendingLabor" %} class="active" {% endif %}>
         <a id="pendingLabor" href="{{url_for('admin.allPendingForms', formType = 'pendingLabor')}}"> Pending Labor Status Forms <strong>({{ laborStatusFormCounter }})</strong></a>
       </li>
-      <li id='modifiedTab' {% if formType == "pendingAdjustment" %} class="active" {% endif %}>
-        <a href="{{url_for('admin.allPendingForms', formType = 'pendingAdjustment')}}">Pending Adjustment Forms <strong>({{ modifiedFormCounter }})</strong></a>
+      <li id='adjustedTab' {% if formType == "pendingAdjustment" %} class="active" {% endif %}>
+        <a href="{{url_for('admin.allPendingForms', formType = 'pendingAdjustment')}}">Pending Adjustment Forms <strong>({{ adjustedFormCounter }})</strong></a>
       </li>
       <li id='overloadTab' {% if formType == "pendingOverload" %} class="active" {% endif %}>
         <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms <strong>({{ overloadFormCounter }})</strong></a>
@@ -88,8 +88,8 @@
                 <a href="#" aria-label="{{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}}" class="hover_indicator"> {{allForms.formID.department.DEPT_NAME}} </a>
               </td>
               <td> {# SUPERVISOR #}
-                {% if allForms.modifiedForm.fieldModified == "Supervisor" %}
-                  <s aria-hidden="true">{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</s> <br/> {{allForms.modifiedForm.newValue}}
+                {% if allForms.adjustedForm.fieldAdjusted == "supervisor" %}
+                  <s aria-hidden="true">{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</s> <br/> {{allForms.adjustedForm.newValue}}
                 {% else %}
                   {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
                 {% endif %}
@@ -98,16 +98,16 @@
                 <a href="#" aria-label="{{allForms.formID.studentSupervisee.ID}}" class="hover_indicator"> {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}</a>
               </td>
               <td> {# POSITON AND WLS #}
-                {% if allForms.modifiedForm.fieldModified == "Position"%}
+                {% if allForms.adjustedForm.fieldAdjusted == "position"%}
                   <s aria-hidden="true"><a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a></s><br/>
-                  <a href="#" aria-label="{{allForms.modifiedForm.oldValue}}" class="hover_indicator"> {{allForms.modifiedForm.newValue}}</a>
+                  <a href="#" aria-label="{{allForms.adjustedForm.oldValue}}" class="hover_indicator"> {{allForms.adjustedForm.newValue}}</a>
                 {% else %}
                   <a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a>
                 {% endif %}
               </td>
               <td> {# HOURS #}
-                {% if allForms.modifiedForm.fieldModified == "Weekly Hours"  or  allForms.modifiedForm.fieldModified == "Contract Hours" %}
-                  <s aria-hidden="true">{% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}</s> <br> {{allForms.modifiedForm.newValue}}
+                {% if allForms.adjustedForm.fieldAdjusted == "weeklyHours"  or  allForms.adjustedForm.fieldAdjusted == "contractHours" %}
+                  <s aria-hidden="true">{% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}</s> <br> {{allForms.adjustedForm.newValue}}
                 {% else %}
                   {% if allForms.formID.weeklyHours != None%} {{allForms.formID.weeklyHours}} {% else %}   {{allForms.formID.contractHours}} {% endif %}
                 {% endif %}
@@ -117,7 +117,7 @@
               </td>
               {% if formType == "pendingAdjustment" %}
                 <td> {# EFFECTIVE DATE #}
-                     {{allForms.modifiedForm.effectiveDate.strftime('%m/%d/%y')}}
+                     {{allForms.adjustedForm.effectiveDate.strftime('%m/%d/%y')}}
                 </td>
               {% endif %}
               <td> {# CREATED BY #}
@@ -166,8 +166,8 @@
                             data-target="#{{modalTarget}}">Deny</span></a></li>
                     {% endif %}
                     {% if allForms.historyType.historyTypeName == 'Labor Status Form' %}
-                    <li role="presentation"><a role="menuitem" href="/modifyLSF/{{allForms.formID.laborStatusFormID}}">
-                        <span id="edit_{{allForms.formID.laborStatusFormID}}">Modify</span></a></li>
+                    <li role="presentation"><a role="menuitem" href="/alterLSF/{{allForms.formID.laborStatusFormID}}">
+                        <span id="edit_{{allForms.formID.laborStatusFormID}}">Correct</span></a></li>
                     {% endif %}
                     <li role="presentation"><a role="menuitem" href="#"
                       <span id="notes_{{allForms.formHistoryID}}"

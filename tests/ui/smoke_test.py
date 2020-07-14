@@ -5,7 +5,7 @@ import colorama
 import urllib.request
 from urllib.error import HTTPError, URLError
 from time import sleep
-import socket 
+import socket
 import http.client
 import json
 
@@ -38,7 +38,6 @@ class Test_Routes:
                 ("/laborstatusform/getcompliance/1", None),
                 ("/laborstatusform/getPositions/1", None),
                 ("/laborstatusform/getstudents/202000/B00841417/1", None),
-                ("/laborstatusform/getstudents/202000/B00841417", None),
                 ("/laborstatusform/getDate/202000", None),
                 ("/laborHistory/modal/2", None),
                 ("/admin/pendingForms/pendingLabor", None),
@@ -47,9 +46,9 @@ class Test_Routes:
                 ("/studentOverloadApp/2", None),
                 ("/laborReleaseForm/2", None),
                 ("/laborstatusform/2", None),
+                # ("/laborHistory/2", None) # TODO: Not sure if this should stay here or the next laborHistory test
+                ("/alterLSF/2", None),
                 ("/laborHistory/B00730361", None),
-                ("/adjustLSF/2", None),
-                ("/modifyLSF/2", None),
             ]
             self.url_runner(base_url, urls)
 
@@ -60,6 +59,7 @@ class Test_Routes:
                 ("/laborHistory/modal/withdrawform", b"FormID=2"),
                 ("/admin/emailTemplates/postEmail", b"body=test&purpose=Labor%20Status%20Form%20Submitted%20For%20Student"),
                 ("/studentOverloadApp/update", {2: {"formID": 2, "Notes": "test"}}),
+                #("/laborstatusform/getstudents/202000/B00841417", None),
                 # ("/laborstatusform/userInsert", []),
                 # ("/adminManagement/userInsert", []),
                 # ("/termManagement/manageStatus", []),
@@ -109,7 +109,7 @@ class Test_Routes:
                         jsondataasbytes = jsondata.encode('utf-8')
                         req.add_header('Content-Length', len(jsondataasbytes))
                         data = jsondataasbytes
-                    
+
                     assert 200 == urllib.request.urlopen(req, data).getcode()
 
                 except HTTPError as e:
