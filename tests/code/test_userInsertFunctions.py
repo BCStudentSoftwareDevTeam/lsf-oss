@@ -36,14 +36,14 @@ def test_createSupervisorFromTracy():
     assert supervisor.FIRST_NAME == "Scott"
 
     # Tests getting a supervisor from TRACY that does not exist in the supervisor table
-    supervisor = createSupervisorFromTracy(username="bryantal", bnumber="B00841417")
-    assert supervisor.FIRST_NAME == "Alex"
+    supervisor = createSupervisorFromTracy(username="hoffmanm", bnumber="B1236237")
+    assert supervisor.FIRST_NAME == "Megan"
     supervisor.delete_instance()
 
-    supervisor = createSupervisorFromTracy(username="", bnumber="B00841417")
-    assert supervisor.FIRST_NAME == "Alex"
+    supervisor = createSupervisorFromTracy(username="", bnumber="B1236237")
+    assert supervisor.FIRST_NAME == "Megan"
     supervisor.delete_instance()
 
-    supervisor = createSupervisorFromTracy(username="byrantal")
-    assert supervisor.FIRST_NAME == "Alex"
+    supervisor = createSupervisorFromTracy(username="hoffmanm")
+    assert supervisor.FIRST_NAME == "Megan"
     supervisor.delete_instance()
