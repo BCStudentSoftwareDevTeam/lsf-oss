@@ -26,7 +26,7 @@ def laborStatusForm(laborStatusKey = None):
     """ Render labor Status Form, and pre-populate LaborStatusForm page with the correct information when redirected from Labor History."""
     currentUser = require_login()
     if not currentUser:        # Not logged in
-        return render_template('errors/403.html')
+        return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:
         if currentUser.Student and not currentUser.Supervisor:
             return redirect('/laborHistory/' + currentUser.Student.ID)
@@ -56,15 +56,14 @@ def laborStatusForm(laborStatusKey = None):
                             students = students,
                             terms = terms,
                             staffs = staffs,
-                            departments = departments,
-                            currentUser = currentUser)
+                            departments = departments)
 
 @main_bp.route('/laborstatusform/userInsert', methods=['POST'])
 def userInsert():
     """ Create labor status form. Create labor history form. Most of the functions called here are in userInsertFunctions.py"""
     currentUser = require_login()
     if not currentUser:        # Not logged in
-        return render_template('errors/403.html')
+        return render_template('errors/403.html'), 403
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     all_forms = []
@@ -74,9 +73,10 @@ def userInsert():
         # Tries to get a student with the following information from the database
         # if the student doesn't exist, it tries to create a student with that same information
         try:
-            createStudentFromTracy(tracyStudent)
-        except Exception as e:
-            print("ERROR: ", e)
+            createStudentFromTracyObj(tracyStudent)
+        except InvalidUserException as e:
+            print(e)
+            return "", 500
 
         student = Student.get(ID = tracyStudent.ID)
 
@@ -96,7 +96,7 @@ def userInsert():
         student.save()                                          #Saves to student database
 
         studentID = student.ID
-        d, created = Supervisor.get_or_create(PIDM = rspFunctional[i]['stuSupervisorID'])
+        d, created = Supervisor.get_or_create(ID = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.ID
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
         department = d.departmentID

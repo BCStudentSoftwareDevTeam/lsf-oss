@@ -114,9 +114,9 @@ class emailHandler():
             self.checkRecipient("Labor Status Form Rejected For Student",
                           "Primary Position Labor Status Form Rejected")
 
-    def laborStatusFormModified(self):
-        self.checkRecipient("Labor Status Form Modified For Student",
-                      "Labor Status Form Modified For Supervisor")
+    def laborStatusFormAdjusted(self):
+        self.checkRecipient("Labor Status Form Adjusted For Student",
+                      "Labor Status Form Adjusted For Supervisor")
 
     def laborReleaseFormSubmitted(self):
         self.checkRecipient("Labor Release Form Submitted For Student",

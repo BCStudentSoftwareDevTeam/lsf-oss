@@ -38,10 +38,7 @@ def alterLSF(laborStatusKey):
     # then we do not want to give users access to the adjustment page
 
     # Query the status of the form to determine if correction or adjust LSF
-    formStatus = (FormHistory.select(FormHistory, LaborStatusForm)
-                             .join(LaborStatusForm)
-                             .where(FormHistory.formID == laborStatusKey)
-                             .get().status_id)
+    formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
 
     if currentDate > form.termCode.adjustmentCutOff and formStatus == "Approved":
         return render_template("errors/403.html", currentUser = currentUser)
@@ -72,8 +69,7 @@ def alterLSF(laborStatusKey):
     positions = Tracy().getPositionsFromDepartment(prefilldepartment)
     print('ERROR: HERE I AM PART 3 ==========================================================')
     #Step 3: send data to front to populate html
-    oldSupervisor = Tracy().getSupervisorFromPIDM(form.supervisor.ID)
-    print('ERROR: HERE I AM PART 4 ==========================================================')
+    oldSupervisor = Tracy().getSupervisorFromID(form.supervisor.ID)
 
     return render_template( "main/alterLSF.html",
 				            title=("Adjust Labor Status Form" if formStatus == "Approved" else "Labor Status Correction Form"),
@@ -109,17 +105,16 @@ def submitAlteredLSF(laborStatusKey):
         currentDate = datetime.now().strftime("%Y-%m-%d")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
+        print('This is the dictionary', rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-        formStatus = (FormHistory.select(FormHistory, LaborStatusForm)
-                                 .join(LaborStatusForm)
-                                 .where(FormHistory.formID == laborStatusKey)
-                                 .get().status_id)
+        formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
         formHistories = ""
         for k in rsp:
+            print('Values of k in Dict', k)
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if k == "supervisorNotes":
                 if formStatus == "Pending":
-                    LSF.supervisorNotes = rsp[k]['newValue']
+                    LSF.supervisorNotes = rsp[k]["newValue"]
                     LSF.save()
                 elif formStatus == "Approved":
                     ## New Entry in AdminNote Table
@@ -131,10 +126,11 @@ def submitAlteredLSF(laborStatusKey):
                     continue
             # This creates the adjusted form entry for every changed field for an adjustment submission
             elif formStatus == "Approved":
+                print('Make a form for the value of {}'.format(k))
                 adjustedforms = AdjustedForm.create(fieldAdjusted = k,
-                                                    oldValue      = rsp[k]['oldValue'],
-                                                    newValue      = rsp[k]['newValue'],
-                                                    effectiveDate = datetime.strptime(rsp[k]['date'], "%m/%d/%Y").strftime('%Y-%m-%d'))
+                                                    oldValue      = rsp[k]["oldValue"],
+                                                    newValue      = rsp[k]["newValue"],
+                                                    effectiveDate = datetime.strptime(rsp[k]["date"], "%m/%d/%Y").strftime("%Y-%m-%d"))
                 historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Adjustment Form")
                 status = Status.get(Status.statusName == "Pending")
                 formHistories = FormHistory.create(formID       = laborStatusKey,
@@ -143,39 +139,22 @@ def submitAlteredLSF(laborStatusKey):
                                                    createdBy    = currentUser,
                                                    createdDate  = date.today(),
                                                    status       = status.statusName)
+                print('Form created successfully for {}'.format(k))
 
-            if k == "supervisor":
-                if formStatus == "Pending":
-                    d, created = Supervisor.get_or_create(ID = int(rsp[k]['newValue']))
-                    if not created:
-                        LSF.supervisor = d.ID
-                    LSF.save()
-                    if created:
-                        tracyUser = Tracy().getSupervisorFromPIDM(rsp[k]['newValue'])
-                        tracyEmail = tracyUser.EMAIL
-                        tracyUsername = tracyEmail.find('@')
-                        user = Supervisor.get(Supervisor.ID == rsp[k]['newValue'])
-                        user.username   = tracyEmail[:tracyUsername]
-                        user.FIRST_NAME = tracyUser.FIRST_NAME
-                        user.LAST_NAME  = tracyUser.LAST_NAME
-                        user.EMAIL      = tracyUser.EMAIL
-                        user.CPO        = tracyUser.CPO
-                        user.ORG        = tracyUser.ORG
-                        user.DEPT_NAME  = tracyUser.DEPT_NAME
-                        user.save()
-                        LSF.supervisor = d.ID
-                        LSF.save()
+            if k == "supervisor" and formStatus == "Pending":
+                supervisor = createSupervisorFromTracy(bnumber=rsp[k]["newValue"])
+                LSF.supervisor = supervisor.ID
+                LSF.save()
 
-            if k == "position":
-                if formStatus == "Pending":
-                    position = Tracy().getPositionFromCode(rsp[k]['newValue'])
-                    LSF.POSN_CODE = position.POSN_CODE
-                    LSF.POSN_TITLE = position.POSN_TITLE
-                    LSF.WLS = position.WLS
-                    LSF.save()
+            if k == "position" and formStatus == "Pending":
+                position = Tracy().getPositionFromCode(rsp[k]["newValue"])
+                LSF.POSN_CODE = position.POSN_CODE
+                LSF.POSN_TITLE = position.POSN_TITLE
+                LSF.WLS = position.WLS
+                LSF.save()
 
             if k == "contractHours":
-                LSF.contractHours = int(rsp[k]['newValue'])
+                LSF.contractHours = int(rsp[k]["newValue"])
                 LSF.save()
 
             if k == "weeklyHours":
@@ -184,8 +163,8 @@ def submitAlteredLSF(laborStatusKey):
                 if allTermForms:
                     for i in allTermForms:
                         totalHours += i.weeklyHours
-                previousTotalHours = totalHours + int(rsp[k]['oldValue'])
-                newTotalHours = totalHours + int(rsp[k]['newValue'])
+                previousTotalHours = totalHours + int(rsp[k]["oldValue"])
+                newTotalHours = totalHours + int(rsp[k]["newValue"])
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
                     newFormHistory = FormHistory.create(formID       = laborStatusKey,
@@ -199,7 +178,7 @@ def submitAlteredLSF(laborStatusKey):
                             overloadEmail = emailHandler(newFormHistory.formHistoryID)
                         elif formStatus == "Approved":
                             overloadEmail = emailHandler(formHistories.formHistoryID)
-                        overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
+                        overloadEmail.LaborOverLoadFormSubmitted("http://{0}/".format(request.host) + "studentOverloadApp/" + str(newFormHistory.formHistoryID))
                     except Exception as e:
                         print("An error occured while attempting to send overload form emails: ", e)
                 elif previousTotalHours > 15 and newTotalHours <= 15:   # This will delete an overload form after the hours are changed
@@ -207,7 +186,7 @@ def submitAlteredLSF(laborStatusKey):
                     deleteOverloadForm = OverloadForm.get(OverloadForm.overloadFormID == deleteOverloadForm.overloadForm.overloadFormID)
                     deleteOverloadForm.delete_instance()
                 if formStatus == "Pending":
-                    LSF.weeklyHours = int(rsp[k]['newValue'])
+                    LSF.weeklyHours = int(rsp[k]["newValue"])
                     LSF.save()
         changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
         try:
