@@ -21,7 +21,7 @@ def term_Management():
         if currentUser.Student: # logged in as a student
             return redirect('/laborHistory/' + currentUser.Student.ID)
         elif currentUser.Supervisor:
-            return render_template('errors/403.html', currentUser = currentUser), 403
+            return render_template('errors/403.html'), 403
 
     terms = Term.select()
     listOfTerms = Term.select()
@@ -31,8 +31,7 @@ def term_Management():
     return render_template( 'admin/termManagement.html',
                              title=('Term Management'),
                              terms = terms,
-                             listOfTerms = accordionTerms(),
-                             currentUser = currentUser
+                             listOfTerms = accordionTerms()
                           )
 
 def createTerms(termList, iteration):

@@ -48,15 +48,15 @@ class Test_Tracy:
         assert ['420','6305','6301','6301','6302','6303','6300'] == [s.CPO for s in supervisors]
 
     @pytest.mark.integration
-    def test_getSupervisorFromPIDM(self, tracy):
-        supervisor = tracy.getSupervisorFromPIDM(4)
+    def test_getSupervisorFromID(self, tracy):
+        supervisor = tracy.getSupervisorFromID("B1236237")
         assert 'Megan' == supervisor.FIRST_NAME
 
         with pytest.raises(InvalidQueryException):
-            supervisor = tracy.getSupervisorFromPIDM("eleven")
+            supervisor = tracy.getSupervisorFromID("eleven")
 
         with pytest.raises(InvalidQueryException):
-            supervisor = tracy.getSupervisorFromPIDM(17)
+            supervisor = tracy.getSupervisorFromID(17)
 
     @pytest.mark.integration
     def test_getSupervisorFromEmail(self, tracy):
@@ -99,4 +99,3 @@ class Test_Tracy:
 
         with pytest.raises(InvalidQueryException):
             position = tracy.getPositionFromCode(17)
-
