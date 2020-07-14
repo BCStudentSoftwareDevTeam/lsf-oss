@@ -51,7 +51,6 @@ def createUser(username, student=None, supervisor=None):
 def createSupervisorFromTracy(username=None, bnumber=None):
     """
         Attempts to add a user from the Tracy database to the application, based on the provided username.
-        XXX Currently only handles adding staff. XXX
 
         Raises InvalidUserException if this does not succeed.
     """
