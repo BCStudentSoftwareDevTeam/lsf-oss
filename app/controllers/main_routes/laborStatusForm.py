@@ -105,18 +105,15 @@ def userInsert():
         try:
             lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
             status = Status.get(Status.statusName == "Pending")
-            # d, created = Supervisor.get_or_create(username = currentUser.username)
             creatorID = currentUser
             createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
             try:
                 emailDuringBreak(checkForSecondLSFBreak(term.termCode, studentID, "lsf"), term)
             except Exception as e:
-                raise e
-                print("Error on sending emails during break: " + str(e))
+                print("Error when sending emails during break: " + str(e))
 
             all_forms.append(True)
         except Exception as e:
-            raise e
             all_forms.append(False)
             print("ERROR on creating Labor Status Form/Overload Form" + str(e))
 
