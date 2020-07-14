@@ -96,7 +96,7 @@ def userInsert():
         student.save()                                          #Saves to student database
 
         studentID = student.ID
-        d, created = Supervisor.get_or_create(PIDM = rspFunctional[i]['stuSupervisorID'])
+        d, created = Supervisor.get_or_create(ID = rspFunctional[i]['stuSupervisorID'])
         primarySupervisor = d.ID
         d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
         department = d.departmentID

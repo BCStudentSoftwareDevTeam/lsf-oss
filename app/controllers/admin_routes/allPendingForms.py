@@ -77,7 +77,7 @@ def allPendingForms(formType):
             if allForms.adjustedForm: # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in adjusted table
                 # We check if there is a pending overload form using the key of the modifed forms
                 if allForms.adjustedForm.fieldAdjusted == "supervisor": # if supervisor field in adjust forms has been changed,
-                    newSupervisorID = allForms.adjustedForm.newValue    # use the supervisor pidm in the field adjusted to find supervisor in User table.
+                    newSupervisorID = allForms.adjustedForm.newValue    # use the supervisor id in the field adjusted to find supervisor in User table.
                     newSupervisor = Supervisor.get(Supervisor.ID == newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
@@ -204,7 +204,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             LSF.supervisor = d.ID
         LSF.save()
         if created:
-            tracyUser = Tracy().getSupervisorFromPIDM(form.adjustedForm.newValue)
+            tracyUser = Tracy().getSupervisorFromID(form.adjustedForm.newValue)
             tracyEmail = tracyUser.EMAIL
             tracyUsername = tracyEmail.find('@')
             user = Supervisor.get(Supervisor.ID == form.adjustedForm.newValue)
