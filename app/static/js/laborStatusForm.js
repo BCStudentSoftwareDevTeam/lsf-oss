@@ -597,10 +597,11 @@ function isOneLaborStatusForm(studentDict){
           response["previousSupervisorNames"].forEach(element => names += element + ', ');
           supervisorsNames = names.trim().replace(/.$/,".")
 
-          $("#summerContractTitle").text("Warning");
-          $("#additionalLSFWarning").html("<strong>"+response["studentName"] + " is already working with " + supervisorsNames +"</strong><br><br>");
-          $('#summerContractAccept').html('Okay')
-          $("#SummerContract").modal('show');
+          $("#warningModalTitle").text("Warning");
+          $("#warningModalText").html("<strong>"+response["studentName"] + " is already working with " +
+                                          supervisorsNames +"</strong><br><br>" +
+                                          "Students may only work up to 40 hours a week during break periods.");
+          $("#warningModal").modal('show');
         }
       }
     });
