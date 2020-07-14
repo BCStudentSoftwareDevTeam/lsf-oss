@@ -517,7 +517,7 @@ emailtemps= [
                 },
                 {
                 "purpose":"Break Labor Status Form Submitted For Supervisor on Additional LSF", #Original name: Break Labor Status Form Submitted For Supervisor on Second LSF
-                "formType":"Second Break Labor Status Form",
+                "formType":"Additional Break Labor Status Form",
                 "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
