@@ -594,7 +594,7 @@ function isOneLaborStatusForm(studentDict){
         if(response["ShowModal"] == true){
         // if they already have one lsf or multiple (response if false) then show modal reminding the new supervisor of 40 hour mark rule.
           $("#warningModalTitle").text("Warning");
-          $("#warningModalText").html(response["studentName"] +" "+ "is already working with" +" "+ response["primarySupervisorName"] +
+          $("#warningModalText").html(response["studentName"] +" "+ "is already working with" +" "+ response["primarySupervisorNames"] +
                                       "<br><br> " + "Rules for Break LSF");
           $("#warningModal").modal('show');
         }

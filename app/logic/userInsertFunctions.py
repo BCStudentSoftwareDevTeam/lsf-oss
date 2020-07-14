@@ -196,7 +196,7 @@ def emailDuringBreak(secondLSFBreak, term):
     if term.isBreak:
         isOneLSF = json.loads(secondLSFBreak)
         formHistory = FormHistory.get(FormHistory.formHistoryID == isOneLSF['formHistoryID'])
-        if(isOneLSF["isMoreLSF"] == True): #Student has more than one lsf. Send email to both supervisors and student
+        if(isOneLSF["isMoreLSf"] == True): #Student has more than one lsf. Send email to both supervisors and student
             for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
                 email = emailHandler(formHistory.formHistoryID, lsfID)
                 email.notifySecondLaborStatusFormSubmittedForBreak()
@@ -206,20 +206,28 @@ def emailDuringBreak(secondLSFBreak, term):
 
 def checkForSecondLSFBreak(termCode, student):
     """
-    TODO: WRITE THE FUNCTIONALITY 
+    Checks if a student has more than one labor status form submitted for them during a break term, and sends emails accordingly.
     """
     positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
     isMoreLSF_dict = {}
     storeLsfFormsID = []
+    previousSupervisorNames = []
     if len(list(positions)) >= 1: # If student has one or more than one lsf
         isMoreLSF_dict["ShowModal"] = True # show modal when the student has one or more than one lsf
+
+        for item in positions:
+            previousSupervisorNames.append(item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME)
+            isMoreLSF_dict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
+        isMoreLSF_dict['primarySupervisorNames'] = previousSupervisorNames
+
         if len(list(positions)) == 1: # if there is only one labor status form then send email to the supervisor and student
             laborStatusFormID = positions[0].laborStatusFormID
             formHistoryID = FormHistory.get(FormHistory.formID == laborStatusFormID)
-            isMoreLSF_dict["Status"] = True
+            isMoreLSF_dict["isMoreLSf"] = False
             isMoreLSF_dict["formHistoryID"] = formHistoryID.formHistoryID
+
         else: # if there are more lsfs then send email to student, supervisor and all previous supervisors
-            isMoreLSF_dict["Status"] = False
+            isMoreLSF_dict["isMoreLSf"] = True
             for item in positions: # add all the previous lsf ID's
                 storeLsfFormsID.append(item.laborStatusFormID) # store all of the previous labor status forms for break
             laborStatusFormID = storeLsfFormsID.pop() #save all the previous lsf ID's except the one currently created. Pop removes the one created right now.
@@ -227,9 +235,8 @@ def checkForSecondLSFBreak(termCode, student):
             isMoreLSF_dict['formHistoryID'] = formHistoryID.formHistoryID
             isMoreLSF_dict["lsfFormID"] = storeLsfFormsID
     else:
-        #
         isMoreLSF_dict["ShowModal"] = False # Do not show the modal when there's not previous lsf
-        isMoreLSF_dict["Status"] = True # student does not have any previous lsf's.
+        isMoreLSF_dict["isMoreLSf"] = False # student does not have any previous lsf's.
     return json.dumps(isMoreLSF_dict)
 
 def checkForPrimaryPosition(termCode, student):
