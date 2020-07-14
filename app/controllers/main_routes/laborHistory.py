@@ -25,38 +25,51 @@ from app.logic.tracy import Tracy
 
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
 def laborhistory(id):
-    try:
-        currentUser = require_login()
-        if not currentUser:                    # Not logged in
-            return render_template('errors/403.html'), 403
-        student = Student.get(Student.ID == id)
-        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
-        authorizedForms = set(studentForms)
-        if not currentUser.isLaborAdmin:
-            # View only your own form history
-            if currentUser.Student and not currentUser.Supervisor:
-                if currentUser.Student.ID != id:
-                    return redirect('/laborHistory/' + currentUser.Student.ID)
-            elif currentUser.Supervisor:
-                supervisorForms = LaborStatusForm.select() \
-                                  .join_from(LaborStatusForm, FormHistory) \
-                                  .where((LaborStatusForm.supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser)) \
-                                  .distinct()
-                authorizedForms = set(studentForms).intersection(set(supervisorForms))
-                if len(authorizedForms) == 0:
-                    return render_template('errors/403.html'), 403
-        laborStatusFormList = ','.join([str(form.laborStatusFormID) for form in studentForms])
-        return render_template( 'main/formHistory.html',
-    				            title=('Labor History'),
-                                student = student,
-                                username=currentUser.username,
-                                laborStatusFormList = laborStatusFormList,
-                                authorizedForms = authorizedForms,
-                                studentUserName = User.get(User.Student == student).username
-                              )
-    except Exception as e:
-        print("Error Loading Student Labor History", e)
-        return render_template('errors/500.html'), 500
+    # try:
+    currentUser = require_login()
+    if not currentUser:                    # Not logged in
+        return render_template('errors/403.html'), 403
+    student = Student.get(Student.ID == id)
+    studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
+    authorizedForms = set(studentForms)
+    if not currentUser.isLaborAdmin:
+        # View only your own form history
+        if currentUser.Student and not currentUser.Supervisor:
+            if currentUser.Student.ID != id:
+                return redirect('/laborHistory/' + currentUser.Student.ID)
+        elif currentUser.Supervisor:
+            supervisorForms = LaborStatusForm.select() \
+                              .join_from(LaborStatusForm, FormHistory) \
+                              .where((LaborStatusForm.supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser)) \
+                              .distinct()
+            authorizedForms = set(studentForms).intersection(set(supervisorForms))
+            if len(authorizedForms) == 0:
+                return render_template('errors/403.html'), 403
+    laborStatusFormList = ','.join([str(form.laborStatusFormID) for form in studentForms])
+
+    # user, created = User.get_or_create(user.userID = ,
+    #                                    defaults={
+    #                                     user.Student = True,
+    #                                     user.Supervisor = False,
+    #                                     user.username = "",
+    #                                     user.isLaborAdmin = False,
+    #                                     user.isFinancialAidAdmin = False,
+    #                                     user.isSaasAdmin = False
+    #                                    }
+    #                                    )
+
+    print("just before render")
+    return render_template( 'main/formHistory.html',
+				            title=('Labor History'),
+                            student = student,
+                            username=currentUser.username,
+                            laborStatusFormList = laborStatusFormList,
+                            authorizedForms = authorizedForms,
+                            studentUserName = "Username"
+                          )
+    # except Exception as e:
+    #     print("Error Loading Student Labor History", e)
+    #     return render_template('errors/500.html'), 500
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])
 def downloadFormHistory():
