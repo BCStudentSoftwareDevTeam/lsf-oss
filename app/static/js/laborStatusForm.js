@@ -406,7 +406,7 @@ function searchDataToPrepareToCheckPrimaryPosition() { // displays table when pl
   else  {
     disableTermSupervisorDept();
     checkPrimaryPositionToCreateTheTable(studentDict);
-    isOneLaborStatusForm(studentDict);  // this is to be fixed on issue 184
+    isOneLaborStatusForm(studentDict);
      }
   }
 
