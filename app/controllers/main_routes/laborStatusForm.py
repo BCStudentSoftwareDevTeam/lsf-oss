@@ -146,11 +146,11 @@ def getPositions(department):
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["POST"])
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
-def checkForPrimaryOrSecondLSFBreak(isOneLSF=None):
+def checkForPrimaryOrSecondLSFBreak(termCode, student, isOneLSF=None):
     if isOneLSF:
-        checkForSecondLSFBreak(termCode, student)
+        return checkForSecondLSFBreak(termCode, student)
     else:
-        checkForPrimaryPosition(termCode, student)
+        return checkForPrimaryPosition(termCode, student)
 
 @main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
 def checkCompliance(department):

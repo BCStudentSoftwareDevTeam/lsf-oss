@@ -226,7 +226,7 @@ def checkForSecondLSFBreak(termCode, student):
         for item in positions:
             previousSupervisorNames.append(item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME)
             isMoreLSFDict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
-        isMoreLSF_dict['previousSupervisorNames'] = previousSupervisorNames
+        isMoreLSFDict['previousSupervisorNames'] = previousSupervisorNames
 
         if len(list(positions)) == 1: # if there is only one labor status form then send email to the supervisor and student
             laborStatusFormID = positions[0].laborStatusFormID

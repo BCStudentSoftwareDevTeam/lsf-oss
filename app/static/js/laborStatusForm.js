@@ -406,7 +406,7 @@ function searchDataToPrepareToCheckPrimaryPosition() { // displays table when pl
   else  {
     disableTermSupervisorDept();
     checkPrimaryPositionToCreateTheTable(studentDict);
-    //isOneLaborStatusForm(studentDict);  // this is to be fixed on issue 184
+    isOneLaborStatusForm(studentDict);  // this is to be fixed on issue 184
      }
   }
 
@@ -593,10 +593,12 @@ function isOneLaborStatusForm(studentDict){
       success: function (response){
         if(response["showModal"] == true){
         // if they already have one lsf or multiple then show modal reminding the new supervisor of 40 hour mark rule.
+          var names = ""
+          response["previousSupervisorNames"].forEach(element => names += element + ', ');
+          supervisorsNames = names.trim().replace(/.$/,".")
+
           $("#warningModalTitle").text("Warning");
-          $("#warningModalText").html(response["studentName"] +" "+ "is already working with" +" "+
-                                      supervisor + ' ,' for supervisor in response["previousSupervisorNames"] +
-                                      "<br><br> " + "Rules for Break LSF");
+          $("#warningModalText").html(response["studentName"] + " is already working with " + supervisorsNames +"<br><br> " + "Rules for Break LSF");
           $("#warningModal").modal('show');
         }
       }
