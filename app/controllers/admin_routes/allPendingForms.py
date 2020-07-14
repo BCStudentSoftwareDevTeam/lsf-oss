@@ -27,12 +27,12 @@ def allPendingForms(formType):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
         if not currentUser.isLaborAdmin:       # Not an admin
             if currentUser.Student: # logged in as a student
                 return redirect('/laborHistory/' + currentUser.Student.ID)
             elif currentUser.Supervisor:
-                return render_template('errors/403.html', currentUser = currentUser), 403
+                return render_template('errors/403.html'), 403
         formList = None
         historyType = None
         pageTitle = ""
@@ -77,7 +77,7 @@ def allPendingForms(formType):
             if allForms.adjustedForm: # If a form has been adjusted then we want to retrieve supervisor and position information using the new values stored in adjusted table
                 # We check if there is a pending overload form using the key of the modifed forms
                 if allForms.adjustedForm.fieldAdjusted == "supervisor": # if supervisor field in adjust forms has been changed,
-                    newSupervisorID = allForms.adjustedForm.newValue    # use the supervisor pidm in the field adjusted to find supervisor in User table.
+                    newSupervisorID = allForms.adjustedForm.newValue    # use the supervisor id in the field adjusted to find supervisor in User table.
                     newSupervisor = Supervisor.get(Supervisor.ID == newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
@@ -102,12 +102,11 @@ def allPendingForms(formType):
                                 laborStatusFormCounter = laborStatusFormCounter,
                                 adjustedFormCounter  = adjustedFormCounter,
                                 releaseFormCounter = releaseFormCounter,
-                                currentUser = currentUser,
                                 pendingOverloadFormPairs = pendingOverloadFormPairs
                                 )
     except Exception as e:
         print("Error Loading all Pending Forms:", e)
-        return render_template('errors/500.html', currentUser = currentUser), 500
+        return render_template('errors/500.html'), 500
 
 @admin.route('/admin/checkedForms', methods=['POST'])
 def approved_and_denied_Forms():
@@ -128,9 +127,9 @@ def finalUpdateStatus(raw_status):
     ''' This method changes the status of the pending forms to approved '''
     currentUser = require_login()
     if not currentUser:                    # Not logged in
-        return render_template('errors/403.html')
+        return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:       # Not an admin
-        return render_template('errors/403.html', currentUser = currentUser), 403
+        return render_template('errors/403.html'), 403
 
     if raw_status == 'approved':
         new_status = "Approved"
@@ -198,14 +197,14 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
     """
     currentUser = require_login()
     if not currentUser:        # Not logged in
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
     if form.adjustedForm.fieldAdjusted == "supervisor":
         d, created = Supervisor.get_or_create(ID = form.adjustedForm.newValue)
         if not created:
             LSF.supervisor = d.ID
         LSF.save()
         if created:
-            tracyUser = Tracy().getSupervisorFromPIDM(form.adjustedForm.newValue)
+            tracyUser = Tracy().getSupervisorFromID(form.adjustedForm.newValue)
             tracyEmail = tracyUser.EMAIL
             tracyUsername = tracyEmail.find('@')
             createSupervisorFromTracy(tracyUsername)
@@ -274,9 +273,9 @@ def getNotes(formid):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
         if not currentUser.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html', currentUser = currentUser), 403
+            return render_template('errors/403.html'), 403
         supervisorNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid) # Gets Supervisor note
         notes = AdminNotes.select().where(AdminNotes.formID == formid) # Gets labor department notes from the laborofficenotes table
         notesDict = {}          # Stores the both types of notes
@@ -302,9 +301,9 @@ def insertNotes(formId):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
         if not currentUser.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html', currentUser = currentUser), 403
+            return render_template('errors/403.html'), 403
         rsp = eval(request.data.decode("utf-8"))
         stripresponse = rsp.strip()
         currentDate = datetime.now().strftime("%Y-%m-%d")  # formats the date to match the peewee format for the database
@@ -373,7 +372,7 @@ def getOverloadModalData(formHistoryID):
                                             )
     except Exception as e:
         print("Error Populating Overload Modal:", e)
-        return render_template('errors/500.html', currentUser = currentUser), 500
+        return render_template('errors/500.html'), 500
 
 @admin.route('/admin/releaseModal/<formHistoryID>', methods=['GET'])
 def getReleaseModalData(formHistoryID):
@@ -381,7 +380,6 @@ def getReleaseModalData(formHistoryID):
     This function will retrieve the data to populate the release modal.
     """
     try:
-        currentUser = require_login()
         historyForm = FormHistory.select().where(FormHistory.formHistoryID == int(formHistoryID))
         noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
         return render_template('snips/pendingReleaseModal.html',
@@ -392,7 +390,7 @@ def getReleaseModalData(formHistoryID):
                                             )
     except Exception as e:
         print("Error Populating Release Modal:", e)
-        return render_template('errors/500.html', currentUser = currentUser), 500
+        return render_template('errors/500.html'), 500
 
 @admin.route('/admin/modalFormUpdate', methods=['POST'])
 def modalFormUpdate():
@@ -403,7 +401,7 @@ def modalFormUpdate():
     try:
         currentUser = require_login()
         if not currentUser:
-            return render_template('errors/403.html')
+            return render_template('errors/403.html'), 403
 
         rsp = eval(request.data.decode("utf-8"))
         if rsp:

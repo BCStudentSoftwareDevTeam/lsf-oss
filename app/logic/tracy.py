@@ -57,15 +57,15 @@ class Tracy():
         """
         return STUSTAFF.query.order_by(STUSTAFF.FIRST_NAME).all()
 
-    def getSupervisorFromPIDM(self, pidm):
+    def getSupervisorFromID(self, id):
         """
-        Return the supervisor with the given PIDM.
+        Return the supervisor with the given ID.
 
-        Throws an InvalidQueryException if the given PIDM does not exist.
+        Throws an InvalidQueryException if the given ID does not exist.
         """
-        supervisor = STUSTAFF.query.get(pidm)
+        supervisor = STUSTAFF.query.filter(STUSTAFF.ID == id).first()
         if supervisor is None:
-            raise InvalidQueryException("PIDM {} not found in STUSTAFF".format(pidm))
+            raise InvalidQueryException("ID {} not found in STUSTAFF".format(id))
 
         return supervisor
 
