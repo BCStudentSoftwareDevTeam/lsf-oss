@@ -48,7 +48,7 @@ def alterLSF(laborStatusKey):
     prefillsupervisorPIDM = form.supervisor.PIDM
     superviser_id = form.supervisor.ID
     prefilldepartment = form.department.DEPT_NAME
-    prefillposition = form.POSN_CODE #+ " " +"("+ form.WLS + ")"
+    prefillposition = form.POSN_CODE
     prefilljobtype = form.jobType
     prefillterm = form.termCode
     totalHours = 0
@@ -106,6 +106,7 @@ def submitAlteredLSF(laborStatusKey):
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
         formHistories = ""
+        adjustedforms = None
         for k in rsp:
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if k == "supervisorNotes":
@@ -152,18 +153,26 @@ def submitAlteredLSF(laborStatusKey):
                 LSF.save()
 
             if k == "weeklyHours":
-                allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
-                totalHours = 0
+                allTermForms = LaborStatusForm.select() \
+                               .join_from(LaborStatusForm, Student) \
+                               .join_from(LaborStatusForm, FormHistory) \
+                               .where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID) & (FormHistory.status != "Denied") & (FormHistory.historyType == "Labor Status Form"))
+                previousTotalHours = 0
                 if allTermForms:
-                    for i in allTermForms:
-                        totalHours += i.weeklyHours
-                previousTotalHours = totalHours + int(rsp[k]["oldValue"])
-                newTotalHours = totalHours + int(rsp[k]["newValue"])
+                    for statusForm in allTermForms:
+                        previousTotalHours += statusForm.weeklyHours
+                newTotalHours = previousTotalHours + int(rsp[k]['newValue'])
+
                 if previousTotalHours <= 15 and newTotalHours > 15:
+                    if formStatus == "Pending":
+                        adjustedForm = None
+                    elif formStatus == "Approved":
+                        adjustedForm = adjustedforms.adjustedFormID
                     newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
                     newFormHistory = FormHistory.create(formID       = laborStatusKey,
                                                         historyType  = "Labor Overload Form",
                                                         createdBy    = currentUser,
+                                                        adjustedForm = adjustedForm,
                                                         overloadForm = newLaborOverloadForm.overloadFormID,
                                                         createdDate  = date.today(),
                                                         status       = "Pending")
@@ -175,7 +184,7 @@ def submitAlteredLSF(laborStatusKey):
                         overloadEmail.LaborOverLoadFormSubmitted("http://{0}/".format(request.host) + "studentOverloadApp/" + str(newFormHistory.formHistoryID))
                     except Exception as e:
                         print("An error occured while attempting to send overload form emails: ", e)
-                elif previousTotalHours > 15 and newTotalHours <= 15:   # This will delete an overload form after the hours are changed
+                elif previousTotalHours > 15 and int(rsp[k]['newValue']) <= 15:   # This will delete an overload form after the hours are changed
                     deleteOverloadForm = FormHistory.get((FormHistory.formID == laborStatusKey) & (FormHistory.historyType == "Labor Overload Form"))
                     deleteOverloadForm = OverloadForm.get(OverloadForm.overloadFormID == deleteOverloadForm.overloadForm.overloadFormID)
                     deleteOverloadForm.delete_instance()
