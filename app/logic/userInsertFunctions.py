@@ -90,27 +90,29 @@ def createStudentFromTracy(username):
 
 def createStudentFromTracyObj(tracyStudent):
     """
-        Attempts to add a student from the Tracy database to the application, based on the provided object from the Tracy student database.
+        Attempts to return a student from our Student table in the application, based on the provided object from the Tracy student database.
 
         Raises InvalidUserException if this does not succeed.
     """
     try:
-        print(tracyStudent.ID.strip())
-        return Student.get_or_create(ID = tracyStudent.ID.strip(),
-                                    PIDM = tracyStudent.PIDM,
-                                    FIRST_NAME = tracyStudent.FIRST_NAME,
-                                    LAST_NAME = tracyStudent.LAST_NAME,
-                                    CLASS_LEVEL = tracyStudent.CLASS_LEVEL,
-                                    ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS,
-                                    MAJOR = tracyStudent.MAJOR,
-                                    PROBATION = tracyStudent.PROBATION,
-                                    ADVISOR = tracyStudent.ADVISOR,
-                                    STU_EMAIL = tracyStudent.STU_EMAIL,
-                                    STU_CPO = tracyStudent.STU_CPO,
-                                    LAST_POSN = tracyStudent.LAST_POSN,
-                                    LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)[0]
+        return Student.get(Student.ID == tracyStudent.ID.strip())
     except Exception as e:
-        raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyStudent.FIRST_NAME, tracyStudent.LAST_NAME), e)
+        print('Could not find {0} {1} in Student table, creating new entry.'.format(tracyStudent.FIRST_NAME, tracyStudent.LAST_NAME))
+        return Student.create(ID = tracyStudent.ID.strip(),
+                            PIDM = tracyStudent.PIDM,
+                            FIRST_NAME = tracyStudent.FIRST_NAME,
+                            LAST_NAME = tracyStudent.LAST_NAME,
+                            CLASS_LEVEL = tracyStudent.CLASS_LEVEL,
+                            ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS,
+                            MAJOR = tracyStudent.MAJOR,
+                            PROBATION = tracyStudent.PROBATION,
+                            ADVISOR = tracyStudent.ADVISOR,
+                            STU_EMAIL = tracyStudent.STU_EMAIL,
+                            STU_CPO = tracyStudent.STU_CPO,
+                            LAST_POSN = tracyStudent.LAST_POSN,
+                            LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
+    else:
+        raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyStudent.FIRST_NAME, tracyStudent.LAST_NAME))
 
 
 def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional):
