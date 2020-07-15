@@ -53,7 +53,6 @@ def index():
         inactiveSupervisees = []
         currentSupervisees = []
         pastSupervisees = []
-
         student_processed = False  # This variable dictates whether a student has already been added to the supervisor's portal
 
         for supervisee in formsBySupervisees: # go through all the form in the formsBySupervisees

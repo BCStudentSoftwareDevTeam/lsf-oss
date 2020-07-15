@@ -406,7 +406,7 @@ function searchDataToPrepareToCheckPrimaryPosition() { // displays table when pl
   else  {
     disableTermSupervisorDept();
     checkPrimaryPositionToCreateTheTable(studentDict);
-    //isOneLaborStatusForm(studentDict);  // this is to be fixed on issue 184
+    isOneLaborStatusForm(studentDict);
      }
   }
 
@@ -591,11 +591,16 @@ function isOneLaborStatusForm(studentDict){
       url: url,
       dataType: "json",
       success: function (response){
-        if(response["ShowModal"] == true){
-        // if they already have one lsf or multiple (response if false) then show modal reminding the new supervisor of 40 hour mark rule.
+        if(response["showModal"] == true){
+        // if they already have one lsf or multiple then show modal reminding the new supervisor of 40 hour mark rule.
+          var names = ""
+          response["previousSupervisorNames"].forEach(element => names += element + ', ');
+          supervisorsNames = names.trim().replace(/.$/,".")
+
           $("#warningModalTitle").text("Warning");
-          $("#warningModalText").html(response["studentName"] +" "+ "is already working with" +" "+ response["primarySupervisorName"] +
-                                      "<br><br> " + "Rules for Break LSF");
+          $("#warningModalText").html("<strong>"+response["studentName"] + " is already working with " +
+                                          supervisorsNames +"</strong><br><br>" +
+                                          "Students may only work up to 40 hours a week during break periods.");
           $("#warningModal").modal('show');
         }
       }

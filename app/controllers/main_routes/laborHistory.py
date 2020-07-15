@@ -51,9 +51,8 @@ def laborhistory(id):
                                 student = student,
                                 username=currentUser.username,
                                 laborStatusFormList = laborStatusFormList,
-                                authorizedForms = authorizedForms,
-                                studentUserName = User.get(User.Student == student).username
-                              )
+                                authorizedForms = authorizedForms
+                          )
     except Exception as e:
         print("Error Loading Student Labor History", e)
         return render_template('errors/500.html'), 500
@@ -87,7 +86,7 @@ def populateModal(statusKey):
             return render_template('errors/403.html'), 403
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
-        student = User.get(User.Student == statusForm[0].studentSupervisee)
+        student = Student.get(Student.ID == statusForm[0].studentSupervisee)
         currentDate = datetime.date.today()
         pendingformType = None
         buttonState = None
@@ -116,7 +115,7 @@ def populateModal(statusKey):
                 form.adjustedForm.fieldAdjusted = re.sub(r"(\w)([A-Z])", r"\1 \2", form.adjustedForm.fieldAdjusted).title()
 
         for form in forms:
-            if currentUser.Student and currentUser.username == student.username:
+            if currentUser.Student and currentUser.Student == student.ID:
                 buttonState = ButtonStatus.show_student_labor_eval_button
                 break
             else:
