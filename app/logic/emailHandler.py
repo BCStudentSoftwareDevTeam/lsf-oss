@@ -36,7 +36,8 @@ class emailHandler():
         self.formHistory = FormHistory.get(FormHistory.formHistoryID == formHistoryKey)
         self.laborStatusForm = self.formHistory.formID
         self.term = self.laborStatusForm.termCode
-        self.studentEmail = self.laborStatusForm.studentSupervisee.STU_EMAIL
+        self.student = self.laborStatusForm.studentSupervisee
+        self.studentEmail = self.student.STU_EMAIL
         self.creatorEmail = self.formHistory.createdBy.Supervisor.EMAIL
         self.supervisorEmail = self.laborStatusForm.supervisor.EMAIL
         print("self.supervisorEmail: ", self.supervisorEmail)
@@ -47,6 +48,10 @@ class emailHandler():
         # This will either bring back the same Labor Status Form, or bring back
         # the Primary LSF that goes with any Secondary LSF in the given term
         #if not self.term.isBreak:
+        self.positions = LaborStatusForm.select().where(LaborStatusForm.termCode == self.term, LaborStatusForm.studentSupervisee == self.student)
+        self.supervisors = []
+        for position in self.positions:
+            self.supervisors.append(position.supervisor)
         self.primaryForm = LaborStatusForm.get(LaborStatusForm.jobType == "Primary" and LaborStatusForm.studentSupervisee == self.laborStatusForm.studentSupervisee and LaborStatusForm.termCode == self.laborStatusForm.termCode)
         print("self.primaryForm: ", self.primaryForm)
         self.primaryEmail = self.primaryForm.supervisor.EMAIL
@@ -177,9 +182,8 @@ class emailHandler():
         self.checkRecipient("Labor Overload Form Rejected For Student",
                             "Labor Overload Form Rejected For Supervisor")
 
-    def notifyExtraLaborStatusFormSubmittedForBreak(self):
+    def notifyAdditionalLaborStatusFormSubmittedForBreak(self):
         # This is the submission
-        print("inside notifyExtraLaborStatusFormSubmittedForBreak")
         self.checkRecipient("Break Labor Status Form Submitted For Student",
                             "Break Labor Status Form Submitted For Supervisor on Additional LSF",
                             "Break Labor Status Form Submitted For Additional Supervisor")
@@ -277,10 +281,11 @@ class emailHandler():
             recipient = 'Student'
         elif sendTo == "secondary":
             print("sent email to additional supervisor in break term")
+            supervisorEmails = []
+            for supervisor in self.supervisors:
+                supervisorEmails.append(supervisor.EMAIL)
             message = Message(template.subject,
-                recipients=[self.supervisorEmail, self.primaryEmail])
-                # for form in self.primaryForm:
-                #     recipients.append(form.supervisor.EMAIL)
+                recipients=supervisorEmails)
             recipient = 'Secondary Supervisor'
         elif sendTo == "Labor Office":
             message = Message(template.subject,
