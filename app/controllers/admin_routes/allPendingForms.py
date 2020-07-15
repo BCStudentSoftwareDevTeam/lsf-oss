@@ -207,17 +207,7 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
             tracyUser = Tracy().getSupervisorFromID(form.adjustedForm.newValue)
             tracyEmail = tracyUser.EMAIL
             tracyUsername = tracyEmail.find('@')
-            user = Supervisor.get(Supervisor.ID == form.adjustedForm.newValue)
-            user.username   = tracyEmail[:tracyUsername]
-            user.FIRST_NAME = tracyUser.FIRST_NAME
-            user.LAST_NAME  = tracyUser.LAST_NAME
-            user.EMAIL      = tracyUser.EMAIL
-            user.CPO        = tracyUser.CPO
-            user.ORG        = tracyUser.ORG
-            user.DEPT_NAME  = tracyUser.DEPT_NAME
-            user.save()
-            LSF.supervisor = d.ID
-            LSF.save()
+            createSupervisorFromTracy(tracyUsername)
 
     if form.adjustedForm.fieldAdjusted == "position":
         LSF.POSN_CODE = form.adjustedForm.newValue
@@ -227,28 +217,10 @@ def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
         LSF.save()
 
     if form.adjustedForm.fieldAdjusted == "contractHours":
-        LSF.contractHours = form.adjustedForm.newValue
+        LSF.contractHours = int(form.adjustedForm.newValue)
         LSF.save()
 
     if form.adjustedForm.fieldAdjusted == "weeklyHours":
-        allTermForms = LaborStatusForm.select().join_from(LaborStatusForm, Student).where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.laborStatusFormID != LSF.laborStatusFormID) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID))
-        totalHours = 0
-        if allTermForms:
-            for i in allTermForms:
-                totalHours += i.weeklyHours
-        previousTotalHours = totalHours + int(form.adjustedForm.newValue)
-        newTotalHours = totalHours + int(form.adjustedForm.newValue)
-        if previousTotalHours <= 15 and newTotalHours > 15:
-            newLaborOverloadForm = OverloadForm.create(studentOverloadReason = None)
-            newFormHistory = FormHistory.create( formID = LSF.laborStatusFormID,
-                                                historyType = "Labor Overload Form",
-                                                createdBy = currentUser,
-                                                overloadForm = newLaborOverloadForm.overloadFormID,
-                                                createdDate = date.today(),
-                                                status = "Pending")
-         # TODO: emails are commented out for testing purposes
-            # overloadEmail = emailHandler(newFormHistory.formHistoryID)
-            # overloadEmail.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(newFormHistory.formHistoryID))
         LSF.weeklyHours = int(form.adjustedForm.newValue)
         LSF.save()
 
@@ -445,9 +417,11 @@ def modalFormUpdate():
                 overloadForm.save()
                 try:
                     pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending")).get()
-                    if pendingForm.historyType.historyTypeName == "Labor Adjustment Form":
-                        if pendingForm.adjustedForm.fieldAdjusted != "weeklyHours":
-                            pendingForm = FormHistory.select().join(AdjustedForm).where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending") & (FormHistory.adjustedForm.fieldAdjusted == "weeklyHours")).get()
+                    if historyForm.adjustedForm and rsp['status'] == "Approved":
+                        LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == historyForm.formID)
+                        if historyForm.adjustedForm.fieldAdjusted == "weeklyHours":
+                            LSF.weeklyHours = pendingForm.adjustedForm.newValue
+                            LSF.save()
                     if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Labor Adjustment Form" and pendingForm.adjustedForm.fieldAdjusted == "weeklyHours"):
                         if status.statusName == "Approved Reluctantly":
                             pendingForm.status = "Approved"
