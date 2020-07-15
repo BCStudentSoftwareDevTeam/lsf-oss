@@ -197,14 +197,14 @@
         <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form1.laborStatusFormID}})">Withdraw</button>
         </div>
         <div class = "col-sm-6">
-        <a id="alter" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Correct</button></a>
+        <a id="alter" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Modify</button></a>
         </div>
         {% elif buttonState == ButtonStatus.show_release_adjustment_rehire_buttons %}
         <div class = "col-sm-4" style="text-align: right">
         <a id="release" href="#"><button type="button" class="btn btn-danger" onclick="redirection({{form1.laborStatusFormID}})">Release</button></a>
         </div>
         <div class = "col-sm-4">
-        <a id="alter" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Adjustment</button></a>
+        <a id="alter" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Adjustment Form</button></a>
         </div>
         <div class = "col-sm-4" style="text-align:left">
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success" onclick="redirection({{form1.laborStatusFormID}})">Rehire</button></a>

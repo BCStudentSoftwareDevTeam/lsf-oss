@@ -207,10 +207,87 @@ def emailDuringBreak(secondLSFBreak, term):
     if term.isBreak:
         isOneLSF = json.loads(secondLSFBreak)
         formHistory = FormHistory.get(FormHistory.formHistoryID == isOneLSF['formHistoryID'])
-        if(isOneLSF["Status"] == False): #Student has more than one lsf. Send email to both supervisors and student
+        if(len(isOneLSF["lsfFormID"]) > 0): #Student has more than one lsf. Send email to both supervisors and student
             for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
                 email = emailHandler(formHistory.formHistoryID, lsfID)
                 email.notifySecondLaborStatusFormSubmittedForBreak()
         else: # Student has only one lsf, send email to student and supervisor
             email = emailHandler(formHistory.formHistoryID)
             email.laborStatusFormSubmittedForBreak()
+
+def checkForSecondLSFBreak(termCode, student):
+    """
+    Checks if a student has more than one labor status form submitted for them during a break term, and sends emails accordingly.
+    """
+    positions = LaborStatusForm.select().where(LaborStatusForm.termCode == termCode, LaborStatusForm.studentSupervisee == student)
+    isMoreLSFDict = {}
+    storeLSFFormsID = []
+    previousSupervisorNames = []
+    if len(list(positions)) >= 1: # If student has one or more than one lsf
+        isMoreLSFDict["showModal"] = True # show modal when the student has one or more than one lsf
+
+        for item in positions:
+            previousSupervisorNames.append(item.supervisor.FIRST_NAME + " " + item.supervisor.LAST_NAME)
+            isMoreLSFDict["studentName"] = item.studentSupervisee.FIRST_NAME + " " + item.studentSupervisee.LAST_NAME
+        isMoreLSFDict['previousSupervisorNames'] = previousSupervisorNames
+
+        if len(list(positions)) == 1: # if there is only one labor status form then send email to the supervisor and student
+            laborStatusFormID = positions[0].laborStatusFormID
+            formHistoryID = FormHistory.get(FormHistory.formID == laborStatusFormID)
+            isMoreLSFDict["formHistoryID"] = formHistoryID.formHistoryID
+
+        else: # if there are more lsfs then send email to student, supervisor and all previous supervisors
+            for item in positions: # add all the previous lsf ID's
+                storeLSFFormsID.append(item.laborStatusFormID) # store all of the previous labor status forms for break
+            laborStatusFormID = storeLSFFormsID.pop() #save all the previous lsf ID's except the one currently created. Pop removes the one created right now.
+            formHistoryID = FormHistory.get(FormHistory.formID == laborStatusFormID)
+            isMoreLSFDict['formHistoryID'] = formHistoryID.formHistoryID
+            isMoreLSFDict["lsfFormID"] = storeLSFFormsID
+    else:
+        isMoreLSFDict["showModal"] = False # Do not show the modal when there's not previous lsf
+    return json.dumps(isMoreLSFDict)
+
+def checkForPrimaryPosition(termCode, student):
+    """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
+    rsp = (request.data).decode("utf-8")  # This turns byte data into a string
+    rspFunctional = json.loads(rsp)
+    term = Term.get(Term.termCode == termCode)
+    try:
+        lastPrimaryPosition = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form", FormHistory.formID.jobType == "Primary").order_by(FormHistory.formHistoryID.desc()).get()
+    except DoesNotExist:
+        lastPrimaryPosition = None
+
+    if not lastPrimaryPosition:
+        approvedRelease = None
+    else:
+        try:
+            approvedRelease = FormHistory.select().where(FormHistory.formID == lastPrimaryPosition.formID, FormHistory.historyType == "Labor Release Form", FormHistory.status == "Approved").order_by(FormHistory.formHistoryID.desc()).get()
+        except DoesNotExist:
+            approvedRelease = None
+
+    finalStatus = ""
+    if not term.isBreak:
+        if lastPrimaryPosition and not approvedRelease:
+            if rspFunctional == "Primary":
+                if lastPrimaryPosition.status.statusName == "Denied":
+                    finalStatus = "hire"
+                else:
+                    finalStatus = "noHire"
+            else:
+                if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
+                    finalStatus = "hire"
+                else:
+                    finalStatus = "noHireForSecondary"
+        elif lastPrimaryPosition and approvedRelease:
+            if rspFunctional == "Primary":
+                finalStatus = "hire"
+            else:
+                finalStatus = "noHireForSecondary"
+        else:
+            if rspFunctional == "Primary":
+                finalStatus = "hire"
+            else:
+                finalStatus = "noHireForSecondary"
+    else:
+        finalStatus = "hire"
+    return json.dumps(finalStatus)

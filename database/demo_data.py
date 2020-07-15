@@ -197,28 +197,6 @@ staffs = [
             "ORG":"2114",
             "DEPT_NAME": "Computer Science"
             },
-
-            {
-            "ID": "B1236236",
-            "PIDM":3,
-            "FIRST_NAME":"Mario",
-            "LAST_NAME" : "Nakazawa",
-            "EMAIL"  :"nakazawam@berea.edu",
-            "CPO":"6302",
-            "ORG":"2150",
-            "DEPT_NAME": "Mathematics"
-            },
-
-            {
-            "ID": "B1236237",
-            "PIDM":4,
-            "FIRST_NAME":"Megan",
-            "LAST_NAME" : "Hoffman",
-            "EMAIL"  :"hoffmanm@berea.edu",
-            "CPO":"6303",
-            "ORG":"2107",
-            "DEPT_NAME": "Biology"
-            },
             {
             "ID": "B12365893",
             "PIDM":5,
@@ -251,12 +229,40 @@ staffs = [
             }
         ]
 
+non_supervisor_staffs = [
+                        {
+                        "ID": "B1236237",
+                        "PIDM":4,
+                        "FIRST_NAME":"Megan",
+                        "LAST_NAME" : "Hoffman",
+                        "EMAIL"  :"hoffmanm@berea.edu",
+                        "CPO":"6303",
+                        "ORG":"2107",
+                        "DEPT_NAME": "Biology"
+                        },
+                        {
+                        "ID": "B1236236",
+                        "PIDM":3,
+                        "FIRST_NAME":"Mario",
+                        "LAST_NAME" : "Nakazawa",
+                        "EMAIL"  :"nakazawam@berea.edu",
+                        "CPO":"6302",
+                        "ORG":"2150",
+                        "DEPT_NAME": "Mathematics"
+                        }
+                        ]
+
 # Add to Tracy db
 for staff in staffs:
     db.session.add(STUSTAFF(**staff))
     db.session.commit()
 
     Supervisor.get_or_create(**staff)
+
+# Add non Supervisor staffs to Tracy db
+for staff in non_supervisor_staffs:
+    db.session.add(STUSTAFF(**staff))
+    db.session.commit()
 
 print(" * staff added")
 
@@ -277,22 +283,6 @@ users = [
         "Student": None,
         "Supervisor": "B12365892",
         "username": "pearcej",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "Student": None,
-        "Supervisor": "B1236236",
-        "username": "nakazawam",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "Student": None,
-        "Supervisor": "B1236237",
-        "username": "hoffmanm",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
         "isSaasAdmin": None
