@@ -17,7 +17,12 @@
       {% for form in historyForm %}
         <td colspan="1">{{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}}</td>
         <td>{{form.formID.POSN_TITLE}}</td>
-        <td>{{form.formID.weeklyHours}}</td>
+        <td>{% if form.adjustedForm %}
+              {{form.adjustedForm.newValue}}
+            {%else%}
+              {{form.formID.weeklyHours}}
+            {%endif%}
+        </td>
         <td>{{form.formID.supervisor.FIRST_NAME}} {{form.formID.supervisor.LAST_NAME}}</td>
         <td>{{form.formID.department.DEPT_NAME}}</td>
         <tr>

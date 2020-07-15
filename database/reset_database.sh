@@ -30,3 +30,6 @@ python3 base_data.py
 
 # Adding fake data (we don't want this in a production environment)
 python3 demo_data.py
+
+# Add admins for production testing
+#FLASK_ENV=production python3 add_admins.py
