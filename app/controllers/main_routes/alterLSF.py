@@ -63,11 +63,8 @@ def alterLSF(laborStatusKey):
     prefillnotes = form.supervisorNotes
 
     #These are the data fields to populate our dropdowns(Supervisor. Position)
-    print('ERROR: HERE I AM ==========================================================')
     supervisors = Tracy().getSupervisors()
-    print('ERROR: HERE I AM PART 2 ==========================================================')
     positions = Tracy().getPositionsFromDepartment(prefilldepartment)
-    print('ERROR: HERE I AM PART 3 ==========================================================')
     #Step 3: send data to front to populate html
     oldSupervisor = Tracy().getSupervisorFromID(form.supervisor.ID)
 
@@ -105,12 +102,10 @@ def submitAlteredLSF(laborStatusKey):
         currentDate = datetime.now().strftime("%Y-%m-%d")
         rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
         rsp = dict(rsp)
-        print('This is the dictionary', rsp)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
         formHistories = ""
         for k in rsp:
-            print('Values of k in Dict', k)
             LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if k == "supervisorNotes":
                 if formStatus == "Pending":
@@ -126,7 +121,6 @@ def submitAlteredLSF(laborStatusKey):
                     continue
             # This creates the adjusted form entry for every changed field for an adjustment submission
             elif formStatus == "Approved":
-                print('Make a form for the value of {}'.format(k))
                 adjustedforms = AdjustedForm.create(fieldAdjusted = k,
                                                     oldValue      = rsp[k]["oldValue"],
                                                     newValue      = rsp[k]["newValue"],
@@ -139,7 +133,6 @@ def submitAlteredLSF(laborStatusKey):
                                                    createdBy    = currentUser,
                                                    createdDate  = date.today(),
                                                    status       = status.statusName)
-                print('Form created successfully for {}'.format(k))
 
             if k == "supervisor" and formStatus == "Pending":
                 supervisor = createSupervisorFromTracy(bnumber=rsp[k]["newValue"])
