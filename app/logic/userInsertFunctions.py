@@ -211,24 +211,22 @@ def emailDuringBreak(secondLSFBreak, term):
 # list of form history ids
 # if isMoreLSF is True:
 #   sendEmailToStudent()
-#   if only one item in list_of_formhistory_ids:
-#      sendEmailToSupervisor(previousSupervisorNames)
-#   if more than one item in list_of_formhistory_ids:
-#       sendEmailToSupervisor(previousSupervisorNames)
-#      for loop through the list_of_formhistory_ids:
-#           sendEmailToAllPreviousSupervisors(LSF that was just submitted, list_of_formhistory_ids)
+#   sendEmailToSupervisor(previousSupervisorNames)
+#   for loop through the list_of_formhistory_ids:
+#       sendEmailToAllPreviousSupervisors(LSF that was just submitted, list_of_formhistory_ids)
     if term.isBreak:
         isOneLSF = json.loads(secondLSFBreak)
         formHistory = FormHistory.get(FormHistory.formHistoryID == isOneLSF['formHistoryID'])
-        if(len(isOneLSF["lsfFormID"]) > 0): #Student has more than one lsf. Send email to both supervisors and student
-            email = emailHandler(formHistory.formHistoryID, lsfID)
-            email.notifyAdditionalLaborStatusFormSubmittedForBreak(isOneLSF["previousSupervisorNames"])
+        email = emailHandler(formHistory.formHistoryID)
+        email.laborStatusFormSubmitted()
+        if(len(isOneLSF["previousSupervisorNames"]) > 1): #Student has more than one lsf. Send email to both supervisors and student
+            email.notifyAdditionalLaborStatusFormSubmittedForBreak()
             # for lsfID in isOneLSF["lsfFormID"]: # send email per previous lsf form
             #     email = emailHandler(formHistory.formHistoryID, lsfID)
             #     email.notifyAdditionalLaborStatusFormSubmittedForBreak()
-        else: # Student has only one lsf, send email to student and supervisor
-            email = emailHandler(formHistory.formHistoryID)
-            email.laborStatusFormSubmitted()
+        #else: # Student has only one lsf, send email to student and supervisor
+            #email = emailHandler(formHistory.formHistoryID)
+            #email.laborStatusFormSubmitted()
 
 def checkForSecondLSFBreak(termCode, student):
     """

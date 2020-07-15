@@ -17,7 +17,7 @@ from datetime import datetime, date
 class emailHandler():
     def __init__(self, formHistoryKey, primaryFormHistory=None):
         secret_conf = get_secret_cfg()
-
+        print("got secret config")
         app.config.update(
             MAIL_SERVER=secret_conf['MAIL_SERVER'],
             MAIL_PORT=secret_conf['MAIL_PORT'],
@@ -29,6 +29,7 @@ class emailHandler():
             MAIL_OVERRIDE_ALL=secret_conf['MAIL_OVERRIDE_ALL'],
             ALWAYS_SEND_MAIL=secret_conf['ALWAYS_SEND_MAIL']
         )
+        print("updated app.config")
 
         self.primaryFormHistory = primaryFormHistory
         self.mail = Mail(app)
@@ -184,9 +185,7 @@ class emailHandler():
 
     def notifyAdditionalLaborStatusFormSubmittedForBreak(self):
         # This is the submission
-        self.checkRecipient("Break Labor Status Form Submitted For Student",
-                            "Break Labor Status Form Submitted For Supervisor on Additional LSF",
-                            "Break Labor Status Form Submitted For Additional Supervisor")
+        self.checkRecipient(False, False, "Break Labor Status Form Submitted For Additional Supervisor")
 
     # def notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak(self):
     #     self.checkRecipient(False, "Break Labor Status Form Submitted For Second Supervisor")
@@ -258,7 +257,6 @@ class emailHandler():
                 # If contract hours != None
                 if secondaryEmailPurpose:
                     secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
-                    print("about to send mail to additional supervisor in break term")
                     self.sendEmail(secondaryEmail, "secondary")
                 else:
                     primaryEmail = EmailTemplate.get(EmailTemplate.purpose == emailPurpose)
@@ -280,10 +278,10 @@ class emailHandler():
                 recipients=[self.studentEmail])
             recipient = 'Student'
         elif sendTo == "secondary":
-            print("sent email to additional supervisor in break term")
             supervisorEmails = []
             for supervisor in self.supervisors:
                 supervisorEmails.append(supervisor.EMAIL)
+            supervisorEmails = supervisorEmails[:-1]
             message = Message(template.subject,
                 recipients=supervisorEmails)
             recipient = 'Secondary Supervisor'
