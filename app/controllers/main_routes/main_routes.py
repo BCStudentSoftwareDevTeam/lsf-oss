@@ -53,7 +53,7 @@ def index():
         inactiveSupervisees = []
         currentSupervisees = []
         pastSupervisees = []
-
+        print("Just after initializing lists")
         student_processed = False  # This variable dictates whether a student has already been added to the supervisor's portal
 
         for supervisee in formsBySupervisees: # go through all the form in the formsBySupervisees
@@ -77,6 +77,8 @@ def index():
                     if supervisee.endDate < todayDate:
                         pastSupervisees.append(supervisee)
                     elif supervisee.endDate >= todayDate:
+                        for i in FormHistory.select().where(FormHistory.formID == supervisee.laborStatusFormID).order_by(FormHistory.createdDate.desc()):
+                            print("formhistory ",i)
                         studentFormHistory = FormHistory.select().where(FormHistory.formID == supervisee.laborStatusFormID).order_by(FormHistory.createdDate.desc())[0]
                         if studentFormHistory.historyType.historyTypeName == "Labor Release Form":
                             if studentFormHistory.status.statusName == "Approved":
@@ -89,6 +91,7 @@ def index():
                 student_processed = False  # Resets state machine.
 
         # On the click of the download button, 'POST' method will send all checked boxes from modal to excel maker
+        print("How about here")
         if request.method== 'POST':
             value =[]
             # The "Try" and "Except" block here is needed because if the user tries to use the download button before they chose
@@ -127,7 +130,9 @@ def index():
 
             # Prevents 'POST' method from sending the same value twice to excel maker
             noDuplicateList = []
+            print("Do we get here")
             for i in value:
+                print("the value of i is",i)
                 if i not in noDuplicateList:
                     noDuplicateList.append(i)
                 else:

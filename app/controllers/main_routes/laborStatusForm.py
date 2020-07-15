@@ -74,7 +74,6 @@ def userInsert():
         # if the student doesn't exist, it tries to create a student with that same information
         try:
             createStudentFromTracyObj(tracyStudent)
-            createUser(tracyStudent)
         except InvalidUserException as e:
             print(e)
             return "", 500
@@ -106,7 +105,7 @@ def userInsert():
         try:
             lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
             status = Status.get(Status.statusName == "Pending")
-            # d, created = Supervisor.get_or_create(username = currentUser.username)
+            d, created = Supervisor.get_or_create(username = currentUser.username)
             creatorID = currentUser
             createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
             try:
