@@ -272,79 +272,79 @@ users = [
         "isLaborAdmin": 1,
         "isFinancialAidAdmin": None,
         "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": "B12365892",
+        "username": "pearcej",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": "B1236236",
+        "username": "nakazawam",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": "B1236237",
+        "username": "hoffmanm",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": "B12365893",
+        "username": "jonesj",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": None,
+        "Supervisor": "B00763721",
+        "username": "ramsayb2",
+        "isLaborAdmin": 1,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": "B00730361",
+        "Supervisor": None,
+        "username": "jamalie",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": "B00734292",
+        "Supervisor": None,
+        "username": "cruzg",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": "B00785329",
+        "Supervisor": None,
+        "username": "adamskg",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
+        },
+        {
+        "Student": "B00841417",
+        "Supervisor": "B00841417",
+        "username": "bryantal",
+        "isLaborAdmin": None,
+        "isFinancialAidAdmin": None,
+        "isSaasAdmin": None
         }
-        # {
-        # "Student": None,
-        # "Supervisor": "B12365892",
-        # "username": "pearcej",
-        # "isLaborAdmin": None,
-        # "isFinancialAidAdmin": None,
-        # "isSaasAdmin": None
-        # },
-        # {
-        # "Student": None,
-        # "Supervisor": "B1236236",
-        # "username": "nakazawam",
-        # "isLaborAdmin": None,
-        # "isFinancialAidAdmin": None,
-        # "isSaasAdmin": None
-        # },
-        # {
-        # "Student": None,
-        # "Supervisor": "B1236237",
-        # "username": "hoffmanm",
-        # "isLaborAdmin": None,
-        # "isFinancialAidAdmin": None,
-        # "isSaasAdmin": None
-        # },
-        # {
-        # "Student": None,
-        # "Supervisor": "B12365893",
-        # "username": "jonesj",
-        # "isLaborAdmin": None,
-        # "isFinancialAidAdmin": None,
-        # "isSaasAdmin": None
-        # },
-        # {
-        # "Student": None,
-        # "Supervisor": "B00763721",
-        # "username": "ramsayb2",
-        # "isLaborAdmin": 1,
-        # "isFinancialAidAdmin": None,
-        # "isSaasAdmin": None
-        # },
-        # {
-        # "Student": "B00730361",
-        # "Supervisor": None,
-        # "username": "jamalie",
-        # "isLaborAdmin": None,
-        # "isFinancialAidAdmin": None,
-        # "isSaasAdmin": None
-        # },
-        # {
-        # "Student": "B00734292",
-        # "Supervisor": None,
-        # "username": "cruzg",
-        # "isLaborAdmin": None,
-        # "isFinancialAidAdmin": None,
-        # "isSaasAdmin": None
-        # },
-        # {
-        # "Student": "B00785329",
-        # "Supervisor": None,
-        # "username": "adamskg",
-        # "isLaborAdmin": None,
-        # "isFinancialAidAdmin": None,
-        # "isSaasAdmin": None
-        # },
-        # {
-        # "Student": "B00841417",
-        # "Supervisor": "B00841417",
-        # "username": "bryantal",
-        # "isLaborAdmin": None,
-        # "isFinancialAidAdmin": None,
-        # "isSaasAdmin": None
-        # }
         ]
 User.insert_many(users).on_conflict_replace().execute()
 print(" * users added")

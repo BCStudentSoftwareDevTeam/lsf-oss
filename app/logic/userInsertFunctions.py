@@ -82,7 +82,7 @@ def createSupervisorFromTracy(username=None, bnumber=None):
     except Exception as e:
         raise InvalidUserException("Adding {} to Supervisor table failed".format(username), e)
 
-def createStudentFromTracy(username):
+def createStudentFromTracy(username=None):
     """
         Checks to see if username of student is in Tracy database, based on the provided username.
 
@@ -102,7 +102,9 @@ def createStudentFromTracyObj(tracyStudent):
 
         Raises InvalidUserException if this does not succeed.
     """
+    print(tracyStudent)
     try:
+        print("fails in here?")
         return Student.get_or_create(ID = tracyStudent.ID.strip(),
                                     PIDM = tracyStudent.PIDM,
                                     FIRST_NAME = tracyStudent.FIRST_NAME,
@@ -117,7 +119,7 @@ def createStudentFromTracyObj(tracyStudent):
                                     LAST_POSN = tracyStudent.LAST_POSN,
                                     LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)[0]
     except Exception as e:
-        raise InvalidUserException("Adding {} to user table failed".format(username), e)
+        raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyStudent.FIRST_NAME, tracyStudent.LAST_NAME))
 
 
 def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional):
