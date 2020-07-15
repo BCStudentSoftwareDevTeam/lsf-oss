@@ -289,14 +289,6 @@ users = [
         },
         {
         "Student": None,
-        "Supervisor": "B1236236",
-        "username": "nakazawam",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "Student": None,
         "Supervisor": "B12365893",
         "username": "jonesj",
         "isLaborAdmin": None,
