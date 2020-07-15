@@ -82,7 +82,7 @@ def createSupervisorFromTracy(username=None, bnumber=None):
     except Exception as e:
         raise InvalidUserException("Adding {} to Supervisor table failed".format(username), e)
 
-def createStudentFromTracy(username=None):
+def createStudentFromTracy(username):
     """
         Checks to see if username of student is in Tracy database, based on the provided username.
 
@@ -102,7 +102,6 @@ def createStudentFromTracyObj(tracyStudent):
 
         Raises InvalidUserException if this does not succeed.
     """
-    print(tracyStudent)
     try:
         return Student.get(Student.ID == tracyStudent.ID.strip())
     except DoesNotExist:

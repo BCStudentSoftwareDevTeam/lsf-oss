@@ -46,8 +46,6 @@ def laborhistory(id):
                 if len(authorizedForms) == 0:
                     return render_template('errors/403.html'), 403
         laborStatusFormList = ','.join([str(form.laborStatusFormID) for form in studentForms])
-
-        print("just before render")
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,
@@ -88,9 +86,7 @@ def populateModal(statusKey):
             return render_template('errors/403.html'), 403
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
-        print("trying to get the user")
-        student = Student.get(Student.ID == statusForm[0].studentSupervisee) # fix this one
-        print("student",student)
+        student = Student.get(Student.ID == statusForm[0].studentSupervisee)
         currentDate = datetime.date.today()
         pendingformType = None
         buttonState = None
