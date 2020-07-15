@@ -90,9 +90,9 @@ for student in studentsTracy:
     db.session.commit()
 
     # Set up lsf db data
-    del student["PIDM"]
-    students.append(student)
-Student.insert_many(students).on_conflict_replace().execute()
+#     del student["PIDM"]
+#     students.append(student)
+# Student.insert_many(students).on_conflict_replace().execute()
 print(" * students (TRACY) added")
 
 #############################
@@ -256,7 +256,7 @@ for staff in staffs:
     db.session.add(STUSTAFF(**staff))
     db.session.commit()
 
-    Supervisor.get_or_create(**staff)
+    # Supervisor.get_or_create(**staff)
 
 print(" * staff added")
 
@@ -346,7 +346,7 @@ users = [
         "isSaasAdmin": None
         }
         ]
-User.insert_many(users).on_conflict_replace().execute()
+# User.insert_many(users).on_conflict_replace().execute()
 print(" * users added")
 
 
@@ -417,49 +417,49 @@ print(" * terms added")
 #############################
 # Create a Pending Labor Status Form
 #############################
-LaborStatusForm.insert([{
-            "laborStatusFormID": 2,
-            "termCode_id": "202000",
-            "studentName": "Alex Bryant",
-            "studentSupervisee_id": "B00841417",
-            "supervisor_id": "B12361006",
-            "department_id": 1,
-            "jobType": "Primary",
-            "WLS": 1,
-            "POSN_TITLE": "Student Programmer",
-            "POSN_CODE": "S61407",
-            "weeklyHours": 10,
-            "startDate": "2020-04-01",
-            "endDate": "2020-09-01"
-        }]).on_conflict_replace().execute()
-FormHistory.insert([{
-            "formHistoryID": 2,
-            "formID_id": "2",
-            "historyType_id": "Labor Status Form",
-            "createdBy_id": 1,
-            "createdDate": "2020-04-14",
-            "status_id": "Pending"
-        }]).on_conflict_replace().execute()
+# LaborStatusForm.insert([{
+#             "laborStatusFormID": 2,
+#             "termCode_id": "202000",
+#             "studentName": "Alex Bryant",
+#             "studentSupervisee_id": "B00841417",
+#             "supervisor_id": "B12361006",
+#             "department_id": 1,
+#             "jobType": "Primary",
+#             "WLS": 1,
+#             "POSN_TITLE": "Student Programmer",
+#             "POSN_CODE": "S61407",
+#             "weeklyHours": 10,
+#             "startDate": "2020-04-01",
+#             "endDate": "2020-09-01"
+#         }]).on_conflict_replace().execute()
+# FormHistory.insert([{
+#             "formHistoryID": 2,
+#             "formID_id": "2",
+#             "historyType_id": "Labor Status Form",
+#             "createdBy_id": 1,
+#             "createdDate": "2020-04-14",
+#             "status_id": "Pending"
+#         }]).on_conflict_replace().execute()
 
 
 #############################
 # admin Notes
 #############################
-adminNotes = [
-            {
-            "noteHistoryID": 1,
-            "formID_id": 2,
-            "date":"2020-01-01",
-            "createdBy" : 1,
-            "notesContents": "This is the first note"
-            },
-            {
-            "noteHistoryID": 2,
-            "formID_id": 2,
-            "date":"2020-02-01",
-            "createdBy" : 1,
-            "notesContents": "This is the second note"
-            },
-       ]
-AdminNotes.insert_many(adminNotes).on_conflict_replace().execute()
+# adminNotes = [
+#             {
+#             "noteHistoryID": 1,
+#             "formID_id": 2,
+#             "date":"2020-01-01",
+#             "createdBy" : 1,
+#             "notesContents": "This is the first note"
+#             },
+#             {
+#             "noteHistoryID": 2,
+#             "formID_id": 2,
+#             "date":"2020-02-01",
+#             "createdBy" : 1,
+#             "notesContents": "This is the second note"
+#             },
+#        ]
+# AdminNotes.insert_many(adminNotes).on_conflict_replace().execute()
 print(" * laborOfficeNotes added")

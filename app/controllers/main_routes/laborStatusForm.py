@@ -74,6 +74,7 @@ def userInsert():
         # if the student doesn't exist, it tries to create a student with that same information
         try:
             createStudentFromTracyObj(tracyStudent)
+            createUser(tracyStudent)
         except InvalidUserException as e:
             print(e)
             return "", 500

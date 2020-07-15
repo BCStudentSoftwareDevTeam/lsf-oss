@@ -100,7 +100,9 @@ def populateModal(statusKey):
             return render_template('errors/403.html'), 403
         forms = FormHistory.select().where(FormHistory.formID == statusKey).order_by(FormHistory.createdDate.desc(), FormHistory.formHistoryID.desc())
         statusForm = LaborStatusForm.select().where(LaborStatusForm.laborStatusFormID == statusKey)
-        student = User.get(User.Student == statusForm[0].studentSupervisee)
+        print("trying to get the user")
+        student = User.get(User.Student == statusForm[0].studentSupervisee) # fix this one
+        print("student",student)
         currentDate = datetime.date.today()
         pendingformType = None
         buttonState = None
