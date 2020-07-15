@@ -10,12 +10,12 @@ from flask import Flask, redirect, url_for, flash, jsonify, json, request, flash
 def email_templates():
     currentUser = require_login()
     if not currentUser:                    # Not logged in
-        return render_template('errors/403.html')
+        return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:       # Not a labor admin
         if currentUser.Student: # logged in as a student
             return redirect('/laborHistory/' + currentUser.Student.ID)
         elif currentUser.Supervisor:
-            return render_template('errors/403.html', currentUser = currentUser), 403
+            return render_template('errors/403.html'), 403
     emailTemplateID = EmailTemplate.select()
     purpose = EmailTemplate.select(EmailTemplate.purpose).distinct()
     formType = EmailTemplate.select(EmailTemplate.formType).distinct()
@@ -31,8 +31,7 @@ def email_templates():
                             formType = formType,
                             subject = subject,
                             recipient = recipient,
-                            body = body,
-                            currentUser = currentUser
+                            body = body
                           )
 
 @admin.route('/admin/emailTemplates/getEmailArray/', methods=['GET'])

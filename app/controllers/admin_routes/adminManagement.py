@@ -13,18 +13,17 @@ def admin_Management():
 # username = load_user('heggens')
     currentUser = require_login()
     if not currentUser:                    # Not logged in
-        return render_template('errors/403.html')
+        return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:       # Not an admin
         if currentUser.Student: # logged in as a student
             return redirect('/laborHistory/' + currentUser.Student.ID)
         elif currentUser.Supervisor:
-            return render_template('errors/403.html', currentUser = currentUser), 403
+            return render_template('errors/403.html'), 403
 
     users = User.select()
     return render_template( 'admin/adminManagement.html',
                             title=('Admin Management'),
-                            users = users,
-                            currentUser = currentUser
+                            users = users
                          )
 
 
@@ -62,9 +61,9 @@ def removeLaborAdmin():
         user.isLaborAdmin = 0
         user.save()
         if user.Student:
-            message = "{0} {1} has been added as a Labor Admin".format(user.Student.FIRST_NAME, user.Student.LAST_NAME)
+            message = "{0} {1} has been removed as a Labor Admin".format(user.Student.FIRST_NAME, user.Student.LAST_NAME)
         elif user.Supervisor:
-            message = "{0} {1} has been added as a Labor Admin".format(user.Supervisor.FIRST_NAME, user.Supervisor.LAST_NAME)
+            message = "{0} {1} has been removed as a Labor Admin".format(user.Supervisor.FIRST_NAME, user.Supervisor.LAST_NAME)
         flash(message, "danger")
 
 def addFinancialAdmin():

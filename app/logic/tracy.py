@@ -1,4 +1,4 @@
-from app.config.loadConfig import get_secret_cfg 
+from app.config.loadConfig import get_secret_cfg
 from peewee import DoesNotExist
 from app.models.Tracy import db
 from app.models.Tracy.stuposn import STUPOSN
@@ -37,6 +37,18 @@ class Tracy():
 
         return student
 
+    def getStudentFromEmail(self, email: str):
+        """
+        Return the student with the given email.
+
+        Throws an InvalidQueryException if the given email address does not exist.
+        """
+        student = STUDATA.query.filter(STUDATA.STU_EMAIL == email).first()
+        if student is None:
+            raise InvalidQueryException("Email {} not found in STUDATA".format(email))
+
+        return student
+
     #######################################
 
     def getSupervisors(self):
@@ -45,15 +57,15 @@ class Tracy():
         """
         return STUSTAFF.query.order_by(STUSTAFF.FIRST_NAME).all()
 
-    def getSupervisorFromPIDM(self, pidm):
+    def getSupervisorFromID(self, id):
         """
-        Return the supervisor with the given PIDM.
+        Return the supervisor with the given ID.
 
-        Throws an InvalidQueryException if the given PIDM does not exist.
+        Throws an InvalidQueryException if the given ID does not exist.
         """
-        supervisor = STUSTAFF.query.get(pidm)
+        supervisor = STUSTAFF.query.filter(STUSTAFF.ID == id).first()
         if supervisor is None:
-            raise InvalidQueryException("PIDM {} not found in STUSTAFF".format(pidm))
+            raise InvalidQueryException("ID {} not found in STUSTAFF".format(id))
 
         return supervisor
 
@@ -93,4 +105,3 @@ class Tracy():
             raise InvalidQueryException("Position Code {} not found in STUPOSN".format(positionCode))
 
         return position
-            

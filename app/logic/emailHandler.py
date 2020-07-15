@@ -26,6 +26,7 @@ class emailHandler():
             MAIL_USE_TLS=secret_conf['MAIL_USE_TLS'],
             MAIL_USE_SSL=secret_conf['MAIL_USE_SSL'],
             MAIL_DEFAULT_SENDER=secret_conf['MAIL_DEFAULT_SENDER'],
+            MAIL_OVERRIDE_ALL=secret_conf['MAIL_OVERRIDE_ALL'],
             ALWAYS_SEND_MAIL=secret_conf['ALWAYS_SEND_MAIL']
         )
 
@@ -76,7 +77,7 @@ class emailHandler():
 
             # If we have set an override address
             if app.config['MAIL_OVERRIDE_ALL']:
-                message.html = "<b>Original message intended for {}.</b>".format(", ".join(message.recipients)) + message.html
+                message.html = "<b>Original message intended for {}.</b><br>".format(", ".join(message.recipients)) + message.html
                 message.recipients = [app.config['MAIL_OVERRIDE_ALL']]
 
             self.mail.send(message)

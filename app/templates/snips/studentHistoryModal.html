@@ -24,15 +24,12 @@
             <dd class="col-sm-9">{{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}}</dd>
 
             <dt class="col-sm-3">Job Type (Hours)</dt>
-            <dd class="col-sm-9">{{form1.jobType}} ({% if form1.weeklyHours == None %}
-                                    {{form1.contractHours}}
-                                  {% else %}
-                                    {{form1.weeklyHours}}
-                                  {% endif %})
+            <dd class="col-sm-9">{{form1.jobType}}
+              ({% if form1.weeklyHours == None %}{{form1.contractHours}}{% else %}{{form1.weeklyHours}}{% endif %})
             </dd>
 
             <dt class="col-sm-3">Position (WLS)</dt>
-            <dd class="col-sm-9">{{form1.POSN_CODE}} - {{form1.POSN_TITLE}} ( {{form1.WLS}} )</dd>
+            <dd class="col-sm-9">{{form1.POSN_CODE}} - {{form1.POSN_TITLE}} ({{form1.WLS}})</dd>
           </dl>
         {% endfor %}
         <hr>
@@ -200,14 +197,14 @@
         <button type="button" class="btn btn-danger" data-dismiss="modal" onclick = "withdrawform({{form1.laborStatusFormID}})">Withdraw</button>
         </div>
         <div class = "col-sm-6">
-        <a id="alter" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Correct</button></a>
+        <a id="alter" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Modify</button></a>
         </div>
         {% elif buttonState == ButtonStatus.show_release_adjustment_rehire_buttons %}
         <div class = "col-sm-4" style="text-align: right">
         <a id="release" href="#"><button type="button" class="btn btn-danger" onclick="redirection({{form1.laborStatusFormID}})">Release</button></a>
         </div>
         <div class = "col-sm-4">
-        <a id="alter" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Adjustment</button></a>
+        <a id="alter" href="#"><button type="button" class="btn btn-info" onclick="redirection({{form1.laborStatusFormID}})">Adjustment Form</button></a>
         </div>
         <div class = "col-sm-4" style="text-align:left">
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success" onclick="redirection({{form1.laborStatusFormID}})">Rehire</button></a>

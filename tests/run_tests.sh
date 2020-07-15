@@ -6,7 +6,7 @@ BASE_URL=http://localhost:8080
 SENSITIVE_URL=http://lsf.berea.edu
 VERBOSE="--verbose "
 
-FLAGS="${VERBOSE}--capture=no --disable-pytest-warnings --strict-markers --tb=line -rs"
+FLAGS="${VERBOSE}--capture=no --disable-pytest-warnings --strict-markers --tb=line -rs --ignore=tests/mail_test.py"
 UI_URLS="--verify-base-url --base-url $BASE_URL --sensitive-url $SENSITIVE_URL"
 
 RED='\033[0;31m'
