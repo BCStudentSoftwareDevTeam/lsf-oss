@@ -470,7 +470,7 @@ function createStuDict(){
 function checkDuplicate(studentDict) {// checks for duplicates in the table. This is for Academic Year
   for(i = 0; i < globalArrayOfStudents.length; i++){
     if(globalArrayOfStudents[i].stuName == studentDict.stuName){
-      $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
+      $("#warningModalText").html("You have already entered a labor status form for " + studentDict.stuName + " in the table below.");
       $("#warningModal").modal("show");
       return true;
     }
@@ -510,7 +510,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
 
 
 function initialLSFInsert(studentDict){ //Add student info to the table if they have no previous lsf's in the database
-  if (checkDuplicate(studentDict) == true){
+  if (checkDuplicate(studentDict) == false){
       checkTotalHours(studentDict);
       createAndFillTable(studentDict);
   }
