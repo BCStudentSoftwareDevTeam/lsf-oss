@@ -7,3 +7,4 @@ class ButtonStatus(Enum):
     show_release_adjustment_rehire_buttons = 3
     show_release_rehire_buttons = 4
     no_buttons_pending_forms = 5
+    show_student_view = 6

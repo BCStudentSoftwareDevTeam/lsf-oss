@@ -220,6 +220,8 @@
         <div class = "col-md-12">
         <p style="color:blue;"><span class="glyphicon glyphicon-exclamation-sign"></span><strong> Changes to a form are unavailable when a {{pendingformType}} is 'Pending'.</strong></p>
         </div>
+        {% elif buttonState == ButtonStatus.show_student_view %}
+        <div class = "col-md-12"></div>
         {% endif %}
         {% endfor %}
       </div>
