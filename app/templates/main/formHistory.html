@@ -13,7 +13,7 @@
 <div align= "center">
   <h1>Labor History</h1>
     <span id="studentName">{{student.FIRST_NAME}} {{student.LAST_NAME}}</span>
-    {% if not currentUser.Student or currentUser.username != studentUserName %}
+    {% if currentUser.Supervisor or currentUser.isLaborAdmin %}
       <form method="POST" action="/laborHistory/download">
         <input hidden name="listOfForms" value="{{laborStatusFormList}}" />
         <div align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success" id="downloadButton">Download</button></div>
@@ -42,7 +42,7 @@
   </div>
 </div>
 <!-- Modal End -->
-  {% if currentUser.Student == None or currentUser.username != studentUserName %}
+  {% if currentUser.Supervisor or currentUser.isLaborAdmin %}
     <div align= "left"><button class='btn btn-danger' id="returnbutton" onclick="location.replace('/')">Return</button></div>
   {% endif %}
 {% endblock %}
