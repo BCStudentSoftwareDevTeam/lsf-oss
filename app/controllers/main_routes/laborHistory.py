@@ -37,7 +37,7 @@ def laborhistory(id):
             if currentUser.Student and not currentUser.Supervisor:
                 if currentUser.Student.ID != id:
                     return redirect('/laborHistory/' + currentUser.Student.ID)
-            elif currentUser.Supervisor:
+            elif currentUser.Supervisor and not currentUser.Student:
                 supervisorForms = LaborStatusForm.select() \
                                   .join_from(LaborStatusForm, FormHistory) \
                                   .where((LaborStatusForm.supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser)) \
