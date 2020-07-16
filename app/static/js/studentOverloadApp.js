@@ -8,18 +8,23 @@ $(document).ready(function () {
      keyboard: false
   })
  }
+
 });
 
 checkboxCounter = 0; //keeps track of how many checkboxes are checked
-function checkBoxCheck(obj){
+function checkBoxCheck(obj,totalFormHours){
+  console.log(totalFormHours)
   if(obj.checked == true){
       checkboxCounter = checkboxCounter + 1;
   }
   else if(obj.checked == false){
       checkboxCounter = checkboxCounter - 1;
   }
-  if(checkboxCounter >= 8){
+  if(checkboxCounter >= 8 & totalFormHours>=20){
     $("#notes").prop("disabled", false);
+  }
+  else if (checkboxCounter >=5 & totalFormHours <20){
+      $("#notes").prop("disabled", false);
   }
   else{
     $("#notes").prop("disabled", true);
