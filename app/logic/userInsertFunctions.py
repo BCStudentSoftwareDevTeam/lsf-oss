@@ -170,7 +170,7 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     # We create a 'Labor Status Form' first, then we check to see if a 'Labor Overload Form'
     # needs to be created
     historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-    FormHistory.create( formID = lsf.laborStatusFormID,
+    formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
                         historyType = historyType.historyTypeName,
                         overloadForm = None,
                         createdBy   = creatorID,
@@ -197,8 +197,12 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
         email = emailHandler(formOverload.formHistoryID)
         email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
     else:
-        email = emailHandler(FormHistory.formHistoryID)
-        email.laborStatusFormSubmitted()
+        if not formHistory.formID.termCode.isBreak:
+            email = emailHandler(formHistory.formHistoryID)
+            email.laborStatusFormSubmitted()
+        # if formHistory.formID.jobType == "Secondary":
+        #     email.notifyAdditionalLaborStatusFormSubmittedForBreak()
+
 
 def emailDuringBreak(secondLSFBreak, term):
     """

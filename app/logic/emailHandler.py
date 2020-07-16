@@ -17,7 +17,6 @@ from datetime import datetime, date
 class emailHandler():
     def __init__(self, formHistoryKey, primaryFormHistory=None):
         secret_conf = get_secret_cfg()
-        print("got secret config")
         app.config.update(
             MAIL_SERVER=secret_conf['MAIL_SERVER'],
             MAIL_PORT=secret_conf['MAIL_PORT'],
@@ -29,7 +28,6 @@ class emailHandler():
             MAIL_OVERRIDE_ALL=secret_conf['MAIL_OVERRIDE_ALL'],
             ALWAYS_SEND_MAIL=secret_conf['ALWAYS_SEND_MAIL']
         )
-        print("updated app.config")
 
         self.primaryFormHistory = primaryFormHistory
         self.mail = Mail(app)
@@ -38,10 +36,9 @@ class emailHandler():
         self.laborStatusForm = self.formHistory.formID
         self.term = self.laborStatusForm.termCode
         self.student = self.laborStatusForm.studentSupervisee
-        self.studentEmail = self.student.STU_EMAIL
+        self.studentEmail = self.laborStatusForm.studentSupervisee.STU_EMAIL
         self.creatorEmail = self.formHistory.createdBy.Supervisor.EMAIL
         self.supervisorEmail = self.laborStatusForm.supervisor.EMAIL
-        print("self.supervisorEmail: ", self.supervisorEmail)
         self.date = self.laborStatusForm.startDate.strftime("%m/%d/%Y")
         self.weeklyHours = str(self.laborStatusForm.weeklyHours)
         self.contractHours = str(self.laborStatusForm.contractHours)
@@ -53,10 +50,10 @@ class emailHandler():
         self.supervisors = []
         for position in self.positions:
             self.supervisors.append(position.supervisor)
-        self.primaryForm = LaborStatusForm.get(LaborStatusForm.jobType == "Primary" and LaborStatusForm.studentSupervisee == self.laborStatusForm.studentSupervisee and LaborStatusForm.termCode == self.laborStatusForm.termCode)
-        print("self.primaryForm: ", self.primaryForm)
-        self.primaryEmail = self.primaryForm.supervisor.EMAIL
-        print("self.primaryEmail: ", self.primaryEmail)
+
+        if not self.term.isBreak:
+            self.primaryForm = LaborStatusForm.get((LaborStatusForm.jobType == "Primary") & (LaborStatusForm.studentSupervisee == self.laborStatusForm.studentSupervisee) & (LaborStatusForm.termCode == self.laborStatusForm.termCode))
+            self.primaryEmail = self.primaryForm.supervisor.EMAIL
         self.link = ""
         self.releaseReason = ""
         self.releaseDate = ""
@@ -102,8 +99,12 @@ class emailHandler():
     def laborStatusFormSubmitted(self):
         if self.laborStatusForm.jobType == 'Secondary':
             if self.term.isBreak:
-                self.checkRecipient("Break Labor Status Form Submitted For Student",
-                                    "Break Labor Status Form Submitted For Supervisor")
+                if len(list(self.positions)) > 1:
+                    self.checkRecipient("Break Labor Status Form Submitted For Student",
+                                        "Break Labor Status Form Submitted For Supervisor on Additional LSF")
+                else:
+                    self.checkRecipient("Break Labor Status Form Submitted For Student",
+                                     "Break Labor Status Form Submitted For Supervisor")
             else:
                 self.checkRecipient("Labor Status Form Submitted For Student",
                                     False,
@@ -183,6 +184,9 @@ class emailHandler():
         self.checkRecipient("Labor Overload Form Rejected For Student",
                             "Labor Overload Form Rejected For Supervisor")
 
+    def notifyPrimarySupervisorForSecondaryForm(self):
+        self.checkRecipient()
+
     def notifyAdditionalLaborStatusFormSubmittedForBreak(self):
         # This is the submission
         self.checkRecipient(False, False, "Break Labor Status Form Submitted For Additional Supervisor")
@@ -244,14 +248,8 @@ class emailHandler():
         The method sendEmail is then called to handle the actual sending of the emails.
         """
         if studentEmailPurpose:
-            print("inside studentEmailPurpose condtional")
             studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
-            print("about to send email to student")
             self.sendEmail(studentEmail, "student")
-        if self.primaryFormHistory:
-            primaryEmail = EmailTemplate.get(EmailTemplate.purpose == emailPurpose) # Jan
-            print("about to send email to first supervisor in break term")
-            self.sendEmail(primaryEmail, "supervisor")
         if emailPurpose or secondaryEmailPurpose:
             if self.laborStatusForm.jobType == 'Secondary':
                 # If contract hours != None
@@ -273,28 +271,31 @@ class emailHandler():
         formTemplate = template.body
         formTemplate = self.replaceText(formTemplate)
         if sendTo == "student":
-            print("sent email to student")
             message = Message(template.subject,
                 recipients=[self.studentEmail])
             recipient = 'Student'
         elif sendTo == "secondary":
-            supervisorEmails = []
-            for supervisor in self.supervisors:
-                supervisorEmails.append(supervisor.EMAIL)
-            supervisorEmails = supervisorEmails[:-1]
-            message = Message(template.subject,
-                recipients=supervisorEmails)
-            recipient = 'Secondary Supervisor'
+            if self.term.isBreak:
+                supervisorEmails = []
+                for supervisor in self.supervisors:
+                    supervisorEmails.append(supervisor.EMAIL)
+                supervisorEmails = supervisorEmails[:-1]
+                message = Message(template.subject,
+                    recipients=supervisorEmails)
+                recipient = 'Secondary Supervisor'
+            else:
+                message = Message(template.subject,
+                    recipients=[self.supervisorEmail, self.primaryEmail])
+                recipient = 'Primary Supervisor'
         elif sendTo == "Labor Office":
             message = Message(template.subject,
                 recipients=[""]) #TODO: Email for the Labor Office
             recipient = 'Labor Office'
-        elif sendTo == "breakPrimary":
-            message = Message(template.subject,
-                recipients=[self.primarySupervisorEmail])
-            recipient = 'Primary Break Supervisor'
+        # elif sendTo == "breakPrimary":
+        #     message = Message(template.subject,
+        #         recipients=[self.primarySupervisorEmail])
+        #     recipient = 'Primary Break Supervisor'
         elif sendTo == 'supervisor':
-            print("sent email to first supervisor in break term")
             message = Message(template.subject,
                 recipients=[self.supervisorEmail])
             recipient = 'Primary Supervisor'
@@ -312,6 +313,7 @@ class emailHandler():
             self.mail.send(message)
         else:
             print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
+            print("Email Body: {}".format(message.html))
 
             # self.send(message) REPLACE ABOVE IF WITH THIS LINE
 
@@ -320,8 +322,6 @@ class emailHandler():
         form = form.replace("@@Creator@@", self.formHistory.createdBy.Supervisor.FIRST_NAME + " " + self.formHistory.createdBy.Supervisor.LAST_NAME)
         # 'Supervisor' is the supervisor on the current laborStatusForm that correspond to the formID we passed in when creating the class
         form = form.replace("@@Supervisor@@", self.laborStatusForm.supervisor.FIRST_NAME + " " + self.laborStatusForm.supervisor.LAST_NAME)
-        # 'Primary Supervisor' is the primary supervisor of the student who's laborStatusForm is passed in the initializer
-        form = form.replace("@@Primsupr@@", self.primaryForm.supervisor.FIRST_NAME + " " + self.primaryForm.supervisor.LAST_NAME)
         form = form.replace("@@Student@@", self.laborStatusForm.studentSupervisee.FIRST_NAME + " " + self.laborStatusForm.studentSupervisee.LAST_NAME)
         form = form.replace("@@StudB@@", self.laborStatusForm.studentSupervisee.ID)
         form = form.replace("@@Position@@", self.laborStatusForm.POSN_CODE+ ", " + self.laborStatusForm.POSN_TITLE)
@@ -331,12 +331,16 @@ class emailHandler():
             form = form.replace("@@Hours@@", self.weeklyHours)
         else:
             form = form.replace("@@Hours@@", self.contractHours)
-        if self.primaryFormHistory != None:
-            # allBreakLSFs = LaborStatusForm.select(LaborStatusForm.supervisor).where(LaborStatusForm.studentSupervisee == self.laborStatusForm.studentSupervisee, LaborStatusForm.termCode == self.term).distinct()
-            # for lsf in allBreakLSFs:
-            #     print("Supervisor PK: ", lsf)
-            form = form.replace("@@PrimarySupervisor@@", self.primaryLaborStatusForm.supervisor.FIRST_NAME +" "+ self.primaryLaborStatusForm.supervisor.LAST_NAME)
-            form = form.replace("@@SupervisorEmail@@", self.supervisorEmail)
+        if self.term.isBreak:
+            previousSupervisorNames = ""
+            for supervisor in self.supervisors[:-1]:
+                previousSupervisorNames += supervisor.FIRST_NAME + " " + supervisor.LAST_NAME + ", "
+            previousSupervisorNames = previousSupervisorNames[:-2]
+            form = form.replace("@@PreviousSupervisor(s)@@", previousSupervisorNames)
+        else:
+            # 'Primary Supervisor' is the primary supervisor of the student who's laborStatusForm is passed in the initializer
+            form = form.replace("@@PrimarySupervisor@@", self.primaryForm.supervisor.FIRST_NAME + " " + self.primaryForm.supervisor.LAST_NAME)
+        form = form.replace("@@SupervisorEmail@@", self.supervisorEmail)
         form = form.replace("@@Date@@", self.date)
         form = form.replace("@@ReleaseReason@@", self.releaseReason)
         form = form.replace("@@ReleaseDate@@", self.releaseDate)
