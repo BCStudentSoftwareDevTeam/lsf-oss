@@ -115,41 +115,37 @@ def populateModal(statusKey):
                 form.adjustedForm.fieldAdjusted = re.sub(r"(\w)([A-Z])", r"\1 \2", form.adjustedForm.fieldAdjusted).title()
 
         for form in forms:
-            if currentUser.Student and currentUser.Student == student.ID:
-                buttonState = ButtonStatus.show_student_labor_eval_button
-                break
-            else:
-                if form.releaseForm != None:
-                    if form.status.statusName == "Approved":
-                        buttonState = ButtonStatus.show_rehire_button
-                        break
-                    elif form.status.statusName == "Pending":
-                        buttonState = ButtonStatus.no_buttons_pending_forms
-                        pendingformType = form.historyType.historyTypeName
-                        break
-                if form.adjustedForm != None:
-                    if form.status.statusName == "Pending":
-                        buttonState = ButtonStatus.no_buttons_pending_forms
-                        pendingformType = form.historyType.historyTypeName
-                        break
-                if form.historyType.historyTypeName == "Labor Status Form":
-                    if form.status.statusName == "Pending":
-                        buttonState = ButtonStatus.show_withdraw_correction_buttons
-                        break
-                    elif form.status.statusName == "Denied":
-                        buttonState = ButtonStatus.show_rehire_button
-                        break
-                    elif form.status.statusName == "Approved":
-                        if currentDate <= form.formID.endDate:
-                            if currentDate > form.formID.termCode.adjustmentCutOff:
-                                buttonState = ButtonStatus.show_release_rehire_buttons
-                                break
-                            else:
-                                buttonState = ButtonStatus.show_release_adjustment_rehire_buttons
-                                break
-                        else:
-                            buttonState = ButtonStatus.show_rehire_button
+            if form.releaseForm != None:
+                if form.status.statusName == "Approved":
+                    buttonState = ButtonStatus.show_rehire_button
+                    break
+                elif form.status.statusName == "Pending":
+                    buttonState = ButtonStatus.no_buttons_pending_forms
+                    pendingformType = form.historyType.historyTypeName
+                    break
+            if form.adjustedForm != None:
+                if form.status.statusName == "Pending":
+                    buttonState = ButtonStatus.no_buttons_pending_forms
+                    pendingformType = form.historyType.historyTypeName
+                    break
+            if form.historyType.historyTypeName == "Labor Status Form":
+                if form.status.statusName == "Pending":
+                    buttonState = ButtonStatus.show_withdraw_correction_buttons
+                    break
+                elif form.status.statusName == "Denied":
+                    buttonState = ButtonStatus.show_rehire_button
+                    break
+                elif form.status.statusName == "Approved":
+                    if currentDate <= form.formID.endDate:
+                        if currentDate > form.formID.termCode.adjustmentCutOff:
+                            buttonState = ButtonStatus.show_release_rehire_buttons
                             break
+                        else:
+                            buttonState = ButtonStatus.show_release_adjustment_rehire_buttons
+                            break
+                    else:
+                        buttonState = ButtonStatus.show_rehire_button
+                        break
         resp = make_response(render_template('snips/studentHistoryModal.html',
                                             forms = forms,
                                             statusForm = statusForm,

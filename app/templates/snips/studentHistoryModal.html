@@ -216,17 +216,9 @@
         <div class = "col-sm-6">
         <a id="rehire" href="#"><button type="submit" name="submit" value="submit" class="btn btn-success" onclick="redirection({{form1.laborStatusFormID}})">Rehire</button></a>
         </div>
-        {% elif buttonState == ButtonStatus.no_buttons %}
-        <div class = "col-md-12">
-        <p style="color:blue;"><span class="glyphicon glyphicon-exclamation-sign"></span><strong> Only the current supervisor or the creator of this form can make changes.</strong></p>
-        </div>
         {% elif buttonState == ButtonStatus.no_buttons_pending_forms %}
         <div class = "col-md-12">
         <p style="color:blue;"><span class="glyphicon glyphicon-exclamation-sign"></span><strong> Changes to a form are unavailable when a {{pendingformType}} is 'Pending'.</strong></p>
-        </div>
-        {% elif buttonState == ButtonStatus.show_student_labor_eval_button %}
-        <div class = "col-md-12">
-          <button type="button" name="StudentLaborEvaluation" class="btn btn-primary">Student Labor Evaluation Report</button>
         </div>
         {% endif %}
         {% endfor %}
