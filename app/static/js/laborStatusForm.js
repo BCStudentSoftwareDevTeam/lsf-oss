@@ -808,8 +808,6 @@ function userInsert(){
       }
 } // userInsert closing tag
 
-$("#submitmodalid").click(function() {
-    $('html,body').animate({
-        scrollTop: $(".col-lg-11").offset().top}, //This makes the screen scroll to the top if it is not already so the user can see the flash message.
-        'slow');
+$("#submitmodalid").click(function() {                                
+    $('html,body').scrollTop(0);    //This makes the screen scroll to the top if it is not already so the user can see the flash message.
 });

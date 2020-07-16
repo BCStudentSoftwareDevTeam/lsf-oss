@@ -20,24 +20,25 @@
   <p class ="subHeader">You can then click on Term State in each panel to open or close the term. </p>
 
   <div class="accordion" id="accordionExample">
-  {% for terms in listOfTerms %}   <!-- This loop creates the panels for the accordion, they contain "Academic Year: year-year" -->
+  <!-- This loop creates the panels for the accordion, they contain "Academic Year: year-year" -->
+  {% for year,terms in listOfTerms.items() %}   
     <div class="card">
-      <div class="card-header" id="heading_{{terms[0]}}">
+      <div class="card-header" id="heading_{{year}}">
         <button class="btn btn-link"
           type="button"
-          id="academicYear_{{terms[0]}}"
+          id="academicYear_{{year}}"
           data-toggle="collapse"
-          data-target="#{{terms[0]}}"
+          data-target="#{{year}}"
           aria-expanded="true"
-          aria-controls="{{terms[0]}}">
+          aria-controls="{{year}}">
           <h4 class="mb-0">
-          Academic Year: {{(terms[0]|string)[:4]}}-{{(((terms[0]|string)[:4])|int)+1}}        <!-- this was the only way to get the Academic year to show properly... sorry -->
+          Academic Year: {{(year|string)[:4]}}-{{(((year|string)[:4])|int)+1}}        <!-- this was the only way to get the Academic year to show properly... sorry -->
           </h4>
         </button>
       </div>
-      <div id="{{terms[0]}}"
+      <div id="{{year}}"
             class="collapse"
-            aria-labelledby="heading_{{terms[0]}}"
+            aria-labelledby="heading_{{year}}"
             data-parent="#accordionExample">
     <table class="table table-condensed" class="card-body" id="myTable">  <!-- This is the start of the table -->
       <thead>
