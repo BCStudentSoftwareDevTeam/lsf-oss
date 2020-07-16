@@ -34,13 +34,13 @@ def laborhistory(id):
         authorizedForms = set(studentForms)
         if not currentUser.isLaborAdmin:
             # View only your own form history
-            if currentUser.Student and not currentUser.Supervisor:
-                if currentUser.Student.ID != id:
-                    return redirect('/laborHistory/' + currentUser.Student.ID)
-            elif currentUser.Supervisor:
+            if currentUser.student and not currentUser.supervisor:
+                if currentUser.student.ID != id:
+                    return redirect('/laborHistory/' + currentUser.student.ID)
+            elif currentUser.supervisor:
                 supervisorForms = LaborStatusForm.select() \
                                   .join_from(LaborStatusForm, FormHistory) \
-                                  .where((LaborStatusForm.supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser)) \
+                                  .where((LaborStatusForm.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
                                   .distinct()
                 authorizedForms = set(studentForms).intersection(set(supervisorForms))
                 if len(authorizedForms) == 0:
@@ -51,8 +51,10 @@ def laborhistory(id):
                                 student = student,
                                 username=currentUser.username,
                                 laborStatusFormList = laborStatusFormList,
-                                authorizedForms = authorizedForms
-                          )
+                                authorizedForms = authorizedForms,
+                                studentUserName = User.get(User.student == student).username
+                              )
+
     except Exception as e:
         print("Error Loading Student Labor History", e)
         return render_template('errors/500.html'), 500
@@ -115,7 +117,7 @@ def populateModal(statusKey):
                 form.adjustedForm.fieldAdjusted = re.sub(r"(\w)([A-Z])", r"\1 \2", form.adjustedForm.fieldAdjusted).title()
 
         for form in forms:
-            if currentUser.Student and currentUser.Student == student.ID:
+            if currentUser.student and currentUser.student == student.ID:
                 buttonState = ButtonStatus.show_student_labor_eval_button
                 break
             else:
