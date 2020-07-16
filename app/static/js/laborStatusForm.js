@@ -467,6 +467,17 @@ function createStuDict(){
     return studentDict;
   }
 
+function checkDuplicate(studentDict) {// checks for duplicates in the table. This is for Academic Year
+  for(i = 0; i < globalArrayOfStudents.length; i++){
+    if(globalArrayOfStudents[i].stuName == studentDict.stuName){
+      $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
+      $("#warningModal").modal("show");
+      return true;
+    }
+  }
+  return false;
+}
+
 function checkPrimaryPositionToCreateTheTable(studentDict) {
   var term = $("#selectedTerm").val();
   var url = "/laborstatusform/getstudents/" + term + "/" + studentDict.stuBNumber;
@@ -497,40 +508,13 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
    });
  }
 
- function initialLSFInsert(studentDict){ //Add student info to the table if they have no previous lsf's in the database
-   if (checkDuplicate(studentDict) == false){
-       checkTotalHours(studentDict);
-       createAndFillTable(studentDict);
-   }
- }
 
- function checkDuplicate(studentDict) {// checks for duplicates in the table. This is for Academic Year
-   for(i = 0; i < globalArrayOfStudents.length; i++){
-     if(globalArrayOfStudents[i].stuName == studentDict.stuName){
-       $("#warningModalText").html("You have already entered a labor status form for " + studentDict.stuName + " in the table below.");
-       $("#warningModal").modal("show");
-       return true;
-     }
-   }
-   return false;
- }
-
- function checkTotalHours(studentDict) {
-   var termCode = $("#selectedTerm").val()
-   var isBreak = $("#selectedTerm").find("option:selected").data("termbreak");
-   $.ajax({
-     url: "/laborstatusform/checktotalhours/" + termCode +"/"+ studentDict.stuBNumber +"/"+ studentDict.stuWeeklyHours +"/"+ studentDict.stuContractHours,
-     dataType: "json",
-     success: function (response){
-       if (response > (15) && !isBreak) {
-         studentDict.isItOverloadForm = "True";
-         $("#OverloadModal").modal('show');
-       }
-       studentDict.stuTotalHours = response;
-       return true;
-     }
-   });
- }
+function initialLSFInsert(studentDict){ //Add student info to the table if they have no previous lsf's in the database
+  if (checkDuplicate(studentDict) == true){
+      checkTotalHours(studentDict);
+      createAndFillTable(studentDict);
+  }
+}
 
 function createAndFillTable(studentDict) {
   globalArrayOfStudents.push(studentDict);
@@ -585,6 +569,7 @@ function createAndFillTable(studentDict) {
   }
 }
 
+
 function isOneLaborStatusForm(studentDict){
   var isBreak = (studentDict).isTermBreak;
   var term = $("#selectedTerm").val();
@@ -611,6 +596,25 @@ function isOneLaborStatusForm(studentDict){
     });
   }
 }
+
+function checkTotalHours(studentDict) {
+  var termCode = $("#selectedTerm").val()
+  var isBreak = $("#selectedTerm").find("option:selected").data("termbreak");
+  $.ajax({
+    url: "/laborstatusform/checktotalhours/" + termCode +"/"+ studentDict.stuBNumber +"/"+ studentDict.stuWeeklyHours +"/"+ studentDict.stuContractHours,
+    dataType: "json",
+    success: function (response){
+      if (response > (15) && !isBreak) {
+        studentDict.isItOverloadForm = "True";
+        $("#OverloadModal").modal('show');
+      }
+      studentDict.stuTotalHours = response;
+      return true;
+    }
+  });
+}
+
+
 //Triggered when summer labor is clicked when making a New Labor Status Form
 function summerLaborWarning(){
   var isBreak = $("#selectedTerm").find("option:selected").data("termbreak");
