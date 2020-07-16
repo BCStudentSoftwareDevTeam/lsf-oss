@@ -6,6 +6,8 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
   <!-- These are the outside links for the effective date calendar-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -33,13 +35,13 @@
         <p class="required-mark">* Marked fields are required</p>
     </div>
   <div class="floatleft">
-    <ul class="small">
-      <h6><strong><span class="tooltip-right" data-tooltip="Required">Guidelines for Approval<span class="required-mark"> *</span></span></strong></h6>
-      <input type="checkbox" name="checkbox" id="checkbox1" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Sophomore, junior, or senior classification <br>
-      <input type="checkbox" name="checkbox" id="checkbox2" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Not on any form of probation <br>
-      <input type="checkbox" name="checkbox" id="checkbox3" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Enrolled in less than 5 course credits with less than 8 preparations <br>
-      <input type="checkbox" name="checkbox" id="checkbox4" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Have a 2.50 GPA, both cumulative and for the previous full term <br>
-      <input type="checkbox" name="checkbox" id="checkbox5" onclick="checkBoxCheck(this,{{totalFormHours}})" /> The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term
+    <ul class="medium">
+      <h6><strong><span class="tooltip-right" data-tooltip="Required">Guidelines for Approval:</span></strong></h6>
+      <input type="checkbox" name="checkbox" id="checkbox1" onclick="checkBoxCheck(this,{{totalFormHours}})" /><span class="required-mark">*</span> Sophomore, junior, or senior classification<br>
+      <input type="checkbox" name="checkbox" id="checkbox2" onclick="checkBoxCheck(this,{{totalFormHours}})" /><span class="required-mark">*</span> Not on any form of probation<br>
+      <input type="checkbox" name="checkbox" id="checkbox3" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Enrolled in less than 5 course credits with less than 8 preparations<span class="required-mark"> *</span> <br>
+      <input type="checkbox" name="checkbox" id="checkbox4" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Have a 2.50 GPA, both cumulative and for the previous full term<span class="required-mark"> *</span> <br>
+      <input type="checkbox" name="checkbox" id="checkbox5" onclick="checkBoxCheck(this,{{totalFormHours}})" /> The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term<span class="required-mark"> *</span>
     </ul>
   </div>
   {% if totalFormHours >= 20 %}
@@ -157,7 +159,7 @@
       <div align="center">
         <label for="Reason"><span class="tooltip-right" data-tooltip="Required">Reason For Overload Request:<span class="required-mark">*</span></span></label>
         <div>
-          <textarea id="notes" name="notes" rows="8" cols="80" onchange="primaryCheck()" style="resize:none;"required></textarea>
+          <textarea id="notes" name="notes" rows="8" cols="80"  style="resize:none;"required></textarea>
         </div>
       </div>
 </form>
@@ -166,7 +168,7 @@
 
 </div>
 <div class="container col-md-6 col-md-offset-5">
-  <div align="center">
+  <div align="center" >
     <button id="submit" type="submit" class="btn btn-success" onclick ="checkForEmptyFields()">Submit Changes</button>
     {% with overloadForm=overloadForm %}
       {% include "snips/studentOverloadSubmit.html" %}

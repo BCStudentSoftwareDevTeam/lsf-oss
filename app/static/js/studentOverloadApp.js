@@ -31,14 +31,14 @@ function checkBoxCheck(obj,totalFormHours){
   }
 }
 
-function primaryCheck(){
-  if(($("#notes").val() != "")){
-    $("#submit").show();
+$(document).on('keyup', '#notes', function() {
+  // this function makes sure that the text area has at least 1 character
+  if ($.trim($(this).val()).length == 0) {
+    $('#submit').hide();
+  } else {
+    $('#submit').show();
   }
-  else{
-    $("#submit").hide();
-  }
-}
+})
 
 function checkForEmptyFields(){
   if($("#notes").val() != "") {
