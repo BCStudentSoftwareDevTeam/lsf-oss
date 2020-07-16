@@ -3,12 +3,10 @@ from app.models.user import User
 from app.controllers.admin_routes import admin
 from app.login_manager import require_login
 from app.models.term import Term
-import datetime
+from datetime import datetime
 from flask import json, jsonify
 from flask import request, redirect
-from datetime import datetime, date
-from datetime import datetime
-import datetime
+from peewee import IntegrityError
 
 @admin.route('/admin/termManagement', methods=['GET', 'POST'])
 # @login_required
@@ -23,57 +21,40 @@ def term_Management():
         elif currentUser.Supervisor:
             return render_template('errors/403.html'), 403
 
-    terms = Term.select()
-    listOfTerms = Term.select()
-    for i in range(5):
-        createTerms(Term, i)
-    accordionTerms()
+    today = datetime.now()
+    termsByYear ={} 
+    for termYear in range(today.year-2, today.year+3):
+        createTerms(termYear)
+        termsByYear[termYear] = list(Term.select().where(Term.termCode.cast('char').contains(termYear)))
+
     return render_template( 'admin/termManagement.html',
-                             title=('Term Management'),
-                             terms = terms,
-                             listOfTerms = accordionTerms()
+                             title='Term Management',
+                             listOfTerms = termsByYear
                           )
 
-def createTerms(termList, iteration):
-    """ This function creates the current Academic Year, two Academic years in the past and two Academic
-    Years in the future. If any of the terms that are in the Academic Years are already created it will
-    get an exception message. """
-    today = datetime.datetime.now()
-    todayYear = today.year
-    termYear = todayYear - 2 + iteration
-    code = (todayYear - 2 + iteration) * 100
+def createTerms(termYear):
+    """ 
+        This function creates the terms for the given Academic Year
+    """
+    code = termYear * 100
     for i in range(7):
         try:
             if i == 0:
-                termList.create(termCode = code, termName = ("AY " + str(termYear) + "-" + str(termYear + 1)))
+                Term.create(termCode = code, termName = "AY {}-{}".format(termYear, termYear + 1))
             elif i == 1:
-                termList.create(termCode = (code + 11), termName = ("Fall " + str(termYear)))
+                Term.create(termCode = (code + 11), termName = "Fall {}".format(termYear))
             elif i == 2:
-                termList.create(termCode = (code + 1), termName = ("Thanksgiving Break " + str(termYear)), isBreak = True)
+                Term.create(termCode = (code + 1), termName = "Thanksgiving Break {}".format(termYear), isBreak=True)
             elif i == 3:
-                termList.create(termCode = (code + 2), termName = ("Christmas Break " + str(termYear)), isBreak = True)
+                Term.create(termCode = (code + 2), termName = "Christmas Break {}".format( termYear), isBreak=True)
             elif i == 4:
-                termList.create(termCode = (code + 12), termName = ("Spring " + str(termYear + 1)))
+                Term.create(termCode = (code + 12), termName = "Spring {}".format(termYear + 1))
             elif i == 5:
-                termList.create(termCode = (code + 3), termName = ("Spring Break " + str(termYear + 1)), isBreak = True)
+                Term.create(termCode = (code + 3), termName = "Spring Break {}".format(termYear + 1), isBreak=True)
             elif i == 6:
-                termList.create(termCode = (code + 13), termName = ("Summer " + str(termYear + 1)), isBreak = True, isSummer = True)
-        except Exception as e:
-             print("You failed to create a term in the " + str(termYear) + " AY. This is likely expected.")
-
-def accordionTerms():
-    """ This function populates all the Academic Years with the correct terms.
-    """
-    listOfTerms = []
-    hoy = datetime.datetime.now()
-    hoyyear = hoy.year
-    for i in range(5):
-        termYear = (hoyyear - 2 + i)*100
-        currentTerm = Term.select().where(Term.termCode.between(termYear-1, termYear + 15))
-        listOfTerms.append([])
-        for term in currentTerm:
-            listOfTerms[i].append(term)
-    return listOfTerms
+                Term.create(termCode = (code + 13), termName = "Summer {}".format(termYear + 1), isBreak=True, isSummer=True)
+        except IntegrityError as e:
+            pass
 
 @admin.route("/termManagement/setDate/", methods=['POST'])
 def ourDate():
@@ -87,19 +68,19 @@ def ourDate():
             termToChange = Term.get(Term.termCode == termCode)
             date_value = rsp.get("start", rsp.get("end", rsp.get("primaryCutOff", rsp.get("adjustmentCutOff", None))))
             if rsp.get('start', None):
-                startDate = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
+                startDate = datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.termStart = startDate
                 dateChanged = 'Start Date'
             if rsp.get('end', None):
-                endDate = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
+                endDate = datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.termEnd = endDate
                 dateChanged = 'End Date'
             if rsp.get('primaryCutOff', None):
-                primaryCutOff = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
+                primaryCutOff = datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.primaryCutOff = primaryCutOff
                 dateChanged = 'Primary Cut Off Date'
             if rsp.get('adjustmentCutOff', None):
-                adjustmentCutOff = datetime.datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
+                adjustmentCutOff = datetime.strptime(date_value, '%m/%d/%Y').strftime('%Y-%m-%d')
                 termToChange.adjustmentCutOff = adjustmentCutOff
                 dateChanged = 'Adjustment Cut Off Date'
             termToChange.save()

@@ -27,7 +27,7 @@ function ui {
 }
 
 # no-ui
-function no-ui {
+function no_ui {
 	header non-UI
 	python -m pytest $FLAGS -m "unit or integration"
 
@@ -37,11 +37,11 @@ function no-ui {
 
 case "$1" in
 	"")
-		no-ui
+		no_ui
 		ui
 		;;
 	all)
-		no-ui
+		no_ui
 		ui
 		;;
 	ui)
@@ -49,11 +49,11 @@ case "$1" in
 		;;
 	fast)
 		# in the future, we may need to remove the integration tests
-		no-ui
+		no_ui
 		#header fast
 		#python -m pytest $FLAGS -m fast
 		;;
 	no-ui)
-		no-ui
+		no_ui
 		;;
 esac
