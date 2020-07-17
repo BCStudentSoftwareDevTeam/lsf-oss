@@ -37,19 +37,42 @@ function fillHoursPerWeek(){ // prefill hours per week select picker
   var jobType = $("#jobType").val();
   var wls = $("#position option:selected").attr("data-wls");
   if (selectedHoursPerWeek){
-       var list = ["10", "12", "15", "20"];
-       if (jobType == "Secondary") {
-         list = ["5","10"]
-       }
-       if(wls>=5){
-         list = ["15", "20"]
-       }
-       $("#weeklyHours").empty();
-       $(list).each(function(i,hours) {
-         selectedHoursPerWeek.append($("<option />").text(hours).val(hours));
-       });
-       $("#weeklyHours").val(defaultValue);
-       $("#weeklyHours").selectpicker("refresh");
+    var list = ["10", "12", "15", "20"];
+    if (jobType == "Secondary") {
+      list = ["5","10"]
+    }
+    if(wls >= 5) {
+      list = ["15", "20"]
+      // Here we need to pop open the modal that says they need atleast 15 hours
+    }
+    $("#weeklyHours").empty();
+    $(list).each(function(i,hours) {
+      selectedHoursPerWeek.append($("<option />").text(hours).val(hours));
+    });
+    if (wls >= 5){
+      if (Number(defaultValue) >= 15){
+        $("#weeklyHours").val(defaultValue);
+        $("#weeklyHours").selectpicker("render");
+        $("#weeklyHours").selectpicker("refresh");
+      } else {
+        $("#weeklyHours").val('15');
+        $("#weeklyHours").selectpicker("render");
+        $("#weeklyHours").selectpicker("refresh");
+        $("#warningModalTitle").html("Work-Learning-Service Levels (WLS)");
+        $("#warningModalText").html("Student with WLS Level 5 or 6 must have at least a 15 hour contract. " +
+                                 "These positions require special authorization as specified at " +
+                                 "<a href=\"http://catalog.berea.edu/2014-2015/Tools/Work-Learning-Service-Levels-WLS\""+
+                                 "target=\"_blank\">The Labor Program Website.</a>");
+        $("#warningModalButton").css('display', 'none');
+        $("#resetConfirmButton").css('display', 'none');
+        $("#warningModal").modal("show");
+      }
+    } else {
+        $("#weeklyHours").val(defaultValue);
+        $("#weeklyHours").selectpicker("render");
+        $("#weeklyHours").selectpicker("refresh");
+    }
+    $("#weeklyHours").selectpicker("refresh");
   }
 }
 
@@ -98,13 +121,14 @@ function checkForChange(){
     finalDict["weeklyHours"] = {"oldValue": oldWeeklyHours, "newValue": newWeeklyHours, "date": date}
   }
 
-  if (JSON.stringify(finalDict) !== "{}"){
+  if (JSON.stringify(finalDict) == "{}" || (Object.keys(finalDict).length == 1 && Object.keys(finalDict) == "supervisorNotes")){
+    $("#NochangeModal").modal("show");
+  }
+  else if (JSON.stringify(finalDict) !== "{}"){
     $("#submitModal").modal("show");
     return finalDict
   }
-  if (JSON.stringify(finalDict) == "{}"){
-    $("#NochangeModal").modal("show");
-  }
+
 }
 
 function buttonListener(laborStatusKey) {

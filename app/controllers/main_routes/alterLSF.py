@@ -65,7 +65,6 @@ def alterLSF(laborStatusKey):
     #These are the data fields to populate our dropdowns(Supervisor. Position)
     supervisors = Tracy().getSupervisors()
     positions = Tracy().getPositionsFromDepartment(prefilldepartment)
-
     #Step 3: send data to front to populate html
     oldSupervisor = Tracy().getSupervisorFromID(form.supervisor.ID)
 
@@ -161,7 +160,11 @@ def submitAlteredLSF(laborStatusKey):
                 if allTermForms:
                     for statusForm in allTermForms:
                         previousTotalHours += statusForm.weeklyHours
-                newTotalHours = previousTotalHours + int(rsp[k]['newValue'])
+
+                if len(list(allTermForms)) == 1:
+                    newTotalHours = int(rsp[k]['newValue'])
+                else:
+                    newTotalHours = previousTotalHours + int(rsp[k]['newValue'])
 
                 if previousTotalHours <= 15 and newTotalHours > 15:
                     if formStatus == "Pending":
