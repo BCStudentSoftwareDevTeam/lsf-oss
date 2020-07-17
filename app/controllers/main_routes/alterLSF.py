@@ -198,7 +198,11 @@ def submitAlteredLSF(laborStatusKey):
             changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
             try:
                 email = emailHandler(changedForm.formHistoryID)
-                email.laborStatusFormAdjusted()
+                if "supervisor" in rsp:
+                    print("inside rsp conditional")
+                    email.laborStatusFormAdjusted(rsp["supervisor"]["newValue"])
+                else:
+                    email.laborStatusFormAdjusted()
             except Exception as e:
                 print("An error occured while attempting to send adjustment form emails: ", e)
             message = "Your labor adjustment form(s) for {0} {1} have been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)

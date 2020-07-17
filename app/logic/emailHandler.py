@@ -6,6 +6,7 @@ from app.models.laborReleaseForm import*
 from app.models.laborStatusForm import*
 from app.models.overloadForm import*
 from app.models.formHistory import*
+from app.models.supervisor import*
 from app.models.user import*
 from datetime import datetime
 from app.models.emailTracker import *
@@ -127,9 +128,13 @@ class emailHandler():
             self.checkRecipient("Labor Status Form Rejected For Student",
                           "Primary Position Labor Status Form Rejected")
 
-    def laborStatusFormAdjusted(self):
+    def laborStatusFormAdjusted(self, newSupervisor=False):
         self.checkRecipient("Labor Status Form Adjusted For Student",
                       "Labor Status Form Adjusted For Supervisor")
+        if newSupervisor:
+            self.supervisorEmail = (Supervisor.get(Supervisor.ID == newSupervisor).EMAIL)
+            self.checkRecipient(False,
+                          "Labor Status Form Adjusted For Supervisor")
 
     def laborReleaseFormSubmitted(self):
         self.checkRecipient("Labor Release Form Submitted For Student",
@@ -138,6 +143,7 @@ class emailHandler():
     def laborReleaseFormApproved(self):
         self.checkRecipient("Labor Release Form Approved For Student",
                       "Labor Release Form Approved For Supervisor")
+
 
     def laborReleaseFormRejected(self):
         self.checkRecipient("Labor Release Form Rejected For Student",
