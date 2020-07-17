@@ -469,15 +469,13 @@ function createStuDict(){
 
 function checkDuplicate(studentDict) {// checks for duplicates in the table. This is for Academic Year
   for(i = 0; i < globalArrayOfStudents.length; i++){
-    if(globalArrayOfStudents[i].stuName == studentDict.stuName &&
-      globalArrayOfStudents[i].stuJobType == studentDict.stuJobType &&
-      (studentDict.stuJobType == "Primary" || globalArrayOfStudents[i].stuPosition == studentDict.stuPosition)){
-      $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
+    if(globalArrayOfStudents[i].stuName == studentDict.stuName){
+      $("#warningModalText").html("You have already entered a labor status form for " + studentDict.stuName + " in the table below.");
       $("#warningModal").modal("show");
-      return false;
+      return true;
     }
   }
-  return true;
+  return false;
 }
 
 function checkPrimaryPositionToCreateTheTable(studentDict) {
@@ -512,19 +510,10 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
 
 
 function initialLSFInsert(studentDict){ //Add student info to the table if they have no previous lsf's in the database
-  if (checkDuplicate(studentDict) == true){
+  if (checkDuplicate(studentDict) == false){
       checkTotalHours(studentDict);
       createAndFillTable(studentDict);
   }
-  else {
-    insertRejectedModal(studentDict);
-  }
-}
-
-function insertRejectedModal(studentDict){ // Reject Adding a new form when the form is already in the table
-  $("#warningModalTitle").html("Insert Rejected");
-  $("#warningModalText").html("You have already entered a " + studentDict.stuJobType.toLowerCase() + " position labor status form for " + studentDict.stuName + " in the table below.");
-  $("#warningModal").modal("show");
 }
 
 function createAndFillTable(studentDict) {
@@ -553,7 +542,7 @@ function createAndFillTable(studentDict) {
   var cell5 = row.insertCell(4);
   var cell6 = row.insertCell(5);
   var cell7 = row.insertCell(6);
-  $(cell1).html((studentDict).stuName + " " + "(" + (studentDict).stuBNumber+ ")");
+  $(cell1).html((studentDict).stuName + " (" + ((studentDict).stuBNumber).trim()+ ")");
   $(cell2).html((studentDict).stuPosition);
   $(cell2).attr("data-posn", (studentDict).stuPositionCode);
   $(cell2).attr("data-wls", (studentDict).stuWLS);
@@ -808,6 +797,6 @@ function userInsert(){
       }
 } // userInsert closing tag
 
-$("#submitmodalid").click(function() {                                
+$("#submitmodalid").click(function() {
     $('html,body').scrollTop(0);    //This makes the screen scroll to the top if it is not already so the user can see the flash message.
 });
