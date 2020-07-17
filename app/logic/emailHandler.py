@@ -15,7 +15,7 @@ import os
 from datetime import datetime, date
 
 class emailHandler():
-    def __init__(self, formHistoryKey, primaryFormHistory=None):
+    def __init__(self, formHistoryKey):
         secret_conf = get_secret_cfg()
         app.config.update(
             MAIL_SERVER=secret_conf['MAIL_SERVER'],
@@ -29,23 +29,19 @@ class emailHandler():
             ALWAYS_SEND_MAIL=secret_conf['ALWAYS_SEND_MAIL']
         )
 
-        self.primaryFormHistory = primaryFormHistory
         self.mail = Mail(app)
 
         self.formHistory = FormHistory.get(FormHistory.formHistoryID == formHistoryKey)
         self.laborStatusForm = self.formHistory.formID
         self.term = self.laborStatusForm.termCode
         self.student = self.laborStatusForm.studentSupervisee
-        self.studentEmail = self.laborStatusForm.studentSupervisee.STU_EMAIL
+        self.studentEmail = self.student.STU_EMAIL
         self.creatorEmail = self.formHistory.createdBy.Supervisor.EMAIL
         self.supervisorEmail = self.laborStatusForm.supervisor.EMAIL
         self.date = self.laborStatusForm.startDate.strftime("%m/%d/%Y")
         self.weeklyHours = str(self.laborStatusForm.weeklyHours)
         self.contractHours = str(self.laborStatusForm.contractHours)
 
-        # This will either bring back the same Labor Status Form, or bring back
-        # the Primary LSF that goes with any Secondary LSF in the given term
-        #if not self.term.isBreak:
         self.positions = LaborStatusForm.select().where(LaborStatusForm.termCode == self.term, LaborStatusForm.studentSupervisee == self.student)
         self.supervisors = []
         for position in self.positions:
@@ -57,12 +53,6 @@ class emailHandler():
         self.link = ""
         self.releaseReason = ""
         self.releaseDate = ""
-
-        # self.primaryLaborStatusForm = None
-        if self.primaryFormHistory is not None:
-            self.primaryFormHistory = FormHistory.get(FormHistory.formID == primaryFormHistory)
-            self.primaryLaborStatusForm = self.primaryFormHistory.formID
-            self.primarySupervisorEmail = self.primaryLaborStatusForm.supervisor.EMAIL
 
         try:
             self.releaseDate = self.formHistory.releaseForm.releaseDate.strftime("%m/%d/%Y")
@@ -120,7 +110,6 @@ class emailHandler():
                                     "Break Labor Status Form Approved For Supervisor")
             else:
                 self.checkRecipient("Labor Status Form Approved For Student",
-                                    False,
                                     "Secondary Position Labor Status Form Approved")
         else:
             self.checkRecipient("Labor Status Form Approved For Student",
@@ -133,7 +122,6 @@ class emailHandler():
                                     "Break Labor Status Form Rejected For Supervisor")
             else:
                 self.checkRecipient("Labor Status Form Rejected For Student",
-                                    False,
                                     "Secondary Position Labor Status Form Rejected")
         else:
             self.checkRecipient("Labor Status Form Rejected For Student",
@@ -184,15 +172,9 @@ class emailHandler():
         self.checkRecipient("Labor Overload Form Rejected For Student",
                             "Labor Overload Form Rejected For Supervisor")
 
-    def notifyPrimarySupervisorForSecondaryForm(self):
-        self.checkRecipient()
-
     def notifyAdditionalLaborStatusFormSubmittedForBreak(self):
         # This is the submission
         self.checkRecipient(False, False, "Break Labor Status Form Submitted For Additional Supervisor")
-
-    # def notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak(self):
-    #     self.checkRecipient(False, "Break Labor Status Form Submitted For Second Supervisor")
 
     # Depending on the department specified, this method will send an email to either SASS or Financial Aid office
     # to notify them about the overload applocation they need to approve
@@ -225,21 +207,26 @@ class emailHandler():
 
         self.send(message)
 
-    def verifiedOverloadNotification(self):
-        """ This email will be sent to Labor Admin when SAAS or Financial Aid Make
-        a decision on an overload form"""
-        message = Message("Verified Labor Overload Form Notification",
-                    recipients=[""]) # TODO: Labor Admin email
-        emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Admin Notification")
-        newEmailTracker = EmailTracker.create(
-                        formID = self.laborStatusForm.laborStatusFormID,
-                        date = datetime.today().strftime('%Y-%m-%d'),
-                        recipient = 'Labor Office',
-                        subject = emailTemplateID.subject
-                        )
-        message.html = self.replaceText(emailTemplateID.body)
+    # The function below was commented out becasuse there is no email template with the purpose "Labor Admin Notification"
+    # Since an admin can still see the decision from SAAS or Financial Aid in the pending Overload Form Modal,
+    # this function didn't seem neccesary but if we want to implement it, we just need to create a email template with that purpose
+    # and uncomment lines 116 and 117 in financialAidOverload.py
 
-        self.send(message)
+    # def verifiedOverloadNotification(self):
+    #     """ This email will be sent to Labor Admin when SAAS or Financial Aid Make
+    #     a decision on an overload form"""
+    #     message = Message("Verified Labor Overload Form Notification",
+    #                 recipients=[""]) # TODO: Labor Admin email
+    #     emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Admin Notification")
+    #     newEmailTracker = EmailTracker.create(
+    #                     formID = self.laborStatusForm.laborStatusFormID,
+    #                     date = datetime.today().strftime('%Y-%m-%d'),
+    #                     recipient = 'Labor Office',
+    #                     subject = emailTemplateID.subject
+    #                     )
+    #     message.html = self.replaceText(emailTemplateID.body)
+    #
+    #     self.send(message)
 
     def checkRecipient(self, studentEmailPurpose=False, emailPurpose=False, secondaryEmailPurpose=False):
         """
@@ -252,7 +239,6 @@ class emailHandler():
             self.sendEmail(studentEmail, "student")
         if emailPurpose or secondaryEmailPurpose:
             if self.laborStatusForm.jobType == 'Secondary':
-                # If contract hours != None
                 if secondaryEmailPurpose:
                     secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
                     self.sendEmail(secondaryEmail, "secondary")
@@ -291,10 +277,6 @@ class emailHandler():
             message = Message(template.subject,
                 recipients=[""]) #TODO: Email for the Labor Office
             recipient = 'Labor Office'
-        # elif sendTo == "breakPrimary":
-        #     message = Message(template.subject,
-        #         recipients=[self.primarySupervisorEmail])
-        #     recipient = 'Primary Break Supervisor'
         elif sendTo == 'supervisor':
             message = Message(template.subject,
                 recipients=[self.supervisorEmail])
@@ -308,14 +290,7 @@ class emailHandler():
                         subject = template.subject
                         )
 
-        if app.config['ENV'] == 'production' or app.config['ALWAYS_SEND_MAIL']:
-
-            self.mail.send(message)
-        else:
-            print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
-            print("Email Body: {}".format(message.html))
-
-            # self.send(message) REPLACE ABOVE IF WITH THIS LINE
+        self.send(message)
 
     # This method is responsible for replacing the keyword form the templates in the database with the data in the laborStatusForm
     def replaceText(self, form):

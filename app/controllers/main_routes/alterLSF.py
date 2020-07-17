@@ -185,7 +185,6 @@ def submitAlteredLSF(laborStatusKey):
                         elif formStatus == "Approved":
                             overloadEmail = emailHandler(formHistories.formHistoryID)
                         overloadEmail.LaborOverLoadFormSubmitted("http://{0}/".format(request.host) + "studentOverloadApp/" + str(newFormHistory.formHistoryID))
-                        overloadEmail.laborStatusFormAdjusted()
                     except Exception as e:
                         print("An error occured while attempting to send overload form emails: ", e)
                 elif previousTotalHours > 15 and int(rsp[k]['newValue']) <= 15:   # This will delete an overload form after the hours are changed
