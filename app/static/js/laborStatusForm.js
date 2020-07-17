@@ -679,6 +679,7 @@ function reviewButtonFunctionality() { // Triggred when Review button is clicked
 function createModalContent() { // Populates Submit Modal with Student information from the table
   var isBreak = $('#selectedTerm').find('option:selected').data('termbreak');
   modalList = [];
+  $("#closeBtn").show();
   if (isBreak){
     for (var i = 0; i < globalArrayOfStudents.length; i++) {
       var bigString = "<li>" + globalArrayOfStudents[i].stuName + " | " + globalArrayOfStudents[i].stuPosition + " | " +
@@ -710,6 +711,12 @@ function userInsert(){
     $("#laborStatusForm").on("submit", function(e) {
       e.preventDefault();
     });
+
+    $("#submitmodalid").prop("disabled", true);
+    $("#closeBtn").prop("disabled", true);
+    $("#submitmodalid").text("Processing...");
+    $("#SubmitModal").data("bs.modal").options.backdrop = "static";
+    $("#SubmitModal").data("bs.modal").options.keyboard = false;
 
     $.ajax({
            method: "POST",
@@ -781,11 +788,16 @@ function userInsert(){
                   }, 5000);
                }
              }
+             $("#submitmodalid").prop("disabled", false);
+             $("#closeBtn").prop("disabled", false);
+             $("#submitmodalid").text("Submit");
+             $("#SubmitModal").data("bs.modal").options.backdrop = true;
+             $("#SubmitModal").data("bs.modal").options.keyboard = true;
+
+             $("#submitmodalid").hide();
+             $("#doneBtn").show();
             }
          }); // ajax closing tag
-
-      $("#submitmodalid").hide();
-      $("#doneBtn").show();
 
       document.getElementById("doneBtn").onclick = function() { // Calls this function after failed form(s)
        if (display_failed.length > 0){
@@ -808,6 +820,6 @@ function userInsert(){
       }
 } // userInsert closing tag
 
-$("#submitmodalid").click(function() {                                
+$("#submitmodalid").click(function() {
     $('html,body').scrollTop(0);    //This makes the screen scroll to the top if it is not already so the user can see the flash message.
 });
