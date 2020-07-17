@@ -26,7 +26,6 @@ def admin_Management():
                             users = users
                          )
 
-
 @admin.route("/adminManagement/userInsert", methods=['POST'])
 def manageLaborAdmin():
     if request.form.get("add") == "add":   #this is taking the id in the select tag
@@ -99,3 +98,7 @@ def removeSAASAdmin():
         userSaas.save()
         message = "{0} {1} has been removed as a SAAS Admin".format(userSaas.Supervisor.FIRST_NAME, userSaas.Supervisor.LAST_NAME)
         flash(message, "danger")
+
+@admin.route('/admin/laborAdminInsert')
+def laborAdminInsert():
+    return 0

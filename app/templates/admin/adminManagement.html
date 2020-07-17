@@ -27,7 +27,7 @@
         <h3 id="header">Labor Administrators</h3>
         <div class="form-group">
           <select id="addlaborAdmin" class="form-control selectpicker" title="Select User" data-width="258px"
-          data-show-subtext="true" data-live-search="true" name="addAdmin">
+          data-show-subtext="true" data-live-search="true" name="addAdmin" onkeyup="Hello()">
             {% for user in users %}
               {% if not user.isLaborAdmin %}
                 {% if user.Student %}
