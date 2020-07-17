@@ -4,8 +4,9 @@ from app.models.user import *
 from app.controllers.admin_routes import admin
 from flask import request
 from app.login_manager import require_login
-from flask import Flask, redirect, url_for, flash
+from flask import Flask, redirect, url_for, flash, jsonify
 from app.models.supervisor import Supervisor
+from app.models.student import Student
 
 @admin.route('/admin/adminManagement', methods=['GET'])
 # @login_required
@@ -25,6 +26,21 @@ def admin_Management():
                             title=('Admin Management'),
                             users = users
                          )
+
+@admin.route('/admin/laborAdminInsert', methods=['POST'])
+def laborAdminInsert():
+    try:
+        rsp = eval(request.data.decode("utf-8"))
+        dict = {'Hello': 'World'}
+        print('Input:', rsp)
+        # users = User.select().join_from(User, Student).where((User.Student.FIRST_NAME.contains(rsp)) | (User.Student.LAST_NAME.contains(rsp)))
+        users = User.select().join_from(User, Supervisor).where((User.Supervisor.FIRST_NAME.contains(rsp)) | (User.Supervisor.LAST_NAME.contains(rsp)))
+        for i in users:
+            print(i.username)
+        return jsonify(dict)
+    except Exception as e:
+        print('ERROR:', e)
+        return jsonify(dict)
 
 @admin.route("/adminManagement/userInsert", methods=['POST'])
 def manageLaborAdmin():
@@ -98,7 +114,3 @@ def removeSAASAdmin():
         userSaas.save()
         message = "{0} {1} has been removed as a SAAS Admin".format(userSaas.Supervisor.FIRST_NAME, userSaas.Supervisor.LAST_NAME)
         flash(message, "danger")
-
-@admin.route('/admin/laborAdminInsert')
-def laborAdminInsert():
-    return 0

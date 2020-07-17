@@ -12,11 +12,10 @@ $('.dropdown-menu .bs-searchbox input').on('keyup', function (e) {
     //here you listen to the change of the input corresponding to your select
     //and now you can populate your select element
     var searchData = e.target.value;
-    console.log(searchData, typeof(searchData));
     // AJAX call if length >= 3
     if (searchData.length >= 3) {
       console.log('Made it here');
-      var data = [searchData]
+      var data = searchData
       data = JSON.stringify(data)
       $.ajax({
         type: "POST",
@@ -25,6 +24,7 @@ $('.dropdown-menu .bs-searchbox input').on('keyup', function (e) {
         data: data,
         contentType: 'application/json',
         success: function(response) {
+          console.log(response);
         }
       });
     }
