@@ -16,6 +16,10 @@ def studentOverloadApp(formId):
     if not currentUser:        # Not logged in
         return render_template('errors/403.html'), 403
     overloadForm = FormHistory.get(FormHistory.formHistoryID == formId)
+    if not currentUser.Student:
+        return render_template('errors/403.html'), 403
+    if currentUser.Student.ID != overloadForm.formID.studentSupervisee.ID:
+        return render_template('errors/403.html'), 403
 
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
     prefillStudentName = lsfForm.studentSupervisee.FIRST_NAME + " "+ lsfForm.studentSupervisee.LAST_NAME
@@ -91,7 +95,9 @@ def updateDatabase():
                 d.studentOverloadReason = data["Notes"]
                 d.save()
                 email = emailHandler(formHistoryForm.formHistoryID)
-                email.LaborOverLoadFormSubmittedNotification('http://{0}/'.format(request.host) + 'admin/pendingForms/pendingOverload')
+                # Do we need this link?
+                # email.LaborOverLoadFormSubmittedNotification('http://{0}/'.format(request.host) + 'admin/pendingForms/pendingOverload')
+                email.LaborOverLoadFormSubmittedNotification()
         return jsonify({"Success": True})
     except Exception as e:
         print("ERROR: " + str(e))

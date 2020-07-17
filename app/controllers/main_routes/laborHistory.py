@@ -52,7 +52,7 @@ def laborhistory(id):
                                 username=currentUser.username,
                                 laborStatusFormList = laborStatusFormList,
                                 authorizedForms = authorizedForms,
-                                studentUserName = User.get(User.student == student).username
+                                studentUserName = User.get(User.Student == student).username
                               )
 
     except Exception as e:
