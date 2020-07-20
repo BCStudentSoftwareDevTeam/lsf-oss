@@ -199,7 +199,6 @@ def submitAlteredLSF(laborStatusKey):
             try:
                 email = emailHandler(changedForm.formHistoryID)
                 if "supervisor" in rsp:
-                    print("inside rsp conditional")
                     email.laborStatusFormAdjusted(rsp["supervisor"]["newValue"])
                 else:
                     email.laborStatusFormAdjusted()
