@@ -95,8 +95,6 @@ def updateDatabase():
                 d.studentOverloadReason = data["Notes"]
                 d.save()
                 email = emailHandler(formHistoryForm.formHistoryID)
-                # Do we need this link?
-                # email.LaborOverLoadFormSubmittedNotification('http://{0}/'.format(request.host) + 'admin/pendingForms/pendingOverload')
                 email.LaborOverLoadFormSubmittedNotification()
         return jsonify({"Success": True})
     except Exception as e:

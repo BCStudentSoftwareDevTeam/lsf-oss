@@ -40,7 +40,7 @@ def laborhistory(id):
             elif currentUser.Supervisor and not currentUser.Student:
                 supervisorForms = LaborStatusForm.select() \
                                   .join_from(LaborStatusForm, FormHistory) \
-                                  .where((LaborStatusForm.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
+                                  .where((LaborStatusForm.Supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser)) \
                                   .distinct()
                 authorizedForms = set(studentForms).intersection(set(supervisorForms))
                 if len(authorizedForms) == 0:
