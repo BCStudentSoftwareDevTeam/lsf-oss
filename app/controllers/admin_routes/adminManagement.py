@@ -29,73 +29,68 @@ def admin_Management():
 
 @admin.route("/adminManagement/userInsert", methods=['POST'])
 def manageLaborAdmin():
-    if request.form.get("add") == "add":   #this is taking the id in the select tag
-        addLaborAdmin()
-    elif request.form.get("remove") == "remove":  #this is taking the id in the select tag
-        removeLaborAdmin()
-    elif request.form.get("addAid") == "addAid":
-        addFinancialAdmin()
-    elif request.form.get("removeAid") == "removeAid":
-        removeFinancialAdmin()
-    elif request.form.get("addSaas") == "addSaas":
-        addSAASAdmin()
-    elif request.form.get("removeSaas") == "removeSaas":
-        removeSAASAdmin()
+    if request.form.get("add") == "add" and request.form.get('addAdmin') != "":
+        newAdmin = getUser('addAdmin')
+        addAdmin(newAdmin, labor='labor')
+        flashMassage(newAdmin, 'added', 'Labor')
+
+    elif request.form.get("remove") == "remove" and request.form.get('removeAdmin') != "":
+        oldAdmin = getUser('removeAdmin')
+        removeAdmin(oldAdmin, labor='labor')
+        flashMassage(oldAdmin, 'removed', 'Labor')
+
+    elif request.form.get("addAid") == "addAid" and request.form.get('addFinancialAidAdmin') !="":
+        newAdmin = getUser('addFinancialAidAdmin')
+        addAdmin(newAdmin, finAid='finAid')
+        flashMassage(newAdmin, 'added', 'Financial Aid')
+
+    elif request.form.get("removeAid") == "removeAid" and request.form.get('removeFinancialAidAdmin') != "":
+        oldAdmin = getUser('removeFinancialAidAdmin')
+        removeAdmin(oldAdmin, finAid='finAid')
+        flashMassage(oldAdmin, 'removed', 'Financial Aid')
+
+    elif request.form.get("addSaas") == "addSaas" and request.form.get('addSAASAdmin') != "":
+        newAdmin = getUser('addSAASAdmin')
+        addAdmin(newAdmin, saas='saas')
+        flashMassage(newAdmin, 'added', 'SAAS')
+
+    elif request.form.get("removeSaas") == "removeSaas" and request.form.get('removeSAASAdmin') != "":
+        oldAdmin = getUser('removeSAASAdmin')
+        removeAdmin(oldAdmin, saas='saas')
+        flashMassage(oldAdmin, 'removed', 'SAAS')
+
     return redirect(url_for('admin.admin_Management'))
 
-def addLaborAdmin():
-    if request.form.get('addAdmin') != "":
-        newAdmins = request.form.get('addAdmin')   #this is taking the name in the select tag
-        newAdmin = User.get(User.username == newAdmins)
+def getUser(username):
+    username = request.form.get(username)
+    user = User.get(User.username == username)
+    return user
+
+def addAdmin(newAdmin, labor=None, finAid=None, saas=None):
+    if labor:
         newAdmin.isLaborAdmin = 1
-        newAdmin.save()
-        if newAdmin.Student:
-            message = "{0} {1} has been added as a Labor Admin".format(newAdmin.Student.FIRST_NAME, newAdmin.Student.LAST_NAME)
-        elif newAdmin.Supervisor:
-            message = "{0} {1} has been added as a Labor Admin".format(newAdmin.Supervisor.FIRST_NAME, newAdmin.Supervisor.LAST_NAME)
+    if finAid:
+        newAdmin.isFinancialAidAdmin = 1
+    if saas:
+        newAdmin.isSaasAdmin = 1
+    newAdmin.save()
+
+def removeAdmin(oldAdmin, labor=None, finAid=None, saas=None):
+    if labor:
+        oldAdmin.isLaborAdmin = 0
+    if finAid:
+        oldAdmin.isFinancialAidAdmin = 0
+    if saas:
+        oldAdmin.isSaasAdmin = 0
+    oldAdmin.save()
+
+def flashMassage(user, action, adminType):
+    if user.Student:
+        message = "{0} {1} has been {2} as a {3} Admin".format(user.Student.FIRST_NAME, user.Student.LAST_NAME, action, adminType)
+    elif user.Supervisor:
+        message = "{0} {1} has been {2} as a {3} Admin".format(user.Supervisor.FIRST_NAME, user.Supervisor.LAST_NAME, action, adminType)
+
+    if action == 'added':
         flash(message, "success")
-
-def removeLaborAdmin():
-    if request.form.get('removeAdmin') != "":
-        user = User.get(User.username == request.form.get('removeAdmin'))   #this is taking the name in the select tag
-        user.isLaborAdmin = 0
-        user.save()
-        if user.Student:
-            message = "{0} {1} has been removed as a Labor Admin".format(user.Student.FIRST_NAME, user.Student.LAST_NAME)
-        elif user.Supervisor:
-            message = "{0} {1} has been removed as a Labor Admin".format(user.Supervisor.FIRST_NAME, user.Supervisor.LAST_NAME)
-        flash(message, "danger")
-
-def addFinancialAdmin():
-    if request.form.get('addFinancialAidAdmin') != "":
-        newFinAidAdmins = request.form.get('addFinancialAidAdmin')
-        newFinAidAdmin = User.get(User.username == newFinAidAdmins)
-        newFinAidAdmin.isFinancialAidAdmin = 1
-        newFinAidAdmin.save()
-        message = "{0} {1} has been added as a Financial Aid Admin".format(newFinAidAdmin.Supervisor.FIRST_NAME, newFinAidAdmin.Supervisor.LAST_NAME)
-        flash(message, "success")
-
-def removeFinancialAdmin():
-    if request.form.get('removeFinancialAidAdmin') != "":
-        userFinAid = User.get(User.username == request.form.get('removeFinancialAidAdmin'))
-        userFinAid.isFinancialAidAdmin = 0
-        userFinAid.save()
-        message = "{0} {1} has been removed as a Financial Aid Admin".format(userFinAid.Supervisor.FIRST_NAME, userFinAid.Supervisor.LAST_NAME)
-        flash(message, "danger")
-
-def addSAASAdmin():
-    if request.form.get('addSAASAdmin') != "":
-        newSaasAdmins = request.form.get('addSAASAdmin')
-        newSaasAdmin = User.get(User.username == newSaasAdmins)
-        newSaasAdmin.isSaasAdmin = 1
-        newSaasAdmin.save()
-        message = "{0} {1} has been added as a SAAS Admin".format(newSaasAdmin.Supervisor.FIRST_NAME, newSaasAdmin.Supervisor.LAST_NAME)
-        flash(message, "success")
-
-def removeSAASAdmin():
-    if request.form.get('removeSAASAdmin') != "":
-        userSaas = User.get(User.username == request.form.get('removeSAASAdmin'))
-        userSaas.isSaasAdmin = 0
-        userSaas.save()
-        message = "{0} {1} has been removed as a SAAS Admin".format(userSaas.Supervisor.FIRST_NAME, userSaas.Supervisor.LAST_NAME)
+    elif action == 'removed':
         flash(message, "danger")
