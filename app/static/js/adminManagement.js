@@ -1,20 +1,12 @@
 // Opens collapse menu for this page
 $("#admin").collapse("show");
 
-
-function Hello() {
-  console.log('function');
-}
-
-
 $('#addlaborAdmin').selectpicker('refresh');
 $('.dropdown-menu .bs-searchbox input').on('keyup', function (e) {
-    //here you listen to the change of the input corresponding to your select
-    //and now you can populate your select element
     var searchData = e.target.value;
-    // AJAX call if length >= 3
+    $("#addlaborAdmin").empty();
     if (searchData.length >= 3) {
-      console.log('Made it here');
+      $("#addlaborAdmin").empty();
       var data = searchData
       data = JSON.stringify(data)
       $.ajax({
@@ -24,17 +16,16 @@ $('.dropdown-menu .bs-searchbox input').on('keyup', function (e) {
         data: data,
         contentType: 'application/json',
         success: function(response) {
-          console.log(response);
+          for (var key = 0; key < response.length; key++) {
+            var username = response[key]['username']
+            var firstName = response[key]['firstName']
+            var lastName = response[key]['lastName']
+            $("#addlaborAdmin").append('<option value="' + username + '" data-subtext="' + username + '">' + firstName + ' ' + lastName + '</option>');
+          }
+          $('#addlaborAdmin').selectpicker("refresh");
         }
       });
     }
-
-
-    // $('#my-select').append($('<option>', {
-    //     value: 'any value',
-    //     text: 'any text'
-    // }));
-    // $('#my-select').selectpicker('refresh');
 });
 
 

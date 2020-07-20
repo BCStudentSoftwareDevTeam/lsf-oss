@@ -29,18 +29,39 @@ def admin_Management():
 
 @admin.route('/admin/laborAdminInsert', methods=['POST'])
 def laborAdminInsert():
+    """
+    This function takes in the data from the 'Add Labor Admin' select picker, then uses the data to query from the User table and return a list of possible options
+    to populate the select picker.
+    """
     try:
         rsp = eval(request.data.decode("utf-8"))
-        dict = {'Hello': 'World'}
-        print('Input:', rsp)
-        # users = User.select().join_from(User, Student).where((User.Student.FIRST_NAME.contains(rsp)) | (User.Student.LAST_NAME.contains(rsp)))
-        users = User.select().join_from(User, Supervisor).where((User.Supervisor.FIRST_NAME.contains(rsp)) | (User.Supervisor.LAST_NAME.contains(rsp)))
-        for i in users:
-            print(i.username)
-        return jsonify(dict)
+        userList = []
+        if " " not in rsp:
+            supervisors = User.select().join_from(User, Supervisor).where(((User.Supervisor.FIRST_NAME.contains(rsp)) | (User.Supervisor.LAST_NAME.contains(rsp))) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
+            students = User.select().join_from(User, Student).where(((User.Student.FIRST_NAME.contains(rsp)) | (User.Student.LAST_NAME.contains(rsp))) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
+        else:
+            rsp = rsp.split()
+            try:
+                supervisors = User.select().join_from(User, Supervisor).where(((User.Supervisor.FIRST_NAME.contains(rsp[0])) & (User.Supervisor.LAST_NAME.contains(rsp[1]))) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
+                students = User.select().join_from(User, Student).where(((User.Student.FIRST_NAME.contains(rsp[0])) & (User.Student.LAST_NAME.contains(rsp[1]))) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
+            except IndexError:
+                # We get an IndexError when rsp is split into one list item rather than two list items due to a missing substring after the space
+                supervisors = User.select().join_from(User, Supervisor).where((User.Supervisor.FIRST_NAME.contains(rsp[0])) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
+                students = User.select().join_from(User, Student).where((User.Student.FIRST_NAME.contains(rsp[0])) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
+        for i in supervisors:
+            userList.append({'username': i.username,
+                                    'firstName': i.Supervisor.FIRST_NAME,
+                                    'lastName': i.Supervisor.LAST_NAME,
+                                    })
+        for i in students:
+            userList.append({'username': i.username,
+                                    'firstName': i.Student.FIRST_NAME,
+                                    'lastName': i.Student.LAST_NAME,
+                                    })
+        return jsonify(userList)
     except Exception as e:
-        print('ERROR:', e)
-        return jsonify(dict)
+        print('ERROR Loading Non Labor Admins:', e, type(e))
+        return jsonify(userList)
 
 @admin.route("/adminManagement/userInsert", methods=['POST'])
 def manageLaborAdmin():
