@@ -29,32 +29,32 @@ def admin_Management():
 
 @admin.route("/adminManagement/userInsert", methods=['POST'])
 def manageLaborAdmin():
-    if request.form.get("add") == "add" and request.form.get('addAdmin') != "":
+    if request.form.get("add") == "add":
         newAdmin = getUser('addAdmin')
         addAdmin(newAdmin, labor='labor')
         flashMassage(newAdmin, 'added', 'Labor')
 
-    elif request.form.get("remove") == "remove" and request.form.get('removeAdmin') != "":
+    elif request.form.get("remove") == "remove":
         oldAdmin = getUser('removeAdmin')
         removeAdmin(oldAdmin, labor='labor')
         flashMassage(oldAdmin, 'removed', 'Labor')
 
-    elif request.form.get("addAid") == "addAid" and request.form.get('addFinancialAidAdmin') !="":
+    elif request.form.get("addAid") == "addAid":
         newAdmin = getUser('addFinancialAidAdmin')
         addAdmin(newAdmin, finAid='finAid')
         flashMassage(newAdmin, 'added', 'Financial Aid')
 
-    elif request.form.get("removeAid") == "removeAid" and request.form.get('removeFinancialAidAdmin') != "":
+    elif request.form.get("removeAid") == "removeAid":
         oldAdmin = getUser('removeFinancialAidAdmin')
         removeAdmin(oldAdmin, finAid='finAid')
         flashMassage(oldAdmin, 'removed', 'Financial Aid')
 
-    elif request.form.get("addSaas") == "addSaas" and request.form.get('addSAASAdmin') != "":
+    elif request.form.get("addSaas") == "addSaas":
         newAdmin = getUser('addSAASAdmin')
         addAdmin(newAdmin, saas='saas')
         flashMassage(newAdmin, 'added', 'SAAS')
 
-    elif request.form.get("removeSaas") == "removeSaas" and request.form.get('removeSAASAdmin') != "":
+    elif request.form.get("removeSaas") == "removeSaas":
         oldAdmin = getUser('removeSAASAdmin')
         removeAdmin(oldAdmin, saas='saas')
         flashMassage(oldAdmin, 'removed', 'SAAS')
