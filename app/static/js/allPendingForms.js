@@ -109,6 +109,11 @@ function approvalModalClose(){// on close of approval modal we are clearing the 
 }
 
 function finalApproval() { //this method changes the status of the lsf from pending to approved status
+  $(".btn").prop("disabled", true);
+  $(".close").prop("disabled", true);
+  $("#approveModalButton").text("Processing...");
+  $("#approvalModal").data("bs.modal").options.backdrop = "static";
+  $("#approvalModal").data("bs.modal").options.keyboard = false;
   var data = JSON.stringify(labor_details_ids);
   $.ajax({
     type: "POST",
@@ -119,6 +124,11 @@ function finalApproval() { //this method changes the status of the lsf from pend
     success: function(response) {
       if (response) {
         if (response.success) {
+          $(".btn").prop("disabled", false);
+          $(".close").prop("disabled", false);
+          $("#approveModalButton").text("Approve");
+          $("#approvalModal").data("bs.modal").options.backdrop = true;
+          $("#approvalModal").data("bs.modal").options.keyboard = true;
           location.reload(true);
         }
       }
