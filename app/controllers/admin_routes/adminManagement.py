@@ -68,20 +68,20 @@ def getUser(selectpickerID):
 
 def addAdmin(newAdmin, adminType):
     if adminType == 'labor':
-        newAdmin.isLaborAdmin = 1
+        newAdmin.isLaborAdmin = True
     if adminType == 'finAid':
-        newAdmin.isFinancialAidAdmin = 1
+        newAdmin.isFinancialAidAdmin = True
     if adminType == 'saas':
-        newAdmin.isSaasAdmin = 1
+        newAdmin.isSaasAdmin = True
     newAdmin.save()
 
 def removeAdmin(oldAdmin, adminType):
     if adminType == 'labor':
-        oldAdmin.isLaborAdmin = 0
+        oldAdmin.isLaborAdmin = False
     if adminType == 'finAid':
-        oldAdmin.isFinancialAidAdmin = 0
+        oldAdmin.isFinancialAidAdmin = False
     if adminType == 'saas':
-        oldAdmin.isSaasAdmin = 0
+        oldAdmin.isSaasAdmin = False
     oldAdmin.save()
 
 def flashMassage(user, action, adminType):

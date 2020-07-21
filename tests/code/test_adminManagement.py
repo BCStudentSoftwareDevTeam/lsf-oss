@@ -10,15 +10,15 @@ def test_addAdmin():
 
     # Test adding labor admin
     addAdmin(user, 'labor')
-    assert user.isLaborAdmin != 0
+    assert user.isLaborAdmin
 
     # Test adding financial aid admin
     addAdmin(user, 'finAid')
-    assert user.isFinancialAidAdmin != 0
+    assert user.isFinancialAidAdmin
 
     # Test adding saas admin
     addAdmin(user, 'saas')
-    assert user.isSaasAdmin != 0
+    assert user.isSaasAdmin
 
 @pytest.mark.integration
 def test_removeAdmin():
@@ -27,12 +27,12 @@ def test_removeAdmin():
 
     # Test removing labor admin
     removeAdmin(user, 'labor')
-    assert user.isLaborAdmin != 1
+    assert not user.isLaborAdmin
 
     # Test removing financial aid admin
     removeAdmin(user, 'finAid')
-    assert user.isFinancialAidAdmin != 1
+    assert not user.isFinancialAidAdmin
 
     # Test removing saas admin
     removeAdmin(user, 'saas')
-    assert user.isSaasAdmin != 1
+    assert not user.isSaasAdmin
