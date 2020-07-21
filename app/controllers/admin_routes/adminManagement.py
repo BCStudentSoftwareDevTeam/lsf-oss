@@ -29,32 +29,32 @@ def admin_Management():
 
 @admin.route("/adminManagement/userInsert", methods=['POST'])
 def manageLaborAdmin():
-    if request.form.get("addAdmin") != "":
+    if request.form.get("addAdmin"):
         newAdmin = getUser('addAdmin')
         addAdmin(newAdmin, 'labor')
         flashMassage(newAdmin, 'added', 'Labor')
 
-    elif request.form.get("removeAdmin") != "":
+    elif request.form.get("removeAdmin"):
         oldAdmin = getUser('removeAdmin')
         removeAdmin(oldAdmin, 'labor')
         flashMassage(oldAdmin, 'removed', 'Labor')
 
-    elif request.form.get("addFinancialAidAdmin") != "":
+    elif request.form.get("addFinancialAidAdmin"):
         newAdmin = getUser('addFinancialAidAdmin')
         addAdmin(newAdmin, 'finAid')
         flashMassage(newAdmin, 'added', 'Financial Aid')
 
-    elif request.form.get("removeFinancialAidAdmin") != "":
+    elif request.form.get("removeFinancialAidAdmin"):
         oldAdmin = getUser('removeFinancialAidAdmin')
         removeAdmin(oldAdmin, 'finAid')
         flashMassage(oldAdmin, 'removed', 'Financial Aid')
 
-    elif request.form.get("addSAASAdmin") != "":
+    elif request.form.get("addSAASAdmin"):
         newAdmin = getUser('addSAASAdmin')
         addAdmin(newAdmin, 'saas')
         flashMassage(newAdmin, 'added', 'SAAS')
 
-    elif request.form.get("removeSAASAdmin") != "":
+    elif request.form.get("removeSAASAdmin"):
         oldAdmin = getUser('removeSAASAdmin')
         removeAdmin(oldAdmin, 'saas')
         flashMassage(oldAdmin, 'removed', 'SAAS')
