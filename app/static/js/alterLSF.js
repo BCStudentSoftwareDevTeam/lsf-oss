@@ -92,6 +92,40 @@ function checkWLS20(){
   }
 }
 
+function checkSupervisor() {
+  var oldSupervisor = $('#prefillsupervisor').val();
+  var supervisor = $('#supervisor').val()
+  var position = $('#position').val()
+  var oldPostition = $('#prefillposition').val()
+  var weeklyHours = $('#weeklyHours').val()
+  var oldWeeklyHours = $('#oldWeeklyHours').val()
+  var contractHours = $('#contractHours').val()
+  var oldContractHours = $('#oldContractHours').val()
+
+  if (supervisor != oldSupervisor) {
+    $('#position').val(oldPostition);
+    $("#position").prop('disabled', true);
+    $('#position').selectpicker('refresh');
+    $('#weeklyHours').val(oldWeeklyHours);
+    $("#weeklyHours").prop('disabled', true);
+    $('#weeklyHours').selectpicker('refresh');
+    $('#contractHours').val(oldContractHours);
+    $("#contractHours").prop('disabled', true);
+    $('#contractHours').selectpicker('refresh');
+    category = "info"
+    msg = "Changes to Hours and Position are unavailable when Supervisor is changed. (Select Original Supervisor to change Position or Hours)";
+    $("#flash_container").html('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+    $("#flasher").delay(3000).fadeOut()
+  } else {
+    $("#position").prop('disabled', false)
+    $('#position').selectpicker('refresh');
+    $("#weeklyHours").prop('disabled', false);
+    $('#weeklyHours').selectpicker('refresh');
+    $("#contractHours").prop('disabled', false);
+    $('#contractHours').selectpicker('refresh');
+  }
+}
+
 function checkForChange(){
   var oldSupervisor = $("#prefillsupervisor").val();
   var newSupervisor = $("#supervisor").val();
@@ -123,6 +157,12 @@ function checkForChange(){
 
   if (JSON.stringify(finalDict) == "{}" || (Object.keys(finalDict).length == 1 && Object.keys(finalDict) == "supervisorNotes")){
     $("#NochangeModal").modal("show");
+  }
+  else if (newNotes == '') {
+    category = "danger"
+    msg = "Please make sure Notes is filled out.";
+    $("#flash_container").html('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+    $("#flasher").delay(3000).fadeOut()
   }
   else if (JSON.stringify(finalDict) !== "{}"){
     $("#submitModal").modal("show");

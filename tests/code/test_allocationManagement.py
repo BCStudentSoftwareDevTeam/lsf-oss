@@ -28,7 +28,8 @@ def test_createTerms(setup, cleanup):
     # We should have this term at least
     term = Term.get(Term.termCode == "202000")
     assert "AY 2020-2021"== term.termName
-    assert termsPerYear == Term.select().where(Term.termCode.cast('char').contains("2020")).count()
+    # We only have 2 to start
+    assert 2 == Term.select().where(Term.termCode.cast('char').contains("2020")).count()
 
     # But not this one or this one
     with pytest.raises(DoesNotExist):
