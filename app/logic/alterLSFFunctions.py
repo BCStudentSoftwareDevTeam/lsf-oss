@@ -15,7 +15,7 @@ from flask import flash
 from flask import request
 
 
-def modifyLSF(rsp, k, LSF):
+def modifyLSF(rsp, k, LSF, currentUser):
     if k == "supervisorNotes":
         LSF.supervisorNotes = rsp[k]["newValue"]
         LSF.save()
@@ -33,7 +33,7 @@ def modifyLSF(rsp, k, LSF):
         LSF.save()
 
     if k == "weeklyHours":
-        createOverloadForm(rsp, k, LSF)
+        createOverloadForm(rsp, k, LSF, currentUser)
         LSF.weeklyHours = int(rsp[k]["newValue"])
         LSF.save()
 
@@ -42,10 +42,7 @@ def modifyLSF(rsp, k, LSF):
         LSF.save()
 
 
-def adjustLSF(rsp, k, LSF):
-    currentUser = require_login()
-    if not currentUser:        # Not logged in
-        return render_template("errors/403.html")
+def adjustLSF(rsp, k, LSF, currentUser):
     if k == "supervisorNotes":
         newNoteEntry = AdminNotes.create(formID        = LSF.laborStatusFormID,
                                          createdBy     = currentUser,
@@ -66,12 +63,9 @@ def adjustLSF(rsp, k, LSF):
                                            createdDate  = date.today(),
                                            status       = status.statusName)
         if k == "weeklyHours":
-            createOverloadForm(rsp, k, LSF, adjustedforms.adjustedFormID, formHistories)
+            createOverloadForm(rsp, k, LSF, adjustedforms.adjustedFormID, formHistories, currentUser)
 
-def createOverloadForm(rsp, k, LSF, adjustedForm=None, formHistories=None):
-    currentUser = require_login()
-    if not currentUser:        # Not logged in
-        return render_template("errors/403.html")
+def createOverloadForm(rsp, k, LSF, adjustedForm=None, formHistories=None, currentUser):
     allTermForms = LaborStatusForm.select() \
                    .join_from(LaborStatusForm, Student) \
                    .join_from(LaborStatusForm, FormHistory) \
