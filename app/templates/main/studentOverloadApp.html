@@ -6,28 +6,25 @@
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
   <!-- These are the outside links for the effective date calendar-->
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="/static/css/tooltip.css" type="text/css"/>
 </head>
-
 <a class="skipContent" href="#checkbox1" tabindex="1" style="top:1%">Click to Skip</a>
 {% include "snips/freshmanWarning.html" %}
-  <div align="center" >
+  <div class="col-md-7 col-md-offset-3" >
     <h1>Labor Overload Application</h1>
+  </div>
+  <div class="col-md-2">
 
-    <!-- <div class="padding">
-      <h5>A labor overload is defined as more than 15 hours of labor per week during the regular academic year and may not be approved retroactively.All approvals are subject to periodic review.
-         Approval may be revoked if primary labor hours, labor performance, or academic performance become less than satisfactory.
-      </h5>
-    </div> -->
   </div>
 
   <!-- TODO: This page appears not to utilize Bootstrap -->
 
-<div class="container" id="checkboxes" >
-    <p>A labor overload is defined as more than 15 hours of labor per week during the regular academic year and may not be approved retroactively.All approvals are subject to periodic review.
+<div class="container col-md-11" id="checkboxes" >
+    <p>A labor overload is defined as more than 15 hours of labor per week during the regular academic year and may not be approved retroactively. All approvals are subject to periodic review.
        Approval may be revoked if primary labor hours, labor performance, or academic performance become less than satisfactory.
     </p>
     <div>
@@ -35,32 +32,37 @@
     </div>
   <div class="floatleft">
     <ul class="small">
-      <h6><strong><span class="tooltip-right" data-tooltip="Required">Guidelines for Approval<span class="required-mark"> *</span></span></strong></h6>
-      <input type="checkbox" name="checkbox" id="checkbox1" onclick="checkBoxCheck(this)" /> Sophomore, junior, or senior classification <br>
-      <input type="checkbox" name="checkbox" id="checkbox2" onclick="checkBoxCheck(this)" /> Not on any form of probation <br>
-      <input type="checkbox" name="checkbox" id="checkbox3" onclick="checkBoxCheck(this)" /> Enrolled in less than 5 course credits with less than 8 preparations <br>
-      <input type="checkbox" name="checkbox" id="checkbox4" onclick="checkBoxCheck(this)" /> Have a 2.50 GPA, both cumulative and for the previous full term <br>
-      <input type="checkbox" name="checkbox" id="checkbox5" onclick="checkBoxCheck(this)" /> The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term
+      <h6><strong><span class="tooltip-right" data-tooltip="Required">Guidelines for Approval:</span></strong></h6>
+      <input type="checkbox" name="checkbox" id="checkbox1" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Sophomore, junior, or senior classification<span class="required-mark"> *</span><br>
+      <input type="checkbox" name="checkbox" id="checkbox2" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Not on any form of probation<span class="required-mark"> *</span><br>
+      <input type="checkbox" name="checkbox" id="checkbox3" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Enrolled in less than 5 course credits with less than 8 preparations<span class="required-mark"> *</span> <br>
+      <input type="checkbox" name="checkbox" id="checkbox4" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Have a 2.50 GPA, both cumulative and for the previous full term<span class="required-mark"> *</span> <br>
+      <input type="checkbox" name="checkbox" id="checkbox5" onclick="checkBoxCheck(this,{{totalFormHours}})" /> The required 2.50 cumulative GPA may be waived if a 3.00 GPA is earned during the previous full term<span class="required-mark"> *</span>
     </ul>
   </div>
+  {% if totalFormHours >= 20 %}
 <div class="floatleft">
   <ul class="small">
-    <h6><strong>Requests for over 20 hours* are subject to the following additional guidelines:  </strong></h6>
-    <input type="checkbox" name="checkbox" id="checkbox6" onclick="checkBoxCheck(this)" /> Junior or senior classification. 3.00 GPA in the major, overall, and for the previous term <br>
-    <input type="checkbox" name="checkbox" id="checkbox7" onclick="checkBoxCheck(this)" /> Submission of a letter outlining the reason for requesting more than 20 hours <br>
-    <input type="checkbox" name="checkbox" id="checkbox8" onclick="checkBoxCheck(this)" /> Approval of the Dean of Labor and the Student Admissions and Academic Standing Committee
+    <h6><strong><span class="tooltip-right" data-tooltip="Required">Requests for over 20 hours* are subject to the following additional guidelines:</span></strong></h6>
+    <input type="checkbox" name="checkbox" id="checkbox6" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Junior or senior classification. 3.00 GPA in the major, overall, and for the previous term<span class="required-mark"> *</span> <br>
+    <input type="checkbox" name="checkbox" id="checkbox7" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Submission of a letter outlining the reason for requesting more than 20 hours<span class="required-mark"> *</span> <br>
+    <input type="checkbox" name="checkbox" id="checkbox8" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Approval of the Dean of Labor and the Student Admissions and Academic Standing Committee<span class="required-mark"> *</span>
   </ul>
 </div>
+{% endif %}
+</div>
+<div class="col-md-1">
+
 </div>
 
-<div class="container">
+<div class="container col-md-11">
 <form>
     <div align="center">
       <h3>Current Job Information</h3>
     </div>
     <div align="center">
       <font size="2">
-      <table class="table table-striped" style="width:100%;">
+      <table class="table table-striped" >
         <tr align="center">
           <th>Name:</th>
           <th>B#:</th>
@@ -78,9 +80,9 @@
       </table>
       </font>
       <div class="form-group">
-        <label for="Primary">Current Positions</label>
+        <h3 for="Primary">Current Positions</h3>
         <font size="2">
-        <table class="table table-striped" style="width:100%;" align="center">
+        <table class="table table-striped"  align="center">
           <tr>
             <th>Term</th>
             <th>Department</th>
@@ -113,59 +115,35 @@
               </tr>
               {% endfor %}
           {% endfor %}
-        </table>
-        </font>
-      </div>
-      <div class="col-md-4 col-md-offset-4">
-        <font size="2">
-          <table class="table table-striped">
-            <tr>
-              <th class="text-center">Total Primary and Secondary Hours:</th>
-            </tr>
-            <tr align="center">
-              <td>{{totalCurrentHours}}</td>
-            </tr>
-          </table>
-        </font>
-      </div>
-    </div>
-    <div align="center" class="col-md-12" >
-      <h3>Overload Assignment Request</h3>
-    </div>
-      <div align="center">
-        <font size="2">
-        <table class="table table-striped" style="width:100%;" align="center">
-          <tr align="center">
-            <th>Department:</th>
-            <th>Position:</th>
-            <th>Hours Per Week:</th>
-            <th>Total Hours Per Week:</th>
-          </tr>
-          <tr align="center">
-            <td>{{prefillDepartment}}</td>
-            <td>{{prefillPosition}}</td>
-            <td>{{prefillHoursOverload}}</td>
-            <td>{{totalFormHours}}</td>
+          <tr>
+            <td><strong>Total Approved Primary and Secondary Hours:</strong></td>
+            <td>{{totalCurrentHours}}</td>
           </tr>
         </table>
         </font>
       </div>
+    </div>
       <div align="center">
         <label for="Reason"><span class="tooltip-right" data-tooltip="Required">Reason For Overload Request:<span class="required-mark">*</span></span></label>
         <div>
-          <textarea id="notes" name="notes" rows="8" cols="80" onchange="primaryCheck()" style="resize:none;"required></textarea>
+          <textarea id="notes" name="notes" rows="8" cols="80"  style="resize:none;"required></textarea>
         </div>
       </div>
-  </div>
 </form>
-<div class="container">
-  <div align="center">
+</div>
+<div class="col-md-1">
+
+</div>
+<div class="container col-md-6 col-md-offset-5">
+  <div align="center" >
     <button id="submit" type="submit" class="btn btn-success" onclick ="checkForEmptyFields()">Submit Changes</button>
     {% with overloadForm=overloadForm %}
       {% include "snips/studentOverloadSubmit.html" %}
     {% endwith %}
   </div>
 </div>
+<div class="col-md-1">
 
+</div>
 <script language="JavaScript" type="text/javascript" src="/static/js/studentOverloadApp.js"></script>
 {% endblock %}

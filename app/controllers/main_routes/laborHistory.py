@@ -40,7 +40,7 @@ def laborhistory(id):
             elif currentUser.Supervisor and not currentUser.Student:
                 supervisorForms = LaborStatusForm.select() \
                                   .join_from(LaborStatusForm, FormHistory) \
-                                  .where((LaborStatusForm.supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser)) \
+                                  .where((LaborStatusForm.Supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser)) \
                                   .distinct()
                 authorizedForms = set(studentForms).intersection(set(supervisorForms))
                 if len(authorizedForms) == 0:
@@ -51,8 +51,10 @@ def laborhistory(id):
                                 student = student,
                                 username=currentUser.username,
                                 laborStatusFormList = laborStatusFormList,
-                                authorizedForms = authorizedForms
-                          )
+                                authorizedForms = authorizedForms,
+                                studentUserName = User.get(User.Student == student).username
+                              )
+
     except Exception as e:
         print("Error Loading Student Labor History", e)
         return render_template('errors/500.html'), 500

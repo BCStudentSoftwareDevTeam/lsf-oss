@@ -108,7 +108,7 @@ def userInsert():
             creatorID = currentUser
             createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
             try:
-                emailDuringBreak(checkForSecondLSFBreak(term.termCode, studentID, "lsf"), term)
+                emailDuringBreak(checkForSecondLSFBreak(term.termCode, studentID), term)
             except Exception as e:
                 print("Error when sending emails during break: " + str(e))
 
