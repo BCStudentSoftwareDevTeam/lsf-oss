@@ -27,8 +27,8 @@ def admin_Management():
                             users = users
                          )
 
-@admin.route('/admin/laborAdminInsert', methods=['POST'])
-def laborAdminInsert():
+@admin.route('/admin/laborAdminSearch', methods=['POST'])
+def laborAdminSearch():
     """
     This function takes in the data from the 'Add Labor Admin' select picker, then uses the data to query from the User table and return a list of possible options
     to populate the select picker.
@@ -50,14 +50,16 @@ def laborAdminInsert():
                 students = User.select().join_from(User, Student).where((User.Student.FIRST_NAME.contains(rsp[0])) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
         for i in supervisors:
             userList.append({'username': i.username,
-                                    'firstName': i.Supervisor.FIRST_NAME,
-                                    'lastName': i.Supervisor.LAST_NAME,
-                                    })
+                            'firstName': i.Supervisor.FIRST_NAME,
+                            'lastName': i.Supervisor.LAST_NAME,
+                            'type': 'Supervisor'
+                            })
         for i in students:
             userList.append({'username': i.username,
-                                    'firstName': i.Student.FIRST_NAME,
-                                    'lastName': i.Student.LAST_NAME,
-                                    })
+                            'firstName': i.Student.FIRST_NAME,
+                            'lastName': i.Student.LAST_NAME,
+                            'type': 'Student'
+                            })
         return jsonify(userList)
     except Exception as e:
         print('ERROR Loading Non Labor Admins:', e, type(e))

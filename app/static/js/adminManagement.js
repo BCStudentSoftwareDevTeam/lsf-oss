@@ -11,7 +11,7 @@ $('.dropdown-menu .bs-searchbox input').on('keyup', function (e) {
       data = JSON.stringify(data)
       $.ajax({
         type: "POST",
-        url: "/admin/laborAdminInsert",
+        url: "/admin/laborAdminSearch",
         datatype: "json",
         data: data,
         contentType: 'application/json',
@@ -20,7 +20,12 @@ $('.dropdown-menu .bs-searchbox input').on('keyup', function (e) {
             var username = response[key]['username']
             var firstName = response[key]['firstName']
             var lastName = response[key]['lastName']
-            $("#addlaborAdmin").append('<option value="' + username + '" data-subtext="' + username + '">' + firstName + ' ' + lastName + '</option>');
+            var type = response[key]['type']
+            if (type == "Student") {
+              $("#addlaborAdmin").append('<option value="' + username + '" data-subtext="' + username + ' (' + type + ')">' + firstName + ' ' + lastName + '</option>');
+            } else {
+              $("#addlaborAdmin").append('<option value="' + username + '" data-subtext="' + username + '">' + firstName + ' ' + lastName + '</option>');
+            }
           }
           $('#addlaborAdmin').selectpicker("refresh");
         }
