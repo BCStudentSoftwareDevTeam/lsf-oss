@@ -6,6 +6,7 @@ from app.models.laborReleaseForm import*
 from app.models.laborStatusForm import*
 from app.models.overloadForm import*
 from app.models.formHistory import*
+from app.models.supervisor import*
 from app.models.user import*
 from datetime import datetime
 from app.models.emailTracker import *
@@ -15,9 +16,8 @@ import os
 from datetime import datetime, date
 
 class emailHandler():
-    def __init__(self, formHistoryKey, primaryFormHistory=None):
+    def __init__(self, formHistoryKey):
         secret_conf = get_secret_cfg()
-
         app.config.update(
             MAIL_SERVER=secret_conf['MAIL_SERVER'],
             MAIL_PORT=secret_conf['MAIL_PORT'],
@@ -30,31 +30,30 @@ class emailHandler():
             ALWAYS_SEND_MAIL=secret_conf['ALWAYS_SEND_MAIL']
         )
 
-        self.primaryFormHistory = primaryFormHistory
         self.mail = Mail(app)
 
         self.formHistory = FormHistory.get(FormHistory.formHistoryID == formHistoryKey)
         self.laborStatusForm = self.formHistory.formID
-        self.studentEmail = self.laborStatusForm.studentSupervisee.STU_EMAIL
+        self.term = self.laborStatusForm.termCode
+        self.student = self.laborStatusForm.studentSupervisee
+        self.studentEmail = self.student.STU_EMAIL
         self.creatorEmail = self.formHistory.createdBy.Supervisor.EMAIL
         self.supervisorEmail = self.laborStatusForm.supervisor.EMAIL
         self.date = self.laborStatusForm.startDate.strftime("%m/%d/%Y")
         self.weeklyHours = str(self.laborStatusForm.weeklyHours)
         self.contractHours = str(self.laborStatusForm.contractHours)
 
-        # This will either bring back the same Labor Status Form, or bring back
-        # the Primary LSF that goes with any Secondary LSF in the given term
-        self.primaryForm = LaborStatusForm.get(LaborStatusForm.jobType == "Primary" and LaborStatusForm.studentSupervisee == self.laborStatusForm.studentSupervisee and LaborStatusForm.termCode == self.laborStatusForm.termCode)
-        self.primaryEmail = self.primaryForm.supervisor.EMAIL
+        self.positions = LaborStatusForm.select().where(LaborStatusForm.termCode == self.term, LaborStatusForm.studentSupervisee == self.student)
+        self.supervisors = []
+        for position in self.positions:
+            self.supervisors.append(position.supervisor)
+
+        if not self.term.isBreak:
+            self.primaryForm = LaborStatusForm.get((LaborStatusForm.jobType == "Primary") & (LaborStatusForm.studentSupervisee == self.laborStatusForm.studentSupervisee) & (LaborStatusForm.termCode == self.laborStatusForm.termCode))
+            self.primaryEmail = self.primaryForm.supervisor.EMAIL
         self.link = ""
         self.releaseReason = ""
         self.releaseDate = ""
-
-        # self.primaryLaborStatusForm = None
-        if self.primaryFormHistory is not None:
-            self.primaryFormHistory = FormHistory.get(FormHistory.formID == primaryFormHistory)
-            self.primaryLaborStatusForm = self.primaryFormHistory.formID
-            self.primarySupervisorEmail = self.primaryLaborStatusForm.supervisor.EMAIL
 
         try:
             self.releaseDate = self.formHistory.releaseForm.releaseDate.strftime("%m/%d/%Y")
@@ -90,34 +89,52 @@ class emailHandler():
     # The sendEmail method will handle all of the email sending once the email template has been populated.
     def laborStatusFormSubmitted(self):
         if self.laborStatusForm.jobType == 'Secondary':
-            self.checkRecipient("Labor Status Form Submitted For Student",
-                                False,
-                                "Secondary Position Labor Status Form Submitted")
+            if self.term.isBreak:
+                if len(list(self.positions)) > 1:
+                    self.checkRecipient("Break Labor Status Form Submitted For Student",
+                                        "Break Labor Status Form Submitted For Supervisor on Additional LSF")
+                else:
+                    self.checkRecipient("Break Labor Status Form Submitted For Student",
+                                     "Break Labor Status Form Submitted For Supervisor")
+            else:
+                self.checkRecipient("Labor Status Form Submitted For Student",
+                                    False,
+                                    "Secondary Position Labor Status Form Submitted")
         else:
             self.checkRecipient("Labor Status Form Submitted For Student",
                           "Primary Position Labor Status Form Submitted")
 
     def laborStatusFormApproved(self):
         if self.laborStatusForm.jobType == 'Secondary':
-            self.checkRecipient("Labor Status Form Approved For Student",
-                                False,
-                                "Secondary Position Labor Status Form Approved")
+            if self.term.isBreak:
+                self.checkRecipient("Break Labor Status Form Approved For Student",
+                                    "Break Labor Status Form Approved For Supervisor")
+            else:
+                self.checkRecipient("Labor Status Form Approved For Student",
+                                    "Secondary Position Labor Status Form Approved")
         else:
             self.checkRecipient("Labor Status Form Approved For Student",
                           "Primary Position Labor Status Form Approved")
 
     def laborStatusFormRejected(self):
         if self.laborStatusForm.jobType  == 'Secondary':
-            self.checkRecipient("Labor Status Form Rejected For Student",
-                                False,
-                                "Secondary Position Labor Status Form Rejected")
+            if self.term.isBreak:
+                self.checkRecipient("Break Labor Status Form Rejected For Student",
+                                    "Break Labor Status Form Rejected For Supervisor")
+            else:
+                self.checkRecipient("Labor Status Form Rejected For Student",
+                                    "Secondary Position Labor Status Form Rejected")
         else:
             self.checkRecipient("Labor Status Form Rejected For Student",
                           "Primary Position Labor Status Form Rejected")
 
-    def laborStatusFormAdjusted(self):
+    def laborStatusFormAdjusted(self, newSupervisor=False):
         self.checkRecipient("Labor Status Form Adjusted For Student",
                       "Labor Status Form Adjusted For Supervisor")
+        if newSupervisor:
+            self.supervisorEmail = (Supervisor.get(Supervisor.ID == newSupervisor).EMAIL)
+            self.checkRecipient(False,
+                          "Labor Status Form Adjusted For Supervisor")
 
     def laborReleaseFormSubmitted(self):
         self.checkRecipient("Labor Release Form Submitted For Student",
@@ -126,6 +143,7 @@ class emailHandler():
     def laborReleaseFormApproved(self):
         self.checkRecipient("Labor Release Form Approved For Student",
                       "Labor Release Form Approved For Supervisor")
+
 
     def laborReleaseFormRejected(self):
         self.checkRecipient("Labor Release Form Rejected For Student",
@@ -142,12 +160,13 @@ class emailHandler():
         self.link = link
         self.checkRecipient("Labor Overload Form Submitted For Student",
                       "Labor Overload Form Submitted For Supervisor")
-    def LaborOverLoadFormSubmittedNotification(self):
+    def LaborOverLoadFormSubmittedNotification(self, link):
         """
         Emails that will be sent after the student has submitted their
         reason for the overload form; One email will be just a confirmation
         email to the student and the other one will be for the labor office.
         """
+        self.link = link
         self.checkRecipient("Labor Overload Form Submitted Notification For Student",
                             "Labor Overload Form Submitted Notification For Labor Office")
 
@@ -156,21 +175,12 @@ class emailHandler():
                       "Labor Overload Form Approved For Supervisor")
 
     def LaborOverLoadFormRejected(self):
-        self.checkRecipient("Labor Overload Form Rejected For Student")
+        self.checkRecipient("Labor Overload Form Rejected For Student",
+                            "Labor Overload Form Rejected For Supervisor")
 
-    def laborStatusFormSubmittedForBreak(self):
-        # This is a normal form submission on break
-        self.checkRecipient("Break Labor Status Form Submitted For Student",
-                            "Break Labor Status Form Submitted For Supervisor")
-
-    def notifySecondLaborStatusFormSubmittedForBreak(self):
+    def notifyAdditionalLaborStatusFormSubmittedForBreak(self):
         # This is the submission
-        self.checkRecipient("Break Labor Status Form Submitted For Student",
-                            "Break Labor Status Form Submitted For Supervisor on Second LSF",
-                            "Break Labor Status Form Submitted For Second Supervisor")
-
-    # def notifyPrimSupervisorSecondLaborStatusFormSubmittedForBreak(self):
-    #     self.checkRecipient(False, "Break Labor Status Form Submitted For Second Supervisor")
+        self.checkRecipient(False, False, "Break Labor Status Form Submitted For Additional Supervisor")
 
     # Depending on the department specified, this method will send an email to either SASS or Financial Aid office
     # to notify them about the overload applocation they need to approve
@@ -203,21 +213,26 @@ class emailHandler():
 
         self.send(message)
 
-    def verifiedOverloadNotification(self):
-        """ This email will be sent to Labor Admin when SAAS or Financial Aid Make
-        a decision on an overload form"""
-        message = Message("Verified Labor Overload Form Notification",
-                    recipients=[""]) # TODO: Labor Admin email
-        emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Admin Notification")
-        newEmailTracker = EmailTracker.create(
-                        formID = self.laborStatusForm.laborStatusFormID,
-                        date = datetime.today().strftime('%Y-%m-%d'),
-                        recipient = 'Labor Office',
-                        subject = emailTemplateID.subject
-                        )
-        message.html = self.replaceText(emailTemplateID.body)
+    # The function below was commented out becasuse there is no email template with the purpose "Labor Admin Notification"
+    # Since an admin can still see the decision from SAAS or Financial Aid in the pending Overload Form Modal,
+    # this function didn't seem neccesary but if we want to implement it, we just need to create a email template with that purpose
+    # and uncomment lines 116 and 117 in financialAidOverload.py
 
-        self.send(message)
+    # def verifiedOverloadNotification(self):
+    #     """ This email will be sent to Labor Admin when SAAS or Financial Aid Make
+    #     a decision on an overload form"""
+    #     message = Message("Verified Labor Overload Form Notification",
+    #                 recipients=[""]) # TODO: Labor Admin email
+    #     emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "Labor Admin Notification")
+    #     newEmailTracker = EmailTracker.create(
+    #                     formID = self.laborStatusForm.laborStatusFormID,
+    #                     date = datetime.today().strftime('%Y-%m-%d'),
+    #                     recipient = 'Labor Office',
+    #                     subject = emailTemplateID.subject
+    #                     )
+    #     message.html = self.replaceText(emailTemplateID.body)
+    #
+    #     self.send(message)
 
     def checkRecipient(self, studentEmailPurpose=False, emailPurpose=False, secondaryEmailPurpose=False):
         """
@@ -228,14 +243,8 @@ class emailHandler():
         if studentEmailPurpose:
             studentEmail = EmailTemplate.get(EmailTemplate.purpose == studentEmailPurpose)
             self.sendEmail(studentEmail, "student")
-        if self.primaryFormHistory is not None:
-            primaryEmail = EmailTemplate.get(EmailTemplate.purpose == emailPurpose) # Jan
-            secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose) # Scott
-            self.sendEmail(secondaryEmail, "breakPrimary")
-            self.sendEmail(primaryEmail, "supervisor")
         if emailPurpose or secondaryEmailPurpose:
             if self.laborStatusForm.jobType == 'Secondary':
-                # If contract hours != None
                 if secondaryEmailPurpose:
                     secondaryEmail = EmailTemplate.get(EmailTemplate.purpose == secondaryEmailPurpose)
                     self.sendEmail(secondaryEmail, "secondary")
@@ -249,7 +258,6 @@ class emailHandler():
                 else:
                     self.sendEmail(primaryEmail, "supervisor")
 
-
     # Depending on the parameter 'sendTo', this method will send the email either to the Primary, Secondary, or the Student
     def sendEmail(self, template, sendTo):
         formTemplate = template.body
@@ -259,17 +267,22 @@ class emailHandler():
                 recipients=[self.studentEmail])
             recipient = 'Student'
         elif sendTo == "secondary":
-            message = Message(template.subject,
-                recipients=[self.supervisorEmail, self.primaryEmail])
-            recipient = 'Secondary Supervisor'
+            if self.term.isBreak:
+                supervisorEmails = []
+                for supervisor in self.supervisors:
+                    supervisorEmails.append(supervisor.EMAIL)
+                supervisorEmails = supervisorEmails[:-1]
+                message = Message(template.subject,
+                    recipients=supervisorEmails)
+                recipient = 'Secondary Supervisor'
+            else:
+                message = Message(template.subject,
+                    recipients=[self.supervisorEmail, self.primaryEmail])
+                recipient = 'Primary Supervisor'
         elif sendTo == "Labor Office":
             message = Message(template.subject,
                 recipients=[""]) #TODO: Email for the Labor Office
             recipient = 'Labor Office'
-        elif sendTo == "breakPrimary":
-            message = Message(template.subject,
-                recipients=[self.primarySupervisorEmail])
-            recipient = 'Primary Break Supervisor'
         elif sendTo == 'supervisor':
             message = Message(template.subject,
                 recipients=[self.supervisorEmail])
@@ -290,8 +303,6 @@ class emailHandler():
         form = form.replace("@@Creator@@", self.formHistory.createdBy.Supervisor.FIRST_NAME + " " + self.formHistory.createdBy.Supervisor.LAST_NAME)
         # 'Supervisor' is the supervisor on the current laborStatusForm that correspond to the formID we passed in when creating the class
         form = form.replace("@@Supervisor@@", self.laborStatusForm.supervisor.FIRST_NAME + " " + self.laborStatusForm.supervisor.LAST_NAME)
-        # 'Primary Supervisor' is the primary supervisor of the student who's laborStatusForm is passed in the initializer
-        form = form.replace("@@Primsupr@@", self.primaryForm.supervisor.FIRST_NAME + " " + self.primaryForm.supervisor.LAST_NAME)
         form = form.replace("@@Student@@", self.laborStatusForm.studentSupervisee.FIRST_NAME + " " + self.laborStatusForm.studentSupervisee.LAST_NAME)
         form = form.replace("@@StudB@@", self.laborStatusForm.studentSupervisee.ID)
         form = form.replace("@@Position@@", self.laborStatusForm.POSN_CODE+ ", " + self.laborStatusForm.POSN_TITLE)
@@ -301,9 +312,16 @@ class emailHandler():
             form = form.replace("@@Hours@@", self.weeklyHours)
         else:
             form = form.replace("@@Hours@@", self.contractHours)
-        if self.primaryFormHistory != None:
-            form = form.replace("@@PrimarySupervisor@@", self.primaryLaborStatusForm.supervisor.FIRST_NAME +" "+ self.primaryLaborStatusForm.supervisor.LAST_NAME)
-            form = form.replace("@@SupervisorEmail@@", self.supervisorEmail)
+        if self.term.isBreak:
+            previousSupervisorNames = ""
+            for supervisor in self.supervisors[:-1]:
+                previousSupervisorNames += supervisor.FIRST_NAME + " " + supervisor.LAST_NAME + ", "
+            previousSupervisorNames = previousSupervisorNames[:-2]
+            form = form.replace("@@PreviousSupervisor(s)@@", previousSupervisorNames)
+        else:
+            # 'Primary Supervisor' is the primary supervisor of the student who's laborStatusForm is passed in the initializer
+            form = form.replace("@@PrimarySupervisor@@", self.primaryForm.supervisor.FIRST_NAME + " " + self.primaryForm.supervisor.LAST_NAME)
+        form = form.replace("@@SupervisorEmail@@", self.supervisorEmail)
         form = form.replace("@@Date@@", self.date)
         form = form.replace("@@ReleaseReason@@", self.releaseReason)
         form = form.replace("@@ReleaseDate@@", self.releaseDate)

@@ -75,7 +75,7 @@ emailtemps= [
                 "formType":"Secondary Labor Status Form",
                 "action":"Submitted",
                 "subject":"Labor Status Form Received",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong> and <strong>@@Primsupr@@</strong>,</p>
+                "body":'''<p>Dear <strong>@@Supervisor@@</strong> and <strong>@@PrimarySupervisor@@</strong>,</p>
                             <p>&nbsp;</p>
                             <p>This email is confirmation that the Labor Program Office has received a Labor Status Form for a secondary position by
                             <strong>@@Supervisor@@</strong> for <strong>@@Student@@</strong>.Please take a moment to read carefully and review the information. Below is the position information for the student you have requested to hire.</p>
@@ -108,8 +108,8 @@ emailtemps= [
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
                             <p>&nbsp;</p>
-                            <p>This email is confirmation that the Labor Program Office has received a Labor Status Form
-                            <strong>@@Creator@@</strong> for <strong>Student</strong>. Please take a moment to read carefully and review the information Below is the position information for the student you have requested to hire.</p>
+                            <p>This email is confirmation that the Labor Program Office has received a Labor Status Form by
+                            <strong>@@Creator@@</strong> for <strong>@@Student@@</strong>. Please take a moment to read carefully and review the information Below is the position information for the student you have requested to hire.</p>
                             <p>&nbsp;</p>
                             <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, the student’s job will be active to allow for time entry in 24 hours. If at that time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
                             <p>&nbsp;</p>
@@ -220,7 +220,7 @@ emailtemps= [
                 "formType":"Secondary Labor Status Form",
                 "action":"Rejected",
                 "subject":"Labor Status Form Rejected",
-                "body":'''<p>Dear <strong>@@Supervisor@@</strong> and <strong>@@Primsupr@@</strong>,</p>
+                "body":'''<p>Dear <strong>@@Supervisor@@</strong> and <strong>@@PrimarySupervisor@@</strong>,</p>
                             <p>&nbsp;</p>
                             <p>A Labor Status Form previously submitted by you for
                             <strong>@@Student@@</strong>, <strong>@@StudB@@</strong> hiring him/her to work in a secondary position has been Denied. This is an informational email to you as the supervisor for the primary labor position.</p>
@@ -397,6 +397,15 @@ emailtemps= [
                             ''',
                 "audience":"Student"
                 },
+                {
+                "purpose":"Labor Overload Form Rejected For Supervisor",
+                "formType":"Labor Overload Form",
+                "action":"Rejected",
+                "subject":"Labor Overload Form Rejected",
+                "body":'''
+                            ''',
+                "audience":"Supervisor"
+                },
                 #SAAS
                 {
                 "purpose":"SAAS and Financial Aid Office",
@@ -473,8 +482,42 @@ emailtemps= [
                 "audience":"Supervisor"
                 },
                 {
-                "purpose":"Break Labor Status Form Submitted For Supervisor on Second LSF", #Original name: Break Labor Status Form Submitted For Supervisor on Second LSF
-                "formType":"Second Break Labor Status Form",
+                "purpose":"Break Labor Status Form Approved for Student",
+                "formType":"Break Labor Status Form",
+                "action":"Approved",
+                "subject":"Labor Status Form Approved",
+                "body":'''
+                            ''',
+                "audience":"Student"
+                },
+                {"purpose":"Break Labor Status Form Approved For Supervisor",
+                "formType":"Break Labor Status Form",
+                "action":"Approved",
+                "subject":"Labor Status Form Approved",
+                "body":'''
+                            ''',
+                "audience":"Supervisor"
+                },
+                {
+                "purpose":"Break Labor Status Form Rejected for Student",
+                "formType":"Break Labor Status Form",
+                "action":"Rejected",
+                "subject":"Labor Status Form Rejected",
+                "body":'''
+                            ''',
+                "audience":"Student"
+                },
+                {"purpose":"Break Labor Status Form Rejected For Supervisor",
+                "formType":"Break Labor Status Form",
+                "action":"Rejected",
+                "subject":"Labor Status Form Rejected",
+                "body":'''
+                            ''',
+                "audience":"Supervisor"
+                },
+                {
+                "purpose":"Break Labor Status Form Submitted For Supervisor on Additional LSF", #Original name: Break Labor Status Form Submitted For Supervisor on Second LSF
+                "formType":"Additional Break Labor Status Form",
                 "action":"Submitted",
                 "subject":"Labor Status Form Received",
                 "body":'''<p>Dear <strong>@@Supervisor@@</strong>,</p>
@@ -484,7 +527,7 @@ emailtemps= [
                             <p>&nbsp;</p>
                             <p><strong>NOTICE:</strong> This does not mean your position is active to begin work, only a status form has been submitted to await approval. Once this position has been approved, the student’s job will be active to allow for time entry in 24 hours. If at that time, the student cannot clock in, please contact the Labor Program Office immediately.</p>
                             <p>&nbsp;</p>
-                            <p><strong>NOTICE:</strong> <strong>@@Student@@</strong> is already working with <strong>@@PrimarySupervisor@@</strong>.
+                            <p><strong>NOTICE:</strong> <strong>@@Student@@</strong> is already working with <strong>@@PreviousSupervisor(s)@@</strong>.
                             Please note that students are only allowed to work for a maximum of 40 hours per week.</p>
                             <p>&nbsp;</p>
                             <p>If you have any further questions or concerns, contact the Labor Program Office at ext. 3611.</p>
@@ -506,11 +549,11 @@ emailtemps= [
                             ''',
                 "audience":"Supervisor"
                 },
-                {"purpose":"Break Labor Status Form Submitted For Second Supervisor", # Original name: Break Labor Status Form Submitted For Second Supervisor
-                "formType":"Second Break Labor Status Form",
+                {"purpose":"Break Labor Status Form Submitted For Additional Supervisor", # Original name: Break Labor Status Form Submitted For Second Supervisor
+                "formType":"Additional Break Labor Status Form",
                 "action":"Submitted",
                 "subject":"Labor Status Form Received",
-                "body":'''<p>Dear <strong>@@PrimarySupervisor@@</strong>,</p>
+                "body":'''<p>Dear <strong>@@PreviousSupervisor(s)@@</strong>,</p>
                             <p>&nbsp;</p>
                             <p>This email is notify you that @@Supervisor@@ (@@SupervisorEmail@@) has submitted another labor status form for @@Student@@</p>
                             <p>&nbsp;</p>
