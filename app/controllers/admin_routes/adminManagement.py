@@ -29,58 +29,58 @@ def admin_Management():
 
 @admin.route("/adminManagement/userInsert", methods=['POST'])
 def manageLaborAdmin():
-    if request.form.get("add") == "add":
+    if request.form.get("addAdmin") != "":
         newAdmin = getUser('addAdmin')
-        addAdmin(newAdmin, labor='labor')
+        addAdmin(newAdmin, 'labor')
         flashMassage(newAdmin, 'added', 'Labor')
 
-    elif request.form.get("remove") == "remove":
+    elif request.form.get("removeAdmin") != "":
         oldAdmin = getUser('removeAdmin')
-        removeAdmin(oldAdmin, labor='labor')
+        removeAdmin(oldAdmin, 'labor')
         flashMassage(oldAdmin, 'removed', 'Labor')
 
-    elif request.form.get("addAid") == "addAid":
+    elif request.form.get("addFinancialAidAdmin") != "":
         newAdmin = getUser('addFinancialAidAdmin')
-        addAdmin(newAdmin, finAid='finAid')
+        addAdmin(newAdmin, 'finAid')
         flashMassage(newAdmin, 'added', 'Financial Aid')
 
-    elif request.form.get("removeAid") == "removeAid":
+    elif request.form.get("removeFinancialAidAdmin") != "":
         oldAdmin = getUser('removeFinancialAidAdmin')
-        removeAdmin(oldAdmin, finAid='finAid')
+        removeAdmin(oldAdmin, 'finAid')
         flashMassage(oldAdmin, 'removed', 'Financial Aid')
 
-    elif request.form.get("addSaas") == "addSaas":
+    elif request.form.get("addSAASAdmin") != "":
         newAdmin = getUser('addSAASAdmin')
-        addAdmin(newAdmin, saas='saas')
+        addAdmin(newAdmin, 'saas')
         flashMassage(newAdmin, 'added', 'SAAS')
 
-    elif request.form.get("removeSaas") == "removeSaas":
+    elif request.form.get("removeSAASAdmin") != "":
         oldAdmin = getUser('removeSAASAdmin')
-        removeAdmin(oldAdmin, saas='saas')
+        removeAdmin(oldAdmin, 'saas')
         flashMassage(oldAdmin, 'removed', 'SAAS')
 
     return redirect(url_for('admin.admin_Management'))
 
-def getUser(username):
-    username = request.form.get(username)
+def getUser(selectpickerID):
+    username = request.form.get(selectpickerID)
     user = User.get(User.username == username)
     return user
 
-def addAdmin(newAdmin, labor=None, finAid=None, saas=None):
-    if labor:
+def addAdmin(newAdmin, adminType):
+    if adminType == 'labor':
         newAdmin.isLaborAdmin = 1
-    if finAid:
+    if adminType == 'finAid':
         newAdmin.isFinancialAidAdmin = 1
-    if saas:
+    if adminType == 'saas':
         newAdmin.isSaasAdmin = 1
     newAdmin.save()
 
-def removeAdmin(oldAdmin, labor=None, finAid=None, saas=None):
-    if labor:
+def removeAdmin(oldAdmin, adminType):
+    if adminType == 'labor':
         oldAdmin.isLaborAdmin = 0
-    if finAid:
+    if adminType == 'finAid':
         oldAdmin.isFinancialAidAdmin = 0
-    if saas:
+    if adminType == 'saas':
         oldAdmin.isSaasAdmin = 0
     oldAdmin.save()
 
