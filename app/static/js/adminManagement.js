@@ -47,7 +47,7 @@ function modal(button) {
   else {
     category = "danger"
     msg = "Please select a user.";
-    $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
+    $("#flash_container").html('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
     $("#flasher").delay(3000).fadeOut()
       }
 };
