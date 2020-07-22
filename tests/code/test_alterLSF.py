@@ -26,7 +26,7 @@ def delete_forms():
 
 
 currentUser = User.get(User.userID == 1) # Scott Heggen's entry in User table
-LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 2)
+lsf = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 2)
 fieldsChanged = {'supervisor':{'oldValue':'B12361006', 'newValue':'B12365892','date':'07/21/2020'},
        'weeklyHours':{'oldValue': '10', 'newValue': '12', 'date': '07/21/2020'},
        'position':{'oldValue': 'S61419', 'newValue': 'S61407', 'date': '07/21/2020'},
@@ -41,51 +41,51 @@ fieldsChanged_contractHours = {'contractHours':{'oldValue': '40', 'newValue': '6
 def test_modifyLSF(setup, cleanup):
 
     fieldName = 'supervisorNotes'
-    modifyLSF(fieldsChanged, fieldName, LSF, currentUser)
-    assert LSF.supervisorNotes == 'new notes.'
+    modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
+    assert lsf.supervisorNotes == 'new notes.'
 
     fieldName = 'supervisor'
-    modifyLSF(fieldsChanged, fieldName, LSF, currentUser)
-    assert LSF.supervisor.ID == 'B12365892'
+    modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
+    assert lsf.supervisor.ID == 'B12365892'
 
     fieldName = 'position'
-    modifyLSF(fieldsChanged, fieldName, LSF, currentUser)
-    assert LSF.POSN_CODE == 'S61407'
+    modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
+    assert lsf.POSN_CODE == 'S61407'
 
     fieldName = 'weeklyHours'
-    modifyLSF(fieldsChanged, fieldName, LSF, currentUser)
-    assert LSF.weeklyHours == 12
+    modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
+    assert lsf.weeklyHours == 12
 
     fieldName = 'contractHours'
-    modifyLSF(fieldsChanged_contractHours, fieldName, LSF, currentUser)
-    assert LSF.contractHours == 60
+    modifyLSF(fieldsChanged_contractHours, fieldName, lsf, currentUser)
+    assert lsf.contractHours == 60
 
 @pytest.mark.integration
 def test_adjustLSF(setup, cleanup):
     fieldName = 'supervisorNotes'
-    adjustLSF(fieldsChanged, fieldName, LSF, currentUser)
+    adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
     assert AdminNotes.get(AdminNotes.notesContents == 'new notes.')
 
     fieldName = 'supervisor'
-    adjustLSF(fieldsChanged, fieldName, LSF, currentUser)
+    adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
     adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == fieldName)
     assert adjustedForm.oldValue == 'B12361006'
     assert adjustedForm.newValue == 'B12365892'
 
     fieldName = 'position'
-    adjustLSF(fieldsChanged, fieldName, LSF, currentUser)
+    adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
     adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == fieldName)
     assert adjustedForm.oldValue == 'S61419'
     assert adjustedForm.newValue == 'S61407'
 
     fieldName = 'weeklyHours'
-    adjustLSF(fieldsChanged, fieldName, LSF, currentUser)
+    adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
     adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == fieldName)
     assert adjustedForm.oldValue == '10'
     assert adjustedForm.newValue == '12'
 
     fieldName = 'contractHours'
-    adjustLSF(fieldsChanged_contractHours, fieldName, LSF, currentUser)
+    adjustLSF(fieldsChanged_contractHours, fieldName, lsf, currentUser)
     adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == fieldName)
     assert adjustedForm.oldValue == '40'
     assert adjustedForm.newValue == '60'
@@ -94,15 +94,15 @@ def test_adjustLSF(setup, cleanup):
 def test_overloadFormCreation(setup, cleanup):
     fieldName = 'weeklyHours'
     # Modified verload
-    modifyLSF(fieldsChanged_overload, fieldName, LSF, currentUser)
-    assert LSF.weeklyHours == 20
-    formHistory = FormHistory.get((FormHistory.formID == LSF.laborStatusFormID) & (FormHistory.historyType == 'Labor Overload Form'))
+    modifyLSF(fieldsChanged_overload, fieldName, lsf, currentUser)
+    assert lsf.weeklyHours == 20
+    formHistory = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) & (FormHistory.historyType == 'Labor Overload Form'))
     assert formHistory.historyType.historyTypeName == 'Labor Overload Form'
 
     # Adjusted Overload
-    adjustLSF(fieldsChanged_overload, fieldName, LSF, currentUser)
+    adjustLSF(fieldsChanged_overload, fieldName, lsf, currentUser)
     adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == fieldName)
     assert adjustedForm.oldValue == '10'
     assert adjustedForm.newValue == '20'
-    formHistory = FormHistory.get((FormHistory.formID == LSF.laborStatusFormID) & (FormHistory.historyType == 'Labor Overload Form'))
+    formHistory = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) & (FormHistory.historyType == 'Labor Overload Form'))
     assert formHistory.historyType.historyTypeName == 'Labor Overload Form'
