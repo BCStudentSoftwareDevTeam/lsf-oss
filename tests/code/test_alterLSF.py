@@ -1,5 +1,5 @@
 import pytest
-from app.controllers.main_routes.alterLSF import modifyLSF, adjustLSF
+from app.controllers.main_routes.alterLSF import modifyLSF, adjustLSF, createOverloadForm
 from app.models.user import User
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.adminNotes import AdminNotes
@@ -22,8 +22,8 @@ def cleanup():
     db_cleanup()
 
 def db_cleanup():
-    AdminNotes.delete().where(AdminNotes.formID.cast('char').contains("10")).execute()
-    formHistories = FormHistory.select().where((FormHistory.formID == 10) & (FormHistory.historyType == 'Labor Adjustment Form'))
+    AdminNotes.delete().where(AdminNotes.formID.cast('char').contains("2")).execute()
+    formHistories = FormHistory.select().where((FormHistory.formID == 2) & (FormHistory.historyType == 'Labor Adjustment Form'))
     for form in formHistories:
         AdjustedForm.delete().where(AdjustedForm.adjustedFormID == form.adjustedForm.adjustedFormID).execute()
         form.delete().execute()
@@ -31,7 +31,7 @@ def db_cleanup():
 
 
 currentUser = User.get(User.userID == 1) # Scott Heggen's entry in User table
-LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 10)
+LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 2)
 rsp = {'supervisor':{'oldValue':'B12361006', 'newValue':'B12365892','date':'07/21/2020'},
        'weeklyHours':{'oldValue': '10', 'newValue': '12', 'date': '07/21/2020'},
        'position':{'oldValue': 'S61419', 'newValue': 'S61407', 'date': '07/21/2020'},
@@ -85,12 +85,12 @@ def test_adjustLSF(setup, cleanup):
     assert adjustedForm.newValue == '12'
 
 
-# @pytest.mark.integration
-# def createOverloadForm():
-#     k = 'weeklyHours'
-#     createOverloadForm(rsp, k ,LSF, currentUser, adjustedForm, formHistories)
-#     adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == k)
-#     formHistories = FormHistory.get(FormHistory.historyType)
-#     assert adjustedForm.oldValue == 20
-#     assert adjustedForm.newValue == 10
-#     assert formHistories == 'Labor Adjustment Form'
+@pytest.mark.integration
+def test_createOverloadForm(setup, cleanup):
+    k = 'weeklyHours'
+    createOverloadForm(rsp, k ,LSF, currentUser, adjustedForm, formHistories)
+    adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == k)
+    formHistories = FormHistory.get(FormHistory.historyType)
+    assert adjustedForm.oldValue == '10'
+    assert adjustedForm.newValue == '12'
+    assert not formHistories == 'Labor Overload Form'
