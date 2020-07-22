@@ -6,7 +6,11 @@ from app.models.adminNotes import AdminNotes
 from app.models.adjustedForm import AdjustedForm
 from app.models.formHistory import FormHistory
 
-#  TODO : At the beginning of the file clean up the records we are creating.
+#  TODO
+# 1. Figure out how to create LSF and Form History for the lsf
+# 2. Delete these two entries
+# 3. test overload creation
+
 @pytest.fixture
 def setup():
     db_cleanup()
@@ -18,14 +22,16 @@ def cleanup():
     db_cleanup()
 
 def db_cleanup():
-    AdminNotes.delete().where(AdminNotes.formID.cast('char').contains("9")).execute()
-    FormHistory.delete().where((FormHistory.formID == 9) & (FormHistory.historyType != 'Labor Status Form')).execute()
-    # AdjustedForm.delete().where(AdjustedForm.formID == 8).execute()
+    AdminNotes.delete().where(AdminNotes.formID.cast('char').contains("10")).execute()
+    formHistories = FormHistory.select().where((FormHistory.formID == 10) & (FormHistory.historyType == 'Labor Adjustment Form'))
+    for form in formHistories:
+        AdjustedForm.delete().where(AdjustedForm.adjustedFormID == form.adjustedForm.adjustedFormID).execute()
+        form.delete().execute()
 
 
 
 currentUser = User.get(User.userID == 1) # Scott Heggen's entry in User table
-LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 9)
+LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 10)
 rsp = {'supervisor':{'oldValue':'B12361006', 'newValue':'B12365892','date':'07/21/2020'},
        'weeklyHours':{'oldValue': '10', 'newValue': '12', 'date': '07/21/2020'},
        'position':{'oldValue': 'S61419', 'newValue': 'S61407', 'date': '07/21/2020'},
@@ -51,12 +57,7 @@ def test_modifyLSF(setup, cleanup):
 
     k = 'weeklyHours'
     modifyLSF(rsp, k, LSF, currentUser)
-    assert LSF.weeklyHours == 10
-
-    # # Overload hours created
-    # k = 'weeklyHours'
-    # modifyLSF(rsp_overload, k, LSF, currentUser)
-    # assert LSF.weeklyHours == 20
+    assert LSF.weeklyHours == 12
 
 @pytest.mark.integration
 def test_adjustLSF(setup, cleanup):
@@ -80,8 +81,8 @@ def test_adjustLSF(setup, cleanup):
     k = 'weeklyHours'
     adjustLSF(rsp, k, LSF, currentUser)
     adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == k)
-    assert adjustedForm.oldValue == '12'
-    assert adjustedForm.newValue == '10'
+    assert adjustedForm.oldValue == '10'
+    assert adjustedForm.newValue == '12'
 
 
 # @pytest.mark.integration
