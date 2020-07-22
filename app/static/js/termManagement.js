@@ -21,36 +21,42 @@ function getDate(obj, termCode) {
   var termID = obj.id.split("_")[1] // This is how we format the term code
   var dateType = obj.id.split("_")[0] // This variable stores whether the value is a start date or an end date
   var tabledata_dict = {};
-  tabledata_dict[dateType] = obj.value;
-  tabledata_dict["termCode"] = termID;
-  data = JSON.stringify(tabledata_dict); // need to do this in order for the python to recognize it
-    $.ajax({
-      type: "POST",
-      url: "/termManagement/setDate/",
-      datatype: "json",
-      data: data,
-      contentType: 'application/json',
-      success: function(response){
+  var id = "#" + String(obj.id)
+  if (obj.value === "") {
+    $(id).css('border', '1px solid red')
+    $("#flash_container").html('<div class="alert alert-danger" role="alert" id="flasher">Empty date fields are invalid. The previous date has not been deleted.</div>');
+    $("#flasher").delay(5000).fadeOut();
+  } else {
+    $(id).css('border', '')
+    tabledata_dict[dateType] = obj.value;
+    tabledata_dict["termCode"] = termID;
+    data = JSON.stringify(tabledata_dict); // need to do this in order for the python to recognize it
+      $.ajax({
+        type: "POST",
+        url: "/termManagement/setDate/",
+        datatype: "json",
+        data: data,
+        contentType: 'application/json',
+        success: function(response){
+          stateBtnValue = $("#term_btn_" + termCode).val();
+          start = $("#start_" + termCode).val();
+          end = $("#end_" +termCode).val();
+          primaryCutOff = $("#primaryCutOff_" + termCode).val();
+          adjustmentCutOff = $("#adjustmentCutOff_" + termCode).val();
 
-        if(response)
-        stateBtnValue = $("#term_btn_" + termCode).val();
-        start = $("#start_" + termCode).val();
-        end = $("#end_" +termCode).val();
-        primaryCutOff = $("#primaryCutOff_" + termCode).val();
-        adjustmentCutOff = $("#adjustmentCutOff_" + termCode).val();
-
-        if (start != "" && end != "" && primaryCutOff != "" && adjustmentCutOff != "") {
-          $('#term_btn_' + termCode).prop('disabled', false)
+          if (start != "" && end != "" && primaryCutOff != "" && adjustmentCutOff != "") {
+            $('#term_btn_' + termCode).prop('disabled', false)
+          }
+          category = "info"
+          dateChanged = response['dateChanged']
+          termchanged = response['changedTerm']
+          newDate = response['newDate']
+          $("#flash_container").html('<div class="alert alert-'+ category +'" role="alert" id="flasher">The '+ dateChanged +' for '+ termchanged +' was changed to '+ newDate +'</div>');
+          $("#flasher").delay(5000).fadeOut();
         }
-        category = "info"
-        dateChanged = response['dateChanged']
-        termchanged = response['changedTerm']
-        newDate = response['newDate']
-        $("#flash_container").html('<div class="alert alert-'+ category +'" role="alert" id="flasher">The '+ dateChanged +' for '+ termchanged +' was changed to '+ newDate +'</div>');
-        $("#flasher").delay(5000).fadeOut();
-      }
 
-    });
+      });
+  }
 }
 
 function updateStart(obj, termCode){
