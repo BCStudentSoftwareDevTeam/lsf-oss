@@ -7,6 +7,7 @@ from app.login_manager import require_login
 from flask import Flask, redirect, url_for, flash, jsonify
 from app.models.supervisor import Supervisor
 from app.models.student import Student
+from app.logic.tracy import Tracy
 
 @admin.route('/admin/adminManagement', methods=['GET'])
 # @login_required
@@ -36,28 +37,40 @@ def laborAdminSearch():
     try:
         rsp = eval(request.data.decode("utf-8"))
         userList = []
-        if " " not in rsp:
-            supervisors = User.select().join_from(User, Supervisor).where(((User.Supervisor.FIRST_NAME.contains(rsp)) | (User.Supervisor.LAST_NAME.contains(rsp))) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
-            students = User.select().join_from(User, Student).where(((User.Student.FIRST_NAME.contains(rsp)) | (User.Student.LAST_NAME.contains(rsp))) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
-        else:
-            rsp = rsp.split()
+        tracySupervisors = Tracy().getSupervisorsFromUserInput(rsp)
+        supervisors = []
+        tracyStudents = Tracy().getStudentsFromUserInput(rsp)
+        students = []
+        for user in tracySupervisors:
             try:
-                supervisors = User.select().join_from(User, Supervisor).where(((User.Supervisor.FIRST_NAME.contains(rsp[0])) & (User.Supervisor.LAST_NAME.contains(rsp[1]))) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
-                students = User.select().join_from(User, Student).where(((User.Student.FIRST_NAME.contains(rsp[0])) & (User.Student.LAST_NAME.contains(rsp[1]))) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
-            except IndexError:
-                # We get an IndexError when rsp is split into one list item rather than two list items due to a missing substring after the space
-                supervisors = User.select().join_from(User, Supervisor).where((User.Supervisor.FIRST_NAME.contains(rsp[0])) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
-                students = User.select().join_from(User, Student).where((User.Student.FIRST_NAME.contains(rsp[0])) & ((User.isLaborAdmin != True) | (User.isLaborAdmin == None)))
+                currentUser = User.get(User.Supervisor == user.ID)
+                if currentUser.isLaborAdmin == True:
+                    pass
+                else:
+                    supervisors.append(user)
+            except Exception as e:
+                supervisors.append(user)
+        for user in tracyStudents:
+            try:
+                currentUser = User.get(User.Student == user.ID)
+                if currentUser.isLaborAdmin == True:
+                    pass
+                else:
+                    students.append(user)
+            except Exception as e:
+                students.append(user)
         for i in supervisors:
-            userList.append({'username': i.username,
-                            'firstName': i.Supervisor.FIRST_NAME,
-                            'lastName': i.Supervisor.LAST_NAME,
+            username = i.EMAIL.split('@', 1)
+            userList.append({'username': username[0],
+                            'firstName': i.FIRST_NAME,
+                            'lastName': i.LAST_NAME,
                             'type': 'Supervisor'
                             })
         for i in students:
-            userList.append({'username': i.username,
-                            'firstName': i.Student.FIRST_NAME,
-                            'lastName': i.Student.LAST_NAME,
+            username = i.STU_EMAIL.split('@', 1)
+            userList.append({'username': username[0],
+                            'firstName': i.FIRST_NAME,
+                            'lastName': i.LAST_NAME,
                             'type': 'Student'
                             })
         return jsonify(userList)
@@ -85,6 +98,7 @@ def addLaborAdmin():
     if request.form.get('addAdmin') != "":
         newAdmins = request.form.get('addAdmin')   #this is taking the name in the select tag
         newAdmin = User.get(User.username == newAdmins)
+        print('Inside of Labor Admins', newAdmins)
         newAdmin.isLaborAdmin = 1
         newAdmin.save()
         if newAdmin.Student:

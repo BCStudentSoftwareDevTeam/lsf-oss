@@ -105,3 +105,31 @@ class Tracy():
             raise InvalidQueryException("Position Code {} not found in STUPOSN".format(positionCode))
 
         return position
+
+    def getSupervisorsFromUserInput(self, userInput: str):
+        """
+        Return a list of supervisors based off of the user input
+        """
+        if " " not in userInput:
+            supervisors = STUSTAFF.query.filter((STUSTAFF.FIRST_NAME.contains(userInput)) | (STUSTAFF.LAST_NAME.contains(userInput))).all()
+        else:
+            userInput = userInput.split()
+            try:
+                supervisors = STUSTAFF.query.filter((STUSTAFF.FIRST_NAME.contains(userInput[0])) & (STUSTAFF.LAST_NAME.contains(userInput[1]))).all()
+            except IndexError:
+                supervisors = STUSTAFF.query.filter(STUSTAFF.FIRST_NAME.contains(userInput[0])).all()
+        return supervisors
+
+    def getStudentsFromUserInput(self, userInput: str):
+        """
+        Return a list of students based off of the user input
+        """
+        if " " not in userInput:
+            students = STUDATA.query.filter((STUDATA.FIRST_NAME.contains(userInput)) | (STUDATA.LAST_NAME.contains(userInput))).all()
+        else:
+            userInput = userInput.split()
+            try:
+                students = STUDATA.query.filter((STUDATA.FIRST_NAME.contains(userInput[0])) & (STUDATA.LAST_NAME.contains(userInput[1]))).all()
+            except IndexError:
+                students = STUDATA.query.filter(STUDATA.FIRST_NAME.contains(userInput[0])).all()
+        return students
