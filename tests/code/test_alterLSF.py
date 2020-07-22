@@ -33,9 +33,9 @@ fieldsChanged = {'supervisor':{'oldValue':'B12361006', 'newValue':'B12365892','d
        'supervisorNotes':{'oldValue':'old notes.', 'newValue':'new notes.'}
        }
 
-fieldsChanged_overload = {'weeklyHours': {'oldValue':'10', 'newValue':'20', 'date': '07/21/2020'}}
+fieldsChangedOverload = {'weeklyHours': {'oldValue':'10', 'newValue':'20', 'date': '07/21/2020'}}
 
-fieldsChanged_contractHours = {'contractHours':{'oldValue': '40', 'newValue': '60', 'date': '07/21/2020'}}
+fieldsChangedContractHours = {'contractHours':{'oldValue': '40', 'newValue': '60', 'date': '07/21/2020'}}
 
 @pytest.mark.integration
 def test_modifyLSF(setup, cleanup):
@@ -57,7 +57,7 @@ def test_modifyLSF(setup, cleanup):
     assert lsf.weeklyHours == 12
 
     fieldName = 'contractHours'
-    modifyLSF(fieldsChanged_contractHours, fieldName, lsf, currentUser)
+    modifyLSF(fieldsChangedContractHours, fieldName, lsf, currentUser)
     assert lsf.contractHours == 60
 
 @pytest.mark.integration
@@ -85,7 +85,7 @@ def test_adjustLSF(setup, cleanup):
     assert adjustedForm.newValue == '12'
 
     fieldName = 'contractHours'
-    adjustLSF(fieldsChanged_contractHours, fieldName, lsf, currentUser)
+    adjustLSF(fieldsChangedContractHours, fieldName, lsf, currentUser)
     adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == fieldName)
     assert adjustedForm.oldValue == '40'
     assert adjustedForm.newValue == '60'
@@ -94,13 +94,13 @@ def test_adjustLSF(setup, cleanup):
 def test_overloadFormCreation(setup, cleanup):
     fieldName = 'weeklyHours'
     # Modified verload
-    modifyLSF(fieldsChanged_overload, fieldName, lsf, currentUser)
+    modifyLSF(fieldsChangedOverload, fieldName, lsf, currentUser)
     assert lsf.weeklyHours == 20
     formHistory = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) & (FormHistory.historyType == 'Labor Overload Form'))
     assert formHistory.historyType.historyTypeName == 'Labor Overload Form'
 
     # Adjusted Overload
-    adjustLSF(fieldsChanged_overload, fieldName, lsf, currentUser)
+    adjustLSF(fieldsChangedOverload, fieldName, lsf, currentUser)
     adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == fieldName)
     assert adjustedForm.oldValue == '10'
     assert adjustedForm.newValue == '20'
