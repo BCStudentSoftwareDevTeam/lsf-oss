@@ -22,7 +22,7 @@ def term_Management():
             return render_template('errors/403.html'), 403
 
     today = datetime.now()
-    termsByYear ={} 
+    termsByYear ={}
     for termYear in range(today.year-2, today.year+3):
         createTerms(termYear)
         termsByYear[termYear] = list(Term.select().where(Term.termCode.cast('char').contains(termYear)))
@@ -33,7 +33,7 @@ def term_Management():
                           )
 
 def createTerms(termYear):
-    """ 
+    """
         This function creates the terms for the given Academic Year
     """
     code = termYear * 100
