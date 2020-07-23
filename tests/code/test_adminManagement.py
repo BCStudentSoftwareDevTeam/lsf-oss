@@ -9,17 +9,17 @@ def test_addAdmin():
     user = User.get(User.username == newAdmin)
 
     # Before adding user as admin
-    assert user.isLaborAdmin != True
+    assert not user.isLaborAdmin 
     # Test adding labor admin
     addAdmin(user, 'labor')
     assert user.isLaborAdmin
 
-    assert user.isFinancialAidAdmin != True
+    assert not user.isFinancialAidAdmin
     # Test adding financial aid admin
     addAdmin(user, 'finAid')
     assert user.isFinancialAidAdmin
 
-    assert user.isSaasAdmin != True
+    assert not user.isSaasAdmin
     # Test adding saas admin
     addAdmin(user, 'saas')
     assert user.isSaasAdmin
@@ -30,17 +30,17 @@ def test_removeAdmin():
     user = User.get(User.username == oldAdmin)
 
     # Before removing user as admin
-    assert user.isLaborAdmin == True
+    assert user.isLaborAdmin
     # Test removing labor admin
     removeAdmin(user, 'labor')
     assert not user.isLaborAdmin
 
-    assert user.isFinancialAidAdmin == True
+    assert user.isFinancialAidAdmin
     # Test removing financial aid admin
     removeAdmin(user, 'finAid')
     assert not user.isFinancialAidAdmin
 
-    assert user.isSaasAdmin == True
+    assert user.isSaasAdmin
     # Test removing saas admin
     removeAdmin(user, 'saas')
     assert not user.isSaasAdmin
