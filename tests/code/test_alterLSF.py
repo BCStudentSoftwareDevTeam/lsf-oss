@@ -5,6 +5,7 @@ from app.models.laborStatusForm import LaborStatusForm
 from app.models.adminNotes import AdminNotes
 from app.models.adjustedForm import AdjustedForm
 from app.models.formHistory import FormHistory
+from datetime import date, datetime
 
 @pytest.fixture
 def setup():
@@ -23,6 +24,7 @@ def delete_forms():
         AdjustedForm.delete().where(AdjustedForm.adjustedFormID == form.adjustedForm.adjustedFormID).execute()
         form.delete().execute()
     AdminNotes.delete().where(AdminNotes.formID.cast('char').contains("2")).execute()
+    FormHistory.delete().where((FormHistory.formID == 2) & (FormHistory.historyType == "Labor Overload Form")).execute()
 
 
 currentUser = User.get(User.userID == 1) # Scott Heggen's entry in User table
@@ -36,6 +38,7 @@ fieldsChanged = {'supervisor':{'oldValue':'B12361006', 'newValue':'B12365892','d
 fieldsChangedOverload = {'weeklyHours': {'oldValue':'10', 'newValue':'20', 'date': '07/21/2020'}}
 
 fieldsChangedContractHours = {'contractHours':{'oldValue': '40', 'newValue': '60', 'date': '07/21/2020'}}
+
 
 @pytest.mark.integration
 def test_modifyLSF(setup, cleanup):
@@ -55,6 +58,13 @@ def test_modifyLSF(setup, cleanup):
     fieldName = 'weeklyHours'
     modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
     assert lsf.weeklyHours == 12
+
+    # Modified verload
+    modifyLSF(fieldsChangedOverload, fieldName, lsf, currentUser)
+    assert lsf.weeklyHours == 20
+    formHistory = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) &
+                                  (FormHistory.historyType == 'Labor Overload Form'))
+    assert formHistory.historyType.historyTypeName == 'Labor Overload Form'
 
     fieldName = 'contractHours'
     modifyLSF(fieldsChangedContractHours, fieldName, lsf, currentUser)
@@ -84,6 +94,15 @@ def test_adjustLSF(setup, cleanup):
     assert adjustedForm.oldValue == '10'
     assert adjustedForm.newValue == '12'
 
+    # adjusted overload
+    adjustLSF(fieldsChangedOverload, fieldName, lsf, currentUser)
+    formHistory = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) &
+                                  (FormHistory.historyType == 'Labor Overload Form'))
+    adjustedForm = AdjustedForm.get(AdjustedForm.adjustedFormID == formHistory.adjustedForm)
+    assert adjustedForm.oldValue == '10'
+    assert adjustedForm.newValue == '20'
+    assert formHistory.historyType.historyTypeName == 'Labor Overload Form'
+
     fieldName = 'contractHours'
     adjustLSF(fieldsChangedContractHours, fieldName, lsf, currentUser)
     adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == fieldName)
@@ -91,17 +110,30 @@ def test_adjustLSF(setup, cleanup):
     assert adjustedForm.newValue == '60'
 
 @pytest.mark.integration
-def test_overloadFormCreation(setup, cleanup):
-    fieldName = 'weeklyHours'
-    # Modified verload
-    modifyLSF(fieldsChangedOverload, fieldName, lsf, currentUser)
+def test_createOverloadForm(setup, cleanup):
+    newWeeklyHours = 20
+
+    # modify lsf overload form
+    createOverloadForm(newWeeklyHours, lsf, currentUser)
     assert lsf.weeklyHours == 20
     formHistory = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) & (FormHistory.historyType == 'Labor Overload Form'))
     assert formHistory.historyType.historyTypeName == 'Labor Overload Form'
 
-    # Adjusted Overload
-    adjustLSF(fieldsChangedOverload, fieldName, lsf, currentUser)
-    adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == fieldName)
+    # adjust lsf overload form
+    adjustedforms = AdjustedForm.create(fieldAdjusted = 'weeklyHours',
+                                        oldValue      = '10',
+                                        newValue      = newWeeklyHours,
+                                        effectiveDate = datetime.strptime("07/21/2020", "%m/%d/%Y").strftime("%Y-%m-%d"))
+
+    formHistories = FormHistory.create(formID       = lsf.laborStatusFormID,
+                                       historyType  = "Labor Adjustment Form",
+                                       adjustedForm = adjustedforms.adjustedFormID,
+                                       createdBy    = currentUser,
+                                       createdDate  = date.today(),
+                                       status       = "Pending")
+
+    createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedforms.adjustedFormID, formHistories)
+    adjustedForm = AdjustedForm.get(AdjustedForm.fieldAdjusted == 'weeklyHours')
     assert adjustedForm.oldValue == '10'
     assert adjustedForm.newValue == '20'
     formHistory = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) & (FormHistory.historyType == 'Labor Overload Form'))
