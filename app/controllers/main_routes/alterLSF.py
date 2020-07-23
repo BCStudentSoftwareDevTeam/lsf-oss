@@ -147,7 +147,7 @@ def submitAlteredLSF(laborStatusKey):
                 LSF.WLS = position.WLS
                 LSF.save()
 
-            if k == "contractHours":
+            if k == "contractHours" and formStatus == "Pending":
                 LSF.contractHours = int(rsp[k]["newValue"])
                 LSF.save()
 

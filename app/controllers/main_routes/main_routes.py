@@ -12,12 +12,17 @@ from flask import json, jsonify
 from flask import make_response
 from app.logic.tracy import Tracy
 from app.logic.tracy import InvalidQueryException
+import app.login_manager as login_manager
 import base64
 
 
 @main_bp.before_app_request
 def before_request():
     pass # TODO Do we need to do anything here? User stuff?
+
+@main_bp.route('/logout', methods=['GET'])
+def logout():
+    return redirect(login_manager.logout())
 
 @main_bp.route('/', methods=['GET', 'POST'])
 def index():
