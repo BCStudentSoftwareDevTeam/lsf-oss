@@ -7,7 +7,6 @@ from flask_nav.elements import *
 
 app = Flask(__name__)
 bootstrap = Bootstrap(app)
-
 # login = LoginManager(app)  #FIXME: needs configured with our dev/prod environment handlers
 
 def load_config(file):
