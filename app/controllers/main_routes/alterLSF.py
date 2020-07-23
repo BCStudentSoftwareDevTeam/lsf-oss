@@ -16,7 +16,6 @@ from flask import json, jsonify
 from flask import request
 from flask import flash
 import base64
-#from app.logic.alterLSFFunctions import *
 
 
 @main_bp.route("/alterLSF/<laborStatusKey>", methods=["GET"])
