@@ -134,9 +134,11 @@ def getDates(termcode):
             datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y"), "isBreak": date.isBreak, "isSummer": date.isSummer}
     return json.dumps(datesDict)
 
-@main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
-def getPositions(department):
+@main_bp.route("/laborstatusform/getPositions/", methods=['POST'])
+def getPositions():
     """ Get all of the positions that are in the selected department """
+    rsp = (request.data).decode("utf-8")  # This turns byte data into a string
+    department = json.loads(rsp)
     positions = Tracy().getPositionsFromDepartment(department)
     positionDict = {}
     for position in positions:
@@ -151,9 +153,11 @@ def checkForPrimaryOrSecondLSFBreak(termCode, student, isOneLSF=None):
     else:
         return checkForPrimaryPosition(termCode, student)
 
-@main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
-def checkCompliance(department):
+@main_bp.route("/laborstatusform/getcompliance/", methods=["POST"])
+def checkCompliance():
     """ Gets the compliance status of a department. """
+    rsp = (request.data).decode("utf-8")  # This turns byte data into a string
+    department = json.loads(rsp)
     depts = Department.select().where(Department.DEPT_NAME == department)
     deptDict = {}
     for dept in depts:
