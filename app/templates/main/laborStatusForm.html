@@ -8,7 +8,7 @@
 
 ​{% block scripts %}
 {{super()}}
-<script type=text/javascript src="{{url_for('static', filename='js/laborStatusForm.js')}}"></script>
+<script type=text/javascript src="{{url_for('static', filename='js/laborStatusForm.js')}}?u={{lastStaticUpdate}}"></script>
 {% endblock %}
 
 {% block app_content %}

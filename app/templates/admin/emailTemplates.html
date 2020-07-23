@@ -2,7 +2,7 @@
 
 ​{% block scripts %}
 {{super()}}
-<script type=text/javascript src="{{url_for('static', filename='js/emailTemplates.js')}}"></script>
+<script type=text/javascript src="{{url_for('static', filename='js/emailTemplates.js')}}?u={{lastStaticUpdate}}"></script>
 <link rel="stylesheet" href="/static/css/tooltip.css" type="text/css"/>
 {% endblock %}
 
