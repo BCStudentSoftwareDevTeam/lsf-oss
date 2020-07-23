@@ -1,5 +1,5 @@
-from flask import request
-from app import cfg
+from flask import request, session
+from app import cfg, app
 from app.controllers.errors_routes.handlers import *
 from app.models.user import User, DoesNotExist
 from app.logic.userInsertFunctions import createUser, createSupervisorFromTracy, createStudentFromTracy, InvalidUserException
@@ -14,6 +14,17 @@ def getUsernameFromEnv(env):
     else:
         return cfg['user']['debug']
 
+def logout():
+    """
+        Erases the session and returns the URL for redirection
+    """
+    print("Logging out", session['username'])
+    session.clear()
+
+    url ="/"
+    if app.config['ENV'] == 'production':
+        url = "/Shibboleth.sso/Logout"
+    return url
 
 def require_login():
     env = request.environ
@@ -25,7 +36,10 @@ def require_login():
         print("Invalid User:", e)
         return False
 
-    print("Logging in as", user.username)
+    if 'username' not in session:
+        print("Logging in as", user.username)
+        session['username'] = user.username
+
     return user
 
 def auth_user(env, username):
