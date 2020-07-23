@@ -99,3 +99,25 @@ class Test_Tracy:
 
         with pytest.raises(InvalidQueryException):
             position = tracy.getPositionFromCode(17)
+
+    @pytest.mark.integration
+    def test_getSupervisorsFromUserInput(self, tracy):
+        supervisor = tracy.getSupervisorsFromUserInput("Jan Pearce")
+        assert "Jan" == supervisor[0].FIRST_NAME
+
+        # with pytest.raises(InvalidQueryException):
+        #     supervisor = tracy.getSupervisorsFromUserInput("Bill")
+        #
+        # with pytest.raises(InvalidQueryException):
+        #     supervisor = tracy.getSupervisorsFromUserInput("Jan1")
+
+    @pytest.mark.integration
+    def test_getStudentsFromUserInput(self, tracy):
+        students = tracy.getStudentsFromUserInput("Guillermo ")
+        assert "Guillermo" == students[0].FIRST_NAME
+
+        # with pytest.raises(InvalidQueryException):
+        #     supervisor = tracy.getSupervisorsFromUserInput("Bill")
+        #
+        # with pytest.raises(InvalidQueryException):
+        #     supervisor = tracy.getSupervisorsFromUserInput("Jan1")
