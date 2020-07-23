@@ -236,6 +236,9 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
   var jobType = $("#jobType").val();
   if (selectedHoursPerWeek){
     $("#selectedHoursPerWeek").empty();
+    if (fillhours == ""){
+      $(".selectpicker").selectpicker("refresh");
+    }
     var list = ["10", "12", "15", "20"];
     if (jobType == "Secondary"){
        list = ["5", "10"];
