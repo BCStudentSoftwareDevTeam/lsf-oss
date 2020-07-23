@@ -37,7 +37,7 @@
         {% for user in users %}
           {% if user.isLaborAdmin %}
             {% if user.Student %}
-              <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Student.FIRST_NAME}} {{user.Student.LAST_NAME}}</option>
+              <option value="{{user.username}}" data-subtext="{{user.username}} (Student)">{{user.Student.FIRST_NAME}} {{user.Student.LAST_NAME}}</option>
             {% elif user.Supervisor %}
               <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.Supervisor.FIRST_NAME}} {{user.Supervisor.LAST_NAME}}</option>
             {% endif %}

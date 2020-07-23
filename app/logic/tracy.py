@@ -133,3 +133,17 @@ class Tracy():
             except IndexError:
                 students = STUDATA.query.filter(STUDATA.FIRST_NAME.contains(userInput[0])).all()
         return students
+
+    def checkStudentOrSupervisor(self, username: str):
+        """
+        Checks if the username belongs to a student or supervisor
+        """
+        email = "{}@berea.edu".format(username)
+        try:
+            supervisor = self.getSupervisorFromEmail(email)
+            if supervisor:
+                return "Supervisor"
+        except:
+            student = self.getStudentFromEmail(email)
+            if student:
+                return "Student"

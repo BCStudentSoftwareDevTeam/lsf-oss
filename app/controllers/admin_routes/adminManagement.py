@@ -8,6 +8,7 @@ from flask import Flask, redirect, url_for, flash, jsonify
 from app.models.supervisor import Supervisor
 from app.models.student import Student
 from app.logic.tracy import Tracy
+from app.logic.userInsertFunctions import createUser, createSupervisorFromTracy, createStudentFromTracy
 
 @admin.route('/admin/adminManagement', methods=['GET'])
 # @login_required
@@ -97,8 +98,16 @@ def manageLaborAdmin():
 def addLaborAdmin():
     if request.form.get('addAdmin') != "":
         newAdmins = request.form.get('addAdmin')   #this is taking the name in the select tag
-        newAdmin = User.get(User.username == newAdmins)
-        print('Inside of Labor Admins', newAdmins)
+        try:
+            newAdmin = User.get(User.username == newAdmins)
+        except Exception as e:
+            usertype = Tracy().checkStudentOrSupervisor(newAdmins)
+            supervisor = student = None
+            if usertype == "Student":
+                student = createStudentFromTracy(newAdmins)
+            else:
+                supervisor = createSupervisorFromTracy(newAdmins)
+            newAdmin = createUser(newAdmins, student=student, supervisor=supervisor)
         newAdmin.isLaborAdmin = 1
         newAdmin.save()
         if newAdmin.Student:
