@@ -14,9 +14,13 @@ def cleanup():
     db_cleanup()
 
 def db_cleanup():
+    # data our tests add
     Term.delete().where(Term.termCode.cast('char').contains("2018")).execute()
     Term.delete().where(Term.termCode.cast('char').contains("2021")).execute()
     Term.delete().where(Term.termCode.cast('char').contains("2022")).execute()
+
+    # our demo data puts 2 terms in, let's leave those
+    Term.delete().where(Term.termCode.cast('char').contains("2020") & (Term.termCode > 202001)).execute()
 
 @pytest.mark.integration
 def test_createTerms(setup, cleanup):
