@@ -16,8 +16,8 @@ def term_Management():
     if not currentUser:                    # Not logged in
         return render_template('errors/403.html')
     if not currentUser.isLaborAdmin:       # Not an admin
-        if currentUser.Student: # logged in as a student
-            return redirect('/laborHistory/' + currentUser.Student.ID)
+        if currentUser.student: # logged in as a student
+            return redirect('/laborHistory/' + currentUser.student.ID)
         elif currentUser.Supervisor:
             return render_template('errors/403.html'), 403
 
@@ -27,7 +27,7 @@ def term_Management():
         createTerms(termYear)
         termsByYear[termYear] = list(Term.select().where(Term.termCode.cast('char').contains(termYear)))
 
-    return render_template( 'admin/termManagement.html',
+    return render_template( 'admin/termManagement.html',s
                              title='Term Management',
                              listOfTerms = termsByYear
                           )

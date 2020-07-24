@@ -28,8 +28,8 @@ def laborStatusForm(laborStatusKey = None):
     if not currentUser:        # Not logged in
         return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:
-        if currentUser.Student and not currentUser.Supervisor:
-            return redirect('/laborHistory/' + currentUser.Student.ID)
+        if currentUser.student and not currentUser.Supervisor:
+            return redirect('/laborHistory/' + currentUser.student.ID)
 
     # Logged in
     students = Tracy().getStudents()

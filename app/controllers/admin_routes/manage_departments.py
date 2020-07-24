@@ -23,8 +23,8 @@ def manage_departments():
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html')
         if not currentUser.isLaborAdmin:       # Not an admin
-            if currentUser.Student: # logged in as a student
-                return redirect('/laborHistory/' + currentUser.Student.ID)
+            if currentUser.student: # logged in as a student
+                return redirect('/laborHistory/' + currentUser.student.ID)
             elif currentUser.Supervisor:
                 return render_template('errors/403.html'), 403
 

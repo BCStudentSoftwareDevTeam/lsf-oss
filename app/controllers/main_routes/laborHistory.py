@@ -34,10 +34,10 @@ def laborhistory(id):
         authorizedForms = set(studentForms)
         if not currentUser.isLaborAdmin:
             # View only your own form history
-            if currentUser.Student and not currentUser.Supervisor:
-                if currentUser.Student.ID != id:
-                    return redirect('/laborHistory/' + currentUser.Student.ID)
-            elif currentUser.Supervisor and not currentUser.Student:
+            if currentUser.student and not currentUser.Supervisor:
+                if currentUser.student.ID != id:
+                    return redirect('/laborHistory/' + currentUser.student.ID)
+            elif currentUser.Supervisor and not currentUser.student:
                 supervisorForms = LaborStatusForm.select() \
                                   .join_from(LaborStatusForm, FormHistory) \
                                   .where((LaborStatusForm.Supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser)) \
@@ -52,7 +52,7 @@ def laborhistory(id):
                                 username=currentUser.username,
                                 laborStatusFormList = laborStatusFormList,
                                 authorizedForms = authorizedForms,
-                                studentUserName = User.get(User.Student == student).username
+                                studentUserName = User.get(User.student == student).username
                               )
 
     except Exception as e:
@@ -117,7 +117,7 @@ def populateModal(statusKey):
                 form.adjustedForm.fieldAdjusted = re.sub(r"(\w)([A-Z])", r"\1 \2", form.adjustedForm.fieldAdjusted).title()
 
         for form in forms:
-            if currentUser.Student and currentUser.Student.ID == student.ID:
+            if currentUser.student and currentUser.student.ID == student.ID:
                 buttonState = ButtonStatus.show_student_view
                 break
             else:

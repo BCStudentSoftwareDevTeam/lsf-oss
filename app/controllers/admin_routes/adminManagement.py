@@ -15,8 +15,8 @@ def admin_Management():
     if not currentUser:                    # Not logged in
         return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:       # Not an admin
-        if currentUser.Student: # logged in as a student
-            return redirect('/laborHistory/' + currentUser.Student.ID)
+        if currentUser.student: # logged in as a student
+            return redirect('/laborHistory/' + currentUser.student.ID)
         elif currentUser.Supervisor:
             return render_template('errors/403.html'), 403
 
@@ -85,8 +85,8 @@ def removeAdmin(oldAdmin, adminType):
     oldAdmin.save()
 
 def flashMassage(user, action, adminType):
-    if user.Student:
-        message = "{0} {1} has been {2} as a {3} Admin".format(user.Student.FIRST_NAME, user.Student.LAST_NAME, action, adminType)
+    if user.student:
+        message = "{0} {1} has been {2} as a {3} Admin".format(user.student.FIRST_NAME, user.student.LAST_NAME, action, adminType)
     elif user.Supervisor:
         message = "{0} {1} has been {2} as a {3} Admin".format(user.Supervisor.FIRST_NAME, user.Supervisor.LAST_NAME, action, adminType)
 
