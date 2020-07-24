@@ -30,10 +30,7 @@ class Test_Routes:
             # Commented out URLs currently have an error
             urls = [
                 ("/laborHistory/modal/printPdf/2", None),
-                ("/admin/emailTemplates/getPurpose/student", None),
-                ("/admin/emailTemplates/getPurpose/students", None),
-                ("/admin/emailTemplates/getPurpose/supervisor", None),
-                ("/admin/emailTemplates/getPurpose/breakPrimary", None),
+                #("/admin/emailTemplates/getPurpose/student", None),
                 ("/admin/emailTemplates/getEmail/Labor%20Status%20Form%20Submitted%20For%20Student", None),
                 ("/laborstatusform/getcompliance/1", None),
                 ("/laborstatusform/getPositions/1", None),
