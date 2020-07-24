@@ -94,7 +94,7 @@ class Tracy():
         """
         Return a list of position objects for the given department name, sorted by position title
         """
-        return STUPOSN.query.filter(STUPOSN.DEPT_NAME == department).order_by(STUPOSN.POSN_TITLE).all()
+        return STUPOSN.query.filter(STUPOSN.ORG == department).order_by(STUPOSN.POSN_TITLE).all()
 
     def getPositionFromCode(self, positionCode: str):
         """

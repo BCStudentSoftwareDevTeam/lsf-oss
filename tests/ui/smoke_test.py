@@ -14,6 +14,8 @@ from app import app
 def has_no_empty_params(rule):
     defaults = rule.defaults if rule.defaults is not None else ()
     arguments = rule.arguments if rule.arguments is not None else ()
+    print("Defaults: ",defaults)
+    print("Arguments: ", arguments)
     return len(defaults) >= len(arguments)
 
 class Test_Routes:
@@ -32,8 +34,8 @@ class Test_Routes:
                 ("/laborHistory/modal/printPdf/2", None),
                 #("/admin/emailTemplates/getPurpose/student", None), # getPurpose has changed
                 ("/admin/emailTemplates/getEmail/Labor%20Status%20Form%20Submitted%20For%20Student", None),
-                ("/laborstatusform/getcompliance/1", None),
-                ("/laborstatusform/getPositions/1", None),
+                ("/laborstatusform/getcompliance/2114", None),
+                ("/laborstatusform/getPositions/2114", None),
                 ("/laborstatusform/getstudents/202000/B00841417/1", None),
                 ("/laborstatusform/getstudents/202000/B00841417/0", None),
                 ("/laborstatusform/getDate/202000", None),
@@ -79,10 +81,12 @@ class Test_Routes:
 
             links = []
             for rule in app.url_map.iter_rules():
+                print("RULE: ", rule)
                 if method in rule.methods and has_no_empty_params(rule):
                     #url = url_for(rule.endpoint, **(rule.defaults or {}))
                     url = rule.rule
                     links.append((url,None))
+            print(links)
 
             return links
 
