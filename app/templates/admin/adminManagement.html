@@ -2,7 +2,7 @@
 
 {% block styles %}
 {{super()}}
-  <link href="/static/css/adminManagement.css" rel="stylesheet" type="text/css">
+  <link href="/static/css/adminManagement.css?u={{lastStaticUpdate}}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block scripts %}

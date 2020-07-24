@@ -1,7 +1,7 @@
 {% extends "finAidBase.html" %}
 {% block styles %}
 {{super()}}
-  <link rel="stylesheet" href="{{url_for('static', filename ='css/financialAidOverload.css')}}">
+  <link rel="stylesheet" href="{{url_for('static', filename ='css/financialAidOverload.css')}}?u={{lastStaticUpdate}}">
 {% endblock %}
 
 {% block scripts %}
