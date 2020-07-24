@@ -118,7 +118,6 @@ def getUser(selectpickerID):
     try:
         user = User.get(User.username == username)
     except Exception as e:
-        print('ERROR: Exception', type(e), e)
         usertype = Tracy().checkStudentOrSupervisor(username)
         supervisor = student = None
         if usertype == "Student":
