@@ -180,13 +180,10 @@ function updateDate(obj) { // updates max and min dates of the datepickers as th
 
 function getDepartment(object, stopSelectRefresh="") { // get department from select picker
    var department = $(object).val();
-   var url = "/laborstatusform/getPositions/";
+   var url = "/laborstatusform/getPositions/" + department;
        $.ajax({
-         method: "POST",
          url: url,
-         data: JSON.stringify(department),
          dataType: "json",
-         contentType: "application/json",
          success: function (response){
 
            fillPositions(response, stopSelectRefresh);
@@ -276,13 +273,10 @@ function checkCompliance(obj) {
   $("#dept-compliance-warning").hide();
   $("#departmentClass").removeClass(" has-error")
   var department = $(obj).val();
-  var url = "/laborstatusform/getcompliance/";
+  var url = "/laborstatusform/getcompliance/" + department;
       $.ajax({
-        method: "POST",
         url: url,
-        data: JSON.stringify(department),
         dataType: "json",
-        contentType: "application/json",
         success: function (response){
           if(response.Department["Department Compliance"] == false){
             $("#warningModal").modal("show");
