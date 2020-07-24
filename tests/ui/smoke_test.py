@@ -38,6 +38,7 @@ class Test_Routes:
                 ("/laborstatusform/getcompliance/1", None),
                 ("/laborstatusform/getPositions/1", None),
                 ("/laborstatusform/getstudents/202000/B00841417/1", None),
+                ("/laborstatusform/getstudents/202000/B00841417/0", None),
                 ("/laborstatusform/getDate/202000", None),
                 ("/laborHistory/modal/2", None),
                 ("/admin/pendingForms/pendingLabor", None),
