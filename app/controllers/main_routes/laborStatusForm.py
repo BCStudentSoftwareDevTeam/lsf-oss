@@ -28,7 +28,7 @@ def laborStatusForm(laborStatusKey = None):
     if not currentUser:        # Not logged in
         return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:
-        if currentUser.student and not currentUser.Supervisor:
+        if currentUser.student and not currentUser.supervisor:
             return redirect('/laborHistory/' + currentUser.student.ID)
 
     # Logged in
@@ -41,9 +41,9 @@ def laborStatusForm(laborStatusKey = None):
     if laborStatusKey != None:
         selectedLSForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         selectedFormHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
-        creator = selectedFormHistory.createdBy.Supervisor.ID
+        creator = selectedFormHistory.createdBy.supervisor.ID
         supervisor = selectedLSForm.supervisor.ID
-        if currentUser.Supervisor.ID == supervisor or currentUser.Supervisor.ID == creator:
+        if currentUser.supervisor.ID == supervisor or currentUser.supervisor.ID == creator:
             forms = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey) # getting labor status form id, to prepopulate laborStatusForm.
         else:
             forms = None

@@ -34,13 +34,13 @@ def laborhistory(id):
         authorizedForms = set(studentForms)
         if not currentUser.isLaborAdmin:
             # View only your own form history
-            if currentUser.student and not currentUser.Supervisor:
+            if currentUser.student and not currentUser.supervisor:
                 if currentUser.student.ID != id:
                     return redirect('/laborHistory/' + currentUser.student.ID)
-            elif currentUser.Supervisor and not currentUser.student:
+            elif currentUser.supervisor and not currentUser.student:
                 supervisorForms = LaborStatusForm.select() \
                                   .join_from(LaborStatusForm, FormHistory) \
-                                  .where((LaborStatusForm.Supervisor == currentUser.Supervisor.ID) | (FormHistory.createdBy == currentUser)) \
+                                  .where((LaborStatusForm.Supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
                                   .distinct()
                 authorizedForms = set(studentForms).intersection(set(supervisorForms))
                 if len(authorizedForms) == 0:
