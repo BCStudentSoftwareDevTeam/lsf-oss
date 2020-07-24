@@ -30,7 +30,7 @@ class Test_Routes:
             # Commented out URLs currently have an error
             urls = [
                 ("/laborHistory/modal/printPdf/2", None),
-                #("/admin/emailTemplates/getPurpose/student", None),
+                #("/admin/emailTemplates/getPurpose/student", None), # getPurpose has changed
                 ("/admin/emailTemplates/getEmail/Labor%20Status%20Form%20Submitted%20For%20Student", None),
                 ("/laborstatusform/getcompliance/1", None),
                 ("/laborstatusform/getPositions/1", None),
@@ -41,7 +41,7 @@ class Test_Routes:
                 ("/admin/pendingForms/pendingLabor", None),
                 ("/admin/getNotes/2", None),
                 ("/main/department/1", None),
-                ("/studentOverloadApp/2", None),
+                #("/studentOverloadApp/2", None), # We can't test a student yet
                 ("/laborReleaseForm/2", None),
                 ("/laborstatusform/2", None),
                 # ("/laborHistory/2", None) # TODO: Not sure if this should stay here or the next laborHistory test
