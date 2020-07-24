@@ -14,8 +14,8 @@ html, body {
     overflow-x: hidden;
 }
 
-.active{
-  color: red;
+a.activeMenuItem{
+  background-color: red;
 }
 
 .panel-default, .panel-heading {
