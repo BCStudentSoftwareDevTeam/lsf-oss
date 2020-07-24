@@ -27,7 +27,7 @@ def alterLSF(laborStatusKey):
     if not currentUser:        # Not logged in
         return render_template("errors/403.html")
     if not currentUser.isLaborAdmin:       # Not an admin
-        if currentUser.student and not currentUser.Supervisor: # If a student is logged in and trying to get to this URL then send them back to their own page.
+        if currentUser.student and not currentUser.supervisor: # If a student is logged in and trying to get to this URL then send them back to their own page.
             return redirect("/laborHistory/" + currentUser.student.ID)
 
     currentDate = date.today()

@@ -18,7 +18,7 @@ def term_Management():
     if not currentUser.isLaborAdmin:       # Not an admin
         if currentUser.student: # logged in as a student
             return redirect('/laborHistory/' + currentUser.student.ID)
-        elif currentUser.Supervisor:
+        elif currentUser.supervisor:
             return render_template('errors/403.html'), 403
 
     today = datetime.now()

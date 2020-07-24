@@ -17,7 +17,7 @@ def admin_Management():
     if not currentUser.isLaborAdmin:       # Not an admin
         if currentUser.student: # logged in as a student
             return redirect('/laborHistory/' + currentUser.student.ID)
-        elif currentUser.Supervisor:
+        elif currentUser.supervisor:
             return render_template('errors/403.html'), 403
 
     users = User.select()
@@ -87,8 +87,8 @@ def removeAdmin(oldAdmin, adminType):
 def flashMassage(user, action, adminType):
     if user.student:
         message = "{0} {1} has been {2} as a {3} Admin".format(user.student.FIRST_NAME, user.student.LAST_NAME, action, adminType)
-    elif user.Supervisor:
-        message = "{0} {1} has been {2} as a {3} Admin".format(user.Supervisor.FIRST_NAME, user.Supervisor.LAST_NAME, action, adminType)
+    elif user.supervisor:
+        message = "{0} {1} has been {2} as a {3} Admin".format(user.supervisor.FIRST_NAME, user.supervisor.LAST_NAME, action, adminType)
 
     if action == 'added':
         flash(message, "success")
