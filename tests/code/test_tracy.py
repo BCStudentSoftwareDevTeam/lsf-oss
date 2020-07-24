@@ -104,17 +104,29 @@ class Test_Tracy:
     def test_getSupervisorsFromUserInput(self, tracy):
         supervisor = tracy.getSupervisorsFromUserInput("Jan Pearce")
         assert "Jan" == supervisor[0].FIRST_NAME
+        assert 1 == len(supervisor)
 
         supervisor = tracy.getSupervisorsFromUserInput("heggen")
         assert "Scott" == supervisor[0].FIRST_NAME
+        assert 1 == len(supervisor)
+
+        supervisor = tracy.getSupervisorsFromUserInput("Peter Parker")
+        assert supervisor != True
+        assert 0 == len(supervisor)
 
     @pytest.mark.integration
     def test_getStudentsFromUserInput(self, tracy):
         students = tracy.getStudentsFromUserInput("Guillermo C")
         assert "Guillermo" == students[0].FIRST_NAME
+        assert 1 == len(students)
 
         students = tracy.getStudentsFromUserInput("Kat")
         assert "Adams" == students[0].LAST_NAME
+        assert  1 == len(students)
+
+        students = tracy.getSupervisorsFromUserInput("John Smith")
+        assert students != True
+        assert 0 == len(students)
 
     @pytest.mark.integration
     def test_checkStudentOrSupervisor(self, tracy):
@@ -123,3 +135,6 @@ class Test_Tracy:
 
         user = tracy.checkStudentOrSupervisor("heggens")
         assert "Supervisor" == user
+
+        with pytest.raises(InvalidQueryException):
+            user = tracy.checkStudentOrSupervisor("smith")

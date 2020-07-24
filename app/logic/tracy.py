@@ -147,3 +147,5 @@ class Tracy():
             student = self.getStudentFromEmail(email)
             if student:
                 return "Student"
+        else:
+            raise InvalidQueryException("Username {} not found in Tracy Database".format(username))

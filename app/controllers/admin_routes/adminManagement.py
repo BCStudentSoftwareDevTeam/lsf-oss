@@ -42,24 +42,24 @@ def laborAdminSearch():
         supervisors = []
         tracyStudents = Tracy().getStudentsFromUserInput(rsp)
         students = []
-        for user in tracySupervisors:
+        for supervisor in tracySupervisors:
             try:
-                currentUser = User.get(User.Supervisor == user.ID)
-                if currentUser.isLaborAdmin == True:
+                existingUser = User.get(User.Supervisor == supervisor.ID)
+                if existingUser.isLaborAdmin:
                     pass
                 else:
-                    supervisors.append(user)
+                    supervisors.append(supervisor)
             except Exception as e:
-                supervisors.append(user)
-        for user in tracyStudents:
+                supervisors.append(supervisor)
+        for student in tracyStudents:
             try:
-                currentUser = User.get(User.Student == user.ID)
-                if currentUser.isLaborAdmin == True:
+                existingUser = User.get(User.Student == student.ID)
+                if existingUser.isLaborAdmin:
                     pass
                 else:
-                    students.append(user)
+                    students.append(student)
             except Exception as e:
-                students.append(user)
+                students.append(student)
         for i in supervisors:
             username = i.EMAIL.split('@', 1)
             userList.append({'username': username[0],
@@ -118,6 +118,7 @@ def getUser(selectpickerID):
     try:
         user = User.get(User.username == username)
     except Exception as e:
+        print('ERROR: Exception', type(e), e)
         usertype = Tracy().checkStudentOrSupervisor(username)
         supervisor = student = None
         if usertype == "Student":
