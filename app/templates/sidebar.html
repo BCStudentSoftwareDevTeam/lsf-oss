@@ -6,7 +6,7 @@
       <div class="container-fluid">
           <div class="panel-group" >
               <div class="panel panel-default">
-                <a href='/laborHistory/{{currentUser.Student.ID}}'>
+                <a class="highlight" href='/laborHistory/{{currentUser.Student.ID}}'>
                     <div class="panel-heading">
                         <h4>Labor History</h4>
                     </div>
@@ -19,15 +19,15 @@
         <div class="container-fluid">
           <div class="panel-group" >
               <div class="panel panel-default">
-                  <a href="/">
+                  <a class="highlight" href="/">
                       <div class="panel-heading">
                           <h4>Supervisor Portal</h4>
                       </div>
                   </a>
                   <div id="supervisorNavBar" class="laborStudentChoice" style="display:none">
                       <ul id="supervisordropdown" class="panel panel-default">
-                          <a style="cursor:pointer"><li class="panel-heading" id="myStudents" tabindex="0"><h4>My Students</h4></li></a>
-                          <a style="cursor:pointer"><li class="panel-heading" id="department" tabindex="0"><h4>Department Students</h4></li></a>
+                          <a class="highlight" style="cursor:pointer"><li class="panel-heading" id="myStudents" tabindex="0"><h4>My Students</h4></li></a>
+                          <a class="highlight" style="cursor:pointer"><li class="panel-heading" id="department" tabindex="0"><h4>Department Students</h4></li></a>
                       </ul>
 
                   </div>
@@ -36,7 +36,7 @@
 
           </div>
           <div class="panel panel-default">
-              <a href="/laborstatusform">
+              <a class="highlight" href="/laborstatusform">
                   <div class="panel-heading">
                       <h4>New Labor Status Form</h4>
                   </div>
@@ -50,7 +50,7 @@
       <div class="container-fluid">
         <div class="panel-group" id="accordion">
             <div class="panel panel-default">
-                <a id="admin-toggle" data-toggle="collapse" href="#admin">
+                <a class="highlight" id="admin-toggle" data-toggle="collapse" href="#admin">
                     <div class="panel-heading">
                         <h4>Administration</h4>
                     </div>
@@ -58,13 +58,13 @@
                 <div id="admin" class="panel-collapse collapse">
 
                   <ul id="admindropdown" class="panel panel-default">
-                    <a href="/admin/pendingForms/pendingLabor"><li class="panel-heading"><h4>Pending Forms</h4></li></a>
+                    <a class="highlight" href="/admin/pendingForms/pendingLabor"><li class="panel-heading"><h4>Pending Forms</h4></li></a>
                     {#  <a href="/admin/adminOverload"><li class="panel-heading"><h4>Overload Forms</h4></li></a> #}
                     {#  <a href="/"><li class="panel-heading"><h4>Past Forms</h4></li></a> #}
-                    <a href="/admin/termManagement"><li class="panel-heading"><h4>Manage Terms</h4></li></a>
-                    <a href="/admin/manageDepartments"><li class="panel-heading"><h4>Manage Departments</h4></li></a>
-                    <a href="/admin/adminManagement"><li class="panel-heading"><h4>Manage Administrators</h4></li></a>
-                    <a href="/admin/emailTemplates"><li class="panel-heading"><h4>Manage Email Templates</h4></li></a>
+                    <a class="highlight" href="/admin/termManagement"><li class="panel-heading"><h4>Manage Terms</h4></li></a>
+                    <a class="highlight" href="/admin/manageDepartments"><li class="panel-heading"><h4>Manage Departments</h4></li></a>
+                    <a class="highlight" href="/admin/adminManagement"><li class="panel-heading"><h4>Manage Administrators</h4></li></a>
+                    <a class="highlight" href="/admin/emailTemplates"><li class="panel-heading"><h4>Manage Email Templates</h4></li></a>
                   </ul>
 
                 </div>
@@ -75,7 +75,7 @@
       {% endif %}
           <div class="container-fluid">
             <div class="panel panel-default">
-                <a href="/logout">
+                <a class="highlight" href="/logout">
                     <div class="panel-heading">
                         <h4>
                             Logout

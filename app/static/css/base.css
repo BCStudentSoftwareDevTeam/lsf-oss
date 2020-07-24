@@ -14,6 +14,10 @@ html, body {
     overflow-x: hidden;
 }
 
+.weird{
+  color:red;
+}
+
 .panel-default, .panel-heading {
     border: none;
     color: #FFF;
