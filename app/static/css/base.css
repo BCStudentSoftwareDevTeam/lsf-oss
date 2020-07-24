@@ -56,13 +56,11 @@ html, body {
 
 #flash_container {
     min-height: 55px;
+
 }
 
 #flasher {
     margin-bottom: 5px;
-    position: fixed;
-    width: 80%;
-    z-index: 3;
 }
 
 .panel {
@@ -118,8 +116,7 @@ a {
   box-sizing: border-box;
   left: 280px;
   right: 0px;
-  width: auto;
-  float: none;
+  width: calc(100vw - 280px);
   margin-right: 280px;
 }
 
