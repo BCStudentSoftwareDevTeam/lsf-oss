@@ -198,8 +198,8 @@
                   data-live-search='true'
                   data-width="100%"
                   title="Hours per week" >
-          <option value = "" disabled selected>Select Hours Per Week</option>
-          <option value="{{forms.weeklyHours}}"{% if forms %} selected {% endif %}>{{forms.weeklyHours}}</option>
+            <option value = "" disabled selected>Select Hours Per Week</option>
+            {% if forms %} <option value="{{forms.weeklyHours}}" selected >{{forms.weeklyHours}}</option> {% endif %}
           </select>​
     </div>
     <div id="contractHours" class= "form-group ">

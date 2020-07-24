@@ -64,7 +64,7 @@ def getPurpose(fieldsDictSTR):
         return json.dumps(subjectList)
     except Exception as e:
         print("ERROR in getPurpose(): ", e)
-        return jsonify({"Success": False})
+        return jsonify({"Success": False}), 500
 
 @admin.route('/admin/emailTemplates/getEmail/<fieldsDictSTR>', methods=['GET'])
 
