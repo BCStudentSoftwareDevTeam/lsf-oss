@@ -14,8 +14,8 @@ html, body {
     overflow-x: hidden;
 }
 
-.weird{
-  color:red;
+.active{
+  color: red;
 }
 
 .panel-default, .panel-heading {

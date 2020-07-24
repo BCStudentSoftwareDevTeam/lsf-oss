@@ -6,9 +6,9 @@
 })
 */
 
-$(document).ready(function(){
-  $('.highlight').click(function(){
-    $('.highlight').removeClass("weird");
-    $(this).addClass("weird");
-  })
-})
+// $(document).ready(function(){
+//   $('.highlight').click(function(){
+//     $('a').removeClass("active");
+//     $(this).addClass("active");
+//   })
+// })
