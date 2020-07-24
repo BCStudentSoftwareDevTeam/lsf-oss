@@ -27,7 +27,7 @@ def term_Management():
         createTerms(termYear)
         termsByYear[termYear] = list(Term.select().where(Term.termCode.cast('char').contains(termYear)))
 
-    return render_template( 'admin/termManagement.html',s
+    return render_template( 'admin/termManagement.html',
                              title='Term Management',
                              listOfTerms = termsByYear
                           )
