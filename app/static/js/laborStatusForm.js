@@ -546,7 +546,7 @@ function createAndFillTable(studentDict) {
   var cell6 = row.insertCell(5);
   var cell7 = row.insertCell(6);
   $(cell1).html((studentDict).stuName + " (" + ((studentDict).stuBNumber).trim()+ ")");
-  $(cell2).html((studentDict).stuPosition);
+  $(cell2).html((studentDict).stuPosition + " (" + (studentDict).stuWLS + ")");
   $(cell2).attr("data-posn", (studentDict).stuPositionCode);
   $(cell2).attr("data-wls", (studentDict).stuWLS);
   cell2.id="position_code";
