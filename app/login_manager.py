@@ -18,7 +18,8 @@ def logout():
     """
         Erases the session and returns the URL for redirection
     """
-    print("Logging out", session['username'])
+    if 'username' in session:
+        print("Logging out", session['username'])
     session.clear()
 
     url ="/"

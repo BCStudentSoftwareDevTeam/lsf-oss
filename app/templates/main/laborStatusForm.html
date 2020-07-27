@@ -124,7 +124,7 @@
         <label for="dateTimePicker1" id="datePickerStart"><span class="tooltip-right" data-tooltip="Required">Start Date<span class="required-mark">*</span></span></label>
           <div class='input-group date'>
             <input type='text' class="form-control disable" id='dateTimePicker1' name="startDate" placeholder="Start Date" data-width="320px" onchange="updateDate(this)" readonly/>
-            <span class="input-group-addon">
+            <span class="input-group-addon" id="calendarIcon1">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
           </div>
@@ -134,7 +134,7 @@
       <label for="dateTimePicker2" id="datePickerEnd"><span class="tooltip-right" data-tooltip="Required">End Date<span class="required-mark">*</span></span></label>
         <div class='input-group date'>
             <input type='text' class="form-control disable" id='dateTimePicker2' name="endDate" placeholder="End Date" data-width="320px" onchange="updateDate(this)" readonly/>
-            <span class="input-group-addon">
+            <span class="input-group-addon" id="calendarIcon2">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
         </div>
@@ -199,8 +199,8 @@
                   data-live-search='true'
                   data-width="100%"
                   title="Hours per week" >
-          <option value = "" disabled selected>Select Hours Per Week</option>
-          <option value="{{forms.weeklyHours}}"{% if forms %} selected {% endif %}>{{forms.weeklyHours}}</option>
+            <option value = "" disabled selected>Select Hours Per Week</option>
+            {% if forms %} <option value="{{forms.weeklyHours}}" selected >{{forms.weeklyHours}}</option> {% endif %}
           </select>​
     </div>
     <div id="contractHours" class= "form-group ">

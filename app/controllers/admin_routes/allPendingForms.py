@@ -29,9 +29,9 @@ def allPendingForms(formType):
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html'), 403
         if not currentUser.isLaborAdmin:       # Not an admin
-            if currentUser.Student: # logged in as a student
-                return redirect('/laborHistory/' + currentUser.Student.ID)
-            elif currentUser.Supervisor:
+            if currentUser.student: # logged in as a student
+                return redirect('/laborHistory/' + currentUser.student.ID)
+            elif currentUser.supervisor:
                 return render_template('errors/403.html'), 403
         formList = None
         historyType = None
@@ -290,7 +290,7 @@ def getNotes(formid):
             listOfNotes = []
             for i in range(len(notes)):
                 formattedDate = notes[len(notes) -  i - 1].date.strftime('%m/%d/%Y')   # formatting date in the database to display MM/DD/YYYY
-                listOfNotes.append("<dl class='dl-horizontal text-left'> <b>" + formattedDate + " | <i>" + notes[len(notes) -  i - 1].createdBy.Supervisor.FIRST_NAME[0] + ". " + notes[len(notes) -  i - 1].createdBy.Supervisor.LAST_NAME + "</i> | </b> " + notes[len(notes) -  i - 1].notesContents + "</dl>")
+                listOfNotes.append("<dl class='dl-horizontal text-left'> <b>" + formattedDate + " | <i>" + notes[len(notes) -  i - 1].createdBy.supervisor.FIRST_NAME[0] + ". " + notes[len(notes) -  i - 1].createdBy.supervisor.LAST_NAME + "</i> | </b> " + notes[len(notes) -  i - 1].notesContents + "</dl>")
             notesDict["laborDepartmentNotes"] = listOfNotes
         return jsonify(notesDict)     # return as JSON
 

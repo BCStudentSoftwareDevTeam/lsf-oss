@@ -118,7 +118,7 @@
     <div class="form-group" id= "dateDiv">
     <label for="datetimepicker" class="required-asterisk"><span class="tooltip-right" data-tooltip="Required">Date Needed<span class="required-mark"> *</span></span></label>
       <div class="input-group date"  class="change">
-        <input type="text" class="form-control effectiveDate" id="datetimepicker0" placeholder="MM/DD/YYYY" required > <!--Should prefill with todays date though// effective date does not have old/new value comparison-->
+        <input type="text" class="form-control effectiveDate" id="datetimepicker0" placeholder="MM/DD/YYYY" required readonly> <!--Should prefill with todays date though// effective date does not have old/new value comparison-->
         <span class="input-group-addon">
           <span class="glyphicon glyphicon-calendar"></span>
         </span>
@@ -129,7 +129,7 @@
      <div class="form-group" >
        <label for="supervisorNotes"> {% if title == "Adjust Labor Status Form" %}<span class="tooltip-right" data-tooltip="Required">Notes<span class="required-mark"> *</span></span> {% endif %} </label>
        <div class ="change">
-         <textarea required name="supervisorNotes" rows="8" cols="73" id="supervisorNotes" class = "newValue">{{prefillnotes}}</textarea>
+         <textarea required name="supervisorNotes" rows="8" cols="65" id="supervisorNotes" class = "newValue">{{prefillnotes}}</textarea>
           <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}"></input>
        </div>
      </div>
