@@ -4,7 +4,7 @@ var laborStatusFormNote = null;
 
 $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip();
-  $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
+  $( "#dateTimePicker1, #dateTimePicker2").datepicker();
   if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
     checkCompliance($("#selectedDepartment"));
     getDepartment($("#selectedDepartment"));
@@ -33,6 +33,14 @@ $(document).ready(function(){
 
 $("#laborStatusForm").submit(function(event) {
   event.preventDefault();
+});
+
+$("#calendarIcon1").click(function() {
+    $("#dateTimePicker1").datepicker('show') // Shows the start date datepicker when glyphicon is clicked
+});
+
+$("#calendarIcon2").click(function() {
+    $("#dateTimePicker2").datepicker('show') // Shows the end date datepicker when glyphicon is clicked
 });
 
 $(document).on("keyup", "input[name=contractHours]", function () { // sets contract hours minimum value
