@@ -31,7 +31,7 @@ th {
 }
 
 div#pendingTabs.container {
-  width: 1500px;
+  width: 100%;
 }
 
 div#pendingForms_length.dataTables_length {
