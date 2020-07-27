@@ -39,9 +39,9 @@ def createUser(username, student=None, supervisor=None):
         raise InvalidUserException("Adding {} to user table failed".format(username), e)
 
     if student:
-        user.Student = student.ID # Not sure why assigning the object doesn't work...
+        user.student = student.ID # Not sure why assigning the object doesn't work...
     if supervisor:
-        user.Supervisor = supervisor.ID
+        user.supervisor = supervisor.ID
 
     user.save()
 

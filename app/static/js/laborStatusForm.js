@@ -4,7 +4,7 @@ var laborStatusFormNote = null;
 
 $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip();
-  $( "#dateTimePicker1, #dateTimePicker2" ).datepicker();
+  $( "#dateTimePicker1, #dateTimePicker2").datepicker();
   if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
     checkCompliance($("#selectedDepartment"));
     getDepartment($("#selectedDepartment"));
@@ -33,6 +33,14 @@ $(document).ready(function(){
 
 $("#laborStatusForm").submit(function(event) {
   event.preventDefault();
+});
+
+$("#calendarIcon1").click(function() {
+    $("#dateTimePicker1").datepicker('show') // Shows the start date datepicker when glyphicon is clicked
+});
+
+$("#calendarIcon2").click(function() {
+    $("#dateTimePicker2").datepicker('show') // Shows the end date datepicker when glyphicon is clicked
 });
 
 $(document).on("keyup", "input[name=contractHours]", function () { // sets contract hours minimum value
@@ -236,6 +244,9 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
   var jobType = $("#jobType").val();
   if (selectedHoursPerWeek){
     $("#selectedHoursPerWeek").empty();
+    if (fillhours == ""){
+      $(".selectpicker").selectpicker("refresh");
+    }
     var list = ["10", "12", "15", "20"];
     if (jobType == "Secondary"){
        list = ["5", "10"];
@@ -544,7 +555,7 @@ function createAndFillTable(studentDict) {
   var cell6 = row.insertCell(5);
   var cell7 = row.insertCell(6);
   $(cell1).html((studentDict).stuName + " (" + ((studentDict).stuBNumber).trim()+ ")");
-  $(cell2).html((studentDict).stuPosition);
+  $(cell2).html((studentDict).stuPosition + " (" + (studentDict).stuWLS + ")");
   $(cell2).attr("data-posn", (studentDict).stuPositionCode);
   $(cell2).attr("data-wls", (studentDict).stuWLS);
   cell2.id="position_code";
