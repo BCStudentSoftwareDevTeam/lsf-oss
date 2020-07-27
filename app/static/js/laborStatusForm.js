@@ -570,7 +570,6 @@ function createAndFillTable(studentDict) {
   if (globalArrayOfStudents.length >= 1) {
     $("#reviewButton").show();
   }
-
 }
 
 
