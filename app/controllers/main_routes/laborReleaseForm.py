@@ -25,7 +25,7 @@ def laborReleaseForm(laborStatusKey):
     if not currentUser:
         render_template("errors/403.html"), 403
     if not currentUser.isLaborAdmin:       # Not an admin
-        if currentUser.student and not currentUser.Supervisor:
+        if currentUser.student and not currentUser.supervisor:
             return redirect('/laborHistory/' + currentUser.student.ID)
 
     forms = LaborStatusForm.select().distinct().where(LaborStatusForm.laborStatusFormID == laborStatusKey)
