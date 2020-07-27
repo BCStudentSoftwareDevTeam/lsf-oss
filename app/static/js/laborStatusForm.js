@@ -570,9 +570,7 @@ function createAndFillTable(studentDict) {
   if (globalArrayOfStudents.length >= 1) {
     $("#reviewButton").show();
   }
-  if ($('#mytable tr').length === 2) {
-    msgFlash("Student added, you can add more students before submitting","success");
-  }
+
 }
 
 
