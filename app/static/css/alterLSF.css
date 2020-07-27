@@ -16,3 +16,7 @@
   /* Makes titles black instead of gray */
   color: #000000 !important;
 }
+
+.container{
+  width: 100%;
+}

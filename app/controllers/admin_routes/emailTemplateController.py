@@ -12,9 +12,9 @@ def email_templates():
     if not currentUser:                    # Not logged in
         return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:       # Not a labor admin
-        if currentUser.Student: # logged in as a student
-            return redirect('/laborHistory/' + currentUser.Student.ID)
-        elif currentUser.Supervisor:
+        if currentUser.student: # logged in as a student
+            return redirect('/laborHistory/' + currentUser.student.ID)
+        elif currentUser.supervisor:
             return render_template('errors/403.html'), 403
     emailTemplateID = EmailTemplate.select()
     purpose = EmailTemplate.select(EmailTemplate.purpose).distinct()
@@ -64,7 +64,7 @@ def getPurpose(fieldsDictSTR):
         return json.dumps(subjectList)
     except Exception as e:
         print("ERROR in getPurpose(): ", e)
-        return jsonify({"Success": False})
+        return jsonify({"Success": False}), 500
 
 @admin.route('/admin/emailTemplates/getEmail/<fieldsDictSTR>', methods=['GET'])
 
