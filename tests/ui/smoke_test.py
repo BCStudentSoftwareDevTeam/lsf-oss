@@ -14,8 +14,6 @@ from app import app
 def has_no_empty_params(rule):
     defaults = rule.defaults if rule.defaults is not None else ()
     arguments = rule.arguments if rule.arguments is not None else ()
-    print("Defaults: ",defaults)
-    print("Arguments: ", arguments)
     return len(defaults) >= len(arguments)
 
 class Test_Routes:
@@ -81,12 +79,10 @@ class Test_Routes:
 
             links = []
             for rule in app.url_map.iter_rules():
-                print("RULE: ", rule)
                 if method in rule.methods and has_no_empty_params(rule):
                     #url = url_for(rule.endpoint, **(rule.defaults or {}))
                     url = rule.rule
                     links.append((url,None))
-            print(links)
 
             return links
 

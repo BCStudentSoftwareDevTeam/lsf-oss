@@ -78,7 +78,7 @@ class Test_Tracy:
 
         assert ['S61408','S61407','S61421','S61419'] == [p.POSN_CODE for p in positions]
 
-        positions = tracy.getPositionsFromDepartment("Underwater Basket-Weaving")
+        positions = tracy.getPositionsFromDepartment("0000")
         assert [] == [p.POSN_CODE for p in positions]
 
     @pytest.mark.integration
