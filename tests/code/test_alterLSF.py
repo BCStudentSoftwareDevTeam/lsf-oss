@@ -20,16 +20,17 @@ def cleanup():
 
 
 def delete_forms():
-    formHistories = FormHistory.select().where((FormHistory.formID == 5) & (FormHistory.historyType == "Labor Adjustment Form"))
+    formHistories = FormHistory.select().where((FormHistory.formID == 2) & (FormHistory.historyType == "Labor Adjustment Form"))
     for form in formHistories:
         AdjustedForm.delete().where(AdjustedForm.adjustedFormID == form.adjustedForm.adjustedFormID).execute()
         form.delete().execute()
-    AdminNotes.delete().where(AdminNotes.formID.cast('char').contains("5")).execute()
-    FormHistory.delete().where((FormHistory.formID == 5) & (FormHistory.historyType == "Labor Overload Form")).execute()
+    AdminNotes.delete().where(AdminNotes.formID.cast('char').contains("2")).execute()
+    FormHistory.delete().where((FormHistory.formID == 2) & (FormHistory.historyType == "Labor Overload Form")).execute()
+    #print("FormHistory")
 
 
 currentUser = User.get(User.userID == 1) # Scott Heggen's entry in User table
-lsf = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 5)
+lsf = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == 2)
 fieldsChanged = {'supervisor':{'oldValue':'B12361006', 'newValue':'B12365892','date':'07/21/2020'},
        'weeklyHours':{'oldValue': '10', 'newValue': '12', 'date': '07/21/2020'},
        'position':{'oldValue': 'S61419', 'newValue': 'S61407', 'date': '07/21/2020'},
@@ -41,37 +42,7 @@ fieldsChangedOverload = {'weeklyHours': {'oldValue':'10', 'newValue':'20', 'date
 fieldsChangedContractHours = {'contractHours':{'oldValue': '40', 'newValue': '60', 'date': '07/21/2020'}}
 
 @pytest.mark.integration
-def test_modifyLSF(setup, cleanup):
-    with app.test_request_context():
-        fieldName = 'supervisorNotes'
-        modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
-        assert lsf.supervisorNotes == 'new notes.'
-
-        fieldName = 'supervisor'
-        modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
-        assert lsf.supervisor.ID == 'B12365892'
-
-        fieldName = 'position'
-        modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
-        assert lsf.POSN_CODE == 'S61407'
-
-        fieldName = 'weeklyHours'
-        modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
-        assert lsf.weeklyHours == 12
-
-        # Modified verload
-        modifyLSF(fieldsChangedOverload, fieldName, lsf, currentUser)
-        assert lsf.weeklyHours == 20
-        formHistory = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) &
-                                      (FormHistory.historyType == 'Labor Overload Form'))
-        assert formHistory.historyType.historyTypeName == 'Labor Overload Form'
-
-        fieldName = 'contractHours'
-        modifyLSF(fieldsChangedContractHours, fieldName, lsf, currentUser)
-        assert lsf.contractHours == 60
-
-@pytest.mark.integration
-def test_adjustLSF(setup, cleanup):
+def test_adjustLSF(setup):
     with app.test_request_context():
         fieldName = 'supervisorNotes'
         adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
@@ -111,7 +82,37 @@ def test_adjustLSF(setup, cleanup):
         assert adjustedForm.newValue == '60'
 
 @pytest.mark.integration
-def test_createOverloadForm(setup, cleanup):
+def test_modifyLSF(setup):
+    with app.test_request_context():
+        fieldName = 'supervisorNotes'
+        modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
+        assert lsf.supervisorNotes == 'new notes.'
+
+        fieldName = 'supervisor'
+        modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
+        assert lsf.supervisor.ID == 'B12365892'
+
+        fieldName = 'position'
+        modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
+        assert lsf.POSN_CODE == 'S61407'
+
+        fieldName = 'weeklyHours'
+        modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
+        assert lsf.weeklyHours == 12
+
+        # Modified verload
+        modifyLSF(fieldsChangedOverload, fieldName, lsf, currentUser)
+        assert lsf.weeklyHours == 20
+        formHistory = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) &
+                                      (FormHistory.historyType == 'Labor Overload Form'))
+        assert formHistory.historyType.historyTypeName == 'Labor Overload Form'
+
+        fieldName = 'contractHours'
+        modifyLSF(fieldsChangedContractHours, fieldName, lsf, currentUser)
+        assert lsf.contractHours == 60
+
+@pytest.mark.integration
+def test_createOverloadForm(setup):
     with app.test_request_context():
         newWeeklyHours = 20
         # modify lsf overload form
