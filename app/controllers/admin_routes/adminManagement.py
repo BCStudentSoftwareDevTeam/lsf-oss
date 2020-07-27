@@ -44,7 +44,7 @@ def laborAdminSearch():
         students = []
         for supervisor in tracySupervisors:
             try:
-                existingUser = User.get(User.Supervisor == supervisor.ID)
+                existingUser = User.get(User.supervisor == supervisor.ID)
                 if existingUser.isLaborAdmin:
                     pass
                 else:
@@ -53,7 +53,7 @@ def laborAdminSearch():
                 supervisors.append(supervisor)
         for student in tracyStudents:
             try:
-                existingUser = User.get(User.Student == student.ID)
+                existingUser = User.get(User.student == student.ID)
                 if existingUser.isLaborAdmin:
                     pass
                 else:
