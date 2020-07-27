@@ -284,7 +284,6 @@ function checkCompliance(obj) {
   $("#dept-compliance-warning").hide();
   $("#departmentClass").removeClass(" has-error")
   var department = $(obj).val();
-  console.log(department);
   var url = "/laborstatusform/getcompliance/" + department;
       $.ajax({
         url: url,
