@@ -1,6 +1,39 @@
 // Opens collapse menu for this page
 $("#admin").collapse("show");
 
+$('#addlaborAdmin').selectpicker('refresh');
+$('.dropdown-menu .bs-searchbox input').on('keyup', function (e) {
+    var searchData = e.target.value;
+    $("#addlaborAdmin").empty();
+    if (searchData.length >= 3) {
+      $("#addlaborAdmin").empty();
+      var data = searchData
+      data = JSON.stringify(data)
+      $.ajax({
+        type: "POST",
+        url: "/admin/laborAdminSearch",
+        datatype: "json",
+        data: data,
+        contentType: 'application/json',
+        success: function(response) {
+          for (var key = 0; key < response.length; key++) {
+            var username = response[key]['username']
+            var firstName = response[key]['firstName']
+            var lastName = response[key]['lastName']
+            var type = response[key]['type']
+            if (type == "Student") {
+              $("#addlaborAdmin").append('<option value="' + username + '" data-subtext="' + username + ' (' + type + ')">' + firstName + ' ' + lastName + '</option>');
+            } else {
+              $("#addlaborAdmin").append('<option value="' + username + '" data-subtext="' + username + '">' + firstName + ' ' + lastName + '</option>');
+            }
+          }
+          $('#addlaborAdmin').selectpicker("refresh");
+        }
+      });
+    }
+});
+
+
 function modal(button) {
   if(button == "add" && $("#addlaborAdmin").val() != "") {
     $("h2").html("Labor Administrators");
