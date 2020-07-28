@@ -76,6 +76,9 @@ class emailHandler():
 
             self.mail.send(message)
 
+        elif app.config['ENV'] == 'testing':
+            # TODO: we really should have a way to check that we're sending emails that doesn't spam the logs
+            pass
         else:
             print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
 
