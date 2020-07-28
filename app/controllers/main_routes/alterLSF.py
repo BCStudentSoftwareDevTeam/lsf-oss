@@ -64,7 +64,7 @@ def alterLSF(laborStatusKey):
 
     #These are the data fields to populate our dropdowns(Supervisor. Position)
     supervisors = Tracy().getSupervisors()
-    positions = Tracy().getPositionsFromDepartment(prefilldepartment)
+    positions = Tracy().getPositionsFromDepartment(form.department.ORG)
     #Step 3: send data to front to populate html
     oldSupervisor = Tracy().getSupervisorFromID(form.supervisor.ID)
 
