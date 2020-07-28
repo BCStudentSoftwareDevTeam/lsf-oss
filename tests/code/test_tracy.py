@@ -74,11 +74,11 @@ class Test_Tracy:
 
     @pytest.mark.integration
     def test_getPositionsFromDepartment(self, tracy):
-        positions = tracy.getPositionsFromDepartment("Computer Science")
+        positions = tracy.getPositionsFromDepartment("2114")
 
         assert ['S61408','S61407','S61421','S61419'] == [p.POSN_CODE for p in positions]
 
-        positions = tracy.getPositionsFromDepartment("Underwater Basket-Weaving")
+        positions = tracy.getPositionsFromDepartment("0000")
         assert [] == [p.POSN_CODE for p in positions]
 
     @pytest.mark.integration

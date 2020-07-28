@@ -64,7 +64,7 @@ def alterLSF(laborStatusKey):
 
     #These are the data fields to populate our dropdowns(Supervisor. Position)
     supervisors = Tracy().getSupervisors()
-    positions = Tracy().getPositionsFromDepartment(prefilldepartment)
+    positions = Tracy().getPositionsFromDepartment(form.department.ORG)
     #Step 3: send data to front to populate html
     oldSupervisor = Tracy().getSupervisorFromID(form.supervisor.ID)
 
@@ -100,106 +100,24 @@ def submitAlteredLSF(laborStatusKey):
         if not currentUser:        # Not logged in
             return render_template("errors/403.html")
         currentDate = datetime.now().strftime("%Y-%m-%d")
-        rsp = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
-        rsp = dict(rsp)
+        fieldsChanged = eval(request.data.decode("utf-8")) # This fixes byte indices must be intergers or slices error
+        fieldsChanged = dict(fieldsChanged)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
-        formHistories = ""
-        adjustedforms = None
-        for k in rsp:
-            LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-            if k == "supervisorNotes":
-                if formStatus == "Pending":
-                    LSF.supervisorNotes = rsp[k]["newValue"]
-                    LSF.save()
-                elif formStatus == "Approved":
-                    ## New Entry in AdminNote Table
-                    newNoteEntry = AdminNotes.create(formID        = LSF.laborStatusFormID,
-                                                     createdBy     = currentUser,
-                                                     date          = currentDate,
-                                                     notesContents = rsp[k]["newValue"])
-                    newNoteEntry.save()
-                    continue
-            # This creates the adjusted form entry for every changed field for an adjustment submission
-            elif formStatus == "Approved":
-                adjustedforms = AdjustedForm.create(fieldAdjusted = k,
-                                                    oldValue      = rsp[k]["oldValue"],
-                                                    newValue      = rsp[k]["newValue"],
-                                                    effectiveDate = datetime.strptime(rsp[k]["date"], "%m/%d/%Y").strftime("%Y-%m-%d"))
-                historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Adjustment Form")
-                status = Status.get(Status.statusName == "Pending")
-                formHistories = FormHistory.create(formID       = laborStatusKey,
-                                                   historyType  = historyType.historyTypeName,
-                                                   adjustedForm = adjustedforms.adjustedFormID,
-                                                   createdBy    = currentUser,
-                                                   createdDate  = date.today(),
-                                                   status       = status.statusName)
 
-            if k == "supervisor" and formStatus == "Pending":
-                supervisor = createSupervisorFromTracy(bnumber=rsp[k]["newValue"])
-                LSF.supervisor = supervisor.ID
-                LSF.save()
+        for fieldName in fieldsChanged:
+            lsf = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+            if formStatus =="Pending":
+                modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
+            elif formStatus =="Approved":
+                adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
 
-            if k == "position" and formStatus == "Pending":
-                position = Tracy().getPositionFromCode(rsp[k]["newValue"])
-                LSF.POSN_CODE = position.POSN_CODE
-                LSF.POSN_TITLE = position.POSN_TITLE
-                LSF.WLS = position.WLS
-                LSF.save()
-
-            if k == "contractHours" and formStatus == "Pending":
-                LSF.contractHours = int(rsp[k]["newValue"])
-                LSF.save()
-
-            if k == "weeklyHours":
-                allTermForms = LaborStatusForm.select() \
-                               .join_from(LaborStatusForm, Student) \
-                               .join_from(LaborStatusForm, FormHistory) \
-                               .where((LaborStatusForm.termCode == LSF.termCode) & (LaborStatusForm.studentSupervisee.ID == LSF.studentSupervisee.ID) & (FormHistory.status != "Denied") & (FormHistory.historyType == "Labor Status Form"))
-                previousTotalHours = 0
-                if allTermForms:
-                    for statusForm in allTermForms:
-                        previousTotalHours += statusForm.weeklyHours
-
-                if len(list(allTermForms)) == 1:
-                    newTotalHours = int(rsp[k]['newValue'])
-                else:
-                    newTotalHours = previousTotalHours + int(rsp[k]['newValue'])
-
-                if previousTotalHours <= 15 and newTotalHours > 15:
-                    if formStatus == "Pending":
-                        adjustedForm = None
-                    elif formStatus == "Approved":
-                        adjustedForm = adjustedforms.adjustedFormID
-                    newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
-                    newFormHistory = FormHistory.create(formID       = laborStatusKey,
-                                                        historyType  = "Labor Overload Form",
-                                                        createdBy    = currentUser,
-                                                        adjustedForm = adjustedForm,
-                                                        overloadForm = newLaborOverloadForm.overloadFormID,
-                                                        createdDate  = date.today(),
-                                                        status       = "Pending")
-                    try:
-                        if formStatus == "Pending":
-                            overloadEmail = emailHandler(newFormHistory.formHistoryID)
-                        elif formStatus == "Approved":
-                            overloadEmail = emailHandler(formHistories.formHistoryID)
-                        overloadEmail.LaborOverLoadFormSubmitted("http://{0}/".format(request.host) + "studentOverloadApp/" + str(newFormHistory.formHistoryID))
-                    except Exception as e:
-                        print("An error occured while attempting to send overload form emails: ", e)
-                elif previousTotalHours > 15 and int(rsp[k]['newValue']) <= 15:   # This will delete an overload form after the hours are changed
-                    deleteOverloadForm = FormHistory.get((FormHistory.formID == laborStatusKey) & (FormHistory.historyType == "Labor Overload Form"))
-                    deleteOverloadForm = OverloadForm.get(OverloadForm.overloadFormID == deleteOverloadForm.overloadForm.overloadFormID)
-                    deleteOverloadForm.delete_instance()
-                if formStatus == "Pending":
-                    LSF.weeklyHours = int(rsp[k]["newValue"])
-                    LSF.save()
         if formStatus == "Approved":
             changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
             try:
                 email = emailHandler(changedForm.formHistoryID)
-                if "supervisor" in rsp:
-                    email.laborStatusFormAdjusted(rsp["supervisor"]["newValue"])
+                if "supervisor" in fieldsChanged:
+                    email.laborStatusFormAdjusted(fieldsChanged["supervisor"]["newValue"])
                 else:
                     email.laborStatusFormAdjusted()
             except Exception as e:
@@ -217,3 +135,99 @@ def submitAlteredLSF(laborStatusKey):
         flash(message, "danger")
         print("An error occured during form submission:", e)
         return jsonify({"Success": False}), 500
+
+
+def modifyLSF(fieldsChanged, fieldName, lsf, currentUser):
+    if fieldName == "supervisorNotes":
+        lsf.supervisorNotes = fieldsChanged[fieldName]["newValue"]
+        lsf.save()
+
+    if fieldName == "supervisor":
+        supervisor = createSupervisorFromTracy(bnumber=fieldsChanged[fieldName]["newValue"])
+        lsf.supervisor = supervisor.ID
+        lsf.save()
+
+    if fieldName == "position":
+        position = Tracy().getPositionFromCode(fieldsChanged[fieldName]["newValue"])
+        lsf.POSN_CODE = position.POSN_CODE
+        lsf.POSN_TITLE = position.POSN_TITLE
+        lsf.WLS = position.WLS
+        lsf.save()
+
+    if fieldName == "weeklyHours":
+        newWeeklyHours = fieldsChanged[fieldName]['newValue']
+        createOverloadForm(newWeeklyHours, lsf, currentUser)
+        lsf.weeklyHours = int(fieldsChanged[fieldName]["newValue"])
+        lsf.save()
+
+    if fieldName == "contractHours":
+        lsf.contractHours = int(fieldsChanged[fieldName]["newValue"])
+        lsf.save()
+
+
+def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
+    if fieldName == "supervisorNotes":
+        newNoteEntry = AdminNotes.create(formID        = lsf.laborStatusFormID,
+                                         createdBy     = currentUser,
+                                         date          = datetime.now().strftime("%Y-%m-%d"),
+                                         notesContents = fieldsChanged[fieldName]["newValue"])
+        newNoteEntry.save()
+    else:
+        adjustedforms = AdjustedForm.create(fieldAdjusted = fieldName,
+                                            oldValue      = fieldsChanged[fieldName]["oldValue"],
+                                            newValue      = fieldsChanged[fieldName]["newValue"],
+                                            effectiveDate = datetime.strptime(fieldsChanged[fieldName]["date"], "%m/%d/%Y").strftime("%Y-%m-%d"))
+        historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Adjustment Form")
+        status = Status.get(Status.statusName == "Pending")
+        formHistories = FormHistory.create(formID       = lsf.laborStatusFormID,
+                                           historyType  = historyType.historyTypeName,
+                                           adjustedForm = adjustedforms.adjustedFormID,
+                                           createdBy    = currentUser,
+                                           createdDate  = date.today(),
+                                           status       = status.statusName)
+        if fieldName == "weeklyHours":
+            newWeeklyHours = fieldsChanged[fieldName]['newValue']
+            createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedforms.adjustedFormID, formHistories)
+
+
+def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None, formHistories=None):
+    allTermForms = LaborStatusForm.select() \
+                   .join_from(LaborStatusForm, Student) \
+                   .join_from(LaborStatusForm, FormHistory) \
+                   .where((LaborStatusForm.termCode == lsf.termCode) &
+                         (LaborStatusForm.studentSupervisee.ID == lsf.studentSupervisee.ID) &
+                         (FormHistory.status != "Denied") &
+                         (FormHistory.historyType == "Labor Status Form"))
+    previousTotalHours = 0
+    if allTermForms:
+        for statusForm in allTermForms:
+            previousTotalHours += statusForm.weeklyHours
+
+    if len(list(allTermForms)) == 1:
+        newTotalHours = int(newWeeklyHours)
+    else:
+        newTotalHours = previousTotalHours + int(newWeeklyHours)
+
+    if previousTotalHours <= 15 and newTotalHours > 15:
+        newLaborOverloadForm = OverloadForm.create(studentOverloadReason = "None")
+        newFormHistory = FormHistory.create(formID       = lsf.laborStatusFormID,
+                                            historyType  = "Labor Overload Form",
+                                            createdBy    = currentUser,
+                                            adjustedForm = adjustedForm,
+                                            overloadForm = newLaborOverloadForm.overloadFormID,
+                                            createdDate  = date.today(),
+                                            status       = "Pending")
+        try:
+            if formHistories:
+                overloadEmail = emailHandler(formHistories.formHistoryID)
+            else:
+                overloadEmail = emailHandler(newFormHistory.formHistoryID)
+            overloadEmail.LaborOverLoadFormSubmitted("http://{0}/".format(request.host) + "studentOverloadApp/" + str(newFormHistory.formHistoryID))
+        except Exception as e:
+            print("An error occured while attempting to send overload form emails: ", e)
+
+    # This will delete an overload form after the hours are changed
+    elif previousTotalHours > 15 and int(newWeeklyHours) <= 15:
+            deleteOverloadForm = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) & (FormHistory.historyType == "Labor Overload Form"))
+            deleteOverloadForm = OverloadForm.get(OverloadForm.overloadFormID == deleteOverloadForm.overloadForm.overloadFormID)
+            deleteOverloadForm.delete_instance()
