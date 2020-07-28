@@ -28,15 +28,6 @@
         <div class="form-group">
           <select id="addlaborAdmin" class="form-control selectpicker" title="Select User" data-width="258px"
           data-show-subtext="true" data-live-search="true" name="addAdmin">
-            {% for user in users %}
-              {% if not user.isLaborAdmin %}
-                {% if user.student %}
-                  <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.student.FIRST_NAME}} {{user.student.LAST_NAME}}</option>
-                {% elif user.supervisor %}
-                  <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.supervisor.FIRST_NAME}} {{user.supervisor.LAST_NAME}}</option>
-                {% endif %}
-              {% endif %}
-            {% endfor %}
           </select>
           <button id="add" onclick="modal('add')" value="add" name="add" class="btn btn-success " type="button">Add</button>
         </div>
@@ -46,7 +37,7 @@
         {% for user in users %}
           {% if user.isLaborAdmin %}
             {% if user.student %}
-              <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.student.FIRST_NAME}} {{user.student.LAST_NAME}}</option>
+              <option value="{{user.username}}" data-subtext="{{user.username}} (Student)">{{user.student.FIRST_NAME}} {{user.student.LAST_NAME}}</option>
             {% elif user.supervisor %}
               <option value="{{user.username}}" data-subtext="{{user.username}}">{{user.supervisor.FIRST_NAME}} {{user.supervisor.LAST_NAME}}</option>
             {% endif %}
