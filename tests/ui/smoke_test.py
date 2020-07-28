@@ -32,8 +32,8 @@ class Test_Routes:
                 ("/laborHistory/modal/printPdf/2", None),
                 #("/admin/emailTemplates/getPurpose/student", None), # getPurpose has changed
                 ("/admin/emailTemplates/getEmail/Labor%20Status%20Form%20Submitted%20For%20Student", None),
-                ("/laborstatusform/getcompliance/1", None),
-                ("/laborstatusform/getPositions/1", None),
+                ("/laborstatusform/getcompliance/2114", None),
+                ("/laborstatusform/getPositions/2114", None),
                 ("/laborstatusform/getstudents/202000/B00841417/1", None),
                 ("/laborstatusform/getstudents/202000/B00841417/0", None),
                 ("/laborstatusform/getDate/202000", None),

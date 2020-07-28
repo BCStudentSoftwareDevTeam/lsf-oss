@@ -7,14 +7,22 @@ from app.models.Tracy.studata import *
 from app import *
 from app.login_manager import *
 
+@app.context_processor
+def injectGlobalData():
+    currentUser = require_login()
+    lastStaticUpdate = str(max(os.path.getmtime(os.path.join(root_path, f))
+                   for root_path, dirs, files in os.walk('app/static')
+                   for f in files))
+    return {'currentUser': currentUser,
+            'lastStaticUpdate': lastStaticUpdate}
+
 @app.route("/contributors", methods = ["GET"])
 def contributors():
     currentUser = require_login()
     if not currentUser:        # Not logged in
-        return render_template('errors/403.html', currentUser = currentUser), 403
+        return render_template('errors/403.html'), 403
 
     contribs = load_config("app/config/contributors.yaml")
     return render_template("main/contributors.html",
-           cfg = contribs,
-           currentUser = currentUser
+           cfg = contribs
            )

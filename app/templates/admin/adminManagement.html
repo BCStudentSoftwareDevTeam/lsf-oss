@@ -2,12 +2,12 @@
 
 {% block styles %}
 {{super()}}
-  <link href="/static/css/adminManagement.css" rel="stylesheet" type="text/css">
+  <link href="/static/css/adminManagement.css?u={{lastStaticUpdate}}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block scripts %}
 {{super()}}
-    <script type="text/javascript" src="{{url_for('static', filename='js/adminManagement.js') }}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/adminManagement.js') }}?u={{lastStaticUpdate}}"></script>
 {% endblock %}
 
 {% block app_content %}
