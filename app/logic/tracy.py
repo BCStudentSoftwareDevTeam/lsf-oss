@@ -110,28 +110,24 @@ class Tracy():
         """
         Return a list of supervisors based off of the user input
         """
+        userInput.strip()
         if " " not in userInput:
             supervisors = STUSTAFF.query.filter((STUSTAFF.FIRST_NAME.contains(userInput)) | (STUSTAFF.LAST_NAME.contains(userInput))).all()
         else:
             userInput = userInput.split()
-            try:
-                supervisors = STUSTAFF.query.filter((STUSTAFF.FIRST_NAME.contains(userInput[0])) & (STUSTAFF.LAST_NAME.contains(userInput[1]))).all()
-            except IndexError:
-                supervisors = STUSTAFF.query.filter(STUSTAFF.FIRST_NAME.contains(userInput[0])).all()
+            supervisors = STUSTAFF.query.filter((STUSTAFF.FIRST_NAME.contains(userInput[0])) & (STUSTAFF.LAST_NAME.contains(userInput[1]))).all()
         return supervisors
 
     def getStudentsFromUserInput(self, userInput: str):
         """
         Return a list of students based off of the user input
         """
+        userInput.strip()
         if " " not in userInput:
             students = STUDATA.query.filter((STUDATA.FIRST_NAME.contains(userInput)) | (STUDATA.LAST_NAME.contains(userInput))).all()
         else:
             userInput = userInput.split()
-            try:
-                students = STUDATA.query.filter((STUDATA.FIRST_NAME.contains(userInput[0])) & (STUDATA.LAST_NAME.contains(userInput[1]))).all()
-            except IndexError:
-                students = STUDATA.query.filter(STUDATA.FIRST_NAME.contains(userInput[0])).all()
+            students = STUDATA.query.filter((STUDATA.FIRST_NAME.contains(userInput[0])) & (STUDATA.LAST_NAME.contains(userInput[1]))).all()
         return students
 
     def checkStudentOrSupervisor(self, username: str):
