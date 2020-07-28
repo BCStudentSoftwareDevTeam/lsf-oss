@@ -2,7 +2,7 @@
 from app.logic.userInsertFunctions import *
 
 students = ['manalaih','mupotsal','escalerapadronl','cruzg','romanow','crafta','rieral','rakhimovb','khatts']
-staff = ['bryantal','ramsayb2','heggens']
+staff = ['bryantal','ramsayb2','heggens','knowlesg', 'welshs', 'napoleonr2', 'buenrostroa', 'ashb', 'gosneyj', 'asantes']
 
 print("Adding staff admins")
 for s in staff:
