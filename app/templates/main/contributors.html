@@ -2,7 +2,7 @@
 {% set currentPage = "contributors" %}
 {% block app_content %}
 
-<link rel="stylesheet" href="{{url_for('static', filename ='css/contributors.css') }}">
+<link rel="stylesheet" href="{{url_for('static', filename ='css/contributors.css') }}?={{lastStaticUpdate}}">
 <div id="wrapper">
   <div class ="container">
     <a class="skipContent" href="#backButton" tabindex="1" style="top:8%">Click to Skip</a>

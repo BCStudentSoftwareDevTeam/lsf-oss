@@ -2,12 +2,12 @@
 
 {% block styles %}
     {{super()}}
-    <link rel="stylesheet" type="text/css" href="/static/css/alterLSF.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/alterLSF.css?u={{lastStaticUpdate}}" />
 {% endblock %}
 
 {% block scripts %}
     {{super()}}
-    <script language="JavaScript" type="text/javascript" src="/static/js/alterLSF.js"></script>
+    <script language="JavaScript" type="text/javascript" src="/static/js/alterLSF.js?u={{lastStaticUpdate}}"></script>
 {% endblock %}
 
 {% block app_content %}
