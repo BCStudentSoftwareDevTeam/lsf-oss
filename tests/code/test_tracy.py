@@ -116,13 +116,13 @@ class Test_Tracy:
 
     @pytest.mark.integration
     def test_getStudentsFromUserInput(self, tracy):
-        students = tracy.getStudentsFromUserInput("Guillermo C")
+        students = tracy.getStudentsFromUserInput("Guillermo")
         assert "Guillermo" == students[0].FIRST_NAME
         assert 1 == len(students)
 
-        students = tracy.getStudentsFromUserInput("Kat")
-        assert "Adams" == students[0].LAST_NAME
-        assert  1 == len(students)
+        students = tracy.getStudentsFromUserInput("Adams")
+        assert "Adams" == students[1].LAST_NAME
+        assert  2 == len(students)
 
         students = tracy.getSupervisorsFromUserInput("John Smith")
         assert students != True

@@ -1,5 +1,5 @@
 from app.controllers.admin_routes import *
-from app.models.user import User
+from app.models.user import User, DoesNotExist
 from app.models.user import *
 from app.controllers.admin_routes import admin
 from flask import request
@@ -49,7 +49,7 @@ def laborAdminSearch():
                     pass
                 else:
                     supervisors.append(supervisor)
-            except Exception as e:
+            except DoesNotExist as e:
                 supervisors.append(supervisor)
         for student in tracyStudents:
             try:
@@ -58,7 +58,7 @@ def laborAdminSearch():
                     pass
                 else:
                     students.append(student)
-            except Exception as e:
+            except DoesNotExist as e:
                 students.append(student)
         for i in supervisors:
             username = i.EMAIL.split('@', 1)
@@ -117,7 +117,7 @@ def getUser(selectpickerID):
     username = request.form.get(selectpickerID)
     try:
         user = User.get(User.username == username)
-    except Exception as e:
+    except DoesNotExist as e:
         usertype = Tracy().checkStudentOrSupervisor(username)
         supervisor = student = None
         if usertype == "Student":
