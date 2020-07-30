@@ -126,7 +126,15 @@ and hide the department select picker. -->
         <th> </th>
       </tr>
     </thead>
-
+    <!-- Indicate if there is no form -->
+    {% if not currentSupervisees %}
+      <tr>
+        <td>
+          <span class="pushLeft h6"> There is no form created. <a href="/laborstatusform">Create a new labor status form</a></span>
+        </td>
+        <td style="display:none">My Current Students</td>
+      </tr>
+    {% endif %}
     <!-- Display all the current students by going through currentSupervisees list from main_route.py -->
     {% for form in currentSupervisees %}
       <tr>
