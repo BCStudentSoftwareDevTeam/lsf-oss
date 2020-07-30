@@ -31,7 +31,7 @@ rm -rf migrations.json
 python3 base_data.py
 
 # Adding fake data for non-prod, set up admins for prod
-if [[ $PRODUCTION ]]; then
+if [ $PRODUCTION -eq 1 ]; then
 	FLASK_ENV=production python3 add_admins.py
 else 
 	python3 demo_data.py
