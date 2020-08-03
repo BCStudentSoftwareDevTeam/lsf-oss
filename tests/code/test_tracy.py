@@ -121,8 +121,8 @@ class Test_Tracy:
         assert 1 == len(students)
 
         students = tracy.getStudentsFromUserInput("Adams")
-        assert "Adams" == students[1].LAST_NAME
         assert  2 == len(students)
+        assert "Adams" == students[1].LAST_NAME
 
         students = tracy.getSupervisorsFromUserInput("John Smith")
         assert students != True
