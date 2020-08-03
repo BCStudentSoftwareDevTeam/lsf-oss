@@ -1,5 +1,6 @@
 from app.config.loadConfig import get_secret_cfg
 from peewee import DoesNotExist
+import sqlalchemy
 from app.models.Tracy import db
 from app.models.Tracy.stuposn import STUPOSN
 from app.models.Tracy.studata import STUDATA
@@ -31,7 +32,7 @@ class Tracy():
 
         Throws an InvalidQueryException if the B Number does not exist.
         """
-        student = STUDATA.query.filter(STUDATA.ID == bnumber).first()
+        student = STUDATA.query.filter(sqlalchemy.func.trim(STUDATA.ID) == str(bnumber).strip()).first()
         if student is None:
             raise InvalidQueryException("B# {} not found in STUDATA".format(bnumber))
 

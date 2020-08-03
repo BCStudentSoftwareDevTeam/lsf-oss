@@ -16,13 +16,19 @@ class Test_Tracy:
     @pytest.mark.integration
     def test_getStudents(self, tracy):
         students = tracy.getStudents()
-        assert ['Alex','Elaheh','Guillermo','Kat'] == [s.FIRST_NAME for s in students]
-        assert ['212','718','300','420'] == [s.STU_CPO for s in students]
+        assert ['Alex','Elaheh','Guillermo','Jeremiah','Kat'] == [s.FIRST_NAME for s in students]
+        assert ['212','718','300','420','420'] == [s.STU_CPO for s in students]
 
     @pytest.mark.integration
     def test_getStudentFromBNumber(self, tracy):
         student = tracy.getStudentFromBNumber("B00734292")
         assert 'Guillermo' == student.FIRST_NAME
+
+        student = tracy.getStudentFromBNumber("  B00734292")
+        assert 'Guillermo' == student.FIRST_NAME
+
+        student = tracy.getStudentFromBNumber("B00888329  ")
+        assert 'Jeremiah' == student.FIRST_NAME
 
         with pytest.raises(InvalidQueryException):
             student = tracy.getStudentFromBNumber("B0000000")

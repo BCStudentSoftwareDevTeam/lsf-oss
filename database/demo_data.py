@@ -81,6 +81,21 @@ studentsTracy = [
                 "STU_CPO":"420",
                 "LAST_POSN":"TA",
                 "LAST_SUP_PIDM":"7"
+                },
+                {
+                "ID":"            B00888329",
+                "PIDM":"7",
+                "FIRST_NAME":"Jeremiah",
+                "LAST_NAME":"Bullfrog",
+                "CLASS_LEVEL":"Senior",
+                "ACADEMIC_FOCUS":"Computer Science",
+                "MAJOR":"Computer Science",
+                "PROBATION":"0",
+                "ADVISOR":"Scott Heggen",
+                "STU_EMAIL":"bullfrogj@berea.edu",
+                "STU_CPO":"420",
+                "LAST_POSN":"TA",
+                "LAST_SUP_PIDM":"7"
                 }
 ]
 students = []
