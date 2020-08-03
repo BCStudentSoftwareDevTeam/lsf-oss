@@ -60,14 +60,14 @@ def createSupervisorFromTracy(username=None, bnumber=None):
     if bnumber:
         try:
             tracyUser = Tracy().getSupervisorFromID(bnumber)
-        except DoesNotExist as e:
+        except InvalidQueryException as e:
             raise InvalidUserException("{} not found in Tracy database".format(bnumber))
 
     else:    # Executes if no ID is provided
         email = "{}@berea.edu".format(username)
         try:
             tracyUser = Tracy().getSupervisorFromEmail(email)
-        except DoesNotExist as e:
+        except InvalidQueryException as e:
             raise InvalidUserException("{} not found in Tracy database".format(email))
 
     try:

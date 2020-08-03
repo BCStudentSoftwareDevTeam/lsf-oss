@@ -7,13 +7,13 @@ def test_createSupervisorFromTracy():
     with pytest.raises(ValueError):
         supervisor = createSupervisorFromTracy()
 
-    with pytest.raises(InvalidQueryException):
+    with pytest.raises(InvalidUserException):
         supervisor = createSupervisorFromTracy("B12361006")
 
-    with pytest.raises(InvalidQueryException):
+    with pytest.raises(InvalidUserException):
         supervisor = createSupervisorFromTracy(username="B12361006")
 
-    with pytest.raises(InvalidQueryException):
+    with pytest.raises(InvalidUserException):
         supervisor = createSupervisorFromTracy(bnumber="heggens")
 
     # Test success conditions
