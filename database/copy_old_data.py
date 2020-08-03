@@ -1,10 +1,14 @@
 import csv
+from app import app
+app.config['ENV'] = 'production'
+
 from app.logic.userInsertFunctions import *
 from app.logic.tracy import Tracy
 from app.models.term import Term
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.department import Department
 from app.controllers.admin_routes.termManagement import createTerms
+
 
 def get_reader(f, fields):
     reader = csv.DictReader(f, delimiter=',', fieldnames=fields, restkey='extra', restval='XXXX')
@@ -95,24 +99,28 @@ with open('old-data/short-pastLSF.txt','r',encoding="cp1252",newline='') as past
             # Ensure Supervisor record exists
             try:
                 supervisor = createSupervisorFromTracy(bnumber=record['supervisor'])
+                print("Found {} as a supervisor".format(supervisor.FIRST_NAME + " " + supervisor.LAST_NAME))
             except InvalidUserException:
+                print("Can't find a matching supervisor for {}".format(record['supervisor']))
                 save = False
-                print("Can't find a matching supervisor for {}!".format(record['supervisor']))
                 # We have to create a supervisor, but we don't have their data from Tracy, just name and bnumber
 
             # Ensure Student record exists
             try:
                 obj = Tracy().getStudentFromBNumber(record['supervisee'])
                 student = createStudentFromTracy(obj)
-            except (InvalidQueryException,InvalidUserException):
+                print("Found {} as a student".format(student.FIRST_NAME + " " + student.LAST_NAME))
+            except InvalidQueryException:
+                print("Can't find a matching student for {}".format(record['supervisee']))
                 save = False
-                print("Can't find a matching student for {}!".format(record['supervisee']))
-                # We have to create a student, but we don't have their data from Tracy, just name and bnumber
+            except InvalidUserException:
+                print("Couldn't create a student for {}".format(record['supervisee']))
+                save = False
 
             try:
-                term = Term.get(Term.termName == record['term'])
+                term = Term.get(Term.termName == record['term'].strip())
             except:
-                print("Can't find a matching term for {}!".format(record['term']))
+                print("Can't find a matching term for {}".format(record['term']))
                 save = False
 
             if save:
