@@ -25,6 +25,10 @@ def financialAidOverload(overloadKey):
     if not (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin): # Not an admin
         return render_template('errors/403.html'), 403
 
+    overloadForm = FormHistory.get(FormHistory.formHistoryID == overloadKey) # get access to overload form
+    lsfForm = overloadForm.formID #LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID) # get the labor status form that is tied to the overload form
+
+
     overloadForm = FormHistory.get(FormHistory.overloadForm == overloadKey) # get access to overload form
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID) # get the labor status form that is tied to the overload form
 
