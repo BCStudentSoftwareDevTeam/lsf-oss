@@ -51,8 +51,7 @@ def laborhistory(id):
                                 student = student,
                                 username=currentUser.username,
                                 laborStatusFormList = laborStatusFormList,
-                                authorizedForms = authorizedForms,
-                                studentUserName = User.get(User.student == student).username
+                                authorizedForms = authorizedForms
                               )
 
     except Exception as e:
