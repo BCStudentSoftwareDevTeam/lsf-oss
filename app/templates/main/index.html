@@ -126,33 +126,33 @@ and hide the department select picker. -->
         <th> </th>
       </tr>
     </thead>
-    <!-- Indicate if there is no current form -->
-    {% if not currentSupervisees %}
-      <tr>
-        <td>
-          <span class="pushLeft h6"> There are no current forms. <a href="/laborstatusform">Create a new labor status form.</a></span>
-        </td>
-        <td style="display:none">My Current Students</td>
-      </tr>
-    {% endif %}
     <!-- Display all the current students by going through currentSupervisees list from main_route.py -->
-    {% for form in currentSupervisees %}
-      <tr>
-        <td><a href="/laborHistory/{{form.studentSupervisee.ID}}" value=0>
-          <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span></a>
-          <br />
-          <span class="pushLeft h6"> {{form.termCode.termName}} - {{form.POSN_TITLE}} - {{form.department.DEPT_NAME}}</span>
-        </td>
-        <td style="display:none">My Current Students</td>
-      </tr>
-    {% endfor %}
+    {% if not currentSupervisees %}
+    <tr>
+      <td>
+        <span class="pushLeft h6"> There are no current forms.<a href="/laborstatusform">Create a new labor status form.</a></span>
+      </td>
+      <td style="display:none">My Current Students</td>
+    </tr>
+    {% else %}
+      {% for form in currentSupervisees %}
+        <tr>
+          <td><a href="/laborHistory/{{form.studentSupervisee.ID}}" value=0>
+            <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span></a>
+            <br />
+            <span class="pushLeft h6"> {{form.termCode.termName}} - {{form.POSN_TITLE}} - {{form.department.DEPT_NAME}}</span>
+          </td>
+          <td style="display:none">My Current Students</td>
+        </tr>
+      {% endfor %}
+    {% endif %}
     <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
     <tr class="currentStu">
       <td style="display:none"></td>
       <td style="display:none">My Current Students</td>
     </tr>
 
-    <!-- Indicate if there is no past form -->
+    <!-- Display all the current students by going through pastSupervisees list from main_route.py -->
     {% if not pastSupervisees %}
       <tr>
         <td>
@@ -160,18 +160,18 @@ and hide the department select picker. -->
         </td>
         <td style="display:none">My Past Students</td>
       </tr>
+    {% else %}
+      {% for form in pastSupervisees %}
+        <tr>
+          <td><a href="/laborHistory/{{form.studentSupervisee.ID}}" value=0>
+            <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span></a>
+            <br />
+            <span class="pushLeft h6"> {{form.termCode.termName}} - {{form.POSN_TITLE}} - {{form.department.DEPT_NAME}}</span>
+          </td>
+          <td style="display:none">My Past Students</td>
+        </tr>
+      {% endfor %}
     {% endif %}
-    <!-- Display all the current students by going through pastSupervisees list from main_route.py -->
-    {% for form in pastSupervisees %}
-      <tr>
-        <td><a href="/laborHistory/{{form.studentSupervisee.ID}}" value=0>
-          <span class="h4">{{form.studentSupervisee.FIRST_NAME}} {{form.studentSupervisee.LAST_NAME}} ({{form.studentSupervisee.ID}})</span></a>
-          <br />
-          <span class="pushLeft h6"> {{form.termCode.termName}} - {{form.POSN_TITLE}} - {{form.department.DEPT_NAME}}</span>
-        </td>
-        <td style="display:none">My Past Students</td>
-      </tr>
-    {% endfor %}
     <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
     <tr class="currentStu">
       <td style="display:none"></td>
