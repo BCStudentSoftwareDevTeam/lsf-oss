@@ -19,8 +19,7 @@
 }
 
 .pushRight {
-  position: absolute;
-  right: -1;
+  float: right;
 }
 
 .studentTable th, .studentTable td {

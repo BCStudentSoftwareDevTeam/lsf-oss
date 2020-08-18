@@ -132,7 +132,7 @@ and hide the department select picker. -->
       <tr>
         <td><a href="/laborHistory/{{form.formID.studentSupervisee.ID}}" value=0>
           <span class="h4">{{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}} ({{form.formID.studentSupervisee.ID}})</span></a>
-          <span class="pushRight h4">{{form.status}}</span>
+          <span class="pushRight h5">{{form.status}}</span>
           <br />
           <span class="pushLeft h6"> {{form.formID.termCode.termName}} - {{form.formID.POSN_TITLE}} - {{form.formID.department.DEPT_NAME}}</span>
         </td>
@@ -150,7 +150,8 @@ and hide the department select picker. -->
       <tr>
         <td><a href="/laborHistory/{{form.formID.studentSupervisee.ID}}" value=0>
           <span class="h4">{{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}} ({{form.formID.studentSupervisee.ID}})</span></a>
-          <br />
+          <span class="pushRight h5">Past Student</span>
+          <br/>
           <span class="pushLeft h6"> {{form.formID.termCode.termName}} - {{form.formID.POSN_TITLE}} - {{form.formID.department.DEPT_NAME}}</span>
         </td>
         <td style="display:none">My Past Students</td>

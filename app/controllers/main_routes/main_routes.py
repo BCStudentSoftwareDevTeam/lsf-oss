@@ -66,16 +66,16 @@ def index():
 
             except InvalidQueryException: # if they are inactive
                 for student in inactiveSupervisees:
-                    if (supervisee.formID.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
+                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
                         student_processed = True
                 if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
                     inactiveSupervisees.append(supervisee)
             else: # if there is no exception (student is in Tracy and active) this code will run
                 for student in currentSupervisees:
-                    if (supervisee.formID.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an current student.
+                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):  # Checks whether student has already been added as an current student.
                         student_processed = True
                 for student in pastSupervisees:
-                    if (supervisee.formID.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an past student.
+                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):  # Checks whether student has already been added as an past student.
                         student_processed = True
                 if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
                     if supervisee.formID.endDate < todayDate:
