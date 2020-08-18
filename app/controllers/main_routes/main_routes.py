@@ -53,7 +53,7 @@ def index():
         # Grabs all the labor status forms where the current user is the supervisor
         formsBySupervisees = []
         if currentUser.supervisor:
-            formsBySupervisees = LaborStatusForm.select().where(LaborStatusForm.supervisor == currentUser.supervisor.ID).order_by(LaborStatusForm.endDate.desc())
+            formsBySupervisees = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.supervisor == currentUser.supervisor.ID).order_by(FormHistory.formID.endDate.desc())
 
         inactiveSupervisees = []
         currentSupervisees = []
@@ -62,26 +62,26 @@ def index():
 
         for supervisee in formsBySupervisees: # go through all the form in the formsBySupervisees
             try:
-                tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
+                tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.formID.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
 
             except InvalidQueryException: # if they are inactive
                 for student in inactiveSupervisees:
-                    if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
+                    if (supervisee.formID.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
                         student_processed = True
                 if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
                     inactiveSupervisees.append(supervisee)
             else: # if there is no exception (student is in Tracy and active) this code will run
                 for student in currentSupervisees:
-                    if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an current student.
+                    if (supervisee.formID.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an current student.
                         student_processed = True
                 for student in pastSupervisees:
-                    if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an past student.
+                    if (supervisee.formID.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an past student.
                         student_processed = True
                 if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
-                    if supervisee.endDate < todayDate:
+                    if supervisee.formID.endDate < todayDate:
                         pastSupervisees.append(supervisee)
-                    elif supervisee.endDate >= todayDate:
-                        studentFormHistory = FormHistory.select().where(FormHistory.formID == supervisee.laborStatusFormID).order_by(FormHistory.createdDate.desc())[0]
+                    elif supervisee.formID.endDate >= todayDate:
+                        studentFormHistory = FormHistory.select().where(FormHistory.formID == supervisee.formID.laborStatusFormID).order_by(FormHistory.createdDate.desc())[0]
                         if studentFormHistory.historyType.historyTypeName == "Labor Release Form":
                             if studentFormHistory.status.statusName == "Approved":
                                 pastSupervisees.append(supervisee)
@@ -116,15 +116,15 @@ def index():
             except NameError as e:
                 print("The runtime error happens because a department has not yet been selected.")
             for form in currentSupervisees:
-                name = str(form.laborStatusFormID)
+                name = str(form.formID.laborStatusFormID)
                 if request.form.get(name):
                     value.append( request.form.get(name))
             for form in pastSupervisees:
-                name = str(form.laborStatusFormID)
+                name = str(form.formID.laborStatusFormID)
                 if request.form.get(name):
                     value.append( request.form.get(name))
             for form in inactiveSupervisees:
-                name = str(form.laborStatusFormID)
+                name = str(form.formID.laborStatusFormID)
                 if request.form.get(name):
                     value.append( request.form.get(name))
 
