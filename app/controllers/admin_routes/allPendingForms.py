@@ -505,7 +505,6 @@ def sendEmail():
                 overloadForm.financialAidApproved = status.statusName
                 overloadForm.save()
             link = 'http://{0}/'.format(request.host) + 'admin/financialAidOverloadApproval/' + str(rsp['formHistoryID'])
-            print(link)
             email = emailHandler(historyForm.formHistoryID)
             email.overloadVerification(recipient, link)
             currentDate = datetime.now().strftime('%m/%d/%y')
