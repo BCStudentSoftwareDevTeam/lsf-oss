@@ -5,6 +5,7 @@ from app.login_manager import *
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.department import Department
 from app.models.term import Term
+from app.models.historyType import HistoryType
 from app.models.formHistory import FormHistory
 from datetime import datetime, date
 from flask import request, redirect
@@ -53,7 +54,8 @@ def index():
         # Grabs all the labor status forms where the current user is the supervisor
         formsBySupervisees = []
         if currentUser.supervisor:
-            formsBySupervisees = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.supervisor == currentUser.supervisor.ID).order_by(FormHistory.formID.endDate.desc())
+            formsBySupervisees = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.supervisor == currentUser.supervisor.ID,
+            FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.endDate.desc())
 
         inactiveSupervisees = []
         currentSupervisees = []
@@ -102,15 +104,15 @@ def index():
             # a user can use the download button before they chose a department.
             try:
                 for form in currentDepartmentStudents:
-                    name = str(form.laborStatusFormID)
+                    name = str(form.formID.laborStatusFormID)
                     if request.form.get(name):
                         value.append(request.form.get(name))
                 for form in allDepartmentStudents:
-                    name = str(form.laborStatusFormID)
+                    name = str(form.formID.laborStatusFormID)
                     if request.form.get(name):
                         value.append(request.form.get(name))
                 for form in inactiveDepStudent:
-                    name = str(form.laborStatusFormID)
+                    name = str(form.formID.laborStatusFormID)
                     if request.form.get(name):
                         value.append(request.form.get(name))
             except NameError as e:
@@ -158,12 +160,12 @@ def index():
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
 def populateDepartment(departmentSelected):
     try:
-        department = departmentSelected
+        department = Department.get(Department.DEPT_NAME == departmentSelected)
         todayDate = date.today()
 
         # This will retrieve all the forms that are tied to the department the user selected from the select picker
-        formsByDept = LaborStatusForm.select().join_from(LaborStatusForm, Department).where(LaborStatusForm.department.DEPT_NAME == department).order_by(LaborStatusForm.endDate.desc())
-
+        formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.department == department,
+        FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.endDate.desc())
         # These three variables need to be global variables because they need to be iterated through in the "POST" call
         global currentDepartmentStudents
         global allDepartmentStudents
@@ -176,29 +178,29 @@ def populateDepartment(departmentSelected):
 
         for supervisee in formsByDept: # go through all the form in the formsBySupervisees
             try:
-                tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
+                tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.formID.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
 
             except InvalidQueryException: # if they are inactive
                 for student in inactiveDepStudent:
-                    if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
+                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
                         student_processed = True
                 if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
                     inactiveDepStudent.append(supervisee)
             else: # if there is no exception (student is in Tracy and active) this code will run
                 for student in currentDepartmentStudents:
-                    if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an current student.
+                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):  # Checks whether student has already been added as an current student.
                         student_processed = True
                 for student in allDepartmentStudents:
-                    if (supervisee.studentSupervisee.ID) == (student.studentSupervisee.ID):  # Checks whether student has already been added as an past student.
+                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):  # Checks whether student has already been added as an past student.
                         student_processed = True
                 if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
                     # If a forms "endDate" is less than today's date, then we know the form is from the past and will go into "All Departments"
-                    if supervisee.endDate < todayDate:
+                    if supervisee.formID.endDate < todayDate:
                         allDepartmentStudents.append(supervisee)
                     # If a forms "endDate" is greater than today's date, then we need to look at other conditions
-                    elif supervisee.endDate >= todayDate:
+                    elif supervisee.formID.endDate >= todayDate:
                         # For every form at this point, we need to see if there are any "Labor Release Forms" tied to the form
-                        studentFormHistory = FormHistory.select().where(FormHistory.formID == supervisee.laborStatusFormID).order_by(FormHistory.createdDate.desc())[0]
+                        studentFormHistory = FormHistory.select().where(FormHistory.formID == supervisee.formID.laborStatusFormID).order_by(FormHistory.formHistoryID.desc())[0]
                         if studentFormHistory.historyType.historyTypeName == "Labor Release Form":
                             # If the form has a "Labor Release Form" with a status of "Approved", then we know the student is no longer employed
                             if studentFormHistory.status.statusName == "Approved":
@@ -206,11 +208,9 @@ def populateDepartment(departmentSelected):
                             # If the form has a "Labor Release Form" with a status not equal to "Approved", then we know the student is still employed
                             else:
                                 currentDepartmentStudents.append(supervisee)
-                                allDepartmentStudents.append(supervisee)
                         # If the form does not have a "Labor Release Form", then we know the student is still employed
                         else:
                             currentDepartmentStudents.append(supervisee)
-                            allDepartmentStudents.append(supervisee)
             finally: # it will run at the end regardless of whether or no the excpet statement or else statement is met.
                 student_processed = False  # Resets state machine.
 
@@ -220,34 +220,37 @@ def populateDepartment(departmentSelected):
         departmentStudents = []
         for i in currentDepartmentStudents:
             departmentStudents.append({"Status":"Current Department Students",
-                                        "Student": i.studentSupervisee.FIRST_NAME + " " + i.studentSupervisee.LAST_NAME,
-                                        "BNumber": i.studentSupervisee.ID,
-                                        "Term": i.termCode.termName,
-                                        "Position": i.POSN_TITLE,
+                                        "Student": i.formID.studentSupervisee.FIRST_NAME + " " + i.formID.studentSupervisee.LAST_NAME,
+                                        "BNumber": i.formID.studentSupervisee.ID,
+                                        "Term": i.formID.termCode.termName,
+                                        "Position": i.formID.POSN_TITLE,
                                         "checkboxModalClass" : "currentDepartmentModal",
                                         "activeStatus" : "True",
-                                        "formID" : i.laborStatusFormID,
-                                        "Department": i.department.DEPT_NAME})
+                                        "formID" : i.formID.laborStatusFormID,
+                                        "Department": i.formID.department.DEPT_NAME,
+                                        "formStatus": i.status.statusName})
         for i in allDepartmentStudents:
             departmentStudents.append({"Status":"All Department Students",
-                                        "Student": i.studentSupervisee.FIRST_NAME + " " + i.studentSupervisee.LAST_NAME,
-                                        "BNumber": i.studentSupervisee.ID,
-                                        "Term": i.termCode.termName,
-                                        "Position": i.POSN_TITLE,
+                                        "Student": i.formID.studentSupervisee.FIRST_NAME + " " + i.formID.studentSupervisee.LAST_NAME,
+                                        "BNumber": i.formID.studentSupervisee.ID,
+                                        "Term": i.formID.termCode.termName,
+                                        "Position": i.formID.POSN_TITLE,
                                         "checkboxModalClass" : "allDepartmentModal",
                                         "activeStatus" : "True",
-                                        "formID" : i.laborStatusFormID,
-                                        "Department": i.department.DEPT_NAME})
+                                        "formID" : i.formID.laborStatusFormID,
+                                        "Department": i.formID.department.DEPT_NAME,
+                                        "formStatus": "Past Student"})
         for i in inactiveDepStudent:
             departmentStudents.append({"Status":"All Department Students",
-                                    "Student": i.studentSupervisee.FIRST_NAME + " " + i.studentSupervisee.LAST_NAME,
-                                    "BNumber": i.studentSupervisee.ID,
-                                    "Term": i.termCode.termName,
-                                    "Position": i.POSN_TITLE,
+                                    "Student": i.formID.studentSupervisee.FIRST_NAME + " " + i.formID.studentSupervisee.LAST_NAME,
+                                    "BNumber": i.formID.studentSupervisee.ID,
+                                    "Term": i.formID.termCode.termName,
+                                    "Position": i.formID.POSN_TITLE,
                                     "checkboxModalClass" : "allDepartmentModal",
                                     "activeStatus" : "False",
-                                    "formID" : i.laborStatusFormID,
-                                    "Department": i.department.DEPT_NAME})
+                                    "formID" : i.formID.laborStatusFormID,
+                                    "Department": i.formID.department.DEPT_NAME,
+                                    "formStatus": i.status.statusName})
         return json.dumps(departmentStudents)
 
     except Exception as e:
