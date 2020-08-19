@@ -81,7 +81,7 @@ def index():
                     if supervisee.formID.endDate < todayDate:
                         pastSupervisees.append(supervisee)
                     elif supervisee.formID.endDate >= todayDate:
-                        studentFormHistory = FormHistory.select().where(FormHistory.formID == supervisee.formID.laborStatusFormID).order_by(FormHistory.createdDate.desc())[0]
+                        studentFormHistory = FormHistory.select().where(FormHistory.formID == supervisee.formID.laborStatusFormID).order_by(FormHistory.formHistoryID.desc())[0]
                         if studentFormHistory.historyType.historyTypeName == "Labor Release Form":
                             if studentFormHistory.status.statusName == "Approved":
                                 pastSupervisees.append(supervisee)
