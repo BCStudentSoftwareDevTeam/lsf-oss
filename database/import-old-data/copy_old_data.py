@@ -89,5 +89,5 @@ def import_file(filepath, fields):
             pp = pprint.PrettyPrinter(indent=4)
             pp.pprint(terms)
 
-import_file('old-data/pastlsf2.csv', past_fields)
-import_file('old-data/lsf2.csv', current_fields)
+import_file('pastlsf2.csv', past_fields)
+import_file('lsf2.csv', current_fields)
