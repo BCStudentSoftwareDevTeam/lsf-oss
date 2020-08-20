@@ -117,6 +117,7 @@ def userInsert():
             all_forms.append(False)
             print("ERROR on creating Labor Status Form/Overload Form" + str(e))
 
+    flash("Form(s) submitted successfully! They will be eligible for approval in one business day.", "success")
     return jsonify(all_forms)
 
 @main_bp.route("/laborstatusform/getDate/<termcode>", methods=['GET'])
