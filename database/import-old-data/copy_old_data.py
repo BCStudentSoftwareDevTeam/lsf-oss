@@ -9,9 +9,10 @@ import import_functions as importf
 
 importf.DEBUG = False
 
-# Beforehand, replace funky Microsoft quotes
+# Beforehand, clean up data
 # :%s/ctrl-v u0092 ctrl-v/'/g
 # :%s/ctrl-v ctrl-r ctrl-v/,/g
+# :%s/&amp;/\&/g
 
 print("Creating terms...")
 createTerms(2015)
@@ -89,5 +90,5 @@ def import_file(filepath, fields):
             pp = pprint.PrettyPrinter(indent=4)
             pp.pprint(terms)
 
-import_file('pastlsf2.csv', past_fields)
-import_file('lsf2.csv', current_fields)
+import_file('pastlsf3.csv', past_fields)
+import_file('lsf3.csv', current_fields)

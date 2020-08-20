@@ -4,6 +4,9 @@ from app.models.term import Term
 from app.models.student import Student
 from app.logic.userInsertFunctions import *
 import random
+import dateutil.parser
+from datetime import timedelta
+
 
 DEBUG=False
 
@@ -146,8 +149,8 @@ def handleStudent(raw_student, raw_name):
 
     return student
 
-# Create User and Student/Supervisor records based only on username
-def handleCreator(username, department):
+# Create User and Student/Supervisor records based on username
+def userFromUsername(username, department):
 
     user, created = User.get_or_create(username=username)
     if created:
@@ -185,7 +188,10 @@ def importRecord(record, terms):
         # There won't be positions for the old stuff, but that's ok because we have all the data
         position = Tracy().getPositionFromCode(record['posn_code'])
     except InvalidQueryException:
-        pass
+        if 'department' not in record:
+            print("There is no position code {} in Tracy and we need it for department".format(record['posn_code']))
+            return False
+
 
     # Populate department table
     if 'department' in record:
@@ -198,6 +204,9 @@ def importRecord(record, terms):
             DEPT_NAME=position.DEPT_NAME,
             ACCOUNT=position.ACCOUNT,
             ORG=position.ORG)
+
+    if department.DEPT_NAME.strip() == "":
+        return False
 
 
     # Ensure Supervisor record exists
@@ -217,19 +226,25 @@ def importRecord(record, terms):
 
     if save:
 
-        # estimate the proper hours for the contract
-        weekly_hours = record['hour']
-        contract_hours = None
+        # estimate the proper hours and length of the contract
+        weeks = 16
         if term.isSummer:
-            contract_hours = int(record['hour']) * 5 * 8 # 8 weeks of summer
-            weekly_hours = None
-
+            weeks = 8
         elif term.isBreak:
             weeks = 1
             if 'Christmas' in term.termName:
                 weeks = 4
+
+        weekly_hours = record['hour']
+        contract_hours = None
+        if weeks < 16:
             contract_hours = int(record['hour']) * 5 * weeks
             weekly_hours = None
+
+        end_date = record['end'].strip()
+        if end_date == '':
+            end_date = dateutil.parser.isoparse(record['start']) + timedelta(weeks=weeks)
+
 
 
         form = LaborStatusForm.create(
@@ -245,16 +260,16 @@ def importRecord(record, terms):
             contractHours=contract_hours,
             weeklyHours=weekly_hours,
             startDate=record['start'],
-            endDate=record['end'] if record['end'] else term.termEnd,
+            endDate=end_date,
             laborDepartmentNotes=record['note'])
         
-        creator = handleCreator(record['creator'], department)
+        creator = userFromUsername(record['creator'], department)
         status = Status.get(Status.statusName == "Pending")
 
         create_date = record['start']
         if 'created_on' in record and record['created_on'] != "":
             create_date = record['created_on']
-        create_date = datetime.fromisoformat(create_date[:-3]) # we have extra fractional zeroes for some reason
+        create_date = dateutil.parser.isoparse(create_date[:-3]) # we have extra fractional zeroes for some reason
 
         historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
         fh_entry = FormHistory.create(
@@ -273,7 +288,11 @@ def importRecord(record, terms):
                 status = Status.get(Status.statusName == "Denied")
                 fh_entry.rejectReason = record['rejectReason']
 
+            processor = userFromUsername(record['processedBy'], department)
+            fh_entry.reviewedBy = processor
+            fh_entry.reviewedDate = record['processedDate']
             fh_entry.status = status.statusName
+
             fh_entry.save()
 
         debug("Saved.")
