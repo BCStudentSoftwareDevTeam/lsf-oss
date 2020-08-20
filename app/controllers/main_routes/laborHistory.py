@@ -31,7 +31,7 @@ def laborhistory(id):
             return render_template('errors/403.html'), 403
         student = Student.get(Student.ID == id)
         studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
-        authorizedForms = set(studentForms)
+        authorizedForms = studentForms
         if not currentUser.isLaborAdmin:
             # View only your own form history
             if currentUser.student and not currentUser.supervisor:
