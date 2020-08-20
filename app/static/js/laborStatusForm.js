@@ -782,10 +782,7 @@ function userInsert(){
                  $(".glyphicon-remove").css("color", "grey");
                  parsedArrayOfStudentCookies = document.cookie;
                  document.cookie = parsedArrayOfStudentCookies +";max-age=0";
-                 msgFlash("Form(s) submitted successfully! They will be eligible for approval in one business day. (Please wait for page to reload.)", "success");
-                 setTimeout(function() { // executed after 1 second
-                    window.location.replace("/laborstatusform"); // reloads the page if every form
-                  }, 5000);
+                 window.location.replace("/laborstatusform");
                }
              }
              $("#submitmodalid").prop("disabled", false);

@@ -20,6 +20,7 @@ from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 from app.models.Tracy.stuposn import STUPOSN
 from app.models.supervisor import Supervisor
+from app.controllers.main_routes.download import ExcelMaker
 
 
 @admin.route('/admin/pendingForms/<formType>',  methods=['GET'])
@@ -107,6 +108,14 @@ def allPendingForms(formType):
     except Exception as e:
         print("Error Loading all Pending Forms:", e)
         return render_template('errors/500.html'), 500
+
+@admin.route('/admin/pendingForms/download', methods=['POST'])
+def downloadAllPendingForms():
+    allPendingForms = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
+    excel = ExcelMaker()
+    completePath = excel.makeExcelAllPendingForms(allPendingForms)
+    filename = completePath.split('/').pop()
+    return send_file(completePath,as_attachment=True, attachment_filename=filename)
 
 @admin.route('/admin/checkedForms', methods=['POST'])
 def approved_and_denied_Forms():
@@ -504,8 +513,7 @@ def sendEmail():
                 recipient = 'Financial Aid'
                 overloadForm.financialAidApproved = status.statusName
                 overloadForm.save()
-            # Lines 347-349 were left as comments because they require code from PR #89
-            link = '/admin/financialAidOverloadApproval/' + str(rsp['formHistoryID'])
+            link = 'http://{0}/'.format(request.host) + 'admin/financialAidOverloadApproval/' + str(rsp['formHistoryID'])
             email = emailHandler(historyForm.formHistoryID)
             email.overloadVerification(recipient, link)
             currentDate = datetime.now().strftime('%m/%d/%y')
