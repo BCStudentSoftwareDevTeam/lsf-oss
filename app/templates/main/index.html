@@ -126,7 +126,6 @@ and hide the department select picker. -->
         <th> </th>
       </tr>
     </thead>
-
     <!-- Display all the current students by going through currentSupervisees list from main_route.py -->
     {% for form in currentSupervisees %}
       <tr>
@@ -138,13 +137,7 @@ and hide the department select picker. -->
         <td style="display:none">My Current Students</td>
       </tr>
     {% endfor %}
-    <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
-    <tr class="currentStu">
-      <td style="display:none"></td>
-      <td style="display:none">My Current Students</td>
-    </tr>
-
-    <!-- Display all the current students by going through pastSupervisees list from main_route.py -->
+    <!-- Display all the past students by going through pastSupervisees list from main_route.py -->
     {% for form in pastSupervisees %}
       <tr>
         <td><a href="/laborHistory/{{form.studentSupervisee.ID}}" value=0>
@@ -155,13 +148,7 @@ and hide the department select picker. -->
         <td style="display:none">My Past Students</td>
       </tr>
     {% endfor %}
-    <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
-    <tr class="currentStu">
-      <td style="display:none"></td>
-      <td style="display:none">My Past Students</td>
-    </tr>
-
-    <!-- Display all the current students by going through inactiveSupervisees list from main_route.py -->
+    <!-- Display all the past and inactive students by going through inactiveSupervisees list from main_route.py -->
     {% for form in inactiveSupervisees %}
     <tr>
       <td><a href="/laborHistory/{{form.studentSupervisee.ID}}">
@@ -172,18 +159,10 @@ and hide the department select picker. -->
       <td style="display:none">My Past Students</td>
     </tr>
     {% endfor %}
-    <!-- Here, we create a second hidden column so that we can filter by this column in the JavaScript -->
-    <tr class="pastStu">
-      <td style="display:none"></td>
-      <td style="display:none">My Past Students</td>
-    </tr>
-
   </table>
 </div>
 <div class="col-md-2"></div>
 <!-- End of data-table that will display the supervisee -->
-
 <!-- Keeps modal form closing when submit( Download ) button is pressed -->
 <iframe name="frame"></iframe>
-
 {% endblock %}
