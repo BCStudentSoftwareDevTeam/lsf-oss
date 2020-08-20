@@ -44,7 +44,7 @@ def createTerms(termYear):
             elif i == 1:
                 Term.create(termCode = (code + 11), termName = "Fall {}".format(termYear))
             elif i == 7:
-                Term.create(termCode = (code + 4), termName = "Fall Break {}".format(termYear))
+                Term.create(termCode = (code + 4), termName = "Fall Break {}".format(termYear), isBreak=True)
             elif i == 2:
                 Term.create(termCode = (code + 1), termName = "Thanksgiving Break {}".format(termYear), isBreak=True)
             elif i == 3:
