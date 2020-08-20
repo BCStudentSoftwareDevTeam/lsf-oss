@@ -139,17 +139,17 @@ var table = $("#studentList").DataTable({
           changeButtonColor("#allDepartmentStudents")
           $(".currentStu").hide();
           $(".allDeptStu").show();
-          $(".currentDeptStu").hide();
+          $(".currentDeptStu").show();
           $(".pastStu").hide();
           $(".currentStudentModal").attr("disabled", true);
           $(".allDepartmentModal").removeAttr("disabled");
-          $(".currentDepartmentModal").attr("disabled", true);
+          $(".currentDepartmentModal").removeAttr("disabled");
           $(".pastStudentModal").attr("disabled", true);
           $('#portalTitle').text("Current and Past Department Students");
           // Used to filter the datatable by the hidden column made in the HTML
           table
             .columns( 1 )
-            .search("All Department Students")
+            .search("All Department Students|Current Department Students", true, false, true)
             .draw();
          },
         attr: { id: "allDepartmentStudents"}
@@ -353,12 +353,13 @@ function populateTable(){
         var divClass = response[key]["checkboxModalClass"]
         var formID = response[key]["formID"]
         var activeStatus = response[key]["activeStatus"]
+        var formStatus = response[key]["formStatus"]
 
         // The first "If" statment will populate both the data table and modal if the student's activeStatus == 'True', meaning that the
         // student is currently still a student at Berea
         if (activeStatus == "True") {
-          table.row.add(["<a href='/laborHistory/" + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>" +
-          "<br />" + "<span class='pushLeft h6'>" + term + " - " + position + " - " + department + "</span>",
+          table.row.add(["<a href='/laborHistory/" + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>"
+          + "<span class='pushRight h5'>" + formStatus + "</span>" + "<br />"+ "<span class='pushLeft h6'>" + term + " - " + position + " - " + department + "</span>",
           "<span style='display:none'>" + status + "</span>"])
           .draw()
 

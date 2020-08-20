@@ -15,7 +15,11 @@
 }
 
 .pushLeft {
-    padding-left: 10px;
+  padding-left: 10px;
+}
+
+.pushRight {
+  float: right;
 }
 
 .studentTable th, .studentTable td {
