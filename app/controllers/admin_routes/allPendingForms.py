@@ -182,7 +182,7 @@ def finalUpdateStatus(raw_status):
         return jsonify({"success": True})
     except Exception as e:
         print("Error preparing form for status update:", e)
-        return jsonify({"success": False})
+        return jsonify({"success": False}), 500
 
     # BANNER
     save_status = True # default true so that we will still save in the Deny case
