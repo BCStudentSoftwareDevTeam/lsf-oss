@@ -217,15 +217,20 @@ def importRecord(record, terms):
 
     if save:
 
-        #XXX fix hours
+        # estimate the proper hours for the contract
         weekly_hours = record['hour']
         contract_hours = None
-        if term.isBreak:
-            weekly_hours = None
-            contract_hours = int(record['hour']) * 5 # we need a total, but that's hard. here's a week
-
         if term.isSummer:
-            contract_hours *= 8 # how many weeks is summer?
+            contract_hours = int(record['hour']) * 5 * 8 # 8 weeks of summer
+            weekly_hours = None
+
+        elif term.isBreak:
+            weeks = 1
+            if 'Christmas' in term.termName:
+                weeks = 4
+            contract_hours = int(record['hour']) * 5 * weeks
+            weekly_hours = None
+
 
         form = LaborStatusForm.create(
             studentName=student.FIRST_NAME + " " + student.LAST_NAME,
