@@ -22,8 +22,8 @@ class LaborStatusForm (baseModel):
     weeklyHours                 = IntegerField(null=True)         # weekly hours 10,12,15...
     startDate                   = DateField(null=True)            # in case they start different than term start date
     endDate                     = DateField(null=True)
-    supervisorNotes             = CharField(null=True)              # null=True allows saving of null in db, and a supervisor may not always have notes
-    laborDepartmentNotes        = CharField(null=True)
+    supervisorNotes             = TextField(null=True)
+    laborDepartmentNotes        = TextField(null=True)
 
 
     def __str__(self):
