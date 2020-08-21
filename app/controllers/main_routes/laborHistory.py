@@ -40,11 +40,12 @@ def laborhistory(id):
             elif currentUser.supervisor and not currentUser.student:
                 supervisorForms = LaborStatusForm.select() \
                                   .join_from(LaborStatusForm, FormHistory) \
-                                  .where((LaborStatusForm.Supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
+                                  .where((LaborStatusForm.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
                                   .distinct()
                 authorizedForms = set(studentForms).intersection(set(supervisorForms))
                 if len(authorizedForms) == 0:
                     return render_template('errors/403.html'), 403
+        authorizedForms = sorted(authorizedForms,key=lambda f:f.startDate, reverse=True)
         laborStatusFormList = ','.join([str(form.laborStatusFormID) for form in studentForms])
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
