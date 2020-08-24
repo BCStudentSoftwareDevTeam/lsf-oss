@@ -128,7 +128,3 @@ function termStatus(term) {
      }
   })
 };
-
-function hello() {
-  console.log("Hello");
-}
