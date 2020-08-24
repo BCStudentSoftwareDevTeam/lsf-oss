@@ -160,12 +160,19 @@ def index():
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
 def populateDepartment(departmentSelected):
     try:
-        department = Department.get(Department.DEPT_NAME == departmentSelected)
         todayDate = date.today()
-
+        # if "ALL" is selected, grab all labor status forms
+        if departmentSelected == "All":
+            formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm)\
+                                     .join_from(FormHistory, HistoryType)\
+                                     .where(FormHistory.historyType.historyTypeName == "Labor Status Form")\
+                                     .order_by(FormHistory.formID.endDate.desc())
+        # otherwise, grab the one associated with the department
+        else:
+            department = Department.get(Department.DEPT_NAME == departmentSelected)
         # This will retrieve all the forms that are tied to the department the user selected from the select picker
-        formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.department == department,
-        FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.endDate.desc())
+            formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.department == department,
+            FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.endDate.desc())
         # These three variables need to be global variables because they need to be iterated through in the "POST" call
         global currentDepartmentStudents
         global allDepartmentStudents
