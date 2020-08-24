@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" type="text/css" href="/static/css/formHistory.css" />
+<link rel="stylesheet" type="text/css" href="/static/css/formHistory.css?u={{lastStaticUpdate}}" />
 {% endblock %}
 {% block scripts %}
 {{super()}}
-<script type="text/javascript" src="/static/js/laborhistory.js"></script>
+<script type="text/javascript" src="/static/js/laborhistory.js?u={{lastStaticUpdate}}"></script>
 {% endblock %}
 {% block app_content %}
 
@@ -13,7 +13,7 @@
 <div align= "center">
   <h1>Labor History</h1>
     <span id="studentName">{{student.FIRST_NAME}} {{student.LAST_NAME}}</span>
-    {% if currentUser.Supervisor or currentUser.isLaborAdmin %}
+    {% if currentUser.supervisor or currentUser.isLaborAdmin %}
       <form method="POST" action="/laborHistory/download">
         <input hidden name="listOfForms" value="{{laborStatusFormList}}" />
         <div align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success" id="downloadButton">Download</button></div>
@@ -42,7 +42,7 @@
   </div>
 </div>
 <!-- Modal End -->
-  {% if currentUser.Supervisor or currentUser.isLaborAdmin %}
+  {% if currentUser.supervisor or currentUser.isLaborAdmin %}
     <div align= "left"><button class='btn btn-danger' id="returnbutton" onclick="location.replace('/')">Return</button></div>
   {% endif %}
 {% endblock %}

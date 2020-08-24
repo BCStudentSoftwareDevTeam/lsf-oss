@@ -56,7 +56,7 @@ studentsTracy = [
                 "ID":"B00734292",
                 "PIDM":"3",
                 "FIRST_NAME":"Guillermo",
-                "LAST_NAME":"Cruz",
+                "LAST_NAME":"Adams",
                 "CLASS_LEVEL":"Junior",
                 "ACADEMIC_FOCUS":"Computer Science",
                 "MAJOR":"Computer Science",
@@ -78,6 +78,21 @@ studentsTracy = [
                 "PROBATION":"0",
                 "ADVISOR":"Scott Heggen",
                 "STU_EMAIL":"adamskg@berea.edu",
+                "STU_CPO":"420",
+                "LAST_POSN":"TA",
+                "LAST_SUP_PIDM":"7"
+                },
+                {
+                "ID":"            B00888329",
+                "PIDM":"7",
+                "FIRST_NAME":"Jeremiah",
+                "LAST_NAME":"Bullfrog",
+                "CLASS_LEVEL":"Senior",
+                "ACADEMIC_FOCUS":"Computer Science",
+                "MAJOR":"Computer Science",
+                "PROBATION":"0",
+                "ADVISOR":"Scott Heggen",
+                "STU_EMAIL":"bullfrogj@berea.edu",
                 "STU_CPO":"420",
                 "LAST_POSN":"TA",
                 "LAST_SUP_PIDM":"7"
@@ -272,64 +287,64 @@ print(" * staff added")
 #############################
 users = [
         {
-        "Student": None,
-        "Supervisor": "B12361006",
+        "student": None,
+        "supervisor": "B12361006",
         "username": "heggens",
         "isLaborAdmin": 1,
         "isFinancialAidAdmin": None,
         "isSaasAdmin": None
         },
         {
-        "Student": None,
-        "Supervisor": "B12365892",
+        "student": None,
+        "supervisor": "B12365892",
         "username": "pearcej",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
         "isSaasAdmin": None
         },
         {
-        "Student": None,
-        "Supervisor": "B12365893",
+        "student": None,
+        "supervisor": "B12365893",
         "username": "jonesj",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
         "isSaasAdmin": None
         },
         {
-        "Student": None,
-        "Supervisor": "B00763721",
+        "student": None,
+        "supervisor": "B00763721",
         "username": "ramsayb2",
         "isLaborAdmin": 1,
         "isFinancialAidAdmin": None,
         "isSaasAdmin": None
         },
         {
-        "Student": "B00730361",
-        "Supervisor": None,
+        "student": "B00730361",
+        "supervisor": None,
         "username": "jamalie",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
         "isSaasAdmin": None
         },
         {
-        "Student": "B00734292",
-        "Supervisor": None,
+        "student": "B00734292",
+        "supervisor": None,
         "username": "cruzg",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
         "isSaasAdmin": None
         },
         {
-        "Student": "B00785329",
-        "Supervisor": None,
+        "student": "B00785329",
+        "supervisor": None,
         "username": "adamskg",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
         "isSaasAdmin": None
         },
         {
-        "Student": "B00841417",
-        "Supervisor": "B00841417",
+        "student": "B00841417",
+        "supervisor": "B00841417",
         "username": "bryantal",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,

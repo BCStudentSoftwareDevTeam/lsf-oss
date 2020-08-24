@@ -1,5 +1,6 @@
 from app.config.loadConfig import get_secret_cfg
 from peewee import DoesNotExist
+import sqlalchemy
 from app.models.Tracy import db
 from app.models.Tracy.stuposn import STUPOSN
 from app.models.Tracy.studata import STUDATA
@@ -31,7 +32,7 @@ class Tracy():
 
         Throws an InvalidQueryException if the B Number does not exist.
         """
-        student = STUDATA.query.filter(STUDATA.ID == bnumber).first()
+        student = STUDATA.query.filter(sqlalchemy.func.trim(STUDATA.ID) == str(bnumber).strip()).first()
         if student is None:
             raise InvalidQueryException("B# {} not found in STUDATA".format(bnumber))
 
@@ -94,7 +95,7 @@ class Tracy():
         """
         Return a list of position objects for the given department name, sorted by position title
         """
-        return STUPOSN.query.filter(STUPOSN.DEPT_NAME == department).order_by(STUPOSN.POSN_TITLE).all()
+        return STUPOSN.query.filter(STUPOSN.ORG == department).order_by(STUPOSN.POSN_TITLE).all()
 
     def getPositionFromCode(self, positionCode: str):
         """
@@ -105,3 +106,41 @@ class Tracy():
             raise InvalidQueryException("Position Code {} not found in STUPOSN".format(positionCode))
 
         return position
+
+    def getSupervisorsFromUserInput(self, userInput: str):
+        """
+        Return a list of supervisors based off of the user input
+        """
+        userInput.strip()
+        if " " not in userInput:
+            supervisors = STUSTAFF.query.filter((STUSTAFF.FIRST_NAME.contains(userInput)) | (STUSTAFF.LAST_NAME.contains(userInput))).all()
+        else:
+            userInput = userInput.split()
+            supervisors = STUSTAFF.query.filter((STUSTAFF.FIRST_NAME.contains(userInput[0])) & (STUSTAFF.LAST_NAME.contains(userInput[1]))).all()
+        return supervisors
+
+    def getStudentsFromUserInput(self, userInput: str):
+        """
+        Return a list of students based off of the user input
+        """
+        userInput.strip()
+        if " " not in userInput:
+            students = STUDATA.query.filter((STUDATA.FIRST_NAME.contains(userInput)) | (STUDATA.LAST_NAME.contains(userInput))).all()
+        else:
+            userInput = userInput.split()
+            students = STUDATA.query.filter((STUDATA.FIRST_NAME.contains(userInput[0])) & (STUDATA.LAST_NAME.contains(userInput[1]))).all()
+        return students
+
+    def checkStudentOrSupervisor(self, username: str):
+        """
+        Checks if the username belongs to a student or supervisor
+        """
+        email = "{}@berea.edu".format(username)
+        try:
+            supervisor = self.getSupervisorFromEmail(email)
+            if supervisor:
+                return "Supervisor"
+        except:
+            student = self.getStudentFromEmail(email)
+            if student:
+                return "Student"

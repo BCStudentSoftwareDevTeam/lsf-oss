@@ -39,9 +39,9 @@ def createUser(username, student=None, supervisor=None):
         raise InvalidUserException("Adding {} to user table failed".format(username), e)
 
     if student:
-        user.Student = student.ID # Not sure why assigning the object doesn't work...
+        user.student = student.ID # Not sure why assigning the object doesn't work...
     if supervisor:
-        user.Supervisor = supervisor.ID
+        user.supervisor = supervisor.ID
 
     user.save()
 
@@ -60,14 +60,14 @@ def createSupervisorFromTracy(username=None, bnumber=None):
     if bnumber:
         try:
             tracyUser = Tracy().getSupervisorFromID(bnumber)
-        except DoesNotExist as e:
+        except InvalidQueryException as e:
             raise InvalidUserException("{} not found in Tracy database".format(bnumber))
 
     else:    # Executes if no ID is provided
         email = "{}@berea.edu".format(username)
         try:
             tracyUser = Tracy().getSupervisorFromEmail(email)
-        except DoesNotExist as e:
+        except InvalidQueryException as e:
             raise InvalidUserException("{} not found in Tracy database".format(email))
 
     try:

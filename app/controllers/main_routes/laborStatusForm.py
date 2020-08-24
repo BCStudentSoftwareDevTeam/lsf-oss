@@ -28,8 +28,8 @@ def laborStatusForm(laborStatusKey = None):
     if not currentUser:        # Not logged in
         return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:
-        if currentUser.Student and not currentUser.Supervisor:
-            return redirect('/laborHistory/' + currentUser.Student.ID)
+        if currentUser.student and not currentUser.supervisor:
+            return redirect('/laborHistory/' + currentUser.student.ID)
 
     # Logged in
     students = Tracy().getStudents()
@@ -41,9 +41,9 @@ def laborStatusForm(laborStatusKey = None):
     if laborStatusKey != None:
         selectedLSForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         selectedFormHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
-        creator = selectedFormHistory.createdBy.Supervisor.ID
+        creator = selectedFormHistory.createdBy.supervisor.ID
         supervisor = selectedLSForm.supervisor.ID
-        if currentUser.Supervisor.ID == supervisor or currentUser.Supervisor.ID == creator:
+        if currentUser.supervisor.ID == supervisor or currentUser.supervisor.ID == creator:
             forms = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey) # getting labor status form id, to prepopulate laborStatusForm.
         else:
             forms = None
@@ -154,7 +154,7 @@ def checkForPrimaryOrSecondLSFBreak(termCode, student, isOneLSF=None):
 @main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
 def checkCompliance(department):
     """ Gets the compliance status of a department. """
-    depts = Department.select().where(Department.DEPT_NAME == department)
+    depts = Department.select().where(Department.ORG == department)
     deptDict = {}
     for dept in depts:
         deptDict['Department'] = {'Department Compliance': dept.departmentCompliance}

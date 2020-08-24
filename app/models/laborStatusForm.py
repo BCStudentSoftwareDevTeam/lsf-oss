@@ -14,7 +14,6 @@ class LaborStatusForm (baseModel):
     studentSupervisee           = ForeignKeyField(Student, on_delete="cascade")          # foreign key to student
     supervisor                  = ForeignKeyField(Supervisor, on_delete="cascade")             # foreign key to supervisor
     department                  = ForeignKeyField(Department, on_delete="cascade")       # Foreign key to department
-    #secondarySupervisor         = ForeignKeyField(User, null=True, on_delete="cascade")  # student may not always have a secondary #7/25/19: decided it was too                                                                                                 confusing language and we didnt even need to store this field..
     jobType                     = CharField()                       # Primary or secondary
     WLS                         = CharField()
     POSN_TITLE                  = CharField()                       # eg. student programmer, customer engagement specialist, receptionist, teaching assistant

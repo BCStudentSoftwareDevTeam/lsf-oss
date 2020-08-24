@@ -9,7 +9,6 @@ html, body {
     z-index: 100;
     top: 0;
     left: 0;
-    /* background-color: #e9ebec; */
     background-color: #275881;
     overflow-x: hidden;
 }
@@ -32,7 +31,6 @@ a.activeMenuItem{
 }
 
 #supervisorNavBar {
-    /* background-color: #66c2cc; */
     background-color: rgba(255, 255, 255, 0.45);
 }
 
@@ -82,10 +80,10 @@ a.activeMenuItem{
     height: 100%;
     min-height: 100%;
     margin-bottom: -100px;
+    /* margin-right: 20px; */
 }
 
 .footer {
-  /* background-color: #f5f5f5; */
   background-color: #e9ebec;
   color:#1e2433;
   text-align: center !important;
@@ -123,6 +121,9 @@ a {
 .sidebar-push {
   box-sizing: border-box;
   left: 280px;
+  right: 0px;
+  width: calc(100vw - 280px);
+  margin-right: 280px;
 }
 
 

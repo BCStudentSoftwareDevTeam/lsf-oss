@@ -37,7 +37,7 @@ class emailHandler():
         self.term = self.laborStatusForm.termCode
         self.student = self.laborStatusForm.studentSupervisee
         self.studentEmail = self.student.STU_EMAIL
-        self.creatorEmail = self.formHistory.createdBy.Supervisor.EMAIL
+        self.creatorEmail = self.formHistory.createdBy.supervisor.EMAIL
         self.supervisorEmail = self.laborStatusForm.supervisor.EMAIL
         self.date = self.laborStatusForm.startDate.strftime("%m/%d/%Y")
         self.weeklyHours = str(self.laborStatusForm.weeklyHours)
@@ -76,6 +76,9 @@ class emailHandler():
 
             self.mail.send(message)
 
+        elif app.config['ENV'] == 'testing':
+            # TODO: we really should have a way to check that we're sending emails that doesn't spam the logs
+            pass
         else:
             print("ENV: {}. Email not sent to {}, subject '{}'.".format(app.config['ENV'], message.recipients, message.subject))
 
@@ -300,7 +303,7 @@ class emailHandler():
 
     # This method is responsible for replacing the keyword form the templates in the database with the data in the laborStatusForm
     def replaceText(self, form):
-        form = form.replace("@@Creator@@", self.formHistory.createdBy.Supervisor.FIRST_NAME + " " + self.formHistory.createdBy.Supervisor.LAST_NAME)
+        form = form.replace("@@Creator@@", self.formHistory.createdBy.supervisor.FIRST_NAME + " " + self.formHistory.createdBy.supervisor.LAST_NAME)
         # 'Supervisor' is the supervisor on the current laborStatusForm that correspond to the formID we passed in when creating the class
         form = form.replace("@@Supervisor@@", self.laborStatusForm.supervisor.FIRST_NAME + " " + self.laborStatusForm.supervisor.LAST_NAME)
         form = form.replace("@@Student@@", self.laborStatusForm.studentSupervisee.FIRST_NAME + " " + self.laborStatusForm.studentSupervisee.LAST_NAME)

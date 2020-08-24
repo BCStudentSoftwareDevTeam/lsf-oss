@@ -2,11 +2,12 @@
     <nav class="navbar">
       <!-- Logo -->
       <div id="logo"><img src="/static/labor-logo.png" title="Labor Program Logo" /></div>
-      {% if currentUser.Student %}
+      {% if currentUser.student %}
       <div class="container-fluid">
-          <div class="panel-group" >
+          <div class="panel-group">
               <div class="panel panel-default">
-                <a class="highlight" href='/laborHistory/{{currentUser.Student.ID}}'>
+
+                <a href='/laborHistory/{{currentUser.student.ID}}'>
                     <div class="panel-heading">
                         <h4>Labor History</h4>
                     </div>
@@ -15,7 +16,7 @@
           </div>
        </div>
       {% endif %}
-      {% if currentUser.Supervisor %}
+      {% if currentUser.supervisor %}
         <div class="container-fluid">
           <div class="panel-group" >
               <div class="panel panel-default">

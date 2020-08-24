@@ -1,7 +1,9 @@
 #!/bin/bash
 
+PRODUCTION=0
 if [ "`hostname`" == 'lsf.berea.edu' ]; then
 	echo "DO NOT RUN THIS SCRIPT ON PRODUCTION UNLESS YOU REALLY REALLY KNOW WHAT YOU ARE DOING"
+	PRODUCTION=1
 	exit 1
 fi
 
@@ -28,8 +30,9 @@ rm -rf migrations.json
 # Adding data we need in all environments
 python3 base_data.py
 
-# Adding fake data (we don't want this in a production environment)
-python3 demo_data.py
-
-# Add admins for production testing
-#FLASK_ENV=production python3 add_admins.py
+# Adding fake data for non-prod, set up admins for prod
+if [ $PRODUCTION -eq 1 ]; then
+	FLASK_ENV=production python3 add_admins.py
+else 
+	python3 demo_data.py
+fi

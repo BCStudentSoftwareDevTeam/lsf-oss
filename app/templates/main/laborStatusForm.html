@@ -2,13 +2,12 @@
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" href="/static/css/laborStatusForm.css" type="text/css"/>
-<link rel="stylesheet" href="/static/css/tooltip.css" type="text/css"/>
+<link rel="stylesheet" href="/static/css/laborStatusForm.css?u={{lastStaticUpdate}}" type="text/css"/>
 {% endblock %}
 
 ​{% block scripts %}
 {{super()}}
-<script type=text/javascript src="{{url_for('static', filename='js/laborStatusForm.js')}}"></script>
+<script type=text/javascript src="{{url_for('static', filename='js/laborStatusForm.js')}}?u={{lastStaticUpdate}}"></script>
 {% endblock %}
 
 {% block app_content %}
@@ -86,7 +85,7 @@
                 onchange = "checkCompliance(this); getDepartment(this); showAccessLevel()">
           <option value = "" disabled selected>Select a Department</option>
           {% for department in departments %}
-            <option value="{{department.DEPT_NAME}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-subtext = "({{department.ORG}}-{{department.ACCOUNT}})">{{department.DEPT_NAME}}</option>
+            <option value="{{department.ORG}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-subtext = "({{department.ORG}}-{{department.ACCOUNT}})">{{department.DEPT_NAME}}</option>
           {% endfor %}
         </select>
 
@@ -124,7 +123,7 @@
         <label for="dateTimePicker1" id="datePickerStart"><span class="tooltip-right" data-tooltip="Required">Start Date<span class="required-mark">*</span></span></label>
           <div class='input-group date'>
             <input type='text' class="form-control disable" id='dateTimePicker1' name="startDate" placeholder="Start Date" data-width="320px" onchange="updateDate(this)" readonly/>
-            <span class="input-group-addon">
+            <span class="input-group-addon" id="calendarIcon1">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
           </div>
@@ -134,7 +133,7 @@
       <label for="dateTimePicker2" id="datePickerEnd"><span class="tooltip-right" data-tooltip="Required">End Date<span class="required-mark">*</span></span></label>
         <div class='input-group date'>
             <input type='text' class="form-control disable" id='dateTimePicker2' name="endDate" placeholder="End Date" data-width="320px" onchange="updateDate(this)" readonly/>
-            <span class="input-group-addon">
+            <span class="input-group-addon" id="calendarIcon2">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
         </div>
@@ -226,6 +225,7 @@
           value = "formSubmission"
           onclick="checkIfFreshman();">Add Student
   </button>
+ <strong>*Want to add multiple students for this supervisor? Add them now!</strong>
 </div>
   <br />
 
