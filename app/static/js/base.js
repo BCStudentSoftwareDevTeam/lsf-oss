@@ -5,3 +5,10 @@
     x = $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
 })
 */
+
+$(document).ready(function(){
+  $('.highlight').click(function(){
+    $('.highlight').removeClass("activeMenuItem");
+    $(this).addClass("activeMenuItem");
+  });
+});

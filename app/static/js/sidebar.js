@@ -1,18 +1,22 @@
-valueTI = ["tabindex=2", "tabindex=3", "tabindex=4", "tabindex=5", "tabindex=6", "tabindex=7", "tabindex=8", "tabindex=9", "tabindex=10", "tabindex=11", "tabindex=12", "tabindex=13"]
-valueTitle = ["students", "dept", "lsf", "admin", "pending", "overload", "past", "manageT", "manageD", "manageA", "email", "logout"]
-
-function checkBrowser() {
-  // Get the user-agent string
+$(document).ready(function(){
+  console.log("debug001");
+  // $('.highlight').click(function(){
+  //   $('a').removeClass("active");
+  //   $(this).addClass("active");
+  // })
   let userAgentString = navigator.userAgent;
-
   // Detect Chrome
   let chromeAgent = userAgentString.indexOf("Chrome") > -1;
+  console.log("Line21");
+  console.log(chromeAgent);
+  if (chromeAgent == true){
+    $('a').removeAttr('tabindex');
+    $('li').removeAttr('tabindex');
 
-  if (chromeAgent = true) {
-    varTabIndex = "tabindex=0"
-  } else {
-    varTabIndex =
   }
+})
 
 
-  //document.querySelector(".output-chrome").textContent = chromeAgent;
+// $(document).ready(function(){
+//   $('input').removeAttr("tabindex");
+// });

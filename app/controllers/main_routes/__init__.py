@@ -10,8 +10,24 @@ def injectGlobalData():
     lastStaticUpdate = str(max(os.path.getmtime(os.path.join(root_path, f))
                    for root_path, dirs, files in os.walk('app/static')
                    for f in files))
+    dict = {
+        "students":"2",
+        "dept":"3",
+        "lsf":"4",
+        "admin":"5",
+        "pending": "6",
+        "overload": "7",
+        "past": "8",
+        "manageT": "9",
+        "manageD": "10",
+        "manageA": "11",
+        "email": "12",
+        "logout": "13"
+
+    }
     return {'currentUser': currentUser,
-            'lastStaticUpdate': lastStaticUpdate}
+            'lastStaticUpdate': lastStaticUpdate,
+            'dict': dict}
 
 from app.controllers.main_routes import main_routes
 from app.controllers.main_routes import laborStatusForm
