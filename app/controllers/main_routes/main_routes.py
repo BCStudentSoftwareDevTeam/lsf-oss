@@ -26,6 +26,7 @@ def logout():
     return redirect(login_manager.logout())
 
 @main_bp.route('/', methods=['GET', 'POST'])
+@main_bp.route('/main/department', methods=['GET', 'POST'])
 def index():
     try:
         currentUser = require_login()
