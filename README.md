@@ -3,11 +3,11 @@
 ## Requirements
 Python 3.6+ 
 
-*Packages*
-* python3-dev
-* python3-pip
-* python3-venv
-* unixodbc-dev
+**Packages**
+ * python3-dev
+ * python3-pip
+ * python3-venv
+ * unixodbc-dev
 
 ## Developing on Labor Status Forms
 1. Pull down the repo: git clone <URL>
