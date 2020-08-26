@@ -1,3 +1,7 @@
+function goback(){
+  console.log(document.referrer);
+}
+
 $('#positionTable tbody tr td').on('click',function(){
   /*If boolean value is false, flash container letting user know that they do not
   have access. Else, load student labor history modal.*/
