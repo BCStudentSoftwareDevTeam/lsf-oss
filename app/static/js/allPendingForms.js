@@ -17,7 +17,7 @@ $(document).ready(function() {
     targetsList = [0, 9]
   }
   // If overload tab has been clicked, then we
-  $('#pendingForms, #statusForms, #adjustedForms, #releaseForms').DataTable({
+  table = $('#pendingForms, #statusForms, #adjustedForms, #releaseForms').DataTable({
     'columnDefs': [{
       'orderable': false,
       'targets': targetsList
@@ -26,7 +26,7 @@ $(document).ready(function() {
     'aaSorting': [
       [1, 'asc']
     ], // start to sort data in second column
-    pageLength: 50,
+    pageLength: 3,
     // "dom": '<"top"fl>rt<"bottom"p><"clear">'
   });
 
@@ -51,7 +51,7 @@ $(document).ready(function() {
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
-  var getChecked = $('.approveCheckbox:checked').each(function() {
+  var getChecked = table.$('.approveCheckbox:checked').each(function() {
     labor_details_ids.push(this.value);
   });
 
