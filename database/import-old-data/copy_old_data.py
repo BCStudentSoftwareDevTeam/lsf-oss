@@ -10,8 +10,8 @@ import import_functions as importf
 importf.DEBUG = False
 
 # Beforehand, clean up data
-# :%s/ctrl-v u0092 ctrl-v/'/g
-# :%s/ctrl-v ctrl-r ctrl-v/,/g
+# :%s/ctrl-v u0092/'/g
+# :%s/ctrl-v ctrl-r/,/g
 # :%s/&amp;/\&/g
 
 print("Creating terms...")
@@ -85,10 +85,11 @@ def import_file(filepath, fields):
                     if saved % 100 == 0:
                         print(str(saved).rjust(8))
                 else:
-                    print("XXX Not saved XXX")
+                    print("X", end="", flush=True)
+
             print("\nCreated {} forms\n".format(saved))
             pp = pprint.PrettyPrinter(indent=4)
             pp.pprint(terms)
 
-import_file('pastlsf3.csv', past_fields)
-import_file('lsf3.csv', current_fields)
+import_file('pastlsf4.csv', past_fields)
+import_file('lsf4.csv', current_fields)
