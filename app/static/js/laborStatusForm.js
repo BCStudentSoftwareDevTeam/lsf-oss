@@ -4,7 +4,11 @@ var laborStatusFormNote = null;
 
 $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip();
-  $( "#dateTimePicker1, #dateTimePicker2").datepicker();
+  $("#dateTimePicker1, #dateTimePicker2").datepicker();
+  $("html").on("mouseenter",".ui-state-disabled", function() {
+    $(this).attr('title', 'This is the hover-over text');
+    console.log("hovering");
+  });
   if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
     checkCompliance($("#selectedDepartment"));
     getDepartment($("#selectedDepartment"));
