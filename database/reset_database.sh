@@ -21,7 +21,9 @@ rm -rf migrations.json
 
 echo "Creating database schema"
 ./migrate_db.sh
-./migrate_db_tracy.sh
+if [ $PRODUCTION -ne 1 ]; then
+	./migrate_db_tracy.sh
+fi
 
 rm -rf lsf_migrations
 rm -rf tracy_migrations
