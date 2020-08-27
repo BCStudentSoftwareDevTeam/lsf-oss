@@ -243,6 +243,8 @@ def importRecord(record, terms):
     contract_hours = None
     if weeks < 16:
         contract_hours = int(record['hour']) * 5 * weeks
+        if term.termName == 'Summer 2020':
+            contract_hours = record['hour']
         weekly_hours = None
 
     end_date = record['end'].strip()
