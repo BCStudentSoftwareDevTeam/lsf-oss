@@ -1,6 +1,10 @@
 // Opens collapse menu for this page
 $("#admin").collapse("show");
 
+$('[data-onload]').each(function(){
+  eval($(this).data('onload'));
+});
+
 $(function () {
   $('[data-toggle="tooltip"]').tooltip()
 });
