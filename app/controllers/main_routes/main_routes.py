@@ -162,21 +162,19 @@ def populateDepartment(departmentSelected):
     try:
         currentUser = require_login()
         todayDate = date.today()
-        # if "allStatusForms" is selected, grab all labor status forms
+
         if departmentSelected == "all":
             if currentUser.isLaborAdmin:
                 formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm)\
                                          .join_from(FormHistory, HistoryType)\
                                          .where(FormHistory.historyType.historyTypeName == "Labor Status Form")\
                                          .order_by(FormHistory.formID.endDate.desc())
-        # if "allSupervisorStatusForms" is selected, grab all labor status forms associated with the supervisor
             elif currentUser.supervisor:
                 formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm)\
                                          .join_from(FormHistory, HistoryType)\
                                          .where((FormHistory.formID.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser))\
                                          .where(FormHistory.historyType.historyTypeName == "Labor Status Form")\
                                          .order_by(FormHistory.formID.endDate.desc())
-        # otherwise, grab the one associated with the department
         else:
             department = Department.get(Department.DEPT_NAME == departmentSelected)
         # This will retrieve all the forms that are tied to the department the user selected from the select picker
