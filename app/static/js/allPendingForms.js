@@ -26,7 +26,7 @@ $(document).ready(function() {
     'aaSorting': [
       [1, 'asc']
     ], // start to sort data in second column
-    pageLength: 3,
+    pageLength: 50,
     // "dom": '<"top"fl>rt<"bottom"p><"clear">'
   });
 
