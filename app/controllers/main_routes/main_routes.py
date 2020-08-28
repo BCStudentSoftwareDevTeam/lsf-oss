@@ -163,18 +163,19 @@ def populateDepartment(departmentSelected):
         currentUser = require_login()
         todayDate = date.today()
         # if "allStatusForms" is selected, grab all labor status forms
-        if departmentSelected == "allStatusForms":
-            formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm)\
-                                     .join_from(FormHistory, HistoryType)\
-                                     .where(FormHistory.historyType.historyTypeName == "Labor Status Form")\
-                                     .order_by(FormHistory.formID.endDate.desc())
+        if departmentSelected == "all":
+            if currentUser.isLaborAdmin:
+                formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm)\
+                                         .join_from(FormHistory, HistoryType)\
+                                         .where(FormHistory.historyType.historyTypeName == "Labor Status Form")\
+                                         .order_by(FormHistory.formID.endDate.desc())
         # if "allSupervisorStatusForms" is selected, grab all labor status forms associated with the supervisor
-        elif departmentSelected == "allSupervisorStatusForms":
-            formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm)\
-                                     .join_from(FormHistory, HistoryType)\
-                                     .where((FormHistory.formID.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser))\
-                                     .where(FormHistory.historyType.historyTypeName == "Labor Status Form")\
-                                     .order_by(FormHistory.formID.endDate.desc())
+            elif currentUser.supervisor:
+                formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm)\
+                                         .join_from(FormHistory, HistoryType)\
+                                         .where((FormHistory.formID.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser))\
+                                         .where(FormHistory.historyType.historyTypeName == "Labor Status Form")\
+                                         .order_by(FormHistory.formID.endDate.desc())
         # otherwise, grab the one associated with the department
         else:
             department = Department.get(Department.DEPT_NAME == departmentSelected)
