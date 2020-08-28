@@ -35,10 +35,14 @@ and hide the department select picker. -->
   <select class="selectpicker" id="departmentDropDown" onchange="populateTable()" title="Department" data-width="100%">
     {% for formHistory in currentUserDepartments %}
       {% if currentUser.isLaborAdmin %}
-      <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
+        {% if formHistory.formID.department.DEPT_NAME == department %}
+          <option value="{{formHistory.formID.department.DEPT_NAME}}" selected>{{formHistory.formID.department.DEPT_NAME}}</option>
+        {% else %}
+          <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
+        {% endif %}
       {% else %}
         <!-- We want to populate the select picker with the first option if the user is not an admin -->
-        {% if loop.index == 1 %}
+        {% if loop.index == 1 or formHistory.formID.department.DEPT_NAME == department %}
         <option value="{{formHistory.formID.department.DEPT_NAME}}" selected>{{formHistory.formID.department.DEPT_NAME}}</option>
         {% else %}
         <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>

@@ -27,8 +27,10 @@ def logout():
 
 @main_bp.route('/', methods=['GET', 'POST'])
 @main_bp.route('/main/department', methods=['GET', 'POST'])
-def index():
+@main_bp.route('/main/department/<department>', methods=['GET', 'POST'])
+def index(department = None):
     try:
+        print('Dept:', department)
         currentUser = require_login()
         if not currentUser:
             return render_template('errors/403.html'), 403
@@ -151,14 +153,15 @@ def index():
                         pastSupervisees = pastSupervisees,
                         inactiveSupervisees = inactiveSupervisees,
                         UserID = currentUser,
-                        currentUserDepartments = departments
+                        currentUserDepartments = departments,
+                        department = department
                               )
     except Exception as e:
         #TODO We have to return some sort of error page
         print('Error in Supervisor Portal:', e)
         return "",500
 
-@main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
+@main_bp.route('/main/department/selection/<departmentSelected>', methods=['GET'])
 def populateDepartment(departmentSelected):
     try:
         department = Department.get(Department.DEPT_NAME == departmentSelected)

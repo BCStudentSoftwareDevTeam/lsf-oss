@@ -1,5 +1,12 @@
-function goback(){
-  console.log(document.referrer);
+function goback(departmentName){
+  console.log("Here");
+  if (document.referrer.endsWith('main/department')) {
+    console.log('Something');
+    window.location.href = '/main/department/' + departmentName
+  } else if (document.referrer.endsWith('/')) {
+    console.log("here");
+    window.history.back();
+  }
 }
 
 $('#positionTable tbody tr td').on('click',function(){

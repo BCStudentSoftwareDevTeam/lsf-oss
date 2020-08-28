@@ -1,9 +1,39 @@
 var table;
 $(document).ready(function() {
+  console.log(document.cookie);
   console.log(document.location.href);
   var url = document.location.href
   createButtons();
-  if (url.endsWith('main/department')){
+  if (url.endsWith('/')){
+    console.log('My students');
+    changeButtonColor("#myCurrentStudents")
+    $("#userDepartments").hide()
+    $("#placeholder").show()
+    $("#currentDepartmentStudents").hide()
+    $("#allDepartmentStudents").hide()
+    $("#myCurrentStudents").show()
+    $("#myPastStudents").show()
+    $("#allMyStudents").show()
+    $('#portalTitle').text("Current Students");
+    $("#myCurrentStudents").removeClass("btn-light");
+    $("#myCurrentStudents").addClass("btn-primary");
+
+
+    table
+      .columns( 1 )
+      .search("My Current Students")
+      .draw();
+
+    $(".currentStu").show();
+    $(".allDeptStu").hide();
+    $(".currentDeptStu").hide();
+    $(".pastStu").hide();
+    $(".pastStudentModal").attr("disabled", true);
+    $(".allDepartmentModal").attr("disabled", true);
+    $(".currentDepartmentModal").attr("disabled", true);
+    $(".currentStudentModal").removeAttr("disabled");
+    $('#portalTitle').text("Current Students");
+  } else {
     console.log('Inside of departments');
     changeButtonColor("#currentDepartmentStudents")
     $("#userDepartments").show()
@@ -36,40 +66,11 @@ $(document).ready(function() {
     var departmentDropDown = $("#departmentDropDown");
     console.log(departmentDropDown);
     var departmentSelected = $(departmentDropDown, 'option:selected').attr('value');
+    console.log(departmentSelected);
     if (departmentSelected) {
       console.log(departmentSelected);
-      console.log("here");
-      populateTable()
+      populateTable();
     }
-  } else if (url.endsWith('/')) {
-    console.log('My students');
-    changeButtonColor("#myCurrentStudents")
-    $("#userDepartments").hide()
-    $("#placeholder").show()
-    $("#currentDepartmentStudents").hide()
-    $("#allDepartmentStudents").hide()
-    $("#myCurrentStudents").show()
-    $("#myPastStudents").show()
-    $("#allMyStudents").show()
-    $('#portalTitle').text("Current Students");
-    $("#myCurrentStudents").removeClass("btn-light");
-    $("#myCurrentStudents").addClass("btn-primary");
-
-
-    table
-      .columns( 1 )
-      .search("My Current Students")
-      .draw();
-
-    $(".currentStu").show();
-    $(".allDeptStu").hide();
-    $(".currentDeptStu").hide();
-    $(".pastStu").hide();
-    $(".pastStudentModal").attr("disabled", true);
-    $(".allDepartmentModal").attr("disabled", true);
-    $(".currentDepartmentModal").attr("disabled", true);
-    $(".currentStudentModal").removeAttr("disabled");
-    $('#portalTitle').text("Current Students");
   }
   $('#studentList').show();
   $('#download').show();
@@ -371,7 +372,7 @@ function populateTable(){
   // should send back the data we need as JSON
   $.ajax({
     method: "GET",
-    url: "/main/department/" + departmentSelected,
+    url: "/main/department/selection/" + departmentSelected,
     datatype: "json",
     success: function(response) {
 
@@ -436,7 +437,7 @@ function populateTable(){
         // The first "If" statment will populate both the data table and modal if the student's activeStatus == 'True', meaning that the
         // student is currently still a student at Berea
         if (activeStatus == "True") {
-          table.row.add(["<a href='/laborHistory/" + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>"
+          table.row.add(["<a href='/laborHistory/" + departmentSelected + '/' + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>"
           + "<span class='pushRight h5'>" + formStatus + "</span>" + "<br />"+ "<span class='pushLeft h6'>" + term + " - " + position + " - " + department + "</span>",
           "<span style='display:none'>" + status + "</span>"])
           .draw()
@@ -451,7 +452,7 @@ function populateTable(){
         // The "Else" statment will populate both the data table and modal if the student's activeStatus == 'False', meaning that the
         // student is no longer a student at Berea
         else{
-          table.row.add(["<a href='/laborHistory/" + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>" +
+          table.row.add(["<a href='/laborHistory/" + departmentSelected + '/' + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>" +
           "<br />" + "<span class='pushLeft h6'>No longer a student.</span>",
           "<span style='display:none'>" + status + "</span>"])
           .draw()
