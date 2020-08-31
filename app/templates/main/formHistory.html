@@ -22,10 +22,9 @@
       <table class="table" id="positionTable" >
         {% for form in authorizedForms %}
         <tr>
-          <!-- If a user is a labor admin, then the value boolean is true, and allows admin access to all of a student's labor history. -->
-          <td id="{{form.laborStatusFormID}}" class="modalLink" value="true">
-            <a href="#" tabindex="0"><span class="h4">{{form.termCode.termName}} - {{form.department.DEPT_NAME}} Dept.</span></a>
-            <p class="h6" id="second-line">{{form.jobType}} - {{form.POSN_TITLE}} ({{form.POSN_CODE}})</p>
+          <td id="{{form.formID.laborStatusFormID}}" class="modalLink" value="true">
+            <a href="#" tabindex="0"><span class="h4">{{form.formID.termCode.termName}} - {{form.formID.department.DEPT_NAME}} Dept.</span></a>
+            <p class="h6" id="second-line">{{form.formID.jobType}} - {{form.formID.POSN_TITLE}} ({{form.formID.POSN_CODE}})</p>
           </td>
         </tr>
         {% endfor %}
