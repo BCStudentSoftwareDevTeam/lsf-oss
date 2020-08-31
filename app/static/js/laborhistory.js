@@ -2,7 +2,7 @@ function goback(departmentName){
   if (document.referrer.includes('main/department')) {
     window.location.href = '/main/department/' + departmentName
   } else if (document.referrer.endsWith('/')) {
-    window.history.back();
+    window.location.href = "/";
   }
 }
 
