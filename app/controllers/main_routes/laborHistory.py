@@ -26,7 +26,6 @@ from app.logic.tracy import Tracy
 @main_bp.route('/laborHistory/<departmentName>/<id>', methods=['GET'])
 def laborhistory(id, departmentName = None):
     try:
-        print('Department Name:', departmentName)
         currentUser = require_login()
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html'), 403
@@ -58,7 +57,7 @@ def laborhistory(id, departmentName = None):
                               )
 
     except Exception as e:
-        print("Error Loading Student Labor History", e)
+        ("Error Loading Student Labor History", e)
         return render_template('errors/500.html'), 500
 
 @main_bp.route("/laborHistory/download" , methods=['POST'])

@@ -1,10 +1,8 @@
 var table;
 $(document).ready(function() {
-  console.log(document.location.href);
   var url = document.location.href
   createButtons();
   if (url.endsWith('/')){
-    console.log('My students');
     changeButtonColor("#myCurrentStudents")
     $("#userDepartments").hide()
     $("#placeholder").show()
@@ -62,42 +60,15 @@ $(document).ready(function() {
     // If the select picker already has a department selected when the page is loaded,
     // then we want to populate the data table with the selected department
     var departmentDropDown = $("#departmentDropDown");
-    console.log('Val', $('#departmentDropDown').val());
-    var departmentSelected = $(departmentDropDown, 'option:selected').attr('value');
-    // var departmentSelected = $('#departmentDropDown').val();
-    console.log('Selected Dep', departmentSelected);
+    var departmentSelected = $('option:selected', departmentDropDown).attr('value');
     if (departmentSelected) {
-      console.log('Before table fill');
       populateTable();
     }
   }
   $('#studentList').show();
   $('#download').show();
-  // When the page first loads, this function will make sure the data table is
-  // only showing the correct buttons and data
-  // table
-  //   .columns( 1 )
-  //   .search("My Current Students")
-  //   .draw();
-  //
-  // $("#currentDepartmentStudents").hide()
-  // $("#allDepartmentStudents").hide()
-  // $("#userDepartments").hide()
-  // $("#placeholder").show()
-  //
-  // $(".currentStu").show();
-  // $(".allDeptStu").hide();
-  // $(".currentDeptStu").hide();
-  // $(".pastStu").hide();
-  // $(".pastStudentModal").attr("disabled", true);
-  // $(".allDepartmentModal").attr("disabled", true);
-  // $(".currentDepartmentModal").attr("disabled", true);
-  // $(".currentStudentModal").removeAttr("disabled");
-  // $('#portalTitle').text("Current Students");
-  // $("#myCurrentStudents").removeClass("btn-light");
-  // $("#myCurrentStudents").addClass("btn-primary");
-
 });
+
 function createButtons(){
 
   table = $("#studentList").DataTable({
@@ -258,79 +229,6 @@ function changeButtonColor(ID) {
 
 // show the sub-sidebar only on this page
 $("div.laborStudentChoice").show();
-
-// $("#myStudents").on("click keypress",function(){
-//   // When the 'My Students' tab in the sidebar is clicked, this Function
-//   // hides and shows the correct buttons for that page, filter the datatable,
-//   // and shows the correct checkboxes that should show in the modal
-//   console.log("here");
-//   changeButtonColor("#myCurrentStudents")
-//   $("#userDepartments").hide()
-//   $("#placeholder").show()
-//   $("#currentDepartmentStudents").hide()
-//   $("#allDepartmentStudents").hide()
-//   $("#myCurrentStudents").show()
-//   $("#myPastStudents").show()
-//   $("#allMyStudents").show()
-//   $('#portalTitle').text("Current Students");
-//   $("#myCurrentStudents").removeClass("btn-light");
-//   $("#myCurrentStudents").addClass("btn-primary");
-//
-//
-//   table
-//     .columns( 1 )
-//     .search("My Current Students")
-//     .draw();
-//
-//   $(".currentStu").show();
-//   $(".allDeptStu").hide();
-//   $(".currentDeptStu").hide();
-//   $(".pastStu").hide();
-//   $(".pastStudentModal").attr("disabled", true);
-//   $(".allDepartmentModal").attr("disabled", true);
-//   $(".currentDepartmentModal").attr("disabled", true);
-//   $(".currentStudentModal").removeAttr("disabled");
-//   $('#portalTitle').text("Current Students");
-// });
-
-// $("#department").on("click keypress", function(e){
-//   // When the 'My Department' tab in the sidebar is clicked, this Function
-//   // hides and shows the correct buttons for that page, filter the datatable,
-//   // and shows the correct checkboxes that should show in the modal
-//   changeButtonColor("#currentDepartmentStudents")
-//   $("#userDepartments").show()
-//   $("#placeholder").hide()
-//   $(".currentStu").hide();
-//   $(".allDeptStu").hide();
-//   $(".currentDeptStu").show();
-//   $(".pastStu").hide();
-//   $(".currentStudentModal").attr("disabled", true);
-//   $(".allDepartmentModal").attr("disabled", true);
-//   $(".currentDepartmentModal").removeAttr("disabled");
-//   $(".pastStudentModal").attr("disabled", true);
-//   $('#portalTitle').text("Current Department Students");
-//   $("#currentDepartmentStudents").removeClass("btn-light");
-//   $("#currentDepartmentStudents").addClass("btn-primary");
-//
-//   table
-//     .columns( 1 )
-//     .search("Current Department Students")
-//     .draw();
-//
-//   $("#currentDepartmentStudents").show()
-//   $("#allDepartmentStudents").show()
-//   $("#myCurrentStudents").hide()
-//   $("#myPastStudents").hide()
-//   $("#allMyStudents").hide()
-//
-//   // If the select picker already has a department selected when the page is loaded,
-//   // then we want to populate the data table with the selected department
-//   var departmentDropDown = $("#departmentDropDown");
-//   var departmentSelected = $('option:selected', departmentDropDown).attr('value');
-//   if (departmentSelected) {
-//     populateTable()
-//   }
-// });
 
 // Listen for click on toggle checkbox
 $('#select-all').click(function(event) {

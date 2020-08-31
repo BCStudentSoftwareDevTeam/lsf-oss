@@ -30,7 +30,6 @@ def logout():
 @main_bp.route('/main/department/<department>', methods=['GET', 'POST'])
 def index(department = None):
     try:
-        print('Dept:', department)
         currentUser = require_login()
         if not currentUser:
             return render_template('errors/403.html'), 403
