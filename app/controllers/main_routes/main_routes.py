@@ -160,12 +160,26 @@ def index():
 @main_bp.route('/main/department/<departmentSelected>', methods=['GET'])
 def populateDepartment(departmentSelected):
     try:
-        department = Department.get(Department.DEPT_NAME == departmentSelected)
+        currentUser = require_login()
         todayDate = date.today()
 
+        if departmentSelected == "all":
+            if currentUser.isLaborAdmin:
+                formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm)\
+                                         .join_from(FormHistory, HistoryType)\
+                                         .where(FormHistory.historyType.historyTypeName == "Labor Status Form")\
+                                         .order_by(FormHistory.formID.endDate.desc())
+            elif currentUser.supervisor:
+                formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm)\
+                                         .join_from(FormHistory, HistoryType)\
+                                         .where((FormHistory.formID.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser))\
+                                         .where(FormHistory.historyType.historyTypeName == "Labor Status Form")\
+                                         .order_by(FormHistory.formID.endDate.desc())
+        else:
+            department = Department.get(Department.DEPT_NAME == departmentSelected)
         # This will retrieve all the forms that are tied to the department the user selected from the select picker
-        formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.department == department,
-        FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.endDate.desc())
+            formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.department == department,
+            FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.endDate.desc())
         # These three variables need to be global variables because they need to be iterated through in the "POST" call
         global currentDepartmentStudents
         global allDepartmentStudents
