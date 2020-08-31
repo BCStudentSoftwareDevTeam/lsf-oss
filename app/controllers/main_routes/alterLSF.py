@@ -3,6 +3,7 @@ from app.controllers.main_routes.main_routes import *
 from app.controllers.main_routes.laborHistory import *
 from app.models.formHistory import FormHistory
 from app.models.user import User
+from app.models.supervisor import Supervisor
 from app.models.adjustedForm import AdjustedForm
 from app import cfg
 from app.logic.emailHandler import *
@@ -65,8 +66,16 @@ def alterLSF(laborStatusKey):
     #These are the data fields to populate our dropdowns(Supervisor. Position)
     supervisors = Tracy().getSupervisors()
     positions = Tracy().getPositionsFromDepartment(form.department.ORG)
-    #Step 3: send data to front to populate html
-    oldSupervisor = Tracy().getSupervisorFromID(form.supervisor.ID)
+
+    # supervisors from the old system WILL have a Supervisor record, but might not have a Tracy record
+    oldSupervisor = Supervisor.get_or_none(ID = form.supervisor.ID)
+    if not oldSupervisor:
+        try:
+            oldSupervisor = Tracy().getSupervisorFromID(form.supervisor.ID)
+        except InvalidQueryException:
+            print("The bnumber {} was not found in Supervisor or Tracy", form.supervisor.ID)
+            oldSupervisor = {'ID': form.supervisor.ID}
+    
 
     return render_template( "main/alterLSF.html",
 				            title=("Adjust Labor Status Form" if formStatus == "Approved" else "Labor Status Correction Form"),

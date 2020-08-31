@@ -33,6 +33,7 @@ and hide the department select picker. -->
 
 <div class="col-md-2" align="center" id="userDepartments">
   <select class="selectpicker" id="departmentDropDown" onchange="populateTable()" title="Department" data-width="100%">
+    <option value="all" selected>All</option>
     {% for formHistory in currentUserDepartments %}
       {% if currentUser.isLaborAdmin %}
         {% if loop.index ==1 or formHistory.formID.department.DEPT_NAME == department %}
@@ -46,7 +47,6 @@ and hide the department select picker. -->
         <option value="{{formHistory.formID.department.DEPT_NAME}}" selected>{{formHistory.formID.department.DEPT_NAME}}</option>
         {% else %}
         <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
-        {% endif %}
       {% endif %}
     {% endfor %}
   </select>
