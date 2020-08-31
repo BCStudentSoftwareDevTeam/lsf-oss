@@ -1,6 +1,5 @@
 var table;
 $(document).ready(function() {
-  console.log(document.cookie);
   console.log(document.location.href);
   var url = document.location.href
   createButtons();
@@ -34,7 +33,6 @@ $(document).ready(function() {
     $(".currentStudentModal").removeAttr("disabled");
     $('#portalTitle').text("Current Students");
   } else {
-    console.log('Inside of departments');
     changeButtonColor("#currentDepartmentStudents")
     $("#userDepartments").show()
     $("#placeholder").hide()
@@ -64,11 +62,12 @@ $(document).ready(function() {
     // If the select picker already has a department selected when the page is loaded,
     // then we want to populate the data table with the selected department
     var departmentDropDown = $("#departmentDropDown");
-    console.log(departmentDropDown);
+    console.log('Val', $('#departmentDropDown').val());
     var departmentSelected = $(departmentDropDown, 'option:selected').attr('value');
-    console.log(departmentSelected);
+    // var departmentSelected = $('#departmentDropDown').val();
+    console.log('Selected Dep', departmentSelected);
     if (departmentSelected) {
-      console.log(departmentSelected);
+      console.log('Before table fill');
       populateTable();
     }
   }
