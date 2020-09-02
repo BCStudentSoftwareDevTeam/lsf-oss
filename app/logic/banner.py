@@ -10,7 +10,7 @@ class Banner():
         banner_cfg = secret_conf["banner"]
 
         self.database_exists = False
-        if app.config['ENV'] == 'production':
+        if app.config['use_banner']:
             self.database_exists = True
             try:
                 self.conn = cx_Oracle.connect(
