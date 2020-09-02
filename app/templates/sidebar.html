@@ -2,14 +2,12 @@
     <nav class="navbar">
       <!-- Logo -->
       <div id="logo"><img src="/static/labor-logo.png" title="Labor Program Logo" /></div>
-
       {% if currentUser.student %}
       <div class="container-fluid">
           <div class="panel-group">
               <div class="panel panel-default">
-
                 <a href='/laborHistory/{{currentUser.Student.ID}}'>
-                    <div class ="highlight" class="panel-heading">
+                    <div class="panel-heading">
                         <h4>Labor History</h4>
                     </div>
                 </a>
@@ -19,27 +17,23 @@
       {% endif %}
       {% if currentUser.supervisor %}
         <div class="container-fluid">
-          <div class="panel-group" >
-              <div class="panel panel-default" id="test1234">
-                  <a style="background-color:yellow" href="/">
+          <div class="panel-group" class="accordion">
+              <div class="panel panel-default">
+                  <a id="supervisor-toggle" data-toggle="collapse" href="#supervisorNavBar">
                       <div class="panel-heading" tabindex={{dict["supervisorPortal"]}}>
-                          <h4 >Supervisor Portal</h4>
+                          <h4>Supervisor Portal</h4>
                       </div>
                   </a>
-                  <div id="supervisorNavBar" class="laborStudentChoice" style="display:none">
+                  <div id="supervisorNavBar" class="panel-collapse collapse">
                       <ul id="supervisordropdown" class="panel panel-default">
-                          <a href="/"><li class="panel-heading" id="myStudents" tabindex={{dict["students"]}}><h4>My Students</h4></li></a>
-                          <a href="/main/department"><li class="panel-heading" id="department" tabindex={{dict["dept"]}}><h4>Department Students</h4></li></a>
-
+                          <a href="/"><li class="panel-heading" tabindex={{dict["students"]}}><h4>My Students</h4></li></a>
+                          <a href="/main/department"><li class="panel-heading" tabindex={{dict["dept"]}}><h4>Department Students</h4></li></a>
                       </ul>
-
                   </div>
-
               </div>
-
           </div>
-          <div class="highlight"class="panel panel-default">
-              <a class="adminTest"href="/laborstatusform">
+          <div class="panel panel-default">
+              <a class="adminTest" href="/laborstatusform">
                   <div class="panel-heading" tabindex={{dict["lsf"]}}>
                       <h4>New Labor Status Form</h4>
                   </div>
@@ -58,8 +52,7 @@
                         <h4>Administration</h4>
                     </div>
                 </a>
-                <div id="admin" class="panel-collapse collapse" >
-
+                <div id="admin" class="panel-collapse collapse">
                   <ul id="admindropdown" class="panel panel-default">
                     <a href="/admin/pendingForms/pendingLabor"><li class="panel-heading" tabindex={{dict["pending"]}}><h4>Pending Forms</h4></li></a>
                     {#  <a href="/admin/adminOverload"><li class="panel-heading" tabindex={{dict["overload"]}}><h4>Overload Forms</h4></li></a> #}
@@ -69,9 +62,7 @@
                     <a href="/admin/adminManagement"><li class="panel-heading" tabindex={{dict["manageA"]}}><h4>Manage Administrators</h4></li></a>
                     <a href="/admin/emailTemplates"><li class="panel-heading" tabindex={{dict["email"]}}><h4>Manage Email Templates</h4></li></a>
                   </ul>
-
                 </div>
-
             </div>
         </div>
       </div>
