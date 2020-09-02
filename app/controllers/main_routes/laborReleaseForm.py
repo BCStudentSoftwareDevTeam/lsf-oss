@@ -12,13 +12,10 @@ from app.controllers.errors_routes.handlers import *
 from app.login_manager import require_login
 from flask import Flask, redirect, url_for, flash
 from flask import request
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from app.logic.emailHandler import*
 
-
 @main_bp.route('/laborReleaseForm/<laborStatusKey>', methods=['GET', 'POST'])
-# @main_bp.route('/laborReleaseForm', methods=['GET', 'POST'])
-# @login_required
 
 def laborReleaseForm(laborStatusKey):
     currentUser = require_login()
@@ -44,32 +41,15 @@ def laborReleaseForm(laborStatusKey):
             # If the labor status form does not have a pending labor release form, then the user
             # will be able to submit a labor release form. This section will create the new
             # labor release form, and a new form in the form history table.
+            laborStatusForiegnKey = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
+            formHistoryID = FormHistory.get(FormHistory.formID == laborStatusKey) #need formHistoryID for emailHandler
             datepickerDate = request.form.get("date")
             releaseDate = datetime.strptime(datepickerDate, "%m/%d/%Y").strftime("%Y-%m-%d")
             releaseReason = request.form.get("notes")
             releaseCondition = request.form.get("condition")
-            newLaborReleaseForm = LaborReleaseForm.create(
-                                        conditionAtRelease = releaseCondition,
-                                        releaseDate = releaseDate,
-                                        reasonForRelease = releaseReason
-                                        )
-            historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Release Form")
-            formHistoryID = FormHistory.get(FormHistory.formID == laborStatusKey) #need formHistoryID for emailHandler
-            status = Status.get(Status.statusName == "Pending")
-            laborStatusForiegnKey = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
-            newFormHistory = FormHistory.create(
-                                        formID = laborStatusForiegnKey.laborStatusFormID,
-                                        historyType = historytype.historyTypeName,
-                                        releaseForm = newLaborReleaseForm.laborReleaseFormID,
-                                        adjustedForm = None,
-                                        overloadForm = None,
-                                        createdBy = currentUser,
-                                        createdDate = date.today(),
-                                        reviewedDate = None,
-                                        reviewedBy = None,
-                                        status = status.statusName,
-                                        rejectReason = None
-                                        )
+
+            createLaborReleaseForm(currentUser, laborStatusForiegnKey, releaseDate, releaseCondition, releaseReason)
+
             email = emailHandler(formHistoryID.formHistoryID)
             email.laborReleaseFormSubmitted()
             # Once all the forms are created, the user gets redirected to the
@@ -88,3 +68,25 @@ def laborReleaseForm(laborStatusKey):
 				            title=('Labor Release Form'),
                             forms = forms
                           )
+
+def createLaborReleaseForm(currentUser, laborStatusForiegnKey, releaseDate, releaseCondition, releaseReason, status="Pending", reviewedDate=None, reviewedBy=None):
+    newLaborReleaseForm = LaborReleaseForm.create(
+                                conditionAtRelease = releaseCondition,
+                                releaseDate = releaseDate,
+                                reasonForRelease = releaseReason
+                                )
+    historytype = HistoryType.get(HistoryType.historyTypeName == "Labor Release Form")
+    status = Status.get(Status.statusName == status)
+    newFormHistory = FormHistory.create(
+                                formID = laborStatusForiegnKey.laborStatusFormID,
+                                historyType = historytype.historyTypeName,
+                                releaseForm = newLaborReleaseForm.laborReleaseFormID,
+                                adjustedForm = None,
+                                overloadForm = None,
+                                createdBy = currentUser,
+                                createdDate = date.today(),
+                                reviewedDate = reviewedDate,
+                                reviewedBy = reviewedBy,
+                                status = status.statusName,
+                                rejectReason = None
+                                )

@@ -180,3 +180,25 @@ def checkTotalHours(termCode, student, weeklyHours, contractHours):
     else:
         totalHours = totalHours + int(weeklyHours)
     return json.dumps(totalHours)
+
+@main_bp.route("/laborStatusForm/modal/releaseAndRehire", methods=['POST'])
+def releaseAndRehire():
+    try:
+        currentUser = require_login()
+        formID = eval(request.data.decode("utf-8"))
+        laborStatusForm = LaborStatusForm.get(formID["formID"])
+
+        todayDate = date.today()
+        tomorrowDate = datetime.now()+timedelta(1)
+        createLaborReleaseForm(currentUser, laborStatusForm, tomorrowDate, "Satisfactory", "None", "Approved", todayDate, currentUser)
+
+        # Get student dict as data
+        # using info in the dict find previous lsf
+        # if lsf exists for primary: release the form
+        # and create a new lsf using data in dict
+        # otherwise, ... 
+
+        return jsonify({"Success":True})
+    except Exception as e:
+        print("error", e)
+        return jsonify({"Success": False})

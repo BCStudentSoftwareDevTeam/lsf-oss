@@ -510,8 +510,9 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
           $("#warningModal").modal("show");
           break;
         default:
+          var button = "<button type=\"submit\" name=\"submit\" value=\"submit\" class=\"btn btn-success\" onclick=\"releaseAndRehire({{\studentDict\}})\">Release & Rehire</button>"
           $("#warningModalTitle").html("Insert Rejected");
-          $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
+          $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ". ");
           $("#warningModal").modal("show");
           break;
       }
@@ -820,3 +821,22 @@ function userInsert(){
 $("#submitmodalid").click(function() {
     $('html,body').scrollTop(0);    //This makes the screen scroll to the top if it is not already so the user can see the flash message.
 });
+
+function releaseAndRehire(formID){
+  formIDs  = {}
+  formIDs["formID"] = formID
+  data = JSON.stringify(formIDs)
+  console.log("something goes here");
+  $.ajax({
+    method:"POST",
+    url:"/laborStatusForm/modal/releaseAndRehire",
+    data: data,
+    contentType: "application/json",
+    success: function(response){
+      if (response["Success"]) {
+        console.log("created new form");
+        window.location.href = document.referrer;
+      }
+    }
+  })
+}
