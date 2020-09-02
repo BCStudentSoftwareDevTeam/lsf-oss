@@ -37,12 +37,14 @@ def createTerms(termYear):
         This function creates the terms for the given Academic Year
     """
     code = termYear * 100
-    for i in range(7):
+    for i in range(8):
         try:
             if i == 0:
                 Term.create(termCode = code, termName = "AY {}-{}".format(termYear, termYear + 1))
             elif i == 1:
                 Term.create(termCode = (code + 11), termName = "Fall {}".format(termYear))
+            elif i == 7:
+                Term.create(termCode = (code + 4), termName = "Fall Break {}".format(termYear), isBreak=True)
             elif i == 2:
                 Term.create(termCode = (code + 1), termName = "Thanksgiving Break {}".format(termYear), isBreak=True)
             elif i == 3:

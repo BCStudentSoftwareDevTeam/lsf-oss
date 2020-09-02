@@ -91,7 +91,7 @@ def createStudentFromTracy(username):
     email = "{}@berea.edu".format(username)
     try:
         tracyStudent = Tracy().getStudentFromEmail(email)
-    except DoesNotExist as e:
+    except InvalidQueryException as e:
         raise InvalidUserException("{} not found in Tracy database".format(email))
 
     return createStudentFromTracyObj(tracyStudent)
@@ -105,7 +105,7 @@ def createStudentFromTracyObj(tracyStudent):
     try:
         return Student.get(Student.ID == tracyStudent.ID.strip())
     except DoesNotExist:
-        print('Could not find {0} {1} in Student table, creating new entry.'.format(tracyStudent.FIRST_NAME, tracyStudent.LAST_NAME))
+        #print('Could not find {0} {1} in Student table, creating new entry.'.format(tracyStudent.FIRST_NAME, tracyStudent.LAST_NAME))
         return Student.create(ID = tracyStudent.ID.strip(),
                             PIDM = tracyStudent.PIDM,
                             FIRST_NAME = tracyStudent.FIRST_NAME,

@@ -22,9 +22,9 @@ from app.logic.tracy import Tracy
 from app.models.supervisor import Supervisor
 from app.logic.tracy import Tracy
 
-
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
-def laborhistory(id):
+@main_bp.route('/laborHistory/<departmentName>/<id>', methods=['GET'])
+def laborhistory(id, departmentName = None):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
@@ -40,18 +40,20 @@ def laborhistory(id):
             elif currentUser.supervisor and not currentUser.student:
                 supervisorForms = LaborStatusForm.select() \
                                   .join_from(LaborStatusForm, FormHistory) \
-                                  .where((LaborStatusForm.Supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
+                                  .where((LaborStatusForm.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
                                   .distinct()
                 authorizedForms = set(studentForms).intersection(set(supervisorForms))
                 if len(authorizedForms) == 0:
                     return render_template('errors/403.html'), 403
+        authorizedForms = sorted(authorizedForms,key=lambda f:f.startDate, reverse=True)
         laborStatusFormList = ','.join([str(form.laborStatusFormID) for form in studentForms])
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,
                                 username=currentUser.username,
                                 laborStatusFormList = laborStatusFormList,
-                                authorizedForms = authorizedForms
+                                authorizedForms = authorizedForms,
+                                departmentName = departmentName
                               )
 
     except Exception as e:

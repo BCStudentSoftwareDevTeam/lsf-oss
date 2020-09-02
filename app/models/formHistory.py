@@ -21,7 +21,7 @@ class FormHistory(baseModel):
     reviewedDate        = DateField(null=True)
     reviewedBy          = ForeignKeyField(User, null=True, related_name="reviewer",  on_delete="SET NULL") # Foreign key to Supervisor
     status              = ForeignKeyField(Status)                       # Foreign key to Status # Approved, Denied, Pending
-    rejectReason        = CharField(null=True)                          # This should not be null IF that status is rejected
+    rejectReason        = TextField(null=True)                          # This should not be null IF that status is rejected
 
 
     def __str__(self):
