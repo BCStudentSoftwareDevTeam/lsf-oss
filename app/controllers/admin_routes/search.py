@@ -11,10 +11,10 @@ def usernameFromEmail(email):
 
 # Convert a Student or STUDATA record into the dictionary that our js expects
 def studentDbToDict(item):
-    return {'username': usernameFromEmail(item.STU_EMAIL),
-            'firstName': item.FIRST_NAME,
-            'lastName': item.LAST_NAME,
-            'bnumber': item.ID,
+    return {'username': usernameFromEmail(item.STU_EMAIL.strip()),
+            'firstName': item.FIRST_NAME.strip(),
+            'lastName': item.LAST_NAME.strip(),
+            'bnumber': item.ID.strip(),
             'type': 'Student'}
 
 @admin.route('/admin/search',  methods=['GET'])
