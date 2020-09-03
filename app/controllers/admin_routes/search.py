@@ -2,15 +2,14 @@ from app.controllers.admin_routes import admin
 from app.login_manager import require_login
 from app.logic.tracy import Tracy, InvalidQueryException
 from app.models.student import Student
-from flask import Flask, redirect, url_for, flash, jsonify
-from flask import request, render_template
+from flask import jsonify, render_template
 import re
-import time
 
 def usernameFromEmail(email):
     # split always returns a list, even if there is nothing to split, so [0] is safe
     return email.split('@',1)[0]
 
+# Convert a Student or STUDATA record into the dictionary that our js expects
 def studentDbToDict(item):
     return {'username': usernameFromEmail(item.STU_EMAIL),
             'firstName': item.FIRST_NAME,
@@ -26,13 +25,13 @@ def search_page():
 
     return render_template( 'admin/search.html' )
 
+# search student table and STUDATA for student results
 @admin.route('/admin/search/<query>',  methods=['GET'])
 def search(query=None):
     currentUser = require_login()
     if not currentUser or not currentUser.isLaborAdmin:
         return render_template('errors/403.html'), 403
 
-    # search Student and Tracy
     current_students = []
     our_students = []
     sortKey = 'firstName'
@@ -53,13 +52,12 @@ def search(query=None):
             first_query = search[0] + "%"
             last_query = search[1] + "%"
             results = Student.select().where(Student.FIRST_NAME ** first_query & Student.LAST_NAME ** last_query)
+
         our_students = list(map(studentDbToDict, results))
         current_students = list(map(studentDbToDict, Tracy().getStudentsFromUserInput(query)))
 
-    # combine lists, remove duplicates
+    # combine lists, remove duplicates, and then sort
     students = list({v['bnumber']:v for v in (current_students + our_students)}.values())
-
     students = sorted(students, key=lambda f:f[sortKey])
-
 
     return jsonify(students)
