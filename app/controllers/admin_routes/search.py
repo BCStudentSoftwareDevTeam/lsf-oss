@@ -34,13 +34,11 @@ def search(query=None):
 
     current_students = []
     our_students = []
-    sortKey = 'firstName'
 
     # bnumber search
     if re.match('[Bb]\d+', query):
         our_students = list(map(studentDbToDict, Student.select().where(Student.ID % "{}%".format(query.upper()))))
         current_students = list(map(studentDbToDict, Tracy().getStudentsFromBNumberSearch(query)))
-        sortKey = 'bnumber'
 
     # name search
     else:
@@ -58,6 +56,6 @@ def search(query=None):
 
     # combine lists, remove duplicates, and then sort
     students = list({v['bnumber']:v for v in (current_students + our_students)}.values())
-    students = sorted(students, key=lambda f:f[sortKey])
+    students = sorted(students, key=lambda f:f['firstName'] + f['lastName'])
 
     return jsonify(students)
