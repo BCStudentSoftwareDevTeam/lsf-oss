@@ -46,7 +46,7 @@ def laborhistory(id):
                 authorizedForms = set(studentForms).intersection(set(supervisorForms))
                 if len(authorizedForms) == 0:
                     return render_template('errors/403.html'), 403
-        authorizedForms = sorted(authorizedForms,key=lambda f:f.formID.startDate, reverse=True)
+        authorizedForms = sorted(authorizedForms,key=lambda f:f.reviewedDate if f.reviewedDate else f.createdDate, reverse=True)
         laborStatusFormList = ','.join([str(form.formID.laborStatusFormID) for form in studentForms])
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
