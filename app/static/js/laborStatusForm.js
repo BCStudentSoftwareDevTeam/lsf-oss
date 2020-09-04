@@ -500,7 +500,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
     dataType: "json",
     contentType: "application/json",
     success: function(response) {
-      switch (response) {
+      switch (response["status"] ) {
         case "hire":
           initialLSFInsert(studentDict);
           break
@@ -510,9 +510,18 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
           $("#warningModal").modal("show");
           break;
         default:
-          var button = "<button type=\"submit\" name=\"submit\" value=\"submit\" class=\"btn btn-success\" onclick=\"releaseAndRehire({{\studentDict\}})\">Release & Rehire</button>"
+          var button = "<button type='submit' id='rehireRelease' onclick='releaseAndRehire()' class='btn btn-success'>Release & Rehire</button>" +
+                       "<button type='button' class='btn btn-primary' id='warningModalButton' data-dismiss='modal'>Okay</button>"
           $("#warningModalTitle").html("Insert Rejected");
-          $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ". ");
+          $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".<br><br>" +
+                                      "Primary position information: <br>" +
+                                      "<strong>Supervisor: </strong>" + response['primarySupervisor'] + "<br>" +
+                                      "<strong>Department: </strong>" + response['department'] + "<br>" +
+                                      "<strong>Position: </strong>" + response['position'] + "<br>" +
+                                      "<strong>Hours: </strong>" + response['weeklyHours']);
+          if(response["isFormSupervisor"] || response["isLaborAdmin"]){
+            $("#warningModalFooter").html(button)
+          }
           $("#warningModal").modal("show");
           break;
       }
@@ -822,11 +831,10 @@ $("#submitmodalid").click(function() {
     $('html,body').scrollTop(0);    //This makes the screen scroll to the top if it is not already so the user can see the flash message.
 });
 
-function releaseAndRehire(formID){
-  formIDs  = {}
-  formIDs["formID"] = formID
-  data = JSON.stringify(formIDs)
-  console.log("something goes here");
+function releaseAndRehire(){
+  var studentDict = createStuDict();
+  console.log(studentDict);
+  data = JSON.stringify(studentDict)
   $.ajax({
     method:"POST",
     url:"/laborStatusForm/modal/releaseAndRehire",
@@ -834,8 +842,7 @@ function releaseAndRehire(formID){
     contentType: "application/json",
     success: function(response){
       if (response["Success"]) {
-        console.log("created new form");
-        window.location.href = document.referrer;
+        window.location.replace("/laborstatusform");
       }
     }
   })

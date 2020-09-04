@@ -12,13 +12,14 @@ from app.models.student import Student
 from app.models.department import *
 from flask import json, jsonify
 from flask import request
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 from flask import Flask, redirect, url_for, flash
 from app import cfg
 from app.logic.emailHandler import*
 from app.logic.userInsertFunctions import*
 from app.models.supervisor import Supervisor
 from app.logic.tracy import Tracy
+from app.controllers.main_routes.laborReleaseForm import createLaborReleaseForm
 
 @main_bp.route('/laborstatusform', methods=['GET'])
 @main_bp.route('/laborstatusform/<laborStatusKey>', methods=['GET'])
@@ -147,10 +148,11 @@ def getPositions(department):
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["POST"])
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>/<isOneLSF>", methods=["GET"])
 def checkForPrimaryOrSecondLSFBreak(termCode, student, isOneLSF=None):
+    currentUser = require_login()
     if isOneLSF:
         return checkForSecondLSFBreak(termCode, student)
     else:
-        return checkForPrimaryPosition(termCode, student)
+        return checkForPrimaryPosition(termCode, student, currentUser)
 
 @main_bp.route("/laborstatusform/getcompliance/<department>", methods=["GET"])
 def checkCompliance(department):
@@ -185,19 +187,29 @@ def checkTotalHours(termCode, student, weeklyHours, contractHours):
 def releaseAndRehire():
     try:
         currentUser = require_login()
-        formID = eval(request.data.decode("utf-8"))
-        laborStatusForm = LaborStatusForm.get(formID["formID"])
-
+        null=None; true = True; false= False
+        studentDict = eval(request.data.decode("utf-8"))
+        previousPrimaryPosition = FormHistory.select()\
+                                             .join_from(FormHistory, LaborStatusForm)\
+                                             .where(FormHistory.formID.termCode == studentDict["stuTermCode"], FormHistory.formID.studentSupervisee == studentDict["stuBNumber"], FormHistory.historyType == "Labor Status Form", FormHistory.formID.jobType == "Primary")\
+                                             .order_by(FormHistory.formHistoryID.desc())\
+                                             .get()
         todayDate = date.today()
         tomorrowDate = datetime.now()+timedelta(1)
-        createLaborReleaseForm(currentUser, laborStatusForm, tomorrowDate, "Satisfactory", "None", "Approved", todayDate, currentUser)
+        createLaborReleaseForm(currentUser, previousPrimaryPosition.formID, tomorrowDate, "Satisfactory", "Released by labor admin.", "Approved", todayDate, currentUser)
 
-        # Get student dict as data
-        # using info in the dict find previous lsf
-        # if lsf exists for primary: release the form
-        # and create a new lsf using data in dict
-        # otherwise, ... 
-
+        tracyStudent = Tracy().getStudentFromBNumber(studentDict['stuBNumber'])
+        studentID = Student.get(ID = tracyStudent.ID)
+        d = createSupervisorFromTracy(bnumber=studentDict['stuSupervisorID'])
+        primarySupervisor = d.ID
+        d, created = Department.get_or_create(DEPT_NAME = studentDict['stuDepartment'])
+        department = d.departmentID
+        d, created = Term.get_or_create(termCode = studentDict['stuTermCode'])
+        term = d
+        status = Status.get(Status.statusName == "Pending")
+        newLaborStatusForm = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, studentDict)
+        createOverloadFormAndFormHistory(studentDict, newLaborStatusForm, currentUser, status)
+        flash("Form has been successfully released and submitted.", "success")
         return jsonify({"Success":True})
     except Exception as e:
         print("error", e)
