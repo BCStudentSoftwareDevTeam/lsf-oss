@@ -212,5 +212,5 @@ def releaseAndRehire():
         flash("Form has been successfully released and submitted.", "success")
         return jsonify({"Success":True})
     except Exception as e:
-        print("error", e)
+        print("Error on release and rehire: ", e)
         return jsonify({"Success": False})

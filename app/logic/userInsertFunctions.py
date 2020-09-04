@@ -273,7 +273,7 @@ def checkForPrimaryPosition(termCode, student, currentUser):
                     finalStatus["status"]  = "noHire"
                     finalStatus["primarySupervisor"] = lastPrimaryPosition.formID.supervisor.FIRST_NAME + " " +lastPrimaryPosition.formID.supervisor.LAST_NAME
                     finalStatus["department"] = lastPrimaryPosition.formID.department.DEPT_NAME
-                    finalStatus["position"] = lastPrimaryPosition.formID.POSN_TITLE + " (" + lastPrimaryPosition.formID.POSN_CODE + ")"
+                    finalStatus["position"] = lastPrimaryPosition.formID.POSN_CODE +" - "+lastPrimaryPosition.formID.POSN_TITLE + " (" + lastPrimaryPosition.formID.WLS + ")"
                     finalStatus["weeklyHours"] = lastPrimaryPosition.formID.weeklyHours
                     finalStatus["isLaborAdmin"] = currentUser.isLaborAdmin
                     if currentUser.supervisor and (currentUser.supervisor == lastPrimaryPosition.formID.supervisor):

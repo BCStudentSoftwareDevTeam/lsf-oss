@@ -513,11 +513,10 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
           var button = "<button type='submit' id='rehireRelease' onclick='releaseAndRehire()' class='btn btn-success'>Release & Rehire</button>" +
                        "<button type='button' class='btn btn-primary' id='warningModalButton' data-dismiss='modal'>Okay</button>"
           $("#warningModalTitle").html("Insert Rejected");
-          $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".<br><br>" +
-                                      "Primary position information: <br>" +
+          $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".<br><hr>" +
                                       "<strong>Supervisor: </strong>" + response['primarySupervisor'] + "<br>" +
                                       "<strong>Department: </strong>" + response['department'] + "<br>" +
-                                      "<strong>Position: </strong>" + response['position'] + "<br>" +
+                                      "<strong>Position (WLS): </strong>" + response['position'] + "<br>" +
                                       "<strong>Hours: </strong>" + response['weeklyHours']);
           if(response["isFormSupervisor"] || response["isLaborAdmin"]){
             $("#warningModalFooter").html(button)
@@ -833,7 +832,6 @@ $("#submitmodalid").click(function() {
 
 function releaseAndRehire(){
   var studentDict = createStuDict();
-  console.log(studentDict);
   data = JSON.stringify(studentDict)
   $.ajax({
     method:"POST",

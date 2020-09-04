@@ -12,7 +12,7 @@ from app.controllers.errors_routes.handlers import *
 from app.login_manager import require_login
 from flask import Flask, redirect, url_for, flash
 from flask import request
-from datetime import datetime, date, timedelta
+from datetime import datetime, date
 from app.logic.emailHandler import*
 
 @main_bp.route('/laborReleaseForm/<laborStatusKey>', methods=['GET', 'POST'])
