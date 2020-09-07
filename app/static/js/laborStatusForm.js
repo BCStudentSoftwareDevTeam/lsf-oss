@@ -500,7 +500,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
     dataType: "json",
     contentType: "application/json",
     success: function(response) {
-      switch (response["status"] ) {
+      switch (response["status"]) {
         case "hire":
           initialLSFInsert(studentDict);
           break
@@ -513,12 +513,19 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
           var button = "<button type='submit' id='rehireRelease' onclick='releaseAndRehire()' class='btn btn-success'>Release & Rehire</button>" +
                        "<button type='button' class='btn btn-primary' id='warningModalButton' data-dismiss='modal'>Okay</button>"
           $("#warningModalTitle").html("Insert Rejected");
-          $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".<br><hr>" +
-                                      "<strong>Supervisor: </strong>" + response['primarySupervisor'] + "<br>" +
-                                      "<strong>Department: </strong>" + response['department'] + "<br>" +
-                                      "<strong>Position (WLS): </strong>" + response['position'] + "<br>" +
-                                      "<strong>Hours: </strong>" + response['weeklyHours']);
-          if(response["isFormSupervisor"] || response["isLaborAdmin"]){
+          $("#warningModalText").html("A primary position labor status form has already been submitted for <strong>" + studentDict.stuName + "</strong> with the following information:<br><br>" +
+                                      "<dl class='row'>" +
+                                      "<dt class='col-sm-3'>Term</dt>" + "<dd class='col-sm-9'>"+ response['term'] + "</dd>" +
+                                      "<dt class='col-sm-3'>Supervisor</dt>" + "<dd class='col-sm-9'>"+ response['primarySupervisor'] + "</dd>" +
+                                      "<dt class='col-sm-3'>Department</dt>" + "<dd class='col-sm-9'>"+ response['department'] + "</dd>" +
+                                      "<dt class='col-sm-3'>Position (WLS)</dt>" + "<dd class='col-sm-9'>"+ response['position'] + "</dd>" +
+                                      "<dt class='col-sm-3'>Job Type (Hours)</dt>" + "<dd class='col-sm-9'>"+ response['hours'] + "</dd></dl>" +
+                                      "<div id='releaseRehireWarning'></div>")
+          if(response["approvedForm"] && response["isLaborAdmin"]){
+            $("#releaseRehireWarning").html("The release and rehire button releases the student from their current primary position and hires them into the currently selected position.<br>" +
+                                            "<strong>Clicking on the release and rehire button will reload the page.</strong></p><br>" +
+                                            "<p id='warning' style='color: red; display: block;'><span class='glyphicon glyphicon-exclamation-sign'>"+
+                                            "</span><strong> Please ensure the student's form has been updated in <strong>Banner</strong> before releasing the form.</strong></p>")
             $("#warningModalFooter").html(button)
           }
           $("#warningModal").modal("show");

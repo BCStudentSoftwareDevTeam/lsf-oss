@@ -271,18 +271,19 @@ def checkForPrimaryPosition(termCode, student, currentUser):
                     finalStatus["status"] = "hire"
                 else:
                     finalStatus["status"]  = "noHire"
+                    finalStatus["term"] = lastPrimaryPosition.formID.termCode.termName
                     finalStatus["primarySupervisor"] = lastPrimaryPosition.formID.supervisor.FIRST_NAME + " " +lastPrimaryPosition.formID.supervisor.LAST_NAME
-                    finalStatus["department"] = lastPrimaryPosition.formID.department.DEPT_NAME
+                    finalStatus["department"] = lastPrimaryPosition.formID.department.DEPT_NAME + " (" + lastPrimaryPosition.formID.department.ORG + "-" + lastPrimaryPosition.formID.department.ACCOUNT+ ")"
                     finalStatus["position"] = lastPrimaryPosition.formID.POSN_CODE +" - "+lastPrimaryPosition.formID.POSN_TITLE + " (" + lastPrimaryPosition.formID.WLS + ")"
-                    finalStatus["weeklyHours"] = lastPrimaryPosition.formID.weeklyHours
+                    finalStatus["hours"] = lastPrimaryPosition.formID.jobType + " (" + str(lastPrimaryPosition.formID.weeklyHours) + ")"
                     finalStatus["isLaborAdmin"] = currentUser.isLaborAdmin
-                    if currentUser.supervisor and (currentUser.supervisor == lastPrimaryPosition.formID.supervisor):
-                        finalStatus["isFormSupervisor"] = True
+                    if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
+                        finalStatus["approvedForm"] = True
             else:
                 if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
                     finalStatus["status"]  = "hire"
                 else:
-                    finalStatus = "noHireForSecondary"
+                    finalStatus["status"] = "noHireForSecondary"
         elif lastPrimaryPosition and approvedRelease:
             if rspFunctional == "Primary":
                 finalStatus["status"]  = "hire"
