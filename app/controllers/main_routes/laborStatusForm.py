@@ -141,7 +141,7 @@ def getPositions(department):
     positions = Tracy().getPositionsFromDepartment(department)
     positionDict = {}
     for position in positions:
-        positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS}
+        positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
     return json.dumps(positionDict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["POST"])
