@@ -10,7 +10,7 @@ function createFragment(htmlStr) {
 // highlight search string. doesn't actually check for last name and first name, just highlights what we find
 $.fn.selectpicker.Constructor.DEFAULTS.whiteList.mark = [];
 function highlight(htmlStr, query) {
-    query = query.split(" ");
+    query = query.trim().split(" ");
     for(i = 0; i < query.length; i++) {
         htmlStr = htmlStr.replace(new RegExp(query[i], "gi"), function(match) { return `<mark>${match}</mark>`; });
     }
