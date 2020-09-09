@@ -59,10 +59,19 @@ $(document).ready(function() {
 
     // If the select picker already has a department selected when the page is loaded,
     // then we want to populate the data table with the selected department
-    var departmentDropDown = $("#departmentDropDown");
-    var departmentSelected = $('option:selected', departmentDropDown).attr('value');
-    if (departmentSelected) {
-      populateTable();
+    if (url.endsWith('department') != true) { 
+      var urlDeptartment = document.location.href
+      var deptartment = urlDeptartment.substring(urlDeptartment.lastIndexOf('/') + 1);
+      deptartment = deptartment.replace("%20", " ");
+      console.log('URL', deptartment);
+      var departmentDropDown = $("#departmentDropDown");
+      $("#departmentDropDown").val(deptartment).change();
+      // $("#departmentDropDown").selectpicker("render");
+      // departmentDropDown.selectpicker("refresh");
+      var departmentSelected = $('option:selected', departmentDropDown).attr('value');
+      if (departmentSelected) {
+        populateTable();
+      }
     }
   }
   $('#studentList').show();
