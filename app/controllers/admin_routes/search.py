@@ -34,6 +34,7 @@ def search(query=None):
 
     current_students = []
     our_students = []
+    query = query.strip()
 
     # bnumber search
     if re.match('[Bb]\d+', query):
