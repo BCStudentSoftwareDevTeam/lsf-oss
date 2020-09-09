@@ -20,6 +20,7 @@ from app.logic.userInsertFunctions import*
 from app.models.supervisor import Supervisor
 from app.logic.tracy import Tracy
 from app.controllers.main_routes.laborReleaseForm import createLaborReleaseForm
+from app.controllers.admin_routes.allPendingForms import saveStatus
 
 @main_bp.route('/laborstatusform', methods=['GET'])
 @main_bp.route('/laborstatusform/<laborStatusKey>', methods=['GET'])
@@ -194,10 +195,11 @@ def releaseAndRehire():
                                              .where(FormHistory.formID.termCode == studentDict["stuTermCode"], FormHistory.formID.studentSupervisee == studentDict["stuBNumber"], FormHistory.historyType == "Labor Status Form", FormHistory.formID.jobType == "Primary")\
                                              .order_by(FormHistory.formHistoryID.desc())\
                                              .get()
+        # Release previous labor status form
         todayDate = date.today()
         tomorrowDate = datetime.now()+timedelta(1)
         createLaborReleaseForm(currentUser, previousPrimaryPosition.formID, tomorrowDate, "Satisfactory", "Released by labor admin.", "Approved", todayDate, currentUser)
-
+        # Create new labor status form
         tracyStudent = Tracy().getStudentFromBNumber(studentDict['stuBNumber'])
         studentID = Student.get(ID = tracyStudent.ID)
         d = createSupervisorFromTracy(bnumber=studentDict['stuSupervisorID'])
@@ -208,7 +210,10 @@ def releaseAndRehire():
         term = d
         status = Status.get(Status.statusName == "Pending")
         newLaborStatusForm = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, studentDict)
-        createOverloadFormAndFormHistory(studentDict, newLaborStatusForm, currentUser, status)
+        formHistory = createOverloadFormAndFormHistory(studentDict, newLaborStatusForm, currentUser, status)
+        # Mark the newly created labor status form as approved in both our system and Banner
+        saveStatus("Approved", [str(formHistory.formHistoryID)], currentUser)
+
         flash("Form has been successfully released and submitted.", "success")
         return jsonify({"Success":True})
     except Exception as e:
