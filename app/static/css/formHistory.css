@@ -47,6 +47,10 @@
   margin-bottom: 20px;
 }
 
+.pushRight {
+  float: right;
+}
+
 /* #studentEvalExperience {
   display: none;
 } */

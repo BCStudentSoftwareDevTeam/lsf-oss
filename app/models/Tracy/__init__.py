@@ -15,7 +15,7 @@ if not os.environ.get("USING_CONTAINER", False):
 uri = "mysql+pymysql://{}:{}@{}/{}".format(cfg['tracy']['username'], cfg['tracy']['password'], host, cfg['tracy']['db_name'])
 
 # MSSQL database connection
-if app.config['ENV'] == 'production':
+if app.config['use_tracy']:
     uri = "mssql+pyodbc:///?odbc_connect=" + quote('DRIVER=FreeTDS;SERVER={};PORT=1433;DATABASE={};UID={};PWD={};TDS_Version=8.0;'.format(cfg['tracy']['mssql_host'],  cfg['tracy']['db_name'], cfg['tracy']['mssql_user'], cfg['tracy']['mssql_password']))
 
 

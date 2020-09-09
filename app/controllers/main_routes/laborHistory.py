@@ -30,7 +30,8 @@ def laborhistory(id):
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html'), 403
         student = Student.get(Student.ID == id)
-        studentForms = LaborStatusForm.select().where(LaborStatusForm.studentSupervisee == student).order_by(LaborStatusForm.startDate.desc())
+        studentForms = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.studentSupervisee == student,
+         FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.startDate.desc())
         authorizedForms = set(studentForms)
         if not currentUser.isLaborAdmin:
             # View only your own form history
@@ -38,15 +39,15 @@ def laborhistory(id):
                 if currentUser.student.ID != id:
                     return redirect('/laborHistory/' + currentUser.student.ID)
             elif currentUser.supervisor and not currentUser.student:
-                supervisorForms = LaborStatusForm.select() \
-                                  .join_from(LaborStatusForm, FormHistory) \
-                                  .where((LaborStatusForm.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
+                supervisorForms = FormHistory.select() \
+                                  .join_from(FormHistory, LaborStatusForm) \
+                                  .where((FormHistory.formID.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
                                   .distinct()
                 authorizedForms = set(studentForms).intersection(set(supervisorForms))
                 if len(authorizedForms) == 0:
                     return render_template('errors/403.html'), 403
-        authorizedForms = sorted(authorizedForms,key=lambda f:f.startDate, reverse=True)
-        laborStatusFormList = ','.join([str(form.laborStatusFormID) for form in studentForms])
+        authorizedForms = sorted(authorizedForms,key=lambda f:f.reviewedDate if f.reviewedDate else f.createdDate, reverse=True)
+        laborStatusFormList = ','.join([str(form.formID.laborStatusFormID) for form in studentForms])
         return render_template( 'main/formHistory.html',
     				            title=('Labor History'),
                                 student = student,

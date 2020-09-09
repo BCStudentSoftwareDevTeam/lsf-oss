@@ -205,7 +205,8 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
    for (var key in response) {
      selectedPositions.append(
        $("<option />")
-          .text(response[key].position+ " " + "(" + response[key].WLS+ ")")
+          .attr("data-content", "<span>" + response[key].position + " " + "(" + response[key].WLS+ ")"
+          + "</span>" + "<small class='text-muted'>" + " " + "(" + response[key].positionCode + ")" + "</small>")
           .attr("id", key)
           .attr("value", response[key].position)
           .attr("data-wls", response[key].WLS)
