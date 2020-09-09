@@ -60,7 +60,9 @@
                 onchange = "showAccessLevel()">
             <option value = "" disabled selected>Select a Supervisor</option>
           {% for staff in staffs %}
-            <option value="{{staff.ID}}" {% if forms %}{% if forms.supervisor.ID == staff.ID %} selected {% endif %}{% endif %} data-subtext="({{staff.ID}})">{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</option>
+            <option value="{{staff.ID}}" {% if forms %}{% if forms.supervisor.ID == staff.ID %} selected {% endif %}{% endif %} data-content=
+            "<span>{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</span><small class='text-muted'> ({{staff.ID}}) </small>">
+            </option>
           {% endfor %}
         </select>
   </div>
@@ -85,7 +87,8 @@
                 onchange = "checkCompliance(this); getDepartment(this); showAccessLevel()">
           <option value = "" disabled selected>Select a Department</option>
           {% for department in departments %}
-            <option value="{{department.ORG}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-subtext = "({{department.ORG}}-{{department.ACCOUNT}})">{{department.DEPT_NAME}}</option>
+            <option value="{{department.ORG}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-content=
+            "<span>{{department.DEPT_NAME}}</span><small class='text-muted'> ({{department.ORG}}-{{department.ACCOUNT}}) </small>"></option>
           {% endfor %}
         </select>
 
@@ -156,7 +159,10 @@
                 title="Student" >
               <option value = "" disabled selected>Select a Student</option>
           {% for student in students %}
-              <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %} data-subtext="({{student.ID}})" data-stuCL="{{student.CLASS_LEVEL}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
+              <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %} data-content=
+                "<span>{{student.FIRST_NAME}} {{student.LAST_NAME}}</span><small class='text-muted'> ({{student.ID}}) </small>"
+                 data-stuCL="{{student.CLASS_LEVEL}}">
+              </option>
           {% endfor %}
         </select>
   </div>
@@ -170,7 +176,6 @@
                 data-width="100%"
                 title="Position" >
                 <option value = "" disabled selected>Select a Position</option>
-                {% if forms %} <option id="{{forms.POSN_CODE}}" value="{{forms.POSN_TITLE}}" data-wls={{forms.WLS}} {% if forms %} selected {% endif %}>{{forms.POSN_TITLE}}</option>{% endif %}
         </select>
     </div>
     <div id="JobTypes" class= "form-group ">

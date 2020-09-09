@@ -163,13 +163,12 @@ class emailHandler():
         self.link = link
         self.checkRecipient("Labor Overload Form Submitted For Student",
                       "Labor Overload Form Submitted For Supervisor")
-    def LaborOverLoadFormSubmittedNotification(self, link):
+    def LaborOverLoadFormSubmittedNotification(self):
         """
         Emails that will be sent after the student has submitted their
         reason for the overload form; One email will be just a confirmation
         email to the student and the other one will be for the labor office.
         """
-        self.link = link
         self.checkRecipient("Labor Overload Form Submitted Notification For Student",
                             "Labor Overload Form Submitted Notification For Labor Office")
 
