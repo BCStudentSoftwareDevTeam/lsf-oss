@@ -59,16 +59,19 @@
   <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
   <div id='radioDiv'>
     <!-- Need to pass in the notes counter from the notes counter method -->
-    <button id="modalNote_{{formHistoryID}}" onclick="toggleNotesLog({{laborStatusFormID}}, {{formHistoryID}})" style='float: left; margin-top: -10px;' class='btn btn-sm btn-primary'>View Notes ({{noteTotal}})</button>
+    <p><span class="glyphicon glyphicon-exclamation-sign"></span> <b>Selection is required:</b></p>
     <label for="approve" class="radio-inline">
-      <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">Approve</input>
+      <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)"><b>Approve</b></input>
     </label>
     <label for="approveRel" class="radio-inline">
-      <input type="radio" id="approveRel" name="decision" value="approveRel" onclick="displayModalTextArea(this.value)">Approve Reluctantly</input>
+      <input type="radio" id="approveRel" name="decision" value="approveRel" onclick="displayModalTextArea(this.value)"><b>Approve Reluctantly</b></input>
     </label>
     <label for="deny" class="radio-inline">
-      <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea(this.value)">Deny</input>
+      <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea(this.value)"><b>Deny</b></input>
     </label>
+  </div>
+  <div id="viewNotesButton">
+    <button id="modalNote_{{formHistoryID}}" onclick="toggleNotesLog({{laborStatusFormID}}, {{formHistoryID}})" class='btn btn-sm btn-primary'>View Notes ({{noteTotal}})</button>
   </div>
   <div id="notesTextAreaOverload" class="notesTextArea">
     <textarea id='overloadNotes' class="finalNote form-control" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a note"></textarea>
