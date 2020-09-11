@@ -2,6 +2,7 @@ from flask import render_template
 from flask import Blueprint
 from app.login_manager import require_login
 import os
+import urllib.parse
 
 main_bp = Blueprint('main', __name__)
 @main_bp.context_processor
@@ -25,6 +26,11 @@ def injectGlobalData():
         "email": "13",
         "logout": "14"
     }
+
+    url = os.environ["REQUEST_URI"]
+    # parsed = urlparse.urlparse(url)
+    # print("this is the url........................................",urlparse.parse_qs(parsed.query)['param'])
+
     return {'currentUser': currentUser,
             'lastStaticUpdate': lastStaticUpdate,
             'dict': dict}

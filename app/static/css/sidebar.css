@@ -1,7 +1,16 @@
+<<<<<<< HEAD
 /* .panel-heading.active{
   background-color: DarkBlue;
+=======
+.panel-heading.active{
+  background-color: #88A3BA;
+>>>>>>> 78fe4d66... working on removing js for highlighitinh'
   color: white;
 } */
+
+sidebar:active, .highlight{
++  background-color: yellow;
+ }
 
 sidebar:active, .highlight{
 +  background-color: yellow;

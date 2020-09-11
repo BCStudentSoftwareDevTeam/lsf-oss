@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-
+{% set active_page = "emailTemplates" %}
 ​{% block scripts %}
 {{super()}}
 <script type=text/javascript src="{{url_for('static', filename='js/emailTemplates.js')}}?u={{lastStaticUpdate}}"></script>
