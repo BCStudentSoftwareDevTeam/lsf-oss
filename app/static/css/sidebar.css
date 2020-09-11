@@ -1,7 +1,11 @@
-.panel-heading.active{
+/* .panel-heading.active{
   background-color: DarkBlue;
   color: white;
-}
+} */
+
+sidebar:active, .highlight{
++  background-color: yellow;
+ }
 
 
 
