@@ -426,9 +426,11 @@ function createStuDict(){
   var supervisor = $("#selectedSupervisor").find("option:selected").text();
   var supervisorID = $("#selectedSupervisor").find("option:selected").attr("value");
   var department = $("#selectedDepartment").find("option:selected").text();
+  var departmentORG = $("#selectedDepartment").find("option:selected").val();
+  var departmentAccount = $("#selectedDepartment").find("option:selected").data("account");
   var termCodeSelected = $("#selectedTerm").find("option:selected").val();
   var isBreak = $("#selectedTerm").find("option:selected").data("termbreak")
-  var studentName = $("#student option:selected" ).text();
+  var studentName = $("#student option:selected").text();
   if (!studentName){
     return false;
   }
@@ -457,8 +459,8 @@ function createStuDict(){
         return false;
       }
     }
-  var studentDict = {stuName: studentName,
-                    stuBNumber: studentBNumber,
+  var studentDict = {stuName: studentName.trim(),
+                    stuBNumber: studentBNumber.trim(),
                     stuPosition: positionName,
                     stuPositionCode: positionCode,
                     stuJobType: jobTypeName,
@@ -470,8 +472,10 @@ function createStuDict(){
                     stuTermCode: termCodeSelected,
                     stuNotes: "",
                     stuLaborNotes: laborStatusFormNote,
-                    stuSupervisor: supervisor,
-                    stuDepartment: department,
+                    stuSupervisor: supervisor.trim(),
+                    stuDepartment: department.trim(),
+                    stuDepartmentORG: departmentORG,
+                    stuDepartmentAccount: departmentAccount,
                     stuSupervisorID: supervisorID,
                     isItOverloadForm: "False",
                     isTermBreak: isBreak
@@ -521,7 +525,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
 
           $('#newTerm').html($("#selectedTerm").find("option:selected").text());
           $('#newSupervisor').html(studentDict.stuSupervisor)
-          $('#newDepartment').html(studentDict.stuDepartment)
+          $('#newDepartment').html(studentDict.stuDepartment +" ("+ studentDict.stuDepartmentORG+"-"+studentDict.stuDepartmentAccount +")")
           $('#newPosition').html(studentDict.stuPositionCode +" - "+ studentDict.stuPosition +" ("+ studentDict.stuWLS+")")
           $('#newHours').html(studentDict.stuJobType +" ("+ studentDict.stuWeeklyHours+")")
 
