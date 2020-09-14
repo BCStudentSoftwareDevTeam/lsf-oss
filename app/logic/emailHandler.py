@@ -198,12 +198,16 @@ class emailHandler():
         # are sent, the EmailTracker will create a new entry that points back to
         # the LSF form the email is being created for.
         self.link = link
+        emailList = []
         if dept == "SAAS":
-            email = "" #In the future, this(SASS email address) should be puled from the yaml file instead of being a string
+            admins = User.select(User.username).where(User.isSaasAdmin == True)
         elif dept == "Financial Aid":
-            email = "" #This(financial Aid email) address should also be pull from the yaml file
+            admins = User.select(User.username).where(User.isFinancialAidAdmin == True)
+        for admin in admins:
+            emailList.append(admin.username + "@berea.edu")
+        print(emailList)
         message = Message("Labor Overload Form Verification",
-            recipients=[email])
+            recipients=emailList)
         emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "SAAS and Financial Aid Office")
         newEmailTracker = EmailTracker.create(
                         formID = self.laborStatusForm.laborStatusFormID,
