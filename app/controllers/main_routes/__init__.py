@@ -2,6 +2,8 @@ from flask import render_template
 from flask import Blueprint
 from app.login_manager import require_login
 import os
+import os.path
+import requests
 import urllib.parse
 
 main_bp = Blueprint('main', __name__)
@@ -26,10 +28,8 @@ def injectGlobalData():
         "email": "13",
         "logout": "14"
     }
-
-    url = os.environ["REQUEST_URI"]
-    # parsed = urlparse.urlparse(url)
-    # print("this is the url........................................",urlparse.parse_qs(parsed.query)['param'])
+    sURL = os.path.realpath('.')
+    print('sURL = ' + sURL + '<br />')
 
     return {'currentUser': currentUser,
             'lastStaticUpdate': lastStaticUpdate,
