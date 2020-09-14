@@ -205,7 +205,6 @@ class emailHandler():
             admins = User.select(User.username).where(User.isFinancialAidAdmin == True)
         for admin in admins:
             emailList.append(admin.username + "@berea.edu")
-        print(emailList)
         message = Message("Labor Overload Form Verification",
             recipients=emailList)
         emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "SAAS and Financial Aid Office")
