@@ -145,7 +145,7 @@ def populateModal(statusKey):
                         break
                     elif form.status.statusName == "Approved":
                         if currentDate <= form.formID.endDate:
-                            if currentDate > form.formID.termCode.adjustmentCutOff:
+                            if currentDate > form.formID.termCode.adjustmentCutOff and not currentUser.isLaborAdmin:
                                 buttonState = ButtonStatus.show_release_rehire_buttons
                                 break
                             else:
