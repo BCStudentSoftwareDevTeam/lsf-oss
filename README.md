@@ -17,8 +17,10 @@ Python 3.6+
 5. Run the app with ```flask run``` in the root directory
 
 ## Using the Production database and real Tracy data
-1. Reset your database from the backup ```./reset_database.sh from-backup```.
-2. Change your environment to ```staging```. Before starting the application, run ```export FLASK_ENV=staging```
+1. Set up your computer to access SQL Server databases: http://ssdt-documentation.berea.edu/en/database.
+2. Ensure your database connection is working by running ```python db_test.py```.
+3. Reset your database from the backup ```./reset_database.sh from-backup```.
+4. Change your environment to ```staging```. Before starting the application, run ```export FLASK_ENV=staging```
 
 ## Updating pip dependencies (imports)
 1. Run ```pip freeze > requirements.txt``` to export all imports to a file. This file is used by **setup.sh** when the next user runs ```source setup.sh```
