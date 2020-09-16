@@ -87,7 +87,7 @@
                 onchange = "checkCompliance(this); getDepartment(this); showAccessLevel()">
           <option value = "" disabled selected>Select a Department</option>
           {% for department in departments %}
-            <option value="{{department.ORG}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-content=
+            <option value-account="{{department.ACCOUNT}}" value="{{department.ORG}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-content=
             "<span>{{department.DEPT_NAME}}</span><small class='text-muted'> ({{department.ORG}}-{{department.ACCOUNT}}) </small>"></option>
           {% endfor %}
         </select>
