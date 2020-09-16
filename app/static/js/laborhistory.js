@@ -1,3 +1,12 @@
+function goback(departmentName){
+  console.log(departmentName);
+  if (document.referrer.includes('main/department')) {
+    window.location.href = '/main/department/' + departmentName
+  } else {
+    window.location.href = document.referrer;
+  }
+}
+
 $('#positionTable tbody tr td').on('click',function(){
   /*If boolean value is false, flash container letting user know that they do not
   have access. Else, load student labor history modal.*/

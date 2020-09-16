@@ -22,9 +22,9 @@ from app.logic.tracy import Tracy
 from app.models.supervisor import Supervisor
 from app.logic.tracy import Tracy
 
-
 @main_bp.route('/laborHistory/<id>', methods=['GET'])
-def laborhistory(id):
+@main_bp.route('/laborHistory/<departmentName>/<id>', methods=['GET'])
+def laborhistory(id, departmentName = None):
     try:
         currentUser = require_login()
         if not currentUser:                    # Not logged in
@@ -53,7 +53,8 @@ def laborhistory(id):
                                 student = student,
                                 username=currentUser.username,
                                 laborStatusFormList = laborStatusFormList,
-                                authorizedForms = authorizedForms
+                                authorizedForms = authorizedForms,
+                                departmentName = departmentName
                               )
 
     except Exception as e:
@@ -144,7 +145,7 @@ def populateModal(statusKey):
                         break
                     elif form.status.statusName == "Approved":
                         if currentDate <= form.formID.endDate:
-                            if currentDate > form.formID.termCode.adjustmentCutOff:
+                            if currentDate > form.formID.termCode.adjustmentCutOff and not currentUser.isLaborAdmin:
                                 buttonState = ButtonStatus.show_release_rehire_buttons
                                 break
                             else:
