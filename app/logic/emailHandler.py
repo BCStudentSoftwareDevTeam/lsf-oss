@@ -313,6 +313,9 @@ class emailHandler():
         form = form.replace("@@Position@@", self.laborStatusForm.POSN_CODE+ ", " + self.laborStatusForm.POSN_TITLE)
         form = form.replace("@@Department@@", self.laborStatusForm.department.DEPT_NAME)
         form = form.replace("@@WLS@@", self.laborStatusForm.WLS)
+
+        if self.formHistory.rejectReason != None:
+            form = form.replace("@@RejectReason@@", self.formHistory.rejectReason)
         if self.laborStatusForm.weeklyHours != None:
             form = form.replace("@@Hours@@", self.weeklyHours)
         else:
