@@ -199,6 +199,7 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
                                             status      = status.statusName)
         email = emailHandler(formOverload.formHistoryID)
         email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+    return formHistory
 
 
 def emailDuringBreak(secondLSFBreak, term):
@@ -245,7 +246,7 @@ def checkForSecondLSFBreak(termCode, student):
         isMoreLSFDict["showModal"] = False # Do not show the modal when there's not previous lsf
     return json.dumps(isMoreLSFDict)
 
-def checkForPrimaryPosition(termCode, student):
+def checkForPrimaryPosition(termCode, student, currentUser):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
@@ -263,29 +264,37 @@ def checkForPrimaryPosition(termCode, student):
         except DoesNotExist:
             approvedRelease = None
 
-    finalStatus = ""
+    finalStatus = {}
     if not term.isBreak:
         if lastPrimaryPosition and not approvedRelease:
             if rspFunctional == "Primary":
                 if lastPrimaryPosition.status.statusName == "Denied":
-                    finalStatus = "hire"
+                    finalStatus["status"] = "hire"
                 else:
-                    finalStatus = "noHire"
+                    finalStatus["status"]  = "noHire"
+                    finalStatus["term"] = lastPrimaryPosition.formID.termCode.termName
+                    finalStatus["primarySupervisor"] = lastPrimaryPosition.formID.supervisor.FIRST_NAME + " " +lastPrimaryPosition.formID.supervisor.LAST_NAME
+                    finalStatus["department"] = lastPrimaryPosition.formID.department.DEPT_NAME + " (" + lastPrimaryPosition.formID.department.ORG + "-" + lastPrimaryPosition.formID.department.ACCOUNT+ ")"
+                    finalStatus["position"] = lastPrimaryPosition.formID.POSN_CODE +" - "+lastPrimaryPosition.formID.POSN_TITLE + " (" + lastPrimaryPosition.formID.WLS + ")"
+                    finalStatus["hours"] = lastPrimaryPosition.formID.jobType + " (" + str(lastPrimaryPosition.formID.weeklyHours) + ")"
+                    finalStatus["isLaborAdmin"] = currentUser.isLaborAdmin
+                    if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
+                        finalStatus["approvedForm"] = True
             else:
                 if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
-                    finalStatus = "hire"
+                    finalStatus["status"]  = "hire"
                 else:
-                    finalStatus = "noHireForSecondary"
+                    finalStatus["status"] = "noHireForSecondary"
         elif lastPrimaryPosition and approvedRelease:
             if rspFunctional == "Primary":
-                finalStatus = "hire"
+                finalStatus["status"]  = "hire"
             else:
-                finalStatus = "noHireForSecondary"
+                finalStatus["status"]  = "noHireForSecondary"
         else:
             if rspFunctional == "Primary":
-                finalStatus = "hire"
+                finalStatus["status"]  = "hire"
             else:
-                finalStatus = "noHireForSecondary"
+                finalStatus["status"]  = "noHireForSecondary"
     else:
-        finalStatus = "hire"
+        finalStatus["status"]  = "hire"
     return json.dumps(finalStatus)
