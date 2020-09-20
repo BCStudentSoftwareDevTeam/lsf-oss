@@ -46,4 +46,9 @@ iframe{
 
 #download {
   margin-bottom: 10px;
+  display: none;
+}
+
+#studentList {
+  display: none;
 }

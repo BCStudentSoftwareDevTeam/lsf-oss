@@ -33,12 +33,20 @@ and hide the department select picker. -->
 
 <div class="col-md-2" align="center" id="userDepartments">
   <select class="selectpicker" id="departmentDropDown" onchange="populateTable()" title="Department" data-width="100%">
-    <option value="all" selected>All</option>
+    {% if department == 'all' %}
+      <option value="all" selected>All</option>
+    {% else %}
+      <option value="all">All</option>
+    {% endif %}
     {% for formHistory in currentUserDepartments %}
-      {% if currentUser.isLaborAdmin %}
-        <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
+      {% if department != 'all' %}
+        <!-- We want to either select the first option, or the option that matches the department if the department is not 'all' -->
+        {% if loop.index == 1 or formHistory.formID.department.DEPT_NAME == department %}
+          <option value="{{formHistory.formID.department.DEPT_NAME}}" selected>{{formHistory.formID.department.DEPT_NAME}}</option>
+        {% else %}
+          <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
+        {% endif %}
       {% else %}
-        <!-- We want to populate the select picker with the first option if the user is not an admin -->
         <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
       {% endif %}
     {% endfor %}
@@ -46,7 +54,7 @@ and hide the department select picker. -->
 </div>
 
 <div class="col-md-3" align= "right">
-  <button class="btn btn-success" id="download" data-toggle="modal" data-target="#downloadModal">Download</button>
+  <button class="btn btn-success" id="download" data-toggle="modal" data-target="#downloadModal" style="display:None">Download</button>
 </div>
 <div class="col-md-2"></div>
 
@@ -115,7 +123,7 @@ and hide the department select picker. -->
 <!-- Start of data-table that will display the supervisee -->
 <div class="col-md-3"></div>
 <div class="col-md-7" align="center" >
-  <table id="studentList" class="table table-striped studentTable" >
+  <table id="studentList" class="table table-striped studentTable" style="display:none">
     <!-- Made empty header tags because we need to hide the header -->
     <thead>
       <tr>

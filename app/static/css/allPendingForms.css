@@ -80,3 +80,13 @@ a.hover_indicator:active {
   display: block;
   color: #000000;
 }
+
+/* Styling for Pending Overload Modal */
+#radioDiv p{
+  color:red;
+  margin: 0px 0px 0px;
+}
+
+#viewNotesButton{
+  float: left;
+}
