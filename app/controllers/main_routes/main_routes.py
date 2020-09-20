@@ -178,20 +178,11 @@ def populateDepartment(departmentSelected):
         else:
             department = Department.get(Department.DEPT_NAME == departmentSelected)
             departmentPositions = Tracy().getPositionsFromDepartment(department.ORG, department.ACCOUNT)
-            validPositions = set()
+            validPositions = []
             for position in departmentPositions:
-                print(position.POSN_TITLE)
-                validPositions.add(position.POSN_CODE)
-            print(validPositions)
+                validPositions.append(position.POSN_CODE)
         # This will retrieve all the forms that are tied to the department the user selected from the select picker
             formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where((FormHistory.historyType.historyTypeName == "Labor Status Form") & (FormHistory.formID.POSN_CODE << validPositions)).order_by(FormHistory.formID.endDate.desc())
-
-            # formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType)join_from(LaborStatusForm, ).where(FormHistory.formID.POSN_CODE.ORG == department.ORG,
-            # FormHistory.formID.POSN_CODE.ACCOUNT == department.ACCOUNT, FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.endDate.desc())
-
-
-
-
         # These three variables need to be global variables because they need to be iterated through in the "POST" call
         global currentDepartmentStudents
         global allDepartmentStudents
@@ -280,5 +271,5 @@ def populateDepartment(departmentSelected):
         return json.dumps(departmentStudents)
 
     except Exception as e:
-        print('ERROR:', e)
+        print('ERROR in Department Stundents:', e)
         return jsonify({"Success": False})
