@@ -91,6 +91,8 @@ def updateDatabase():
             formId = rsp.keys()
             for data in rsp.values():
                 formHistoryForm = FormHistory.get(FormHistory.formHistoryID == data["formID"])
+                formHistoryForm.status.statusName = "Pending"
+                formHistoryForm.save()
                 d, created = OverloadForm.get_or_create(overloadFormID = formHistoryForm.overloadForm)
                 d.studentOverloadReason = data["Notes"]
                 d.save()

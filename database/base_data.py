@@ -17,6 +17,8 @@ stats = [
             {"statusName":"Denied"
             },
             {"statusName":"Approved Reluctantly"
+            },
+            {"statusName":"Pre-Student Approval"
             }
         ]
 Status.insert_many(stats).on_conflict_replace().execute()
