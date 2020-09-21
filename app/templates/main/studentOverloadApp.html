@@ -44,8 +44,7 @@
   <ul class="small">
     <h6><strong><span class="tooltip-right" data-tooltip="Required">Requests for over 20 hours* are subject to the following additional guidelines:</span></strong></h6>
     <input type="checkbox" name="checkbox" id="checkbox6" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Junior or senior classification. 3.00 GPA in the major, overall, and for the previous term<span class="required-mark"> *</span> <br>
-    <input type="checkbox" name="checkbox" id="checkbox7" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Submission of a letter outlining the reason for requesting more than 20 hours<span class="required-mark"> *</span> <br>
-    <input type="checkbox" name="checkbox" id="checkbox8" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Approval of the Dean of Labor and the Student Admissions and Academic Standing Committee<span class="required-mark"> *</span>
+    <input type="checkbox" name="checkbox" id="checkbox8" onclick="checkBoxCheck(this,{{totalFormHours}})" /> Approval of the Dean of Labor, the Student Admissions and Academic Standing Committee, and the Office of Financial Aid<span class="required-mark"> *</span>
   </ul>
 </div>
 {% endif %}
@@ -61,7 +60,7 @@
     </div>
     <div align="center">
       <font size="2">
-      <table class="table table-striped" >
+      <table class="table table-striped table-bordered">
         <tr align="center">
           <th>Name:</th>
           <th>B#:</th>
@@ -81,7 +80,7 @@
       <div class="form-group">
         <h3 for="Primary">Current Positions</h3>
         <font size="2">
-        <table class="table table-striped"  align="center">
+        <table class="table table-striped table-bordered"  align="center">
           <tr>
             <th>Term</th>
             <th>Department</th>
@@ -133,7 +132,7 @@
 <div class="col-md-1">
 
 </div>
-<div class="container col-md-6 col-md-offset-5">
+<div class="container col-md-11">
   <div align="center" >
     <button id="submit" type="submit" class="btn btn-success" onclick ="checkForEmptyFields()">Submit Changes</button>
     {% with overloadForm=overloadForm %}
