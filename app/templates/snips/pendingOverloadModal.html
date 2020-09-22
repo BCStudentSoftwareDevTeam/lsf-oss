@@ -3,6 +3,16 @@
   <h3 class="modal-title" id="overloadModalLabel" align="center"><b>Labor Overload Form</b></h3>
 </div>
 <div class="modal-body" id="overloadModalBody">
+  {% if pendingForm == true %}
+    <div class="row" style="margin-top:7px;">
+      <div class="col-sm-1" style="padding:0px;">
+        <span class="glyphicon glyphicon-info-sign" style="color:blue;"></span>
+      </div>
+      <div class="col-sm-11" align="left" style="padding:0px;">
+        <p role="alert" id="alertText"><strong>Your decision will apply to the student's current pending {{pendingFormType}}.</strong></p>
+      </div>
+    </div>
+  {% endif %}
   <table id="overloadStudentTable" class="table table-bordered">
     <thead>
       <tr>
@@ -86,16 +96,6 @@
     <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
     <div class="notesLogArea"></div>
   </div>
-  {% if pendingForm == true %}
-  <div class="row" style="margin-top:7px;">
-   <div class="col-sm-1" style="padding:0px;">
-     <span class="glyphicon glyphicon-info-sign" style="color:blue;"></span>
-   </div>
-   <div class="col-sm-11" align="left" style="padding:0px;">
-     <p role="alert" id="alertText"><strong> The decision made will also apply to the current pending {{pendingFormType}} for the student.</strong></p>
-   </div>
- </div>
-  {% endif %}
 </div>
 <div class="modal-footer">
   <div class="col-sm-6" align="left">
