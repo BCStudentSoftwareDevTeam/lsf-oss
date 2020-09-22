@@ -225,7 +225,7 @@ def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None, form
                                             adjustedForm = adjustedForm,
                                             overloadForm = newLaborOverloadForm.overloadFormID,
                                             createdDate  = date.today(),
-                                            status       = "Pending")
+                                            status       = "Pre-Student Approval")
         try:
             if formHistories:
                 overloadEmail = emailHandler(formHistories.formHistoryID)
