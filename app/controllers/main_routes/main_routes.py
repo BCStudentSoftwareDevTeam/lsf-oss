@@ -208,7 +208,6 @@ def populateDepartment(departmentSelected):
         inactiveDepStudent = []
 
         tic = time.perf_counter()
-        print("Form sorting")
         for supervisee in formsByDept: # go through all the form in the formsBySupervisees
             student_processed = False  # This variable dictates whether a student has already been added to the supervisor's portal
 
