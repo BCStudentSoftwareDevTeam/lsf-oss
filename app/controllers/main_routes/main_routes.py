@@ -44,8 +44,6 @@ def logout():
 def index(department = None):
     try:
         currentUser = require_login()
-        print("selecting departments")
-        tic = time.perf_counter()
         if not currentUser:
             return render_template('errors/403.html'), 403
         if not currentUser.isLaborAdmin:
@@ -73,8 +71,6 @@ def index(department = None):
         if currentUser.supervisor:
             formsBySupervisees = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.supervisor == currentUser.supervisor.ID,
             FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.endDate.desc())
-        toc = time.perf_counter()
-        print(f"departments selected {toc - tic:0.4f} seconds")
 
         inactiveSupervisees = []
         currentSupervisees = []
@@ -118,7 +114,7 @@ def index(department = None):
                     inactiveSupervisees.append(supervisee)
 
         toc = time.perf_counter()
-        print(f"Processing {len(formsBySupervisees)} supervisor students in {toc - tic:0.4f} seconds")
+        print("Processed {} supervisor students in {:0.4f} seconds".format(len(formsBySupervisees), toc-tic))
 
         # On the click of the download button, 'POST' method will send all checked boxes from modal to excel maker
         if request.method== 'POST':
@@ -257,7 +253,7 @@ def populateDepartment(departmentSelected):
                     inactiveDepStudent.append(supervisee)
 
         toc = time.perf_counter()
-        print(f"Processed {len(formsByDept)} department forms in {toc - tic:0.4f} seconds")
+        print("Processed {} department forms in {:0.4f} seconds".format(len(formsByDept),toc - tic))
 
 
         # This section will format our JSON data with the key-value pairs we want to pass back to the AJAX call in our JS file.
