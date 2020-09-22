@@ -188,8 +188,8 @@ function updateDate(obj) { // updates max and min dates of the datepickers as th
 
 function getDepartment(object, stopSelectRefresh="") { // get department from select picker
    var departmentOrg = $(object).val();
-   var deparmtentAcct = $(object).find('option:selected').attr('value-account');
-   var url = "/laborstatusform/getPositions/" + departmentOrg + "/" + deparmtentAcct;
+   var departmentAcct = $(object).find('option:selected').attr('value-account');
+   var url = "/laborstatusform/getPositions/" + departmentOrg + "/" + departmentAcct;
        $.ajax({
          url: url,
          dataType: "json",

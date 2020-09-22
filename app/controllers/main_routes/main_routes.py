@@ -274,5 +274,5 @@ def populateDepartment(departmentSelected):
         return json.dumps(departmentStudents)
 
     except Exception as e:
-        print('ERROR in Department Stundents:', e)
+        print('ERROR in Department Students:', e)
         return jsonify({"Success": False})
