@@ -147,16 +147,19 @@ def finalUpdateStatus(raw_status):
     else:
         print("Unknown status: ", raw_status)
         return jsonify({"success": False})
+    form_ids = eval(request.data.decode("utf-8"))
+    return saveStatus(new_status, form_ids, currentUser)
+
+def saveStatus(new_status, form_ids, currentUser):
     try:
-        rsp = eval(request.data.decode("utf-8"))
         if new_status == 'Denied':
             # Index 1 will always hold the reject reason in the list, so we can
             # set a variable equal to the index value and then slice off the list
             # item before the iteration
-            denyReason = rsp[1]
-            rsp = rsp[:1]
+            denyReason = form_ids[1]
+            form_ids = form_ids[:1]
 
-        for id in rsp:
+        for id in form_ids:
             history_type_data = FormHistory.get(FormHistory.formHistoryID == int(id))
             history_type = str(history_type_data.historyType)
 

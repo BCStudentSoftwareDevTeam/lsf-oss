@@ -17,6 +17,18 @@ def load_config(file):
 cfg = load_config("app/config/secret_config.yaml")
 app.secret_key = cfg["secret_key"]
 
+app.config['use_shibboleth'] = False
+if app.config['ENV'] == 'production':
+    app.config['use_shibboleth'] = True
+
+app.config['use_tracy'] = False
+if app.config['ENV'] in ('production','staging'):
+    app.config['use_tracy'] = True
+
+app.config['use_banner'] = False
+if app.config['ENV'] in ('production','staging'):
+    app.config['use_banner'] = True
+
 # Registers blueprints (controllers). These are general routes, like /index
 from app.controllers.main_routes import main_bp as main_bp
 app.register_blueprint(main_bp)

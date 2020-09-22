@@ -1,8 +1,9 @@
 function goback(departmentName){
+  console.log(departmentName);
   if (document.referrer.includes('main/department')) {
     window.location.href = '/main/department/' + departmentName
-  } else if (document.referrer.endsWith('/')) {
-    window.location.href = "/";
+  } else {
+    window.location.href = document.referrer;
   }
 }
 

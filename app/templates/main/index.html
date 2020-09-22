@@ -33,23 +33,23 @@ and hide the department select picker. -->
 
 <div class="col-md-2" align="center" id="userDepartments">
   <select class="selectpicker" id="departmentDropDown" onchange="populateTable()" title="Department" data-width="100%">
-    <option value="all" selected>All</option>
+    {% if department == 'all' %}
+      <option value="all" selected>All</option>
+    {% else %}
+      <option value="all">All</option>
+    {% endif %}
     {% for formHistory in currentUserDepartments %}
-      {% if currentUser.isLaborAdmin %}
-        {% if loop.index ==1 or formHistory.formID.department.DEPT_NAME == department %}
+      {% if department != 'all' %}
+        <!-- We want to either select the first option, or the option that matches the department if the department is not 'all' -->
+        {% if loop.index == 1 or formHistory.formID.department.DEPT_NAME == department %}
           <option value="{{formHistory.formID.department.DEPT_NAME}}" selected>{{formHistory.formID.department.DEPT_NAME}}</option>
         {% else %}
           <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
         {% endif %}
       {% else %}
-        <!-- We want to populate the select picker with the first option if the user is not an admin -->
-        {% if loop.index == 1 or formHistory.formID.department.DEPT_NAME == department %}
-        <option value="{{formHistory.formID.department.DEPT_NAME}}" selected>{{formHistory.formID.department.DEPT_NAME}}</option>
-        {% else %}
         <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
-        {% endif %}
-    {% endif %}
-  {% endfor %}
+      {% endif %}
+    {% endfor %}
   </select>
 </div>
 

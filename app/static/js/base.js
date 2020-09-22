@@ -5,6 +5,8 @@
     x = $("#flash_container").prepend('<div class="alert alert-'+ category +'" role="alert" id="flasher">'+msg+'</div>')
 })
 */
+// $("#supervisorNavBar").collapse("show");
+// $("#supervisorNavBar").collapse("show");
 
 $(document).ready(function(){
   $('.highlight').click(function(){
