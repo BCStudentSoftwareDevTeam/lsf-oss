@@ -1,9 +1,9 @@
 from flask import render_template
 from flask import Blueprint
+from flask import request
 from app.login_manager import require_login
 import os
 import os.path
-import requests
 import urllib.parse
 
 main_bp = Blueprint('main', __name__)
@@ -28,12 +28,12 @@ def injectGlobalData():
         "email": "13",
         "logout": "14"
     }
-    sURL = os.path.realpath('.')
-    print('sURL = ' + sURL + '<br />')
 
     return {'currentUser': currentUser,
             'lastStaticUpdate': lastStaticUpdate,
-            'dict': dict}
+            'dict': dict,
+             #so that we can use request in the HTML
+            }
 
 from app.controllers.main_routes import main_routes
 from app.controllers.main_routes import laborStatusForm
