@@ -15,7 +15,20 @@ from app.logic.tracy import Tracy
 from app.logic.tracy import InvalidQueryException
 import app.login_manager as login_manager
 import base64
+import time
+import sys
 
+currentlyEnrolledBNumbers = []
+
+# Check if a student is currently a student at Berea. Only get the list from Tracy once
+# This means we'll need to restart the application to refresh tracy data (currently a nightly restart)
+def isCurrentStudent(bnumber):
+    global currentlyEnrolledBNumbers
+
+    if not currentlyEnrolledBNumbers:
+        currentlyEnrolledBNumbers = [s.ID.strip() for s in Tracy().getStudents()]
+
+    return (bnumber in currentlyEnrolledBNumbers)
 
 @main_bp.before_app_request
 def before_request():
@@ -31,6 +44,8 @@ def logout():
 def index(department = None):
     try:
         currentUser = require_login()
+        print("selecting departments")
+        tic = time.perf_counter()
         if not currentUser:
             return render_template('errors/403.html'), 403
         if not currentUser.isLaborAdmin:
@@ -58,30 +73,29 @@ def index(department = None):
         if currentUser.supervisor:
             formsBySupervisees = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.supervisor == currentUser.supervisor.ID,
             FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.endDate.desc())
+        toc = time.perf_counter()
+        print(f"departments selected {toc - tic:0.4f} seconds")
 
         inactiveSupervisees = []
         currentSupervisees = []
         pastSupervisees = []
-        student_processed = False  # This variable dictates whether a student has already been added to the supervisor's portal
 
+        tic = time.perf_counter()
         for supervisee in formsBySupervisees: # go through all the form in the formsBySupervisees
-            try:
-                tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.formID.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
+            student_processed = False # whether or not the student has been added to the list
 
-            except InvalidQueryException: # if they are inactive
-                for student in inactiveSupervisees:
-                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
-                        student_processed = True
-                if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
-                    inactiveSupervisees.append(supervisee)
-            else: # if there is no exception (student is in Tracy and active) this code will run
+            if isCurrentStudent(supervisee.formID.studentSupervisee.ID):
                 for student in currentSupervisees:
-                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):  # Checks whether student has already been added as an current student.
+                    # Checks whether student has already been added as an current student.
+                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):
                         student_processed = True
                 for student in pastSupervisees:
-                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):  # Checks whether student has already been added as an past student.
+                    # Checks whether student has already been added as an past student.
+                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):
                         student_processed = True
-                if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
+
+                # If a student has not yet been added to the view, they are appended as an active student.
+                if student_processed == False:
                     if supervisee.formID.endDate < todayDate:
                         pastSupervisees.append(supervisee)
                     elif supervisee.formID.endDate >= todayDate:
@@ -93,8 +107,18 @@ def index(department = None):
                                 currentSupervisees.append(supervisee)
                         else:
                             currentSupervisees.append(supervisee)
-            finally:# it will run at the end regardless of whether or no the excpet statement or else statement is met.
-                student_processed = False  # Resets state machine.
+
+            else: # if they are inactive
+                for student in inactiveSupervisees:
+                    # Checks whether student has already been added as an active student.
+                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):
+                        student_processed = True
+                # If a student has not yet been added to the view, they are appended as an active student.
+                if student_processed == False:
+                    inactiveSupervisees.append(supervisee)
+
+        toc = time.perf_counter()
+        print(f"Processing {len(formsBySupervisees)} supervisor students in {toc - tic:0.4f} seconds")
 
         # On the click of the download button, 'POST' method will send all checked boxes from modal to excel maker
         if request.method== 'POST':
@@ -183,27 +207,24 @@ def populateDepartment(departmentSelected):
         # This will retrieve all the forms that are tied to the department the user selected from the select picker
             formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.department == department,
             FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.endDate.desc())
-        # These three variables need to be global variables because they need to be iterated through in the "POST" call
+
+
+        # These variables need to be global variables because they need to be used in other requests
         global currentDepartmentStudents
         global allDepartmentStudents
         global inactiveDepStudent
 
+        
         currentDepartmentStudents = []
         allDepartmentStudents = []
         inactiveDepStudent = []
-        student_processed = False  # This variable dictates whether a student has already been added to the supervisor's portal
 
+        tic = time.perf_counter()
+        print("Form sorting")
         for supervisee in formsByDept: # go through all the form in the formsBySupervisees
-            try:
-                tracy_supervisee = Tracy().getStudentFromBNumber(supervisee.formID.studentSupervisee.ID) # check if the student is in tracy to check if they're inactive or current
+            student_processed = False  # This variable dictates whether a student has already been added to the supervisor's portal
 
-            except InvalidQueryException: # if they are inactive
-                for student in inactiveDepStudent:
-                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
-                        student_processed = True
-                if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
-                    inactiveDepStudent.append(supervisee)
-            else: # if there is no exception (student is in Tracy and active) this code will run
+            if isCurrentStudent(supervisee.formID.studentSupervisee.ID):
                 for student in currentDepartmentStudents:
                     if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):  # Checks whether student has already been added as an current student.
                         student_processed = True
@@ -228,9 +249,15 @@ def populateDepartment(departmentSelected):
                         # If the form does not have a "Labor Release Form", then we know the student is still employed
                         else:
                             currentDepartmentStudents.append(supervisee)
-            finally: # it will run at the end regardless of whether or no the excpet statement or else statement is met.
-                student_processed = False  # Resets state machine.
+            else:
+                for student in inactiveDepStudent:
+                    if (supervisee.formID.studentSupervisee.ID) == (student.formID.studentSupervisee.ID):  # Checks whether student has already been added as an active student.
+                        student_processed = True
+                if student_processed == False:  # If a student has not yet been added to the view, they are appended as an active student.
+                    inactiveDepStudent.append(supervisee)
 
+        toc = time.perf_counter()
+        print(f"Processed {len(formsByDept)} department forms in {toc - tic:0.4f} seconds")
 
 
         # This section will format our JSON data with the key-value pairs we want to pass back to the AJAX call in our JS file.
