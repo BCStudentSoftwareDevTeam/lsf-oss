@@ -102,8 +102,8 @@ def updateDatabase():
                 d, created = OverloadForm.get_or_create(overloadFormID = formHistoryForm.overloadForm)
                 d.studentOverloadReason = data["Notes"]
                 d.save()
-                # email = emailHandler(formHistoryForm.formHistoryID)
-                # email.LaborOverLoadFormSubmittedNotification()
+                email = emailHandler(formHistoryForm.formHistoryID)
+                email.LaborOverLoadFormSubmittedNotification()
         return jsonify({"Success": True})
     except Exception as e:
         print("ERROR: " + str(e))
