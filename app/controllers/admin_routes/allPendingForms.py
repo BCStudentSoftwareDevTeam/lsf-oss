@@ -167,15 +167,14 @@ def saveStatus(new_status, form_ids, currentUser):
             labor_forms.status = Status.get(Status.statusName == new_status)
             labor_forms.reviewedDate = date.today()
             labor_forms.reviewedBy = currentUser
-            email = emailHandler(labor_forms.formHistoryID)
-            if new_status == 'Denied':
+            if new_status == "Denied":
                 labor_forms.rejectReason = denyReason
-                labor_forms.save()
-                if history_type == "Labor Status Form":
-                    email.laborStatusFormRejected()
+            labor_forms.save()
+            email = emailHandler(labor_forms.formHistoryID)
+            if new_status == "Denied" and history_type == "Labor Status Form":
+                email.laborStatusFormRejected()
             if new_status == "Approved" and history_type == "Labor Status Form":
                 email.laborStatusFormApproved()
-            labor_forms.save()
 
             if history_type == "Labor Adjustment Form" and new_status == "Approved":
                 # This function is triggered whenever an adjustment form is approved.

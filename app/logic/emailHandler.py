@@ -8,6 +8,7 @@ from app.models.overloadForm import*
 from app.models.formHistory import*
 from app.models.supervisor import*
 from app.models.user import*
+from app.models.status import*
 from datetime import datetime
 from app.models.emailTracker import *
 import string
@@ -314,6 +315,8 @@ class emailHandler():
         form = form.replace("@@Position@@", self.laborStatusForm.POSN_CODE+ ", " + self.laborStatusForm.POSN_TITLE)
         form = form.replace("@@Department@@", self.laborStatusForm.department.DEPT_NAME)
         form = form.replace("@@WLS@@", self.laborStatusForm.WLS)
+        if self.formHistory.rejectReason:
+            form = form.replace("@@RejectReason@@", self.formHistory.rejectReason)
         if self.laborStatusForm.weeklyHours != None:
             form = form.replace("@@Hours@@", self.weeklyHours)
         else:
