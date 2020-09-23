@@ -198,14 +198,15 @@ class emailHandler():
         # In order to keep track of when emails to 'SAAS' and 'Financial Aid'
         # are sent, the EmailTracker will create a new entry that points back to
         # the LSF form the email is being created for.
+        secret_conf = get_secret_cfg()
         self.link = link
         emailList = []
         if dept == "SAAS":
             admins = User.select(User.username).where(User.isSaasAdmin == True)
+            for admin in admins:
+                emailList.append(admin.username + "@berea.edu")
         elif dept == "Financial Aid":
-            admins = User.select(User.username).where(User.isFinancialAidAdmin == True)
-        for admin in admins:
-            emailList.append(admin.username + "@berea.edu")
+            emailList.append(secret_conf["financial_aid"]["email"])
         message = Message("Labor Overload Form Verification",
             recipients=emailList)
         emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "SAAS and Financial Aid Office")

@@ -62,6 +62,7 @@
           {% for staff in staffs %}
             <option value="{{staff.ID}}" {% if forms %}{% if forms.supervisor.ID == staff.ID %} selected {% endif %}{% endif %} data-content=
             "<span>{{staff.FIRST_NAME}} {{staff.LAST_NAME}}</span><small class='text-muted'> ({{staff.ID}}) </small>">
+              {{staff.FIRST_NAME}} {{staff.LAST_NAME}}
             </option>
           {% endfor %}
         </select>
@@ -87,8 +88,8 @@
                 onchange = "checkCompliance(this); getDepartment(this); showAccessLevel()">
           <option value = "" disabled selected>Select a Department</option>
           {% for department in departments %}
-            <option value="{{department.ORG}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-content=
-            "<span>{{department.DEPT_NAME}}</span><small class='text-muted'> ({{department.ORG}}-{{department.ACCOUNT}}) </small>"></option>
+            <option value-account="{{department.ACCOUNT}}" value="{{department.ORG}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-content=
+            "<span>{{department.DEPT_NAME}}</span><small class='text-muted'> ({{department.ORG}}-{{department.ACCOUNT}}) </small>">{{department.DEPT_NAME}}</option>
           {% endfor %}
         </select>
 
@@ -161,7 +162,7 @@
           {% for student in students %}
               <option value="{{student.ID}}" {% if forms %}{% if forms.studentSupervisee.ID == student.ID %} selected {% endif %}{% endif %} data-content=
                 "<span>{{student.FIRST_NAME}} {{student.LAST_NAME}}</span><small class='text-muted'> ({{student.ID}}) </small>"
-                 data-stuCL="{{student.CLASS_LEVEL}}">
+                 data-stuCL="{{student.CLASS_LEVEL}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}
               </option>
           {% endfor %}
         </select>

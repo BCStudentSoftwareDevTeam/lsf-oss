@@ -91,11 +91,11 @@ class Tracy():
         return STUPOSN.query.with_entities(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT) \
                             .distinct().order_by(STUPOSN.DEPT_NAME).all()
 
-    def getPositionsFromDepartment(self, department: str):
+    def getPositionsFromDepartment(self, departmentOrg: str, departmentAcct: str):
         """
         Return a list of position objects for the given department name, sorted by position title
         """
-        return STUPOSN.query.filter(STUPOSN.ORG == department).order_by(STUPOSN.POSN_TITLE).all()
+        return STUPOSN.query.filter((STUPOSN.ORG == departmentOrg) & (STUPOSN.ACCOUNT == departmentAcct)).order_by(STUPOSN.POSN_TITLE).all()
 
     def getPositionFromCode(self, positionCode: str):
         """
