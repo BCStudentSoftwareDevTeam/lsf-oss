@@ -3,7 +3,7 @@
 ## Requirements
 Python 3.6+ 
 
-**Packages**
+**Packages (Ubuntu)**
  * python3-dev
  * python3-pip
  * python3-venv
@@ -15,6 +15,13 @@ Python 3.6+
 3. Ensure mysql is running. You may need to do ```sudo systemctl start mysql```
 4. In the database directory, run ```./reset_database.sh```
 5. Run the app with ```flask run``` in the root directory
+
+## Using the Production database and real Tracy data
+1. Set up your computer to access SQL Server databases: http://ssdt-documentation.berea.edu/en/database.
+2. Ensure your database connection is working by running ```python db_test.py```.
+3. Check your secret_config.yml and make sure you have the necessary config items (check example_secret_config.yml)
+4. Reset your database from the backup ```./reset_database.sh from-backup```.
+5. Change your environment to ```staging```. Before starting the application, run ```export FLASK_ENV=staging```
 
 ## Updating pip dependencies (imports)
 1. Run ```pip freeze > requirements.txt``` to export all imports to a file. This file is used by **setup.sh** when the next user runs ```source setup.sh```

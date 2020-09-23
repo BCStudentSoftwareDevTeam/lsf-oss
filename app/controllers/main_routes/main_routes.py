@@ -192,16 +192,15 @@ def populateDepartment(departmentSelected):
             print("Department '{}' does not exist".format(departmentSelected))
             return jsonify({"Success": False})
 
-        # This will retrieve all the forms that are tied to the department the user selected from the select picker
-        formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.department == department,
-        FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.endDate.desc())
+        deptPositions = [p.POSN_CODE for p in Tracy().getPositionsFromDepartment(department.ORG, department.ACCOUNT)]
 
+        # This will retrieve all the forms that are tied to the department the user selected from the select picker
+        formsByDept = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where((FormHistory.historyType.historyTypeName == "Labor Status Form") & (FormHistory.formID.POSN_CODE << deptPositions)).order_by(FormHistory.formID.endDate.desc())
 
         # These variables need to be global variables because they need to be used in other requests
         global currentDepartmentStudents
         global allDepartmentStudents
         global inactiveDepStudent
-
         
         currentDepartmentStudents = []
         allDepartmentStudents = []
@@ -285,5 +284,5 @@ def populateDepartment(departmentSelected):
         return json.dumps(departmentStudents)
 
     except Exception as e:
-        print(e)
+        print('ERROR in Department Students:', e)
         return jsonify({"Success": False})
