@@ -137,10 +137,10 @@ def getDates(termcode):
             datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y"), "isBreak": date.isBreak, "isSummer": date.isSummer}
     return json.dumps(datesDict)
 
-@main_bp.route("/laborstatusform/getPositions/<department>", methods=['GET'])
-def getPositions(department):
+@main_bp.route("/laborstatusform/getPositions/<departmentOrg>/<departmentAcct>", methods=['GET'])
+def getPositions(departmentOrg, departmentAcct):
     """ Get all of the positions that are in the selected department """
-    positions = Tracy().getPositionsFromDepartment(department)
+    positions = Tracy().getPositionsFromDepartment(departmentOrg,departmentAcct)
     positionDict = {}
     for position in positions:
         positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
