@@ -171,7 +171,6 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     # needs to be created
     if rspFunctional.get("isItOverloadForm") == "True":
         status = Status.get(Status.statusName == "Pre-Student Approval")
-        print(status.statusName, "inside")
         overloadHistoryType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
         newLaborOverloadForm = OverloadForm.create( studentOverloadReason = None,
                                                     financialAidApproved = None,
@@ -192,7 +191,6 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
         email = emailHandler(formOverload.formHistoryID)
         email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
     historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-    print(status.statusName, "outside")
     formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
                         historyType = historyType.historyTypeName,
                         overloadForm = None,
@@ -202,26 +200,6 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     if not formHistory.formID.termCode.isBreak:
         email = emailHandler(formHistory.formHistoryID)
         email.laborStatusFormSubmitted()
-    # if rspFunctional.get("isItOverloadForm") == "True":
-    #     overloadHistoryType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
-    #     newLaborOverloadForm = OverloadForm.create( studentOverloadReason = None,
-    #                                                 financialAidApproved = None,
-    #                                                 financialAidApprover = None,
-    #                                                 financialAidReviewDate = None,
-    #                                                 SAASApproved = None,
-    #                                                 SAASApprover = None,
-    #                                                 SAASReviewDate = None,
-    #                                                 laborApproved = None,
-    #                                                 laborApprover = None,
-    #                                                 laborReviewDate = None)
-    #     formOverload = FormHistory.create( formID = lsf.laborStatusFormID,
-    #                                         historyType = overloadHistoryType.historyTypeName,
-    #                                         overloadForm = newLaborOverloadForm.overloadFormID,
-    #                                         createdBy   = creatorID,
-    #                                         createdDate = date.today(),
-    #                                         status      = status.statusName)
-    #     email = emailHandler(formOverload.formHistoryID)
-    #     email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
     return formHistory
 
 
