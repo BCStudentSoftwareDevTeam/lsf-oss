@@ -33,14 +33,8 @@ and hide the department select picker. -->
 
 <div class="col-md-2" align="center" id="userDepartments">
   <select class="selectpicker" id="departmentDropDown" onchange="populateTable()" title="Department" data-width="100%">
-    {% if department == 'all' %}
-      <option value="all" selected>All</option>
-    {% else %}
-      <option value="all">All</option>
-    {% endif %}
     {% for formHistory in currentUserDepartments %}
-      {% if department != 'all' %}
-        <!-- We want to either select the first option, or the option that matches the department if the department is not 'all' -->
+        <!-- We want to either select the first option, or the option that matches the department -->
         {% if loop.index == 1 or formHistory.formID.department.DEPT_NAME == department %}
           <option value="{{formHistory.formID.department.DEPT_NAME}}" selected>{{formHistory.formID.department.DEPT_NAME}}</option>
         {% else %}
@@ -48,7 +42,6 @@ and hide the department select picker. -->
         {% endif %}
       {% else %}
         <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
-      {% endif %}
     {% endfor %}
   </select>
 </div>
@@ -95,7 +88,7 @@ and hide the department select picker. -->
           {% for form in inactiveSupervisees %}
           <label class="container">
             <input class="pastStudentModal" type="checkbox" id= '{{form.formID.laborStatusFormID}}' name='{{form.formID.laborStatusFormID}}' value='{{form.formID.laborStatusFormID}}' disabled>
-              {{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}} <strong>(No longer a student.)</strong>
+              {{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}} <strong>(No longer a student)</strong>
           </label>
           {% endfor %}
           </div>
@@ -161,7 +154,9 @@ and hide the department select picker. -->
       <td><a href="/laborHistory/{{form.formID.studentSupervisee.ID}}">
         <span class="h4">{{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}} ({{form.formID.studentSupervisee.ID}})</span></a>
         <br />
-        <span class="pushLeft h6"> No longer a student.</span>
+        <span class="pushRight h5">No longer a student</span>
+        <br/>
+        <span class="pushLeft h6"> {{form.formID.termCode.termName}} - {{form.formID.POSN_TITLE}} - {{form.formID.department.DEPT_NAME}}</span>
       </td>
       <td style="display:none">My Past Students</td>
     </tr>
