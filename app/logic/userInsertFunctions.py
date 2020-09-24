@@ -252,7 +252,9 @@ def checkForPrimaryPosition(termCode, student, currentUser):
     rspFunctional = json.loads(rsp)
     term = Term.get(Term.termCode == termCode)
     try:
-        lastPrimaryPosition = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form", FormHistory.formID.jobType == "Primary").order_by(FormHistory.formHistoryID.desc()).get()
+        lastPrimaryPosition = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(
+         (FormHistory.formID.termCode == termCode) & (FormHistory.formID.studentSupervisee == student) &
+         (FormHistory.historyType.historyTypeName == "Labor Status Form") & (FormHistory.formID.jobType == "Primary")).order_by(FormHistory.formHistoryID.desc()).get()
     except DoesNotExist:
         lastPrimaryPosition = None
 
