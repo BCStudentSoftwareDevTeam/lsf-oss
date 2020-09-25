@@ -31,7 +31,7 @@ def injectGlobalData():
 
     return {'currentUser': currentUser,
             'lastStaticUpdate': lastStaticUpdate,
-            'dict': dict,
+            'dictt': dict,
              #so that we can use request in the HTML
             }
 
