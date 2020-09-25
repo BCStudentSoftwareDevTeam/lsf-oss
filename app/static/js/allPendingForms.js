@@ -393,6 +393,7 @@ function submitOverload(formHistoryID) {
       overloadModalInfo['status'] = status;
       overloadModalInfo['formType'] = 'Overload';
       var data = JSON.stringify(overloadModalInfo)
+      console.log("data", data);
       $.ajax({
         method: "POST",
         url: '/admin/modalFormUpdate',

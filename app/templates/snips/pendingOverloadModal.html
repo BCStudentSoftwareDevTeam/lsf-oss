@@ -3,7 +3,7 @@
   <h3 class="modal-title" id="overloadModalLabel" align="center"><b>Labor Overload Form</b></h3>
 </div>
 <div class="modal-body" id="overloadModalBody">
-  {% if pendingForm == true %}
+  {% if pendingForm == true and currentUser.isLaborAdmin %}
     <div class="row" style="margin-top:7px;">
       <div class="col-sm-1" style="padding:0px;">
         <span class="glyphicon glyphicon-info-sign" style="color:blue;"></span>
@@ -42,6 +42,8 @@
       {% endfor %}
     </tbody>
   </table>
+
+  {% if currentUser.isLaborAdmin %}
   <table id="overloadDepartmentTable" class="table table-bordered">
     <thead>
       <tr>
@@ -66,6 +68,8 @@
       </tr>
     </tbody>
   </table>
+  {% endif %}
+
   <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
   <div id='radioDiv'>
     <!-- Need to pass in the notes counter from the notes counter method -->

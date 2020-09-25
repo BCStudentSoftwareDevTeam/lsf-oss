@@ -20,28 +20,41 @@
 </div>
 
 <div class="container" id="wrapper">
-  <div id="pendingTabs" class="container" style='display: inline-block;;'>
+  <div id="pendingTabs" class="container" style='display: inline-block;'>
+    {% if currentUser.isLaborAdmin or currentUser.isFinancialAidAdmin %}
     <ul class="nav nav-tabs" style='text-align: center;'>
-      <li id='laborTab' {% if formType == "pendingLabor" %} class="active" {% endif %}>
-        <a id="pendingLabor" href="{{url_for('admin.allPendingForms', formType = 'pendingLabor')}}"> Pending Labor Status Forms <strong>({{ laborStatusFormCounter }})</strong></a>
-      </li>
-      <li id='adjustedTab' {% if formType == "pendingAdjustment" %} class="active" {% endif %}>
-        <a href="{{url_for('admin.allPendingForms', formType = 'pendingAdjustment')}}">Pending Adjustment Forms <strong>({{ adjustedFormCounter }})</strong></a>
-      </li>
-      <li id='overloadTab' {% if formType == "pendingOverload" %} class="active" {% endif %}>
-        <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms <strong>({{ overloadFormCounter }})</strong></a>
-      </li>
-      <li id='releaseTab' {% if formType == "pendingRelease" %} class="active" {% endif %}>
-        <a href="{{url_for('admin.allPendingForms', formType = 'pendingRelease')}}">Pending Release Forms <strong>({{ releaseFormCounter }})</strong></a>
-      </li>
-      <ul class= "nav nav-tabs navbar-right" style='margin-right:0px;'>
-        <li id="download">
-          <form method="POST" action="/admin/pendingForms/download">
-            <button class="btn btn-success" id="download">Download</button>
-          </form>
+      {% if currentUser.isLaborAdmin %}
+        <li id='laborTab' {% if formType == "pendingLabor" %} class="active" {% endif %}>
+          <a id="pendingLabor" href="{{url_for('admin.allPendingForms', formType = 'pendingLabor')}}"> Pending Labor Status Forms <strong>({{ laborStatusFormCounter }})</strong></a>
         </li>
-      </ul>
+        <li id='adjustedTab' {% if formType == "pendingAdjustment" %} class="active" {% endif %}>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingAdjustment')}}">Pending Adjustment Forms <strong>({{ adjustedFormCounter }})</strong></a>
+        </li>
+        <li id='overloadTab' {% if formType == "pendingOverload" %} class="active" {% endif %}>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms <strong>({{ overloadFormCounter }})</strong></a>
+        </li>
+        <li id='releaseTab' {% if formType == "pendingRelease" %} class="active" {% endif %}>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingRelease')}}">Pending Release Forms <strong>({{ releaseFormCounter }})</strong></a>
+        </li>
+      {% endif %}
+
+      {% if currentUser.isFinancialAidAdmin %}
+        <li id='overloadTab' {% if formType == "pendingOverload" %} class="active" {% endif %}>
+          <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms <strong>({{ overloadFormCounter }})</strong></a>
+        </li>
+      {% endif %}
+
+      {% if currentUser.isLaborAdmin %}
+        <ul class= "nav nav-tabs navbar-right" style='margin-right:0px;'>
+          <li id="download">
+            <form method="POST" action="/admin/pendingForms/download">
+              <button class="btn btn-success" id="download">Download</button>
+            </form>
+          </li>
+        </ul>
+      {% endif %}
     </ul>
+    {% endif %}
   </div>
   <br> </br>
   <div align="center" class="tab-content clearfix">
@@ -156,7 +169,8 @@
                     {% if allForms.historyType.historyTypeName == 'Labor Overload Form' %}
                     <li role="presentation"><a role="menuitem" href="#"
                       <span id="{{allForms.formHistoryID}}"
-                            onclick="loadOverloadModal({{allForms.formHistoryID}}, {{allForms.formID.laborStatusFormID}});">Manage</span></a></li>
+                            onclick="loadOverloadModal({{allForms.formHistoryID}}, {{allForms.formID.laborStatusFormID}});">Manage</span></a>
+                    </li>
                     {% elif allForms.historyType.historyTypeName == 'Labor Release Form' %}
                     <li role="presentation"><a role="menuitem" href="#"
                       <span id="{{allForms.formHistoryID}}"
