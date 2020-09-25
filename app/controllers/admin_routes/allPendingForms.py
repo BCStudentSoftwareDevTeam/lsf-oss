@@ -361,11 +361,14 @@ def getOverloadModalData(formHistoryID):
             SAASEmailDate = 'No Email Sent'
         try:
             financialAidStatus = historyForm[0].overloadForm.financialAidApproved.statusName
+            print("status", financialAidStatus)
             financialAidLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'Financial Aid') & (EmailTracker.formID == historyForm[0].formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
             financialAidEmailDate = financialAidLastEmail[0].date.strftime('%m/%d/%y')
         except (AttributeError, IndexError):
             financialAidStatus = 'None'
             financialAidEmailDate = 'No Email Sent'
+
+        print("status", financialAidStatus)
         try:
             currentPendingForm = FormHistory.select().where((FormHistory.formID == historyForm[0].formID) & (FormHistory.status == "Pending")).get()
             if currentPendingForm:
@@ -374,6 +377,8 @@ def getOverloadModalData(formHistoryID):
         except (AttributeError, IndexError):
             pendingForm = False
             pendingFormType = False
+
+        print("status", financialAidStatus)
         departmentStatusInfo.update({
                             'SAASEmail': SAASEmailDate,
                             'SAASStatus': SAASStatus,
