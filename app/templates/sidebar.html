@@ -20,21 +20,21 @@
           <div class="panel-group" class="accordion">
               <div class="panel panel-default">
                   <a id="supervisor-toggle" data-toggle="collapse" href="#supervisorNavBar">
-                      <div class="panel-heading" tabindex={{dict["supervisorPortal"]}}>
+                      <div class="panel-heading" tabindex="2">
                           <h4>Supervisor Portal</h4>
                       </div>
                   </a>
                   <div id="supervisorNavBar" {% if request.path =="/main/students" or request.path =="/main/department"%} class="panel-collapse collapse in"{% endif %} class="panel-collapse collapse">
                       <ul id="supervisordropdown" class="panel panel-default">
-                          <a href="/main/students"><li {% if request.path =="/main/students"%} class="panel-heading active"{% endif %}class="panel-heading" tabindex={{dict["students"]}}><h4>My Students</h4></li></a>
-                          <a href="/main/department"><li {% if request.path =="/main/department" %} class="panel-heading active"{% endif %} class="panel-heading" tabindex={{dict["dept"]}}><h4>Department Students</h4></li></a>
+                          <a href="/main/students"><li {% if request.path =="/main/students"%} class="panel-heading active"{% endif %}class="panel-heading" tabindex="3"><h4>My Students</h4></li></a>
+                          <a href="/main/department"><li {% if request.path =="/main/department" %} class="panel-heading active"{% endif %} class="panel-heading" tabindex="4"><h4>Department Students</h4></li></a>
                       </ul>
                   </div>
               </div>
           </div>
           <div class="panel panel-default">
               <a class="adminTest" href="/laborstatusform">
-                  <div {% if request.path =="/laborstatusform" %} class="panel-heading active"{% endif %} class="panel-heading" tabindex={{dict["lsf"]}}>
+                  <div {% if request.path =="/laborstatusform" %} class="panel-heading active"{% endif %} class="panel-heading" tabindex="5">
                       <h4>New Labor Status Form</h4>
                   </div>
               </a>
@@ -48,20 +48,20 @@
         <div class="panel-group" id="accordion">
             <div class="panel panel-default">
                 <a id="admin-toggle" data-toggle="collapse" href="#admin">
-                    <div class="panel-heading" tabindex={{dict["admin"]}}>
+                    <div class="panel-heading" tabindex="6">
                         <h4>Administration</h4>
                     </div>
                 </a>
                 <div id="admin" class="panel-collapse collapse">
                   <ul id="admindropdown" class="panel panel-default">
                     <a href="/admin/search"><li li {% if request.path =="/admin/search" %} class="panel-heading active"{% endif %}class="panel-heading"><h4>Student Search</h4></li></a>
-                    <a href="/admin/pendingForms/pendingLabor"><li {% if request.path =="/admin/pendingForms/pendingLabor" %} class="panel-heading active"{% endif %} class="panel-heading" tabindex={{dict["pending"]}}><h4>Pending Forms</h4></li></a>
-                    {#  <a href="/admin/adminOverload"><li {% if request.path =="/admin/adminOverload" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex={{dict["overload"]}}><h4>Overload Forms</h4></li></a> #}
-                    {#  <a href="/"><li {% if request.path =="/" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex={{dict["past"]}}><h4>Past Forms</h4></li></a> #}
-                    <a href="/admin/termManagement"><li{% if request.path =="/admin/termManagement" %} class="panel-heading active"{% endif %} class="panel-heading" tabindex={{dict["manageT"]}}><h4>Manage Terms</h4></li></a>
-                    <a href="/admin/manageDepartments"><li {% if request.path =="/admin/manageDepartments" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex={{dict["manageD"]}}><h4>Manage Departments</h4></li></a>
-                    <a href="/admin/adminManagement"><li {% if request.path =="/admin/adminManagement" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex={{dict["manageA"]}}><h4>Manage Administrators</h4></li></a>
-                    <a href="/admin/emailTemplates"><li {% if request.path =="/admin/emailTemplates" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex={{dict["email"]}}><h4>Manage Email Templates</h4></li></a>
+                    <a href="/admin/pendingForms/pendingLabor"><li {% if request.path =="/admin/pendingForms/pendingLabor" %} class="panel-heading active"{% endif %} class="panel-heading" tabindex="7"><h4>Pending Forms</h4></li></a>
+                    {#  <a href="/admin/adminOverload"><li {% if request.path =="/admin/adminOverload" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="7"><h4>Overload Forms</h4></li></a> #}
+                    {#  <a href="/"><li {% if request.path =="/" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="9"><h4>Past Forms</h4></li></a> #}
+                    <a href="/admin/termManagement"><li{% if request.path =="/admin/termManagement" %} class="panel-heading active"{% endif %} class="panel-heading" tabindex="10"><h4>Manage Terms</h4></li></a>
+                    <a href="/admin/manageDepartments"><li {% if request.path =="/admin/manageDepartments" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="11"><h4>Manage Departments</h4></li></a>
+                    <a href="/admin/adminManagement"><li {% if request.path =="/admin/adminManagement" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="12"><h4>Manage Administrators</h4></li></a>
+                    <a href="/admin/emailTemplates"><li {% if request.path =="/admin/emailTemplates" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="13"><h4>Manage Email Templates</h4></li></a>
 
 
                   </ul>
@@ -73,7 +73,7 @@
           <div class="container-fluid">
             <div class="panel panel-default">
                 <a href="/logout">
-                    <div class="panel-heading" tabindex={{dict["logout"]}} >
+                    <div class="panel-heading" tabindex="14" >
                         <h4>
                             Logout
                         </h4>
