@@ -255,9 +255,11 @@ $('.openBtn').on('click',function(){
 function downloadHistory(){
   $('input[type="checkbox"]:checked').prop('checked',false);
 }
-
+// variable to check if another ajax call is in progress
 var currentRequest = null;
 function populateTable(){
+  // if a second department is selected while the first department is loading
+  // the previous ajax call will be aborted and the last ajax call will continue
   if (currentRequest != null) {
     currentRequest.abort();
   }
