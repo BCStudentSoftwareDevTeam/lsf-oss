@@ -256,7 +256,11 @@ function downloadHistory(){
   $('input[type="checkbox"]:checked').prop('checked',false);
 }
 
+var currentRequest = null;
 function populateTable(){
+  if (currentRequest != null) {
+    currentRequest.abort();
+  }
   // This function will take input from the department select picker, and based
   // off of what department is choosen, the function will populate both the data table
   // and the modal with the correct data from that department
@@ -267,7 +271,7 @@ function populateTable(){
 
   // AJAX call sends our controller the department choosen, and the controller
   // should send back the data we need as JSON
-  $.ajax({
+  currentRequest = $.ajax({
     method: "GET",
     url: "/main/department/selection/" + departmentSelected,
     datatype: "json",
