@@ -79,7 +79,7 @@ def allPendingForms(formType):
                 # We check if there is a pending overload form using the key of the modifed forms
                 if allForms.adjustedForm.fieldAdjusted == "supervisor": # if supervisor field in adjust forms has been changed,
                     newSupervisorID = allForms.adjustedForm.newValue    # use the supervisor id in the field adjusted to find supervisor in User table.
-                    newSupervisor = Supervisor.get(Supervisor.ID == newSupervisorID)
+                    newSupervisor = createSupervisorFromTracy(bnumber=newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     allForms.adjustedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
