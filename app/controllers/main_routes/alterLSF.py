@@ -65,7 +65,7 @@ def alterLSF(laborStatusKey):
 
     #These are the data fields to populate our dropdowns(Supervisor. Position)
     supervisors = Tracy().getSupervisors()
-    positions = Tracy().getPositionsFromDepartment(form.department.ORG)
+    positions = Tracy().getPositionsFromDepartment(form.department.ORG, form.department.ACCOUNT)
 
     # supervisors from the old system WILL have a Supervisor record, but might not have a Tracy record
     oldSupervisor = Supervisor.get_or_none(ID = form.supervisor.ID)
