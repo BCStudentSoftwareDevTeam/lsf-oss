@@ -26,6 +26,8 @@ from app.controllers.main_routes.download import ExcelMaker
 @admin.route('/admin/pendingForms/<formType>',  methods=['GET'])
 def allPendingForms(formType):
     try:
+        global globalFormType
+        globalFormType = formType
         currentUser = require_login()
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html'), 403
@@ -41,6 +43,16 @@ def allPendingForms(formType):
         laborStatusFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Status Form')).count()
         adjustedFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Adjustment Form')).count()
         releaseFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Release Form')).count()
+        approvedOverloadFormCounter = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                                 .where(FormHistory.historyType == 'Labor Overload Form')\
+                                                 .where(FormHistory.overloadForm.financialAidApproved == 'Approved').count()
+        if currentUser.isLaborAdmin:
+            overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
+        elif currentUser.isFinancialAidAdmin:
+            overloadFormCounter = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                             .where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form'))\
+                                             .where((FormHistory.overloadForm.financialAidApproved == 'Pending') | (FormHistory.overloadForm.financialAidApproved == None)).count()
+
         if formType == "pendingLabor":
             historyType = "Labor Status Form"
             approvalTarget = "denyLaborStatusFormsModal"
@@ -61,18 +73,25 @@ def allPendingForms(formType):
             approvalTarget = "denyReleaseformSModal"
             pageTitle = "Pending Release Forms"
 
-        if currentUser.isFinancialAidAdmin:
-            overloadFormCounter = FormHistory.select().join_from(FormHistory, OverloadForm)\
-                                             .where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form'))\
-                                             .where((FormHistory.overloadForm.financialAidApproved == "Pending") | (FormHistory.overloadForm.financialAidApproved == None)).count()
+        elif formType == "approvedOverload":
+            historyType = "Labor Overload Form"
+            approvalTarget = ""
+            pageTitle = "Approved Overload Forms"
 
-            formList = FormHistory.select().join_from(FormHistory, OverloadForm)\
-                                  .where(FormHistory.status == "Pending")\
-                                  .where(FormHistory.historyType == "Labor Overload Form")\
-                                  .where((FormHistory.overloadForm.financialAidApproved == "Pending") | (FormHistory.overloadForm.financialAidApproved == None))\
-                                  .order_by(-FormHistory.createdDate).distinct()
-        elif currentUser.isLaborAdmin:
-            overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
+        if currentUser.isFinancialAidAdmin:
+            if formType == "pendingOverload":
+                formList = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                      .where(FormHistory.status == 'Pending')\
+                                      .where(FormHistory.historyType == "Labor Overload Form")\
+                                      .where((FormHistory.overloadForm.financialAidApproved == 'Pending') | (FormHistory.overloadForm.financialAidApproved == None))\
+                                      .order_by(-FormHistory.createdDate).distinct()
+            elif formType == "approvedOverload":
+                formList = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                      .where(FormHistory.historyType == "Labor Overload Form")\
+                                      .where(FormHistory.overloadForm.financialAidApproved == 'Approved')\
+                                      .order_by(-FormHistory.createdDate).distinct()
+
+        if currentUser.isLaborAdmin:
             formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
         # only if a form is adjusted
         pendingOverloadFormPairs = {}
@@ -115,6 +134,7 @@ def allPendingForms(formType):
                                 laborStatusFormCounter = laborStatusFormCounter,
                                 adjustedFormCounter  = adjustedFormCounter,
                                 releaseFormCounter = releaseFormCounter,
+                                approvedOverloadFormCounter = approvedOverloadFormCounter,
                                 pendingOverloadFormPairs = pendingOverloadFormPairs
                                 )
     except Exception as e:
@@ -397,7 +417,8 @@ def getOverloadModalData(formHistoryID):
                                             laborStatusFormID = historyForm[0].formID.laborStatusFormID,
                                             noteTotal = noteTotal,
                                             pendingForm = pendingForm,
-                                            pendingFormType = pendingFormType
+                                            pendingFormType = pendingFormType,
+                                            formType = globalFormType
                                             )
     except Exception as e:
         print("Error Populating Overload Modal:", e)

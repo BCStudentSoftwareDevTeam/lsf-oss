@@ -21,7 +21,6 @@
 
 <div class="container" id="wrapper">
   <div id="pendingTabs" class="container" style='display: inline-block;'>
-    {% if currentUser.isLaborAdmin or currentUser.isFinancialAidAdmin %}
     <ul class="nav nav-tabs" style='text-align: center;'>
       {% if currentUser.isLaborAdmin %}
         <li id='laborTab' {% if formType == "pendingLabor" %} class="active" {% endif %}>
@@ -30,21 +29,22 @@
         <li id='adjustedTab' {% if formType == "pendingAdjustment" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingAdjustment')}}">Pending Adjustment Forms <strong>({{ adjustedFormCounter }})</strong></a>
         </li>
+        {% endif %}
+        {% if currentUser.isFinancialAidAdmin or currentUser.isLaborAdmin %}
         <li id='overloadTab' {% if formType == "pendingOverload" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms <strong>({{ overloadFormCounter }})</strong></a>
         </li>
+        {% endif %}
+        {% if currentUser.isFinancialAidAdmin%}
+        <li id='approvedOverloadTab' {% if formType == "approvedOverload" %} class="active" {% endif %}>
+          <a href="{{url_for('admin.allPendingForms', formType = 'approvedOverload')}}">Approved Overload Forms <strong>({{ approvedOverloadFormCounter }})</strong></a>
+        </li>
+        {% endif %}
+        {% if currentUser.isLaborAdmin %}
         <li id='releaseTab' {% if formType == "pendingRelease" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingRelease')}}">Pending Release Forms <strong>({{ releaseFormCounter }})</strong></a>
         </li>
-      {% endif %}
 
-      {% if currentUser.isFinancialAidAdmin %}
-        <li id='overloadTab' {% if formType == "pendingOverload" %} class="active" {% endif %}>
-          <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms <strong>({{ overloadFormCounter }})</strong></a>
-        </li>
-      {% endif %}
-
-      {% if currentUser.isLaborAdmin %}
         <ul class= "nav nav-tabs navbar-right" style='margin-right:0px;'>
           <li id="download">
             <form method="POST" action="/admin/pendingForms/download">
@@ -54,7 +54,6 @@
         </ul>
       {% endif %}
     </ul>
-    {% endif %}
   </div>
   <br> </br>
   <div align="center" class="tab-content clearfix">
@@ -82,6 +81,9 @@
             </tr>
           </thead>
           <tbody id="tablebody">
+            <!-- IF Financial aid is logged form type is overload then overload form set variable to finaidforms otherwise set the var to formlist  -->
+            <!-- IF financialAid is logged in and form type is approved overload then set variable to approved finaid forms  -->
+            <!--  -->
             {% for allForms in formList %}
             <tr id="tableData" class="tableData" align="center">
               {% if formType != "pendingOverload" and formType != "pendingRelease" %}
