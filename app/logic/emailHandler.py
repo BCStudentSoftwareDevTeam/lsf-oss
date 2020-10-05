@@ -44,6 +44,7 @@ class emailHandler():
         self.weeklyHours = str(self.laborStatusForm.weeklyHours)
         self.contractHours = str(self.laborStatusForm.contractHours)
 
+
         self.positions = LaborStatusForm.select().where(LaborStatusForm.termCode == self.term, LaborStatusForm.studentSupervisee == self.student)
         self.supervisors = []
         for position in self.positions:
@@ -315,6 +316,8 @@ class emailHandler():
         form = form.replace("@@Position@@", self.laborStatusForm.POSN_CODE+ ", " + self.laborStatusForm.POSN_TITLE)
         form = form.replace("@@Department@@", self.laborStatusForm.department.DEPT_NAME)
         form = form.replace("@@WLS@@", self.laborStatusForm.WLS)
+        form = form.replace("@@Term@@", self.term.termName)
+
         if self.formHistory.rejectReason:
             form = form.replace("@@RejectReason@@", self.formHistory.rejectReason)
         if self.laborStatusForm.weeklyHours != None:
