@@ -61,7 +61,10 @@ def alterLSF(laborStatusKey):
                 totalHours += i.weeklyHours
     else:
         prefillhours = form.contractHours
-    prefillnotes = form.supervisorNotes
+    if form.supervisorNotes != None:
+        prefillnotes = form.supervisorNotes
+    else:
+        prefillnotes = ""
 
     #These are the data fields to populate our dropdowns(Supervisor. Position)
     supervisors = Tracy().getSupervisors()
