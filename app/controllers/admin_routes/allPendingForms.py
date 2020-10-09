@@ -34,24 +34,35 @@ def allPendingForms(formType):
         if not currentUser.isLaborAdmin:       # Not an admin
             if currentUser.student: # logged in as a student
                 return redirect('/laborHistory/' + currentUser.student.ID)
-            elif currentUser.supervisor and not currentUser.isFinancialAidAdmin:
+            elif currentUser.supervisor and not currentUser.isFinancialAidAdmin and not currentUser.isSaasAdmin:
                 return render_template('errors/403.html'), 403
         formList = None
         historyType = None
         pageTitle = ""
         approvalTarget = ""
+        completedOverloadFormCounter = 0
         laborStatusFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Status Form')).count()
         adjustedFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Adjustment Form')).count()
         releaseFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Release Form')).count()
-        approvedOverloadFormCounter = FormHistory.select().join_from(FormHistory, OverloadForm)\
-                                                 .where(FormHistory.historyType == 'Labor Overload Form')\
-                                                 .where(FormHistory.overloadForm.financialAidApproved == 'Approved').count()
+
         if currentUser.isLaborAdmin:
             overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
         elif currentUser.isFinancialAidAdmin:
             overloadFormCounter = FormHistory.select().join_from(FormHistory, OverloadForm)\
                                              .where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form'))\
                                              .where((FormHistory.overloadForm.financialAidApproved == 'Pending') | (FormHistory.overloadForm.financialAidApproved == None)).count()
+
+            completedOverloadFormCounter = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                                     .where(FormHistory.historyType == 'Labor Overload Form')\
+                                                     .where((FormHistory.overloadForm.financialAidApproved == 'Approved') | (FormHistory.overloadForm.financialAidApproved == 'Denied')).count()
+        elif currentUser.isSaasAdmin:
+            overloadFormCounter = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                             .where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form'))\
+                                             .where((FormHistory.overloadForm.SAASApproved == 'Pending') | (FormHistory.overloadForm.SAASApproved == None)).count()
+
+            completedOverloadFormCounter = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                                     .where(FormHistory.historyType == 'Labor Overload Form')\
+                                                     .where((FormHistory.overloadForm.SAASApproved == 'Approved') | (FormHistory.overloadForm.SAASApproved == 'Denied')).count()
 
         if formType == "pendingLabor":
             historyType = "Labor Status Form"
@@ -73,7 +84,7 @@ def allPendingForms(formType):
             approvalTarget = "denyReleaseformSModal"
             pageTitle = "Pending Release Forms"
 
-        elif formType == "approvedOverload":
+        elif formType == "completedOverload":
             historyType = "Labor Overload Form"
             approvalTarget = ""
             pageTitle = "Approved Overload Forms"
@@ -85,10 +96,23 @@ def allPendingForms(formType):
                                       .where(FormHistory.historyType == "Labor Overload Form")\
                                       .where((FormHistory.overloadForm.financialAidApproved == 'Pending') | (FormHistory.overloadForm.financialAidApproved == None))\
                                       .order_by(-FormHistory.createdDate).distinct()
-            elif formType == "approvedOverload":
+            elif formType == "completedOverload":
                 formList = FormHistory.select().join_from(FormHistory, OverloadForm)\
                                       .where(FormHistory.historyType == "Labor Overload Form")\
-                                      .where(FormHistory.overloadForm.financialAidApproved == 'Approved')\
+                                      .where((FormHistory.overloadForm.financialAidApproved == 'Approved') | (FormHistory.overloadForm.financialAidApproved == 'Denied'))\
+                                      .order_by(-FormHistory.createdDate).distinct()
+
+        if currentUser.isSaasAdmin:
+            if formType == "pendingOverload":
+                formList = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                      .where(FormHistory.status == 'Pending')\
+                                      .where(FormHistory.historyType == "Labor Overload Form")\
+                                      .where((FormHistory.overloadForm.SAASApproved == 'Pending') | (FormHistory.overloadForm.SAASApproved == None))\
+                                      .order_by(-FormHistory.createdDate).distinct()
+            elif formType == "completedOverload":
+                formList = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                      .where(FormHistory.historyType == "Labor Overload Form")\
+                                      .where((FormHistory.overloadForm.SAASApproved == 'Approved') | (FormHistory.overloadForm.SAASApproved == 'Denied'))\
                                       .order_by(-FormHistory.createdDate).distinct()
 
         if currentUser.isLaborAdmin:
@@ -134,7 +158,7 @@ def allPendingForms(formType):
                                 laborStatusFormCounter = laborStatusFormCounter,
                                 adjustedFormCounter  = adjustedFormCounter,
                                 releaseFormCounter = releaseFormCounter,
-                                approvedOverloadFormCounter = approvedOverloadFormCounter,
+                                completedOverloadFormCounter = completedOverloadFormCounter,
                                 pendingOverloadFormPairs = pendingOverloadFormPairs
                                 )
     except Exception as e:
@@ -442,7 +466,7 @@ def getReleaseModalData(formHistoryID):
         print("Error Populating Release Modal:", e)
         return render_template('errors/500.html'), 500
 
-def financialAidOverloadApproval(historyForm, rsp, status, currentUser, currentDate):
+def financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate):
     selectedOverload = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
     if 'denialReason' in rsp.keys():
         newNoteEntry = AdminNotes.create(formID=historyForm.formID.laborStatusFormID,
@@ -450,9 +474,14 @@ def financialAidOverloadApproval(historyForm, rsp, status, currentUser, currentD
         notesContents=rsp["denialReason"])
         newNoteEntry.save()
     ## Updating the overloadform TableS
-    selectedOverload.financialAidApproved = status.statusName
-    selectedOverload.financialAidApprover = currentUser
-    selectedOverload.financialAidReviewDate = currentDate
+    if currentUser.isFinancialAidAdmin:
+        selectedOverload.financialAidApproved = status.statusName
+        selectedOverload.financialAidApprover = currentUser
+        selectedOverload.financialAidReviewDate = currentDate
+    elif currentUser.isSaasAdmin:
+        selectedOverload.SAASApproved = status.statusName
+        selectedOverload.SAASApprover = currentUser
+        selectedOverload.SAASReviewDate = currentDate
     selectedOverload.save()
     return jsonify({"Success": True})
 
@@ -471,8 +500,8 @@ def modalFormUpdate():
             currentDate = datetime.now().strftime("%Y-%m-%d")
             status = Status.get(Status.statusName == rsp['status'])
 
-            if currentUser.isFinancialAidAdmin:
-                financialAidOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
+            if currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin:
+                financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
 
             elif currentUser.isLaborAdmin:
                 if rsp['formType'] == 'Overload':

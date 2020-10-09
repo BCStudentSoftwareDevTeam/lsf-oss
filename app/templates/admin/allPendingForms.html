@@ -30,14 +30,14 @@
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingAdjustment')}}">Pending Adjustment Forms <strong>({{ adjustedFormCounter }})</strong></a>
         </li>
         {% endif %}
-        {% if currentUser.isFinancialAidAdmin or currentUser.isLaborAdmin %}
+        {% if currentUser.isFinancialAidAdmin or currentUser.isLaborAdmin  or currentUser.isSaasAdmin %}
         <li id='overloadTab' {% if formType == "pendingOverload" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms <strong>({{ overloadFormCounter }})</strong></a>
         </li>
         {% endif %}
-        {% if currentUser.isFinancialAidAdmin%}
-        <li id='approvedOverloadTab' {% if formType == "approvedOverload" %} class="active" {% endif %}>
-          <a href="{{url_for('admin.allPendingForms', formType = 'approvedOverload')}}">Approved Overload Forms <strong>({{ approvedOverloadFormCounter }})</strong></a>
+        {% if currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin %}
+        <li id='completedOverloadTab' {% if formType == "completedOverload" %} class="active" {% endif %}>
+          <a href="{{url_for('admin.allPendingForms', formType = 'completedOverload')}}">Completed Overload Forms <strong>({{ completedOverloadFormCounter }})</strong></a>
         </li>
         {% endif %}
         {% if currentUser.isLaborAdmin %}
@@ -63,7 +63,7 @@
           <!-- Made empty header tags because we need to hide the header -->
           <thead id="headTable" text-align="center">
             <tr id="tableHeaders" class="tableHeaders">
-              {% if formType != "pendingOverload" and formType != "pendingRelease" %}
+              {% if formType != "pendingOverload" and formType != "pendingRelease" and formType !="completedOverload" %}
               <th> Approve <input type="checkbox" id="checkAll"/></th>
               {% endif %}
               <th>Term</th>
@@ -86,7 +86,7 @@
             <!--  -->
             {% for allForms in formList %}
             <tr id="tableData" class="tableData" align="center">
-              {% if formType != "pendingOverload" and formType != "pendingRelease" %}
+              {% if formType != "pendingOverload" and formType != "pendingRelease" and formType !="completedOverload" %}
                 {% if allForms.formHistoryID in pendingOverloadFormPairs %}
                   <td> {# REDIRECT #}
                     {% with modalTarget = modalTarget %}
@@ -204,7 +204,7 @@
             {% endfor %}
           </tbody>
         </table>
-        {% if formType != 'pendingOverload' and formType != 'pendingRelease' %}
+        {% if formType != 'pendingOverload' and formType != 'pendingRelease' and formType != 'completedOverload'%}
         <div style='float:left'>
           <button
             id="approveSelected"

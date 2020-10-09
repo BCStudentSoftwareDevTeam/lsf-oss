@@ -389,6 +389,17 @@ function submitOverload(formHistoryID) {
         overloadModalInfo['adminNotes'] = adminNotes;
       }
     }
+
+    if ($('#initials').val() == ""){
+      createAJAX = false
+      $('.status-warning').html('<span class="glyphicon glyphicon-exclamation-sign"></span><strong> Please fill out all required fields.</strong>')
+      $('.status-warning').show();
+    }
+    else{
+      createAJAX = true
+      $('.status-warning').hide();
+    }
+
     if (createAJAX == true) {
       overloadModalInfo['status'] = status;
       overloadModalInfo['formType'] = 'Overload';

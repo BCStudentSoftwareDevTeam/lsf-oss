@@ -44,7 +44,7 @@
           </div>
         </div>
       {% endif %}
-      {% if currentUser.isLaborAdmin or currentUser.isFinancialAidAdmin %}
+      {% if currentUser.isLaborAdmin or currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin %}
       <!-- If the current user is an admin, then we want to
           create the 'Administration' tab in the sidebar for them.-->
       <div class="container-fluid">
@@ -68,7 +68,7 @@
                     <a href="/admin/emailTemplates"><li class="panel-heading"><h4>Manage Email Templates</h4></li></a>
                   </ul>
                   {% endif %}
-                  {% if currentUser.isFinancialAidAdmin %}
+                  {% if currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin %}
                   <ul id="admindropdown" class="panel panel-default">
                     <a href="/admin/pendingForms/pendingOverload"><li class="panel-heading"><h4>Overload Forms</h4></li></a>
                   </ul>

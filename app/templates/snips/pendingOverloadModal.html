@@ -13,7 +13,7 @@
       </div>
     </div>
   {% endif %}
-  <div class="col-12">
+  <div class="col-md-12">
     {% for form in historyForm %}
       <dl class="row col-sm-10" style="text-align:left;">
         <dt class="col-sm-4">Student</dt>
@@ -45,11 +45,12 @@
       </div>
     </div>
   </div>
-  <div class="logNotesDiv" style='display:none'>
-    <h4 class="supeNotesLabel col-md-4 control-label text-left" for="supervisor">Supervisor Notes: </h4>
+  <div class="logNotesDiv col-md-12" style='display:none'>
+    <h4 class="supeNotesLabel control-label text-left" for="supervisor">Supervisor Notes: </h4>
     <textarea class="notesText form-control" rows="2" cols="70" disabled> </textarea>
     <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
     <div class="notesLogArea"></div>
+    <br>
   </div>
 
 
@@ -81,8 +82,8 @@
   </table>
   {% endif %}
 
-  {% if formType != "approvedOverload" %}
-  <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
+  {% if formType != "completedOverload" %}
+  <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong> A Status is required in order to submit</strong></p>
   <div id='radioDiv' class="col-sm-12">
     <!-- Need to pass in the notes counter from the notes counter method -->
     <div class="col-sm-5" align="left">
@@ -109,18 +110,25 @@
     <textarea id='denyOverloadReason' class="finalDeny form-control" name="name" rows="4" cols="80" style="max-width:100%;resize:none" placeholder="Enter a reason for denial"></textarea>
     <p id="required-error" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><b> This field is required</b></p>
   </div>
+    {% if currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin %}
+      <div align="left" style="margin-top:2%;">
+        <span class="tooltip-right" data-tooltip="Required">Approved by <strong>{{currentUser.supervisor.FIRST_NAME}} {{currentUser.supervisor.LAST_NAME}}: </strong><span class="required-mark">*</span>
+          <input type="text" id="initials" placeholder="Type initials here">
+        </span>
+      </div>
+    {% endif %}
   {% endif %}
 </div>
 
 <div class="modal-footer">
-  {% if formType == "approvedOverload" %}
+  {% if formType == "completedOverload" %}
     <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal">Close</button>
   {% else %}
     <div class="col-sm-6" align="left">
       <button type="button" class="btn btn-secondary floatleft" id="close" data-dismiss="modal">Close</button>
     </div>
     <div class="col-sm-6" align="right">
-        <button type="button" class="btn btn-success floatright" class="submitOverload" onclick="submitOverload({{formHistoryID}})">Submit</button>
+        <button type="submit" class="btn btn-success floatright" class="submitOverload" onclick="submitOverload({{formHistoryID}})">Submit</button>
     </div>
   {% endif %}
 </div>
