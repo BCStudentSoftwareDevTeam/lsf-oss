@@ -70,13 +70,13 @@
     <tbody id="overloadDepartmentTableBody">
       <tr>
         <td>SAAS</td>
-        <td id="statusSAAS">{{departmentStatusInfo['SAASStatus']}}</td>
+        <td id="statusSAAS">{{departmentStatusInfo['SAASStatus']}} {% if departmentStatusInfo['SAASInitial'] %}<br><strong>Initials: </strong>{{departmentStatusInfo['SAASInitial']}} {% endif %}</td>
         <td id="emailDateSAAS">{{departmentStatusInfo['SAASEmail']}}</td>
         <td><button id="SAASEmail" value='{{formHistoryID}}' type="button" class ="btn btn-info col-sm-12" onclick="sendEmail(this.value, this.id)">Send Email</button></td>
       </tr>
       <tr>
         <td>Financial Aid</td>
-        <td id="statusFinancialAid">{{departmentStatusInfo['financialAidStatus']}}</td>
+        <td id="statusFinancialAid">{{departmentStatusInfo['financialAidStatus']}} {% if departmentStatusInfo['FinancialAidInitial'] %}<br><strong> Initials: </strong>{{departmentStatusInfo['FinancialAidInitial']}} {% endif %} </td>
         <td id="emailDateFinancialAid">{{departmentStatusInfo['financialAidLastEmail']}}</td>
         <td><button id="financialAidEmail" value="{{formHistoryID}}" type="button" class ="btn btn-info col-sm-12" onclick="sendEmail(this.value, this.id)">Send Email</button></td>
       </tr>

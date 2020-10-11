@@ -409,14 +409,20 @@ def getOverloadModalData(formHistoryID):
             SAASEmailDate = 'No Email Sent'
 
         try:
-            financialAidStatus = historyForm[0].overloadForm.financialAidApproved.statusName
+            financialAidStatus = historyForm[0].overloadForm.financialAidApproved.statusName + " by " +\
+                                 historyForm[0].overloadForm.financialAidApprover.username
+            FinancialAidInitial = 'None'
         except (AttributeError, IndexError):
             financialAidStatus = 'None'
+            FinancialAidInitial = None
 
         try:
-            SAASStatus = historyForm[0].overloadForm.SAASApproved.statusName
+            SAASStatus = historyForm[0].overloadForm.SAASApproved.statusName + " by " +\
+                         historyForm[0].overloadForm.SAASApprover.username
+            SAASInitial = 'None'
         except (AttributeError, IndexError):
             SAASStatus = 'None'
+            SAASInitial = None
 
         try:
             currentPendingForm = FormHistory.select().where((FormHistory.formID == historyForm[0].formID) & (FormHistory.status == "Pending")).get()
@@ -431,7 +437,9 @@ def getOverloadModalData(formHistoryID):
                             'SAASEmail': SAASEmailDate,
                             'SAASStatus': SAASStatus,
                             'financialAidStatus': financialAidStatus,
-                            'financialAidLastEmail': financialAidEmailDate
+                            'financialAidLastEmail': financialAidEmailDate,
+                            'SAASInitial': SAASInitial,
+                            'FinancialAidInitial': FinancialAidInitial,
                             })
         noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
         return render_template('snips/pendingOverloadModal.html',
