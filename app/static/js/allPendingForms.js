@@ -9,7 +9,7 @@ $(document).ready(function() {
   // If the overload tab has been selected, then we need to restrict the
   // ordering functionality on different headers
 
-  if ($('#overloadTab').hasClass('active') || $('#releaseTab').hasClass('active')) {
+  if ($('#overloadTab').hasClass('active') || $('#releaseTab').hasClass('active') || $('#completedOverloadTab').hasClass('active')) {
     targetsList = [8]
   } else if ($('#adjustedTab').hasClass('active')) {
     targetsList = [0, 10]
@@ -355,7 +355,7 @@ function sendEmail(formHistoryID, emailRecipient) {
   });
 }
 
-function submitOverload(formHistoryID) {
+function submitOverload(formHistoryID, isLaborAdmin) {
   /*
   This method is used to check if the form is ready for submission, then
   makes an AJAX call with the information needed to complete the submission
@@ -390,14 +390,16 @@ function submitOverload(formHistoryID) {
       }
     }
 
-    if ($('#initials').val() == ""){
-      createAJAX = false
-      $('.status-warning').html('<span class="glyphicon glyphicon-exclamation-sign"></span><strong> Please fill out all required fields.</strong>')
-      $('.status-warning').show();
-    }
-    else{
-      createAJAX = true
-      $('.status-warning').hide();
+    if (isLaborAdmin =='None') {
+      if ($('#initials').val() == ""){
+        createAJAX = false
+        $('.status-warning').html('<span class="glyphicon glyphicon-exclamation-sign"></span><strong> Please fill out all required fields.</strong>')
+        $('.status-warning').show();
+      }
+      else{
+        createAJAX = true
+        $('.status-warning').hide();
+      }
     }
 
     if (createAJAX == true) {
