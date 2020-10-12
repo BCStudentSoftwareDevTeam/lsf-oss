@@ -55,6 +55,19 @@ class emailHandler():
         self.link = ""
         self.releaseReason = ""
         self.releaseDate = ""
+        self.newAdjustmentField = ""
+        self.oldAdjustmentField = ""
+
+        if self.formHistory.adjustedForm:
+            print("######################### Made it here ##############################")
+            if self.formHistory.adjustedForm.fieldAdjusted == "supervisor":
+                newSupervisor = createSupervisorFromTracy(bnumber=self.formHistory.adjustedForm.newValue)
+                self.newAdjustmentField = newSupervisor.FIRST_NAME + " " + newSupervisor.LAST_NAME
+                self.oldAdjustmentField = self.formHistory.formID.supervisor.FIRST_NAME + " " + self.formHistory.formID.supervisor.LAST_NAME
+            else:
+                self.oldAdjustmentField = self.formHistory.adjustedForm.oldValue
+                self.newAdjustmentField = self.formHistory.adjustedForm.newValue
+        print("#################", self.oldAdjustmentField, self.newAdjustmentField, "#######################")
 
         try:
             self.releaseDate = self.formHistory.releaseForm.releaseDate.strftime("%m/%d/%Y")
@@ -330,6 +343,11 @@ class emailHandler():
         else:
             # 'Primary Supervisor' is the primary supervisor of the student who's laborStatusForm is passed in the initializer
             form = form.replace("@@PrimarySupervisor@@", self.primaryForm.supervisor.FIRST_NAME + " " + self.primaryForm.supervisor.LAST_NAME)
+        print('################################################HERE########################################')
+        if self.formHistory.adjustedForm:
+            print("#################", self.oldAdjustmentField, self.newAdjustmentField, "#######################")
+            form = form.replace("@@NewAdjustmentField@@", self.newAdjustmentField)
+            form = form.replace("@@CurrentAdjustmentField@@", self.oldAdjustmentField)
         form = form.replace("@@SupervisorEmail@@", self.supervisorEmail)
         form = form.replace("@@Date@@", self.date)
         form = form.replace("@@ReleaseReason@@", self.releaseReason)

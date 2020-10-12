@@ -41,6 +41,11 @@ def alterLSF(laborStatusKey):
     # Query the status of the form to determine if correction or adjust LSF
     formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
 
+    formHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
+
+    if not formHistory.adjustedForm:
+        print("Hhhhhhhhh")
+
     if currentDate > form.termCode.adjustmentCutOff and formStatus == "Approved" and not currentUser.isLaborAdmin:
         return render_template("errors/403.html")
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
@@ -65,7 +70,7 @@ def alterLSF(laborStatusKey):
 
     #These are the data fields to populate our dropdowns(Supervisor. Position)
     supervisors = Tracy().getSupervisors()
-    positions = Tracy().getPositionsFromDepartment(form.department.ORG)
+    positions = Tracy().getPositionsFromDepartment(form.department.ORG, form.department.ACCOUNT)
 
     # supervisors from the old system WILL have a Supervisor record, but might not have a Tracy record
     oldSupervisor = Supervisor.get_or_none(ID = form.supervisor.ID)
