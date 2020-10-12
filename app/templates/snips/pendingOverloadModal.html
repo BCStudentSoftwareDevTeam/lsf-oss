@@ -114,7 +114,7 @@
   </div>
     {% if currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin %}
       <div align="left" style="margin-top:2%;">
-        <span class="tooltip-right" data-tooltip="Required">Approved by <strong>{{currentUser.supervisor.FIRST_NAME}} {{currentUser.supervisor.LAST_NAME}}: </strong><span class="required-mark">*</span>
+        <span class="tooltip-right" data-tooltip="Required">Mark approved by <strong>{{currentUser.supervisor.FIRST_NAME}} {{currentUser.supervisor.LAST_NAME}}: </strong><span class="required-mark">*</span>
           <input type="text" id="initials" placeholder="Type initials here">
         </span>
       </div>

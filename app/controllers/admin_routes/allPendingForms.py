@@ -411,7 +411,7 @@ def getOverloadModalData(formHistoryID):
         try:
             financialAidStatus = historyForm[0].overloadForm.financialAidApproved.statusName + " by " +\
                                  historyForm[0].overloadForm.financialAidApprover.username
-            FinancialAidInitial = 'None'
+            FinancialAidInitial = historyForm[0].overloadForm.financialAidInitials
         except (AttributeError, IndexError):
             financialAidStatus = 'None'
             FinancialAidInitial = None
@@ -419,7 +419,7 @@ def getOverloadModalData(formHistoryID):
         try:
             SAASStatus = historyForm[0].overloadForm.SAASApproved.statusName + " by " +\
                          historyForm[0].overloadForm.SAASApprover.username
-            SAASInitial = 'None'
+            SAASInitial = historyForm[0].overloadForm.SAASInitials
         except (AttributeError, IndexError):
             SAASStatus = 'None'
             SAASInitial = None
@@ -485,10 +485,12 @@ def financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, curr
     if currentUser.isFinancialAidAdmin:
         selectedOverload.financialAidApproved = status.statusName
         selectedOverload.financialAidApprover = currentUser
+        selectedOverload.financialAidInitials = rsp['initials']
         selectedOverload.financialAidReviewDate = currentDate
     elif currentUser.isSaasAdmin:
         selectedOverload.SAASApproved = status.statusName
         selectedOverload.SAASApprover = currentUser
+        selectedOverload.SAASInitials = rsp['initials']
         selectedOverload.SAASReviewDate = currentDate
     selectedOverload.save()
     return jsonify({"Success": True})

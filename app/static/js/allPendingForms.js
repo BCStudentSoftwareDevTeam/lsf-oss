@@ -48,7 +48,6 @@ $(document).ready(function() {
 
 });
 
-
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
 function insertApprovals() {
   var getChecked = table.$('.approveCheckbox:checked').each(function() {
@@ -399,6 +398,7 @@ function submitOverload(formHistoryID, isLaborAdmin) {
       else{
         createAJAX = true
         $('.status-warning').hide();
+        overloadModalInfo['initials'] = $('#initials').val();
       }
     }
 
