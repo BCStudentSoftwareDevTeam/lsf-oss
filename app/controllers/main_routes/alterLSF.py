@@ -118,18 +118,20 @@ def submitAlteredLSF(laborStatusKey):
         fieldsChanged = dict(fieldsChanged)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
-
+        formHistoryIDs = []
         for fieldName in fieldsChanged:
             lsf = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if formStatus =="Pending":
                 modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
             elif formStatus =="Approved":
-                adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
+                changedForm = adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
+                if changedForm:
+                    formHistoryIDs.append(changedForm)
+        print(formHistoryIDs)
 
         if formStatus == "Approved":
-            changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
             try:
-                email = emailHandler(changedForm.formHistoryID)
+                email = emailHandler(changedForm)
                 if "supervisor" in fieldsChanged:
                     email.laborStatusFormAdjusted(fieldsChanged["supervisor"]["newValue"])
                 else:
@@ -186,6 +188,7 @@ def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
                                          date          = datetime.now().strftime("%Y-%m-%d"),
                                          notesContents = fieldsChanged[fieldName]["newValue"])
         newNoteEntry.save()
+        return None
     else:
         adjustedforms = AdjustedForm.create(fieldAdjusted = fieldName,
                                             oldValue      = fieldsChanged[fieldName]["oldValue"],
@@ -193,7 +196,7 @@ def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
                                             effectiveDate = datetime.strptime(fieldsChanged[fieldName]["date"], "%m/%d/%Y").strftime("%Y-%m-%d"))
         historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Adjustment Form")
         status = Status.get(Status.statusName == "Pending")
-        formHistories = FormHistory.create(formID       = lsf.laborStatusFormID,
+        adjustedFormHistories = FormHistory.create(formID       = lsf.laborStatusFormID,
                                            historyType  = historyType.historyTypeName,
                                            adjustedForm = adjustedforms.adjustedFormID,
                                            createdBy    = currentUser,
@@ -201,10 +204,11 @@ def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
                                            status       = status.statusName)
         if fieldName == "weeklyHours":
             newWeeklyHours = fieldsChanged[fieldName]['newValue']
-            createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedforms.adjustedFormID, formHistories)
+            createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedforms.adjustedFormID, adjustedFormHistories)
+        return adjustedFormHistories.formHistoryID
 
 
-def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None, formHistories=None):
+def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None, adjustedFormHistories=None):
     allTermForms = LaborStatusForm.select() \
                    .join_from(LaborStatusForm, Student) \
                    .join_from(LaborStatusForm, FormHistory) \
@@ -232,8 +236,8 @@ def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None, form
                                             createdDate  = date.today(),
                                             status       = "Pending")
         try:
-            if formHistories:
-                overloadEmail = emailHandler(formHistories.formHistoryID)
+            if adjustedFormHistories:
+                overloadEmail = emailHandler(adjustedFormHistories.formHistoryID)
             else:
                 overloadEmail = emailHandler(newFormHistory.formHistoryID)
             overloadEmail.LaborOverLoadFormSubmitted("http://{0}/".format(request.host) + "studentOverloadApp/" + str(newFormHistory.formHistoryID))
