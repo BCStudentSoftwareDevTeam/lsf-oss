@@ -54,6 +54,7 @@ def createSupervisorFromTracy(username=None, bnumber=None):
 
         Raises InvalidUserException if this does not succeed.
     """
+    print("######################### inside hahaha ##############################")
     if not username and not bnumber:
         raise ValueError("No arguments provided to createSupervisorFromTracy()")
 

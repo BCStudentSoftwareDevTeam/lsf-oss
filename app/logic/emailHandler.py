@@ -11,8 +11,8 @@ from app.models.user import*
 from app.models.status import*
 from datetime import datetime
 from app.models.emailTracker import *
-from app.logic.tracy import Tracy
 from app.logic.userInsertFunctions import*
+from app.logic.tracy import Tracy
 import string
 from app import app
 import os
@@ -63,6 +63,7 @@ class emailHandler():
         if self.formHistory.adjustedForm:
             print("######################### Made it here ##############################")
             if self.formHistory.adjustedForm.fieldAdjusted == "supervisor":
+                print("######################### inside conditional ##############################",self.formHistory.adjustedForm.newValue )
                 newSupervisor = createSupervisorFromTracy(bnumber=self.formHistory.adjustedForm.newValue)
                 self.newAdjustmentField = "Pending new Supervisor: {0} {1}".format(newSupervisor.FIRST_NAME, newSupervisor.LAST_NAME)
                 self.oldAdjustmentField = "Current Supervisor: {0} {1}".format(self.formHistory.formID.supervisor.FIRST_NAME, self.formHistory.formID.supervisor.LAST_NAME)
