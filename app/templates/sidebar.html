@@ -68,7 +68,7 @@
                     <a href="/admin/emailTemplates"><li class="panel-heading"><h4>Manage Email Templates</h4></li></a>
                   </ul>
                   {% endif %}
-                  {% if currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin %}
+                  {% if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin %}
                   <ul id="admindropdown" class="panel panel-default">
                     <a href="/admin/pendingForms/pendingOverload"><li class="panel-heading"><h4>Overload Forms</h4></li></a>
                   </ul>
