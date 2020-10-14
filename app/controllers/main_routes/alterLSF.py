@@ -127,18 +127,22 @@ def submitAlteredLSF(laborStatusKey):
                 changedForm = adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
                 if changedForm:
                     formHistoryIDs.append(changedForm)
-        print(formHistoryIDs)
+        print('The ID of the forms:', formHistoryIDs)
 
         if formStatus == "Approved":
-            try:
-                email = emailHandler(changedForm)
-                if "supervisor" in fieldsChanged:
-                    email.laborStatusFormAdjusted(fieldsChanged["supervisor"]["newValue"])
-                else:
-                    email.laborStatusFormAdjusted()
-            except Exception as e:
-                print("An error occured while attempting to send adjustment form emails: ", e)
-            message = "Your labor adjustment form(s) for {0} {1} have been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+            for formHistory in formHistoryIDs:
+                try:
+                    print('Error here?', formHistory)
+                    email = emailHandler(formHistory)
+                    print('Email good')
+                    if "supervisor" in fieldsChanged:
+                        email.laborStatusFormAdjusted(fieldsChanged["supervisor"]["newValue"])
+                    else:
+                        print('Going into email')
+                        email.laborStatusFormAdjusted()
+                except Exception as e:
+                    print("An error occured while attempting to send adjustment form emails: ", e)
+                message = "Your labor adjustment form(s) for {0} {1} have been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         else:
             message = "Your labor status form for {0} {1} has been modified.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")

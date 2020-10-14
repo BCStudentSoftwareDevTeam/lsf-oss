@@ -11,6 +11,8 @@ from app.models.user import*
 from app.models.status import*
 from datetime import datetime
 from app.models.emailTracker import *
+from app.logic.tracy import Tracy
+from app.logic.userInsertFunctions import*
 import string
 from app import app
 import os
@@ -62,11 +64,16 @@ class emailHandler():
             print("######################### Made it here ##############################")
             if self.formHistory.adjustedForm.fieldAdjusted == "supervisor":
                 newSupervisor = createSupervisorFromTracy(bnumber=self.formHistory.adjustedForm.newValue)
-                self.newAdjustmentField = newSupervisor.FIRST_NAME + " " + newSupervisor.LAST_NAME
-                self.oldAdjustmentField = self.formHistory.formID.supervisor.FIRST_NAME + " " + self.formHistory.formID.supervisor.LAST_NAME
+                self.newAdjustmentField = "Pending new Supervisor: {0} {1}".format(newSupervisor.FIRST_NAME, newSupervisor.LAST_NAME)
+                self.oldAdjustmentField = "Current Supervisor: {0} {1}".format(self.formHistory.formID.supervisor.FIRST_NAME, self.formHistory.formID.supervisor.LAST_NAME)
+            elif self.formHistory.adjustedForm.fieldAdjusted == "position":
+                currentPosition = Tracy().getPositionFromCode(self.formHistory.adjustedForm.oldValue)
+                newPosition = Tracy().getPositionFromCode(self.formHistory.adjustedForm.newValue)
+                self.oldAdjustmentField = "Current Position: {0} ({1})".format(currentPosition.POSN_TITLE, currentPosition.WLS)
+                self.newAdjustmentField = "Pending new Position: {0} ({1})".format(newPosition.POSN_TITLE, newPosition.WLS)
             else:
-                self.oldAdjustmentField = self.formHistory.adjustedForm.oldValue
-                self.newAdjustmentField = self.formHistory.adjustedForm.newValue
+                self.oldAdjustmentField = "Current Hours: {0}".format(self.formHistory.adjustedForm.oldValue)
+                self.newAdjustmentField = "Pending new Hours: {0}".format(self.formHistory.adjustedForm.newValue)
         print("#################", self.oldAdjustmentField, self.newAdjustmentField, "#######################")
 
         try:
