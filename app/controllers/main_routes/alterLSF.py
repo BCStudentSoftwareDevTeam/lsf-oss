@@ -43,9 +43,6 @@ def alterLSF(laborStatusKey):
 
     formHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
 
-    if not formHistory.adjustedForm:
-        print("Hhhhhhhhh")
-
     if currentDate > form.termCode.adjustmentCutOff and formStatus == "Approved" and not currentUser.isLaborAdmin:
         return render_template("errors/403.html")
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
@@ -127,18 +124,14 @@ def submitAlteredLSF(laborStatusKey):
                 changedForm = adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
                 if changedForm:
                     formHistoryIDs.append(changedForm)
-        print('The ID of the forms:', formHistoryIDs)
 
         if formStatus == "Approved":
             for formHistory in formHistoryIDs:
                 try:
-                    print('Error here?', formHistory)
                     email = emailHandler(formHistory)
-                    print('Email good')
                     if "supervisor" in fieldsChanged:
                         email.laborStatusFormAdjusted(fieldsChanged["supervisor"]["newValue"])
                     else:
-                        print('Going into email')
                         email.laborStatusFormAdjusted()
                 except Exception as e:
                     print("An error occured while attempting to send adjustment form emails: ", e)
