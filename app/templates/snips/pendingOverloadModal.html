@@ -70,13 +70,13 @@
     <tbody id="overloadDepartmentTableBody">
       <tr>
         <td>SAAS</td>
-        <td id="statusSAAS">{{departmentStatusInfo['SAASStatus']}} {% if departmentStatusInfo['SAASInitial'] %}<br><strong>Initials: </strong>{{departmentStatusInfo['SAASInitial']}} {% endif %}</td>
+        <td id="statusSAAS"><strong>{{departmentStatusInfo['SAASStatus']}}</strong> {% if departmentStatusInfo['SAASApprover'] %}<br>{{departmentStatusInfo['SAASApprover']}} {% endif %}</td>
         <td id="emailDateSAAS">{{departmentStatusInfo['SAASEmail']}}</td>
         <td><button id="SAASEmail" value='{{formHistoryID}}' type="button" class ="btn btn-info col-sm-12" onclick="sendEmail(this.value, this.id)">Send Email</button></td>
       </tr>
       <tr>
         <td>Financial Aid</td>
-        <td id="statusFinancialAid">{{departmentStatusInfo['financialAidStatus']}} {% if departmentStatusInfo['FinancialAidInitial'] %}<br><strong> Initials: </strong>{{departmentStatusInfo['FinancialAidInitial']}} {% endif %} </td>
+        <td id="statusFinancialAid"><strong>{{departmentStatusInfo['financialAidStatus']}}</strong> {% if departmentStatusInfo['FinancialAidApprover'] %}<br>{{departmentStatusInfo['FinancialAidApprover']}} {% endif %} </td>
         <td id="emailDateFinancialAid">{{departmentStatusInfo['financialAidLastEmail']}}</td>
         <td><button id="financialAidEmail" value="{{formHistoryID}}" type="button" class ="btn btn-info col-sm-12" onclick="sendEmail(this.value, this.id)">Send Email</button></td>
       </tr>
@@ -93,7 +93,14 @@
     </div>
     <div>
       <label for="approve" class="radio-inline">
-        <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)"><b>Approve</b>
+        <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)">
+        {% if (currentUser.isLaborAdmin and currentUser.isFinancialAidAdmin and not departmentStatusInfo['financialAidStatus']) %}
+          <b>Approve as Financial Aid admin</b>
+        {% elif (currentUser.isLaborAdmin and currentUser.isSaasAdmin and not departmentStatusInfo['SAASStatus']) %}
+          <b>Approve as SAAS admin</b>
+        {% else %}
+          <b>Approve</b>
+        {% endif %}
       </label>
       {% if (currentUser.isLaborAdmin and currentUser.isFinancialAidAdmin and departmentStatusInfo['financialAidStatus']) or (currentUser.isLaborAdmin and currentUser.isSaasAdmin and departmentStatusInfo['SAASStatus']) or (currentUser.isLaborAdmin and not currentUser.isFinancialAidAdmin and not currentUser.isSaasAdmin) %}
       <label for="approveRel" class="radio-inline">

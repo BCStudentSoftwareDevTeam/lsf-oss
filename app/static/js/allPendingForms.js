@@ -389,17 +389,15 @@ function submitOverload(formHistoryID, isLaborAdmin) {
       }
     }
 
-    if (isLaborAdmin =='None') {
-      if ($('#initials').val() == ""){
-        createAJAX = false
-        $('.status-warning').html('<span class="glyphicon glyphicon-exclamation-sign"></span><strong> Please fill out all required fields.</strong>')
-        $('.status-warning').show();
-      }
-      else{
-        createAJAX = true
-        $('.status-warning').hide();
-        overloadModalInfo['initials'] = $('#initials').val();
-      }
+    if ($('#initials').val() == ""){
+      createAJAX = false
+      $('.status-warning').html('<span class="glyphicon glyphicon-exclamation-sign"></span><strong> Please fill out all required fields.</strong>')
+      $('.status-warning').show();
+    }
+    else{
+      createAJAX = true
+      $('.status-warning').hide();
+      overloadModalInfo['initials'] = $('#initials').val();
     }
 
     if (createAJAX == true) {

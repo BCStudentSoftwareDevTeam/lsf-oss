@@ -409,20 +409,18 @@ def getOverloadModalData(formHistoryID):
             SAASEmailDate = 'No Email Sent'
 
         try:
-            financialAidStatus = historyForm[0].overloadForm.financialAidApproved.statusName + " by " +\
-                                 historyForm[0].overloadForm.financialAidApprover.username
-            FinancialAidInitial = historyForm[0].overloadForm.financialAidInitials
+            financialAidStatus = historyForm[0].overloadForm.financialAidApproved.statusName
+            FinancialAidApprover = "By " + historyForm[0].overloadForm.financialAidApprover.supervisor.FIRST_NAME + " " + historyForm[0].overloadForm.financialAidApprover.supervisor.LAST_NAME
         except (AttributeError, IndexError):
             financialAidStatus = None
-            FinancialAidInitial = None
+            FinancialAidApprover = None
 
         try:
-            SAASStatus = historyForm[0].overloadForm.SAASApproved.statusName + " by " +\
-                         historyForm[0].overloadForm.SAASApprover.username
-            SAASInitial = historyForm[0].overloadForm.SAASInitials
+            SAASStatus = historyForm[0].overloadForm.SAASApproved.statusName
+            SAASApprover = "By " + historyForm[0].overloadForm.SAASApprover.supervisor.FIRST_NAME + " " + historyForm[0].overloadForm.SAASApprover.supervisor.LAST_NAME
         except (AttributeError, IndexError):
             SAASStatus = None
-            SAASInitial = None
+            SAASApprover = None
 
         try:
             currentPendingForm = FormHistory.select().where((FormHistory.formID == historyForm[0].formID) & (FormHistory.status == "Pending")).get()
@@ -438,8 +436,8 @@ def getOverloadModalData(formHistoryID):
                             'SAASStatus': SAASStatus,
                             'financialAidStatus': financialAidStatus,
                             'financialAidLastEmail': financialAidEmailDate,
-                            'SAASInitial': SAASInitial,
-                            'FinancialAidInitial': FinancialAidInitial,
+                            'SAASApprover': SAASApprover,
+                            'FinancialAidApprover': FinancialAidApprover,
                             })
         noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
         return render_template('snips/pendingOverloadModal.html',
@@ -581,28 +579,21 @@ def modalFormUpdate():
             currentDate = datetime.now().strftime("%Y-%m-%d")
             status = Status.get(Status.statusName == rsp['status'])
             overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
-            print("approved ", overloadForm.financialAidApproved)
             if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin:
-                print("1")
                 financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
 
             elif currentUser.isFinancialAidAdmin and currentUser.isLaborAdmin:
                 if (not overloadForm.financialAidApproved) or (overloadForm.financialAidApproved == "Pending"):
-                    print("2")
                     financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
                 else:
-                    print("3")
                     laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
             elif currentUser.isSaasAdmin and currentUser.isLaborAdmin:
-                if not overloadForm.SAASApproved or overloadForm.SAASApproved == "Pending":
-                    print("4")
+                if (not overloadForm.SAASApproved) or overloadForm.SAASApproved == "Pending":
                     financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
                 else:
-                    print("5")
                     laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
 
             elif currentUser.isLaborAdmin and (not currentUser.isFinancialAidAdmin or not currentUser.isSaasAdmin):
-                print("6")
                 laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
         return jsonify({"Success": True})
     except Exception as e:

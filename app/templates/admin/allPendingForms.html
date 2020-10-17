@@ -35,7 +35,7 @@
           <a href="{{url_for('admin.allPendingForms', formType = 'pendingOverload')}}">Pending Overload Forms <strong>({{ overloadFormCounter }})</strong></a>
         </li>
         {% endif %}
-        {% if currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin %}
+        {% if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin %}
         <li id='completedOverloadTab' {% if formType == "completedOverload" %} class="active" {% endif %}>
           <a href="{{url_for('admin.allPendingForms', formType = 'completedOverload')}}">Completed Overload Forms <strong>({{ completedOverloadFormCounter }})</strong></a>
         </li>
