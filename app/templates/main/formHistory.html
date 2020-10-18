@@ -12,7 +12,7 @@
 <a class="skipContent" href="#downloadButton" tabindex="1">Click to Skip</a>
 <div align= "center">
   <h1>Labor History</h1>
-    <span id="studentName">{{student.FIRST_NAME}} {{student.LAST_NAME}}</span>
+    <a href="mailto:{{student.STU_EMAIL}}" id="studentName" class="mailtoHover">{{student.FIRST_NAME}} {{student.LAST_NAME}}</a>
     <form method="POST" action="/laborHistory/download">
       <input hidden name="listOfForms" value="{{laborStatusFormList}}" />
       <div style="width:50%; margin-bottom:0.5%" align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success" id="downloadButton">Download</button></div>

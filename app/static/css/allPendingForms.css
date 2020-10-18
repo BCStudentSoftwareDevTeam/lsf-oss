@@ -38,7 +38,7 @@ div#pendingForms_length.dataTables_length {
   text-align: left;
 }
 
-[class*="hover_indicator"] {
+a.hover_indicator, a.mailtoHover {
   text-decoration: none !important;
   position: relative;
   border-bottom: 1px dotted #000;
