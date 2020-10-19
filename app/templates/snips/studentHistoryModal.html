@@ -4,7 +4,7 @@
         {% for form1 in statusForm %}
         <span style="text-align: right;"><button type="button" class="btn btn-default btn col-sm-2" id="print" onclick="fillPDF({{form1.laborStatusFormID}})"><span class="glyphicon glyphicon-print"></span> Print</button></span>
         <span class="h2 col-sm-9 modalHeader">
-            <a href="mailto:{{form1.studentSupervisee.STU_EMAIL}}" class="mailtoHover">{{form1.studentSupervisee.FIRST_NAME}} {{form1.studentSupervisee.LAST_NAME}}</a>
+            <a href="mailto:{{form1.studentSupervisee.STU_EMAIL}}" class="mailtoHover">{{form1.studentSupervisee.FIRST_NAME}} {{form1.studentSupervisee.LAST_NAME}} <span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>
             {% if form1.studentSupervisee.FIRST_NAME + " " + form1.studentSupervisee.LAST_NAME != form1.studentName %}
             <div class="original-name">Originally filed under "{{form1.studentName}}"</div>
             {% endif %}
@@ -21,7 +21,7 @@
             <dd class="col-sm-9">{{form1.department.DEPT_NAME}}</dd>
 
             <dt class="col-sm-3">Supervisor</dt>
-            <dd class="col-sm-9"><a href="mailto:{{form1.supervisor.EMAIL}}" class="mailtoHover">{{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}}</a></dd>
+            <dd class="col-sm-9"><a href="mailto:{{form1.supervisor.EMAIL}}" class="mailtoHover">{{form1.supervisor.FIRST_NAME}} {{form1.supervisor.LAST_NAME}} <span class="glyphicon glyphicon-envelope mailtoIcon"></span></a></dd>
 
             <dt class="col-sm-3">Job Type (Hours)</dt>
             <dd class="col-sm-9">{{form1.jobType}}

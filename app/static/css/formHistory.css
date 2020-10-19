@@ -61,3 +61,14 @@
   border-bottom: 1px dotted #000;
   color: #000000;
 }
+
+a.mailtoHover:visited,
+a.mailtoHover:link,
+a.mailtoHover:hover,
+a.mailtoHover:active {
+  color: #000000;
+}
+
+#mailtoIcon{
+  font-size: large;
+}
