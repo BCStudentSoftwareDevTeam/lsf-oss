@@ -20,7 +20,7 @@ class ExcelMaker:
     def makeExcelStudentHistory(self, formid):
         downloadForms = []
         for id in formid:
-            studentForms = FormHistory.select().where(FormHistory.formID == id)
+            studentForms = FormHistory.select().where(FormHistory.formID == id, FormHistory.historyType == 'Labor Status Form')
             for studentForm in studentForms:
                 downloadForms.append(studentForm)
 
@@ -126,7 +126,7 @@ class ExcelMaker:
     def makeList(self, student):
         downloadForms = []
         for id in student:
-            studentForm = FormHistory.select().where(FormHistory.formID == id)
+            studentForm = FormHistory.select().where(FormHistory.formID == id, FormHistory.historyType == 'Labor Status Form')
             for studentF in studentForm:
                 downloadForms.append(studentF)
 
