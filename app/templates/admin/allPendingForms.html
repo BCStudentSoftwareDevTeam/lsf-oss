@@ -92,7 +92,7 @@
                 {{allForms.formID.termCode.termName}}
               </td>
               <td> {# DEPARTMENT #}
-                <a href="#" aria-label="{{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}}" class="hover_indicator preventDefault"> {{allForms.formID.department.DEPT_NAME}} </a>
+                <a href="#" aria-label="{{allForms.formID.department.ORG}}-{{allForms.formID.department.ACCOUNT}}" class="hover_indicator"> {{allForms.formID.department.DEPT_NAME}} </a>
               </td>
               <td> {# SUPERVISOR #}
                 {% if allForms.adjustedForm.fieldAdjusted == "supervisor" %}
@@ -108,10 +108,10 @@
               </td>
               <td> {# POSITON AND WLS #}
                 {% if allForms.adjustedForm.fieldAdjusted == "position"%}
-                  <s aria-hidden="true"><a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator preventDefault">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a></s><br/>
-                  <a href="#" aria-label="{{allForms.adjustedForm.oldValue}}" class="hover_indicator preventDefault"> {{allForms.adjustedForm.newValue}}</a>
+                  <s aria-hidden="true"><a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a></s><br/>
+                  <a href="#" aria-label="{{allForms.adjustedForm.oldValue}}" class="hover_indicator"> {{allForms.adjustedForm.newValue}}</a>
                 {% else %}
-                  <a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator preventDefault">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a>
+                  <a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a>
                 {% endif %}
               </td>
               <td> {# HOURS #}
