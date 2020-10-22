@@ -41,8 +41,6 @@ def alterLSF(laborStatusKey):
     # Query the status of the form to determine if correction or adjust LSF
     formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
 
-    formHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
-
     if currentDate > form.termCode.adjustmentCutOff and formStatus == "Approved" and not currentUser.isLaborAdmin:
         return render_template("errors/403.html")
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
@@ -77,12 +75,17 @@ def alterLSF(laborStatusKey):
             print("The bnumber {} was not found in Supervisor or Tracy", form.supervisor.ID)
             oldSupervisor = {'ID': form.supervisor.ID}
 
-    noteTotal = AdminNotes.select().where(AdminNotes.formID == formHistory[0].formID.laborStatusFormID).count()
+    noteTotal = AdminNotes.select().where(AdminNotes.formID == laborStatusKey).count()
+    notes = AdminNotes.select().where(AdminNotes.formID == laborStatusKey) # Gets labor department notes from the laborofficenotes table
+    logNotes = ""
+    if len(notes) > 0: # If there are labor office notes, show them in the log notes area
+        for i in range(len(notes)):
+            formattedDate = notes[len(notes) -  i - 1].date.strftime('%m/%d/%Y')   # formatting date in the database to display MM/DD/YYYY
+            logNotes += "<dl class='dl-horizontal text-left'> <b>" + formattedDate + " | <i>" + notes[len(notes) -  i - 1].createdBy.supervisor.FIRST_NAME[0] + ". " + notes[len(notes) -  i - 1].createdBy.supervisor.LAST_NAME + "</i> | </b> " + notes[len(notes) -  i - 1].notesContents + "</dl>"
 
     return render_template( "main/alterLSF.html",
 				            title=("Adjust Labor Status Form" if formStatus == "Approved" else "Labor Status Correction Form"),
                             username = currentUser,
-                            formHistory = formHistory,
                             superviser_id = superviser_id,
                             prefillstudent = prefillstudent,
                             prefillsupervisor = prefillsupervisor,
@@ -98,7 +101,8 @@ def alterLSF(laborStatusKey):
                             oldSupervisor = oldSupervisor,
                             totalHours = totalHours,
                             currentUser = currentUser,
-                            noteTotal = noteTotal
+                            noteTotal = noteTotal,
+                            logNotes = logNotes
                           )
 
 
@@ -243,46 +247,3 @@ def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None, form
             deleteOverloadForm = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) & (FormHistory.historyType == "Labor Overload Form"))
             deleteOverloadForm = OverloadForm.get(OverloadForm.overloadFormID == deleteOverloadForm.overloadForm.overloadFormID)
             deleteOverloadForm.delete_instance()
-
-@main_bp.route('/alterLSF/getNotes/<formid>', methods=['GET'])
-def getNotes(formid):
-    '''
-    This function retrieves the supervisor and labor department notes.
-    '''
-    try:
-        currentUser = require_login()
-        if not currentUser:                    # Not logged in
-            return render_template('errors/403.html'), 403
-        if not currentUser.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html'), 403
-        supervisorNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid) # Gets Supervisor note
-        notes = AdminNotes.select().where(AdminNotes.formID == formid) # Gets labor department notes from the laborofficenotes table
-        notesDict = {}          # Stores the both types of notes
-        if supervisorNotes.supervisorNotes: # If there is a supervisor note, store it in notesDict
-            notesDict["supervisorNotes"] = supervisorNotes.supervisorNotes
-        if len(notes) > 0: # If there are labor office notes, format, and store them in notesDict
-            listOfNotes = []
-            for i in range(len(notes)):
-                formattedDate = notes[len(notes) -  i - 1].date.strftime('%m/%d/%Y')   # formatting date in the database to display MM/DD/YYYY
-                listOfNotes.append("<dl class='dl-horizontal text-left'> <b>" + formattedDate + " | <i>" + notes[len(notes) -  i - 1].createdBy.supervisor.FIRST_NAME[0] + ". " + notes[len(notes) -  i - 1].createdBy.supervisor.LAST_NAME + "</i> | </b> " + notes[len(notes) -  i - 1].notesContents + "</dl>")
-            notesDict["laborDepartmentNotes"] = listOfNotes
-        return jsonify(notesDict)     # return as JSON
-
-    except Exception as e:
-        print("Error on getting notes: ", e)
-        return jsonify({"Success": False})
-
-@main_bp.route('/alterLSF/notesCounter', methods=['POST'])
-def getNotesCounter():
-    """
-    This method retrieve the number of notes a labor status form has
-    """
-    try:
-        rsp = eval(request.data.decode("utf-8"))
-        if rsp:
-            noteTotal = AdminNotes.select().where(AdminNotes.formID == rsp['laborStatusFormID']).count()
-            noteDictionary = {'noteTotal': noteTotal}
-            return jsonify(noteDictionary)
-    except Exception as e:
-        print("Error selecting admin notes:", e)
-        return jsonify({"Success": False}),500

@@ -133,7 +133,15 @@
        </div>
      </div>
      <div id="viewNotesButton">
-       <button id="Note_{{formHistory.formHistoryID}}" onclick="toggleNotesLog({{form.laborStatusFormID}}, {{formHistory.formHistoryID}})" class='btn btn-sm btn-primary'>View Notes ({{noteTotal}})</button>
+       <button id="noteButton" onclick="toggleNotesLog({{noteTotal}})" class='btn btn-sm btn-primary'>View Notes ({{noteTotal}})</button>
+     </div>
+     <div class="logNotesDiv" style='display:none'>
+       <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
+        {% if logNotes %}
+          <div class="notesLogArea" value = {{logNotes}}>{{logNotes}}</div>
+        {% else %}
+          <div class="notesLogArea">No notes to show</div>
+        {% endif %}
      </div>
   </div>
   </div>
