@@ -132,7 +132,6 @@ function checkForChange(){
   var oldPostition = $("#prefillposition").val();
   var newPosition = $("#position").val();
   var date = $("#datetimepicker0").val();
-  var oldNotes = $("#oldNotes").val();
   var newNotes = $("#supervisorNotes").val();
   var oldContractHours = $("#oldContractHours").val();
   var newContractHours = $("#contractHours").val();
@@ -145,8 +144,8 @@ function checkForChange(){
   if(oldPostition != newPosition){
     finalDict["position"] = {"oldValue": oldPostition, "newValue": newPosition, "date": date}
   }
-  if(oldNotes != newNotes){
-    finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes, "date": date}
+  if(newNotes){
+    finalDict["supervisorNotes"] = {"newValue": newNotes, "date": date}
   }
   if(oldContractHours != newContractHours && newWeeklyHours == ""){
     finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours, "date": date}
@@ -182,4 +181,77 @@ function buttonListener(laborStatusKey) {
       window.location.href = document.referrer;
     }
   })
+}
+
+function getNotes(formId) {
+  $.ajax({
+    type: "GET",
+    url: "/alterLSF/getNotes/" + formId,
+    datatype: "json",
+    success: function(response) {
+      if ("Success" in response && response.Success == "false") {
+        //Clears supervisor notes p tag and the labor notes textarea
+        $(".notesText").empty();
+        $("#laborNotesText").empty();
+      } else {
+        $("#laborNotesText").data('formId', formId); //attaches the formid data to the textarea
+
+        //Populates notes value from the database
+        if ("supervisorNotes" in response) {
+          $(".supeNotesLabel").show()
+          $(".notesText").show()
+          $(".notesText").html(response.supervisorNotes);
+        }
+        if (!("supervisorNotes" in response)) {
+          $(".supeNotesLabel").hide()
+          $(".notesText").hide()
+        }
+        if ("laborDepartmentNotes" in response) {
+          $(".notesLogArea").html(response.laborDepartmentNotes);
+        } else if (!("laborDepartmentNotes" in response)) {
+          $(".notesLogArea").html("No notes to show")
+        }
+      }
+    }
+  });
+}
+
+function toggleNotesLog(laborStatusFormID, formHistoryID) {
+  /*
+  This method toggles the 'Notes' log at the bottom of the
+  'Overload' and 'Release' modal to show/hide it
+  */
+  if ($('.logNotesDiv').css('display') == 'none') {
+    var modalViewNotesID = '#modalNote_' + String(formHistoryID)
+    $(modalViewNotesID).html('Hide Notes')
+    getNotes(laborStatusFormID)
+    $('.logNotesDiv').css('display', 'block')
+  } else {
+    notesCounter(laborStatusFormID, formHistoryID)
+    $('.logNotesDiv').css('display', 'none')
+  }
+}
+
+function notesCounter(laborStatusFormID, formHistoryID){
+  /*
+  This method displays the number of admin notes a Labor
+  Status Form has
+  */
+  var data = {'laborStatusFormID': laborStatusFormID}
+  data = JSON.stringify(data)
+  $.ajax({
+    method: "POST",
+    url: '/admin/notesCounter',
+    data: data,
+    contentType: 'application/json',
+    success: function(response) {
+      var viewNotesID = '#notes_' + String(formHistoryID)
+      var modalViewNotesID = '#modalNote_' + String(formHistoryID)
+      $(viewNotesID).html('View Notes (' + response['noteTotal'] + ')')
+      $(modalViewNotesID).html('View Notes (' + response['noteTotal'] + ')')
+    },
+    error: function(request,status,error){
+      console.log(request.responseText);
+    }
+  });
 }

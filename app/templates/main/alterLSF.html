@@ -127,11 +127,13 @@
      {% endif %}
 
      <div class="form-group" >
-       <label for="supervisorNotes"> {% if title == "Adjust Labor Status Form" %}<span class="tooltip-right" data-tooltip="Required">Notes<span class="required-mark"> *</span></span> {% endif %} </label>
+       <label for="supervisorNotes"><span class="tooltip-right" data-tooltip="Required">Notes<span class="required-mark"> *</span></span></label>
        <div class ="change">
-         <textarea required name="supervisorNotes" rows="8" cols="65" id="supervisorNotes" class = "newValue">{{prefillnotes}}</textarea>
-          <input hidden class = "oldValue"  id= "oldNotes" value="{{prefillnotes}}"></input>
+         <textarea required name="supervisorNotes" rows="8" cols="65" id="supervisorNotes" class = "newValue"></textarea>
        </div>
+     </div>
+     <div id="viewNotesButton">
+       <button id="Note_{{formHistory.formHistoryID}}" onclick="toggleNotesLog({{form.laborStatusFormID}}, {{formHistory.formHistoryID}})" class='btn btn-sm btn-primary'>View Notes ({{noteTotal}})</button>
      </div>
   </div>
   </div>
