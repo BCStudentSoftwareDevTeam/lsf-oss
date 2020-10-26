@@ -75,8 +75,8 @@ def alterLSF(laborStatusKey):
             print("The bnumber {} was not found in Supervisor or Tracy", form.supervisor.ID)
             oldSupervisor = {'ID': form.supervisor.ID}
 
-    noteTotal = AdminNotes.select().where(AdminNotes.formID == laborStatusKey).count()
-    notes = AdminNotes.select().where(AdminNotes.formID == laborStatusKey) # Gets labor department notes from the laborofficenotes table
+    noteTotal = AdminNotes.select().where(AdminNotes.formID == laborStatusKey, AdminNotes.noteType == "Supervisor Note").count()
+    notes = AdminNotes.select().where(AdminNotes.formID == laborStatusKey, AdminNotes.noteType == "Supervisor Note") # Gets labor department notes from the laborofficenotes table
     logNotes = ""
     if len(notes) > 0: # If there are labor office notes, show them in the log notes area
         for i in range(len(notes)):
@@ -155,8 +155,12 @@ def submitAlteredLSF(laborStatusKey):
 
 def modifyLSF(fieldsChanged, fieldName, lsf, currentUser):
     if fieldName == "supervisorNotes":
-        lsf.supervisorNotes = fieldsChanged[fieldName]["newValue"]
-        lsf.save()
+        noteEntry = AdminNotes.create(formID           = lsf.laborStatusFormID,
+                                         createdBy     = currentUser,
+                                         date          = datetime.now().strftime("%Y-%m-%d"),
+                                         notesContents = fieldsChanged[fieldName]["newValue"],
+                                         noteType      = "Supervisor Note")
+        noteEntry.save()
 
     if fieldName == "supervisor":
         supervisor = createSupervisorFromTracy(bnumber=fieldsChanged[fieldName]["newValue"])
@@ -186,7 +190,8 @@ def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
         newNoteEntry = AdminNotes.create(formID        = lsf.laborStatusFormID,
                                          createdBy     = currentUser,
                                          date          = datetime.now().strftime("%Y-%m-%d"),
-                                         notesContents = fieldsChanged[fieldName]["newValue"])
+                                         notesContents = fieldsChanged[fieldName]["newValue"],
+                                         noteType      = "Supervisor Note")
         newNoteEntry.save()
     else:
         adjustedforms = AdjustedForm.create(fieldAdjusted = fieldName,

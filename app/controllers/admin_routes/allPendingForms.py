@@ -293,7 +293,7 @@ def getNotes(formid):
         if not currentUser.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html'), 403
         supervisorNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid) # Gets Supervisor note
-        notes = AdminNotes.select().where(AdminNotes.formID == formid) # Gets labor department notes from the laborofficenotes table
+        notes = AdminNotes.select().where(AdminNotes.formID == formid, AdminNotes.noteType == "Labor Note") # Gets labor department notes from the laborofficenotes table
         notesDict = {}          # Stores the both types of notes
         if supervisorNotes.supervisorNotes: # If there is a supervisor note, store it in notesDict
             notesDict["supervisorNotes"] = supervisorNotes.supervisorNotes
@@ -325,7 +325,7 @@ def insertNotes(formId):
         currentDate = datetime.now().strftime("%Y-%m-%d")  # formats the date to match the peewee format for the database
 
         if stripresponse:
-            AdminNotes.create(formID=formId, createdBy=currentUser, date=currentDate, notesContents=stripresponse) # creates a new entry in the laborOfficeNotes table
+            AdminNotes.create(formID=formId, createdBy=currentUser, date=currentDate, notesContents=stripresponse, noteType = "Labor Note") # creates a new entry in the laborOfficeNotes table
 
             return jsonify({"Success": True})
 
@@ -376,7 +376,7 @@ def getOverloadModalData(formHistoryID):
                             'financialAidStatus': financialAidStatus,
                             'financialAidLastEmail': financialAidEmailDate
                             })
-        noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
+        noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID, AdminNotes.noteType == "Labor Note").count()
         return render_template('snips/pendingOverloadModal.html',
                                             historyForm = historyForm,
                                             departmentStatusInfo = departmentStatusInfo,
@@ -397,7 +397,7 @@ def getReleaseModalData(formHistoryID):
     """
     try:
         historyForm = FormHistory.select().where(FormHistory.formHistoryID == int(formHistoryID))
-        noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
+        noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID, AdminNotes.noteType == "Labor Note").count()
         return render_template('snips/pendingReleaseModal.html',
                                             historyForm = historyForm,
                                             formHistoryID = historyForm[0].formHistoryID,
@@ -450,7 +450,8 @@ def modalFormUpdate():
                             AdminNotes.create(formID = pendingForm.formID.laborStatusFormID,
                                             createdBy = currentUser,
                                             date = currentDate,
-                                            notesContents = rsp['denialReason'])
+                                            notesContents = rsp['denialReason'],
+                                            noteType = "Labor Note")
                         pendingForm.save()
 
                         if pendingForm.historyType.historyTypeName == "Labor Status Form":
@@ -476,7 +477,8 @@ def modalFormUpdate():
                 AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
                                 createdBy = currentUser,
                                 date = currentDate,
-                                notesContents = rsp['adminNotes'])
+                                notesContents = rsp['adminNotes'],
+                                noteType = "Labor Note")
             historyForm.status = status.statusName
             historyForm.reviewedBy = currentUser
             historyForm.reviewedDate = currentDate
@@ -536,7 +538,7 @@ def getNotesCounter():
     try:
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
-            noteTotal = AdminNotes.select().where(AdminNotes.formID == rsp['laborStatusFormID']).count()
+            noteTotal = AdminNotes.select().where(AdminNotes.formID == rsp['laborStatusFormID'], AdminNotes.noteType == "Labor Note").count()
             noteDictionary = {'noteTotal': noteTotal}
             return jsonify(noteDictionary)
     except Exception as e:
