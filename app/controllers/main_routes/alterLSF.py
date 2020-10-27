@@ -9,7 +9,7 @@ from app import cfg
 from app.logic.emailHandler import *
 from app.login_manager import require_login
 from app.logic.tracy import Tracy
-from app.models.adminNotes import AdminNotes
+from app.models.notes import Notes
 from app.models.supervisor import Supervisor
 from app.login_manager import require_login
 from datetime import date, datetime
@@ -75,8 +75,8 @@ def alterLSF(laborStatusKey):
             print("The bnumber {} was not found in Supervisor or Tracy", form.supervisor.ID)
             oldSupervisor = {'ID': form.supervisor.ID}
 
-    noteTotal = AdminNotes.select().where(AdminNotes.formID == laborStatusKey, AdminNotes.noteType == "Supervisor Note").count()
-    notes = AdminNotes.select().where(AdminNotes.formID == laborStatusKey, AdminNotes.noteType == "Supervisor Note") # Gets labor department notes from the laborofficenotes table
+    noteTotal = Notes.select().where(Notes.formID == laborStatusKey, Notes.noteType == "Supervisor Note").count()
+    notes = Notes.select().where(Notes.formID == laborStatusKey, Notes.noteType == "Supervisor Note") # Gets labor department notes from the laborofficenotes table
     # logNotes = ""
     # if len(notes) > 0: # If there are labor office notes, show them in the log notes area
     #     for i in range(len(notes)):
@@ -156,7 +156,7 @@ def submitAlteredLSF(laborStatusKey):
 
 def modifyLSF(fieldsChanged, fieldName, lsf, currentUser):
     if fieldName == "supervisorNotes":
-        noteEntry = AdminNotes.create(formID           = lsf.laborStatusFormID,
+        noteEntry = Notes.create(formID           = lsf.laborStatusFormID,
                                          createdBy     = currentUser,
                                          date          = datetime.now().strftime("%Y-%m-%d"),
                                          notesContents = fieldsChanged[fieldName]["newValue"],
@@ -188,7 +188,7 @@ def modifyLSF(fieldsChanged, fieldName, lsf, currentUser):
 
 def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
     if fieldName == "supervisorNotes":
-        newNoteEntry = AdminNotes.create(formID        = lsf.laborStatusFormID,
+        newNoteEntry = Notes.create(formID        = lsf.laborStatusFormID,
                                          createdBy     = currentUser,
                                          date          = datetime.now().strftime("%Y-%m-%d"),
                                          notesContents = fieldsChanged[fieldName]["newValue"],

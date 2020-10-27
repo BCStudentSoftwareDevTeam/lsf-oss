@@ -9,7 +9,7 @@ from app.models.laborStatusForm import LaborStatusForm
 from app.models.adjustedForm import AdjustedForm
 from app.models.emailTracker import EmailTracker
 from app.models.overloadForm import OverloadForm
-from app.models.adminNotes import AdminNotes
+from app.models.notes import Notes
 from app.logic.emailHandler import *
 from app.models.formHistory import *
 from app.models.term import Term
@@ -293,7 +293,7 @@ def getNotes(formid):
         if not currentUser.isLaborAdmin:       # Not an admin
             return render_template('errors/403.html'), 403
         supervisorNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid) # Gets Supervisor note
-        notes = AdminNotes.select().where(AdminNotes.formID == formid, AdminNotes.noteType == "Labor Note") # Gets labor department notes from the laborofficenotes table
+        notes = Notes.select().where(Notes.formID == formid, Notes.noteType == "Labor Note") # Gets labor department notes from the laborofficenotes table
         notesDict = {}          # Stores the both types of notes
         if supervisorNotes.supervisorNotes: # If there is a supervisor note, store it in notesDict
             notesDict["supervisorNotes"] = supervisorNotes.supervisorNotes
@@ -325,7 +325,7 @@ def insertNotes(formId):
         currentDate = datetime.now().strftime("%Y-%m-%d")  # formats the date to match the peewee format for the database
 
         if stripresponse:
-            AdminNotes.create(formID=formId, createdBy=currentUser, date=currentDate, notesContents=stripresponse, noteType = "Labor Note") # creates a new entry in the laborOfficeNotes table
+            Notes.create(formID=formId, createdBy=currentUser, date=currentDate, notesContents=stripresponse, noteType = "Labor Note") # creates a new entry in the laborOfficeNotes table
 
             return jsonify({"Success": True})
 
@@ -376,7 +376,7 @@ def getOverloadModalData(formHistoryID):
                             'financialAidStatus': financialAidStatus,
                             'financialAidLastEmail': financialAidEmailDate
                             })
-        noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID, AdminNotes.noteType == "Labor Note").count()
+        noteTotal = Notes.select().where(Notes.formID == historyForm[0].formID.laborStatusFormID, Notes.noteType == "Labor Note").count()
         return render_template('snips/pendingOverloadModal.html',
                                             historyForm = historyForm,
                                             departmentStatusInfo = departmentStatusInfo,
@@ -397,7 +397,7 @@ def getReleaseModalData(formHistoryID):
     """
     try:
         historyForm = FormHistory.select().where(FormHistory.formHistoryID == int(formHistoryID))
-        noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID, AdminNotes.noteType == "Labor Note").count()
+        noteTotal = Notes.select().where(Notes.formID == historyForm[0].formID.laborStatusFormID, Notes.noteType == "Labor Note").count()
         return render_template('snips/pendingReleaseModal.html',
                                             historyForm = historyForm,
                                             formHistoryID = historyForm[0].formHistoryID,
@@ -447,7 +447,7 @@ def modalFormUpdate():
                         pendingForm.reviewedDate = currentDate
                         if 'denialReason' in rsp.keys():
                             pendingForm.rejectReason = rsp['denialReason']
-                            AdminNotes.create(formID = pendingForm.formID.laborStatusFormID,
+                            Notes.create(formID = pendingForm.formID.laborStatusFormID,
                                             createdBy = currentUser,
                                             date = currentDate,
                                             notesContents = rsp['denialReason'],
@@ -468,13 +468,13 @@ def modalFormUpdate():
                 # We only update the reject reason if one was given on the UI
                 historyForm.rejectReason = rsp['denialReason']
                 historyForm.save()
-                AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
+                Notes.create(formID = historyForm.formID.laborStatusFormID,
                                 createdBy = currentUser,
                                 date = currentDate,
                                 notesContents = rsp['denialReason'])
             if 'adminNotes' in rsp.keys():
                 # We only add admin notes if there was a note made on the UI
-                AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
+                Notes.create(formID = historyForm.formID.laborStatusFormID,
                                 createdBy = currentUser,
                                 date = currentDate,
                                 notesContents = rsp['adminNotes'],
@@ -538,7 +538,7 @@ def getNotesCounter():
     try:
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
-            noteTotal = AdminNotes.select().where(AdminNotes.formID == rsp['laborStatusFormID'], AdminNotes.noteType == "Labor Note").count()
+            noteTotal = Notes.select().where(Notes.formID == rsp['laborStatusFormID'], Notes.noteType == "Labor Note").count()
             noteDictionary = {'noteTotal': noteTotal}
             return jsonify(noteDictionary)
     except Exception as e:

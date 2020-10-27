@@ -14,7 +14,7 @@ from app.models.user import User
 from app.models.term import Term
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
-from app.models.adminNotes import AdminNotes
+from app.models.notes import Notes
 
 print("Inserting data for demo and testing purposes")
 
@@ -450,7 +450,7 @@ FormHistory.insert([{
 #############################
 # admin Notes
 #############################
-adminNotes = [
+notes = [
             {
             "noteHistoryID": 1,
             "formID_id": 2,
@@ -468,5 +468,5 @@ adminNotes = [
             "noteType" : "Labor Note"
             },
        ]
-AdminNotes.insert_many(adminNotes).on_conflict_replace().execute()
+Notes.insert_many(notes).on_conflict_replace().execute()
 print(" * laborOfficeNotes added")
