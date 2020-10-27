@@ -77,11 +77,6 @@ def alterLSF(laborStatusKey):
 
     noteTotal = Notes.select().where(Notes.formID == laborStatusKey, Notes.noteType == "Supervisor Note").count()
     notes = Notes.select().where(Notes.formID == laborStatusKey, Notes.noteType == "Supervisor Note") # Gets labor department notes from the laborofficenotes table
-    # logNotes = ""
-    # if len(notes) > 0: # If there are labor office notes, show them in the log notes area
-    #     for i in range(len(notes)):
-    #         formattedDate = notes[len(notes) -  i - 1].date.strftime('%m/%d/%Y')   # formatting date in the database to display MM/DD/YYYY
-    #         logNotes += "<dl class='dl-horizontal text-left'> <b>" + formattedDate + " | <i>" + notes[len(notes) -  i - 1].createdBy.supervisor.FIRST_NAME[0] + ". " + notes[len(notes) -  i - 1].createdBy.supervisor.LAST_NAME + "</i> | </b> " + notes[len(notes) -  i - 1].notesContents + "</dl>"
 
     return render_template( "main/alterLSF.html",
 				            title=("Adjust Labor Status Form" if formStatus == "Approved" else "Labor Status Correction Form"),
@@ -102,7 +97,6 @@ def alterLSF(laborStatusKey):
                             totalHours = totalHours,
                             currentUser = currentUser,
                             noteTotal = noteTotal,
-                            # logNotes = logNotes,
                             notes = notes
                           )
 
