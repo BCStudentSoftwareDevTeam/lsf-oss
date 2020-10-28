@@ -2,16 +2,30 @@
 $("#admin").collapse("show");
 
 $('#addlaborAdmin').selectpicker('refresh');
-$('.dropdown-menu .bs-searchbox input').on('keyup', function (e) {
+$('#addFinAidAdmin').selectpicker('refresh');
+$('#addSaasAdmin').selectpicker('refresh');
+
+$("#labor .bs-searchbox input").on("keyup", function(e) {
+  liveSearch("addlaborAdmin", e);
+});
+$("#financialAid .bs-searchbox input").on("keyup", function(e) {
+  liveSearch("addFinAidAdmin", e);
+});
+$("#saas .bs-searchbox input").on("keyup", function(e) {
+  liveSearch("addSaasAdmin", e);
+});
+function liveSearch(selectPickerID, e) {
     var searchData = e.target.value;
-    $("#addlaborAdmin").empty();
+    $("#"+ selectPickerID).empty();
     if (searchData.length >= 3) {
-      $("#addlaborAdmin").empty();
-      var data = searchData
+      $("#"+ selectPickerID).empty();
+      var data = {key:selectPickerID,
+                  value: searchData}
+      console.log(data);
       data = JSON.stringify(data)
       $.ajax({
         type: "POST",
-        url: "/admin/laborAdminSearch",
+        url: "/admin/adminSearch",
         datatype: "json",
         data: data,
         contentType: 'application/json',
@@ -22,16 +36,16 @@ $('.dropdown-menu .bs-searchbox input').on('keyup', function (e) {
             var lastName = response[key]['lastName']
             var type = response[key]['type']
             if (type == "Student") {
-              $("#addlaborAdmin").append('<option value="' + username + '" data-subtext="' + username + ' (' + type + ')">' + firstName + ' ' + lastName + '</option>');
+              $("#"+ selectPickerID).append('<option value="' + username + '" data-subtext="' + username + ' (' + type + ')">' + firstName + ' ' + lastName + '</option>');
             } else {
-              $("#addlaborAdmin").append('<option value="' + username + '" data-subtext="' + username + '">' + firstName + ' ' + lastName + '</option>');
+              $("#"+ selectPickerID).append('<option value="' + username + '" data-subtext="' + username + '">' + firstName + ' ' + lastName + '</option>');
             }
           }
-          $('#addlaborAdmin').selectpicker("refresh");
+          $("#"+ selectPickerID).selectpicker("refresh");
         }
       });
     }
-});
+};
 
 
 function modal(button) {

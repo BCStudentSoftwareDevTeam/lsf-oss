@@ -29,8 +29,8 @@ def admin_Management():
                             users = users
                          )
 
-@admin.route('/admin/laborAdminSearch', methods=['POST'])
-def laborAdminSearch():
+@admin.route('/admin/adminSearch', methods=['POST'])
+def adminSearch():
     """
     This function takes in the data from the 'Add Labor Admin' select picker, then uses the data to query from the User table and return a list of possible options
     to populate the select picker.
