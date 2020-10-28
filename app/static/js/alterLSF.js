@@ -182,14 +182,3 @@ function buttonListener(laborStatusKey) {
     }
   })
 }
-
-function toggleNotesLog(noteTotal) {
-
-  if ($('.logNotesDiv').css('display') == 'none') {
-    $("#noteButton").html('Hide Notes')
-    $('.logNotesDiv').css('display', 'block')
-  } else {
-    $("#noteButton").html('View Notes (' + noteTotal + ")")
-    $('.logNotesDiv').css('display', 'none')
-  }
-}

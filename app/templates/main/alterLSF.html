@@ -132,16 +132,8 @@
          <textarea required name="supervisorNotes" rows="8" cols="65" id="supervisorNotes" class = "newValue"></textarea>
        </div>
      </div>
-     <div id="viewNotesButton">
-       <button id="noteButton" onclick="toggleNotesLog({{noteTotal}})" class='btn btn-sm btn-primary'>View Notes ({{noteTotal}})</button>
-     </div>
-     <div class="logNotesDiv" style='display:none'>
+     <div class="logNotesDiv">
        <h4 class=" control-label text-left" id="notesLogHeader" for="notesLog">Notes Log:</h4>
-        <!-- {% if logNotes %}
-          <div class="notesLogArea" value = {{logNotes}}>{{logNotes}}</div>
-        {% else %}
-          <div class="notesLogArea">No notes to show</div>
-        {% endif %} -->
         {% for note in notes %}
           <dl class='dl-horizontal text-left'><strong>{{note.date.strftime('%m/%d/%Y')}} | <i>{{note.createdBy.supervisor.FIRST_NAME[0]}}. {{note.createdBy.supervisor.LAST_NAME}}</i> | </strong>{{note.notesContents}}</dl>
         {% endfor %}

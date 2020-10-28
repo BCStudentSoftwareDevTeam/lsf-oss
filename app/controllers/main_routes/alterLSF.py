@@ -75,7 +75,6 @@ def alterLSF(laborStatusKey):
             print("The bnumber {} was not found in Supervisor or Tracy", form.supervisor.ID)
             oldSupervisor = {'ID': form.supervisor.ID}
 
-    noteTotal = Notes.select().where(Notes.formID == laborStatusKey, Notes.noteType == "Supervisor Note").count()
     notes = Notes.select().where(Notes.formID == laborStatusKey, Notes.noteType == "Supervisor Note") # Gets labor department notes from the laborofficenotes table
 
     return render_template( "main/alterLSF.html",
@@ -96,7 +95,6 @@ def alterLSF(laborStatusKey):
                             oldSupervisor = oldSupervisor,
                             totalHours = totalHours,
                             currentUser = currentUser,
-                            noteTotal = noteTotal,
                             notes = notes
                           )
 
