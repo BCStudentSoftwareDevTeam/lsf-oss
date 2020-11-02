@@ -37,11 +37,36 @@ def adminSearch():
     """
     try:
         rsp = eval(request.data.decode("utf-8"))
+        print("List", rsp)
+        # We need to be able to update the type of admin we're looking for
+        adminTypes = {"add"}
+        userInput = rsp[1]
+        adminType = rsp[0]
         userList = []
-        tracySupervisors = Tracy().getSupervisorsFromUserInput(rsp)
+        if adminType == "addlaborAdmin":
+            print("yes dawg")
+            tracyStudents = Tracy().getStudentsFromUserInput(userInput)
+            students = []
+            for student in tracyStudents:
+                try:
+                    existingUser = User.get(User.student == student.ID)
+                    if existingUser.isLaborAdmin:
+                        pass
+                    else:
+                        students.append(student)
+                except DoesNotExist as e:
+                    students.append(student)
+            for i in students:
+                username = i.STU_EMAIL.split('@', 1)
+                userList.append({'username': username[0],
+                                'firstName': i.FIRST_NAME,
+                                'lastName': i.LAST_NAME,
+                                'type': 'Student'
+                                })
+        tracySupervisors = Tracy().getSupervisorsFromUserInput(userInput)
         supervisors = []
-        tracyStudents = Tracy().getStudentsFromUserInput(rsp)
-        students = []
+        # tracyStudents = Tracy().getStudentsFromUserInput(userInput)
+        # students = []
         for supervisor in tracySupervisors:
             try:
                 existingUser = User.get(User.supervisor == supervisor.ID)
@@ -51,15 +76,16 @@ def adminSearch():
                     supervisors.append(supervisor)
             except DoesNotExist as e:
                 supervisors.append(supervisor)
-        for student in tracyStudents:
-            try:
-                existingUser = User.get(User.student == student.ID)
-                if existingUser.isLaborAdmin:
-                    pass
-                else:
-                    students.append(student)
-            except DoesNotExist as e:
-                students.append(student)
+
+        # for student in tracyStudents:
+        #     try:
+        #         existingUser = User.get(User.student == student.ID)
+        #         if existingUser.isLaborAdmin:
+        #             pass
+        #         else:
+        #             students.append(student)
+        #     except DoesNotExist as e:
+        #         students.append(student)
         for i in supervisors:
             username = i.EMAIL.split('@', 1)
             userList.append({'username': username[0],
@@ -67,13 +93,13 @@ def adminSearch():
                             'lastName': i.LAST_NAME,
                             'type': 'Supervisor'
                             })
-        for i in students:
-            username = i.STU_EMAIL.split('@', 1)
-            userList.append({'username': username[0],
-                            'firstName': i.FIRST_NAME,
-                            'lastName': i.LAST_NAME,
-                            'type': 'Student'
-                            })
+        # for i in students:
+        #     username = i.STU_EMAIL.split('@', 1)
+        #     userList.append({'username': username[0],
+        #                     'firstName': i.FIRST_NAME,
+        #                     'lastName': i.LAST_NAME,
+        #                     'type': 'Student'
+        #                     })
         return jsonify(userList)
     except Exception as e:
         print('ERROR Loading Non Labor Admins:', e, type(e))

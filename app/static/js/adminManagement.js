@@ -19,8 +19,7 @@ function liveSearch(selectPickerID, e) {
     $("#"+ selectPickerID).empty();
     if (searchData.length >= 3) {
       $("#"+ selectPickerID).empty();
-      var data = {key:selectPickerID,
-                  value: searchData}
+      var data = [selectPickerID, searchData]
       console.log(data);
       data = JSON.stringify(data)
       $.ajax({
