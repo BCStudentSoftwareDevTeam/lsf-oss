@@ -20,7 +20,6 @@ function liveSearch(selectPickerID, e) {
     if (searchData.length >= 3) {
       $("#"+ selectPickerID).empty();
       var data = [selectPickerID, searchData]
-      console.log(data);
       data = JSON.stringify(data)
       $.ajax({
         type: "POST",
