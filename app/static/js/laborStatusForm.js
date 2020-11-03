@@ -122,7 +122,7 @@ function fillDates(response) { // prefill term start and term end
     var isSummer = response[key]["isSummer"];
     if (primaryCutOff){
       if (isBreak){
-        if (date > primaryCutOff){
+        if (Date.parse(date) > Date.parse(primaryCutOff)){
         msgFlash("The deadline to add break positions has ended.", "fail");
         $("#break-cutoff-warning").show();
         $("#break-cutoff-date").text(primaryCutOff);
@@ -130,7 +130,7 @@ function fillDates(response) { // prefill term start and term end
         }
       }
       else{
-        if (date > primaryCutOff){
+        if (Date.parse(date) > Date.parse(primaryCutOff)){
           $("#jobType option[value='Primary']").attr("disabled", true );
           $('.selectpicker').selectpicker('refresh');
           msgFlash("Disabling primary position because cut off date is before today's date", "fail");
