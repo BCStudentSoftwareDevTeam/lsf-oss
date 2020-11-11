@@ -169,17 +169,8 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     """
     # We create a 'Labor Status Form' first, then we check to see if a 'Labor Overload Form'
     # needs to be created
-    historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-    formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
-                        historyType = historyType.historyTypeName,
-                        overloadForm = None,
-                        createdBy   = creatorID,
-                        createdDate = date.today(),
-                            status      = status.statusName)
-    if not formHistory.formID.termCode.isBreak:
-        email = emailHandler(formHistory.formHistoryID)
-        email.laborStatusFormSubmitted()
     if rspFunctional.get("isItOverloadForm") == "True":
+        status = Status.get(Status.statusName == "Pre-Student Approval")
         overloadHistoryType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
         newLaborOverloadForm = OverloadForm.create( studentOverloadReason = None,
                                                     financialAidApproved = None,
@@ -199,6 +190,16 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
                                             status      = status.statusName)
         email = emailHandler(formOverload.formHistoryID)
         email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+    historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
+    formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
+                        historyType = historyType.historyTypeName,
+                        overloadForm = None,
+                        createdBy   = creatorID,
+                        createdDate = date.today(),
+                        status      = status.statusName)
+    if not formHistory.formID.termCode.isBreak:
+        email = emailHandler(formHistory.formHistoryID)
+        email.laborStatusFormSubmitted()
     return formHistory
 
 

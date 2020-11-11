@@ -65,7 +65,7 @@ def alterLSF(laborStatusKey):
 
     #These are the data fields to populate our dropdowns(Supervisor. Position)
     supervisors = Tracy().getSupervisors()
-    positions = Tracy().getPositionsFromDepartment(form.department.ORG)
+    positions = Tracy().getPositionsFromDepartment(form.department.ORG, form.department.ACCOUNT)
 
     # supervisors from the old system WILL have a Supervisor record, but might not have a Tracy record
     oldSupervisor = Supervisor.get_or_none(ID = form.supervisor.ID)
@@ -225,11 +225,16 @@ def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None, form
                                             adjustedForm = adjustedForm,
                                             overloadForm = newLaborOverloadForm.overloadFormID,
                                             createdDate  = date.today(),
-                                            status       = "Pending")
+                                            status       = "Pre-Student Approval")
         try:
             if formHistories:
+                formHistories.status = "Pre-Student Approval"
+                formHistories.save()
                 overloadEmail = emailHandler(formHistories.formHistoryID)
             else:
+                modifiedFormHistory = FormHistory.select().join_from(FormHistory, HistoryType).where(FormHistory.formID == lsf.laborStatusFormID, FormHistory.historyType.historyTypeName == "Labor Status Form").get()
+                modifiedFormHistory.status = "Pre-Student Approval"
+                modifiedFormHistory.save()
                 overloadEmail = emailHandler(newFormHistory.formHistoryID)
             overloadEmail.LaborOverLoadFormSubmitted("http://{0}/".format(request.host) + "studentOverloadApp/" + str(newFormHistory.formHistoryID))
         except Exception as e:
