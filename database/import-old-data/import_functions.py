@@ -241,13 +241,16 @@ def importRecord(record, terms):
 
     weekly_hours = record['hour']
     contract_hours = None
-    if weeks < 16:
-        # contract_hours = int(record['hour']) * 5 * weeks
-        contract_hours = record['hour']
-        # if term.termName == 'Summer 2020':
-        #     contract_hours = record['hour']
-        weekly_hours = None
 
+    if weeks < 16:
+        if int(record['hour']) <= 10:
+            contract_hours = int(record['hour']) * 5 * weeks
+        elif 10 < int(record['hour']) <= 20:
+            contract_hours = int(record['hour']) * weeks
+        else:
+            contract_hours = int(record['hour'])
+        weekly_hours = None
+    
     end_date = record['end'].strip()
     if end_date == '':
         end_date = dateutil.parser.isoparse(record['start']) + timedelta(weeks=weeks)
