@@ -96,13 +96,15 @@
               </td>
               <td> {# SUPERVISOR #}
                 {% if allForms.adjustedForm.fieldAdjusted == "supervisor" %}
-                  <s aria-hidden="true">{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</s> <br/> {{allForms.adjustedForm.newValue}}
+                  <a aria-label="{{allForms.formID.supervisor.ID}}" class="hover_indicator"><s aria-hidden="true">{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}</s></a> <a href="mailto:{{allForms.formID.supervisor.EMAIL}}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>
+                  <br/>
+                  <a aria-label="{{allForms.adjustedForm.oldValue['ID']}}" class="hover_indicator">{{allForms.adjustedForm.newValue}} </a><a href="mailto:{{allForms.adjustedForm.oldValue['email']}}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>
                 {% else %}
-                  {{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}}
+                  <a aria-label="{{allForms.formID.supervisor.ID}}" class="hover_indicator">{{allForms.formID.supervisor.FIRST_NAME}} {{allForms.formID.supervisor.LAST_NAME}} </a><a href="mailto:{{allForms.formID.supervisor.EMAIL}}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>
                 {% endif %}
               </td>
               <td> {# STUDENT #}
-                <a href="#" aria-label="{{allForms.formID.studentSupervisee.ID}}" class="hover_indicator"> {{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}}</a>
+                <a aria-label="{{allForms.formID.studentSupervisee.ID}}" class="hover_indicator">{{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}} </a><a href="mailto:{{allForms.formID.studentSupervisee.STU_EMAIL}}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>
               </td>
               <td> {# POSITON AND WLS #}
                 {% if allForms.adjustedForm.fieldAdjusted == "position"%}
@@ -128,7 +130,7 @@
                 </td>
               {% endif %}
               <td> {# CREATED BY #}
-                {{allForms.createdBy.username}}  <br/> {{allForms.createdDate.strftime('%m/%d/%y')}}
+                <a aria-label="{{allForms.createdBy.supervisor.ID}}" class="hover_indicator">{{allForms.createdBy.username}} </a><a href="mailto:{{allForms.createdBy.supervisor.EMAIL}}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>  <br/> {{allForms.createdDate.strftime('%m/%d/%y')}}
               </td>
               <td> {# ACTION #}
                 {% if allForms.historyType.historyTypeName != 'Labor Release Form' %}

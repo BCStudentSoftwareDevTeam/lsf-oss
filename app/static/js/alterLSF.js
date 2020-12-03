@@ -132,7 +132,6 @@ function checkForChange(){
   var oldPostition = $("#prefillposition").val();
   var newPosition = $("#position").val();
   var date = $("#datetimepicker0").val();
-  var oldNotes = $("#oldNotes").val();
   var newNotes = $("#supervisorNotes").val();
   var oldContractHours = $("#oldContractHours").val();
   var newContractHours = $("#contractHours").val();
@@ -145,8 +144,8 @@ function checkForChange(){
   if(oldPostition != newPosition){
     finalDict["position"] = {"oldValue": oldPostition, "newValue": newPosition, "date": date}
   }
-  if(oldNotes != newNotes){
-    finalDict["supervisorNotes"] = {"oldValue": oldNotes, "newValue": newNotes, "date": date}
+  if(newNotes){
+    finalDict["supervisorNotes"] = {"newValue": newNotes, "date": date}
   }
   if(oldContractHours != newContractHours && newWeeklyHours == ""){
     finalDict["contractHours"] = {"oldValue": oldContractHours, "newValue": newContractHours, "date": date}

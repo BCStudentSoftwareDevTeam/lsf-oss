@@ -2,7 +2,7 @@ import pytest
 from app.controllers.main_routes.alterLSF import modifyLSF, adjustLSF, createOverloadForm
 from app.models.user import User
 from app.models.laborStatusForm import LaborStatusForm
-from app.models.adminNotes import AdminNotes
+from app.models.notes import Notes
 from app.models.adjustedForm import AdjustedForm
 from app.models.formHistory import FormHistory
 from datetime import date, datetime
@@ -24,7 +24,7 @@ def delete_forms():
     for form in formHistories:
         AdjustedForm.delete().where(AdjustedForm.adjustedFormID == form.adjustedForm.adjustedFormID).execute()
         form.delete().execute()
-    AdminNotes.delete().where(AdminNotes.formID.cast('char').contains("2")).execute()
+    Notes.delete().where(Notes.formID.cast('char').contains("2")).execute()
     FormHistory.delete().where((FormHistory.formID == 2) & (FormHistory.historyType == "Labor Overload Form")).execute()
     #print("FormHistory")
 
@@ -46,7 +46,7 @@ def test_adjustLSF(setup):
     with app.test_request_context():
         fieldName = 'supervisorNotes'
         adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
-        assert AdminNotes.get(AdminNotes.notesContents == 'new notes.')
+        assert Notes.get(Notes.notesContents == 'new notes.')
 
         fieldName = 'supervisor'
         adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
