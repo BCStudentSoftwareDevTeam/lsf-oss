@@ -71,16 +71,18 @@ def createSupervisorFromTracy(username=None, bnumber=None):
             raise InvalidUserException("{} not found in Tracy database".format(email))
 
     try:
-        return Supervisor.get_or_create(PIDM = tracyUser.PIDM,
-                                        FIRST_NAME = tracyUser.FIRST_NAME,
-                                        LAST_NAME = tracyUser.LAST_NAME,
-                                        ID = tracyUser.ID.strip(),
-                                        EMAIL = tracyUser.EMAIL,
-                                        CPO = tracyUser.CPO,
-                                        ORG = tracyUser.ORG,
-                                        DEPT_NAME = tracyUser.DEPT_NAME)[0]
-    except Exception as e:
-        raise InvalidUserException("Adding {} to Supervisor table failed".format(username), e)
+        return Supervisor.get(Supervisor.ID == tracyUser.ID.strip())
+    except DoesNotExist:
+        return Supervisor.create(PIDM = tracyUser.PIDM,
+                                 FIRST_NAME = tracyUser.FIRST_NAME,
+                                 LAST_NAME = tracyUser.LAST_NAME,
+                                 ID = tracyUser.ID.strip(),
+                                 EMAIL = tracyUser.EMAIL,
+                                 CPO = tracyUser.CPO,
+                                 ORG = tracyUser.ORG,
+                                 DEPT_NAME = tracyUser.DEPT_NAME)[0]
+    else:
+        raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyUser.FIRST_NAME, tracyUser.LAST_NAME))
 
 def createStudentFromTracy(username):
     """
