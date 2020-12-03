@@ -83,6 +83,7 @@ def allPendingForms(formType):
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     allForms.adjustedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
+                    allForms.adjustedForm.oldValue = {"email":newSupervisor.EMAIL, "ID":newSupervisor.ID}
 
                 if allForms.adjustedForm.fieldAdjusted == "position": # if position field has been changed in adjust form then retriev position name.
                     newPositionCode = allForms.adjustedForm.newValue
