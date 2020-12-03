@@ -167,41 +167,42 @@ def saveStatus(new_status, form_ids, currentUser):
             labor_forms.status = Status.get(Status.statusName == new_status)
             labor_forms.reviewedDate = date.today()
             labor_forms.reviewedBy = currentUser
-            if new_status == "Denied":
-                labor_forms.rejectReason = denyReason
-            labor_forms.save()
-            email = emailHandler(labor_forms.formHistoryID)
-            if new_status == "Denied" and history_type == "Labor Status Form":
-                email.laborStatusFormRejected()
-            if new_status == "Approved" and history_type == "Labor Status Form":
-                email.laborStatusFormApproved()
 
-            if history_type == "Labor Adjustment Form" and new_status == "Approved":
-                # This function is triggered whenever an adjustment form is approved.
-                # The following function overrides the original data in lsf with the new data from adjustment form.
-                LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == history_type_data.formID) # getting the specific labor status form
-                overrideOriginalStatusFormOnAdjustmentFormApproval(history_type_data, LSF)
-        return jsonify({"success": True})
+            # Add to BANNER
+            save_status = True # default true so that we will still save in other cases
+            if new_status == 'Approved' and history_type == "Labor Status Form": # don't update banner for Adjustment forms
+                conn = Banner()
+                save_status = conn.insert(labor_forms)
+
+            # if we are able to save
+            if save_status:
+
+                if new_status == 'Denied':
+                    labor_forms.rejectReason = denyReason
+                labor_forms.save()
+
+                email = emailHandler(labor_forms.formHistoryID)
+                if new_status == "Denied" and history_type == "Labor Status Form":
+                    email.laborStatusFormRejected()
+                if new_status == "Approved" and history_type == "Labor Status Form":
+                    email.laborStatusFormApproved()
+                if new_status == "Approved" and history_type == "Labor Adjustment Form":
+                    # This function is triggered whenever an adjustment form is approved.
+                    # The following function overrides the original data in lsf with the new data from adjustment form.
+                    LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == history_type_data.formID) # getting the specific labor status form
+                    overrideOriginalStatusFormOnAdjustmentFormApproval(history_type_data, LSF)
+
+            else:
+                print("Unable to update form status for formHistoryID {}.".format(id))
+                return jsonify({"success": False}), 500
+
     except Exception as e:
         print("Error preparing form for status update:", e)
         return jsonify({"success": False}), 500
+    
+    return jsonify({"success": True})
 
-    # BANNER
-    save_status = True # default true so that we will still save in the Deny case
-    if new_status == 'Approved':
-        try:
-            conn = Banner()
-            save_status = conn.insert(labor_forms)
-        except Exception as e:
-            print("Unable to update BANNER:", e)
-            save_status = False
 
-    if save_status:
-        labor_forms.save()
-        return jsonify({"success": True})
-    else:
-        print("Unable to update form status.")
-        return jsonify({"success": False}), 500
 
 
 def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
@@ -425,73 +426,80 @@ def modalFormUpdate():
             email = emailHandler(historyForm.formHistoryID)
             currentDate = datetime.now().strftime("%Y-%m-%d")
             status = Status.get(Status.statusName == rsp['status'])
-            if rsp['formType'] == 'Overload':
-                overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
-                overloadForm.laborApproved = status.statusName
-                overloadForm.laborApprover = currentUser
-                overloadForm.laborReviewDate = currentDate
-                overloadForm.save()
-                try:
-                    pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending")).get()
-                    if historyForm.adjustedForm and rsp['status'] == "Approved":
-                        LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == historyForm.formID)
-                        if historyForm.adjustedForm.fieldAdjusted == "weeklyHours":
-                            LSF.weeklyHours = pendingForm.adjustedForm.newValue
-                            LSF.save()
-                    if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Labor Adjustment Form" and pendingForm.adjustedForm.fieldAdjusted == "weeklyHours"):
-                        if status.statusName == "Approved Reluctantly":
-                            pendingForm.status = "Approved"
-                        else:
-                            pendingForm.status = status.statusName
-                        pendingForm.reviewedBy = currentUser
-                        pendingForm.reviewedDate = currentDate
-                        if 'denialReason' in rsp.keys():
-                            pendingForm.rejectReason = rsp['denialReason']
-                            AdminNotes.create(formID = pendingForm.formID.laborStatusFormID,
-                                            createdBy = currentUser,
-                                            date = currentDate,
-                                            notesContents = rsp['denialReason'])
-                        pendingForm.save()
+            save_form_status = True
+            if rsp['formType'] == 'Overload' and "Approved" in rsp['status']:
+                conn = Banner()
+                save_form_status = conn.insert(historyForm)
 
-                        if pendingForm.historyType.historyTypeName == "Labor Status Form":
-                            email = emailHandler(pendingForm.formHistoryID)
-                            if rsp['status'] in ['Approved', 'Approved Reluctantly']:
-                                email.laborStatusFormApproved()
-                            elif rsp['status'] == 'Denied':
-                                email.laborStatusFormRejected()
-                except DoesNotExist:
-                    pass
-                except Exception as e:
-                    print(e)
-            if 'denialReason' in rsp.keys():
-                # We only update the reject reason if one was given on the UI
-                historyForm.rejectReason = rsp['denialReason']
+            # if we are able to save
+            if save_form_status:
+                if rsp['formType'] == 'Overload':
+                    overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
+                    overloadForm.laborApproved = status.statusName
+                    overloadForm.laborApprover = currentUser
+                    overloadForm.laborReviewDate = currentDate
+                    overloadForm.save()
+                    try:
+                        pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending")).get()
+                        if historyForm.adjustedForm and rsp['status'] == "Approved":
+                            LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == historyForm.formID)
+                            if historyForm.adjustedForm.fieldAdjusted == "weeklyHours":
+                                LSF.weeklyHours = pendingForm.adjustedForm.newValue
+                                LSF.save()
+                        if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Labor Adjustment Form" and pendingForm.adjustedForm.fieldAdjusted == "weeklyHours"):
+                            if status.statusName == "Approved Reluctantly":
+                                pendingForm.status = "Approved"
+                            else:
+                                pendingForm.status = status.statusName
+                            pendingForm.reviewedBy = currentUser
+                            pendingForm.reviewedDate = currentDate
+                            if 'denialReason' in rsp.keys():
+                                pendingForm.rejectReason = rsp['denialReason']
+                                AdminNotes.create(formID = pendingForm.formID.laborStatusFormID,
+                                                createdBy = currentUser,
+                                                date = currentDate,
+                                                notesContents = rsp['denialReason'])
+                            pendingForm.save()
+
+                            if pendingForm.historyType.historyTypeName == "Labor Status Form":
+                                email = emailHandler(pendingForm.formHistoryID)
+                                if rsp['status'] in ['Approved', 'Approved Reluctantly']:
+                                    email.laborStatusFormApproved()
+                                elif rsp['status'] == 'Denied':
+                                    email.laborStatusFormRejected()
+                    except DoesNotExist:
+                        pass
+                    except Exception as e:
+                        print(e)
+                if 'denialReason' in rsp.keys():
+                    # We only update the reject reason if one was given on the UI
+                    historyForm.rejectReason = rsp['denialReason']
+                    historyForm.save()
+                    AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
+                                    createdBy = currentUser,
+                                    date = currentDate,
+                                    notesContents = rsp['denialReason'])
+                if 'adminNotes' in rsp.keys():
+                    # We only add admin notes if there was a note made on the UI
+                    AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
+                                    createdBy = currentUser,
+                                    date = currentDate,
+                                    notesContents = rsp['adminNotes'])
+                historyForm.status = status.statusName
+                historyForm.reviewedBy = currentUser
+                historyForm.reviewedDate = currentDate
                 historyForm.save()
-                AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
-                                createdBy = currentUser,
-                                date = currentDate,
-                                notesContents = rsp['denialReason'])
-            if 'adminNotes' in rsp.keys():
-                # We only add admin notes if there was a note made on the UI
-                AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
-                                createdBy = currentUser,
-                                date = currentDate,
-                                notesContents = rsp['adminNotes'])
-            historyForm.status = status.statusName
-            historyForm.reviewedBy = currentUser
-            historyForm.reviewedDate = currentDate
-            historyForm.save()
-            if rsp['formType'] == 'Overload':
-                if rsp['status'] in ['Approved', 'Approved Reluctantly']:
-                    email.LaborOverLoadFormApproved()
-                elif rsp['status'] == 'Denied':
-                    email.LaborOverLoadFormRejected()
-            elif rsp['formType'] == 'Release':
-                if rsp['status'] == 'Approved':
-                    email.laborReleaseFormApproved()
-                elif rsp['status'] == 'Denied':
-                    email.laborReleaseFormRejected()
-            return jsonify({"Success": True})
+                if rsp['formType'] == 'Overload':
+                    if rsp['status'] in ['Approved', 'Approved Reluctantly']:
+                        email.LaborOverLoadFormApproved()
+                    elif rsp['status'] == 'Denied':
+                        email.LaborOverLoadFormRejected()
+                elif rsp['formType'] == 'Release':
+                    if rsp['status'] == 'Approved':
+                        email.laborReleaseFormApproved()
+                    elif rsp['status'] == 'Denied':
+                        email.laborReleaseFormRejected()
+                return jsonify({"Success": True})
     except Exception as e:
         print("Error Updating Release/Overload Forms:", e)
         return jsonify({"Success": False}),500

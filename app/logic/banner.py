@@ -70,11 +70,11 @@ class Banner():
                 termType = "SUM"
                 hours = 8
 
-            jobType = form.formID.jobType[0] # We only want the first character, 'P' or 'S'
+            jobType = form.jobType[0] # We only want the first character, 'P' or 'S'
 
             params = {
                 ":formID": form.laborStatusFormID,
-                ":studentID": form.studentSupervisee,
+                ":studentID": form.studentSupervisee.ID,
                 ":superID": form.supervisor.ID,
                 ":jobType": jobType,
                 ":position": form.POSN_CODE,
@@ -87,10 +87,11 @@ class Banner():
             try:
                 cursor = self.conn.cursor()
                 result = cursor.execute(stmt, params)
-                return (result == None), result
+                self.conn.commit()
+                print("Form {} inserted into banner".format(form.laborStatusFormID))
 
             except Exception as err:
                 print("Error inserting into BANNER db:", err)
-                return False, err
-        else:
-            return True, None # The same as a succesful execution
+                return False
+        
+        return True # If we got here, we are successful (even if we didn't even try to insert)
