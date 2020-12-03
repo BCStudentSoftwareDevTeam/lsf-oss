@@ -8,7 +8,7 @@ from flask import json, jsonify
 from flask import request, render_template, flash
 from app.models.overloadForm import *
 from app import cfg
-from app.models.adminNotes import AdminNotes
+from app.models.notes import Notes
 from datetime import datetime, date
 from app.models.status import *
 from app.logic.emailHandler import*
@@ -95,11 +95,17 @@ def formDenial(status):
         selectedFormHistory = FormHistory.get(FormHistory.formHistoryID == rsp["formHistoryID"])
         selectedOverload = OverloadForm.get(OverloadForm.overloadFormID == selectedFormHistory.overloadForm.overloadFormID)
         formStatus = Status.get(Status.statusName == newStatus)
+        if currentUser.isFinancialAidAdmin:
+            typeOfNote = "Financial Aid Note"
+        else:
+            typeOfNote = "SAAS Note"
         if rsp:
             ## New Entry in AdminNote Table
-            newNoteEntry = AdminNotes.create(formID=selectedFormHistory.formID.laborStatusFormID,
-            createdBy=currentUser, date=currentDate,
-            notesContents=rsp["denialNote"])
+            newNoteEntry = Notes.create(formID=selectedFormHistory.formID.laborStatusFormID,
+            createdBy=currentUser,
+            date=currentDate,
+            notesContents=rsp["denialNote"],
+            noteType = typeOfNote)
             newNoteEntry.save()
             ## Updating the overloadform Table
             if currentUser.isFinancialAidAdmin:

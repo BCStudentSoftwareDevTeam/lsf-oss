@@ -9,7 +9,7 @@ from app import cfg
 from app.logic.emailHandler import *
 from app.login_manager import require_login
 from app.logic.tracy import Tracy
-from app.models.adminNotes import AdminNotes
+from app.models.notes import Notes
 from app.models.supervisor import Supervisor
 from app.login_manager import require_login
 from datetime import date, datetime
@@ -61,7 +61,6 @@ def alterLSF(laborStatusKey):
                 totalHours += i.weeklyHours
     else:
         prefillhours = form.contractHours
-    prefillnotes = form.supervisorNotes
 
     #These are the data fields to populate our dropdowns(Supervisor. Position)
     supervisors = Tracy().getSupervisors()
@@ -76,6 +75,7 @@ def alterLSF(laborStatusKey):
             print("The bnumber {} was not found in Supervisor or Tracy", form.supervisor.ID)
             oldSupervisor = {'ID': form.supervisor.ID}
 
+    notes = Notes.select().where(Notes.formID == laborStatusKey, Notes.noteType == "Supervisor Note") # Gets labor department notes from the laborofficenotes table
 
     return render_template( "main/alterLSF.html",
 				            title=("Adjust Labor Status Form" if formStatus == "Approved" else "Labor Status Correction Form"),
@@ -89,13 +89,13 @@ def alterLSF(laborStatusKey):
                             prefilljobtype = prefilljobtype,
                             prefillterm = prefillterm,
                             prefillhours = prefillhours,
-                            prefillnotes = prefillnotes,
                             supervisors = supervisors,
                             positions = positions,
                             form = form,
                             oldSupervisor = oldSupervisor,
                             totalHours = totalHours,
-                            currentUser = currentUser
+                            currentUser = currentUser,
+                            notes = notes
                           )
 
 
@@ -148,8 +148,12 @@ def submitAlteredLSF(laborStatusKey):
 
 def modifyLSF(fieldsChanged, fieldName, lsf, currentUser):
     if fieldName == "supervisorNotes":
-        lsf.supervisorNotes = fieldsChanged[fieldName]["newValue"]
-        lsf.save()
+        noteEntry = Notes.create(formID           = lsf.laborStatusFormID,
+                                         createdBy     = currentUser,
+                                         date          = datetime.now().strftime("%Y-%m-%d"),
+                                         notesContents = fieldsChanged[fieldName]["newValue"],
+                                         noteType      = "Supervisor Note")
+        noteEntry.save()
 
     if fieldName == "supervisor":
         supervisor = createSupervisorFromTracy(bnumber=fieldsChanged[fieldName]["newValue"])
@@ -176,10 +180,11 @@ def modifyLSF(fieldsChanged, fieldName, lsf, currentUser):
 
 def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
     if fieldName == "supervisorNotes":
-        newNoteEntry = AdminNotes.create(formID        = lsf.laborStatusFormID,
+        newNoteEntry = Notes.create(formID        = lsf.laborStatusFormID,
                                          createdBy     = currentUser,
                                          date          = datetime.now().strftime("%Y-%m-%d"),
-                                         notesContents = fieldsChanged[fieldName]["newValue"])
+                                         notesContents = fieldsChanged[fieldName]["newValue"],
+                                         noteType      = "Supervisor Note")
         newNoteEntry.save()
     else:
         adjustedforms = AdjustedForm.create(fieldAdjusted = fieldName,
