@@ -106,12 +106,14 @@
               <td> {# STUDENT #}
                 <a aria-label="{{allForms.formID.studentSupervisee.ID}}" class="hover_indicator">{{allForms.formID.studentSupervisee.FIRST_NAME}}  {{allForms.formID.studentSupervisee.LAST_NAME}} </a><a href="mailto:{{allForms.formID.studentSupervisee.STU_EMAIL}}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>
               </td>
-              <td> {# POSITON AND WLS #}
+              <td data-order="{{allForms.formID.jobType}}"> {# POSITON AND WLS #}
                 {% if allForms.adjustedForm.fieldAdjusted == "position"%}
                   <s aria-hidden="true"><a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a></s><br/>
-                  <a href="#" aria-label="{{allForms.adjustedForm.oldValue}}" class="hover_indicator"> {{allForms.adjustedForm.newValue}}</a>
+                  <a href="#" aria-label="{{allForms.adjustedForm.oldValue}}" class="hover_indicator"> {{allForms.adjustedForm.newValue}}</a><br>
+                  {{allForms.formID.jobType}}
                 {% else %}
-                  <a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a>
+                  <a href="#" aria-label="{{allForms.formID.POSN_TITLE}}" class="hover_indicator">{{allForms.formID.POSN_CODE}} ({{allForms.formID.WLS}})</a><br>
+                  {{allForms.formID.jobType}}
                 {% endif %}
               </td>
               <td> {# HOURS #}
