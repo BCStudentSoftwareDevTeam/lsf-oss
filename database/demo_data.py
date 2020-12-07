@@ -106,6 +106,7 @@ for student in studentsTracy:
 
     # Set up lsf db data
     del student["PIDM"]
+    student['ID'] = student['ID'].strip()
     students.append(student)
 Student.insert_many(students).on_conflict_replace().execute()
 print(" * students (TRACY) added")
