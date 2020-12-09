@@ -35,9 +35,17 @@ def laborStatusForm(laborStatusKey = None):
 
     # Logged in
     students = Tracy().getStudents()
-    terms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
+    allTerms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
     staffs = Tracy().getSupervisors()
     departments = Tracy().getDepartments()
+
+    springFallOnlyTerms = []
+    terms = []
+    for term in allTerms:
+        if str(term.termCode)[-2:] in ["11", "12"]:
+            springFallOnlyTerms.append(term)
+        else:
+            terms.append(term)
 
     # Only prepopulate form if current user is the supervisor or creator of the form.
     if laborStatusKey != None:
