@@ -80,6 +80,7 @@
          <input hidden id="termBreak" data-termBreak="{{prefillterm.isBreak|lower}}"> </input>
        </div>
      </div>
+     {% if title == "Labor Status Correction Form" and currentUser.isLaborAdmin %}
      <div class="form-group col-xs-12" id="datePickerDiv">
          <div  class="form-group col-xs-6" id="startDateStyle">
            <!--datePicker for start date-->
@@ -104,6 +105,8 @@
            </div>
          </div>​
        </div>
+       {% endif %}
+
      <div id="contractHoursDiv" class="form-group newValue">
         <!-- Contract hours for breaks -->
            <label for="contractHours"><span class="tooltip-right" data-tooltip="Required">Contract Hours<span class="required-mark"> *</span></span></label>
