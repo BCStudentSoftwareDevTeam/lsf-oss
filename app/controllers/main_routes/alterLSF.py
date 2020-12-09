@@ -52,6 +52,8 @@ def alterLSF(laborStatusKey):
     prefillposition = form.POSN_CODE
     prefilljobtype = form.jobType
     prefillterm = form.termCode
+    prefillstartdate = form.startDate
+    prefillenddate = form.endDate
     totalHours = 0
     if form.weeklyHours != None:
         prefillhours = form.weeklyHours
@@ -88,6 +90,8 @@ def alterLSF(laborStatusKey):
                             prefillposition = prefillposition,
                             prefilljobtype = prefilljobtype,
                             prefillterm = prefillterm,
+                            prefillstartdate = prefillstartdate,
+                            prefillenddate = prefillenddate,
                             prefillhours = prefillhours,
                             supervisors = supervisors,
                             positions = positions,
@@ -97,6 +101,21 @@ def alterLSF(laborStatusKey):
                             currentUser = currentUser,
                             notes = notes
                           )
+
+@main_bp.route("/alterLSF/getDate/<termcode>", methods=['GET'])
+def getDate(termcode):
+    """ Get the start and end dates of the selected term. """
+    dates = Term.select().where(Term.termCode == termcode)
+    datesDict = {}
+    for date in dates:
+        start = date.termStart
+        end  = date.termEnd
+        primaryCutOff = date.primaryCutOff
+        if primaryCutOff is None:
+            datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
+        else:
+            datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y"), "isBreak": date.isBreak, "isSummer": date.isSummer}
+    return json.dumps(datesDict)
 
 
 @main_bp.route("/alterLSF/submitAlteredLSF/<laborStatusKey>", methods=["POST"])
@@ -175,6 +194,14 @@ def modifyLSF(fieldsChanged, fieldName, lsf, currentUser):
 
     if fieldName == "contractHours":
         lsf.contractHours = int(fieldsChanged[fieldName]["newValue"])
+        lsf.save()
+
+    if fieldName == "startDate":
+        lsf.startDate = datetime.strptime(fieldsChanged[fieldName]["newValue"], "%m/%d/%Y").strftime('%Y-%m-%d')
+        lsf.save()
+
+    if fieldName == "endDate":
+        lsf.endDate = datetime.strptime(fieldsChanged[fieldName]["newValue"], "%m/%d/%Y").strftime('%Y-%m-%d')
         lsf.save()
 
 
