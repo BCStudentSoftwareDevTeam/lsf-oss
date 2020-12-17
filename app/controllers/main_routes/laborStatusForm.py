@@ -39,11 +39,14 @@ def laborStatusForm(laborStatusKey = None):
     staffs = Tracy().getSupervisors()
     departments = Tracy().getDepartments()
 
-    springFallOnlyTerms = []
+    springFallOnlyTerms = {}
     terms = []
     for term in allTerms:
-        if str(term.termCode)[-2:] in ["11", "12"]:
-            springFallOnlyTerms.append(term)
+        if str(term.termCode)[-2:] in ["11", "12"] and str(term.termCode)[:4] in springFallOnlyTerms:
+            springFallOnlyTerms[str(term.termCode)[:4]].append(term)
+        elif str(term.termCode)[-2:] in ["11", "12"]:
+            springFallOnlyTerms[str(term.termCode)[:4]]= [term]
+            print(springFallOnlyTerms)
         else:
             terms.append(term)
 
@@ -65,6 +68,7 @@ def laborStatusForm(laborStatusKey = None):
                             forms = forms,
                             students = students,
                             terms = terms,
+                            springFallOnlyTerms = springFallOnlyTerms,
                             staffs = staffs,
                             departments = departments)
 

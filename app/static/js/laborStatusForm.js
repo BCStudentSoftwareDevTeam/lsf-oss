@@ -21,18 +21,52 @@ $(document).ready(function(){
     for (i in parsedArrayOfStudentCookies) {
       createAndFillTable(parsedArrayOfStudentCookies[i]);
     }
-    $("#selectedTerm option[value=" + parsedArrayOfStudentCookies[0].stuTermCode + "]").attr('selected', 'selected');
+    $("#term").val(parsedArrayOfStudentCookies[0].stuTermCode)
+    $("#selectedTerm option[value=" + parsedArrayOfStudentCookies[0].selectedTerm + "]").attr('selected', 'selected');
     $("#selectedSupervisor option[value=" + parsedArrayOfStudentCookies[0].stuSupervisorID + "]").attr('selected', 'selected');
     $("#selectedDepartment option[value=\"" + parsedArrayOfStudentCookies[0].stuDepartmentORG + "\"]").attr('selected', 'selected');
+    if (parsedArrayOfStudentCookies[0].stuTermCode != parsedArrayOfStudentCookies[0].selectedTerm ){
+      showCheckbox(parsedArrayOfStudentCookies[0].stuTermCode)
+      $("input[name=term][value='" + parsedArrayOfStudentCookies[0].stuTermCode + "']").prop('checked', true);
+    }
+    console.log($("#term").text());
     getDepartment($("#selectedDepartment"));
-    preFilledDate($("#selectedTerm"));
-    showAccessLevel($("#selectedTerm"));
+    preFilledDate($("#term"));
+    showAccessLevel($("#term"));
     disableTermSupervisorDept();
   }
 });
 
 $("#laborStatusForm").submit(function(event) {
   event.preventDefault();
+});
+
+$("#selectedTerm").change(function(){
+  $("#term").val("")
+  var term =$(this).val();
+  lastTwoDigit = term % 100;
+  $('input[name=term]').prop('checked', false);
+  $("#term").val(term)
+  if (lastTwoDigit == 0){
+    showCheckbox(term);
+  }
+  else{
+    $(".termCheckbox").hide()
+  }
+})
+
+$('input[type="checkbox"]').on('change', function() {
+  if ($(this).is(':checked')){
+    $("#term").val("");
+    $('input[name=term]').not(this).prop('checked', false);
+    $("#term").val($(this).val());
+  }
+  else{
+    $("#term").val("");
+    $("#term").val($("#selectedTerm").find("option:selected").val());
+  }
+  preFilledDate($("#term"));
+  showAccessLevel($("#term"));
 });
 
 $("#calendarIcon1").click(function() {
@@ -62,6 +96,12 @@ $("#jobType").change(function(){ // Pops up a modal for Seconday Postion
       }
   });
 
+function showCheckbox(term){
+    termYear = term.toString().slice(0,4);
+    $(".termCheckbox").show()
+    $('.termCheckbox').not('#' + termYear).hide();
+  }
+
 function checkIfFreshman() {
   var jobType = $("#jobType").val();
   var wls = $("#position :selected").attr("data-wls")
@@ -89,6 +129,7 @@ function disableTermSupervisorDept() {
     $("#selectedDepartment").prop("disabled", "disabled");
     $("#departmentInfo").show();
     $("#selectedDepartment").selectpicker("refresh");
+    $("input[name=term]").prop("disabled", "disabled");
 }
 
 function preFilledDate(obj){ // get term start date and end date
@@ -108,7 +149,7 @@ function fillDates(response) { // prefill term start and term end
   $("#primary-cutoff-date").text("");
   $("#addMoreStudent").show();
 
-  $("#selectedTerm").on("change", function(){
+  $(".selectedTerm").on("change", function(){
     $("#jobType").val('');
   });
   for (var key in response){
@@ -320,6 +361,7 @@ $("#JobTypes").hide();
 $("#plus").hide();
 $("#mytable").hide();
 $("#failedTable").hide();
+$(".termCheckbox").hide()
 
 
 function showAccessLevel(){ // Make Table labels appear
@@ -389,6 +431,7 @@ function deleteRow(glyphicon) {
     $("#selectedSupervisor").selectpicker("refresh");
     $("#selectedDepartment").prop("disabled", false);
     $("#selectedDepartment").selectpicker("refresh");
+    $("input[name=term]").prop("disabled", false);
   }
 }
 //END of glyphicons
@@ -429,7 +472,8 @@ function createStuDict(){
   var department = $("#selectedDepartment").find("option:selected").text();
   var departmentORG = $("#selectedDepartment").find("option:selected").val();
   var departmentAccount = $("#selectedDepartment").find("option:selected").data("account");
-  var termCodeSelected = $("#selectedTerm").find("option:selected").val();
+  var termCodeSelected = $("#term").val();
+  var selectedTerm = $("#selectedTerm").find("option:selected").val();
   var isBreak = $("#selectedTerm").find("option:selected").data("termbreak")
   var studentName = $("#student option:selected").text();
   if (!studentName){
@@ -479,7 +523,8 @@ function createStuDict(){
                     stuDepartmentAccount: departmentAccount,
                     stuSupervisorID: supervisorID,
                     isItOverloadForm: "False",
-                    isTermBreak: isBreak
+                    isTermBreak: isBreak,
+                    selectedTerm: selectedTerm
                     };
     return studentDict;
   }
@@ -496,7 +541,8 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
 }
 
 function checkPrimaryPositionToCreateTheTable(studentDict) {
-  var term = $("#selectedTerm").val();
+  var term = $("#term").val();
+  console.log(term, "pri");
   var url = "/laborstatusform/getstudents/" + term + "/" + studentDict.stuBNumber;
   var data = JSON.stringify(studentDict.stuJobType);
   $.ajax({
@@ -614,7 +660,7 @@ function createAndFillTable(studentDict) {
 
 function isOneLaborStatusForm(studentDict){
   var isBreak = (studentDict).isTermBreak;
-  var term = $("#selectedTerm").val();
+  var term = $("#term").val();
   if(isBreak){
     url = "/laborstatusform/getstudents/" + term + "/"+ studentDict.stuBNumber+ "/"+ 'isOneLSF';
     // check whether student has multiple labor status forms over the break period.
@@ -640,7 +686,8 @@ function isOneLaborStatusForm(studentDict){
 }
 
 function checkTotalHours(studentDict) {
-  var termCode = $("#selectedTerm").val()
+  var termCode = $("#term").val()
+  console.log("total hours", termCode);
   var isBreak = $("#selectedTerm").find("option:selected").data("termbreak");
   $.ajax({
     url: "/laborstatusform/checktotalhours/" + termCode +"/"+ studentDict.stuBNumber +"/"+ studentDict.stuWeeklyHours +"/"+ studentDict.stuContractHours,

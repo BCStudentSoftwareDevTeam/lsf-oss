@@ -20,13 +20,13 @@
 .floatleft {
 float: left;
 width: 47%;
-height: 310px;
+height: 80%;
 }
 
 .floatright {
 float: right;
 width: 47%;
-height: 310px;
+height: 80%;
 }
 
 #mytable {

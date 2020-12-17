@@ -106,7 +106,7 @@
               title="Forms can only be submitted to one term at a time"
               aria-hidden="false"></span>
       </label>
-            <select class="selectpicker disable"
+            <select class="selectpicker disable selectedTerm"
                     name='term'
                     id='selectedTerm'
                     data-live-search="true"
@@ -119,7 +119,19 @@
                 <option value = "{{term.termCode}}" data-termSummer = "{{term.isSummer|lower}}" data-termBreak = "{{term.isBreak|lower}}">{{term.termName}}</option>
             {% endfor %}
           </select>
+          <input hidden id="term" value="" name=""/>
   </div>
+  <!-- checkbox for term spring or fall only -->
+  <div id ="termCheckbox" class="form-group">
+    {% for year in springFallOnlyTerms %}
+    <div class="termCheckbox" id="{{year}}">
+      {% for term in springFallOnlyTerms[year]%}
+        <input class= "selectedTerm" type="checkbox" id="{{term.termName}}" value="{{term.termCode}}" name="term"> {{term.termName}} only</input>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+
   <!-- datePickerS -->
   <div class="form-group col-xs-12">
       <div  class="form-group col-xs-6" id="startDateStyle">
