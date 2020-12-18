@@ -116,7 +116,7 @@
                     onchange = "showAccessLevel(); preFilledDate(this); summerLaborWarning()">
                 <option value = "" disabled selected>Select a Term</option>
             {% for term in terms %}
-                <option value = "{{term.termCode}}" data-termSummer = "{{term.isSummer|lower}}" data-termBreak = "{{term.isBreak|lower}}">{{term.termName}}</option>
+                <option value = "{{term.termCode}}" data-termSummer = "{{term.isSummer|lower}}" data-termBreak = "{{term.isBreak|lower}}" name="{{term.termName}}">{{term.termName}}</option>
             {% endfor %}
           </select>
           <input hidden id="term" value="" name=""/>
@@ -126,7 +126,7 @@
     {% for year in springFallOnlyTerms %}
     <div class="termCheckbox" id="{{year}}">
       {% for term in springFallOnlyTerms[year]%}
-        <input class= "selectedTerm" type="checkbox" id="{{term.termName}}" value="{{term.termCode}}" name="term"> {{term.termName}} only</input>
+        <input class= "selectedTerm termChecked" type="checkbox" id="{{term.termName}}" name="{{term.termName}}" value="{{term.termCode}}"> {{term.termName}} only</input>
       {% endfor %}
     </div>
     {% endfor %}

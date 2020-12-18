@@ -21,15 +21,14 @@ $(document).ready(function(){
     for (i in parsedArrayOfStudentCookies) {
       createAndFillTable(parsedArrayOfStudentCookies[i]);
     }
-    $("#term").val(parsedArrayOfStudentCookies[0].stuTermCode)
+    $("#term").val(parsedArrayOfStudentCookies[0].stuTermCode).attr('name', parsedArrayOfStudentCookies[0].stuTermName)
     $("#selectedTerm option[value=" + parsedArrayOfStudentCookies[0].selectedTerm + "]").attr('selected', 'selected');
     $("#selectedSupervisor option[value=" + parsedArrayOfStudentCookies[0].stuSupervisorID + "]").attr('selected', 'selected');
     $("#selectedDepartment option[value=\"" + parsedArrayOfStudentCookies[0].stuDepartmentORG + "\"]").attr('selected', 'selected');
     if (parsedArrayOfStudentCookies[0].stuTermCode != parsedArrayOfStudentCookies[0].selectedTerm ){
       showCheckbox(parsedArrayOfStudentCookies[0].stuTermCode)
-      $("input[name=term][value='" + parsedArrayOfStudentCookies[0].stuTermCode + "']").prop('checked', true);
+      $(".termChecked[value='" + parsedArrayOfStudentCookies[0].stuTermCode + "']").prop('checked', true);
     }
-    console.log($("#term").text());
     getDepartment($("#selectedDepartment"));
     preFilledDate($("#term"));
     showAccessLevel($("#term"));
@@ -42,28 +41,28 @@ $("#laborStatusForm").submit(function(event) {
 });
 
 $("#selectedTerm").change(function(){
-  $("#term").val("")
   var term =$(this).val();
   lastTwoDigit = term % 100;
-  $('input[name=term]').prop('checked', false);
-  $("#term").val(term)
+  $('.termChecked').prop('checked', false);
   if (lastTwoDigit == 0){
     showCheckbox(term);
   }
   else{
     $(".termCheckbox").hide()
   }
+$("#term").val("")
+$("#term").val(term).attr('name', $("#selectedTerm").find("option:selected").attr('name'))
 })
 
-$('input[type="checkbox"]').on('change', function() {
+$('.termChecked').on('change', function() {
   if ($(this).is(':checked')){
     $("#term").val("");
-    $('input[name=term]').not(this).prop('checked', false);
-    $("#term").val($(this).val());
+    $('.termChecked').not(this).prop('checked', false);
+    $('#term').attr('name', $(this).attr('name')).val($(this).val());
   }
   else{
     $("#term").val("");
-    $("#term").val($("#selectedTerm").find("option:selected").val());
+    $("#term").attr('name', $("#selectedTerm").find("option:selected").attr('name')).val($("#selectedTerm").find("option:selected").val());
   }
   preFilledDate($("#term"));
   showAccessLevel($("#term"));
@@ -129,7 +128,7 @@ function disableTermSupervisorDept() {
     $("#selectedDepartment").prop("disabled", "disabled");
     $("#departmentInfo").show();
     $("#selectedDepartment").selectpicker("refresh");
-    $("input[name=term]").prop("disabled", "disabled");
+    $(".termChecked").prop("disabled", "disabled");
 }
 
 function preFilledDate(obj){ // get term start date and end date
@@ -431,7 +430,7 @@ function deleteRow(glyphicon) {
     $("#selectedSupervisor").selectpicker("refresh");
     $("#selectedDepartment").prop("disabled", false);
     $("#selectedDepartment").selectpicker("refresh");
-    $("input[name=term]").prop("disabled", false);
+    $(".termChecked").prop("disabled", false);
   }
 }
 //END of glyphicons
@@ -473,6 +472,7 @@ function createStuDict(){
   var departmentORG = $("#selectedDepartment").find("option:selected").val();
   var departmentAccount = $("#selectedDepartment").find("option:selected").data("account");
   var termCodeSelected = $("#term").val();
+  var termName = $("#term").attr('name')
   var selectedTerm = $("#selectedTerm").find("option:selected").val();
   var isBreak = $("#selectedTerm").find("option:selected").data("termbreak")
   var studentName = $("#student option:selected").text();
@@ -515,6 +515,7 @@ function createStuDict(){
                     stuStartDate: startDate,
                     stuEndDate: endDate,
                     stuTermCode: termCodeSelected,
+                    stuTermName: termName,
                     stuNotes: "",
                     stuLaborNotes: laborStatusFormNote,
                     stuSupervisor: supervisor.trim(),
@@ -522,9 +523,9 @@ function createStuDict(){
                     stuDepartmentORG: departmentORG,
                     stuDepartmentAccount: departmentAccount,
                     stuSupervisorID: supervisorID,
+                    selectedTerm: selectedTerm,
                     isItOverloadForm: "False",
-                    isTermBreak: isBreak,
-                    selectedTerm: selectedTerm
+                    isTermBreak: isBreak
                     };
     return studentDict;
   }
@@ -542,7 +543,6 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
 
 function checkPrimaryPositionToCreateTheTable(studentDict) {
   var term = $("#term").val();
-  console.log(term, "pri");
   var url = "/laborstatusform/getstudents/" + term + "/" + studentDict.stuBNumber;
   var data = JSON.stringify(studentDict.stuJobType);
   $.ajax({
@@ -570,7 +570,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
           $('#oldPosition').html(response['position'])
           $('#oldHours').html(response['hours'])
 
-          $('#newTerm').html($("#selectedTerm").find("option:selected").text());
+          $('#newTerm').html(studentDict.stuTermName);
           $('#newSupervisor').html(studentDict.stuSupervisor)
           $('#newDepartment').html(studentDict.stuDepartment +" ("+ studentDict.stuDepartmentORG+"-"+studentDict.stuDepartmentAccount +")")
           $('#newPosition').html(studentDict.stuPositionCode +" - "+ studentDict.stuPosition +" ("+ studentDict.stuWLS+")")
@@ -687,7 +687,6 @@ function isOneLaborStatusForm(studentDict){
 
 function checkTotalHours(studentDict) {
   var termCode = $("#term").val()
-  console.log("total hours", termCode);
   var isBreak = $("#selectedTerm").find("option:selected").data("termbreak");
   $.ajax({
     url: "/laborstatusform/checktotalhours/" + termCode +"/"+ studentDict.stuBNumber +"/"+ studentDict.stuWeeklyHours +"/"+ studentDict.stuContractHours,
@@ -738,7 +737,6 @@ $("#resetConfirmButton").click(function(){
     globalArrayOfStudents = [];
     $("#tbodyid tr").remove();
     document.cookie = JSON.stringify(globalArrayOfStudents) + ";max-age=0;";
-    console.log(document.cookie);
     location.reload();
 });
 
