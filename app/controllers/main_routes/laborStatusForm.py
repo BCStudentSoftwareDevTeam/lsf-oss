@@ -46,7 +46,6 @@ def laborStatusForm(laborStatusKey = None):
             springFallOnlyTerms[str(term.termCode)[:4]].append(term)
         elif str(term.termCode)[-2:] in ["11", "12"]:
             springFallOnlyTerms[str(term.termCode)[:4]]= [term]
-            print(springFallOnlyTerms)
         else:
             terms.append(term)
 
