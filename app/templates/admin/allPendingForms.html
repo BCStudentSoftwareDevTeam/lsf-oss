@@ -14,13 +14,89 @@
 {% endblock %}
 
 {% block app_content %}
+<div align="center">
+  <a class="skipContent" href="#pendingLabor" tabindex="1">Click to Skip</a>
+  <h1>{{title}}</h1>
+</div>
+
 {% if title == "General Search" %}
-  <h1>Hello</h1>
-{% else %}
-  <div align="center">
-    <a class="skipContent" href="#pendingLabor" tabindex="1">Click to Skip</a>
-    <h1>{{title}}</h1>
+<!-- TODO: Selecpickers, checkboxes, and search button  -->
+<form>
+  <div class="form-group">
+    <label for="termSelect">Term</label>
+    <select class="selectpicker"
+            name='term'
+            id='termSelect'
+            data-live-search='true'
+            title="Term">
+        {% for term in terms %}
+          <option>{{term.termName}}</option>
+        {% endfor %}
+    </select>
   </div>
+  <div class="form-group">
+    <label for="departmentSelect">Department</label>
+    <select class="selectpicker"
+            name='department'
+            id='departmentSelect'
+            data-live-search='true'
+            title="Department">
+          {% for department in departments %}
+            <option>{{department}}</option>
+          {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="supervisorSelect">Supervisor</label>
+    <select class="selectpicker"
+            name='supervisor'
+            id='supervisorSelect'
+            data-live-search='true'
+            title="Supervisor">
+        {% for supervisor in supervisors  %}
+          <option>{{supervisor.FIRST_NAME}} {{supervisor.LAST_NAME}}</option>
+        {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="studentSelect">Student</label>
+    <select class="selectpicker"
+            name='student'
+            id='studentSelect'
+            data-live-search='true'
+            title="Student">
+          {% for student in students %}
+            <option>{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
+          {% endfor %}
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="">Limit Form Status</label>
+    <div class="checkbox">
+      <label><input type="checkbox" value="" id="pending">Pending</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" value="" id="approved">Approved</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" value="" id="denied">Denied</label>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="">Limit Form Type</label>
+    <div class="checkbox">
+      <label><input type="checkbox" value="" id="adjusted">Adjusted</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" value="" id="release">Release</label>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox" value="" id="overload">Overload</label>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary" name="searchButton">Search</button>
+</form>
+{% else %}
 
   <div class="container" id="wrapper">
     <div id="pendingTabs" class="container" style='display: inline-block;;'>
