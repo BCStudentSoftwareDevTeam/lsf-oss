@@ -42,7 +42,7 @@
             data-live-search='true'
             title="Department">
           {% for department in departments %}
-            <option>{{department}}</option>
+            <option>{{department.DEPT_NAME}} <small>({{department.ORG}}-{{department.ACCOUNT}})</small> </option>
           {% endfor %}
     </select>
   </div>
@@ -54,7 +54,7 @@
             data-live-search='true'
             title="Supervisor">
         {% for supervisor in supervisors  %}
-          <option>{{supervisor.FIRST_NAME}} {{supervisor.LAST_NAME}}</option>
+          <option>{{supervisor.FIRST_NAME}} {{supervisor.LAST_NAME}} <small>({{supervisor.ID}})</small></option>
         {% endfor %}
     </select>
   </div>
@@ -66,7 +66,7 @@
             data-live-search='true'
             title="Student">
           {% for student in students %}
-            <option>{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
+            <option>{{student.FIRST_NAME}} {{student.LAST_NAME}} <small>({{student.ID}})</small></option>
           {% endfor %}
     </select>
   </div>
@@ -94,7 +94,7 @@
       <label><input type="checkbox" value="" id="overload">Overload</label>
     </div>
   </div>
-  <button type="submit" class="btn btn-primary" name="searchButton">Search</button>
+  <button type="submit" class="btn btn-primary" id="generalSearchButton">Search</button>
 </form>
 {% else %}
 
