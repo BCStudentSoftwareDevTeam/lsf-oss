@@ -22,7 +22,7 @@
 
 {% if title == "General Search" %}
 <!-- TODO: Selecpickers, checkboxes, and search button  -->
-<form>
+<form method="post">
   <div class="form-group">
     <label for="termSelect">Term</label>
     <select class="selectpicker"
@@ -152,6 +152,7 @@
             </tr>
           </thead>
           <tbody id="tablebody">
+            {% if formList %}
             {% for allForms in formList %}
             <tr id="tableData" class="tableData" align="center">
               {% if formType != "pendingOverload" and formType != "pendingRelease" %}
@@ -273,6 +274,7 @@
               </td>
             </tr>
             {% endfor %}
+            {% endif %}
           </tbody>
         </table>
         {% if formType != 'pendingOverload' and formType != 'pendingRelease' %}

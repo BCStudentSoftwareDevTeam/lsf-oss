@@ -27,7 +27,7 @@ $("#generalSearchButton").on('click', function() {
              };
 
   var data = JSON.stringify(queryDict);
-  var url  = "/admin/generalSearch"
+  var url  = "/admin/generalSearch/quwey"
   $.ajax({
     method: "POST",
     url: url,

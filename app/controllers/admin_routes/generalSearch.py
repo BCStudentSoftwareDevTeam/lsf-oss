@@ -1,6 +1,6 @@
 from app.controllers.admin_routes import admin
 from app.login_manager import require_login
-from flask import render_template, request, json, jsonify
+from flask import render_template, request, json, jsonify, redirect, url_for
 from app.models.term import Term
 from app.models.department import Department
 from app.models.supervisor import Supervisor
@@ -21,17 +21,28 @@ def generalSearch():
     if not currentUser or not currentUser.isLaborAdmin:
         return render_template('errors/403.html'), 403
 
-    query = None  # TODO: write if statements in JavaScript to handle the NoneType case
-    if request.method == 'POST':
-        queryResult = (request.data).decode("utf-8")  # This turns byte data into a string
-        queryDict = json.loads(queryResult)
+    terms = Term.select()
+    departments = Department.select()
+    supervisors = Supervisor.select()
+    students = Student.select()
 
-        fieldValueMap = { Term.termCode: queryDict['termCode'],
-                 Department.departmentID: queryDict['departmentID'],
-                 Student.ID: queryDict['studentID'],
-                 Supervisor.ID: queryDict['supervisorID'],
-                 FormHistory.historyType: queryDict['formType'],
-                 FormHistory.status: queryDict['formStatus'] }
+    # query = None  # TODO: write if statements in JavaScript to handle the NoneType case
+    if request.method == 'POST':
+        # queryResult = (request.data).decode("utf-8")  # This turns byte data into a string
+        # queryDict = json.loads(queryResult)
+        termCode = request.form['term']
+        departmentId = request.form['department']
+        supervisorId = request.form['supervisor']
+        studentId = request.form['student']
+        formStatusList = request.form.getlist('formStatus') # checkboxes
+        formTypeList = request.form.getlist('formType')
+
+        fieldValueMap = { Term.termCode: termCode,
+                         Department.departmentID: departmentId,
+                         Student.ID: studentId,
+                         Supervisor.ID: supervisorId,
+                         FormHistory.historyType: formTypeList,
+                         FormHistory.status: formStatusList }
 
         clauses = []
         for field, value in fieldValueMap.items():
@@ -56,10 +67,16 @@ def generalSearch():
                             .where(expression))
         print("Almost there!!!")
 
-    terms = Term.select()
-    departments = Department.select()
-    supervisors = Supervisor.select()
-    students = Student.select()
+        return render_template('admin/allPendingForms.html',
+                                title = "General Search",
+                                terms = terms,
+                                supervisors = supervisors,
+                                students = students,
+                                departments = departments,
+                                formList = query
+                                )
+
+
 
     return render_template('admin/allPendingForms.html',
                             title = "General Search",
@@ -67,43 +84,42 @@ def generalSearch():
                             supervisors = supervisors,
                             students = students,
                             departments = departments,
-                            formList = query
                             )
 
-# # TODO: A new function to run the search query
-# @admin.route('/admin/generalSearch/queryResult', methods=['POST'])
+# TODO: A new function to run the search query
+# @admin.route('/admin/queryResult', methods=['POST'])
 # def generalSearchQuery():
-#     queryResult = (request.data).decode("utf-8")  # This turns byte data into a string
-#     queryDict = json.loads(queryResult)
-#
-#     fieldValueMap = { Term.termCode: queryDict['termCode'],
-#              Department.departmentID: queryDict['departmentID'],
-#              Student.ID: queryDict['studentID'],
-#              Supervisor.ID: queryDict['supervisorID'],
-#              FormHistory.historyType: queryDict['formType'],
-#              FormHistory.status: queryDict['formStatus'] }
-#
-#     clauses = []
-#     for field, value in fieldValueMap.items():
-#         if value:
-#             # "is" is used to compare the two peewee objects.
-#             if field is FormHistory.historyType:
-#                 for val in value:
-#                     clauses.append(field == val)
-#             elif field is FormHistory.status:
-#                 for val in value:
-#                     clauses.append(field == val)
-#             else:
-#                 clauses.append(field == value)
-#
-#     expression = reduce(operator.and_, clauses)
-#
-#     query = (FormHistory.select().join(LaborStatusForm, on=(FormHistory.formID == LaborStatusForm.laborStatusFormID))
-#                         .join(Department, on=(LaborStatusForm.department == Department.departmentID))
-#                         .join(Supervisor, on=(LaborStatusForm.supervisor == Supervisor.ID))
-#                         .join(Student, on=(LaborStatusForm.studentSupervisee == Student.ID))
-#                         .join(Term, on=(LaborStatusForm.termCode == Term.termCode))
-#                         .where(expression))
-#     print("Almost there!!!")
-#     return render_template('admin/allPendingForms.html',
-#                             formList=query)
+    # queryResult = (request.data).decode("utf-8")  # This turns byte data into a string
+    # queryDict = json.loads(queryResult)
+    #
+    # fieldValueMap = { Term.termCode: queryDict['termCode'],
+    #          Department.departmentID: queryDict['departmentID'],
+    #          Student.ID: queryDict['studentID'],
+    #          Supervisor.ID: queryDict['supervisorID'],
+    #          FormHistory.historyType: queryDict['formType'],
+    #          FormHistory.status: queryDict['formStatus'] }
+    #
+    # clauses = []
+    # for field, value in fieldValueMap.items():
+    #     if value:
+    #         # "is" is used to compare the two peewee objects.
+    #         if field is FormHistory.historyType:
+    #             for val in value:
+    #                 clauses.append(field == val)
+    #         elif field is FormHistory.status:
+    #             for val in value:
+    #                 clauses.append(field == val)
+    #         else:
+    #             clauses.append(field == value)
+    #
+    # expression = reduce(operator.and_, clauses)
+    #
+    # query = (FormHistory.select().join(LaborStatusForm, on=(FormHistory.formID == LaborStatusForm.laborStatusFormID))
+    #                     .join(Department, on=(LaborStatusForm.department == Department.departmentID))
+    #                     .join(Supervisor, on=(LaborStatusForm.supervisor == Supervisor.ID))
+    #                     .join(Student, on=(LaborStatusForm.studentSupervisee == Student.ID))
+    #                     .join(Term, on=(LaborStatusForm.termCode == Term.termCode))
+    #                     .where(expression))
+    # print("Almost there!!!")
+    # return render_template('admin/allPendingForms.html',
+    #                         formList=query)
