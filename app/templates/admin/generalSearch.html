@@ -16,7 +16,7 @@
   <h1>{{title}}</h1>
 </div>
 
-<form method="post" id="generalSearchForm">
+<form id="generalSearchForm">
   <div class="form-group">
     <label for="termSelect">Term</label>
     <select class="selectpicker"
@@ -89,7 +89,7 @@
       <label><input type="checkbox" value="Overload" id="overload" name="formType">Overload</label>
     </div>
   </div>
-  <button type="submit" class="btn btn-primary" id="generalSearchButton">Search</button>
+  <button type="button" class="btn btn-primary" id="generalSearchButton">Search</button>
 </form>
 
 <table id="generalSearchTable" class="table table-striped table-bordered">
@@ -104,19 +104,6 @@
     <th>Created</th>
     <th></th>
   </thead>
-  <tbody>
-    <tr>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td></td>
-    </tr>
-  </tbody>
 </table>
 
 {% endblock %}
