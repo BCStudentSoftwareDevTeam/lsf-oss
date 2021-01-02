@@ -1,5 +1,3 @@
-
-
 $('#generalSearchButton').on('click', function(){
   var termCode = $("#termSelect").val();
   var departmentID = $("#departmentSelect").val();
@@ -33,6 +31,7 @@ $('#generalSearchButton').on('click', function(){
         paging: true,
         lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
         pageLength: 25,
+        aaSorting: [[0, 'desc']],
         ajax: {
             url: "/admin/generalSearch",
             type: "POST",
@@ -52,18 +51,3 @@ $('#generalSearchButton').on('click', function(){
         }
   });
 });
-
-
-
-
-//   $.ajax({
-//     method: "POST",
-//     url: url,
-//     data: data,
-//     contentType: "application/json",
-//     success: function(response) {
-//       console.log("Success");
-//     }
-//   });
-// //
-// });

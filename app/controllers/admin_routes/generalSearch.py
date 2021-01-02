@@ -16,7 +16,6 @@ from functools import reduce
 
 @admin.route('/admin/generalSearch', methods=['GET', 'POST'])
 def generalSearch():
-
     currentUser = require_login()
     if not currentUser or not currentUser.isLaborAdmin:
         return render_template('errors/403.html'), 403
@@ -44,11 +43,19 @@ def getDatatableData(request):
     queryDict = json.loads(queryResult)
 
     draw = int(request.form['draw'])
-    length = int(request.form['length'])
     start = int(request.form['start'])
+    length = int(request.form['length'])
     sortColIndex = int(request.form["order[0][column]"])
     order = request.form['order[0][dir]']
     print("col-----", sortColIndex, order)
+    colIndexColNameMap = {  0: Term.termCode,
+                            1: Department.DEPT_NAME,
+                            2: FormHistory.formID.supervisor.FIRST_NAME,
+                            3: Student.FIRST_NAME,
+                            4: FormHistory.formID.POSN_CODE,
+                            5: FormHistory.formID.weeklyHours,
+                            6: FormHistory.formID.startDate,
+                            7: FormHistory.createdBy}
 
     termCode = queryDict.get('termCode', "")
     departmentId = queryDict.get('departmentID', "")
@@ -86,13 +93,10 @@ def getDatatableData(request):
                         .where(expression))
 
     recordsTotal = query.count()
-    filteredQuery = query.order_by().limit(length).offset(start)
-    """
-    .select(Member.surname)
-         .order_by(Member.surname)
-         .limit(10)
-         .distinct())
-    """
+    if order == "desc":
+        filteredQuery = query.order_by(-colIndexColNameMap[sortColIndex]).limit(length).offset(start)
+    elif order == "asc":
+        filteredQuery = query.order_by(colIndexColNameMap[sortColIndex]).limit(length).offset(start)
 
     data = []
     for form in filteredQuery:
