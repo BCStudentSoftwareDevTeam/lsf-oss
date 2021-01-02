@@ -1,4 +1,15 @@
+$(document).ready(function(){
+  $('#generalSearchTable').hide();
+});
+
+$('a.hover_indicator').click(function(e){
+  e.preventDefault(); // prevents click on '#' link from jumping to top of the page.
+});
+
 $('#generalSearchButton').on('click', function(){
+
+  $('#generalSearchTable').show();
+
   var termCode = $("#termSelect").val();
   var departmentID = $("#departmentSelect").val();
   var supervisorID = $("#supervisorSelect").val();
@@ -23,7 +34,12 @@ $('#generalSearchButton').on('click', function(){
              };
   var data = JSON.stringify(queryDict);
 
+  // TODO: If no option is selected tell user that they should have at least one input.
+  // If at least one field is filled: run the ajax
+  // otherwise, show a warning. 
+
   $('#generalSearchTable').DataTable({
+        responsive: true,
         destroy: true,
         searching: false,
         processing: true,
@@ -32,6 +48,10 @@ $('#generalSearchButton').on('click', function(){
         lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
         pageLength: 25,
         aaSorting: [[0, 'desc']],
+        columnDefs: [{
+          targets: -1,
+          orderable: false,
+        }],
         ajax: {
             url: "/admin/generalSearch",
             type: "POST",
