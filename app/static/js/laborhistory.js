@@ -14,11 +14,16 @@ $('#positionTable tbody tr td').on('click',function(){
    $("#flasher").delay(3000).fadeOut();
  }
  else {
-   $("#modal").modal("show");
-   $("#modal").find('.modal-content').load('/laborHistory/modal/' + this.id);
-   setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
+   loadLaborHistoryModal(this.id)
  }
 });
+
+function loadLaborHistoryModal(formHistory) {
+  console.log("Here ", formHistory);
+  $("#modal").modal("show");
+  $("#modal").find('.modal-content').load('/laborHistory/modal/' + formHistory);
+  setTimeout(function(){ $(".loader").fadeOut("slow"); }, 500);
+}
 
 function redirection(laborStatusKey){
   /*

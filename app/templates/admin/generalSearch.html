@@ -9,7 +9,8 @@
 {% block scripts %}
 {{super()}}
   <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/datatables.min.js"></script>
-  <script type="text/javascript" src="{{url_for('static', filename='js/allPendingForms.js') }}?u={{lastStaticUpdate}}"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/laborhistory.js')}}?u={{lastStaticUpdate}}"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/allPendingForms.js')}}?u={{lastStaticUpdate}}"></script>
   <script type="text/javascript" src="{{url_for('static', filename='js/generalSearch.js') }}?u={{lastStaticUpdate}}"></script>
 {% endblock %}
 
@@ -91,13 +92,13 @@
         <div class="form-group">
           <label for="">Limit Form Type</label>
           <div class="checkbox">
-            <label><input type="checkbox" value="Adjusted" id="adjusted" name="formType">Adjusted</label>
+            <label><input type="checkbox" value="Labor Adjustment Form" id="adjusted" name="formType">Adjusted</label>
           </div>
           <div class="checkbox">
-            <label><input type="checkbox" value="Release" id="release" name="formType">Release</label>
+            <label><input type="checkbox" value="Labor Release Form" id="release" name="formType">Release</label>
           </div>
           <div class="checkbox">
-            <label><input type="checkbox" value="Overload" id="overload" name="formType">Overload</label>
+            <label><input type="checkbox" value="Labor Overload Form" id="overload" name="formType">Overload</label>
           </div>
         </div>
       </div>
@@ -119,4 +120,25 @@
   </thead>
 </table>
 
+<!-- Overload Modal -->
+<div class="modal fade" id="overloadModal" role="dialog" data-backdrop="true" tabindex="-1" aria-labelledby="overloadModalLabel" aria-describedby="overloadModalBody">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div id="content" class="modal-content">
+    </div>
+  </div>
+</div>
+<!-- Release Modal -->
+<div class="modal fade" id="modalRelease" data-dismiss="modal" tabindex="-1" role="dialog" aria-labelledby="releaseModalLabel" aria-describedby="releaseModalBody">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div id="content" class="modal-content">
+    </div>
+  </div>
+</div>
+<!-- Form History Modal -->
+<div class="modal fade" id="modal" role="dialog" data-backdrop="true" tabindex="-1">
+  <div class="modal-dialog modal-dialog-scrollable" role="document">
+    <div id="content" class="modal-content">
+    </div>
+  </div>
+</div>
 {% endblock %}

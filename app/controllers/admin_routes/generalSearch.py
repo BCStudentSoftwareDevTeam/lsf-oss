@@ -98,40 +98,73 @@ def getDatatableData(request):
         filteredQuery = query.order_by(colIndexColNameMap[sortColIndex]).limit(length).offset(start)
 
     data = []
+    supervisorStudentHTML = '<a href="#" class="hover_indicator" aria-label="{}">{} </a><a href="mailto:{}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>'
+    departmentHTML = '<a href="#" class="hover_indicator" aria-label="{}-{}"> {}</a>'
+    positionHTML = '<a href="#" class="hover_indicator" aria-label="{}"> {}</a><br>{}'
+    actionsButtonDropdownHTML = '<div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Actions</button>' +\
+                        '<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="min-width: 100%;">{}</ul></div>'
+    actionsListHTML = '<li role="presentation"><a role="menuitem" href="#"<span id="{}" onclick="{}">{}</span></a></li></ul></div>'
+
     for form in filteredQuery:
         record = []
         record.append(form.formID.termCode.termName)
-        record.append('<a href="#" class="hover_indicator" aria-label="{}-{}"> {}</a>'
-              .format(form.formID.department.ORG, form.formID.department.ACCOUNT, form.formID.department.DEPT_NAME))
+        record.append(departmentHTML.format(
+              form.formID.department.ORG,
+              form.formID.department.ACCOUNT,
+              form.formID.department.DEPT_NAME))
 
-        record.append('<a href="#" class="hover_indicator" aria-label="{}">{} </a><a href="mailto:{}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>'
-              .format(form.formID.supervisor.ID, ' '.join([form.formID.supervisor.FIRST_NAME, form.formID.supervisor.LAST_NAME]), form.formID.supervisor.EMAIL))
+        record.append(supervisorStudentHTML.format(
+              form.formID.supervisor.ID,
+              ' '.join([form.formID.supervisor.FIRST_NAME, form.formID.supervisor.LAST_NAME]),
+              form.formID.supervisor.EMAIL))
 
-        record.append('<a href="#" class="hover_indicator" aria-label="{}">{} </a><a href="mailto:{}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>'
-              .format(form.formID.studentSupervisee.ID, ' '.join([form.formID.studentSupervisee.FIRST_NAME, form.formID.studentSupervisee.LAST_NAME]), form.formID.studentSupervisee.STU_EMAIL))
+        record.append(supervisorStudentHTML.format(
+              form.formID.studentSupervisee.ID,
+              ' '.join([form.formID.studentSupervisee.FIRST_NAME,
+              form.formID.studentSupervisee.LAST_NAME]),
+              form.formID.studentSupervisee.STU_EMAIL))
 
-        record.append('<a href="#" class="hover_indicator" aria-label="{}"> {}</a><br>{}'
-              .format(form.formID.POSN_TITLE, ' '.join([form.formID.POSN_CODE + " (" + form.formID.WLS + ")"]), form.formID.jobType))
+        record.append(positionHTML.format(
+              form.formID.POSN_TITLE,
+              form.formID.POSN_CODE + " (" + form.formID.WLS + ")",
+              form.formID.jobType))
 
         hours = form.formID.weeklyHours if form.formID.weeklyHours else form.formID.contractHours
         record.append(hours)
 
-        record.append("<br>".join([form.formID.startDate.strftime('%m/%d/%y'), form.formID.endDate.strftime('%m/%d/%y')]))
+        record.append("<br>".join([form.formID.startDate.strftime('%m/%d/%y'),
+                      form.formID.endDate.strftime('%m/%d/%y')]))
 
-        record.append('<a href="#" class="hover_indicator" aria-label="{}">{} </a><a href="mailto:{}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a><br>{}'
-              .format(form.createdBy.supervisor.ID, form.createdBy.username, form.createdBy.supervisor.EMAIL, form.createdDate.strftime('%m/%d/%y')))
+        record.append(supervisorStudentHTML.format(
+              form.createdBy.supervisor.ID,
+              form.createdBy.username,
+              form.createdBy.supervisor.EMAIL,
+              form.createdDate.strftime('%m/%d/%y')))
 
-        # TODO: Conditionals to determine which options will be shown on the actions dropdown
-        # The conditonals will mainly change the function and actionName
         laborHistoryId = form.formHistoryID
-        function = "loadOverloadModal({}, {})".format(laborHistoryId, form.formID.laborStatusFormID)
-        actionName = "Manage"
+        laborStatusFormId = form.formID.laborStatusFormID
+        if "Labor Overload Form" in formTypeList:
+            function = "loadOverloadModal({}, {})".format(laborHistoryId, laborStatusFormId)
+            actionName = "Manage"
 
-        actionsButton = '<div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Actions</button>' +\
-                        '<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="min-width: 100%;">' +\
-                        '<li role="presentation"><a role="menuitem" href="#"<span id="{}"'.format(laborHistoryId) +\
-                        'onclick="{}">{}</span></a></li></ul></div>'.format(function, actionName)
+        if "Labor Release Form" in formTypeList:
+            function = "loadReleaseModal({}, {})".format(laborHistoryId, laborStatusFormId)
+            actionName = "Manage"
 
+        if "Labor Adjustment Form" in formTypeList:
+            function = ""
+            actionName = "Deny"
+
+            # TODO: This one also has an approve modal
+
+        if formStatusList and not formTypeList: # if only status is selected and not a form type
+            function = "loadLaborHistoryModal({})".format(laborHistoryId)
+            actionName = "Manage"
+
+            # TODO: we should add approve and deny modals here as well.
+
+        actionsList = actionsListHTML.format(laborHistoryId, function, actionName)
+        actionsButton = actionsButtonDropdownHTML.format(actionsList)
         record.append(actionsButton)
         data.append(record)
 
