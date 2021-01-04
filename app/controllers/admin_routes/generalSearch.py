@@ -11,11 +11,13 @@ from app.models.historyType import HistoryType
 from app.models.status import Status
 import operator
 from functools import reduce
-# from app.controllers.admin_routes.allPendingForms import x, y, z
-# from app.controllers.main_routes.laborHistory import x, y, z
 
 @admin.route('/admin/generalSearch', methods=['GET', 'POST'])
 def generalSearch():
+    '''
+    When the request is GET the function populates the General Search interface dropdown menus with their corresponding values.
+    If the request is POST it also populates the datatable with data.
+    '''
     currentUser = require_login()
     if not currentUser or not currentUser.isLaborAdmin:
         return render_template('errors/403.html'), 403
@@ -38,7 +40,10 @@ def generalSearch():
 
 
 def getDatatableData(request):
-
+    '''
+    This function runs a query based on selected options in the front-end and retrieves the appropriate forms.
+    Then, it puts all the retrieved data in appropriate form to be send to the ajax call in the JS file.
+    '''
     queryResult = request.form['data']
     queryDict = json.loads(queryResult)
 
@@ -91,20 +96,18 @@ def getDatatableData(request):
                         .join(Term, on=(LaborStatusForm.termCode == Term.termCode))
                         .where(expression))
 
+    # Sorting Functionality of the datatable
     recordsTotal = query.count()
     if order == "desc":
         filteredQuery = query.order_by(-colIndexColNameMap[sortColIndex]).limit(length).offset(start)
     elif order == "asc":
         filteredQuery = query.order_by(colIndexColNameMap[sortColIndex]).limit(length).offset(start)
 
-    data = []
+    # Putting the data in the correct format to be used by the JS file
     supervisorStudentHTML = '<a href="#" class="hover_indicator" aria-label="{}">{} </a><a href="mailto:{}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>'
     departmentHTML = '<a href="#" class="hover_indicator" aria-label="{}-{}"> {}</a>'
     positionHTML = '<a href="#" class="hover_indicator" aria-label="{}"> {}</a><br>{}'
-    actionsButtonDropdownHTML = '<div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Actions</button>' +\
-                        '<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="min-width: 100%;">{}</ul></div>'
-    actionsListHTML = '<li role="presentation"><a role="menuitem" href="#"<span id="{}" onclick="{}">{}</span></a></li></ul></div>'
-
+    data = []
     for form in filteredQuery:
         record = []
         record.append(form.formID.termCode.termName)
@@ -113,10 +116,15 @@ def getDatatableData(request):
               form.formID.department.ACCOUNT,
               form.formID.department.DEPT_NAME))
 
-        record.append(supervisorStudentHTML.format(
-              form.formID.supervisor.ID,
-              ' '.join([form.formID.supervisor.FIRST_NAME, form.formID.supervisor.LAST_NAME]),
-              form.formID.supervisor.EMAIL))
+        currentSupervisor = supervisorStudentHTML.format(
+                            form.formID.supervisor.ID,
+                            ' '.join([form.formID.supervisor.FIRST_NAME, form.formID.supervisor.LAST_NAME]),
+                            form.formID.supervisor.EMAIL)
+
+        if form.adjustedForm.fieldAdjusted == "supervisor":
+            supervisor = supervisorStudentHTML.format(form.adjustedForm.oldValue.ID, form.adjustedForm.newValue, form.adjustedForm.oldValue.email)
+
+        record.append(currentSupervisor)
 
         record.append(supervisorStudentHTML.format(
               form.formID.studentSupervisee.ID,
@@ -143,31 +151,50 @@ def getDatatableData(request):
 
         laborHistoryId = form.formHistoryID
         laborStatusFormId = form.formID.laborStatusFormID
-        if "Labor Overload Form" in formTypeList:
-            function = "loadOverloadModal({}, {})".format(laborHistoryId, laborStatusFormId)
-            actionName = "Manage"
+        actionsButton = getActionButtonLogic(form, laborHistoryId, laborStatusFormId)
 
-        if "Labor Release Form" in formTypeList:
-            function = "loadReleaseModal({}, {})".format(laborHistoryId, laborStatusFormId)
-            actionName = "Manage"
-
-        if "Labor Adjustment Form" in formTypeList:
-            function = ""
-            actionName = "Deny"
-
-            # TODO: This one also has an approve modal
-
-        if formStatusList and not formTypeList: # if only status is selected and not a form type
-            function = "loadLaborHistoryModal({})".format(laborHistoryId)
-            actionName = "Manage"
-
-            # TODO: we should add approve and deny modals here as well.
-
-        actionsList = actionsListHTML.format(laborHistoryId, function, actionName)
-        actionsButton = actionsButtonDropdownHTML.format(actionsList)
         record.append(actionsButton)
         data.append(record)
 
     formsDict = {"draw": draw, "recordsTotal": recordsTotal, "recordsFiltered": recordsTotal, "data": data}
 
     return jsonify(formsDict)
+
+def getActionButtonLogic(form, laborHistoryId, laborStatusFormId):
+    '''
+    This function determines the options shown on the Actions dropdown, which depends on form type and form status.
+    '''
+
+    actionsButtonDropdownHTML = '<div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Actions</button>' +\
+                                '<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="min-width: 100%;">{}{}{}{}</ul></div>'
+    actionsListHTML = '<li role="presentation"><a role="menuitem" href="{}">{}</a></li>'
+    manageOptionHTML = actionsListHTML.format('#', '<span id="{}" onclick="{}">Manage</span>')
+    denyApproveOptionsHTML = actionsListHTML.format('#', '<span id="{}" onclick="{}" data-toggle="modal" data-target="#{}">{}</span>')
+    modifyOptionHTML = actionsListHTML.format('/alterLSF/{lsfID}', '<span id="edit_{lsfID}">Modify</span>')
+
+    # Actions button and its options
+    actionsButton = ""
+    approve = ""
+    deny = ""
+    manage = ""
+    modify = ""
+
+    if form.historyType.historyTypeName == "Labor Status Form":
+        manage = manageOptionHTML.format(laborHistoryId, f"loadLaborHistoryModal({laborHistoryId})")
+        actionsButton = actionsButtonDropdownHTML.format(manage, approve, deny, modify)
+
+    if form.status.statusName == "Pending":
+        if form.overloadForm:
+            manage = manageOptionHTML.format(laborHistoryId, f"loadOverloadModal({laborHistoryId}, {laborStatusFormId})")
+        elif form.releaseForm:
+            manage = manageOptionHTML.format(laborHistoryId, f"loadReleaseModal({laborHistoryId}, {laborStatusFormId})")
+        elif form.adjustedForm:
+            deny = denyApproveOptionsHTML.format(f"reject_{laborHistoryId}", f"insertDenial({laborHistoryId})", 'denyModal', 'Deny')
+            approve = denyApproveOptionsHTML.format("", f"insertApprovals({laborHistoryId})", 'approvalModal', 'Approve')
+        else:
+            modify = modifyOptionHTML.format(lsfID = laborStatusFormId)
+            deny = denyApproveOptionsHTML.format(f"reject_{laborHistoryId}", f"insertDenial({laborHistoryId})", 'denyModal', 'Deny')
+            approve = denyApproveOptionsHTML.format("", f"insertApprovals({laborHistoryId});", 'approvalModal', 'Approve')
+        actionsButton = actionsButtonDropdownHTML.format(manage, approve, deny, modify)
+
+    return actionsButton

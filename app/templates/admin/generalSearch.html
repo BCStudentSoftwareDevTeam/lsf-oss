@@ -92,6 +92,9 @@
         <div class="form-group">
           <label for="">Limit Form Type</label>
           <div class="checkbox">
+            <label><input type="checkbox" value="Labor Status Form" id="original" name="formType">Original</label>
+          </div>
+          <div class="checkbox">
             <label><input type="checkbox" value="Labor Adjustment Form" id="adjusted" name="formType">Adjusted</label>
           </div>
           <div class="checkbox">
@@ -141,4 +144,6 @@
     </div>
   </div>
 </div>
+{% include "snips/FormsDeny.html" %}
+{% include "snips/pendingApprovalModal.html" %}
 {% endblock %}

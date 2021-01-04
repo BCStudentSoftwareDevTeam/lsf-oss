@@ -6,6 +6,7 @@ $('a.hover_indicator').click(function(e){
   e.preventDefault(); // prevents click on '#' link from jumping to top of the page.
 });
 
+
 $('#generalSearchButton').on('click', function(){
 
   $('#generalSearchTable').show();
@@ -36,7 +37,7 @@ $('#generalSearchButton').on('click', function(){
 
   // TODO: If no option is selected tell user that they should have at least one input.
   // If at least one field is filled: run the ajax
-  // otherwise, show a warning. 
+  // otherwise, show a warning.
 
   $('#generalSearchTable').DataTable({
         responsive: true,

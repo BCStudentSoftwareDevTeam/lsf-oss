@@ -50,14 +50,15 @@ $(document).ready(function() {
 
 
 var labor_details_ids = []; // for insertApprovals() and final_approval() only
-function insertApprovals() {
+function insertApprovals(laborHistoryId = null) {
   var getChecked = table.$('.approveCheckbox:checked').each(function() {
     labor_details_ids.push(this.value);
   });
-
+  // This 'if' statement is used on the generalSearch table where we can approve forms one-by-one only
+  if (laborHistoryId) {labor_details_ids.push(laborHistoryId)}
   //this checks wether the checkbox is checked or not and if does not it disable the approve selected button
   var atLeastOneIsChecked = $('input[name="check[]"]:checked').length > 0;
-  if (!atLeastOneIsChecked) {
+  if (!atLeastOneIsChecked && !laborHistoryId) {
     $("#approveSelected").prop("disabled", true);
     $("#approvePendingForm").prop("disabled", true);
     $("#adjustedApproval").prop("disabled", true);
@@ -67,6 +68,7 @@ function insertApprovals() {
     location.reload();
   }
   var data = JSON.stringify(labor_details_ids);
+  console.log("added the id");
   $.ajax({
     type: "POST",
     url: "/admin/checkedForms",
