@@ -1,6 +1,6 @@
 from app.controllers.admin_routes import admin
 from app.login_manager import require_login
-from flask import render_template, request, json, jsonify, redirect, url_for
+from flask import render_template, request, json, jsonify, redirect, url_for, send_file
 from app.models.term import Term
 from app.models.department import Department
 from app.models.supervisor import Supervisor
@@ -9,8 +9,14 @@ from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
 from app.models.historyType import HistoryType
 from app.models.status import Status
+from app.controllers.admin_routes.allPendingForms import checkAdjustment
 import operator
 from functools import reduce
+from app.controllers.main_routes.download import ExcelMaker
+
+# Global variable that will store the query result.
+# It is made global to be later used in creating CSV file.
+generalSearchResults = None
 
 @admin.route('/admin/generalSearch', methods=['GET', 'POST'])
 def generalSearch():
@@ -38,17 +44,16 @@ def generalSearch():
                             departments = departments,
                             )
 
-
 def getDatatableData(request):
     '''
     This function runs a query based on selected options in the front-end and retrieves the appropriate forms.
     Then, it puts all the retrieved data in appropriate form to be send to the ajax call in the JS file.
     '''
-    draw = int(request.form['draw'])
-    start = int(request.form['start'])
-    length = int(request.form['length'])
-    sortColIndex = int(request.form["order[0][column]"])
-    order = request.form['order[0][dir]']
+    draw = int(request.form.get('draw'))
+    start = int(request.form.get('start'))
+    length = int(request.form.get('length'))
+    sortColIndex = int(request.form.get("order[0][column]"))
+    order = request.form.get('order[0][dir]')
     colIndexColNameMap = {  0: Term.termCode,
                             1: Department.DEPT_NAME,
                             2: FormHistory.formID.supervisor.FIRST_NAME,
@@ -58,7 +63,7 @@ def getDatatableData(request):
                             6: FormHistory.formID.startDate,
                             7: FormHistory.createdBy}
 
-    queryResult = request.form['data']
+    queryResult = request.form.get('data')
     queryDict = json.loads(queryResult)
 
     termCode = queryDict.get('termCode', "")
@@ -74,6 +79,7 @@ def getDatatableData(request):
                      Supervisor.ID: supervisorId,
                      FormHistory.status: formStatusList,
                      FormHistory.historyType: formTypeList}
+
     clauses = []
     for field, value in fieldValueMap.items():
         if value != "" and value:
@@ -87,21 +93,22 @@ def getDatatableData(request):
             else:
                 clauses.append(field == value)
 
-    expression = reduce(operator.and_, clauses) # This expression creates AND statements using model fields and select picker values appened to clauses list
+    # This expression creates AND statements using model fields and select picker values appened to clauses list
+    expression = reduce(operator.and_, clauses)
 
-    query = (FormHistory.select().join(LaborStatusForm, on=(FormHistory.formID == LaborStatusForm.laborStatusFormID))
+    global generalSearchResults
+    generalSearchResults = (FormHistory.select().join(LaborStatusForm, on=(FormHistory.formID == LaborStatusForm.laborStatusFormID))
                         .join(Department, on=(LaborStatusForm.department == Department.departmentID))
                         .join(Supervisor, on=(LaborStatusForm.supervisor == Supervisor.ID))
                         .join(Student, on=(LaborStatusForm.studentSupervisee == Student.ID))
                         .join(Term, on=(LaborStatusForm.termCode == Term.termCode))
                         .where(expression))
 
-    # Sorting Functionality of the datatable
-    recordsTotal = query.count()
+    recordsTotal = generalSearchResults.count()
     if order == "desc":
-        filteredQuery = query.order_by(-colIndexColNameMap[sortColIndex]).limit(length).offset(start)
-    elif order == "asc":
-        filteredQuery = query.order_by(colIndexColNameMap[sortColIndex]).limit(length).offset(start)
+        filteredQuery = generalSearchResults.order_by(-colIndexColNameMap[sortColIndex]).limit(length).offset(start)
+    else:
+        filteredQuery = generalSearchResults.order_by(colIndexColNameMap[sortColIndex]).limit(length).offset(start)
 
     data = getFormattedData(filteredQuery)
     formsDict = {"draw": draw, "recordsTotal": recordsTotal, "recordsFiltered": recordsTotal, "data": data}
@@ -114,39 +121,62 @@ def getFormattedData(filteredQuery):
     '''
     supervisorStudentHTML = '<a href="#" class="hover_indicator" aria-label="{}">{} </a><a href="mailto:{}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>'
     departmentHTML = '<a href="#" class="hover_indicator" aria-label="{}-{}"> {}</a>'
-    positionHTML = '<a href="#" class="hover_indicator" aria-label="{}"> {}</a><br>{}'
+    positionHTML = '<a href="#" class="hover_indicator" aria-label="{}"> {}</a>'
     data = []
     for form in filteredQuery:
         record = []
+        # Term
         record.append(form.formID.termCode.termName)
+        # Department
         record.append(departmentHTML.format(
               form.formID.department.ORG,
               form.formID.department.ACCOUNT,
               form.formID.department.DEPT_NAME))
-
-        currentSupervisor = supervisorStudentHTML.format(
+        # Supervisor
+        supervisorField = supervisorStudentHTML.format(
                             form.formID.supervisor.ID,
-                            ' '.join([form.formID.supervisor.FIRST_NAME, form.formID.supervisor.LAST_NAME]),
+                            f'{form.formID.supervisor.FIRST_NAME} {form.formID.supervisor.LAST_NAME}',
                             form.formID.supervisor.EMAIL)
-        record.append(currentSupervisor)
+        # Position
+        positionField = positionHTML.format(
+                        form.formID.POSN_TITLE,
+                        f'{form.formID.POSN_CODE} ({form.formID.WLS})')
+        # Hours
+        hoursField = form.formID.weeklyHours if form.formID.weeklyHours else form.formID.contractHours
 
+        # Adjustment Form Specific Data
+        checkAdjustment(form)
+        if (form.adjustedForm):
+            if form.adjustedForm.fieldAdjusted == "supervisor":
+                newSupervisor = supervisorStudentHTML.format(
+                                form.adjustedForm.oldValue['ID'],
+                                form.adjustedForm.newValue,
+                                form.adjustedForm.oldValue['email'])
+                supervisorField = f'<s aria-label="true">{supervisorField}</s><br>{newSupervisor}'
+
+            if form.adjustedForm.fieldAdjusted == "position":
+                newPosition = positionHTML.format(
+                              form.adjustedForm.oldValue,
+                              form.adjustedForm.newValue)
+                positionField = f'<s aria-label="true">{positionField}</s><br>{newPosition}'
+
+            if form.adjustedForm.fieldAdjusted == "weeklyHours"  or  form.adjustedForm.fieldAdjusted == "contractHours":
+                newHours = form.adjustedForm.newValue
+                hoursField = f'<s aria-label="true">{hoursField}</s><br>{newHours}'
+
+        record.append(supervisorField)
+        # Student
         record.append(supervisorStudentHTML.format(
               form.formID.studentSupervisee.ID,
-              ' '.join([form.formID.studentSupervisee.FIRST_NAME,
-              form.formID.studentSupervisee.LAST_NAME]),
+              f'{form.formID.studentSupervisee.FIRST_NAME} {form.formID.studentSupervisee.LAST_NAME}',
               form.formID.studentSupervisee.STU_EMAIL))
 
-        record.append(positionHTML.format(
-              form.formID.POSN_TITLE,
-              form.formID.POSN_CODE + " (" + form.formID.WLS + ")",
-              form.formID.jobType))
-
-        hours = form.formID.weeklyHours if form.formID.weeklyHours else form.formID.contractHours
-        record.append(hours)
-
+        record.append(f'{positionField}<br>{form.formID.jobType}')
+        record.append(hoursField)
+        # Contract Dates
         record.append("<br>".join([form.formID.startDate.strftime('%m/%d/%y'),
-                      form.formID.endDate.strftime('%m/%d/%y')]))
-
+                                   form.formID.endDate.strftime('%m/%d/%y')]))
+        # Created By
         record.append(supervisorStudentHTML.format(
               form.createdBy.supervisor.ID,
               form.createdBy.username,
@@ -159,6 +189,7 @@ def getFormattedData(filteredQuery):
 
         record.append(actionsButton)
         data.append(record)
+
     return data
 
 
@@ -167,11 +198,11 @@ def getActionButtonLogic(form, laborHistoryId, laborStatusFormId):
     This function determines the options shown on the Actions dropdown, which depends on form type and form status.
     '''
 
-    actionsButtonDropdownHTML = '<div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Actions</button>' +\
-                                '<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="min-width: 100%;">{}{}{}{}</ul></div>'
+    actionsButtonDropdownHTML = '<div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Actions <span class="caret"></span></button>' +\
+                                '<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="min-width: 100%;">{}{}{}{}{}</ul></div>'
     actionsListHTML = '<li role="presentation"><a role="menuitem" href="{}">{}</a></li>'
     manageOptionHTML = actionsListHTML.format('#', '<span id="{}" onclick="{}">Manage</span>')
-    denyApproveOptionsHTML = actionsListHTML.format('#', '<span id="{}" onclick="{}" data-toggle="modal" data-target="#{}">{}</span>')
+    denyApproveNotesOptionsHTML = actionsListHTML.format('#', '<span id="{}" onclick="{}" data-toggle="modal" data-target="#{}">{}</span>')
     modifyOptionHTML = actionsListHTML.format('/alterLSF/{lsfID}', '<span id="edit_{lsfID}">Modify</span>')
 
     # Actions button and its options
@@ -180,10 +211,11 @@ def getActionButtonLogic(form, laborHistoryId, laborStatusFormId):
     deny = ""
     manage = ""
     modify = ""
+    notes = denyApproveNotesOptionsHTML.format(f'notes_{laborHistoryId}', f'getNotes({laborStatusFormId})', 'NotesModal', 'View Notes')
 
     if form.historyType.historyTypeName == "Labor Status Form":
         manage = manageOptionHTML.format(laborHistoryId, f"loadLaborHistoryModal({laborHistoryId})")
-        actionsButton = actionsButtonDropdownHTML.format(manage, approve, deny, modify)
+        actionsButton = actionsButtonDropdownHTML.format(manage, approve, deny, modify, notes)
 
     if form.status.statusName == "Pending":
         if form.overloadForm:
@@ -191,12 +223,23 @@ def getActionButtonLogic(form, laborHistoryId, laborStatusFormId):
         elif form.releaseForm:
             manage = manageOptionHTML.format(laborHistoryId, f"loadReleaseModal({laborHistoryId}, {laborStatusFormId})")
         elif form.adjustedForm:
-            deny = denyApproveOptionsHTML.format(f"reject_{laborHistoryId}", f"insertDenial({laborHistoryId})", 'denyModal', 'Deny')
-            approve = denyApproveOptionsHTML.format("", f"insertApprovals({laborHistoryId})", 'approvalModal', 'Approve')
+            deny = denyApproveNotesOptionsHTML.format(f"reject_{laborHistoryId}", f"insertDenial({laborHistoryId})", 'denyModal', 'Deny')
+            approve = denyApproveNotesOptionsHTML.format("", f"insertApprovals({laborHistoryId})", 'approvalModal', 'Approve')
         else:
             modify = modifyOptionHTML.format(lsfID = laborStatusFormId)
-            deny = denyApproveOptionsHTML.format(f"reject_{laborHistoryId}", f"insertDenial({laborHistoryId})", 'denyModal', 'Deny')
-            approve = denyApproveOptionsHTML.format("", f"insertApprovals({laborHistoryId});", 'approvalModal', 'Approve')
-        actionsButton = actionsButtonDropdownHTML.format(manage, approve, deny, modify)
+            deny = denyApproveNotesOptionsHTML.format(f"reject_{laborHistoryId}", f"insertDenial({laborHistoryId})", 'denyModal', 'Deny')
+            approve = denyApproveNotesOptionsHTML.format("", f"insertApprovals({laborHistoryId});", 'approvalModal', 'Approve')
+        actionsButton = actionsButtonDropdownHTML.format(manage, approve, deny, modify, notes)
 
     return actionsButton
+
+
+@admin.route('/admin/generalSearch/download', methods=['POST'])
+def downloadGeneralSearchResults():
+    global generalSearchResults
+    if generalSearchResults:
+        generalSearchResults = generalSearchResults.order_by(-FormHistory.createdDate)
+        excel = ExcelMaker()
+        completePath = excel.makeExcelAllPendingForms(generalSearchResults)
+        filename = completePath.split('/').pop()
+        return send_file(completePath, as_attachment=True, attachment_filename=filename)

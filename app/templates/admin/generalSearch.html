@@ -78,32 +78,37 @@
       <div class="col-md-4">
         <div class="form-group">
           <label for="">Limit Form Status</label>
-          <div class="checkbox">
+          <div class="radio">
             <label><input type="radio" value="Pending" id="pending" name="formStatus"> Pending</label>
           </div>
-          <div class="checkbox">
+          <div class="radio">
             <label><input type="radio" value="Approved" id="approved" name="formStatus"> Approved</label>
           </div>
-          <div class="checkbox">
+          <div class="radio">
             <label><input type="radio" value="Denied" id="denied" name="formStatus"> Denied</label>
           </div>
         </div>
         <br>
         <div class="form-group">
           <label for="">Limit Form Type</label>
-          <div class="checkbox">
+          <div class="radio">
             <label><input type="radio" value="Labor Status Form" id="original" name="formType"> Original</label>
           </div>
-          <div class="checkbox">
+          <div class="radio">
             <label><input type="radio" value="Labor Adjustment Form" id="adjusted" name="formType"> Adjusted</label>
           </div>
-          <div class="checkbox">
+          <div class="radio">
             <label><input type="radio" value="Labor Release Form" id="release" name="formType"> Release</label>
           </div>
-          <div class="checkbox">
+          <div class="radio">
             <label><input type="radio" value="Labor Overload Form" id="overload" name="formType"> Overload</label>
           </div>
         </div>
+      </div>
+      <div class="col-md-4">
+        <form method="POST" action="/admin/generalSearch/download">
+          <button class="btn btn-success" id="download">Download</button>
+        </form>
       </div>
     </div>
   <button type="button" class="btn btn-primary" id="generalSearchButton">Search</button>
@@ -144,6 +149,7 @@
     </div>
   </div>
 </div>
+{% include "snips/pendingNotesModal.html" %}
 {% include "snips/FormsDeny.html" %}
 {% include "snips/pendingApprovalModal.html" %}
 {% endblock %}

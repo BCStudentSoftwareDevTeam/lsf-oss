@@ -1,15 +1,13 @@
 $(document).ready(function(){
   $('#generalSearchTable').hide();
+  $("#download").prop('disabled', true);
 });
 
 $('a.hover_indicator').click(function(e){
   e.preventDefault(); // prevents click on '#' link from jumping to top of the page.
 });
 
-
 $('#generalSearchButton').on('click', function(){
-
-  $('#generalSearchTable').show();
 
   var termCode = $("#termSelect").val();
   var departmentID = $("#departmentSelect").val();
@@ -33,42 +31,47 @@ $('#generalSearchButton').on('click', function(){
                'formStatus': formStatusList,
                'formType': formTypeList
              };
-  var data = JSON.stringify(queryDict);
 
-  // TODO: If no option is selected tell user that they should have at least one input.
-  // If at least one field is filled: run the ajax
-  // otherwise, show a warning.
+  data = JSON.stringify(queryDict)
 
-  $('#generalSearchTable').DataTable({
-        responsive: true,
-        destroy: true,
-        searching: false,
-        processing: true,
-        serverSide: true,
-        paging: true,
-        lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
-        pageLength: 25,
-        aaSorting: [[0, 'desc']],
-        columnDefs: [{
-          targets: -1,
-          orderable: false,
-        }],
-        ajax: {
-            url: "/admin/generalSearch",
-            type: "POST",
-            data: {'data': data},
-            dataSrc: "data",
-            columns: [
-              {"data":"Term"},
-              {"data":"Department"},
-              {"data":"Supervisor"},
-              {"data":"Student"},
-              {"data":"Position (WLS)"},
-              {"data":"Hours"},
-              {"data":"Contract Dates"},
-              {"data":"Created"},
-              {"data":""}
-            ]
+  if (termCode + departmentID + supervisorID + studentID == "" && formStatusList.length + formTypeList.length == 0) {
+    $("#flash_container").html('<div class="alert alert-danger" role="alert" id="flasher">At least one field one must be selected.</div>');
+    $("#flasher").delay(5000).fadeOut();
+  }
+  else {
+    $("#download").prop('disabled', false);
+    $('#generalSearchTable').show();
+    $('#generalSearchTable').DataTable({
+          responsive: true,
+          destroy: true,
+          searching: false,
+          processing: true,
+          serverSide: true,
+          paging: true,
+          lengthMenu: [[10, 25, 50, 100], [10, 25, 50, 100]],
+          pageLength: 25,
+          aaSorting: [[0, 'desc']],
+          columnDefs: [{
+            targets: -1,
+            orderable: false,
+          }],
+          ajax: {
+              url: "/admin/generalSearch",
+              type: "POST",
+              data: {'data': data},
+              dataSrc: "data",
+              columns: [
+                {"data":"Term"},
+                {"data":"Department"},
+                {"data":"Supervisor"},
+                {"data":"Student"},
+                {"data":"Position (WLS)"},
+                {"data":"Hours"},
+                {"data":"Contract Dates"},
+                {"data":"Created"},
+                {"data":""}
+              ]
         }
-  });
+    });
+  }
 });
