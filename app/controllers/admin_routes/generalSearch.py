@@ -44,9 +44,6 @@ def getDatatableData(request):
     This function runs a query based on selected options in the front-end and retrieves the appropriate forms.
     Then, it puts all the retrieved data in appropriate form to be send to the ajax call in the JS file.
     '''
-    queryResult = request.form['data']
-    queryDict = json.loads(queryResult)
-
     draw = int(request.form['draw'])
     start = int(request.form['start'])
     length = int(request.form['length'])
@@ -61,12 +58,15 @@ def getDatatableData(request):
                             6: FormHistory.formID.startDate,
                             7: FormHistory.createdBy}
 
+    queryResult = request.form['data']
+    queryDict = json.loads(queryResult)
+
     termCode = queryDict.get('termCode', "")
     departmentId = queryDict.get('departmentID', "")
     supervisorId = queryDict.get('supervisorID', "")
     studentId = queryDict.get('studentID', "")
-    formStatusList = queryDict.get('formStatus', "") # checkboxes
-    formTypeList = queryDict.get('formType', "")
+    formStatusList = queryDict.get('formStatus', "") # form status checkboxes
+    formTypeList = queryDict.get('formType', "") # form type checkboxes
 
     fieldValueMap = { Term.termCode: termCode,
                      Department.departmentID: departmentId,
@@ -87,7 +87,7 @@ def getDatatableData(request):
             else:
                 clauses.append(field == value)
 
-    expression = reduce(operator.and_, clauses) # This expression created AND statements using model fields and selec picker values
+    expression = reduce(operator.and_, clauses) # This expression creates AND statements using model fields and select picker values appened to clauses list
 
     query = (FormHistory.select().join(LaborStatusForm, on=(FormHistory.formID == LaborStatusForm.laborStatusFormID))
                         .join(Department, on=(LaborStatusForm.department == Department.departmentID))
@@ -103,7 +103,15 @@ def getDatatableData(request):
     elif order == "asc":
         filteredQuery = query.order_by(colIndexColNameMap[sortColIndex]).limit(length).offset(start)
 
-    # Putting the data in the correct format to be used by the JS file
+    data = getFormattedData(filteredQuery)
+    formsDict = {"draw": draw, "recordsTotal": recordsTotal, "recordsFiltered": recordsTotal, "data": data}
+
+    return jsonify(formsDict)
+
+def getFormattedData(filteredQuery):
+    '''
+    Putting the data in the correct format to be used by the JS file
+    '''
     supervisorStudentHTML = '<a href="#" class="hover_indicator" aria-label="{}">{} </a><a href="mailto:{}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>'
     departmentHTML = '<a href="#" class="hover_indicator" aria-label="{}-{}"> {}</a>'
     positionHTML = '<a href="#" class="hover_indicator" aria-label="{}"> {}</a><br>{}'
@@ -120,10 +128,6 @@ def getDatatableData(request):
                             form.formID.supervisor.ID,
                             ' '.join([form.formID.supervisor.FIRST_NAME, form.formID.supervisor.LAST_NAME]),
                             form.formID.supervisor.EMAIL)
-
-        if form.adjustedForm.fieldAdjusted == "supervisor":
-            supervisor = supervisorStudentHTML.format(form.adjustedForm.oldValue.ID, form.adjustedForm.newValue, form.adjustedForm.oldValue.email)
-
         record.append(currentSupervisor)
 
         record.append(supervisorStudentHTML.format(
@@ -155,10 +159,8 @@ def getDatatableData(request):
 
         record.append(actionsButton)
         data.append(record)
+    return data
 
-    formsDict = {"draw": draw, "recordsTotal": recordsTotal, "recordsFiltered": recordsTotal, "data": data}
-
-    return jsonify(formsDict)
 
 def getActionButtonLogic(form, laborHistoryId, laborStatusFormId):
     '''
