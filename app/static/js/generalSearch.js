@@ -18,11 +18,11 @@ $('#generalSearchButton').on('click', function(){
   var formStatusList = [];
   var formTypeList = [];
 
-  $("input:checkbox[name='formStatus']:checked").each(function(){
+  $("input:radio[name='formStatus']:checked").each(function(){
       formStatusList.push($(this).val());
   });
 
-  $("input:checkbox[name='formType']:checked").each(function(){
+  $("input:radio[name='formType']:checked").each(function(){
       formTypeList.push($(this).val());
   });
 
