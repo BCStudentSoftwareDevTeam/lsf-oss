@@ -15,14 +15,14 @@ from functools import reduce
 from app.controllers.main_routes.download import ExcelMaker
 
 # Global variable that will store the query result.
-# It is made global to be later used in creating CSV file.
+# It is made global to be used later in creating CSV file.
 generalSearchResults = None
 
 @admin.route('/admin/generalSearch', methods=['GET', 'POST'])
 def generalSearch():
     '''
     When the request is GET the function populates the General Search interface dropdown menus with their corresponding values.
-    If the request is POST it also populates the datatable with data.
+    If the request is POST it also populates the datatable with data based on user input.
     '''
     currentUser = require_login()
     if not currentUser or not currentUser.isLaborAdmin:
@@ -47,33 +47,37 @@ def generalSearch():
 def getDatatableData(request):
     '''
     This function runs a query based on selected options in the front-end and retrieves the appropriate forms.
-    Then, it puts all the retrieved data in appropriate form to be send to the ajax call in the JS file.
+    Then, it puts all the retrieved data in appropriate form to be send to the ajax call in the generalSearch.js file.
     '''
-    draw = int(request.form.get('draw'))
-    start = int(request.form.get('start'))
-    length = int(request.form.get('length'))
-    sortColIndex = int(request.form.get("order[0][column]"))
+
+    # 'draw', 'start', 'length', 'order[0][column]', 'order[0][dir]' are built-in parameters, i.e.,
+    # they are implicitly passed as part of the AJAX request when using datatable server-side processing
+    draw = int(request.form.get('draw', -1))
+    rowNumber = int(request.form.get('start', -1))
+    rowsPerPage = int(request.form.get('length', -1))
+    sortColIndex = int(request.form.get("order[0][column]", -1))
     order = request.form.get('order[0][dir]')
+    queryFilterData = request.form.get('data')
+    queryFilterDict = json.loads(queryFilterData)
+    # Dictionary to match column indices with column names in the DB
+    # It is used for identifying the column that needs to be sorted
     colIndexColNameMap = {  0: Term.termCode,
                             1: Department.DEPT_NAME,
-                            2: FormHistory.formID.supervisor.FIRST_NAME,
+                            2: Supervisor.FIRST_NAME,
                             3: Student.FIRST_NAME,
                             4: FormHistory.formID.POSN_CODE,
                             5: FormHistory.formID.weeklyHours,
                             6: FormHistory.formID.startDate,
-                            7: FormHistory.createdBy}
+                            7: FormHistory.createdBy }
 
-    queryResult = request.form.get('data')
-    queryDict = json.loads(queryResult)
+    termCode = queryFilterDict.get('termCode', "")
+    departmentId = queryFilterDict.get('departmentID', "")
+    supervisorId = queryFilterDict.get('supervisorID', "")
+    studentId = queryFilterDict.get('studentID', "")
+    formStatusList = queryFilterDict.get('formStatus', "") # form status checkboxes
+    formTypeList = queryFilterDict.get('formType', "") # form type checkboxes
 
-    termCode = queryDict.get('termCode', "")
-    departmentId = queryDict.get('departmentID', "")
-    supervisorId = queryDict.get('supervisorID', "")
-    studentId = queryDict.get('studentID', "")
-    formStatusList = queryDict.get('formStatus', "") # form status checkboxes
-    formTypeList = queryDict.get('formType', "") # form type checkboxes
-
-    fieldValueMap = { Term.termCode: termCode,
+    fieldValueMap = {Term.termCode: termCode,
                      Department.departmentID: departmentId,
                      Student.ID: studentId,
                      Supervisor.ID: supervisorId,
@@ -81,9 +85,10 @@ def getDatatableData(request):
                      FormHistory.historyType: formTypeList}
 
     clauses = []
+    # WHERE clause conditions are dynamically generated using model fields and selectpicker values
     for field, value in fieldValueMap.items():
         if value != "" and value:
-            # "is" is used to compare the two peewee objects.
+            # "is" is used to compare the two peewee objects as opposed to "==" operator.
             if field is FormHistory.historyType:
                 for val in value:
                     clauses.append(field == val)
@@ -93,7 +98,7 @@ def getDatatableData(request):
             else:
                 clauses.append(field == value)
 
-    # This expression creates AND statements using model fields and select picker values appened to clauses list
+    # This expression creates SQL AND operator between the conditions added to 'clauses' list
     expression = reduce(operator.and_, clauses)
 
     global generalSearchResults
@@ -105,25 +110,33 @@ def getDatatableData(request):
                         .where(expression))
 
     recordsTotal = generalSearchResults.count()
-    if order == "desc":
-        filteredQuery = generalSearchResults.order_by(-colIndexColNameMap[sortColIndex]).limit(length).offset(start)
-    else:
-        filteredQuery = generalSearchResults.order_by(colIndexColNameMap[sortColIndex]).limit(length).offset(start)
 
-    data = getFormattedData(filteredQuery)
-    formsDict = {"draw": draw, "recordsTotal": recordsTotal, "recordsFiltered": recordsTotal, "data": data}
+    # Sorting a column in descending order when a specific column is chosen
+    # Initially, it sorts by the Term column as specified in generalSearch.js
+    if order == "desc":
+        filteredSearchResults = generalSearchResults.order_by(-colIndexColNameMap[sortColIndex]).limit(rowsPerPage).offset(rowNumber)
+    # Sorting a column in ascending order when a specific column is chosen
+    else:
+        filteredSearchResults = generalSearchResults.order_by(colIndexColNameMap[sortColIndex]).limit(rowsPerPage).offset(rowNumber)
+
+    formattedData = getFormattedData(filteredSearchResults)
+    formsDict = {"draw": draw, "recordsTotal": recordsTotal, "recordsFiltered": recordsTotal, "data": formattedData}
 
     return jsonify(formsDict)
 
-def getFormattedData(filteredQuery):
+def getFormattedData(filteredSearchResults):
     '''
-    Putting the data in the correct format to be used by the JS file
+    Putting the data in the correct format to be used by the JS file.
+    Because this implementation is using server-side processing of datatables,
+    the HTML for the datatables are also formatted here.
     '''
+
     supervisorStudentHTML = '<a href="#" class="hover_indicator" aria-label="{}">{} </a><a href="mailto:{}"><span class="glyphicon glyphicon-envelope mailtoIcon"></span></a>'
     departmentHTML = '<a href="#" class="hover_indicator" aria-label="{}-{}"> {}</a>'
     positionHTML = '<a href="#" class="hover_indicator" aria-label="{}"> {}</a>'
-    data = []
-    for form in filteredQuery:
+    formattedData = []
+    for form in filteredSearchResults:
+        # The order in which you append the items to 'record' matters and it should match the order of columns on the table!
         record = []
         # Term
         record.append(form.formID.termCode.termName)
@@ -188,9 +201,9 @@ def getFormattedData(filteredQuery):
         actionsButton = getActionButtonLogic(form, laborHistoryId, laborStatusFormId)
 
         record.append(actionsButton)
-        data.append(record)
+        formattedData.append(record)
 
-    return data
+    return formattedData
 
 
 def getActionButtonLogic(form, laborHistoryId, laborStatusFormId):
@@ -201,7 +214,7 @@ def getActionButtonLogic(form, laborHistoryId, laborStatusFormId):
     actionsButtonDropdownHTML = '<div class="dropdown"><button class="btn btn-primary dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">Actions <span class="caret"></span></button>' +\
                                 '<ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style="min-width: 100%;">{}{}{}{}{}</ul></div>'
     actionsListHTML = '<li role="presentation"><a role="menuitem" href="{}">{}</a></li>'
-    manageOptionHTML = actionsListHTML.format('#', '<span id="{}" onclick="{}">Manage</span>')
+    manageOptionHTML = actionsListHTML.format('#', '<span id="{}" onclick="{}">{}</span>')
     denyApproveNotesOptionsHTML = actionsListHTML.format('#', '<span id="{}" onclick="{}" data-toggle="modal" data-target="#{}">{}</span>')
     modifyOptionHTML = actionsListHTML.format('/alterLSF/{lsfID}', '<span id="edit_{lsfID}">Modify</span>')
 
@@ -211,21 +224,23 @@ def getActionButtonLogic(form, laborHistoryId, laborStatusFormId):
     deny = ""
     manage = ""
     modify = ""
-    notes = denyApproveNotesOptionsHTML.format(f'notes_{laborHistoryId}', f'getNotes({laborStatusFormId})', 'NotesModal', 'View Notes')
+    notes = ""
 
     if form.historyType.historyTypeName == "Labor Status Form":
-        manage = manageOptionHTML.format(laborHistoryId, f"loadLaborHistoryModal({laborHistoryId})")
+        manage = manageOptionHTML.format(laborHistoryId, f"loadLaborHistoryModal({laborStatusFormId})", 'Labor History')
         actionsButton = actionsButtonDropdownHTML.format(manage, approve, deny, modify, notes)
 
     if form.status.statusName == "Pending":
+        # show notes modal for all pending labor status forms
+        notes = denyApproveNotesOptionsHTML.format(f'notes_{laborHistoryId}', f'getNotes({laborStatusFormId})', 'NotesModal', 'View Notes')
         if form.overloadForm:
-            manage = manageOptionHTML.format(laborHistoryId, f"loadOverloadModal({laborHistoryId}, {laborStatusFormId})")
+            manage = manageOptionHTML.format(laborHistoryId, f"loadOverloadModal({laborHistoryId}, {laborStatusFormId})", 'Manage')
         elif form.releaseForm:
-            manage = manageOptionHTML.format(laborHistoryId, f"loadReleaseModal({laborHistoryId}, {laborStatusFormId})")
+            manage = manageOptionHTML.format(laborHistoryId, f"loadReleaseModal({laborHistoryId}, {laborStatusFormId})", 'Manage')
         elif form.adjustedForm:
             deny = denyApproveNotesOptionsHTML.format(f"reject_{laborHistoryId}", f"insertDenial({laborHistoryId})", 'denyModal', 'Deny')
             approve = denyApproveNotesOptionsHTML.format("", f"insertApprovals({laborHistoryId})", 'approvalModal', 'Approve')
-        else:
+        else: # if it is the original labor status form
             modify = modifyOptionHTML.format(lsfID = laborStatusFormId)
             deny = denyApproveNotesOptionsHTML.format(f"reject_{laborHistoryId}", f"insertDenial({laborHistoryId})", 'denyModal', 'Deny')
             approve = denyApproveNotesOptionsHTML.format("", f"insertApprovals({laborHistoryId});", 'approvalModal', 'Approve')
@@ -236,10 +251,14 @@ def getActionButtonLogic(form, laborHistoryId, laborStatusFormId):
 
 @admin.route('/admin/generalSearch/download', methods=['POST'])
 def downloadGeneralSearchResults():
+    '''
+    This function uses the general search results, stored in a global variable, to
+    generate a CSV file of datatable data.
+    '''
+    
     global generalSearchResults
-    if generalSearchResults:
-        generalSearchResults = generalSearchResults.order_by(-FormHistory.createdDate)
-        excel = ExcelMaker()
-        completePath = excel.makeExcelAllPendingForms(generalSearchResults)
-        filename = completePath.split('/').pop()
-        return send_file(completePath, as_attachment=True, attachment_filename=filename)
+    generalSearchResults = generalSearchResults.order_by(-FormHistory.createdDate)
+    excel = ExcelMaker()
+    completePath = excel.makeExcelAllPendingForms(generalSearchResults)
+    filename = completePath.split('/').pop()
+    return send_file(completePath, as_attachment=True, attachment_filename=filename)

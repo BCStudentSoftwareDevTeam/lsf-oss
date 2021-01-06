@@ -8,6 +8,10 @@ $('a.hover_indicator').click(function(e){
 });
 
 $('#generalSearchButton').on('click', function(){
+  runGeneralSearchQuery();
+});
+
+function runGeneralSearchQuery() {
 
   var termCode = $("#termSelect").val();
   var departmentID = $("#departmentSelect").val();
@@ -35,7 +39,7 @@ $('#generalSearchButton').on('click', function(){
   data = JSON.stringify(queryDict)
 
   if (termCode + departmentID + supervisorID + studentID == "" && formStatusList.length + formTypeList.length == 0) {
-    $("#flash_container").html('<div class="alert alert-danger" role="alert" id="flasher">At least one field one must be selected.</div>');
+    $("#flash_container").html('<div class="alert alert-danger" role="alert" id="flasher">At least one field must be selected.</div>');
     $("#flasher").delay(5000).fadeOut();
   }
   else {
@@ -74,4 +78,4 @@ $('#generalSearchButton').on('click', function(){
         }
     });
   }
-});
+}

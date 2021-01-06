@@ -17,7 +17,7 @@ $(document).ready(function() {
     targetsList = [0, 9]
   }
   // If overload tab has been clicked, then we
-  table = $('#pendingForms, #statusForms, #adjustedForms, #releaseForms').DataTable({
+table = $('#pendingForms, #statusForms, #adjustedForms, #releaseForms').DataTable({
     'columnDefs': [{
       'orderable': false,
       'targets': targetsList
@@ -68,7 +68,6 @@ function insertApprovals(laborHistoryId = null) {
     location.reload();
   }
   var data = JSON.stringify(labor_details_ids);
-  console.log("added the id");
   $.ajax({
     type: "POST",
     url: "/admin/checkedForms",
@@ -131,7 +130,15 @@ function finalApproval() { //this method changes the status of the lsf from pend
           $("#approveModalButton").text("Approve");
           $("#approvalModal").data("bs.modal").options.backdrop = true;
           $("#approvalModal").data("bs.modal").options.keyboard = true;
-          location.reload(true);
+
+          // Try and catch is used here to prevent General Search page from reloading the entire the page.
+          try {
+            runGeneralSearchQuery();
+            $('#approvalModal').modal('hide');
+          }
+          catch(e){
+            location.reload(true);
+          }
         }
       }
     }
@@ -198,7 +205,14 @@ function finalDenial() { // this mehod is AJAX call for the finalDenial method i
     success: function(response) {
       if (response) {
         if (response.success) {
-          location.reload(true);
+          // Try and catch is used here to prevent General Search page from reloading the entire the page.
+          try {
+            runGeneralSearchQuery();
+            $('.denialModal').modal('hide');
+          }
+          catch(e){
+            location.reload(true);
+          }
         }
       }
     }
@@ -259,7 +273,15 @@ function notesInsert(textareaID, buttonID) {
     data: data,
     contentType: 'application/json',
     success: function(response) {
-        window.location.reload(true);
+      // Try and catch is used here to prevent General Search page from reloading the entire the page.
+      try {
+        clearTextArea();
+        runGeneralSearchQuery();
+        $('#NotesModal').modal('hide');
+      }
+      catch(e){
+        location.reload(true);
+      }
       }
   });
 }
@@ -282,8 +304,8 @@ function finalDeny() {
 }
 
 function clearTextArea() { //makes sure that it empties text areas and p tags when modal is closed
-  $("#notesText").empty();
-  $("#laborNotesText").empty();
+  $("#notesText").val("");
+  $("#laborNotesText").val("");
 }
 
 
@@ -401,7 +423,14 @@ function submitOverload(formHistoryID) {
         data: data,
         contentType: 'application/json',
         success: function(response) {
-          location.reload();
+          // Try and catch is used here to prevent General Search page from reloading the entire the page.
+          try {
+            runGeneralSearchQuery();
+            $('#overloadModal').modal('hide');
+          }
+          catch(e){
+            location.reload(true);
+          }
         },
         error: function(request, status, error) {
           console.log(request.responseText);
@@ -454,7 +483,14 @@ function submitRelease(formHistoryID) {
         data: data,
         contentType: 'application/json',
         success: function(response) {
-          location.reload();
+          // Try and catch is used here to prevent General Search page from reloading the entire the page.
+          try {
+            runGeneralSearchQuery();
+            $('#modalRelease').modal('hide');
+          }
+          catch(e){
+            location.reload(true);
+          }
         },
         error: function(request, status, error) {
           console.log(request.responseText);

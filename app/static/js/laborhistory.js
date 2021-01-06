@@ -85,7 +85,14 @@ function withdrawform(formID){
          contentType: 'application/json',
          success: function(response) {
              if (response["Success"]) {
-               window.location.href = response["url"]
+               // Try and catch is used here to prevent General Search page from reloading the entire the page.
+               try {
+                 runGeneralSearchQuery();
+                 $('#modal').modal('hide');
+               }
+               catch(e){
+                 window.location.href = response["url"]
+               }
              }
            }
          });
