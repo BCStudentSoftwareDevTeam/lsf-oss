@@ -17,7 +17,7 @@ $(document).ready(function() {
     targetsList = [0, 9]
   }
   // If overload tab has been clicked, then we
-table = $('#pendingForms, #statusForms, #adjustedForms, #releaseForms').DataTable({
+  table = $('#pendingForms, #statusForms, #adjustedForms, #releaseForms').DataTable({
     'columnDefs': [{
       'orderable': false,
       'targets': targetsList

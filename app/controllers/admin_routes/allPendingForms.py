@@ -1,5 +1,3 @@
-#from flask import render_template  #, redirect, url_for, request, g, jsonify, current_app
-#from flask_login import current_user, login_required
 from flask import flash, send_file, json, jsonify, redirect, url_for
 from app.login_manager import *
 from app.controllers.admin_routes import admin
@@ -44,22 +42,22 @@ def allPendingForms(formType):
         overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
         if formType == "pendingLabor":
             historyType = "Labor Status Form"
-            # approvalTarget = "denyLaborStatusFormsModal"
+            approvalTarget = "denyLaborStatusFormsModal"
             pageTitle = "Pending Labor Status Forms"
 
         elif formType == "pendingAdjustment":
             historyType = "Labor Adjustment Form"
-            # approvalTarget = "denyAdjustedFormsModal"
+            approvalTarget = "denyAdjustedFormsModal"
             pageTitle = "Pending Adjustment Forms"
 
         elif formType == "pendingOverload":
             historyType = "Labor Overload Form"
-            # approvalTarget = "denyOverloadFormsModal"
+            approvalTarget = "denyOverloadFormsModal"
             pageTitle = "Pending Overload Forms"
 
         elif formType == "pendingRelease":
             historyType = "Labor Release Form"
-            # approvalTarget = "denyReleaseformSModal"
+            approvalTarget = "denyReleaseformSModal"
             pageTitle = "Pending Release Forms"
         formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
         # only if a form is adjusted
