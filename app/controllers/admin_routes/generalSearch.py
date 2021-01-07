@@ -9,6 +9,7 @@ from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
 from app.models.historyType import HistoryType
 from app.models.status import Status
+from app.models.user import User
 from app.controllers.admin_routes.allPendingForms import checkAdjustment
 import operator
 from functools import reduce
@@ -65,10 +66,10 @@ def getDatatableData(request):
                             1: Department.DEPT_NAME,
                             2: Supervisor.FIRST_NAME,
                             3: Student.FIRST_NAME,
-                            4: FormHistory.formID.POSN_CODE,
-                            5: FormHistory.formID.weeklyHours,
-                            6: FormHistory.formID.startDate,
-                            7: FormHistory.createdBy }
+                            4: LaborStatusForm.POSN_CODE,
+                            5: LaborStatusForm.weeklyHours,
+                            6: LaborStatusForm.startDate,
+                            7: User.username }
 
     termCode = queryFilterDict.get('termCode', "")
     departmentId = queryFilterDict.get('departmentID', "")
@@ -107,6 +108,7 @@ def getDatatableData(request):
                         .join(Supervisor, on=(LaborStatusForm.supervisor == Supervisor.ID))
                         .join(Student, on=(LaborStatusForm.studentSupervisee == Student.ID))
                         .join(Term, on=(LaborStatusForm.termCode == Term.termCode))
+                        .join(User, on=(FormHistory.createdBy == User.userID))
                         .where(expression))
 
     recordsTotal = generalSearchResults.count()
@@ -255,7 +257,7 @@ def downloadGeneralSearchResults():
     This function uses the general search results, stored in a global variable, to
     generate a CSV file of datatable data.
     '''
-    
+
     global generalSearchResults
     generalSearchResults = generalSearchResults.order_by(-FormHistory.createdDate)
     excel = ExcelMaker()
