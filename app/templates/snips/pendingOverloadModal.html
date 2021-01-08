@@ -5,7 +5,7 @@
 <div class="modal-body" id="overloadModalBody">
   {% if pendingForm == true %}
     <div class="row" style="margin-top:7px;">
-      <div class="col-sm-1" style="padding:0px;">
+      <div class="col-sm-1">
         <span class="glyphicon glyphicon-info-sign" style="color:blue;"></span>
       </div>
       <div class="col-sm-11" align="left" style="padding:0px;">
@@ -67,17 +67,17 @@
     </tbody>
   </table>
   <p class="status-warning" style="color:red;" hidden><span class="glyphicon glyphicon-exclamation-sign"></span><strong>A Status is required in order to submit</strong></p>
-  <div id='radioDiv'>
+  <div id='radioDiv' align="center">
     <!-- Need to pass in the notes counter from the notes counter method -->
     <p><span class="glyphicon glyphicon-exclamation-sign"></span> <b>Selection is required:</b></p>
     <label for="approve" class="radio-inline">
-      <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)"><b>Approve</b></input>
+      <input type="radio" id="approve" name="decision" value="approve" onclick="displayModalTextArea(this.value)"><b>Approve</b>
     </label>
     <label for="approveRel" class="radio-inline">
-      <input type="radio" id="approveRel" name="decision" value="approveRel" onclick="displayModalTextArea(this.value)"><b>Approve Reluctantly</b></input>
+      <input type="radio" id="approveRel" name="decision" value="approveRel" onclick="displayModalTextArea(this.value)"><b>Approve Reluctantly</b>
     </label>
     <label for="deny" class="radio-inline">
-      <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea(this.value)"><b>Deny</b></input>
+      <input type="radio" id="deny" name="decision" value="deny" onclick="displayModalTextArea(this.value)"><b>Deny</b>
     </label>
   </div>
   <div id="viewNotesButton">
