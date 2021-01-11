@@ -481,7 +481,7 @@ def financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, curr
                                     createdBy=currentUser, 
                                     date=currentDate,
                                     notesContents=rsp["denialReason"],
-                                    Notes.noteType == "Labor Note")
+                                    noteType = "Labor Note")
         newNoteEntry.save()
     ## Updating the overloadform TableS
     if currentUser.isFinancialAidAdmin:
@@ -525,7 +525,7 @@ def laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDat
                                     createdBy = currentUser,
                                     date = currentDate,
                                     notesContents = rsp['denialReason'],
-                                    Notes.noteType == "Labor Note")
+                                    noteType = "Labor Note")
                 pendingForm.save()
 
                 if pendingForm.historyType.historyTypeName == "Labor Status Form":
@@ -546,14 +546,14 @@ def laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDat
                         createdBy = currentUser,
                         date = currentDate,
                         notesContents = rsp['denialReason'],
-                        Notes.noteType == "Labor Note")
+                        noteType = "Labor Note")
     if 'adminNotes' in rsp.keys():
         # We only add admin notes if there was a note made on the UI
         Notes.create(formID = historyForm.formID.laborStatusFormID,
                         createdBy = currentUser,
                         date = currentDate,
                         notesContents = rsp['adminNotes'],
-                        Notes.noteType == "Labor Note")
+                        noteType = "Labor Note")
     historyForm.status = status.statusName
     historyForm.reviewedBy = currentUser
     historyForm.reviewedDate = currentDate
