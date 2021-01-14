@@ -123,7 +123,6 @@ def submitAlteredLSF(laborStatusKey):
     """
     Submits an altered LSF form and creates a formHistory entry if appropriate
     """
-    print("I am inside of here?")
     try:
         currentUser = require_login()
         if not currentUser:        # Not logged in
@@ -134,7 +133,6 @@ def submitAlteredLSF(laborStatusKey):
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
         formHistoryIDs = []
-        print("How far down are we?")
         for fieldName in fieldsChanged:
             lsf = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if formStatus =="Pending":
@@ -143,18 +141,13 @@ def submitAlteredLSF(laborStatusKey):
                 changedForm = adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
                 if changedForm:
                     formHistoryIDs.append(changedForm)
-        print("Atleast this far?", formHistoryIDs, formStatus)
         if formStatus == "Approved":
             for formHistory in formHistoryIDs:
-                print("ID's", formHistoryIDs)
-                print("Inside of for loop")
                 try:
-                    print("Inside of first try statement")
                     email = emailHandler(formHistory)
                     if "supervisor" in fieldsChanged:
                         email.laborStatusFormAdjusted(fieldsChanged["supervisor"]["newValue"])
                     else:
-                        print("Do I atleast make it to this point?")
                         email.laborStatusFormAdjusted()
                 except Exception as e:
                     print("An error occured while attempting to send adjustment form emails: ", e)
@@ -165,7 +158,6 @@ def submitAlteredLSF(laborStatusKey):
         return jsonify({"Success": True})
 
     except Exception as e:
-        print("I am inside of this exception?")
         message = "An error occured. Your labor {0} form(s) for {1} {2} were not submitted.".format("status" if formStatus == "Pending" else "adjustment",
                                                                                                     student.studentSupervisee.FIRST_NAME,
                                                                                                     student.studentSupervisee.LAST_NAME)
@@ -239,7 +231,7 @@ def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
         if fieldName == "weeklyHours":
             newWeeklyHours = fieldsChanged[fieldName]['newValue']
             createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedforms.adjustedFormID, formHistories)
-
+        return formHistories.formHistoryID
 
 def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None,  formHistories=None):
     allTermForms = LaborStatusForm.select() \
