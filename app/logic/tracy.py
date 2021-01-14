@@ -91,11 +91,11 @@ class Tracy():
         return STUPOSN.query.with_entities(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT) \
                             .distinct().order_by(STUPOSN.DEPT_NAME).all()
 
-    def getPositionsFromDepartment(self, department: str):
+    def getPositionsFromDepartment(self, departmentOrg: str, departmentAcct: str):
         """
         Return a list of position objects for the given department name, sorted by position title
         """
-        return STUPOSN.query.filter(STUPOSN.ORG == department).order_by(STUPOSN.POSN_TITLE).all()
+        return STUPOSN.query.filter((STUPOSN.ORG == departmentOrg) & (STUPOSN.ACCOUNT == departmentAcct)).order_by(STUPOSN.POSN_TITLE).all()
 
     def getPositionFromCode(self, positionCode: str):
         """
@@ -129,6 +129,14 @@ class Tracy():
         else:
             userInput = userInput.split()
             students = STUDATA.query.filter((STUDATA.FIRST_NAME.contains(userInput[0])) & (STUDATA.LAST_NAME.contains(userInput[1]))).all()
+        return students
+
+    def getStudentsFromBNumberSearch(self, bnum_part: str):
+        """
+        Return a list of students searching by bnumber
+        """
+        bnum_search = bnum_part.strip() + "%"
+        students = STUDATA.query.filter(STUDATA.ID.like(bnum_search)).all()
         return students
 
     def checkStudentOrSupervisor(self, username: str):

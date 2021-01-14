@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block styles %}
 {{super()}}
-<link rel="stylesheet" type="text/css" href="/static/css/formHistory.css?u={{lastStaticUpdate}}" />
+<link rel="stylesheet" type="text/css" href="/static/css/formHistory.css?u={{lastStaticUpdate}}"/>
 {% endblock %}
 {% block scripts %}
 {{super()}}
@@ -12,22 +12,22 @@
 <a class="skipContent" href="#downloadButton" tabindex="1">Click to Skip</a>
 <div align= "center">
   <h1>Labor History</h1>
-    <span id="studentName">{{student.FIRST_NAME}} {{student.LAST_NAME}}</span>
-    {% if currentUser.supervisor or currentUser.isLaborAdmin %}
-      <form method="POST" action="/laborHistory/download">
-        <input hidden name="listOfForms" value="{{laborStatusFormList}}" />
-        <div align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success" id="downloadButton">Download</button></div>
-      </form>
-    {% endif %}
+    <span id="studentName">{{student.FIRST_NAME}} {{student.LAST_NAME}} </span> <a href="mailto:{{student.STU_EMAIL}}" id="studentName"><span id="mailtoIcon" class="glyphicon glyphicon-envelope"></span></a>
+    <br><span class="h4">{{student.ID}} </span>
+    <form method="POST" action="/laborHistory/download">
+      <input hidden name="listOfForms" value="{{laborStatusFormList}}" />
+      <div style="width:50%; margin-bottom:0.5%" align= "right" id="editor"><button  type="submit" value="Submit" class="btn btn-success" id="downloadButton">Download</button></div>
+    </form>
 
     <div align= "center">
-      <table id="positionTable" >
+      <table class="table" id="positionTable" >
         {% for form in authorizedForms %}
         <tr>
           <!-- If a user is a labor admin, then the value boolean is true, and allows admin access to all of a student's labor history. -->
-          <td id="{{form.laborStatusFormID}}" class="modalLink" value="true">
-            <a href="#" tabindex="0"><span class="h4">{{form.termCode.termName}} - {{form.department.DEPT_NAME}} Dept.</span></a>
-            <p class="h6" id="second-line">{{form.jobType}} - {{form.POSN_TITLE}} ({{form.POSN_CODE}})</p>
+          <td id="{{form.formID.laborStatusFormID}}" class="modalLink" value="true">
+            <a href="#" tabindex="0"><span class="h4">{{form.formID.termCode.termName}} - {{form.formID.department.DEPT_NAME}} Dept.</span></a>
+            <span class="pushRight h5">{{form.status}}</span>
+            <p class="h6" id="second-line">{{form.formID.jobType}} - {{form.formID.POSN_TITLE}} ({{form.formID.POSN_CODE}})</p>
           </td>
         </tr>
         {% endfor %}
@@ -43,6 +43,6 @@
 </div>
 <!-- Modal End -->
   {% if currentUser.supervisor or currentUser.isLaborAdmin %}
-    <div align= "left"><button class='btn btn-danger' id="returnbutton" onclick="location.replace('/')">Return</button></div>
+    <div align= "left"><button class='btn btn-danger' id="returnbutton" onclick="goback('{{departmentName}}')">Return</button></div>
   {% endif %}
 {% endblock %}

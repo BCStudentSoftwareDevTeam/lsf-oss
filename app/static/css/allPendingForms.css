@@ -38,7 +38,7 @@ div#pendingForms_length.dataTables_length {
   text-align: left;
 }
 
-[class*="hover_indicator"] {
+a.hover_indicator {
   text-decoration: none !important;
   position: relative;
   border-bottom: 1px dotted #000;
@@ -79,4 +79,18 @@ a.hover_indicator:active {
 [class*="hover_indicator"]:hover:after, [class*="hover_indicator"]:focus:after {
   display: block;
   color: #000000;
+}
+
+/* Styling for Pending Overload Modal */
+#radioDiv p{
+  color:red;
+  margin: 0px 0px 0px;
+}
+
+#viewNotesButton{
+  float: left;
+}
+
+.mailtoIcon{
+  font-size: smaller;
 }

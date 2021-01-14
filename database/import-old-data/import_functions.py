@@ -43,7 +43,7 @@ def validate_file(f, fields):
         except:
             print("Line {}:".format(reader.line_num), "Bad ID '{}'. Need quotes on previous line.".format(row['form_id']))
             success = False
-            
+
     f.seek(0)
 
     return success
@@ -77,7 +77,7 @@ def getTerm(raw_term, start_year, terms):
         termname += " {}".format(start_year)
 
     if start_year not in terms:
-        terms[start_year] = {} 
+        terms[start_year] = {}
     if termname not in terms[start_year]:
         terms[start_year][termname] = None
 
@@ -105,7 +105,7 @@ def handleSupervisor(raw_id, raw_name, department):
     id_text = raw_id.strip()
 
     try:
-        supervisor = (Supervisor.get_or_none(ID=id_text) or 
+        supervisor = (Supervisor.get_or_none(ID=id_text) or
                      createSupervisorFromTracy(bnumber=id_text))
         debug("Found {} as a supervisor".format(supervisor.FIRST_NAME + " " + supervisor.LAST_NAME))
     except InvalidUserException:
@@ -151,6 +151,8 @@ def handleStudent(raw_student, raw_name):
 
 # Create User and Student/Supervisor records based on username
 def userFromUsername(username, department):
+    if username == "":
+        return None
 
     user, created = User.get_or_create(username=username)
     if created:
@@ -182,7 +184,6 @@ def userFromUsername(username, department):
 
 def importRecord(record, terms):
     debug(record)
-    save = True
 
     try:
         # There won't be positions for the old stuff, but that's ok because we have all the data
@@ -206,13 +207,18 @@ def importRecord(record, terms):
             ORG=position.ORG)
 
     if department.DEPT_NAME.strip() == "":
+        debug("XXX Don't save records with the empty department")
+        return False
+
+    if record['posn_code'] == "S12345":
+        debug("XXX Don't save the DUMMY position code")
         return False
 
 
     # Ensure Supervisor record exists
     name = record['supervisorName'] if 'supervisorName' in record else ''
     supervisor = handleSupervisor(record['supervisor'], name, department)
-    
+
     # Ensure Student record exists
     name = record['superviseeName'] if 'superviseeName' in record else ''
     student = handleStudent(record['supervisee'], name)
@@ -222,80 +228,88 @@ def importRecord(record, terms):
         term = getTerm(record['term'], record['start'].split('-')[0], terms)
     except DoesNotExist:
         print("XXX Can't find a matching term for '{}'".format(record['term']))
-        save = False
+        return False
 
-    if save:
+    # estimate the proper hours and length of the contract
+    weeks = 16
+    if term.isSummer:
+        weeks = 8
+    elif term.isBreak:
+        weeks = 1
+        if 'Christmas' in term.termName:
+            weeks = 4
 
-        # estimate the proper hours and length of the contract
-        weeks = 16
-        if term.isSummer:
-            weeks = 8
-        elif term.isBreak:
-            weeks = 1
-            if 'Christmas' in term.termName:
-                weeks = 4
+    weekly_hours = record['hour']
+    contract_hours = None
 
-        weekly_hours = record['hour']
-        contract_hours = None
-        if weeks < 16:
+    if weeks < 16:
+        if int(record['hour']) <= 10:
             contract_hours = int(record['hour']) * 5 * weeks
-            weekly_hours = None
+        elif 10 < int(record['hour']) <= 20:
+            contract_hours = int(record['hour']) * weeks
+        else:
+            contract_hours = int(record['hour'])
+        weekly_hours = None
+    
+    end_date = record['end'].strip()
+    if end_date == '':
+        end_date = dateutil.parser.isoparse(record['start']) + timedelta(weeks=weeks)
 
-        end_date = record['end'].strip()
-        if end_date == '':
-            end_date = dateutil.parser.isoparse(record['start']) + timedelta(weeks=weeks)
 
 
+    form = LaborStatusForm.create(
+        studentName=student.FIRST_NAME + " " + student.LAST_NAME,
+        termCode=term.termCode,
+        studentSupervisee=student.ID,
+        supervisor=supervisor.ID,
+        department=department.departmentID,
+        jobType='Primary' if record['job_type'] == 'Primary' else 'Secondary',
+        WLS=record['WLS'] if 'WLS' in record else position.WLS,
+        POSN_TITLE=record['positionName'] if 'positionName' in record else position.POSN_TITLE,
+        POSN_CODE=record['posn_code'],
+        contractHours=contract_hours,
+        weeklyHours=weekly_hours,
+        startDate=record['start'],
+        endDate=end_date,
+        laborDepartmentNotes=record['note'])
 
-        form = LaborStatusForm.create(
-            studentName=student.FIRST_NAME + " " + student.LAST_NAME,
-            termCode=term.termCode,
-            studentSupervisee=student.ID,
-            supervisor=supervisor.ID,
-            department=department.departmentID,
-            jobType='Primary' if record['job_type'] == 'Primary' else 'Secondary',
-            WLS=record['WLS'] if 'WLS' in record else position.WLS,
-            POSN_TITLE=record['positionName'] if 'positionName' in record else position.POSN_TITLE,
-            POSN_CODE=record['posn_code'],
-            contractHours=contract_hours,
-            weeklyHours=weekly_hours,
-            startDate=record['start'],
-            endDate=end_date,
-            laborDepartmentNotes=record['note'])
-        
-        creator = userFromUsername(record['creator'], department)
-        status = Status.get(Status.statusName == "Pending")
+    creator = userFromUsername(record['creator'], department)
+    status = Status.get(Status.statusName == "Pending")
 
-        create_date = record['start']
-        if 'created_on' in record and record['created_on'] != "":
-            create_date = record['created_on']
-        create_date = dateutil.parser.isoparse(create_date[:-3]) # we have extra fractional zeroes for some reason
+    create_date = record['start']
+    if 'created_on' in record and record['created_on'] != "":
+        create_date = record['created_on']
+    create_date = dateutil.parser.isoparse(create_date[:-3]) # we have extra fractional zeroes for some reason
 
-        historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-        fh_entry = FormHistory.create(
-                formID = form.laborStatusFormID,
-                historyType = historyType.historyTypeName,
-                createdBy = creator,
-                createdDate = create_date,
-                status = status.statusName)
+    historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
+    fh_entry = FormHistory.create(
+            formID = form.laborStatusFormID,
+            historyType = historyType.historyTypeName,
+            createdBy = creator,
+            createdDate = create_date,
+            status = status.statusName)
 
-        # Create rejected form or approval
-        if 'approval' in record:
-            if record['approval'] == "1":
-                status = Status.get(Status.statusName == "Approved")
+    # Create rejected form or approval
+    if 'approval' in record:
+        if record['approval'] == "1":
+            status = Status.get(Status.statusName == "Approved")
 
-            elif record['approval'] == "-1":
-                status = Status.get(Status.statusName == "Denied")
-                fh_entry.rejectReason = record['rejectReason']
+        elif record['approval'] == "-1":
+            status = Status.get(Status.statusName == "Denied")
+            fh_entry.rejectReason = record['rejectReason']
 
-            processor = userFromUsername(record['processedBy'], department)
-            fh_entry.reviewedBy = processor
-            fh_entry.reviewedDate = record['processedDate']
-            fh_entry.status = status.statusName
+        processor = userFromUsername(record['processedBy'], department)
+        if not processor:
+            processor = creator
+            processed_date = create_date
+        else:
+            processed_date = dateutil.parser.parse(timestr=record['processedDate'])
 
-            fh_entry.save()
+        fh_entry.reviewedBy = processor
+        fh_entry.reviewedDate = processed_date
+        fh_entry.status = status.statusName
 
-        debug("Saved.")
-        return True
+        fh_entry.save()
 
-    return False
+    debug("Saved.")
+    return True

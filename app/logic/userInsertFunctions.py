@@ -71,16 +71,18 @@ def createSupervisorFromTracy(username=None, bnumber=None):
             raise InvalidUserException("{} not found in Tracy database".format(email))
 
     try:
-        return Supervisor.get_or_create(PIDM = tracyUser.PIDM,
-                                        FIRST_NAME = tracyUser.FIRST_NAME,
-                                        LAST_NAME = tracyUser.LAST_NAME,
-                                        ID = tracyUser.ID.strip(),
-                                        EMAIL = tracyUser.EMAIL,
-                                        CPO = tracyUser.CPO,
-                                        ORG = tracyUser.ORG,
-                                        DEPT_NAME = tracyUser.DEPT_NAME)[0]
-    except Exception as e:
-        raise InvalidUserException("Adding {} to Supervisor table failed".format(username), e)
+        return Supervisor.get(Supervisor.ID == tracyUser.ID.strip())
+    except DoesNotExist:
+        return Supervisor.create(PIDM = tracyUser.PIDM,
+                                 FIRST_NAME = tracyUser.FIRST_NAME,
+                                 LAST_NAME = tracyUser.LAST_NAME,
+                                 ID = tracyUser.ID.strip(),
+                                 EMAIL = tracyUser.EMAIL,
+                                 CPO = tracyUser.CPO,
+                                 ORG = tracyUser.ORG,
+                                 DEPT_NAME = tracyUser.DEPT_NAME)[0]
+    else:
+        raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyUser.FIRST_NAME, tracyUser.LAST_NAME))
 
 def createStudentFromTracy(username):
     """
@@ -169,17 +171,8 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     """
     # We create a 'Labor Status Form' first, then we check to see if a 'Labor Overload Form'
     # needs to be created
-    historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-    formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
-                        historyType = historyType.historyTypeName,
-                        overloadForm = None,
-                        createdBy   = creatorID,
-                        createdDate = date.today(),
-                            status      = status.statusName)
-    if not formHistory.formID.termCode.isBreak:
-        email = emailHandler(formHistory.formHistoryID)
-        email.laborStatusFormSubmitted()
     if rspFunctional.get("isItOverloadForm") == "True":
+        status = Status.get(Status.statusName == "Pre-Student Approval")
         overloadHistoryType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
         newLaborOverloadForm = OverloadForm.create( studentOverloadReason = None,
                                                     financialAidApproved = None,
@@ -199,6 +192,17 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
                                             status      = status.statusName)
         email = emailHandler(formOverload.formHistoryID)
         email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+    historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
+    formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
+                        historyType = historyType.historyTypeName,
+                        overloadForm = None,
+                        createdBy   = creatorID,
+                        createdDate = date.today(),
+                        status      = status.statusName)
+    if not formHistory.formID.termCode.isBreak:
+        email = emailHandler(formHistory.formHistoryID)
+        email.laborStatusFormSubmitted()
+    return formHistory
 
 
 def emailDuringBreak(secondLSFBreak, term):
@@ -245,13 +249,15 @@ def checkForSecondLSFBreak(termCode, student):
         isMoreLSFDict["showModal"] = False # Do not show the modal when there's not previous lsf
     return json.dumps(isMoreLSFDict)
 
-def checkForPrimaryPosition(termCode, student):
+def checkForPrimaryPosition(termCode, student, currentUser):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     term = Term.get(Term.termCode == termCode)
     try:
-        lastPrimaryPosition = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form", FormHistory.formID.jobType == "Primary").order_by(FormHistory.formHistoryID.desc()).get()
+        lastPrimaryPosition = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(
+         (FormHistory.formID.termCode == termCode) & (FormHistory.formID.studentSupervisee == student) &
+         (FormHistory.historyType.historyTypeName == "Labor Status Form") & (FormHistory.formID.jobType == "Primary")).order_by(FormHistory.formHistoryID.desc()).get()
     except DoesNotExist:
         lastPrimaryPosition = None
 
@@ -263,29 +269,37 @@ def checkForPrimaryPosition(termCode, student):
         except DoesNotExist:
             approvedRelease = None
 
-    finalStatus = ""
+    finalStatus = {}
     if not term.isBreak:
         if lastPrimaryPosition and not approvedRelease:
             if rspFunctional == "Primary":
                 if lastPrimaryPosition.status.statusName == "Denied":
-                    finalStatus = "hire"
+                    finalStatus["status"] = "hire"
                 else:
-                    finalStatus = "noHire"
+                    finalStatus["status"]  = "noHire"
+                    finalStatus["term"] = lastPrimaryPosition.formID.termCode.termName
+                    finalStatus["primarySupervisor"] = lastPrimaryPosition.formID.supervisor.FIRST_NAME + " " +lastPrimaryPosition.formID.supervisor.LAST_NAME
+                    finalStatus["department"] = lastPrimaryPosition.formID.department.DEPT_NAME + " (" + lastPrimaryPosition.formID.department.ORG + "-" + lastPrimaryPosition.formID.department.ACCOUNT+ ")"
+                    finalStatus["position"] = lastPrimaryPosition.formID.POSN_CODE +" - "+lastPrimaryPosition.formID.POSN_TITLE + " (" + lastPrimaryPosition.formID.WLS + ")"
+                    finalStatus["hours"] = lastPrimaryPosition.formID.jobType + " (" + str(lastPrimaryPosition.formID.weeklyHours) + ")"
+                    finalStatus["isLaborAdmin"] = currentUser.isLaborAdmin
+                    if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
+                        finalStatus["approvedForm"] = True
             else:
-                if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
-                    finalStatus = "hire"
+                if lastPrimaryPosition.status.statusName in ["Approved", "Approved Reluctantly", "Pending"]:
+                    finalStatus["status"]  = "hire"
                 else:
-                    finalStatus = "noHireForSecondary"
+                    finalStatus["status"] = "noHireForSecondary"
         elif lastPrimaryPosition and approvedRelease:
             if rspFunctional == "Primary":
-                finalStatus = "hire"
+                finalStatus["status"]  = "hire"
             else:
-                finalStatus = "noHireForSecondary"
+                finalStatus["status"]  = "noHireForSecondary"
         else:
             if rspFunctional == "Primary":
-                finalStatus = "hire"
+                finalStatus["status"]  = "hire"
             else:
-                finalStatus = "noHireForSecondary"
+                finalStatus["status"]  = "noHireForSecondary"
     else:
-        finalStatus = "hire"
+        finalStatus["status"]  = "hire"
     return json.dumps(finalStatus)

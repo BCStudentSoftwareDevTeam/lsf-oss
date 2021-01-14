@@ -26,8 +26,8 @@
                   </a>
                   <div id="supervisorNavBar" class="laborStudentChoice" style="display:none">
                       <ul id="supervisordropdown" class="panel panel-default">
-                          <a style="cursor:pointer"><li class="panel-heading" id="myStudents" tabindex="0"><h4>My Students</h4></li></a>
-                          <a style="cursor:pointer"><li class="panel-heading" id="department" tabindex="0"><h4>Department Students</h4></li></a>
+                          <a href="/"><li class="panel-heading" id="myStudents" tabindex="0"><h4>My Students</h4></li></a>
+                          <a href="/main/department"><li class="panel-heading" id="department" tabindex="0"><h4>Department Students</h4></li></a>
                       </ul>
 
                   </div>
@@ -44,7 +44,7 @@
           </div>
         </div>
       {% endif %}
-      {% if currentUser.isLaborAdmin %}
+      {% if currentUser.isLaborAdmin or currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin %}
       <!-- If the current user is an admin, then we want to
           create the 'Administration' tab in the sidebar for them.-->
       <div class="container-fluid">
@@ -56,8 +56,9 @@
                     </div>
                 </a>
                 <div id="admin" class="panel-collapse collapse">
-
+                  {% if currentUser.isLaborAdmin %}
                   <ul id="admindropdown" class="panel panel-default">
+                    <a href="/admin/search"><li class="panel-heading"><h4>Student Search</h4></li></a>
                     <a href="/admin/pendingForms/pendingLabor"><li class="panel-heading"><h4>Pending Forms</h4></li></a>
                     {#  <a href="/admin/adminOverload"><li class="panel-heading"><h4>Overload Forms</h4></li></a> #}
                     {#  <a href="/"><li class="panel-heading"><h4>Past Forms</h4></li></a> #}
@@ -66,9 +67,13 @@
                     <a href="/admin/adminManagement"><li class="panel-heading"><h4>Manage Administrators</h4></li></a>
                     <a href="/admin/emailTemplates"><li class="panel-heading"><h4>Manage Email Templates</h4></li></a>
                   </ul>
-
+                  {% endif %}
+                  {% if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin %}
+                  <ul id="admindropdown" class="panel panel-default">
+                    <a href="/admin/pendingForms/pendingOverload"><li class="panel-heading"><h4>Overload Forms</h4></li></a>
+                  </ul>
+                  {% endif %}
                 </div>
-
             </div>
         </div>
       </div>

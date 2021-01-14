@@ -34,22 +34,18 @@ and hide the department select picker. -->
 <div class="col-md-2" align="center" id="userDepartments">
   <select class="selectpicker" id="departmentDropDown" onchange="populateTable()" title="Department" data-width="100%">
     {% for formHistory in currentUserDepartments %}
-      {% if currentUser.isLaborAdmin %}
-      <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
-      {% else %}
-        <!-- We want to populate the select picker with the first option if the user is not an admin -->
-        {% if loop.index == 1 %}
-        <option value="{{formHistory.formID.department.DEPT_NAME}}" selected>{{formHistory.formID.department.DEPT_NAME}}</option>
+        <!-- We want to either select the first option, or the option that matches the department -->
+        {% if loop.index == 1 or formHistory.formID.department.DEPT_NAME == department %}
+          <option value="{{formHistory.formID.department.DEPT_NAME}}" selected>{{formHistory.formID.department.DEPT_NAME}}</option>
         {% else %}
-        <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
+          <option value="{{formHistory.formID.department.DEPT_NAME}}">{{formHistory.formID.department.DEPT_NAME}}</option>
         {% endif %}
-      {% endif %}
     {% endfor %}
   </select>
 </div>
 
 <div class="col-md-3" align= "right">
-  <button class="btn btn-success" id="download" data-toggle="modal" data-target="#downloadModal">Download</button>
+  <button class="btn btn-success" id="download" data-toggle="modal" data-target="#downloadModal" style="display:None">Download</button>
 </div>
 <div class="col-md-2"></div>
 
@@ -90,7 +86,7 @@ and hide the department select picker. -->
           {% for form in inactiveSupervisees %}
           <label class="container">
             <input class="pastStudentModal" type="checkbox" id= '{{form.formID.laborStatusFormID}}' name='{{form.formID.laborStatusFormID}}' value='{{form.formID.laborStatusFormID}}' disabled>
-              {{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}} <strong>(No longer a student.)</strong>
+              {{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}} <strong>(No longer a student)</strong>
           </label>
           {% endfor %}
           </div>
@@ -118,7 +114,7 @@ and hide the department select picker. -->
 <!-- Start of data-table that will display the supervisee -->
 <div class="col-md-3"></div>
 <div class="col-md-7" align="center" >
-  <table id="studentList" class="table table-striped studentTable" >
+  <table id="studentList" class="table table-striped studentTable" style="display:none">
     <!-- Made empty header tags because we need to hide the header -->
     <thead>
       <tr>
@@ -156,7 +152,9 @@ and hide the department select picker. -->
       <td><a href="/laborHistory/{{form.formID.studentSupervisee.ID}}">
         <span class="h4">{{form.formID.studentSupervisee.FIRST_NAME}} {{form.formID.studentSupervisee.LAST_NAME}} ({{form.formID.studentSupervisee.ID}})</span></a>
         <br />
-        <span class="pushLeft h6"> No longer a student.</span>
+        <span class="pushRight h5">No longer a student</span>
+        <br/>
+        <span class="pushLeft h6"> {{form.formID.termCode.termName}} - {{form.formID.POSN_TITLE}} - {{form.formID.department.DEPT_NAME}}</span>
       </td>
       <td style="display:none">My Past Students</td>
     </tr>

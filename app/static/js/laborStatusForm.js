@@ -27,7 +27,7 @@ $(document).ready(function(){
     }
     $("#selectedTerm option[value=" + parsedArrayOfStudentCookies[0].stuTermCode + "]").attr('selected', 'selected');
     $("#selectedSupervisor option[value=" + parsedArrayOfStudentCookies[0].stuSupervisorID + "]").attr('selected', 'selected');
-    $("#selectedDepartment option[value=\"" + parsedArrayOfStudentCookies[0].stuDepartment + "\"]").attr('selected', 'selected');
+    $("#selectedDepartment option[value=\"" + parsedArrayOfStudentCookies[0].stuDepartmentORG + "\"]").attr('selected', 'selected');
     getDepartment($("#selectedDepartment"));
     preFilledDate($("#selectedTerm"));
     showAccessLevel($("#selectedTerm"));
@@ -126,7 +126,7 @@ function fillDates(response) { // prefill term start and term end
     var isSummer = response[key]["isSummer"];
     if (primaryCutOff){
       if (isBreak){
-        if (date > primaryCutOff){
+        if (Date.parse(date) > Date.parse(primaryCutOff)){
         msgFlash("The deadline to add break positions has ended.", "fail");
         $("#break-cutoff-warning").show();
         $("#break-cutoff-date").text(primaryCutOff);
@@ -134,7 +134,7 @@ function fillDates(response) { // prefill term start and term end
         }
       }
       else{
-        if (date > primaryCutOff){
+        if (Date.parse(date) > Date.parse(primaryCutOff)){
           $("#jobType option[value='Primary']").attr("disabled", true );
           $('.selectpicker').selectpicker('refresh');
           msgFlash("Disabling primary position because cut off date is before today's date", "fail");
@@ -191,8 +191,9 @@ function updateDate(obj) { // updates max and min dates of the datepickers as th
 }
 
 function getDepartment(object, stopSelectRefresh="") { // get department from select picker
-   var department = $(object).val();
-   var url = "/laborstatusform/getPositions/" + department;
+   var departmentOrg = $(object).val();
+   var departmentAcct = $(object).find('option:selected').attr('value-account');
+   var url = "/laborstatusform/getPositions/" + departmentOrg + "/" + departmentAcct;
        $.ajax({
          url: url,
          dataType: "json",
@@ -209,7 +210,8 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
    for (var key in response) {
      selectedPositions.append(
        $("<option />")
-          .text(response[key].position+ " " + "(" + response[key].WLS+ ")")
+          .attr("data-content", "<span>" + response[key].position + " " + "(" + response[key].WLS+ ")"
+          + "</span>" + "<small class='text-muted'>" + " " + "(" + response[key].positionCode + ")" + "</small>")
           .attr("id", key)
           .attr("value", response[key].position)
           .attr("data-wls", response[key].WLS)
@@ -429,9 +431,11 @@ function createStuDict(){
   var supervisor = $("#selectedSupervisor").find("option:selected").text();
   var supervisorID = $("#selectedSupervisor").find("option:selected").attr("value");
   var department = $("#selectedDepartment").find("option:selected").text();
+  var departmentORG = $("#selectedDepartment").find("option:selected").val();
+  var departmentAccount = $("#selectedDepartment").find("option:selected").data("account");
   var termCodeSelected = $("#selectedTerm").find("option:selected").val();
   var isBreak = $("#selectedTerm").find("option:selected").data("termbreak")
-  var studentName = $("#student option:selected" ).text();
+  var studentName = $("#student option:selected").text();
   if (!studentName){
     return false;
   }
@@ -460,8 +464,8 @@ function createStuDict(){
         return false;
       }
     }
-  var studentDict = {stuName: studentName,
-                    stuBNumber: studentBNumber,
+  var studentDict = {stuName: studentName.trim(),
+                    stuBNumber: studentBNumber.trim(),
                     stuPosition: positionName,
                     stuPositionCode: positionCode,
                     stuJobType: jobTypeName,
@@ -473,8 +477,10 @@ function createStuDict(){
                     stuTermCode: termCodeSelected,
                     stuNotes: "",
                     stuLaborNotes: laborStatusFormNote,
-                    stuSupervisor: supervisor,
-                    stuDepartment: department,
+                    stuSupervisor: supervisor.trim(),
+                    stuDepartment: department.trim(),
+                    stuDepartmentORG: departmentORG,
+                    stuDepartmentAccount: departmentAccount,
                     stuSupervisorID: supervisorID,
                     isItOverloadForm: "False",
                     isTermBreak: isBreak
@@ -504,7 +510,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
     dataType: "json",
     contentType: "application/json",
     success: function(response) {
-      switch (response) {
+      switch (response["status"]) {
         case "hire":
           initialLSFInsert(studentDict);
           break
@@ -514,9 +520,34 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
           $("#warningModal").modal("show");
           break;
         default:
-          $("#warningModalTitle").html("Insert Rejected");
-          $("#warningModalText").html("A primary position labor status form has already been submitted for " + studentDict.stuName + ".");
-          $("#warningModal").modal("show");
+          $("#releaseRehireModalTitle").html("Insert Rejected");
+          $('#studentName').html(studentDict.stuName)
+          $('#oldTerm').html(response['term'])
+          $('#oldSupervisor').html(response['primarySupervisor'])
+          $('#oldDepartment').html(response['department'])
+          $('#oldPosition').html(response['position'])
+          $('#oldHours').html(response['hours'])
+
+          $('#newTerm').html($("#selectedTerm").find("option:selected").text());
+          $('#newSupervisor').html(studentDict.stuSupervisor)
+          $('#newDepartment').html(studentDict.stuDepartment +" ("+ studentDict.stuDepartmentORG+"-"+studentDict.stuDepartmentAccount +")")
+          $('#newPosition').html(studentDict.stuPositionCode +" - "+ studentDict.stuPosition +" ("+ studentDict.stuWLS+")")
+          $('#newHours').html(studentDict.stuJobType +" ("+ studentDict.stuWeeklyHours+")")
+
+          if(response["approvedForm"] && response["isLaborAdmin"]){
+            $('#bannerWarning').show();
+            $('#rehireReleaseButton').show();
+
+            $('#warningCheckbox').click(function(){
+              $('#rehireReleaseButton').prop("disabled", !$('#warningCheckbox').prop('checked'));
+            });
+
+          }
+          else{
+            $('#rehireReleaseButton').hide();
+            $('#bannerWarning').hide();
+          }
+          $("#releaseRehireModal").modal("show");
           break;
       }
      }
@@ -824,3 +855,19 @@ function userInsert(){
 $("#submitmodalid").click(function() {
     $('html,body').scrollTop(0);    //This makes the screen scroll to the top if it is not already so the user can see the flash message.
 });
+
+function releaseAndRehire(){
+  var studentDict = createStuDict();
+  data = JSON.stringify(studentDict)
+  $.ajax({
+    method:"POST",
+    url:"/laborStatusForm/modal/releaseAndRehire",
+    data: data,
+    contentType: "application/json",
+    success: function(response){
+      if (response["Success"]) {
+        window.location.replace("/laborstatusform");
+      }
+    }
+  })
+}

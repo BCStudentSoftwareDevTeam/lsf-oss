@@ -7,8 +7,7 @@ from app.logic.userInsertFunctions import createUser, createSupervisorFromTracy,
 def getUsernameFromEnv(env):
     envK = "eppn"
 
-    # Check if we are logging in via Shibboleth
-    if envK in env:
+    if app.config['use_shibboleth'] and envK in env:
         username = env[envK].split("@")[0].split('/')[-1].lower()
         return username
     else:
@@ -23,7 +22,7 @@ def logout():
     session.clear()
 
     url ="/"
-    if app.config['ENV'] == 'production':
+    if app.config['use_shibboleth']:
         url = "/Shibboleth.sso/Logout"
     return url
 

@@ -8,6 +8,7 @@ from app.models.overloadForm import*
 from app.models.formHistory import*
 from app.models.supervisor import*
 from app.models.user import*
+from app.models.status import*
 from datetime import datetime
 from app.models.emailTracker import *
 import string
@@ -49,8 +50,21 @@ class emailHandler():
             self.supervisors.append(position.supervisor)
 
         if not self.term.isBreak:
-            self.primaryForm = LaborStatusForm.get((LaborStatusForm.jobType == "Primary") & (LaborStatusForm.studentSupervisee == self.laborStatusForm.studentSupervisee) & (LaborStatusForm.termCode == self.laborStatusForm.termCode))
-            self.primaryEmail = self.primaryForm.supervisor.EMAIL
+            try:
+                self.primaryEmail = None
+                self.primaryForm = None
+                self.primaryForm = FormHistory.select().join_from(FormHistory, LaborStatusForm) \
+                                              .join_from(FormHistory, HistoryType).join_from(FormHistory, Status) \
+                                              .where((FormHistory.formID.jobType == "Primary") &
+                                                     (FormHistory.formID.studentSupervisee == self.laborStatusForm.studentSupervisee) &
+                                                     (FormHistory.formID.termCode == self.laborStatusForm.termCode) &
+                                                     (FormHistory.historyType.historyTypeName == "Labor Status Form") &
+                                                     (FormHistory.status.statusName != "Denied")).get()
+                self.primaryEmail = self.primaryForm.formID.supervisor.EMAIL
+            except DoesNotExist:
+                # This case happens from some of the old data
+                pass
+
         self.link = ""
         self.releaseReason = ""
         self.releaseDate = ""
@@ -163,13 +177,12 @@ class emailHandler():
         self.link = link
         self.checkRecipient("Labor Overload Form Submitted For Student",
                       "Labor Overload Form Submitted For Supervisor")
-    def LaborOverLoadFormSubmittedNotification(self, link):
+    def LaborOverLoadFormSubmittedNotification(self):
         """
         Emails that will be sent after the student has submitted their
         reason for the overload form; One email will be just a confirmation
         email to the student and the other one will be for the labor office.
         """
-        self.link = link
         self.checkRecipient("Labor Overload Form Submitted Notification For Student",
                             "Labor Overload Form Submitted Notification For Labor Office")
 
@@ -198,13 +211,17 @@ class emailHandler():
         # In order to keep track of when emails to 'SAAS' and 'Financial Aid'
         # are sent, the EmailTracker will create a new entry that points back to
         # the LSF form the email is being created for.
+        secret_conf = get_secret_cfg()
         self.link = link
+        emailList = []
         if dept == "SAAS":
-            email = "" #In the future, this(SASS email address) should be puled from the yaml file instead of being a string
+            admins = User.select(User.username).where(User.isSaasAdmin == True)
+            for admin in admins:
+                emailList.append(admin.username + "@berea.edu")
         elif dept == "Financial Aid":
-            email = "" #This(financial Aid email) address should also be pull from the yaml file
+            emailList.append(secret_conf["financial_aid"]["email"])
         message = Message("Labor Overload Form Verification",
-            recipients=[email])
+            recipients=emailList)
         emailTemplateID = EmailTemplate.get(EmailTemplate.purpose == "SAAS and Financial Aid Office")
         newEmailTracker = EmailTracker.create(
                         formID = self.laborStatusForm.laborStatusFormID,
@@ -311,6 +328,10 @@ class emailHandler():
         form = form.replace("@@Position@@", self.laborStatusForm.POSN_CODE+ ", " + self.laborStatusForm.POSN_TITLE)
         form = form.replace("@@Department@@", self.laborStatusForm.department.DEPT_NAME)
         form = form.replace("@@WLS@@", self.laborStatusForm.WLS)
+        form = form.replace("@@Term@@", self.term.termName)
+        
+        if self.formHistory.rejectReason:
+            form = form.replace("@@RejectReason@@", self.formHistory.rejectReason)
         if self.laborStatusForm.weeklyHours != None:
             form = form.replace("@@Hours@@", self.weeklyHours)
         else:
@@ -321,9 +342,9 @@ class emailHandler():
                 previousSupervisorNames += supervisor.FIRST_NAME + " " + supervisor.LAST_NAME + ", "
             previousSupervisorNames = previousSupervisorNames[:-2]
             form = form.replace("@@PreviousSupervisor(s)@@", previousSupervisorNames)
-        else:
+        elif self.primaryForm:
             # 'Primary Supervisor' is the primary supervisor of the student who's laborStatusForm is passed in the initializer
-            form = form.replace("@@PrimarySupervisor@@", self.primaryForm.supervisor.FIRST_NAME + " " + self.primaryForm.supervisor.LAST_NAME)
+            form = form.replace("@@PrimarySupervisor@@", self.primaryForm.formID.supervisor.FIRST_NAME + " " + self.primaryForm.formID.supervisor.LAST_NAME)
         form = form.replace("@@SupervisorEmail@@", self.supervisorEmail)
         form = form.replace("@@Date@@", self.date)
         form = form.replace("@@ReleaseReason@@", self.releaseReason)

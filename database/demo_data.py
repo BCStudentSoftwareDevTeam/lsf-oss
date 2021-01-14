@@ -14,7 +14,7 @@ from app.models.user import User
 from app.models.term import Term
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
-from app.models.adminNotes import AdminNotes
+from app.models.notes import Notes
 
 print("Inserting data for demo and testing purposes")
 
@@ -106,6 +106,7 @@ for student in studentsTracy:
 
     # Set up lsf db data
     del student["PIDM"]
+    student['ID'] = student['ID'].strip()
     students.append(student)
 Student.insert_many(students).on_conflict_replace().execute()
 print(" * students (TRACY) added")
@@ -450,21 +451,23 @@ FormHistory.insert([{
 #############################
 # admin Notes
 #############################
-adminNotes = [
+notes = [
             {
             "noteHistoryID": 1,
             "formID_id": 2,
             "date":"2020-01-01",
             "createdBy" : 1,
-            "notesContents": "This is the first note"
+            "notesContents": "This is the first note",
+            "noteType" : "Supervisor Note"
             },
             {
             "noteHistoryID": 2,
             "formID_id": 2,
             "date":"2020-02-01",
             "createdBy" : 1,
-            "notesContents": "This is the second note"
+            "notesContents": "This is the second note",
+            "noteType" : "Labor Note"
             },
        ]
-AdminNotes.insert_many(adminNotes).on_conflict_replace().execute()
+Notes.insert_many(notes).on_conflict_replace().execute()
 print(" * laborOfficeNotes added")

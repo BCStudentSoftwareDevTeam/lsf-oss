@@ -1,3 +1,11 @@
+function goback(departmentName){
+  if (departmentName != "None") {
+    window.location.href = '/main/department/' + departmentName
+  } else {
+    window.location.href = '/';
+  }
+}
+
 $('#positionTable tbody tr td').on('click',function(){
   /*If boolean value is false, flash container letting user know that they do not
   have access. Else, load student labor history modal.*/
