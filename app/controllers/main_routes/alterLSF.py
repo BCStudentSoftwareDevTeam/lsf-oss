@@ -41,8 +41,6 @@ def alterLSF(laborStatusKey):
     # Query the status of the form to determine if correction or adjust LSF
     formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
 
-    formHistory = FormHistory.get(FormHistory.formID == laborStatusKey)
-
     if currentDate > form.termCode.adjustmentCutOff and formStatus == "Approved" and not currentUser.isLaborAdmin:
         return render_template("errors/403.html")
     #Step 2: get prefill data from said form, then the data that populates dropdowns for supervisors and position
@@ -125,6 +123,7 @@ def submitAlteredLSF(laborStatusKey):
     """
     Submits an altered LSF form and creates a formHistory entry if appropriate
     """
+    print("I am inside of here?")
     try:
         currentUser = require_login()
         if not currentUser:        # Not logged in
@@ -135,6 +134,7 @@ def submitAlteredLSF(laborStatusKey):
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
         formHistoryIDs = []
+        print("How far down are we?")
         for fieldName in fieldsChanged:
             lsf = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if formStatus =="Pending":
@@ -143,14 +143,18 @@ def submitAlteredLSF(laborStatusKey):
                 changedForm = adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
                 if changedForm:
                     formHistoryIDs.append(changedForm)
-
+        print("Atleast this far?", formHistoryIDs, formStatus)
         if formStatus == "Approved":
             for formHistory in formHistoryIDs:
+                print("ID's", formHistoryIDs)
+                print("Inside of for loop")
                 try:
+                    print("Inside of first try statement")
                     email = emailHandler(formHistory)
                     if "supervisor" in fieldsChanged:
                         email.laborStatusFormAdjusted(fieldsChanged["supervisor"]["newValue"])
                     else:
+                        print("Do I atleast make it to this point?")
                         email.laborStatusFormAdjusted()
                 except Exception as e:
                     print("An error occured while attempting to send adjustment form emails: ", e)
@@ -161,6 +165,7 @@ def submitAlteredLSF(laborStatusKey):
         return jsonify({"Success": True})
 
     except Exception as e:
+        print("I am inside of this exception?")
         message = "An error occured. Your labor {0} form(s) for {1} {2} were not submitted.".format("status" if formStatus == "Pending" else "adjustment",
                                                                                                     student.studentSupervisee.FIRST_NAME,
                                                                                                     student.studentSupervisee.LAST_NAME)
@@ -225,7 +230,7 @@ def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
                                             effectiveDate = datetime.strptime(fieldsChanged[fieldName]["date"], "%m/%d/%Y").strftime("%Y-%m-%d"))
         historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Adjustment Form")
         status = Status.get(Status.statusName == "Pending")
-        adjustedFormHistories = FormHistory.create(formID       = lsf.laborStatusFormID,
+        formHistories = FormHistory.create(formID       = lsf.laborStatusFormID,
                                            historyType  = historyType.historyTypeName,
                                            adjustedForm = adjustedforms.adjustedFormID,
                                            createdBy    = currentUser,
@@ -233,11 +238,10 @@ def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
                                            status       = status.statusName)
         if fieldName == "weeklyHours":
             newWeeklyHours = fieldsChanged[fieldName]['newValue']
-            createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedforms.adjustedFormID, adjustedFormHistories)
-        return adjustedFormHistories.formHistoryID
+            createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedforms.adjustedFormID, formHistories)
 
 
-def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None, adjustedFormHistories=None):
+def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None,  formHistories=None):
     allTermForms = LaborStatusForm.select() \
                    .join_from(LaborStatusForm, Student) \
                    .join_from(LaborStatusForm, FormHistory) \
