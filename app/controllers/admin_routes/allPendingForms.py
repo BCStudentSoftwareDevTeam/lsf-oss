@@ -594,6 +594,7 @@ def modalFormUpdate():
             # if we are able to save
             if save_form_status:
                 try:
+                    # This try is to handle Overload Forms
                     overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
                     if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin:
                         financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
@@ -612,15 +613,33 @@ def modalFormUpdate():
                     elif currentUser.isLaborAdmin and (not currentUser.isFinancialAidAdmin or not currentUser.isSaasAdmin):
                         laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
                 except:
-                    print('What is this status?', status.statusName)
-                    print('This is denail form for', historyForm.formID.studentSupervisee.FIRST_NAME)
-                    print('What is RSP', rsp)
+                    # This except is to handle Release Forms
                     historyForm.status = status.statusName
                     historyForm.reviewedDate = currentDate
                     historyForm.reviewedBy = currentUser
-                    print(historyForm.status)
                     historyForm.save()
-                    # email.laborReleaseFormSubmitted()
+                    if rsp["status"] == "Denied" or "adminNotes" in rsp:
+                        newNotes = Notes.create(formID = historyForm.formID,
+                                                createdBy = currentUser,
+                                                notesContents = "",
+                                                noteType = "",
+                                                date = currentDate)
+                        if rsp["status"] == "Denied":
+                            newNotes.notesContents = rsp["denialReason"]
+                        elif "adminNotes" in rsp:
+                            newNotes.notesContents = rsp["adminNotes"]
+                        if currentUser.isFinancialAidAdmin:
+                            newNotes.noteType = "Financial Aid Note"
+                        elif currentUser.isSaasAdmin:
+                            newNotes.noteType = "SAAS Note"
+                        elif currentUser.isLaborAdmin:
+                            newNotes.noteType = "Supervisor Note"
+                        newNotes.save()
+
+                    if rsp["status"] == "Denied":
+                        email.laborReleaseFormRejected()
+                    elif rsp["status"] == "Approved":
+                        email.laborReleaseFormApproved()
             return jsonify({"Success": True})
 
     except Exception as e:
