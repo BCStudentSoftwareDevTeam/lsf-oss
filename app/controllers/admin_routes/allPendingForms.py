@@ -256,7 +256,7 @@ def saveStatus(new_status, form_ids, currentUser):
     except Exception as e:
         print("Error preparing form for status update:", e)
         return jsonify({"success": False}), 500
-    
+
     return jsonify({"success": True})
 
 
@@ -478,7 +478,7 @@ def financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, curr
     selectedOverload = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
     if 'denialReason' in rsp.keys():
         newNoteEntry = Notes.create(formID=historyForm.formID.laborStatusFormID,
-                                    createdBy=currentUser, 
+                                    createdBy=currentUser,
                                     date=currentDate,
                                     notesContents=rsp["denialReason"],
                                     noteType = "Labor Note")
@@ -593,23 +593,34 @@ def modalFormUpdate():
 
             # if we are able to save
             if save_form_status:
-                overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
-                if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin:
-                    financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
-
-                elif currentUser.isFinancialAidAdmin and currentUser.isLaborAdmin:
-                    if (not overloadForm.financialAidApproved) or (overloadForm.financialAidApproved == "Pending"):
+                try:
+                    overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
+                    if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin:
                         financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
-                    else:
-                        laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
-                elif currentUser.isSaasAdmin and currentUser.isLaborAdmin:
-                    if (not overloadForm.SAASApproved) or overloadForm.SAASApproved == "Pending":
-                        financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
-                    else:
-                        laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
 
-                elif currentUser.isLaborAdmin and (not currentUser.isFinancialAidAdmin or not currentUser.isSaasAdmin):
-                    laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
+                    elif currentUser.isFinancialAidAdmin and currentUser.isLaborAdmin:
+                        if (not overloadForm.financialAidApproved) or (overloadForm.financialAidApproved == "Pending"):
+                            financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
+                        else:
+                            laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
+                    elif currentUser.isSaasAdmin and currentUser.isLaborAdmin:
+                        if (not overloadForm.SAASApproved) or overloadForm.SAASApproved == "Pending":
+                            financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
+                        else:
+                            laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
+
+                    elif currentUser.isLaborAdmin and (not currentUser.isFinancialAidAdmin or not currentUser.isSaasAdmin):
+                        laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
+                except:
+                    print('What is this status?', status.statusName)
+                    print('This is denail form for', historyForm.formID.studentSupervisee.FIRST_NAME)
+                    print('What is RSP', rsp)
+                    historyForm.status = status.statusName
+                    historyForm.reviewedDate = currentDate
+                    historyForm.reviewedBy = currentUser
+                    print(historyForm.status)
+                    historyForm.save()
+                    # email.laborReleaseFormSubmitted()
             return jsonify({"Success": True})
 
     except Exception as e:
