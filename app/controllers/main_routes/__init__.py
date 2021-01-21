@@ -3,8 +3,6 @@ from flask import Blueprint
 from flask import request
 from app.login_manager import require_login
 import os
-import os.path
-import urllib.parse
 
 main_bp = Blueprint('main', __name__)
 @main_bp.context_processor
@@ -15,7 +13,7 @@ def injectGlobalData():
                    for f in files))
 
     return {'currentUser': currentUser,
-            'lastStaticUpdate': lastStaticUpdate            
+            'lastStaticUpdate': lastStaticUpdate
             }
 
 from app.controllers.main_routes import main_routes
