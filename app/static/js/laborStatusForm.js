@@ -122,7 +122,7 @@ function fillDates(response) { // prefill term start and term end
     var isSummer = response[key]["isSummer"];
     if (primaryCutOff){
       if (isBreak){
-        if (date > primaryCutOff){
+        if (Date.parse(date) > Date.parse(primaryCutOff)){
         msgFlash("The deadline to add break positions has ended.", "fail");
         $("#break-cutoff-warning").show();
         $("#break-cutoff-date").text(primaryCutOff);
@@ -130,7 +130,7 @@ function fillDates(response) { // prefill term start and term end
         }
       }
       else{
-        if (date > primaryCutOff){
+        if (Date.parse(date) > Date.parse(primaryCutOff)){
           $("#jobType option[value='Primary']").attr("disabled", true );
           $('.selectpicker').selectpicker('refresh');
           msgFlash("Disabling primary position because cut off date is before today's date", "fail");
@@ -187,8 +187,9 @@ function updateDate(obj) { // updates max and min dates of the datepickers as th
 }
 
 function getDepartment(object, stopSelectRefresh="") { // get department from select picker
-   var department = $(object).val();
-   var url = "/laborstatusform/getPositions/" + department;
+   var departmentOrg = $(object).val();
+   var departmentAcct = $(object).find('option:selected').attr('value-account');
+   var url = "/laborstatusform/getPositions/" + departmentOrg + "/" + departmentAcct;
        $.ajax({
          url: url,
          dataType: "json",

@@ -24,7 +24,7 @@ def db_cleanup():
 
 @pytest.mark.integration
 def test_createTerms(setup, cleanup):
-    termsPerYear = 7
+    termsPerYear = 8
 
     # Initial data sanity
     #################################

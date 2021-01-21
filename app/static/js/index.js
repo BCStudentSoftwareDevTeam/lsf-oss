@@ -255,8 +255,14 @@ $('.openBtn').on('click',function(){
 function downloadHistory(){
   $('input[type="checkbox"]:checked').prop('checked',false);
 }
-
+// variable to check if another ajax call is in progress
+var currentRequest = null;
 function populateTable(){
+  // if a second department is selected while the first department is loading
+  // the previous ajax call will be aborted and the last ajax call will continue
+  if (currentRequest != null) {
+    currentRequest.abort();
+  }
   // This function will take input from the department select picker, and based
   // off of what department is choosen, the function will populate both the data table
   // and the modal with the correct data from that department
@@ -267,7 +273,7 @@ function populateTable(){
 
   // AJAX call sends our controller the department choosen, and the controller
   // should send back the data we need as JSON
-  $.ajax({
+  currentRequest = $.ajax({
     method: "GET",
     url: "/main/department/selection/" + departmentSelected,
     datatype: "json",
@@ -331,31 +337,21 @@ function populateTable(){
         var activeStatus = response[key]["activeStatus"]
         var formStatus = response[key]["formStatus"]
 
-        // The first "If" statment will populate both the data table and modal if the student's activeStatus == 'True', meaning that the
-        // student is currently still a student at Berea
-        if (activeStatus == "True") {
-          table.row.add(["<a href='/laborHistory/" + departmentSelected + '/' + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>"
-          + "<span class='pushRight h5'>" + formStatus + "</span>" + "<br />"+ "<span class='pushLeft h6'>" + term + " - " + position + " - " + department + "</span>",
-          "<span style='display:none'>" + status + "</span>"])
-          .draw()
-
-          if (divClass == "currentDepartmentModal"){
-            $("#currentDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +'</label><br/>')
-          }
-          else{
-            $("#allDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +'</label><br/>')
-          }
+        inactive_tag = ""
+        el_id = "#allDepartmentStudentsDiv"
+        if (activeStatus == "False") {
+            formStatus = "No longer a student"
+            inactive_tag = " <strong>(No longer a student.)</strong>"
+        } else {
+            if (divClass == "currentDepartmentModal"){
+                el_id = "#currentDepartmentStudentsDiv"
+            }
         }
-        // The "Else" statment will populate both the data table and modal if the student's activeStatus == 'False', meaning that the
-        // student is no longer a student at Berea
-        else{
-          table.row.add(["<a href='/laborHistory/" + departmentSelected + '/' + bNumber + "'value=0>" + "<span class='h4'>" + student + " (" + bNumber + ")" + "</a>" +
-          "<br />" + "<span class='pushLeft h6'>No longer a student.</span>",
-          "<span style='display:none'>" + status + "</span>"])
-          .draw()
+        table.row.add([`<a href='/laborHistory/${departmentSelected}/${bNumber}' value=0><span class='h4'>${student} (${bNumber})</a>` +
+          `<span class='pushRight h5'>${formStatus}</span><br /><span class='pushLeft h6'>${term} - ${position} - ${department}</span>`,
+          "<span style='display:none'>" + status + "</span>"]).draw()
 
-          $("#allDepartmentStudentsDiv").append('<label class="container"><input class="' + divClass + '"type="checkbox" name="' + formID + '" id="' + formID +'" value="' + formID +'"/>' + student +' <strong>(No longer a student.)</strong></label><br/>')
-        }
+        $(el_id).append(`<label class="container"><input class="${divClass}" type="checkbox" name="${formID}" id="${formID}" value="${formID}"/>${student}${inactive_tag}</label><br/>`)
 
       }
     }

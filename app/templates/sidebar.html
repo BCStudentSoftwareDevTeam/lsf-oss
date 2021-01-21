@@ -41,7 +41,7 @@
           </div>
         </div>
       {% endif %}
-      {% if currentUser.isLaborAdmin %}
+      {% if currentUser.isLaborAdmin or currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin %}
       <!-- If the current user is an admin, then we want to
           create the 'Administration' tab in the sidebar for them.-->
       <div class="container-fluid">
@@ -53,18 +53,24 @@
                     </div>
                 </a>
                 <div id="admin" class="panel-collapse collapse">
+
+                  {% if currentUser.isLaborAdmin %}
                   <ul id="admindropdown" class="panel panel-default">
-                    <a href="/admin/search"><li li {% if request.path =="/admin/search" %} class="panel-heading active"{% endif %}class="panel-heading"><h4>Student Search</h4></li></a>
-                    <a href="/admin/pendingForms/pendingLabor"><li {% if request.path =="/admin/pendingForms/pendingLabor" %} class="panel-heading active"{% endif %} class="panel-heading" tabindex="7"><h4>Pending Forms</h4></li></a>
-                    {#  <a href="/admin/adminOverload"><li {% if request.path =="/admin/adminOverload" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="7"><h4>Overload Forms</h4></li></a> #}
-                    {#  <a href="/"><li {% if request.path =="/" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="9"><h4>Past Forms</h4></li></a> #}
-                    <a href="/admin/termManagement"><li{% if request.path =="/admin/termManagement" %} class="panel-heading active"{% endif %} class="panel-heading" tabindex="10"><h4>Manage Terms</h4></li></a>
-                    <a href="/admin/manageDepartments"><li {% if request.path =="/admin/manageDepartments" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="11"><h4>Manage Departments</h4></li></a>
-                    <a href="/admin/adminManagement"><li {% if request.path =="/admin/adminManagement" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="12"><h4>Manage Administrators</h4></li></a>
-                    <a href="/admin/emailTemplates"><li {% if request.path =="/admin/emailTemplates" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="13"><h4>Manage Email Templates</h4></li></a>
-
-
+                    <a href="/admin/search"><li class="panel-heading"><h4>Student Search</h4></li></a>
+                    <a href="/admin/pendingForms/pendingLabor"><li class="panel-heading"><h4>Pending Forms</h4></li></a>
+                    {#  <a href="/admin/adminOverload"><li class="panel-heading"><h4>Overload Forms</h4></li></a> #}
+                    {#  <a href="/"><li class="panel-heading"><h4>Past Forms</h4></li></a> #}
+                    <a href="/admin/termManagement"><li class="panel-heading"><h4>Manage Terms</h4></li></a>
+                    <a href="/admin/manageDepartments"><li class="panel-heading"><h4>Manage Departments</h4></li></a>
+                    <a href="/admin/adminManagement"><li class="panel-heading"><h4>Manage Administrators</h4></li></a>
+                    <a href="/admin/emailTemplates"><li class="panel-heading"><h4>Manage Email Templates</h4></li></a>
                   </ul>
+                  {% endif %}
+                  {% if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin %}
+                  <ul id="admindropdown" class="panel panel-default">
+                    <a href="/admin/pendingForms/pendingOverload"><li class="panel-heading"><h4>Overload Forms</h4></li></a>
+                  </ul>
+                  {% endif %}
                 </div>
             </div>
         </div>
