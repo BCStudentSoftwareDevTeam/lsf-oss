@@ -1,4 +1,4 @@
-$("#admin").collapse("show");
+// $("#admin").collapse("show");
 // Creates a dom fragment from html, rather than having to add dom elements
 // https://love2dev.com/blog/inserting-html-using-createdocumentfragment-instead-of-using-jquery/
 
