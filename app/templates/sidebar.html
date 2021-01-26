@@ -52,8 +52,8 @@
                         <h4>Administration</h4>
                     </div>
                 </a>
-                <div id="admin" class="panel-collapse"> <!-- class = "panel-collpase collapse"-->
-
+                <div id="admin"{% if request.path[6] == "/admin"  %} class="panel-collapse" {% endif %} class = "panel-collpase collapse"> <!-- class = "panel-collpase collapse"-->
+   <!-- make the changes needed here only not collapse when in the administration -->
                   {% if currentUser.isLaborAdmin %}
                   <ul id="admindropdown" class="panel panel-default">
                     <a href="/admin/pendingForms/pendingLabor"><li {% if request.path == "/admin/pendingForms/pendingLabor" or request.path == "/admin/pendingForms/pendingAdjustment" or request.path == "/admin/pendingForms/pendingOverload" or request.path == "/admin/pendingForms/pendingRelease" %} class="panel-heading active" {% endif %} class="panel-heading" tabindex={{dict["pending"]}}><h4>Pending Forms</h4></li></a>
