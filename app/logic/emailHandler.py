@@ -24,6 +24,7 @@ class emailHandler():
             MAIL_PORT=secret_conf['MAIL_PORT'],
             MAIL_USERNAME= secret_conf['MAIL_USERNAME'],
             MAIL_PASSWORD= secret_conf['MAIL_PASSWORD'],
+            REPLY_TO_ADDRESS= secret_conf['REPLY_TO_ADDRESS'],
             MAIL_USE_TLS=secret_conf['MAIL_USE_TLS'],
             MAIL_USE_SSL=secret_conf['MAIL_USE_SSL'],
             MAIL_DEFAULT_SENDER=secret_conf['MAIL_DEFAULT_SENDER'],
@@ -88,6 +89,7 @@ class emailHandler():
                 message.html = "<b>Original message intended for {}.</b><br>".format(", ".join(message.recipients)) + message.html
                 message.recipients = [app.config['MAIL_OVERRIDE_ALL']]
 
+            message.reply_to = app.config["REPLY_TO_ADDRESS"]
             self.mail.send(message)
 
         elif app.config['ENV'] == 'testing':
@@ -329,7 +331,7 @@ class emailHandler():
         form = form.replace("@@Department@@", self.laborStatusForm.department.DEPT_NAME)
         form = form.replace("@@WLS@@", self.laborStatusForm.WLS)
         form = form.replace("@@Term@@", self.term.termName)
-        
+
         if self.formHistory.rejectReason:
             form = form.replace("@@RejectReason@@", self.formHistory.rejectReason)
         if self.laborStatusForm.weeklyHours != None:
