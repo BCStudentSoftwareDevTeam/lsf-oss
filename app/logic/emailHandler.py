@@ -11,6 +11,7 @@ from app.models.user import*
 from app.models.status import*
 from datetime import datetime
 from app.models.emailTracker import *
+from app.logic.tracy import Tracy
 import string
 from app import app
 import os
@@ -69,6 +70,23 @@ class emailHandler():
         self.link = ""
         self.releaseReason = ""
         self.releaseDate = ""
+        self.newAdjustmentField = ""
+        self.oldAdjustmentField = ""
+
+        if self.formHistory.adjustedForm:
+            if self.formHistory.adjustedForm.fieldAdjusted == "supervisor":
+                from app.logic.userInsertFunctions import createSupervisorFromTracy
+                newSupervisor = createSupervisorFromTracy(bnumber=self.formHistory.adjustedForm.newValue)
+                self.newAdjustmentField = "Pending new Supervisor: {0} {1}".format(newSupervisor.FIRST_NAME, newSupervisor.LAST_NAME)
+                self.oldAdjustmentField = "Current Supervisor: {0} {1}".format(self.formHistory.formID.supervisor.FIRST_NAME, self.formHistory.formID.supervisor.LAST_NAME)
+            elif self.formHistory.adjustedForm.fieldAdjusted == "position":
+                currentPosition = Tracy().getPositionFromCode(self.formHistory.adjustedForm.oldValue)
+                newPosition = Tracy().getPositionFromCode(self.formHistory.adjustedForm.newValue)
+                self.oldAdjustmentField = "Current Position: {0} ({1})".format(currentPosition.POSN_TITLE, currentPosition.WLS)
+                self.newAdjustmentField = "Pending new Position: {0} ({1})".format(newPosition.POSN_TITLE, newPosition.WLS)
+            else:
+                self.oldAdjustmentField = "Current Hours: {0}".format(self.formHistory.adjustedForm.oldValue)
+                self.newAdjustmentField = "Pending new Hours: {0}".format(self.formHistory.adjustedForm.newValue)
 
         try:
             self.releaseDate = self.formHistory.releaseForm.releaseDate.strftime("%m/%d/%Y")
@@ -347,6 +365,9 @@ class emailHandler():
         elif self.primaryForm:
             # 'Primary Supervisor' is the primary supervisor of the student who's laborStatusForm is passed in the initializer
             form = form.replace("@@PrimarySupervisor@@", self.primaryForm.formID.supervisor.FIRST_NAME + " " + self.primaryForm.formID.supervisor.LAST_NAME)
+        if self.formHistory.adjustedForm:
+            form = form.replace("@@NewAdjustmentField@@", self.newAdjustmentField)
+            form = form.replace("@@CurrentAdjustmentField@@", self.oldAdjustmentField)
         form = form.replace("@@SupervisorEmail@@", self.supervisorEmail)
         form = form.replace("@@Date@@", self.date)
         form = form.replace("@@ReleaseReason@@", self.releaseReason)
