@@ -9,7 +9,7 @@ from app import cfg
 from app.logic.emailHandler import *
 from app.login_manager import require_login
 from app.logic.tracy import Tracy
-from app.models.adminNotes import AdminNotes
+from app.models.notes import Notes
 from app.models.supervisor import Supervisor
 from app.login_manager import require_login
 from datetime import date, datetime
@@ -52,6 +52,8 @@ def alterLSF(laborStatusKey):
     prefillposition = form.POSN_CODE
     prefilljobtype = form.jobType
     prefillterm = form.termCode
+    prefillstartdate = form.startDate
+    prefillenddate = form.endDate
     totalHours = 0
     if form.weeklyHours != None:
         prefillhours = form.weeklyHours
@@ -61,11 +63,10 @@ def alterLSF(laborStatusKey):
                 totalHours += i.weeklyHours
     else:
         prefillhours = form.contractHours
-    prefillnotes = form.supervisorNotes
 
     #These are the data fields to populate our dropdowns(Supervisor. Position)
     supervisors = Tracy().getSupervisors()
-    positions = Tracy().getPositionsFromDepartment(form.department.ORG)
+    positions = Tracy().getPositionsFromDepartment(form.department.ORG, form.department.ACCOUNT)
 
     # supervisors from the old system WILL have a Supervisor record, but might not have a Tracy record
     oldSupervisor = Supervisor.get_or_none(ID = form.supervisor.ID)
@@ -76,6 +77,7 @@ def alterLSF(laborStatusKey):
             print("The bnumber {} was not found in Supervisor or Tracy", form.supervisor.ID)
             oldSupervisor = {'ID': form.supervisor.ID}
 
+    notes = Notes.select().where(Notes.formID == laborStatusKey, Notes.noteType == "Supervisor Note") # Gets labor department notes from the laborofficenotes table
 
     return render_template( "main/alterLSF.html",
 				            title=("Adjust Labor Status Form" if formStatus == "Approved" else "Labor Status Correction Form"),
@@ -88,15 +90,32 @@ def alterLSF(laborStatusKey):
                             prefillposition = prefillposition,
                             prefilljobtype = prefilljobtype,
                             prefillterm = prefillterm,
+                            prefillstartdate = prefillstartdate,
+                            prefillenddate = prefillenddate,
                             prefillhours = prefillhours,
-                            prefillnotes = prefillnotes,
                             supervisors = supervisors,
                             positions = positions,
                             form = form,
                             oldSupervisor = oldSupervisor,
                             totalHours = totalHours,
-                            currentUser = currentUser
+                            currentUser = currentUser,
+                            notes = notes
                           )
+
+@main_bp.route("/alterLSF/getDate/<termcode>", methods=['GET'])
+def getDate(termcode):
+    """ Get the start and end dates of the selected term. """
+    dates = Term.select().where(Term.termCode == termcode)
+    datesDict = {}
+    for date in dates:
+        start = date.termStart
+        end  = date.termEnd
+        primaryCutOff = date.primaryCutOff
+        if primaryCutOff is None:
+            datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y")}
+        else:
+            datesDict[date.termCode] = {"Start Date":datetime.strftime(start, "%m/%d/%Y")  , "End Date": datetime.strftime(end, "%m/%d/%Y"), "Primary Cut Off": datetime.strftime(primaryCutOff, "%m/%d/%Y"), "isBreak": date.isBreak, "isSummer": date.isSummer}
+    return json.dumps(datesDict)
 
 
 @main_bp.route("/alterLSF/submitAlteredLSF/<laborStatusKey>", methods=["POST"])
@@ -113,25 +132,26 @@ def submitAlteredLSF(laborStatusKey):
         fieldsChanged = dict(fieldsChanged)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
-
+        formHistoryIDs = []
         for fieldName in fieldsChanged:
             lsf = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if formStatus =="Pending":
                 modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
             elif formStatus =="Approved":
-                adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
-
+                changedForm = adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
+                if changedForm:
+                    formHistoryIDs.append(changedForm)
         if formStatus == "Approved":
-            changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
-            try:
-                email = emailHandler(changedForm.formHistoryID)
-                if "supervisor" in fieldsChanged:
-                    email.laborStatusFormAdjusted(fieldsChanged["supervisor"]["newValue"])
-                else:
-                    email.laborStatusFormAdjusted()
-            except Exception as e:
-                print("An error occured while attempting to send adjustment form emails: ", e)
-            message = "Your labor adjustment form(s) for {0} {1} have been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+            for formHistory in formHistoryIDs:
+                try:
+                    email = emailHandler(formHistory)
+                    if "supervisor" in fieldsChanged:
+                        email.laborStatusFormAdjusted(fieldsChanged["supervisor"]["newValue"])
+                    else:
+                        email.laborStatusFormAdjusted()
+                except Exception as e:
+                    print("An error occured while attempting to send adjustment form emails: ", e)
+                message = "Your labor adjustment form(s) for {0} {1} have been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         else:
             message = "Your labor status form for {0} {1} has been modified.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
@@ -148,8 +168,12 @@ def submitAlteredLSF(laborStatusKey):
 
 def modifyLSF(fieldsChanged, fieldName, lsf, currentUser):
     if fieldName == "supervisorNotes":
-        lsf.supervisorNotes = fieldsChanged[fieldName]["newValue"]
-        lsf.save()
+        noteEntry = Notes.create(formID           = lsf.laborStatusFormID,
+                                         createdBy     = currentUser,
+                                         date          = datetime.now().strftime("%Y-%m-%d"),
+                                         notesContents = fieldsChanged[fieldName]["newValue"],
+                                         noteType      = "Supervisor Note")
+        noteEntry.save()
 
     if fieldName == "supervisor":
         supervisor = createSupervisorFromTracy(bnumber=fieldsChanged[fieldName]["newValue"])
@@ -173,14 +197,24 @@ def modifyLSF(fieldsChanged, fieldName, lsf, currentUser):
         lsf.contractHours = int(fieldsChanged[fieldName]["newValue"])
         lsf.save()
 
+    if fieldName == "startDate":
+        lsf.startDate = datetime.strptime(fieldsChanged[fieldName]["newValue"], "%m/%d/%Y").strftime('%Y-%m-%d')
+        lsf.save()
+
+    if fieldName == "endDate":
+        lsf.endDate = datetime.strptime(fieldsChanged[fieldName]["newValue"], "%m/%d/%Y").strftime('%Y-%m-%d')
+        lsf.save()
+
 
 def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
     if fieldName == "supervisorNotes":
-        newNoteEntry = AdminNotes.create(formID        = lsf.laborStatusFormID,
+        newNoteEntry = Notes.create(formID        = lsf.laborStatusFormID,
                                          createdBy     = currentUser,
                                          date          = datetime.now().strftime("%Y-%m-%d"),
-                                         notesContents = fieldsChanged[fieldName]["newValue"])
+                                         notesContents = fieldsChanged[fieldName]["newValue"],
+                                         noteType      = "Supervisor Note")
         newNoteEntry.save()
+        return None
     else:
         adjustedforms = AdjustedForm.create(fieldAdjusted = fieldName,
                                             oldValue      = fieldsChanged[fieldName]["oldValue"],
@@ -197,9 +231,9 @@ def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
         if fieldName == "weeklyHours":
             newWeeklyHours = fieldsChanged[fieldName]['newValue']
             createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedforms.adjustedFormID, formHistories)
+        return formHistories.formHistoryID
 
-
-def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None, formHistories=None):
+def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None,  formHistories=None):
     allTermForms = LaborStatusForm.select() \
                    .join_from(LaborStatusForm, Student) \
                    .join_from(LaborStatusForm, FormHistory) \
@@ -225,11 +259,16 @@ def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None, form
                                             adjustedForm = adjustedForm,
                                             overloadForm = newLaborOverloadForm.overloadFormID,
                                             createdDate  = date.today(),
-                                            status       = "Pending")
+                                            status       = "Pre-Student Approval")
         try:
             if formHistories:
+                formHistories.status = "Pre-Student Approval"
+                formHistories.save()
                 overloadEmail = emailHandler(formHistories.formHistoryID)
             else:
+                modifiedFormHistory = FormHistory.select().join_from(FormHistory, HistoryType).where(FormHistory.formID == lsf.laborStatusFormID, FormHistory.historyType.historyTypeName == "Labor Status Form").get()
+                modifiedFormHistory.status = "Pre-Student Approval"
+                modifiedFormHistory.save()
                 overloadEmail = emailHandler(newFormHistory.formHistoryID)
             overloadEmail.LaborOverLoadFormSubmitted("http://{0}/".format(request.host) + "studentOverloadApp/" + str(newFormHistory.formHistoryID))
         except Exception as e:

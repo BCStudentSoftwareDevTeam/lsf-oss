@@ -87,10 +87,18 @@ def updateDatabase():
     try:
         # NEED TO ADD CURRENT PRIMARY AND CURRENT SECONDARY AFTER THE MIGRATION
         rsp = eval(request.data.decode("utf-8"))
+        oldStatus = Status.get(Status.statusName == "Pre-Student Approval")
+        newStatus = Status.get(Status.statusName == "Pending")
         if rsp:
             formId = rsp.keys()
             for data in rsp.values():
                 formHistoryForm = FormHistory.get(FormHistory.formHistoryID == data["formID"])
+                secondPrestudentForm = FormHistory.select().join_from(FormHistory, HistoryType).where(FormHistory.formID == formHistoryForm.formID,
+                FormHistory.status == oldStatus, FormHistory.historyType.historyTypeName != "Labor Overload Form").get()
+                secondPrestudentForm.status = newStatus
+                formHistoryForm.status = newStatus
+                secondPrestudentForm.save()
+                formHistoryForm.save()
                 d, created = OverloadForm.get_or_create(overloadFormID = formHistoryForm.overloadForm)
                 d.studentOverloadReason = data["Notes"]
                 d.save()

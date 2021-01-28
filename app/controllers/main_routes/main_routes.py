@@ -70,7 +70,8 @@ def index(department = None):
         formsBySupervisees = []
         if currentUser.supervisor:
             formsBySupervisees = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.supervisor == currentUser.supervisor.ID,
-            FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.endDate.desc())
+            FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.startDate.desc())
+            formsBySupervisees = sorted(formsBySupervisees,key=lambda f:f.reviewedDate if f.reviewedDate else f.createdDate, reverse=True)
 
         inactiveSupervisees = []
         currentSupervisees = []
@@ -201,7 +202,7 @@ def populateDepartment(departmentSelected):
         global currentDepartmentStudents
         global allDepartmentStudents
         global inactiveDepStudent
-        
+
         currentDepartmentStudents = []
         allDepartmentStudents = []
         inactiveDepStudent = []
