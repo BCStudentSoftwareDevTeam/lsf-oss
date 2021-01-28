@@ -588,7 +588,6 @@ def modalFormUpdate():
 
             save_form_status = True
             if rsp['formType'] == 'Overload' and ("Approved" in rsp['status'] or "Approved Reluctantly" in rsp['status']) and historyForm.formID.POSN_CODE != "S12345":
-                print("#################################### Going into BANNER #########################################")
                 conn = Banner()
                 save_form_status = conn.insert(historyForm)
 
