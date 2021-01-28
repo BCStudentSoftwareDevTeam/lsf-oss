@@ -3,12 +3,6 @@ var display_failed = [];
 var laborStatusFormNote = null;
 
 $(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip();
-  $("#dateTimePicker1, #dateTimePicker2").datepicker();
-  $("html").on("mouseenter",".ui-state-disabled", function() {
-    $(this).attr('title', 'This is the hover-over text');
-    console.log("hovering");
-  });
   if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
     checkCompliance($("#selectedDepartment"));
     getDepartment($("#selectedDepartment"));
@@ -161,16 +155,36 @@ function fillDates(response) { // prefill term start and term end
     // Pre-populate values
     $("#dateTimePicker1").val(start);
     $("#dateTimePicker2").val(end);
-    // set the minimum and maximum Date for Term Start Date
-    $("#dateTimePicker1").datepicker({minDate: new Date(yearStart, monthStart1, dayStart1)});
-    $("#dateTimePicker1").datepicker({maxDate: new Date(yearEnd, monthEnd1, dayEnd1)});
     $("#dateTimePicker1").datepicker("option", "minDate", new Date(yearStart, monthStart1, dayStart1));
     $("#dateTimePicker1").datepicker("option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
-    // set the minimum and maximum Date for Term End Date
-    $("#dateTimePicker2").datepicker({maxDate: new Date(yearEnd, monthEnd1, dayEnd1)});
-    $("#dateTimePicker2").datepicker({minDate: new Date(yearStart, monthStart1, dayStart1)});
     $("#dateTimePicker2").datepicker("option", "maxDate", new Date(yearEnd, monthEnd1, dayEnd1));
     $("#dateTimePicker2").datepicker("option", "minDate", new Date(yearStart, monthStart1, dayStart1));
+    $("#dateTimePicker1").datepicker({
+      beforeShowDay: function(d) {
+
+        if(d.getTime() < startd.getTime()){
+          return [false, 'datePicker', 'Before Term'];
+        }
+        else if (d.getTime() > endd.getTime()) {
+          return [false, 'datePicker', 'After Term'];
+        }else{
+            return [true, '', 'available'];
+        }
+    },
+  });
+    $("#dateTimePicker2").datepicker({
+    beforeShowDay: function(d) {
+
+        if(d.getTime() > endd.getTime()){
+          return [false, 'datePicker', 'After Term'];
+        }
+        else if (d.getTime() < startd.getTime()) {
+          return [false, 'datePicker', 'Before Term'];
+        }else{
+            return [true, '', 'available'];
+        }
+    },
+    });
   }
 }
 
