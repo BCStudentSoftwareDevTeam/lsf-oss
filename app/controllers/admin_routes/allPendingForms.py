@@ -227,7 +227,7 @@ def saveStatus(new_status, form_ids, currentUser):
 
             # Add to BANNER
             save_status = True # default true so that we will still save in other cases
-            if new_status == 'Approved' and history_type == "Labor Status Form": # don't update banner for Adjustment forms
+            if new_status == 'Approved' and history_type == "Labor Status Form" and labor_forms.formID.POSN_CODE != "S12345": # don't update banner for Adjustment forms or for CS dummy position
                 conn = Banner()
                 save_status = conn.insert(labor_forms)
 
@@ -587,7 +587,7 @@ def modalFormUpdate():
             status = Status.get(Status.statusName == rsp['status'])
 
             save_form_status = True
-            if rsp['formType'] == 'Overload' and "Approved" in rsp['status']:
+            if rsp['formType'] == 'Overload' and "Approved" in rsp['status'] and historyForm.formID.POSN_CODE != "S12345":
                 conn = Banner()
                 save_form_status = conn.insert(historyForm)
 

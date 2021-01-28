@@ -178,6 +178,14 @@ positions = [
             "ORG" : "2107",
             "ACCOUNT":"6740",
             "DEPT_NAME":"Biology"
+            },
+            {
+            "POSN_CODE": "S12345",
+            "POSN_TITLE": "DUMMY POSITION",
+            "WLS": "3",
+            "ORG" : "2114",
+            "ACCOUNT":"6740",
+            "DEPT_NAME":"Computer Science"
             }
 ]
 # Add to Tracy db
