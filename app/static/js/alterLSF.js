@@ -192,6 +192,9 @@ function checkForChange(){
 
 function buttonListener(laborStatusKey) {
   event.preventDefault();
+  $('#modal').html('Processing');
+  $('#modal').prop('disabled', 'True');
+  $('#adjustmentClose').prop('disabled', 'True');
   $.ajax({
     url: "/alterLSF/submitAlteredLSF/" + laborStatusKey,
     method: "POST",

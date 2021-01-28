@@ -132,25 +132,26 @@ def submitAlteredLSF(laborStatusKey):
         fieldsChanged = dict(fieldsChanged)
         student = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
         formStatus = (FormHistory.get(FormHistory.formID == laborStatusKey).status_id)
-
+        formHistoryIDs = []
         for fieldName in fieldsChanged:
             lsf = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == laborStatusKey)
             if formStatus =="Pending":
                 modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
             elif formStatus =="Approved":
-                adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
-
+                changedForm = adjustLSF(fieldsChanged, fieldName, lsf, currentUser)
+                if changedForm:
+                    formHistoryIDs.append(changedForm)
         if formStatus == "Approved":
-            changedForm = FormHistory.get(FormHistory.formID == laborStatusKey)
-            try:
-                email = emailHandler(changedForm.formHistoryID)
-                if "supervisor" in fieldsChanged:
-                    email.laborStatusFormAdjusted(fieldsChanged["supervisor"]["newValue"])
-                else:
-                    email.laborStatusFormAdjusted()
-            except Exception as e:
-                print("An error occured while attempting to send adjustment form emails: ", e)
-            message = "Your labor adjustment form(s) for {0} {1} have been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
+            for formHistory in formHistoryIDs:
+                try:
+                    email = emailHandler(formHistory)
+                    if "supervisor" in fieldsChanged:
+                        email.laborStatusFormAdjusted(fieldsChanged["supervisor"]["newValue"])
+                    else:
+                        email.laborStatusFormAdjusted()
+                except Exception as e:
+                    print("An error occured while attempting to send adjustment form emails: ", e)
+                message = "Your labor adjustment form(s) for {0} {1} have been submitted.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         else:
             message = "Your labor status form for {0} {1} has been modified.".format(student.studentSupervisee.FIRST_NAME, student.studentSupervisee.LAST_NAME)
         flash(message, "success")
@@ -213,6 +214,7 @@ def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
                                          notesContents = fieldsChanged[fieldName]["newValue"],
                                          noteType      = "Supervisor Note")
         newNoteEntry.save()
+        return None
     else:
         adjustedforms = AdjustedForm.create(fieldAdjusted = fieldName,
                                             oldValue      = fieldsChanged[fieldName]["oldValue"],
@@ -229,9 +231,9 @@ def adjustLSF(fieldsChanged, fieldName, lsf, currentUser):
         if fieldName == "weeklyHours":
             newWeeklyHours = fieldsChanged[fieldName]['newValue']
             createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedforms.adjustedFormID, formHistories)
+        return formHistories.formHistoryID
 
-
-def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None, formHistories=None):
+def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None,  formHistories=None):
     allTermForms = LaborStatusForm.select() \
                    .join_from(LaborStatusForm, Student) \
                    .join_from(LaborStatusForm, FormHistory) \
