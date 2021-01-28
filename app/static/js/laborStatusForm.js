@@ -181,7 +181,7 @@ function fillDates(response) { // prefill term start and term end
         else if (d.getTime() < startd.getTime()) {
           return [false, 'datePicker', 'Before Term'];
         }else{
-            return [true, '', 'available'];
+            return [true, '', 'Available'];
         }
     },
     });
