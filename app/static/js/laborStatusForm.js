@@ -3,8 +3,6 @@ var display_failed = [];
 var laborStatusFormNote = null;
 
 $(document).ready(function(){
-  $('[data-toggle="tooltip"]').tooltip();
-  $( "#dateTimePicker1, #dateTimePicker2").datepicker();
   if($("#selectedDepartment").val()){ // prepopulates position on redirect from rehire button and checks whether department is in compliance.
     checkCompliance($("#selectedDepartment"));
     getDepartment($("#selectedDepartment"));
@@ -170,7 +168,7 @@ function fillDates(response) { // prefill term start and term end
         else if (d.getTime() > endd.getTime()) {
           return [false, 'datePicker', 'After Term'];
         }else{
-            return [true, '', 'available'];
+            return [true, '', 'Available'];
         }
     },
   });
