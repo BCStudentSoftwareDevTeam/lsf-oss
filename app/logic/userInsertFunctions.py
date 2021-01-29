@@ -286,7 +286,7 @@ def checkForPrimaryPosition(termCode, student, currentUser):
                     if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
                         finalStatus["approvedForm"] = True
             else:
-                if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
+                if lastPrimaryPosition.status.statusName in ["Approved", "Approved Reluctantly", "Pending"]:
                     finalStatus["status"]  = "hire"
                 else:
                     finalStatus["status"] = "noHireForSecondary"
