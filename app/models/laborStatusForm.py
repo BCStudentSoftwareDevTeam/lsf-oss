@@ -24,7 +24,7 @@ class LaborStatusForm (baseModel):
     endDate                     = DateField(null=True)
     supervisorNotes             = TextField(null=True)
     laborDepartmentNotes        = TextField(null=True)
-    jobDescription              = TextField(null=True)
+    jobDescription              = ForeignKeyField(null=True)
 
     def __str__(self):
         return str(self.__dict__)
