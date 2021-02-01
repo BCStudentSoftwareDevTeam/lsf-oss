@@ -163,10 +163,10 @@ function fillDates(response) { // prefill term start and term end
       beforeShowDay: function(d) {
 
         if(d.getTime() < startd.getTime()){
-          return [false, 'datePicker', 'Before Term'];
+          return [false, 'datePicker', 'Before Term Start'];
         }
         else if (d.getTime() > endd.getTime()) {
-          return [false, 'datePicker', 'After Term'];
+          return [false, 'datePicker', 'After Term End'];
         }else{
             return [true, '', 'Available'];
         }
@@ -176,10 +176,10 @@ function fillDates(response) { // prefill term start and term end
     beforeShowDay: function(d) {
 
         if(d.getTime() > endd.getTime()){
-          return [false, 'datePicker', 'After Term'];
+          return [false, 'datePicker', 'After Term End'];
         }
         else if (d.getTime() < startd.getTime()) {
-          return [false, 'datePicker', 'Before Term'];
+          return [false, 'datePicker', 'Before Term Start'];
         }else{
             return [true, '', 'Available'];
         }
