@@ -50,7 +50,7 @@ def createUser(username, student=None, supervisor=None):
 
 def createSupervisorFromTracy(username=None, bnumber=None):
     """
-        Attempts to add a user from the Tracy database to the application, based on the provided username.
+        Attempts to add a supervisor from the Tracy database to the application, based on the provided username or bnumber.
 
         Raises InvalidUserException if this does not succeed.
     """
@@ -80,21 +80,31 @@ def createSupervisorFromTracy(username=None, bnumber=None):
                                  EMAIL = tracyUser.EMAIL,
                                  CPO = tracyUser.CPO,
                                  ORG = tracyUser.ORG,
-                                 DEPT_NAME = tracyUser.DEPT_NAME)[0]
+                                 DEPT_NAME = tracyUser.DEPT_NAME)
     else:
         raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyUser.FIRST_NAME, tracyUser.LAST_NAME))
 
-def createStudentFromTracy(username):
+def createStudentFromTracy(username=None, bnumber=None):
     """
-        Checks to see if username of student is in Tracy database, based on the provided username.
+        Attempts to add a student from the Tracy database to the application, based on the provided username or bnumber.
 
         Raises InvalidUserException if this does not succeed.
     """
-    email = "{}@berea.edu".format(username)
-    try:
-        tracyStudent = Tracy().getStudentFromEmail(email)
-    except InvalidQueryException as e:
-        raise InvalidUserException("{} not found in Tracy database".format(email))
+    if not username and not bnumber:
+        raise ValueError("No arguments provided to createStudentFromTracy()")
+
+    if bnumber:
+        try:
+            tracyStudent = Tracy().getStudentFromBNumber(bnumber)
+        except InvalidQueryException as e:
+            raise InvalidUserException("{} not found in Tracy database".format(bnumber))
+
+    else:    # Executes if no ID is provided
+        email = "{}@berea.edu".format(username)
+        try:
+            tracyStudent = Tracy().getStudentFromEmail(email)
+        except InvalidQueryException as e:
+            raise InvalidUserException("{} not found in Tracy database".format(email))
 
     return createStudentFromTracyObj(tracyStudent)
 
