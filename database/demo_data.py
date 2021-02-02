@@ -15,6 +15,7 @@ from app.models.term import Term
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
 from app.models.notes import Notes
+from app.models.positionDescription import PositionDescription
 
 print("Inserting data for demo and testing purposes")
 
@@ -436,7 +437,7 @@ LaborStatusForm.insert([{
             "POSN_CODE": "S61407",
             "weeklyHours": 10,
             "startDate": "2020-04-01",
-            "endDate": "2020-09-01"
+            "endDate": "2020-09-01",
         }]).on_conflict_replace().execute()
 FormHistory.insert([{
             "formHistoryID": 2,
@@ -471,3 +472,21 @@ notes = [
        ]
 Notes.insert_many(notes).on_conflict_replace().execute()
 print(" * laborOfficeNotes added")
+
+#############################
+# Position Descritpion
+#############################
+positionDescriptions = [
+                            {
+                            "termID": "202000",
+                            "POSN_CODE": "S61407",
+                            "positionDescription": "Working in a team of student software developers"
+                            },
+                            {
+                            "termID": "202001",
+                            "POSN_CODE": "S61407",
+                            "positionDescription": "Working in a team of student software developers again."
+                            }
+                    ]
+PositionDescription.insert_many(positionDescriptions).on_conflict_replace().execute()
+print(" * positionDescriptions added")

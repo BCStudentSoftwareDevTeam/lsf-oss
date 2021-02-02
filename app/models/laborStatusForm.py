@@ -4,6 +4,7 @@ from app.models.student import Student
 from app.models.user import User
 from app.models.department import Department
 from app.models.supervisor import Supervisor
+from app.models.positionDescription import PositionDescription
 
 
 # All caps fields are pulled from TRACY
@@ -24,7 +25,5 @@ class LaborStatusForm (baseModel):
     endDate                     = DateField(null=True)
     supervisorNotes             = TextField(null=True)
     laborDepartmentNotes        = TextField(null=True)
-    jobDescription              = ForeignKeyField(null=True)
-
     def __str__(self):
         return str(self.__dict__)
