@@ -56,7 +56,7 @@ studentsTracy = [
                 "ID":"B00734292",
                 "PIDM":"3",
                 "FIRST_NAME":"Guillermo",
-                "LAST_NAME":"Adams",
+                "LAST_NAME":"Adams", # Guillermo's last name is wrong on purpose
                 "CLASS_LEVEL":"Junior",
                 "ACADEMIC_FOCUS":"Computer Science",
                 "MAJOR":"Computer Science",
@@ -67,6 +67,8 @@ studentsTracy = [
                 "LAST_POSN":"TA",
                 "LAST_SUP_PIDM":"7"
                 },
+                ]
+nonStudentStudents = [
                 {
                 "ID":"B00785329",
                 "PIDM":"4",
@@ -98,6 +100,13 @@ studentsTracy = [
                 "LAST_SUP_PIDM":"7"
                 }
 ]
+
+# Add non Supervisor staffs to Tracy db
+for student in nonStudentStudents:
+    db.session.add(STUDATA(**student))
+    db.session.commit()
+
+# Add the Student records
 students = []
 for student in studentsTracy:
     # Add to Tracy db
@@ -339,14 +348,6 @@ users = [
         "student": "B00734292",
         "supervisor": None,
         "username": "cruzg",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "student": "B00785329",
-        "supervisor": None,
-        "username": "adamskg",
         "isLaborAdmin": None,
         "isFinancialAidAdmin": None,
         "isSaasAdmin": None
