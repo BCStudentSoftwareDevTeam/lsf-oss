@@ -144,9 +144,7 @@ def getPositions(departmentOrg, departmentAcct):
     positions = Tracy().getPositionsFromDepartment(departmentOrg,departmentAcct)
     positionDict = {}
     for position in positions:
-        if currentUser.isLaborAdmin != 1 and position.POSN_CODE == "S12345":
-            pass
-        else:
+        if position.POSN_CODE != "S12345" or currentUser.isLaborAdmin:
             positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
     return json.dumps(positionDict)
 
