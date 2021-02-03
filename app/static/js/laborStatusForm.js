@@ -515,6 +515,7 @@ function checkDuplicate(studentDict) {// checks for duplicates in the table. Thi
 
 function checkPrimaryPositionToCreateTheTable(studentDict) {
   var term = $("#selectedTerm").val();
+  var termName = $('#selectedTerm').find('option:selected').text();
   var url = "/laborstatusform/getstudents/" + term + "/" + studentDict.stuBNumber;
   var data = JSON.stringify(studentDict.stuJobType);
   $.ajax({
@@ -530,7 +531,7 @@ function checkPrimaryPositionToCreateTheTable(studentDict) {
           break
         case "noHireForSecondary":
           $("#warningModalTitle").html("Insert Rejected");
-          $("#warningModalText").html(studentDict.stuName + " needs an approved primary position before a secondary position can be added.");
+          $("#warningModalText").html(studentDict.stuName + " needs an approved primary position for " + termName + " before a secondary position can be added.");
           $("#warningModal").modal("show");
           break;
         default:
