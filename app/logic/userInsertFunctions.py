@@ -264,9 +264,10 @@ def checkForPrimaryPosition(termCode, student, currentUser):
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     term = Term.get(Term.termCode == termCode)
+    ayTermCode = termCode[:-2] + '00'
     try:
         lastPrimaryPosition = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(
-         (FormHistory.formID.termCode == termCode) & (FormHistory.formID.studentSupervisee == student) &
+         ((FormHistory.formID.termCode == ayTermCode) | (FormHistory.formID.termCode == termCode)) & (FormHistory.formID.studentSupervisee == student) &
          (FormHistory.historyType.historyTypeName == "Labor Status Form") & (FormHistory.formID.jobType == "Primary")).order_by(FormHistory.formHistoryID.desc()).get()
     except DoesNotExist:
         lastPrimaryPosition = None
