@@ -86,6 +86,7 @@ def test_modifyLSF(setup):
     with app.test_request_context():
         fieldName = 'supervisorNotes'
         modifyLSF(fieldsChanged, fieldName, lsf, currentUser)
+        print("This are the notes",lsf.supervisorNotes)
         assert lsf.supervisorNotes == 'new notes.'
 
         fieldName = 'supervisor'
