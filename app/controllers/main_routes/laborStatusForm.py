@@ -70,17 +70,13 @@ def userInsert():
     rspFunctional = json.loads(rsp)
     all_forms = []
     for i in range(len(rspFunctional)):
-        tracyStudent = Tracy().getStudentFromBNumber(rspFunctional[i]['stuBNumber'])
 
-        # Tries to get a student with the following information from the database
-        # if the student doesn't exist, it tries to create a student with that same information
+        # Get a student record for the given bnumber
         try:
-            createStudentFromTracyObj(tracyStudent)
+            student = createStudentFromTracy(bnumber=rspFunctional[i]['stuBNumber'])
         except InvalidUserException as e:
             print(e)
             return "", 500
-
-        student = Student.get(ID = tracyStudent.ID)
 
         # Updates the student database with any updated attributes from TRACY
         student.FIRST_NAME = tracyStudent.FIRST_NAME            # FIRST_NAME
