@@ -163,7 +163,14 @@ def checkCompliance(department):
 @main_bp.route("/laborstatusform/checktotalhours/<termCode>/<student>/<weeklyHours>/<contractHours>", methods=["GET"])
 def checkTotalHours(termCode, student, weeklyHours, contractHours):
     """ Counts the total number of hours for the student after the new lsf is filled. """
-    positions = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form", (FormHistory.status == "Approved" or FormHistory.status == "Approved Reluctantly"))
+    ayTermCode = termCode[:-2] + '00'
+    positions = FormHistory.select()\
+                           .join_from(FormHistory, LaborStatusForm)\
+                           .where(((FormHistory.formID.termCode == termCode) | (FormHistory.formID.termCode == ayTermCode)),
+                                  FormHistory.formID.studentSupervisee == student,
+                                  FormHistory.historyType == "Labor Status Form",
+                                  (FormHistory.status == "Approved" or FormHistory.status == "Approved Reluctantly")
+                                  )
     term = Term.get(Term.termCode == termCode)
     totalHours = 0
     for item in positions:

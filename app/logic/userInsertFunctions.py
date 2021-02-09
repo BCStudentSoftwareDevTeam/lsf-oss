@@ -18,6 +18,8 @@ from app import cfg
 from app.logic.emailHandler import emailHandler
 from app.logic.tracy import Tracy, InvalidQueryException
 from peewee import DoesNotExist
+from functools import reduce
+import operator
 
 class InvalidUserException(Exception):
     pass
@@ -264,10 +266,32 @@ def checkForPrimaryPosition(termCode, student, currentUser):
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     term = Term.get(Term.termCode == termCode)
+
+    termYear = termCode[:-2]
+    termCode = termCode[-2:]
+    clauses = []
+    if termCode == '00':
+        fallTermCode = termYear + '11'
+        springTermCode = termYear + '12'
+        clauses.extend([FormHistory.formID.termCode == fallTermCode,
+                        FormHistory.formID.termCode == springTermCode,
+                        FormHistory.formID.termCode == termCode])
+    else:
+        ayTermCode = termYear + '00'
+        clauses.extend([FormHistory.formID.termCode == ayTermCode,
+                        FormHistory.formID.termCode == termCode])
+    expression = reduce(operator.or_, clauses) # This expression creates SQL OR operator between the conditions added to 'clauses' list
+
     try:
-        lastPrimaryPosition = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(
-         (FormHistory.formID.termCode == termCode) & (FormHistory.formID.studentSupervisee == student) &
-         (FormHistory.historyType.historyTypeName == "Labor Status Form") & (FormHistory.formID.jobType == "Primary")).order_by(FormHistory.formHistoryID.desc()).get()
+        lastPrimaryPosition = FormHistory.select()\
+                                         .join_from(FormHistory, LaborStatusForm)\
+                                         .join_from(FormHistory, HistoryType)\
+                                         .where((expression) &
+                                                 (FormHistory.formID.studentSupervisee == student) &
+                                                 (FormHistory.historyType.historyTypeName == "Labor Status Form") &
+                                                 (FormHistory.formID.jobType == "Primary"))\
+                                         .order_by(FormHistory.formHistoryID.desc())\
+                                         .get()
     except DoesNotExist:
         lastPrimaryPosition = None
 
@@ -275,7 +299,12 @@ def checkForPrimaryPosition(termCode, student, currentUser):
         approvedRelease = None
     else:
         try:
-            approvedRelease = FormHistory.select().where(FormHistory.formID == lastPrimaryPosition.formID, FormHistory.historyType == "Labor Release Form", FormHistory.status == "Approved").order_by(FormHistory.formHistoryID.desc()).get()
+            approvedRelease = FormHistory.select()\
+                                         .where(FormHistory.formID == lastPrimaryPosition.formID,
+                                                FormHistory.historyType == "Labor Release Form",
+                                                FormHistory.status == "Approved")\
+                                                .order_by(FormHistory.formHistoryID.desc())\
+                                                .get()
         except DoesNotExist:
             approvedRelease = None
 
@@ -297,9 +326,15 @@ def checkForPrimaryPosition(termCode, student, currentUser):
                         finalStatus["approvedForm"] = True
             else:
                 if lastPrimaryPosition.status.statusName in ["Approved", "Approved Reluctantly", "Pending"]:
-                    finalStatus["status"]  = "hire"
+                    lastPrimaryPositionTermCode = str(lastPrimaryPosition.formID.termCode.termCode)[-2:]
+                    # if selected term is AY and student has an approved/pending LSF in spring or fall
+                    if termCode == '00' and lastPrimaryPositionTermCode in ['11', '12']:
+                        finalStatus["status"] = "noHireForSecondary"
+                    else:
+                        finalStatus["status"]  = "hire"
                 else:
                     finalStatus["status"] = "noHireForSecondary"
+
         elif lastPrimaryPosition and approvedRelease:
             if rspFunctional == "Primary":
                 finalStatus["status"]  = "hire"
