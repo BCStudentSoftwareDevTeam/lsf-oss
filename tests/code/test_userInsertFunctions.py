@@ -47,3 +47,50 @@ def test_createSupervisorFromTracy():
     supervisor = createSupervisorFromTracy(username="hoffmanm")
     assert supervisor.FIRST_NAME == "Megan"
     supervisor.delete_instance()
+
+@pytest.mark.integration
+def test_createStudentFromTracy():
+    # Test fail conditions
+    with pytest.raises(ValueError):
+        supervisor = createStudentFromTracy()
+
+    with pytest.raises(InvalidUserException):
+        supervisor = createStudentFromTracy("B00730361")
+
+    with pytest.raises(InvalidUserException):
+        supervisor = createStudentFromTracy(username="B00730361")
+
+    with pytest.raises(InvalidUserException):
+        supervisor = createStudentFromTracy(bnumber="jamalie")
+
+    # Test success conditions
+    supervisor = createStudentFromTracy(username="jamalie", bnumber="B00730361")
+    assert supervisor.FIRST_NAME == "Elaheh"
+
+    supervisor = createStudentFromTracy(username="", bnumber="B00730361")
+    assert supervisor.FIRST_NAME == "Elaheh"
+
+    supervisor = createStudentFromTracy(bnumber="B00730361")
+    assert supervisor.FIRST_NAME == "Elaheh"
+
+    supervisor = createStudentFromTracy(username="jamalie")
+    assert supervisor.FIRST_NAME == "Elaheh"
+
+    supervisor = createStudentFromTracy(username="jamalie", bnumber="")
+    assert supervisor.FIRST_NAME == "Elaheh"
+
+    supervisor = createStudentFromTracy("jamalie")
+    assert supervisor.FIRST_NAME == "Elaheh"
+
+    # Tests getting a supervisor from TRACY that does not exist in the supervisor table
+    supervisor = createStudentFromTracy(username="adamskg", bnumber="B00785329")
+    assert supervisor.FIRST_NAME == "Kat"
+    supervisor.delete_instance()
+
+    supervisor = createStudentFromTracy(username="", bnumber="B00785329")
+    assert supervisor.FIRST_NAME == "Kat"
+    supervisor.delete_instance()
+
+    supervisor = createStudentFromTracy(username="adamskg")
+    assert supervisor.FIRST_NAME == "Kat"
+    supervisor.delete_instance()
