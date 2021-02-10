@@ -52,45 +52,102 @@ def test_createSupervisorFromTracy():
 def test_createStudentFromTracy():
     # Test fail conditions
     with pytest.raises(ValueError):
-        supervisor = createStudentFromTracy()
+        student = createStudentFromTracy()
 
     with pytest.raises(InvalidUserException):
-        supervisor = createStudentFromTracy("B00730361")
+        student = createStudentFromTracy("B00730361")
 
     with pytest.raises(InvalidUserException):
-        supervisor = createStudentFromTracy(username="B00730361")
+        student = createStudentFromTracy(username="B00730361")
 
     with pytest.raises(InvalidUserException):
-        supervisor = createStudentFromTracy(bnumber="jamalie")
+        student = createStudentFromTracy(bnumber="jamalie")
 
     # Test success conditions
-    supervisor = createStudentFromTracy(username="jamalie", bnumber="B00730361")
-    assert supervisor.FIRST_NAME == "Elaheh"
+    student = createStudentFromTracy(username="jamalie", bnumber="B00730361")
+    assert student.FIRST_NAME == "Elaheh"
 
-    supervisor = createStudentFromTracy(username="", bnumber="B00730361")
-    assert supervisor.FIRST_NAME == "Elaheh"
+    student = createStudentFromTracy(username="", bnumber="B00730361")
+    assert student.FIRST_NAME == "Elaheh"
 
-    supervisor = createStudentFromTracy(bnumber="B00730361")
-    assert supervisor.FIRST_NAME == "Elaheh"
+    student = createStudentFromTracy(bnumber="B00730361")
+    assert student.FIRST_NAME == "Elaheh"
 
-    supervisor = createStudentFromTracy(username="jamalie")
-    assert supervisor.FIRST_NAME == "Elaheh"
+    student = createStudentFromTracy(username="jamalie")
+    assert student.FIRST_NAME == "Elaheh"
 
-    supervisor = createStudentFromTracy(username="jamalie", bnumber="")
-    assert supervisor.FIRST_NAME == "Elaheh"
+    student = createStudentFromTracy(username="jamalie", bnumber="")
+    assert student.FIRST_NAME == "Elaheh"
 
-    supervisor = createStudentFromTracy("jamalie")
-    assert supervisor.FIRST_NAME == "Elaheh"
+    student = createStudentFromTracy("jamalie")
+    assert student.FIRST_NAME == "Elaheh"
 
-    # Tests getting a supervisor from TRACY that does not exist in the supervisor table
-    supervisor = createStudentFromTracy(username="adamskg", bnumber="B00785329")
-    assert supervisor.FIRST_NAME == "Kat"
-    supervisor.delete_instance()
+    # Tests getting a student from TRACY that does not exist in the student table
+    student = createStudentFromTracy(username="adamskg", bnumber="B00785329")
+    assert student.FIRST_NAME == "Kat"
+    student.delete_instance()
 
-    supervisor = createStudentFromTracy(username="", bnumber="B00785329")
-    assert supervisor.FIRST_NAME == "Kat"
-    supervisor.delete_instance()
+    student = createStudentFromTracy(username="", bnumber="B00785329")
+    assert student.FIRST_NAME == "Kat"
+    student.delete_instance()
 
-    supervisor = createStudentFromTracy(username="adamskg")
-    assert supervisor.FIRST_NAME == "Kat"
-    supervisor.delete_instance()
+    student = createStudentFromTracy(username="adamskg")
+    assert student.FIRST_NAME == "Kat"
+    student.delete_instance()
+
+@pytest.mark.integration
+def test_getOrCreateStudentRecord():
+    # Test fail conditions
+    with pytest.raises(ValueError):
+        student = getOrCreateStudentRecord()
+
+    with pytest.raises(InvalidUserException):
+        student = getOrCreateStudentRecord("B00730361")
+
+    with pytest.raises(InvalidUserException):
+        student = getOrCreateStudentRecord(username="B00730361")
+
+    with pytest.raises(InvalidUserException):
+        student = getOrCreateStudentRecord(bnumber="jamalie")
+
+    # Test success conditions
+    student = getOrCreateStudentRecord(username="jamalie", bnumber="B00730361")
+    assert student.FIRST_NAME == "Elaheh"
+
+    student = getOrCreateStudentRecord(username="", bnumber="B00730361")
+    assert student.FIRST_NAME == "Elaheh"
+
+    student = getOrCreateStudentRecord(bnumber="B00730361")
+    assert student.FIRST_NAME == "Elaheh"
+
+    student = getOrCreateStudentRecord(username="jamalie")
+    assert student.FIRST_NAME == "Elaheh"
+
+    student = getOrCreateStudentRecord(username="jamalie", bnumber="")
+    assert student.FIRST_NAME == "Elaheh"
+
+    student = getOrCreateStudentRecord("jamalie")
+    assert student.FIRST_NAME == "Elaheh"
+
+    # Test getting a student that does not exist in Tracy
+    student = getOrCreateStudentRecord(bnumber="B00841417")
+    assert student.FIRST_NAME == "Alex"
+
+    student = getOrCreateStudentRecord(username="bryantal")
+    assert student.FIRST_NAME == "Alex"
+
+
+    # Tests getting a student from TRACY that does not exist in the student table
+    student = getOrCreateStudentRecord(username="adamskg", bnumber="B00785329")
+    assert student.FIRST_NAME == "Kat"
+    student.delete_instance()
+
+    student = getOrCreateStudentRecord(username="", bnumber="B00785329")
+    assert student.FIRST_NAME == "Kat"
+    student.delete_instance()
+
+    student = getOrCreateStudentRecord(username="adamskg")
+    assert student.FIRST_NAME == "Kat"
+    student.delete_instance()
+
+

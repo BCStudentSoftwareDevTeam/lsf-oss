@@ -86,6 +86,27 @@ def createSupervisorFromTracy(username=None, bnumber=None):
     else:
         raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyUser.FIRST_NAME, tracyUser.LAST_NAME))
 
+def getOrCreateStudentRecord(username=None, bnumber=None):
+    """
+        Attempts to add a student from the Tracy database to the application, based on the provided username or bnumber.
+
+        Raises InvalidUserException if this does not succeed.
+    """
+    if not username and not bnumber:
+        raise ValueError("No arguments provided to getOrCreateStudentRecord()")
+
+    try:
+        if bnumber:
+            student = Student.get(Student.ID == bnumber)
+        else:
+            student = Student.get(Student.STU_EMAIL == "{}@berea.edu".format(username))
+
+    except DoesNotExist:
+        student = createStudentFromTracy(username,bnumber)
+
+    return student
+
+
 def createStudentFromTracy(username=None, bnumber=None):
     """
         Attempts to add a student from the Tracy database to the application, based on the provided username or bnumber.
@@ -108,14 +129,7 @@ def createStudentFromTracy(username=None, bnumber=None):
         except InvalidQueryException as e:
             raise InvalidUserException("{} not found in Tracy database".format(email))
 
-    return createStudentFromTracyObj(tracyStudent)
-
-def createStudentFromTracyObj(tracyStudent):
-    """
-        Attempts to return a student from our Student table in the application, based on the provided object from the Tracy student database.
-
-        Raises InvalidUserException if this does not succeed.
-    """
+    # Create the student in Tracy
     try:
         return Student.get(Student.ID == tracyStudent.ID.strip())
     except DoesNotExist:
@@ -135,6 +149,13 @@ def createStudentFromTracyObj(tracyStudent):
                             LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM)
     else:
         raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyStudent.FIRST_NAME, tracyStudent.LAST_NAME))
+
+def createStudentFromTracyObj(tracyStudent):
+    """
+        Attempts to return a student from our Student table in the application, based on the provided object from the Tracy student database.
+
+        Raises InvalidUserException if this does not succeed.
+    """
 
 
 def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional):
