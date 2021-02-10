@@ -70,17 +70,13 @@ def userInsert():
     rspFunctional = json.loads(rsp)
     all_forms = []
     for i in range(len(rspFunctional)):
-        tracyStudent = Tracy().getStudentFromBNumber(rspFunctional[i]['stuBNumber'])
 
-        # Tries to get a student with the following information from the database
-        # if the student doesn't exist, it tries to create a student with that same information
+        # Get a student record for the given bnumber
         try:
-            createStudentFromTracyObj(tracyStudent)
+            student = createStudentFromTracy(bnumber=rspFunctional[i]['stuBNumber'])
         except InvalidUserException as e:
             print(e)
             return "", 500
-
-        student = Student.get(ID = tracyStudent.ID)
 
         # Updates the student database with any updated attributes from TRACY
         student.FIRST_NAME = tracyStudent.FIRST_NAME            # FIRST_NAME
@@ -167,7 +163,14 @@ def checkCompliance(department):
 @main_bp.route("/laborstatusform/checktotalhours/<termCode>/<student>/<weeklyHours>/<contractHours>", methods=["GET"])
 def checkTotalHours(termCode, student, weeklyHours, contractHours):
     """ Counts the total number of hours for the student after the new lsf is filled. """
-    positions = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form", (FormHistory.status == "Approved" or FormHistory.status == "Approved Reluctantly"))
+    ayTermCode = termCode[:-2] + '00'
+    positions = FormHistory.select()\
+                           .join_from(FormHistory, LaborStatusForm)\
+                           .where(((FormHistory.formID.termCode == termCode) | (FormHistory.formID.termCode == ayTermCode)),
+                                  FormHistory.formID.studentSupervisee == student,
+                                  FormHistory.historyType == "Labor Status Form",
+                                  (FormHistory.status == "Approved" or FormHistory.status == "Approved Reluctantly")
+                                  )
     term = Term.get(Term.termCode == termCode)
     totalHours = 0
     for item in positions:
