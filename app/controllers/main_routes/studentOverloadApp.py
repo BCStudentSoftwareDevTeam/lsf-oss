@@ -12,9 +12,7 @@ from app.logic.emailHandler import*
 @main_bp.route('/studentOverloadApp/<formId>', methods=['GET']) # the form ID here is the ID from formHistory table
 # @login_required
 def studentOverloadApp(formId):
-    print("This is before Login")
     currentUser = require_login()
-    print("This is after Login")
     if not currentUser:        # Not logged in
         return render_template('errors/403.html'), 403
     overloadForm = FormHistory.get(FormHistory.formHistoryID == formId)
@@ -22,7 +20,6 @@ def studentOverloadApp(formId):
         return render_template('errors/403.html'), 403
     if currentUser.student.ID != overloadForm.formID.studentSupervisee.ID:
         return render_template('errors/403.html'), 403
-    print("Af")
     lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID)
     prefillStudentName = lsfForm.studentSupervisee.FIRST_NAME + " "+ lsfForm.studentSupervisee.LAST_NAME
     prefillStudentBnum = lsfForm.studentSupervisee.ID

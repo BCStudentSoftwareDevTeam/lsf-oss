@@ -29,7 +29,6 @@ def logout():
 def require_login():
     env = request.environ
     username = getUsernameFromEnv(env)
-    print("Username",username)
 
     try:
         user = auth_user(env, username)
