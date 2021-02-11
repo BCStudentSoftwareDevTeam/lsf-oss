@@ -151,10 +151,9 @@ def createStudentFromTracy(username=None, bnumber=None):
         raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyStudent.FIRST_NAME, tracyStudent.LAST_NAME))
 
 
-def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional):
+def createLaborStatusForm(studentID, primarySupervisor, department, term, rspFunctional):
     """
     Creates a labor status form with the appropriate data passed from userInsert() in laborStatusForm.py
-    tracyStudent: object with all the student's information from Tracy
     studentID: student's primary ID in the database AKA their B#
     primarySupervisor: primary supervisor of the student
     department: department the position is a part of
