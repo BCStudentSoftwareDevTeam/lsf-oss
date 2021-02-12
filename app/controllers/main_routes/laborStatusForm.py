@@ -116,10 +116,12 @@ def getDates(termcode):
 @main_bp.route("/laborstatusform/getPositions/<departmentOrg>/<departmentAcct>", methods=['GET'])
 def getPositions(departmentOrg, departmentAcct):
     """ Get all of the positions that are in the selected department """
+    currentUser = require_login()
     positions = Tracy().getPositionsFromDepartment(departmentOrg,departmentAcct)
     positionDict = {}
     for position in positions:
-        positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
+        if position.POSN_CODE != "S12345" or currentUser.isLaborAdmin:
+            positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
     return json.dumps(positionDict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["POST"])
