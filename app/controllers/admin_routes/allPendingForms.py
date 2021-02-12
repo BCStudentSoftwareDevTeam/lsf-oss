@@ -506,7 +506,7 @@ def laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDat
         overloadForm.laborReviewDate = currentDate
         overloadForm.save()
         try:
-            pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending")).get()
+            pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending") & (FormHistory.historyType != "Labor Overload Form")).get()
             if historyForm.adjustedForm and rsp['status'] == "Approved":
                 LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == historyForm.formID)
                 if historyForm.adjustedForm.fieldAdjusted == "weeklyHours":
@@ -587,7 +587,7 @@ def modalFormUpdate():
             status = Status.get(Status.statusName == rsp['status'])
 
             save_form_status = True
-            if rsp['formType'] == 'Overload' and ("Approved" in rsp['status'] or "Approved Reluctantly" in rsp['status']) and historyForm.formID.POSN_CODE != "S12345":
+            if rsp['formType'] == 'Overload' and "Approved Reluctantly" in rsp['status'] and historyForm.formID.POSN_CODE != "S12345":
                 conn = Banner()
                 save_form_status = conn.insert(historyForm)
 
