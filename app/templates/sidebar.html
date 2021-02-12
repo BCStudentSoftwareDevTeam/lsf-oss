@@ -67,8 +67,14 @@
                   </ul>
                   {% endif %}
                   {% if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin %}
+
                   <ul id="admindropdown" class="panel panel-default">
                     <a href="/admin/pendingForms/pendingOverload"><li {% if request.path == "/admin/pendingForms/pendingOverload" %} class="panel-heading active" {% endif %}class="panel-heading"><h4>Overload Forms</h4></li></a>
+                  </ul>
+                  {% endif %}
+                  {% if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin %}
+                  <ul id="admindropdown" class="panel panel-default">
+                    <a href="/admin/pendingForms/pendingOverload"><li class="panel-heading"><h4>Overload Forms</h4></li></a>
                   </ul>
                   {% endif %}
                 </div>

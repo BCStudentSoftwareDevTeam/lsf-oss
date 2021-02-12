@@ -256,11 +256,8 @@ def saveStatus(new_status, form_ids, currentUser):
     except Exception as e:
         print("Error preparing form for status update:", e)
         return jsonify({"success": False}), 500
-    
+
     return jsonify({"success": True})
-
-
-
 
 def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
     """
@@ -478,7 +475,7 @@ def financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, curr
     selectedOverload = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
     if 'denialReason' in rsp.keys():
         newNoteEntry = Notes.create(formID=historyForm.formID.laborStatusFormID,
-                                    createdBy=currentUser, 
+                                    createdBy=currentUser,
                                     date=currentDate,
                                     notesContents=rsp["denialReason"],
                                     noteType = "Labor Note")
@@ -593,23 +590,53 @@ def modalFormUpdate():
 
             # if we are able to save
             if save_form_status:
-                overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
-                if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin:
-                    financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
-
-                elif currentUser.isFinancialAidAdmin and currentUser.isLaborAdmin:
-                    if (not overloadForm.financialAidApproved) or (overloadForm.financialAidApproved == "Pending"):
+                try:
+                    # This try is to handle Overload Forms
+                    overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
+                    if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin:
                         financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
-                    else:
-                        laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
-                elif currentUser.isSaasAdmin and currentUser.isLaborAdmin:
-                    if (not overloadForm.SAASApproved) or overloadForm.SAASApproved == "Pending":
-                        financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
-                    else:
-                        laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
 
-                elif currentUser.isLaborAdmin and (not currentUser.isFinancialAidAdmin or not currentUser.isSaasAdmin):
-                    laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
+                    elif currentUser.isFinancialAidAdmin and currentUser.isLaborAdmin:
+                        if (not overloadForm.financialAidApproved) or (overloadForm.financialAidApproved == "Pending"):
+                            financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
+                        else:
+                            laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
+                    elif currentUser.isSaasAdmin and currentUser.isLaborAdmin:
+                        if (not overloadForm.SAASApproved) or overloadForm.SAASApproved == "Pending":
+                            financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
+                        else:
+                            laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
+
+                    elif currentUser.isLaborAdmin and (not currentUser.isFinancialAidAdmin or not currentUser.isSaasAdmin):
+                        laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
+                except:
+                    # This except is to handle Release Forms
+                    historyForm.status = status.statusName
+                    historyForm.reviewedDate = currentDate
+                    historyForm.reviewedBy = currentUser
+                    historyForm.save()
+                    if rsp["status"] == "Denied" or "adminNotes" in rsp:
+                        newNotes = Notes.create(formID = historyForm.formID,
+                                                createdBy = currentUser,
+                                                notesContents = "",
+                                                noteType = "",
+                                                date = currentDate)
+                        if rsp["status"] == "Denied":
+                            newNotes.notesContents = rsp["denialReason"]
+                        elif "adminNotes" in rsp:
+                            newNotes.notesContents = rsp["adminNotes"]
+                        if currentUser.isFinancialAidAdmin:
+                            newNotes.noteType = "Financial Aid Note"
+                        elif currentUser.isSaasAdmin:
+                            newNotes.noteType = "SAAS Note"
+                        elif currentUser.isLaborAdmin:
+                            newNotes.noteType = "Supervisor Note"
+                        newNotes.save()
+
+                    if rsp["status"] == "Denied":
+                        email.laborReleaseFormRejected()
+                    elif rsp["status"] == "Approved":
+                        email.laborReleaseFormApproved()
             return jsonify({"Success": True})
 
     except Exception as e:
