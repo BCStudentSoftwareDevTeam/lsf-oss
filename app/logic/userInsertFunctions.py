@@ -341,7 +341,7 @@ def checkForPrimaryPosition(termCode, student, currentUser):
                 if lastPrimaryPosition.status.statusName in ["Approved", "Approved Reluctantly", "Pending"]:
                     lastPrimaryPositionTermCode = str(lastPrimaryPosition.formID.termCode.termCode)[-2:]
                     # if selected term is AY and student has an approved/pending LSF in spring or fall
-                    if termCode == '00' and lastPrimaryPositionTermCode in ['11', '12']:
+                    if shortCode == '00' and lastPrimaryPositionTermCode in ['11', '12']:
                         finalStatus["status"] = "noHireForSecondary"
                     else:
                         finalStatus["status"]  = "hire"
