@@ -281,9 +281,9 @@ def checkForPrimaryPosition(termCode, student, currentUser):
     term = Term.get(Term.termCode == termCode)
 
     termYear = termCode[:-2]
-    termCode = termCode[-2:]
+    shortCode = termCode[-2:]
     clauses = []
-    if termCode == '00':
+    if shortCode == '00':
         fallTermCode = termYear + '11'
         springTermCode = termYear + '12'
         clauses.extend([FormHistory.formID.termCode == fallTermCode,
