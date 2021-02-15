@@ -86,6 +86,27 @@ def createSupervisorFromTracy(username=None, bnumber=None):
     else:
         raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyUser.FIRST_NAME, tracyUser.LAST_NAME))
 
+def getOrCreateStudentRecord(username=None, bnumber=None):
+    """
+        Attempts to add a student from the Tracy database to the application, based on the provided username or bnumber.
+
+        Raises InvalidUserException if this does not succeed.
+    """
+    if not username and not bnumber:
+        raise ValueError("No arguments provided to getOrCreateStudentRecord()")
+
+    try:
+        if bnumber:
+            student = Student.get(Student.ID == bnumber)
+        else:
+            student = Student.get(Student.STU_EMAIL == "{}@berea.edu".format(username))
+
+    except DoesNotExist:
+        student = createStudentFromTracy(username,bnumber)
+
+    return student
+
+
 def createStudentFromTracy(username=None, bnumber=None):
     """
         Attempts to add a student from the Tracy database to the application, based on the provided username or bnumber.
@@ -108,14 +129,7 @@ def createStudentFromTracy(username=None, bnumber=None):
         except InvalidQueryException as e:
             raise InvalidUserException("{} not found in Tracy database".format(email))
 
-    return createStudentFromTracyObj(tracyStudent)
-
-def createStudentFromTracyObj(tracyStudent):
-    """
-        Attempts to return a student from our Student table in the application, based on the provided object from the Tracy student database.
-
-        Raises InvalidUserException if this does not succeed.
-    """
+    # Create the student in Tracy
     try:
         return Student.get(Student.ID == tracyStudent.ID.strip())
     except DoesNotExist:
@@ -137,10 +151,9 @@ def createStudentFromTracyObj(tracyStudent):
         raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyStudent.FIRST_NAME, tracyStudent.LAST_NAME))
 
 
-def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional):
+def createLaborStatusForm(studentID, primarySupervisor, department, term, rspFunctional):
     """
     Creates a labor status form with the appropriate data passed from userInsert() in laborStatusForm.py
-    tracyStudent: object with all the student's information from Tracy
     studentID: student's primary ID in the database AKA their B#
     primarySupervisor: primary supervisor of the student
     department: department the position is a part of
@@ -268,9 +281,9 @@ def checkForPrimaryPosition(termCode, student, currentUser):
     term = Term.get(Term.termCode == termCode)
 
     termYear = termCode[:-2]
-    termCode = termCode[-2:]
+    shortCode = termCode[-2:]
     clauses = []
-    if termCode == '00':
+    if shortCode == '00':
         fallTermCode = termYear + '11'
         springTermCode = termYear + '12'
         clauses.extend([FormHistory.formID.termCode == fallTermCode,
@@ -328,7 +341,7 @@ def checkForPrimaryPosition(termCode, student, currentUser):
                 if lastPrimaryPosition.status.statusName in ["Approved", "Approved Reluctantly", "Pending"]:
                     lastPrimaryPositionTermCode = str(lastPrimaryPosition.formID.termCode.termCode)[-2:]
                     # if selected term is AY and student has an approved/pending LSF in spring or fall
-                    if termCode == '00' and lastPrimaryPositionTermCode in ['11', '12']:
+                    if shortCode == '00' and lastPrimaryPositionTermCode in ['11', '12']:
                         finalStatus["status"] = "noHireForSecondary"
                     else:
                         finalStatus["status"]  = "hire"

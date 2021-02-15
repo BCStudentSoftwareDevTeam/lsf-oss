@@ -73,40 +73,20 @@ def userInsert():
 
         # Get a student record for the given bnumber
         try:
-            student = createStudentFromTracy(bnumber=rspFunctional[i]['stuBNumber'])
+            student = getOrCreateStudentRecord(bnumber=rspFunctional[i]['stuBNumber'])
+            supervisor = createSupervisorFromTracy(bnumber=rspFunctional[i]['stuSupervisorID'])
         except InvalidUserException as e:
             print(e)
             return "", 500
 
-        # Updates the student database with any updated attributes from TRACY
-        student.FIRST_NAME = tracyStudent.FIRST_NAME            # FIRST_NAME
-        student.LAST_NAME = tracyStudent.LAST_NAME              # LAST_NAME
-        student.CLASS_LEVEL = tracyStudent.CLASS_LEVEL          # CLASS_LEVEL
-        student.ACADEMIC_FOCUS = tracyStudent.ACADEMIC_FOCUS    # ACADEMIC_FOCUS
-        student.MAJOR = tracyStudent.MAJOR                      # MAJOR
-        student.PROBATION = tracyStudent.PROBATION              # PROBATION
-        student.ADVISOR = tracyStudent.ADVISOR                  # ADVISOR
-        student.STU_EMAIL = tracyStudent.STU_EMAIL              # STU_EMAIL
-        student.STU_CPO = tracyStudent.STU_CPO                  # STU_CPO
-        student.LAST_POSN = tracyStudent.LAST_POSN              # LAST_POSN
-        student.LAST_SUP_PIDM = tracyStudent.LAST_SUP_PIDM      # LAST_SUP_PIDM
-
-        student.save()                                          #Saves to student database
-
-        studentID = student.ID
-        d = createSupervisorFromTracy(bnumber=rspFunctional[i]['stuSupervisorID'])
-        primarySupervisor = d.ID
-        d, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
-        department = d.departmentID
-        d, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
-        term = d
+        department, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
+        term, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
         try:
-            lsf = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional[i])
+            lsf = createLaborStatusForm(student.ID, supervisor.ID, department.departmentID, term, rspFunctional[i])
             status = Status.get(Status.statusName == "Pending")
-            creatorID = currentUser
-            createOverloadFormAndFormHistory(rspFunctional[i], lsf, creatorID, status) # createOverloadFormAndFormHistory()
+            createOverloadFormAndFormHistory(rspFunctional[i], lsf, currentUser, status) # createOverloadFormAndFormHistory()
             try:
-                emailDuringBreak(checkForSecondLSFBreak(term.termCode, studentID), term)
+                emailDuringBreak(checkForSecondLSFBreak(term.termCode, student.ID), term)
             except Exception as e:
                 print("Error when sending emails during break: " + str(e))
 
@@ -136,10 +116,12 @@ def getDates(termcode):
 @main_bp.route("/laborstatusform/getPositions/<departmentOrg>/<departmentAcct>", methods=['GET'])
 def getPositions(departmentOrg, departmentAcct):
     """ Get all of the positions that are in the selected department """
+    currentUser = require_login()
     positions = Tracy().getPositionsFromDepartment(departmentOrg,departmentAcct)
     positionDict = {}
     for position in positions:
-        positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
+        if position.POSN_CODE != "S12345" or currentUser.isLaborAdmin:
+            positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
     return json.dumps(positionDict)
 
 @main_bp.route("/laborstatusform/getstudents/<termCode>/<student>", methods=["POST"])
@@ -202,18 +184,17 @@ def releaseAndRehire():
         todayDate = date.today()
         tomorrowDate = datetime.now()+timedelta(1)
         createLaborReleaseForm(currentUser, previousPrimaryPosition.formID, tomorrowDate, "Satisfactory", "Released by labor admin.", "Approved", todayDate, currentUser)
+
         # Create new labor status form
-        tracyStudent = Tracy().getStudentFromBNumber(studentDict['stuBNumber'])
-        studentID = Student.get(ID = tracyStudent.ID)
-        d = createSupervisorFromTracy(bnumber=studentDict['stuSupervisorID'])
-        primarySupervisor = d.ID
-        d, created = Department.get_or_create(DEPT_NAME = studentDict['stuDepartment'])
-        department = d.departmentID
-        d, created = Term.get_or_create(termCode = studentDict['stuTermCode'])
-        term = d
+        student = getOrCreateStudentRecord(bnumber=studentDict['stuBNumber'])
+        supervisor = createSupervisorFromTracy(bnumber=studentDict['stuSupervisorID'])
+        department, created = Department.get_or_create(DEPT_NAME = studentDict['stuDepartment'])
+        term, created = Term.get_or_create(termCode = studentDict['stuTermCode'])
         status = Status.get(Status.statusName == "Pending")
-        newLaborStatusForm = createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, studentDict)
+
+        newLaborStatusForm = createLaborStatusForm(student.ID, supervisor.ID, department.departmentID, term, studentDict)
         formHistory = createOverloadFormAndFormHistory(studentDict, newLaborStatusForm, currentUser, status)
+
         # Mark the newly created labor status form as approved in both our system and Banner
         saveStatus("Approved", [str(formHistory.formHistoryID)], currentUser)
 
