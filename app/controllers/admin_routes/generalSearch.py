@@ -29,10 +29,10 @@ def generalSearch():
     if not currentUser or not currentUser.isLaborAdmin:
         return render_template('errors/403.html'), 403
 
-    terms = Term.select()
-    departments = Department.select()
-    supervisors = Supervisor.select()
-    students = Student.select()
+    terms = LaborStatusForm.select(LaborStatusForm.termCode).distinct().order_by(LaborStatusForm.termCode.desc())
+    departments = Department.select().order_by(Department.DEPT_NAME.asc())
+    supervisors = Supervisor.select().order_by(Supervisor.FIRST_NAME.asc())
+    students = Student.select().order_by(Student.FIRST_NAME.asc())
 
     if request.method == 'POST':
         return getDatatableData(request)
