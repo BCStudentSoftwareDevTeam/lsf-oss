@@ -22,7 +22,7 @@ generalSearchResults = None
 @admin.route('/admin/generalSearch', methods=['GET', 'POST'])
 def generalSearch():
     '''
-    When the request is GET the function populates the General Search interface dropdown menus with their corresponding values.
+    When the request is GET the function populates the Form Search interface dropdown menus with their corresponding values.
     If the request is POST it also populates the datatable with data based on user input.
     '''
     currentUser = require_login()
@@ -38,7 +38,7 @@ def generalSearch():
         return getDatatableData(request)
 
     return render_template('admin/generalSearch.html',
-                            title = "General Search",
+                            title = "Form Search",
                             terms = terms,
                             supervisors = supervisors,
                             students = students,
