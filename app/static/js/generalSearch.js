@@ -11,6 +11,14 @@ $('#generalSearchButton').on('click', function(){
   runGeneralSearchQuery();
 });
 
+$('#clearSelectionsButton').on('click', function(){
+  $("input:radio:checked").removeAttr("checked");
+  $('select.selectpicker').each(function() {
+    $(`#${this.id} option:eq(0)`).prop("selected", true);
+    $(`#${this.id}`).selectpicker("refresh");
+  });
+});
+
 function runGeneralSearchQuery() {
 
   var termCode = $("#termSelect").val();

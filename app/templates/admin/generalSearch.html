@@ -36,10 +36,12 @@
                     name='term'
                     id='termSelect'
                     data-live-search='true'
-                    title="Select a term">
-                    <option></option>
+                    title="All terms">
+                    <option value="">All terms</option>
                 {% for term in terms %}
-                  <option value="{{term.termCode}}">{{term.termName}}</option>
+                  <option value="{{term.termCode.termCode}}">
+                    {{term.termCode.termName}}
+                  </option>
                 {% endfor %}
             </select></div>
           </div>
@@ -49,10 +51,13 @@
                     name='department'
                     id='departmentSelect'
                     data-live-search='true'
-                    title="Select a department">
-                    <option></option>
+                    title="All departments">
+                    <option value="">All departments</option>
                   {% for department in departments %}
-                    <option value="{{department.departmentID}}">{{department.DEPT_NAME}}</option>
+                    <option value="{{department.departmentID}}"
+                            data-content="{{department.DEPT_NAME}}<small class='text-muted'> ({{department.ORG}}-{{department.ACCOUNT}})</small>">
+                      {{department.DEPT_NAME}}
+                    </option>
                   {% endfor %}
             </select></div>
           </div>
@@ -62,10 +67,13 @@
                     name='supervisor'
                     id='supervisorSelect'
                     data-live-search='true'
-                    title="Select a supervisor">
-                    <option></option>
+                    title="All supervisors">
+                    <option value="">All supervisors</option>
                 {% for supervisor in supervisors  %}
-                  <option value="{{supervisor.ID}}">{{supervisor.FIRST_NAME}} {{supervisor.LAST_NAME}}</option>
+                  <option value="{{supervisor.ID}}"
+                          data-content="{{supervisor.FIRST_NAME}} {{supervisor.LAST_NAME}}<small class='text-muted'> ({{supervisor.ID}})</small>">
+                    {{supervisor.FIRST_NAME}} {{supervisor.LAST_NAME}}
+                  </option>
                 {% endfor %}
             </select></div>
           </div>
@@ -75,14 +83,18 @@
                     name='student'
                     id='studentSelect'
                     data-live-search='true'
-                    title="Select a student">
-                    <option></option>
+                    title="All students">
+                    <option value="">All students</option>
                   {% for student in students %}
-                    <option value="{{student.ID}}">{{student.FIRST_NAME}} {{student.LAST_NAME}}</option>
+                    <option value="{{student.ID}}"
+                            data-content="{{student.FIRST_NAME}} {{student.LAST_NAME}}<small class='text-muted'> ({{student.ID}})</small>">
+                      {{student.FIRST_NAME}} {{student.LAST_NAME}}
+                   </option>
                   {% endfor %}
             </select></div>
           </div>
           <button type="button" class="btn btn-primary" id="generalSearchButton">Search</button>
+          <button type="button" class="btn btn-danger" id="clearSelectionsButton">Clear Selections</button>
           <br><br>
         </div>
         <div class="col-md-5">
