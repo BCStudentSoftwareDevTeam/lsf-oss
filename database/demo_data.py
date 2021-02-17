@@ -21,7 +21,7 @@ print("Inserting data for demo and testing purposes")
 #############################
 # Students (TRACY)
 #############################
-studentsTracy = [
+bothStudents = [
                 {
                 "ID":"B00730361",
                 "PIDM":"1",
@@ -35,21 +35,6 @@ studentsTracy = [
                 "STU_EMAIL":"jamalie@berea.edu",
                 "STU_CPO":"718",
                 "LAST_POSN":"Media Technician",
-                "LAST_SUP_PIDM":"7"
-                },
-                {
-                "ID":"B00841417",
-                "PIDM":"2",
-                "FIRST_NAME":"Alex",
-                "LAST_NAME":"Bryant",
-                "CLASS_LEVEL":"Senior",
-                "ACADEMIC_FOCUS":"Computer Science",
-                "MAJOR":"Computer Science",
-                "PROBATION":"0",
-                "ADVISOR":"Scott Heggen",
-                "STU_EMAIL":"bryantal@berea.edu",
-                "STU_CPO":"212",
-                "LAST_POSN":"Student Manager",
                 "LAST_SUP_PIDM":"7"
                 },
                 {
@@ -68,7 +53,24 @@ studentsTracy = [
                 "LAST_SUP_PIDM":"7"
                 },
                 ]
-nonStudentStudents = [
+localStudents = [
+                {
+                "ID":"B00841417",
+                "PIDM":"2",
+                "FIRST_NAME":"Alex",
+                "LAST_NAME":"Bryant",
+                "CLASS_LEVEL":"Senior",
+                "ACADEMIC_FOCUS":"Computer Science",
+                "MAJOR":"Computer Science",
+                "PROBATION":"0",
+                "ADVISOR":"Scott Heggen",
+                "STU_EMAIL":"bryantal@berea.edu",
+                "STU_CPO":"212",
+                "LAST_POSN":"Student Manager",
+                "LAST_SUP_PIDM":"7"
+                },
+        ]
+tracyStudents = [
                 {
                 "ID":"B00785329",
                 "PIDM":"4",
@@ -101,18 +103,14 @@ nonStudentStudents = [
                 }
 ]
 
-# Add non Supervisor staffs to Tracy db
-for student in nonStudentStudents:
+# Add students to Tracy db
+for student in (tracyStudents + bothStudents):
     db.session.add(STUDATA(**student))
     db.session.commit()
 
 # Add the Student records
 students = []
-for student in studentsTracy:
-    # Add to Tracy db
-    db.session.add(STUDATA(**student))
-    db.session.commit()
-
+for student in (localStudents + bothStudents):
     # Set up lsf db data
     del student["PIDM"]
     student['ID'] = student['ID'].strip()
@@ -187,6 +185,14 @@ positions = [
             "ORG" : "2107",
             "ACCOUNT":"6740",
             "DEPT_NAME":"Biology"
+            },
+            {
+            "POSN_CODE": "S12345",
+            "POSN_TITLE": "DUMMY POSITION",
+            "WLS": "3",
+            "ORG" : "2114",
+            "ACCOUNT":"6740",
+            "DEPT_NAME":"Computer Science"
             }
 ]
 # Add to Tracy db
