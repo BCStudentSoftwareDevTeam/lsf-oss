@@ -1,0 +1,56 @@
+@media(min-width:970px) and (max-width:2500px) {
+  .container {
+    width: 83%;
+    }
+}
+
+.bootstrap-select>.dropdown-toggle.bs-placeholder,
+.bootstrap-select>.dropdown-toggle.bs-placeholder:active,
+.bootstrap-select>.dropdown-toggle.bs-placeholder:focus,
+.bootstrap-select>.dropdown-toggle.bs-placeholder:hover {
+    color: #757575;
+}
+
+.dropdown-menu>.disabled>a,
+.dropdown-menu>.disabled>a:focus,
+.dropdown-menu>.disabled>a:hover {
+  color: #000;
+}
+
+.floatleft {
+float: left;
+width: 47%;
+height: 310px;
+}
+
+.floatright {
+float: right;
+width: 47%;
+height: 310px;
+}
+
+#titleGlyphicon{
+      font-size: 29px;
+      color: #337ab7;
+}
+
+selectpicker, label {
+  display: block;
+}
+
+.col-xs-12 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+#glyphicon_note{
+  font-size: 29px;
+  color: #337ab7;
+  padding-right: 0px;
+  padding-left: 26px;
+}
+
+#flash_container {
+  width: 87%;
+  height: 55px;
+}

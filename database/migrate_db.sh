@@ -27,6 +27,7 @@ pem add app.models.visitTracker.VisitTracker
 pem add app.models.emailTracker.EmailTracker
 pem add app.models.notes.Notes
 pem add app.models.supervisor.Supervisor
-pem add app.models.positionDescription.PositionDescription
+pem add app.models.termPositionDescription.TermPositionDescription
+pem add app.models.position.Position
 pem watch
 pem migrate

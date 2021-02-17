@@ -15,7 +15,8 @@ from app.models.term import Term
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
 from app.models.notes import Notes
-from app.models.positionDescription import PositionDescription
+from app.models.termPositionDescription import TermPositionDescription
+from app.models.position import Position
 
 print("Inserting data for demo and testing purposes")
 
@@ -422,6 +423,50 @@ Term.insert_many(terms).on_conflict_replace().execute()
 print(" * terms added")
 
 #############################
+# Positions
+#############################
+positions = [
+            {
+            "POSN_CODE": "S61407",
+            "POSN_TITLE": "Student Programmer",
+            "WLS": "1",
+            "ORG" : "2114",
+            "ACCOUNT":"6740",
+            "DEPT_NAME":"Computer Science"
+            },
+            {
+            "POSN_CODE": "S61408",
+            "POSN_TITLE": "Research Associate",
+            "WLS": "5",
+            "ORG" : "2114",
+            "ACCOUNT":"6740",
+            "DEPT_NAME":"Computer Science"
+            }
+                    ]
+Position.insert_many(positions).on_conflict_replace().execute()
+print(" * positionsadded")
+
+#############################
+# Position Descritpion
+#############################
+termPositionDescriptions = [
+                            {
+                            "temrpositionDescriptionID": 1,
+                            "termCode": "202000",
+                            "POSN_CODE": "S61407",
+                            "positionDescription": "Working in a team of student software developers"
+                            },
+                            {
+                            "temrpositionDescriptionID": 2,
+                            "termCode": "202001",
+                            "POSN_CODE": "S61408",
+                            "positionDescription": "Working in a team of student software developers again."
+                            }
+                    ]
+TermPositionDescription.insert_many(termPositionDescriptions).on_conflict_replace().execute()
+print(" * positionDescriptions added")
+
+#############################
 # Create a Pending Labor Status Form
 #############################
 LaborStatusForm.insert([{
@@ -431,10 +476,12 @@ LaborStatusForm.insert([{
             "studentSupervisee_id": "B00841417",
             "supervisor_id": "B12361006",
             "department_id": 1,
+            "termPositionDescription_id":1,
             "jobType": "Primary",
             "WLS": 1,
             "POSN_TITLE": "Student Programmer",
             "POSN_CODE": "S61407",
+            "positionDescription": "Working in a team of student software developers",
             "weeklyHours": 10,
             "startDate": "2020-04-01",
             "endDate": "2020-09-01",
@@ -472,21 +519,3 @@ notes = [
        ]
 Notes.insert_many(notes).on_conflict_replace().execute()
 print(" * laborOfficeNotes added")
-
-#############################
-# Position Descritpion
-#############################
-positionDescriptions = [
-                            {
-                            "termID": "202000",
-                            "POSN_CODE": "S61407",
-                            "positionDescription": "Working in a team of student software developers"
-                            },
-                            {
-                            "termID": "202001",
-                            "POSN_CODE": "S61407",
-                            "positionDescription": "Working in a team of student software developers again."
-                            }
-                    ]
-PositionDescription.insert_many(positionDescriptions).on_conflict_replace().execute()
-print(" * positionDescriptions added")
