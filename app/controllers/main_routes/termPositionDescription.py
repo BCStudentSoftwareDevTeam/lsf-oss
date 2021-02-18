@@ -22,7 +22,7 @@ def termPositionDescription():
             return redirect('/laborHistory/' + currentUser.student.ID)
         if not currentUser.student and currentUser.supervisor:
             # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
-            departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME) \
+            departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME, FormHistory.formID.department.ACCOUNT, FormHistory.formID.department.ORG) \
                             .join_from(FormHistory, LaborStatusForm) \
                             .join_from(LaborStatusForm, Department) \
                             .where((FormHistory.formID.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
@@ -31,15 +31,17 @@ def termPositionDescription():
 
     if currentUser.isLaborAdmin:
         # Grabs every single department that currently has at least one labor status form in it
-        departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME) \
+        departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME, FormHistory.formID.department.ACCOUNT, FormHistory.formID.department.ORG) \
                         .join_from(FormHistory, LaborStatusForm) \
                         .join_from(LaborStatusForm, Department) \
                         .order_by(FormHistory.formID.department.DEPT_NAME.asc()) \
                         .distinct()
 
     # Logged in
-    openTerms = Term.select().where(Term.termState == "open") # changed to term state, open, closed, inactive
-    closedTerms = Term.select().where(Term.termState == "closed")
+    todayDate = date.today()
+    print(todayDate)
+    openTerms = Term.select().where(Term.termEnd > todayDate)
+    closedTerms = Term.select().where(Term.termEnd < todayDate)
 
     return render_template( 'main/termPositionDescription.html',
 				            title=('Position Description'),
@@ -47,3 +49,12 @@ def termPositionDescription():
                             openTerms = openTerms,
                             closedTerms = closedTerms,
                             departments = departments)
+
+@main_bp.route("/termpositiondescription/getPositions/<departmentOrg>/<departmentAcct>", methods=['GET'])
+def getDepartmentPositions(departmentOrg, departmentAcct):
+    """ Get all of the positions that are in the selected department """
+    positions = Tracy().getPositionsFromDepartment(departmentOrg,departmentAcct)
+    positionDict = {}
+    for position in positions:
+        positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
+    return json.dumps(positionDict)

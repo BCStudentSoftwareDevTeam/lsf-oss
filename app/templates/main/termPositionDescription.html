@@ -41,14 +41,86 @@
                 id='selectedDepartment'
                 data-live-search='true'
                 title="Department"
-                data-width="100%">
+                data-width="100%"
+                onchange="getDepartmentPositions(this);">
           <option value = "" disabled selected>Select a Department</option>
           {% for department in departments %}
-            <option value-account="{{department.ACCOUNT}}" value="{{department.ORG}}"{% if forms %}{% if forms.department.DEPT_NAME == department.DEPT_NAME %} selected {% endif %}{% endif %} data-content=
-            "<span>{{department.DEPT_NAME}}</span><small class='text-muted'> ({{department.ORG}}-{{department.ACCOUNT}}) </small>">{{department.DEPT_NAME}}</option>
+            <option value-account="{{department.formID.department.ACCOUNT}}" value="{{department.formID.department.ORG}}" data-content=
+            "<span>{{department.formID.department.DEPT_NAME}}</span><small class='text-muted'> ({{department.formID.department.ORG}}-{{department.formID.department.ACCOUNT}}) </small>">{{department.formID.department.DEPT_NAME}}</option>
           {% endfor %}
         </select>
       </div>
+
+      <div>
+        <p class="required-mark">
+           Select a position description from a previous term
+        </p>
+      </div>
+
+      <div class="form-group">
+        <!-- selectpicker for old term  -->
+          <label for="selectedTerm" aria-describedby="oldTermInfo">Old Term</label>
+          <select class="selectpicker"
+                  name='term'
+                  id='oldTerm'
+                  data-live-search="true"
+                  data-toggle="tooltip"
+                  title="Term"
+                  data-width="100%">
+              <option value = "" disabled selected>Select a Term</option>
+          {% for term in closedTerms %}
+              <option value = "{{term.termCode}}" data-termSummer = "{{term.isSummer|lower}}" data-termBreak = "{{term.isBreak|lower}}">{{term.termName}}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="form-group" >
+        <label for="previousPositionDescription">Previous Position Description</label>
+        <div>
+          <textarea disabled name="previousPositionDescription" rows="8" cols="65" id="previousPosDescription"></textarea>
+        </div>
+      </div>
+
+    </div>
+    <!-- Everything on the right  -->
+    <div class= "floatright" >
+
+      <div class= "form-group " id="Position">
+          <!--selectpicker for position-->
+          <label for="position"><span class="tooltip-right" data-tooltip="Required">Position (WLS) <span class="required-mark">*</span></span></label>
+            <select class="selectpicker"
+                    name='position'
+                    id='position'
+                    data-live-search='true'
+                    data-width="100%"
+                    title="Position"
+                    disabled>
+                    <option value = "" disabled selected>Select a Position</option>
+            </select>
+        </div>
+
+        <div>
+          <p class="required-mark">
+             Select a term to update
+          </p>
+        </div>
+
+        <div class="form-group">
+          <!-- selectpicker for new term  -->
+            <label for="selectedTerm" aria-describedby="newTermInfo"><span class="tooltip-right" data-tooltip="Required">Term <span class="required-mark">*</span></span></label>
+            <select class="selectpicker"
+                    name='term'
+                    id='newTerm'
+                    data-live-search="true"
+                    data-toggle="tooltip"
+                    title="Term"
+                    data-width="100%">
+                <option value = "" disabled selected>Select a Term</option>
+            {% for term in openTerms %}
+                <option value = "{{term.termCode}}" data-termSummer = "{{term.isSummer|lower}}" data-termBreak = "{{term.isBreak|lower}}">{{term.termName}}</option>
+            {% endfor %}
+          </select>
+        </div>
 
     </div>
   </div>
