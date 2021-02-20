@@ -13,6 +13,11 @@ html, body {
     overflow-x: hidden;
 }
 
+a.activeMenuItem{
+  background-color: red;
+
+}
+
 .panel-default, .panel-heading {
     border: none;
     color: #FFF;

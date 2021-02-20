@@ -1,5 +1,6 @@
 from flask import flash, send_file
 from app.controllers.main_routes import *
+from flask import request
 from app.controllers.main_routes.download import ExcelMaker
 from app.login_manager import *
 from app.models.laborStatusForm import LaborStatusForm
@@ -40,6 +41,7 @@ def logout():
 
 @main_bp.route('/', methods=['GET', 'POST'])
 @main_bp.route('/main/department', methods=['GET', 'POST'])
+@main_bp.route('/main/students',methods=["GET","POST"])
 @main_bp.route('/main/department/<department>', methods=['GET', 'POST'])
 def index(department = None):
     try:
