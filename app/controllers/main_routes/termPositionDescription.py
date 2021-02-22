@@ -11,7 +11,7 @@ from app import cfg
 from app.logic.emailHandler import*
 from app.logic.userInsertFunctions import*
 
-@main_bp.route('/termpositiondescription', methods=['GET'])
+@main_bp.route('/termPositionDescription', methods=['GET'])
 def termPositionDescription():
     """ Render Position Description Form"""
     currentUser = require_login()
@@ -50,7 +50,7 @@ def termPositionDescription():
                             closedTerms = closedTerms,
                             departments = departments)
 
-@main_bp.route("/termpositiondescription/getPositions/<departmentOrg>/<departmentAcct>", methods=['GET'])
+@main_bp.route("/termPositionDescription/getPositions/<departmentOrg>/<departmentAcct>", methods=['GET'])
 def getDepartmentPositions(departmentOrg, departmentAcct):
     """ Get all of the positions that are in the selected department """
     positions = Tracy().getPositionsFromDepartment(departmentOrg,departmentAcct)

@@ -13,12 +13,12 @@ if [ "$1" == "from-backup" ]; then
 fi
 
 echo "Dropping databases"
-mysql -u root --execute="DROP DATABASE \`lsf\`; DROP USER 'lsf_user';"
-mysql -u root --execute="DROP DATABASE \`UTE\`; DROP USER 'tracy_user';"
+mysql -u root -proot --execute="DROP DATABASE \`lsf\`; DROP USER 'lsf_user';"
+mysql -u root -proot --execute="DROP DATABASE \`UTE\`; DROP USER 'tracy_user';"
 
 echo "Recreating databases and users"
-mysql -u root --execute="CREATE DATABASE IF NOT EXISTS \`lsf\`; CREATE USER IF NOT EXISTS 'lsf_user'@'%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON *.* TO 'lsf_user'@'%';"
-mysql -u root --execute="CREATE DATABASE IF NOT EXISTS \`UTE\`; CREATE USER IF NOT EXISTS 'tracy_user'@'%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON *.* TO 'tracy_user'@'%';"
+mysql -u root -proot --execute="CREATE DATABASE IF NOT EXISTS \`lsf\`; CREATE USER IF NOT EXISTS 'lsf_user'@'%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON *.* TO 'lsf_user'@'%';"
+mysql -u root -proot --execute="CREATE DATABASE IF NOT EXISTS \`UTE\`; CREATE USER IF NOT EXISTS 'tracy_user'@'%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON *.* TO 'tracy_user'@'%';"
 
 
 rm -rf lsf_migrations
@@ -28,7 +28,7 @@ rm -rf migrations.json
 echo "Creating database objects"
 if [ $BACKUP -eq 1 ]; then
     echo "  from backup"
-    mysql -u root lsf < prod-backup.sql
+    mysql -u root -proot lsf < prod-backup.sql
 else
     echo "  empty"
     ./migrate_db.sh

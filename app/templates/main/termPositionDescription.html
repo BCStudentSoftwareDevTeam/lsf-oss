@@ -12,6 +12,10 @@
 
 {% block app_content %}
 
+<head>
+  <script src="/static/js/ckeditor/ckeditor.js"></script>
+</head>
+
 <div align="center" style="margin-bottom: 50px;">
   <h1 id ="title">Position Description
 	  <span class="glyphicon glyphicon-bookmark"
@@ -74,10 +78,10 @@
         </select>
       </div>
 
-      <div class="form-group" >
-        <label for="previousPositionDescription">Previous Position Description</label>
+      <div class="form-group">
+        <label for="Notes"><span class="tooltip-right" data-tooltip="Required">Reason for Release<span class="required-mark">*</span></span></label>
         <div>
-          <textarea disabled name="previousPositionDescription" rows="8" cols="65" id="previousPosDescription"></textarea>
+          <textarea name="notes" rows="6" cols="73" id="reason"></textarea>
         </div>
       </div>
 
@@ -120,6 +124,14 @@
                 <option value = "{{term.termCode}}" data-termSummer = "{{term.isSummer|lower}}" data-termBreak = "{{term.isBreak|lower}}">{{term.termName}}</option>
             {% endfor %}
           </select>
+        </div>
+
+        <div class="form-group">
+        <label for="Body"><span class="tooltip-right" data-tooltip="Required">Body<span class="required-mark">*</span></span></label>
+        <textarea name="CKeditor" id="CKeditor"></textarea>
+                    <script>
+                            CKEDITOR.replace('CKeditor');
+                    </script>
         </div>
 
     </div>
