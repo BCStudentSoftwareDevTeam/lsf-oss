@@ -70,7 +70,8 @@
                   data-live-search="true"
                   data-toggle="tooltip"
                   title="Term"
-                  data-width="100%">
+                  data-width="100%"
+                  onchange=fillPositionDescription(this.id)>
               <option value = "" disabled selected>Select a Term</option>
           {% for term in closedTerms %}
               <option value = "{{term.termCode}}" data-termSummer = "{{term.isSummer|lower}}" data-termBreak = "{{term.isBreak|lower}}">{{term.termName}}</option>
@@ -118,7 +119,8 @@
                     data-live-search="true"
                     data-toggle="tooltip"
                     title="Term"
-                    data-width="100%">
+                    data-width="100%"
+                    onchange=fillPositionDescription(this.id)>
                 <option value = "" disabled selected>Select a Term</option>
             {% for term in openTerms %}
                 <option value = "{{term.termCode}}" data-termSummer = "{{term.isSummer|lower}}" data-termBreak = "{{term.isBreak|lower}}">{{term.termName}}</option>
