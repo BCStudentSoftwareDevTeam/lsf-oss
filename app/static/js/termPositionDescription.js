@@ -1,8 +1,3 @@
-CKEDITOR.editorConfig = function(config){
-  config.toolbar = [
-        ['Bold', 'Italic', 'Underline', 'Strike', 'TextColor', '-', 'NumberedList', 'BulletedList', '-', 'Link', 'Unlink']
-    ]
-}
 function getDepartmentPositions(object, stopSelectRefresh="") { // get department from select picker
    var departmentOrg = $(object).val();
    var departmentAcct = $(object).find('option:selected').attr('value-account');

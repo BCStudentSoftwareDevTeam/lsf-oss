@@ -13,14 +13,14 @@
 {% block app_content %}
 
 <head>
-  <script src="/static/js/ckeditor/ckeditor.js"></script>
+  <script src="/static/js/ckeditor/ckeditor-positionDescription.js"></script>
 </head>
 
 <div align="center" style="margin-bottom: 50px;">
   <h1 id ="title">Position Description
 	  <span class="glyphicon glyphicon-bookmark"
         data-toggle="tooltip"
-        title="Place Holder Text"
+        title="The position description is used to update current and future labor position descriptions."
         data-placement = "right"
         id="titleGlyphicon"
         tabindex="0">
@@ -79,9 +79,9 @@
       </div>
 
       <div class="form-group">
-        <label for="Notes"><span class="tooltip-right" data-tooltip="Required">Reason for Release<span class="required-mark">*</span></span></label>
+        <label for="Notes">Previous Position Description</label>
         <div>
-          <textarea name="notes" rows="6" cols="73" id="reason"></textarea>
+          <textarea name="notes" rows="13" cols="73" id="reason" disabled></textarea>
         </div>
       </div>
 
@@ -127,7 +127,7 @@
         </div>
 
         <div class="form-group">
-        <label for="Body"><span class="tooltip-right" data-tooltip="Required">Body<span class="required-mark">*</span></span></label>
+        <label for="Position Description"><span class="tooltip-right" data-tooltip="Required">Position Description<span class="required-mark">*</span></span></label>
         <textarea name="CKeditor" id="CKeditor"></textarea>
                     <script>
                             CKEDITOR.replace('CKeditor');
