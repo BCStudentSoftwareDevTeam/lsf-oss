@@ -13,7 +13,7 @@
 {% block app_content %}
 
 <head>
-  <script src="/static/js/ckeditor/ckeditor-positionDescription.js"></script>
+  <script src="/static/js/ckeditor/ckeditor.js"></script>
 </head>
 
 <div align="center" style="margin-bottom: 50px;">
@@ -130,7 +130,10 @@
         <label for="Position Description"><span class="tooltip-right" data-tooltip="Required">Position Description<span class="required-mark">*</span></span></label>
         <textarea name="CKeditor" id="CKeditor"></textarea>
                     <script>
-                            CKEDITOR.replace('CKeditor');
+                            CKEDITOR.replace('CKeditor',
+                                            {
+                                              removePlugins: "strinsert"
+                                            });
                     </script>
         </div>
 
