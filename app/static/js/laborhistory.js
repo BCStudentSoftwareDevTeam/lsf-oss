@@ -85,7 +85,7 @@ function withdrawform(formID){
          contentType: 'application/json',
          success: function(response) {
              if (response["Success"]) {
-               // Try and catch is used here to prevent General Search page from reloading the entire the page.
+               // Try and catch is used here to prevent Form Search page from reloading the entire the page.
                try {
                  runGeneralSearchQuery();
                  $('#modal').modal('hide');
