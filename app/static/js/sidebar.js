@@ -7,3 +7,4 @@ $(document).ready(function(){
     $('.navbar li').removeAttr('tabindex');
     $('.navbar div').removeAttr('tabindex');
     }
+  });
