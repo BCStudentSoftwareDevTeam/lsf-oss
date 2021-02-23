@@ -81,6 +81,8 @@ function runGeneralSearchQuery() {
                 {"data":"Hours"},
                 {"data":"Contract Dates"},
                 {"data":"Created"},
+                {"data":"Form Staus"},
+                {"data": "Form Type"},
                 {"data":""}
               ]
         }

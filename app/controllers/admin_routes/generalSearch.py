@@ -22,7 +22,7 @@ generalSearchResults = None
 @admin.route('/admin/generalSearch', methods=['GET', 'POST'])
 def generalSearch():
     '''
-    When the request is GET the function populates the Form Search interface dropdown menus with their corresponding values.
+    When the request is GET the function populates the General Search interface dropdown menus with their corresponding values.
     If the request is POST it also populates the datatable with data based on user input.
     '''
     currentUser = require_login()
@@ -38,7 +38,7 @@ def generalSearch():
         return getDatatableData(request)
 
     return render_template('admin/generalSearch.html',
-                            title = "Form Search",
+                            title = "General Search",
                             terms = terms,
                             supervisors = supervisors,
                             students = students,
@@ -69,7 +69,9 @@ def getDatatableData(request):
                             4: LaborStatusForm.POSN_CODE,
                             5: LaborStatusForm.weeklyHours,
                             6: LaborStatusForm.startDate,
-                            7: User.username }
+                            7: User.username,
+                            8: FormHistory.status,
+                            9: FormHistory.historyType}
 
     termCode = queryFilterDict.get('termCode', "")
     departmentId = queryFilterDict.get('departmentID', "")
@@ -197,6 +199,11 @@ def getFormattedData(filteredSearchResults):
               form.createdBy.username,
               form.createdBy.supervisor.EMAIL,
               form.createdDate.strftime('%m/%d/%y')))
+
+        # Form Status
+        record.append(form.status.statusName)
+        # Form Type
+        record.append(form.historyType.historyTypeName)
 
         laborHistoryId = form.formHistoryID
         laborStatusFormId = form.formID.laborStatusFormID
