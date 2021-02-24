@@ -58,3 +58,15 @@ def getDepartmentPositions(departmentOrg, departmentAcct):
     for position in positions:
         positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
     return json.dumps(positionDict)
+
+@main_bp.route("/termPositionDescription/getPositionDescription", methods=['POST'])
+def getPositionDescription():
+    """ Get all of the positions that are in the selected department """
+    print("Hello inside the the controller")
+    rsp = eval(request.data.decode("utf-8"))
+    print(rsp)
+    positionDescription, created = TermPositionDescription.get_or_create(termCode = rsp["termCode"],
+                                                                        POSN_CODE = rsp["positionCode"])
+    if positionDescription:
+        return positionDescription
+    return created
