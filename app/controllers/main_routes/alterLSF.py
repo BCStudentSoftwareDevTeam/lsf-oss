@@ -174,7 +174,8 @@ def modifyLSF(fieldsChanged, fieldName, lsf, currentUser):
                                          notesContents = fieldsChanged[fieldName]["newValue"],
                                          noteType      = "Supervisor Note")
         noteEntry.save()
-
+        lsf.supervisorNotes = noteEntry.notesContents
+        lsf.save()
     if fieldName == "supervisor":
         supervisor = createSupervisorFromTracy(bnumber=fieldsChanged[fieldName]["newValue"])
         lsf.supervisor = supervisor.ID
