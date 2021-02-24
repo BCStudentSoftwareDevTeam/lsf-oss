@@ -3,6 +3,8 @@ from app.controllers.main_routes import *
 from app.login_manager import require_login
 from app.models.user import *
 from app.models.formHistory import *
+from app.models.termPositionDescription import *
+from app.models.position import *
 from flask import json, jsonify
 from flask import request
 from datetime import datetime, date, timedelta
@@ -62,11 +64,12 @@ def getDepartmentPositions(departmentOrg, departmentAcct):
 @main_bp.route("/termPositionDescription/getPositionDescription", methods=['POST'])
 def getPositionDescription():
     """ Get all of the positions that are in the selected department """
-    print("Hello inside the the controller")
-    rsp = eval(request.data.decode("utf-8"))
-    print(rsp)
-    positionDescription, created = TermPositionDescription.get_or_create(termCode = rsp["termCode"],
-                                                                        POSN_CODE = rsp["positionCode"])
-    if positionDescription:
-        return positionDescription
-    return created
+    try:
+        rsp = eval(request.data.decode("utf-8"))
+        positionDescription, created = TermPositionDescription.get_or_create(termCode = rsp["termCode"],
+                                                                            POSN_CODE = rsp["positionCode"])
+        if positionDescription:
+            return positionDescription
+        return created
+    except Exception as e:
+        print ("ERROR", e)
