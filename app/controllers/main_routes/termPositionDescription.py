@@ -66,10 +66,11 @@ def getPositionDescription():
     """ Get all of the positions that are in the selected department """
     try:
         rsp = eval(request.data.decode("utf-8"))
-        test = TermPositionDescription.get(TermPositionDescription.termPositionDescriptionID == 1)
-        # positionDescription, created = TermPositionDescription.get_or_create(termCode = rsp["termCode"],
-        #                                                                     POSN_CODE = rsp["positionCode"])
-        print(test)
+        # test = TermPositionDescription.get(TermPositionDescription.termPositionDescriptionID == 1)
+        positionDescription, created = TermPositionDescription.get_or_create(termCode = rsp["termCode"],
+                                                                            POSN_CODE = rsp["positionCode"])
+        print(positionDescription)
+        # print(test)
         return jsonify({"Success": True})
     except Exception as e:
         print ("ERROR", e)
