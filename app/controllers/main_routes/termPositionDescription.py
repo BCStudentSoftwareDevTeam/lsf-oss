@@ -14,7 +14,7 @@ from app.logic.emailHandler import*
 from app.logic.userInsertFunctions import*
 
 @main_bp.route('/termPositionDescription', methods=['GET'])
-def termPositionDescription():
+def PositionDescription():
     """ Render Position Description Form"""
     currentUser = require_login()
     if not currentUser:        # Not logged in
@@ -66,10 +66,11 @@ def getPositionDescription():
     """ Get all of the positions that are in the selected department """
     try:
         rsp = eval(request.data.decode("utf-8"))
-        positionDescription, created = TermPositionDescription.get_or_create(termCode = rsp["termCode"],
-                                                                            POSN_CODE = rsp["positionCode"])
-        if positionDescription:
-            return positionDescription
-        return created
+        test = TermPositionDescription.get(TermPositionDescription.termpositionDescriptionID == 1)
+        # positionDescription, created = TermPositionDescription.get_or_create(termCode = rsp["termCode"],
+        #                                                                     POSN_CODE = rsp["positionCode"])
+        for i in test:
+            print(i)
+        return jsonify({"Success": True})
     except Exception as e:
         print ("ERROR", e)
