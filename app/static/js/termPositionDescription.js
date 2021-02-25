@@ -1,7 +1,7 @@
 function getDepartmentPositions(object, stopSelectRefresh="") { // get department from select picker
    var departmentOrg = $(object).val();
    var departmentAcct = $(object).find('option:selected').attr('value-account');
-   var url = "/termPositionDescription/getPositions/" + departmentOrg + "/" + departmentAcct;
+   var url = "/positionDescription/getPositions/" + departmentOrg + "/" + departmentAcct;
        $.ajax({
          url: url,
          dataType: "json",
@@ -49,7 +49,7 @@ function fillPositionDescription(termID) {
   console.log(data);
   $.ajax({
     type: "POST",
-    url: "/termPositionDescription/getPositionDescription",
+    url: "/positionDescription/getPositionDescription",
     data: data,
     contentType: 'application/json',
     success: function (response){

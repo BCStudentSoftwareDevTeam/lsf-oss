@@ -458,13 +458,13 @@ print(" * positionsadded")
 #############################
 termPositionDescriptions = [
                             {
-                            "temrpositionDescriptionID": 1,
+                            "termPositionDescriptionID": 1,
                             "termCode": "202000",
                             "POSN_CODE": "S61407",
                             "positionDescription": "Working in a team of student software developers"
                             },
                             {
-                            "temrpositionDescriptionID": 2,
+                            "termPositionDescriptionID": 2,
                             "termCode": "202001",
                             "POSN_CODE": "S61408",
                             "positionDescription": "Working in a team of student software developers again."

@@ -13,7 +13,7 @@ from app import cfg
 from app.logic.emailHandler import*
 from app.logic.userInsertFunctions import*
 
-@main_bp.route('/termPositionDescription', methods=['GET'])
+@main_bp.route('/positionDescription', methods=['GET'])
 def PositionDescription():
     """ Render Position Description Form"""
     currentUser = require_login()
@@ -52,7 +52,7 @@ def PositionDescription():
                             closedTerms = closedTerms,
                             departments = departments)
 
-@main_bp.route("/termPositionDescription/getPositions/<departmentOrg>/<departmentAcct>", methods=['GET'])
+@main_bp.route("/positionDescription/getPositions/<departmentOrg>/<departmentAcct>", methods=['GET'])
 def getDepartmentPositions(departmentOrg, departmentAcct):
     """ Get all of the positions that are in the selected department """
     positions = Tracy().getPositionsFromDepartment(departmentOrg,departmentAcct)
@@ -61,16 +61,15 @@ def getDepartmentPositions(departmentOrg, departmentAcct):
         positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
     return json.dumps(positionDict)
 
-@main_bp.route("/termPositionDescription/getPositionDescription", methods=['POST'])
+@main_bp.route("/positionDescription/getPositionDescription", methods=['POST'])
 def getPositionDescription():
     """ Get all of the positions that are in the selected department """
     try:
         rsp = eval(request.data.decode("utf-8"))
-        test = TermPositionDescription.get(TermPositionDescription.termpositionDescriptionID == 1)
+        test = TermPositionDescription.get(TermPositionDescription.termPositionDescriptionID == 1)
         # positionDescription, created = TermPositionDescription.get_or_create(termCode = rsp["termCode"],
         #                                                                     POSN_CODE = rsp["positionCode"])
-        for i in test:
-            print(i)
+        print(test)
         return jsonify({"Success": True})
     except Exception as e:
         print ("ERROR", e)
