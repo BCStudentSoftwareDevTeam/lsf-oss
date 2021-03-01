@@ -71,6 +71,7 @@
                   data-toggle="tooltip"
                   title="Term"
                   data-width="100%"
+                  disabled
                   onchange=fillPositionDescription(this.id)>
               <option value = "" disabled selected>Select a Term</option>
           {% for term in closedTerms %}
@@ -80,9 +81,9 @@
       </div>
 
       <div class="form-group">
-        <label for="Notes">Previous Position Description</label>
+        <label for="positionDescription">Previous Position Description</label>
         <div>
-          <textarea name="notes" rows="13" cols="73" id="reason" disabled></textarea>
+          <textarea name="notes" rows="13" cols="73" id="pastPositionDescription" disabled></textarea>
         </div>
       </div>
 
@@ -99,6 +100,7 @@
                     data-live-search='true'
                     data-width="100%"
                     title="Position"
+                    onchange=clearTerms()
                     disabled>
                     <option value = "" disabled selected>Select a Position</option>
             </select>
@@ -120,7 +122,8 @@
                     data-toggle="tooltip"
                     title="Term"
                     data-width="100%"
-                    onchange=fillPositionDescription(this.id)>
+                    onchange=fillPositionDescription(this.id)
+                    disabled>
                 <option value = "" disabled selected>Select a Term</option>
             {% for term in openTerms %}
                 <option value = "{{term.termCode}}" data-termSummer = "{{term.isSummer|lower}}" data-termBreak = "{{term.isBreak|lower}}">{{term.termName}}</option>
@@ -130,16 +133,23 @@
 
         <div class="form-group">
         <label for="Position Description"><span class="tooltip-right" data-tooltip="Required">Position Description<span class="required-mark">*</span></span></label>
-        <textarea name="CKeditor" id="CKeditor"></textarea>
+        <textarea name="editor1" id="editor1"></textarea>
                     <script>
-                            CKEDITOR.replace('CKeditor',
+                            CKEDITOR.replace('editor1',
                                             {
                                               removePlugins: "strinsert"
                                             });
                     </script>
         </div>
 
+        <div class="form-group">
+          <button type="button" class="btn btn-danger">Discard Changes</button>
+          <button type="button" class="btn btn-success" style="float: right" onclick="saveChanges()">Save Changes</button>
+        </div>
+
     </div>
+    <!-- Modal that will be rendered on the click of the submit button -->
+    {% include "snips/termPositionDescriptionModal.html" %}
   </div>
 </form>
 

@@ -66,11 +66,34 @@ def getPositionDescription():
     """ Get all of the positions that are in the selected department """
     try:
         rsp = eval(request.data.decode("utf-8"))
-        # test = TermPositionDescription.get(TermPositionDescription.termPositionDescriptionID == 1)
+        # print("Here is my data", rsp)
         positionDescription, created = TermPositionDescription.get_or_create(termCode = rsp["termCode"],
                                                                             POSN_CODE = rsp["positionCode"])
-        print(positionDescription)
-        # print(test)
-        return jsonify({"Success": True})
+        # print("After I query")
+        returnDict = {}
+        if positionDescription:
+            # print("I always go in here")
+            # print(positionDescription)
+            returnDict["description"] = positionDescription.positionDescription
+        # elif created:
+        #     print("Had to create one")
+        #     print(created)
+        #     returnDict["description"] = created.positionDescription
+        return jsonify(returnDict)
     except Exception as e:
         print ("ERROR", e)
+
+@main_bp.route("/positionDescription/updatePositionDescription", methods=['POST'])
+def updatePositionDescription():
+    """ Get all of the positions that are in the selected department """
+    try:
+        rsp = eval(request.data.decode("utf-8"))
+        position = TermPositionDescription.select().where(TermPositionDescription.POSN_CODE == rsp["POSN_CODE"], TermPositionDescription.termCode == int(rsp["termCode"])).get()
+        position.positionDescription = rsp["positionDescription"]
+        position.save()
+        message = "The description for the labor position of {0} for the {1} term has been updated.".format(position.POSN_CODE.POSN_TITLE, position.termCode.termName)
+        flash(message, "success")
+        print("FLASH MESSAGE")
+        return (jsonify({"Success": True}))
+    except Exception as e:
+        print("Error on position description update:", e)

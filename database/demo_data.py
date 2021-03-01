@@ -432,24 +432,32 @@ print(" * terms added")
 #############################
 # Positions
 #############################
-positions = [
-            {
-            "POSN_CODE": "S61407",
-            "POSN_TITLE": "Student Programmer",
-            "WLS": "1",
-            "ORG" : "2114",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Computer Science"
-            },
-            {
-            "POSN_CODE": "S61408",
-            "POSN_TITLE": "Research Associate",
-            "WLS": "5",
-            "ORG" : "2114",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Computer Science"
-            }
-                    ]
+# positions = [
+#             {
+#             "POSN_CODE": "S61407",
+#             "POSN_TITLE": "Student Programmer",
+#             "WLS": "1",
+#             "ORG" : "2114",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Computer Science"
+#             },
+#             {
+#             "POSN_CODE": "S12345",
+#             "POSN_TITLE": "Student Programmer",
+#             "WLS": "1",
+#             "ORG" : "2114",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Computer Science"
+#             },
+#             {
+#             "POSN_CODE": "S61408",
+#             "POSN_TITLE": "Research Associate",
+#             "WLS": "5",
+#             "ORG" : "2114",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Computer Science"
+#             }
+#                     ]
 Position.insert_many(positions).on_conflict_replace().execute()
 print(" * positionsadded")
 
