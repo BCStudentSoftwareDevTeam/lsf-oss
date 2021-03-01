@@ -23,7 +23,7 @@ def delete_forms():
     formHistories = FormHistory.select().where((FormHistory.formID == 2) & (FormHistory.historyType == "Labor Adjustment Form"))
     for form in formHistories:
         AdjustedForm.delete().where(AdjustedForm.adjustedFormID == form.adjustedForm.adjustedFormID).execute()
-        form.delete().execute()
+        # form.delete().execute()
     Notes.delete().where(Notes.formID.cast('char').contains("2")).execute()
     FormHistory.delete().where((FormHistory.formID == 2) & (FormHistory.historyType == "Labor Overload Form")).execute()
 
@@ -111,12 +111,11 @@ def test_modifyLSF(setup):
         assert lsf.contractHours == 60
 
 @pytest.mark.integration
-def test_createOverloadForm(setup):
+def test_createOverloadForm(setup):  
     with app.test_request_context():
         newWeeklyHours = 20
         # modify lsf overload form
-        createOverloadForm(newWeeklyHours, lsf, currentUser)
-        assert lsf.weeklyHours == 20
+                assert lsf.weeklyHours == 20
         formHistory = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) & (FormHistory.historyType == 'Labor Overload Form'))
         assert formHistory.historyType.historyTypeName == 'Labor Overload Form'
 

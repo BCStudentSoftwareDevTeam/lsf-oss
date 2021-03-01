@@ -242,6 +242,8 @@ def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None,  for
                          (LaborStatusForm.studentSupervisee.ID == lsf.studentSupervisee.ID) &
                          (FormHistory.status != "Denied") &
                          (FormHistory.historyType == "Labor Status Form"))
+
+
     previousTotalHours = 0
     if allTermForms:
         for statusForm in allTermForms:
@@ -267,10 +269,12 @@ def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None,  for
                 formHistories.save()
                 overloadEmail = emailHandler(formHistories.formHistoryID)
             else:
-                print("Before modified")
-                print("This if the formHistory ID",FormHistory.formID)
-                print("lsf form Id", lsf.laborStatusFormID)
-                modifiedFormHistory = FormHistory.select().join_from(FormHistory, HistoryType).where(FormHistory.formID == lsf.laborStatusFormID, FormHistory.historyType.historyTypeName == "Labor Status Form").get()
+                print("----------------------------------------------------------------")
+                print(FormHistory.formID,lsf.laborStatusFormID,FormHistory.historyType.historyTypeName)
+                modifiedFormHistory = FormHistory.select() \
+                                    .join_from(FormHistory, HistoryType) \
+                                    .where(FormHistory.formID == lsf.laborStatusFormID, FormHistory.historyType.historyTypeName == "Labor Status Form") \
+                                    .get()
                 print("After modified")
                 modifiedFormHistory.status = "Pre-Student Approval"
                 modifiedFormHistory.save()
