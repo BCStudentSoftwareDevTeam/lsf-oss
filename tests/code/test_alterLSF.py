@@ -23,11 +23,10 @@ def cleanup():
 def delete_forms():
     formHistories = FormHistory.select().where((FormHistory.formID == 2) & (FormHistory.historyType == "Labor Adjustment Form"))
     FormHistory.delete().where((FormHistory.formID == 2) & (FormHistory.historyType == "Labor Overload Form")).execute()
-    # for form in formHistories:
-    #     print(" This is the form type", form.historyType)
-    #     form.delete().execute()
-    #     AdjustedForm.delete().where(AdjustedForm.adjustedFormID == form.adjustedForm.adjustedFormID).execute()
-    # Notes.delete().where(Notes.formID.cast('char').contains("2")).execute()
+    for form in formHistories:
+        # form.delete().execute()
+        AdjustedForm.delete().where(AdjustedForm.adjustedFormID == form.adjustedForm.adjustedFormID).execute()
+    Notes.delete().where(Notes.formID.cast('char').contains("2")).execute()
 
 
 currentUser = User.get(User.userID == 1) # Scott Heggen's entry in User table
