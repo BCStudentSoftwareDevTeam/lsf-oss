@@ -269,7 +269,7 @@ def createOverloadForm(newWeeklyHours, lsf, currentUser, adjustedForm=None,  for
                 formHistories.save()
                 overloadEmail = emailHandler(formHistories.formHistoryID)
             else:
-                print("----------------------------------------------------------------")
+                print("------------------- Just before modifying the Form History-")
                 print(FormHistory.formID,lsf.laborStatusFormID,FormHistory.historyType.historyTypeName)
                 modifiedFormHistory = FormHistory.select() \
                                     .join_from(FormHistory, HistoryType) \
