@@ -11,13 +11,10 @@ $(document).ready(function() {
 
   if ($('#overloadTab').hasClass('active') || $('#releaseTab').hasClass('active') || $('#completedOverloadTab').hasClass('active')) {
     targetsList = [9]
-    console.log(targetsList);
   } else if ($('#adjustedTab').hasClass('active')) {
     targetsList = [0, 10]
-    console.log("here", targetsList);
   } else {
     targetsList = [0, 9]
-    console.log("here", targetsList);
   }
   // If overload tab has been clicked, then we
   table = $('#pendingForms, #statusForms, #adjustedForms, #releaseForms').DataTable({
