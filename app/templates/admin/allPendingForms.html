@@ -106,9 +106,11 @@
                   </td>
                 {% endif %}
               {% endif %}
+              {% if formType == "pendingOverload" %}
               <td> {# Status #}
                 {{allForms.status}}
               </td>
+              {% endif %}
               <td> {# TERM #}
                 {{allForms.formID.termCode.termName}}
               </td>
