@@ -6,6 +6,8 @@ from app.models.overloadForm import *
 from app.models.term import *
 from app.controllers.main_routes import studentOverloadApp
 from app.logic.userInsertFunctions import *
+from app.controllers.admin_routes.financialAidOverload import formDenial
+
 @pytest.fixture
 def setUp():
     delete_forms()
@@ -23,23 +25,35 @@ rspFunctional = {'stuName': 'Guillermo Adams', 'stuBNumber': 'B00734292', 'stuPo
 lsf = createLaborStatusForm("B00734292", "B12361006", "1", term, rspFunctional)
 status = "Pending"
 
-print("LSF: ", lsf)
-@pytest.mark.integration
-def test_createOverloadFormAndFormHistory():
-    """ The above function is from the UserInsert Funtions.py"""
-    adjustLSF(fieldsChangedOverload, fieldName, lsf, currentUser)
-    overload = createOverloadFormAndFormHistory(rspFunctional, lsf, currentUser, status)
-    print("OverLoad form passed:", overload)
 
 @pytest.mark.integration
-def test_formCompletetion():
+def test_createOverload():
+    """ The above function is from the UserInsert Funtions.py"""
+    with app.test_request_context():
+        overload = createOverloadFormAndFormHistory(rspFunctional, lsf, currentUser, status)
+        assert FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) & (FormHistory.historyType == "Labor Overload Form"))
+
+@pytest.mark.integration
+def test_formCompletion():
     """This function tests form completion"""
-    pass
+    formHistory = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) & (FormHistory.historyType == "Labor Overload Form"))
+    with app.test_client() as c:
+        rv = c.post('/studentOverloadApp/update', json={
+            str(lsf.laborStatusFormID): {"Notes": "This is my reason", "formID": formHistory.formHistoryID
+        }})
+        overloadForm = OverloadForm.get(OverloadForm.overloadFormID == formHistory.overloadForm)
+        assert overloadForm.studentOverloadReason == "This is my reason"
 
 @pytest.mark.integration
 def test_approval():
-    """ This is for testing financial and approval"""
-    pass
+    """ This is for testing Financial Aid and approval"""
+    with app.test_request_context():
+        status = 'approved'
+        currentUser.isFinancialAidAdmin = 1
+        currentUser.save()
+        formDenial(status)
+
+
 
 @pytest.mark.integration
 def test_denied():
