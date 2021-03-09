@@ -955,11 +955,12 @@ CKEDITOR.plugins.add("strinsert",{
       multiSelect:!1,
       panel:{
         css:[a.config.contentsCss,
-          CKEDITOR.skin.getPath("editor")],voiceLabel:a.lang.panelVoiceLabel
+          CKEDITOR.skin.getPath("editor")],
+            voiceLabel:a.lang.panelVoiceLabel
       },
       init:function(){
         this.startGroup("Insert Placeholder");
-        for(var a in b)this.add(b[a][0],b[a][1],b[a][2])
+        for(var a in b) this.add(b[a][0],b[a][1],b[a][2])
       },
       onClick:function(b){
         a.focus();a.fire("saveSnapshot");
@@ -968,4 +969,22 @@ CKEDITOR.plugins.add("strinsert",{
     })
   }
 });
-CKEDITOR.config.plugins='dialogui,dialog,about,basicstyles,notification,button,toolbar,clipboard,enterkey,entities,floatingspace,wysiwygarea,indent,indentlist,fakeobjects,link,list,undo,panel,floatpanel,listblock,richcombo,strinsert';CKEDITOR.config.skin='moono-lisa';(function() {var setIcons = function(icons, strip) {var path = CKEDITOR.getUrl( 'plugins/' + strip );icons = icons.split( ',' );for ( var i = 0; i < icons.length; i++ )CKEDITOR.skin.icons[ icons[ i ] ] = { path: path, offset: -icons[ ++i ], bgsize : icons[ ++i ] };};if (CKEDITOR.env.hidpi) setIcons('about,0,,bold,24,,italic,48,,strike,72,,subscript,96,,superscript,120,,underline,144,,copy-rtl,168,,copy,192,,cut-rtl,216,,cut,240,,paste-rtl,264,,paste,288,,indent-rtl,312,,indent,336,,outdent-rtl,360,,outdent,384,,anchor-rtl,408,,anchor,432,,link,456,,unlink,480,,bulletedlist-rtl,504,,bulletedlist,528,,numberedlist-rtl,552,,numberedlist,576,,redo-rtl,600,,redo,624,,undo-rtl,648,,undo,672,','icons_hidpi.png');else setIcons('about,0,auto,bold,24,auto,italic,48,auto,strike,72,auto,subscript,96,auto,superscript,120,auto,underline,144,auto,copy-rtl,168,auto,copy,192,auto,cut-rtl,216,auto,cut,240,auto,paste-rtl,264,auto,paste,288,auto,indent-rtl,312,auto,indent,336,auto,outdent-rtl,360,auto,outdent,384,auto,anchor-rtl,408,auto,anchor,432,auto,link,456,auto,unlink,480,auto,bulletedlist-rtl,504,auto,bulletedlist,528,auto,numberedlist-rtl,552,auto,numberedlist,576,auto,redo-rtl,600,auto,redo,624,auto,undo-rtl,648,auto,undo,672,auto','icons.png');})();CKEDITOR.lang.languages={"en":1};}());
+CKEDITOR.config.plugins='dialogui,dialog,about,basicstyles,notification,button,toolbar,clipboard,enterkey,entities,floatingspace,wysiwygarea,indent,indentlist,fakeobjects,link,list,undo,panel,floatpanel,listblock,richcombo,strinsert';
+CKEDITOR.config.skin='moono-lisa';
+(function() {
+  var setIcons = function(icons, strip) {
+    var path = CKEDITOR.getUrl( 'plugins/' + strip );
+    icons = icons.split( ',' );
+    for ( var i = 0; i < icons.length; i++ )CKEDITOR.skin.icons[ icons[ i ] ] = {
+      path: path,
+      offset: -icons[ ++i ],
+      bgsize : icons[ ++i ]
+    };
+  };
+  if (CKEDITOR.env.hidpi) setIcons('about,0,,bold,24,,italic,48,,strike,72,,subscript,96,,superscript,120,,underline,144,,copy-rtl,168,,copy,192,,cut-rtl,216,,cut,240,,paste-rtl,264,,paste,288,,indent-rtl,312,,indent,336,,outdent-rtl,360,,outdent,384,,anchor-rtl,408,,anchor,432,,link,456,,unlink,480,,bulletedlist-rtl,504,,bulletedlist,528,,numberedlist-rtl,552,,numberedlist,576,,redo-rtl,600,,redo,624,,undo-rtl,648,,undo,672,','icons_hidpi.png');
+  else setIcons('about,0,auto,bold,24,auto,italic,48,auto,strike,72,auto,subscript,96,auto,superscript,120,auto,underline,144,auto,copy-rtl,168,auto,copy,192,auto,cut-rtl,216,auto,cut,240,auto,paste-rtl,264,auto,paste,288,auto,indent-rtl,312,auto,indent,336,auto,outdent-rtl,360,auto,outdent,384,auto,anchor-rtl,408,auto,anchor,432,auto,link,456,auto,unlink,480,auto,bulletedlist-rtl,504,auto,bulletedlist,528,auto,numberedlist-rtl,552,auto,numberedlist,576,auto,redo-rtl,600,auto,redo,624,auto,undo-rtl,648,auto,undo,672,auto','icons.png');
+})();
+CKEDITOR.lang.languages={
+  "en":1
+};
+}());
