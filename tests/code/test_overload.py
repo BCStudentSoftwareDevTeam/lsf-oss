@@ -9,14 +9,14 @@ from app.logic.userInsertFunctions import *
 from app.controllers.admin_routes.financialAidOverload import formDenial
 
 @pytest.fixture
-def setUp():
-    delete_forms()
-    yield
-
-
-def delete_forms():
-    """Find out forms which need to be deleted when we do the set up"""
-    pass
+# def setUp():
+#     delete_forms()
+#     yield
+#
+#
+# def delete_forms():
+#     """Find out forms which need to be deleted when we do the set up"""
+#     pass
 
 # get the user
 currentUser = User.get(User.userID == 1)
@@ -49,9 +49,9 @@ def test_approval():
     """ This is for testing Financial Aid and approval"""
     with app.test_request_context():
         status = 'approved'
-        currentUser.isFinancialAidAdmin = 1
-        currentUser.save()
-        formDenial(status)
+        # currentUser.isFinancialAidAdmin = 1
+        # currentUser.save()
+        # formDenial(status)
 
 
 
