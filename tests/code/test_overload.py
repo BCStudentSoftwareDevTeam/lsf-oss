@@ -1,4 +1,4 @@
-# import the modules,
+# importing the modules,
 import pytest
 from app import app
 from app.models.user import User
