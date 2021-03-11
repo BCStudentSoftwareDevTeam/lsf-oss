@@ -8,7 +8,7 @@ from app.controllers.main_routes import studentOverloadApp
 from app.logic.userInsertFunctions import *
 from app.controllers.admin_routes.financialAidOverload import formDenial
 
-@pytest.fixture
+# @pytest.fixture
 # def setUp():
 #     delete_forms()
 #     yield
@@ -38,7 +38,7 @@ def test_formCompletion():
     """This function tests form completion"""
     formHistory = FormHistory.get((FormHistory.formID == lsf.laborStatusFormID) & (FormHistory.historyType == "Labor Overload Form"))
     with app.test_client() as c:
-        rv = c.post('/studentOverloadApp/update', json={
+        studentApproval = c.post('/studentOverloadApp/update', json={
             str(lsf.laborStatusFormID): {"Notes": "This is my reason", "formID": formHistory.formHistoryID
         }})
         overloadForm = OverloadForm.get(OverloadForm.overloadFormID == formHistory.overloadForm)
@@ -48,10 +48,16 @@ def test_formCompletion():
 def test_approval():
     """ This is for testing Financial Aid and approval"""
     with app.test_request_context():
+        currentUser.isFinancialAidAdmin = 1
+        currentUser.save()
+        print("here")
         status = 'approved'
-        # currentUser.isFinancialAidAdmin = 1
-        # currentUser.save()
-        # formDenial(status)
+        with app.test_client() as c:
+            print("before adminapp")
+            adminApproval = c.post('/admin/financialAidOverloadApproval/'+status, json={
+            'formHistoryID': formHistory.formHistoryID, 'denialNote': "I approve this form"
+            })
+
 
 
 
