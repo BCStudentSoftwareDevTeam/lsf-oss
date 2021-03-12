@@ -16,13 +16,19 @@ class Test_Tracy:
     @pytest.mark.integration
     def test_getStudents(self, tracy):
         students = tracy.getStudents()
-        assert ['Alex','Elaheh','Guillermo','Kat'] == [s.FIRST_NAME for s in students]
-        assert ['212','718','300','420'] == [s.STU_CPO for s in students]
+        assert ['Elaheh','Guillermo','Jeremiah','Kat'] == [s.FIRST_NAME for s in students]
+        assert ['718','300','420','420'] == [s.STU_CPO for s in students]
 
     @pytest.mark.integration
     def test_getStudentFromBNumber(self, tracy):
         student = tracy.getStudentFromBNumber("B00734292")
         assert 'Guillermo' == student.FIRST_NAME
+
+        student = tracy.getStudentFromBNumber("  B00734292")
+        assert 'Guillermo' == student.FIRST_NAME
+
+        student = tracy.getStudentFromBNumber("B00888329  ")
+        assert 'Jeremiah' == student.FIRST_NAME
 
         with pytest.raises(InvalidQueryException):
             student = tracy.getStudentFromBNumber("B0000000")
@@ -74,11 +80,11 @@ class Test_Tracy:
 
     @pytest.mark.integration
     def test_getPositionsFromDepartment(self, tracy):
-        positions = tracy.getPositionsFromDepartment("2114")
+        positions = tracy.getPositionsFromDepartment("2114","6740")
 
         assert ['S61408','S61407','S61421','S61419'] == [p.POSN_CODE for p in positions]
 
-        positions = tracy.getPositionsFromDepartment("0000")
+        positions = tracy.getPositionsFromDepartment("2114","0000")
         assert [] == [p.POSN_CODE for p in positions]
 
     @pytest.mark.integration
@@ -121,8 +127,8 @@ class Test_Tracy:
         assert 1 == len(students)
 
         students = tracy.getStudentsFromUserInput("Adams")
-        assert "Adams" == students[1].LAST_NAME
         assert  2 == len(students)
+        assert "Adams" == students[1].LAST_NAME
 
         students = tracy.getSupervisorsFromUserInput("John Smith")
         assert students != True

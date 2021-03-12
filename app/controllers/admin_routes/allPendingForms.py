@@ -9,7 +9,7 @@ from app.models.laborStatusForm import LaborStatusForm
 from app.models.adjustedForm import AdjustedForm
 from app.models.emailTracker import EmailTracker
 from app.models.overloadForm import OverloadForm
-from app.models.adminNotes import AdminNotes
+from app.models.notes import Notes
 from app.logic.emailHandler import *
 from app.models.formHistory import *
 from app.models.term import Term
@@ -20,27 +20,50 @@ from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 from app.models.Tracy.stuposn import STUPOSN
 from app.models.supervisor import Supervisor
+from app.controllers.main_routes.download import ExcelMaker
 
 
 @admin.route('/admin/pendingForms/<formType>',  methods=['GET'])
 def allPendingForms(formType):
     try:
+        global globalFormType
+        globalFormType = formType
         currentUser = require_login()
         if not currentUser:                    # Not logged in
             return render_template('errors/403.html'), 403
         if not currentUser.isLaborAdmin:       # Not an admin
             if currentUser.student: # logged in as a student
                 return redirect('/laborHistory/' + currentUser.student.ID)
-            elif currentUser.supervisor:
+            elif currentUser.supervisor and not currentUser.isFinancialAidAdmin and not currentUser.isSaasAdmin:
                 return render_template('errors/403.html'), 403
         formList = None
         historyType = None
         pageTitle = ""
         approvalTarget = ""
+        completedOverloadFormCounter = 0
         laborStatusFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Status Form')).count()
         adjustedFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Adjustment Form')).count()
         releaseFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Release Form')).count()
-        overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
+
+        if currentUser.isLaborAdmin:
+            overloadFormCounter = FormHistory.select().where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form')).count()
+        elif currentUser.isFinancialAidAdmin:
+            overloadFormCounter = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                             .where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form'))\
+                                             .where((FormHistory.overloadForm.financialAidApproved == 'Pending') | (FormHistory.overloadForm.financialAidApproved == None)).count()
+
+            completedOverloadFormCounter = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                                     .where(FormHistory.historyType == 'Labor Overload Form')\
+                                                     .where((FormHistory.overloadForm.financialAidApproved == 'Approved') | (FormHistory.overloadForm.financialAidApproved == 'Denied')).count()
+        elif currentUser.isSaasAdmin:
+            overloadFormCounter = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                             .where((FormHistory.status == 'Pending') & (FormHistory.historyType == 'Labor Overload Form'))\
+                                             .where((FormHistory.overloadForm.SAASApproved == 'Pending') | (FormHistory.overloadForm.SAASApproved == None)).count()
+
+            completedOverloadFormCounter = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                                     .where(FormHistory.historyType == 'Labor Overload Form')\
+                                                     .where((FormHistory.overloadForm.SAASApproved == 'Approved') | (FormHistory.overloadForm.SAASApproved == 'Denied')).count()
+
         if formType == "pendingLabor":
             historyType = "Labor Status Form"
             approvalTarget = "denyLaborStatusFormsModal"
@@ -60,7 +83,40 @@ def allPendingForms(formType):
             historyType = "Labor Release Form"
             approvalTarget = "denyReleaseformSModal"
             pageTitle = "Pending Release Forms"
-        formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
+
+        elif formType == "completedOverload":
+            historyType = "Labor Overload Form"
+            approvalTarget = ""
+            pageTitle = "Approved Overload Forms"
+
+        if currentUser.isFinancialAidAdmin:
+            if formType == "pendingOverload":
+                formList = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                      .where(FormHistory.status == 'Pending')\
+                                      .where(FormHistory.historyType == "Labor Overload Form")\
+                                      .where((FormHistory.overloadForm.financialAidApproved == 'Pending') | (FormHistory.overloadForm.financialAidApproved == None))\
+                                      .order_by(-FormHistory.createdDate).distinct()
+            elif formType == "completedOverload":
+                formList = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                      .where(FormHistory.historyType == "Labor Overload Form")\
+                                      .where((FormHistory.overloadForm.financialAidApproved == 'Approved') | (FormHistory.overloadForm.financialAidApproved == 'Denied'))\
+                                      .order_by(-FormHistory.createdDate).distinct()
+
+        if currentUser.isSaasAdmin:
+            if formType == "pendingOverload":
+                formList = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                      .where(FormHistory.status == 'Pending')\
+                                      .where(FormHistory.historyType == "Labor Overload Form")\
+                                      .where((FormHistory.overloadForm.SAASApproved == 'Pending') | (FormHistory.overloadForm.SAASApproved == None))\
+                                      .order_by(-FormHistory.createdDate).distinct()
+            elif formType == "completedOverload":
+                formList = FormHistory.select().join_from(FormHistory, OverloadForm)\
+                                      .where(FormHistory.historyType == "Labor Overload Form")\
+                                      .where((FormHistory.overloadForm.SAASApproved == 'Approved') | (FormHistory.overloadForm.SAASApproved == 'Denied'))\
+                                      .order_by(-FormHistory.createdDate).distinct()
+
+        if currentUser.isLaborAdmin:
+            formList = FormHistory.select().where(FormHistory.status == "Pending").where(FormHistory.historyType == historyType).order_by(-FormHistory.createdDate).distinct()
         # only if a form is adjusted
         pendingOverloadFormPairs = {}
         # or allForms.adjustedForm.fieldAdjusted == "Weekly Hours":
@@ -78,10 +134,11 @@ def allPendingForms(formType):
                 # We check if there is a pending overload form using the key of the modifed forms
                 if allForms.adjustedForm.fieldAdjusted == "supervisor": # if supervisor field in adjust forms has been changed,
                     newSupervisorID = allForms.adjustedForm.newValue    # use the supervisor id in the field adjusted to find supervisor in User table.
-                    newSupervisor = Supervisor.get(Supervisor.ID == newSupervisorID)
+                    newSupervisor = createSupervisorFromTracy(bnumber=newSupervisorID)
                     # we are temporarily storing the supervisor name in new value,
                     # because we want to show the supervisor name in the hmtl template.
                     allForms.adjustedForm.newValue = newSupervisor.FIRST_NAME +" "+ newSupervisor.LAST_NAME
+                    allForms.adjustedForm.oldValue = {"email":newSupervisor.EMAIL, "ID":newSupervisor.ID}
 
                 if allForms.adjustedForm.fieldAdjusted == "position": # if position field has been changed in adjust form then retriev position name.
                     newPositionCode = allForms.adjustedForm.newValue
@@ -102,11 +159,20 @@ def allPendingForms(formType):
                                 laborStatusFormCounter = laborStatusFormCounter,
                                 adjustedFormCounter  = adjustedFormCounter,
                                 releaseFormCounter = releaseFormCounter,
+                                completedOverloadFormCounter = completedOverloadFormCounter,
                                 pendingOverloadFormPairs = pendingOverloadFormPairs
                                 )
     except Exception as e:
         print("Error Loading all Pending Forms:", e)
         return render_template('errors/500.html'), 500
+
+@admin.route('/admin/pendingForms/download', methods=['POST'])
+def downloadAllPendingForms():
+    allPendingForms = FormHistory.select().where(FormHistory.status == "Pending").order_by(-FormHistory.createdDate).distinct()
+    excel = ExcelMaker()
+    completePath = excel.makeExcelAllPendingForms(allPendingForms)
+    filename = completePath.split('/').pop()
+    return send_file(completePath,as_attachment=True, attachment_filename=filename)
 
 @admin.route('/admin/checkedForms', methods=['POST'])
 def approved_and_denied_Forms():
@@ -138,16 +204,19 @@ def finalUpdateStatus(raw_status):
     else:
         print("Unknown status: ", raw_status)
         return jsonify({"success": False})
+    form_ids = eval(request.data.decode("utf-8"))
+    return saveStatus(new_status, form_ids, currentUser)
+
+def saveStatus(new_status, form_ids, currentUser):
     try:
-        rsp = eval(request.data.decode("utf-8"))
         if new_status == 'Denied':
             # Index 1 will always hold the reject reason in the list, so we can
             # set a variable equal to the index value and then slice off the list
             # item before the iteration
-            denyReason = rsp[1]
-            rsp = rsp[:1]
+            denyReason = form_ids[1]
+            form_ids = form_ids[:1]
 
-        for id in rsp:
+        for id in form_ids:
             history_type_data = FormHistory.get(FormHistory.formHistoryID == int(id))
             history_type = str(history_type_data.historyType)
 
@@ -155,42 +224,42 @@ def finalUpdateStatus(raw_status):
             labor_forms.status = Status.get(Status.statusName == new_status)
             labor_forms.reviewedDate = date.today()
             labor_forms.reviewedBy = currentUser
-            email = emailHandler(labor_forms.formHistoryID)
-            if new_status == 'Denied':
-                labor_forms.rejectReason = denyReason
-                labor_forms.save()
-                if history_type == "Labor Status Form":
-                    email.laborStatusFormRejected()
-            if new_status == "Approved" and history_type == "Labor Status Form":
-                email.laborStatusFormApproved()
-            labor_forms.save()
 
-            if history_type == "Labor Adjustment Form" and new_status == "Approved":
-                # This function is triggered whenever an adjustment form is approved.
-                # The following function overrides the original data in lsf with the new data from adjustment form.
-                LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == history_type_data.formID) # getting the specific labor status form
-                overrideOriginalStatusFormOnAdjustmentFormApproval(history_type_data, LSF)
-        return jsonify({"success": True})
+            # Add to BANNER
+            save_status = True # default true so that we will still save in other cases
+            if new_status == 'Approved' and history_type == "Labor Status Form" and labor_forms.formID.POSN_CODE != "S12345": # don't update banner for Adjustment forms or for CS dummy position
+                conn = Banner()
+                save_status = conn.insert(labor_forms)
+
+            # if we are able to save
+            if save_status:
+
+                if new_status == 'Denied':
+                    labor_forms.rejectReason = denyReason
+                labor_forms.save()
+
+                email = emailHandler(labor_forms.formHistoryID)
+                if new_status == "Denied" and history_type == "Labor Status Form":
+                    email.laborStatusFormRejected()
+                if new_status == "Approved" and history_type == "Labor Status Form":
+                    email.laborStatusFormApproved()
+                if new_status == "Approved" and history_type == "Labor Adjustment Form":
+                    # This function is triggered whenever an adjustment form is approved.
+                    # The following function overrides the original data in lsf with the new data from adjustment form.
+                    LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == history_type_data.formID) # getting the specific labor status form
+                    overrideOriginalStatusFormOnAdjustmentFormApproval(history_type_data, LSF)
+
+            else:
+                print("Unable to update form status for formHistoryID {}.".format(id))
+                return jsonify({"success": False}), 500
+
     except Exception as e:
         print("Error preparing form for status update:", e)
-        return jsonify({"success": False})
-
-    # BANNER
-    save_status = True # default true so that we will still save in the Deny case
-    if new_status == 'Approved':
-        try:
-            conn = Banner()
-            save_status = conn.insert(labor_forms)
-        except Exception as e:
-            print("Unable to update BANNER:", e)
-            save_status = False
-
-    if save_status:
-        labor_forms.save()
-        return jsonify({"success": True})
-    else:
-        print("Unable to update form status.")
         return jsonify({"success": False}), 500
+
+    return jsonify({"success": True})
+
+
 
 
 def overrideOriginalStatusFormOnAdjustmentFormApproval(form, LSF):
@@ -277,12 +346,8 @@ def getNotes(formid):
     '''
     try:
         currentUser = require_login()
-        if not currentUser:                    # Not logged in
-            return render_template('errors/403.html'), 403
-        if not currentUser.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html'), 403
         supervisorNotes =  LaborStatusForm.get(LaborStatusForm.laborStatusFormID == formid) # Gets Supervisor note
-        notes = AdminNotes.select().where(AdminNotes.formID == formid) # Gets labor department notes from the laborofficenotes table
+        notes = Notes.select().where(Notes.formID == formid, Notes.noteType == "Labor Note") # Gets labor department notes from the laborofficenotes table
         notesDict = {}          # Stores the both types of notes
         if supervisorNotes.supervisorNotes: # If there is a supervisor note, store it in notesDict
             notesDict["supervisorNotes"] = supervisorNotes.supervisorNotes
@@ -305,16 +370,12 @@ def insertNotes(formId):
     '''
     try:
         currentUser = require_login()
-        if not currentUser:                    # Not logged in
-            return render_template('errors/403.html'), 403
-        if not currentUser.isLaborAdmin:       # Not an admin
-            return render_template('errors/403.html'), 403
         rsp = eval(request.data.decode("utf-8"))
         stripresponse = rsp.strip()
         currentDate = datetime.now().strftime("%Y-%m-%d")  # formats the date to match the peewee format for the database
 
         if stripresponse:
-            AdminNotes.create(formID=formId, createdBy=currentUser, date=currentDate, notesContents=stripresponse) # creates a new entry in the laborOfficeNotes table
+            Notes.create(formID=formId, createdBy=currentUser, date=currentDate, notesContents=stripresponse, noteType = "Labor Note") # creates a new entry in the laborOfficeNotes table
 
             return jsonify({"Success": True})
 
@@ -336,21 +397,33 @@ def getOverloadModalData(formHistoryID):
         departmentStatusInfo = {}
         historyForm = FormHistory.select().where(FormHistory.formHistoryID == int(formHistoryID))
         try:
-            SAASStatus = historyForm[0].overloadForm.SAASApproved.statusName
-            SAASLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'SAAS') & (EmailTracker.formID == historyForm[0].formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
-            SAASEmailDate = SAASLastEmail[0].date.strftime('%m/%d/%y')
-        except (AttributeError, IndexError):
-            # We expect to see the AttributeError and IndexError if there is no data,
-            # and in those cases we set the variables manually
-            SAASStatus = 'None'
-            SAASEmailDate = 'No Email Sent'
-        try:
-            financialAidStatus = historyForm[0].overloadForm.financialAidApproved.statusName
             financialAidLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'Financial Aid') & (EmailTracker.formID == historyForm[0].formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
             financialAidEmailDate = financialAidLastEmail[0].date.strftime('%m/%d/%y')
         except (AttributeError, IndexError):
-            financialAidStatus = 'None'
+            # We expect to see the AttributeError and IndexError if there is no data,
+            # and in those cases we set the variables manually
             financialAidEmailDate = 'No Email Sent'
+
+        try:
+            SAASLastEmail = EmailTracker.select().limit(1).where((EmailTracker.recipient == 'SAAS') & (EmailTracker.formID == historyForm[0].formID.laborStatusFormID)) .order_by(EmailTracker.date.desc())
+            SAASEmailDate = SAASLastEmail[0].date.strftime('%m/%d/%y')
+        except (AttributeError, IndexError):
+            SAASEmailDate = 'No Email Sent'
+
+        try:
+            financialAidStatus = historyForm[0].overloadForm.financialAidApproved.statusName
+            FinancialAidApprover = "By " + historyForm[0].overloadForm.financialAidApprover.supervisor.FIRST_NAME + " " + historyForm[0].overloadForm.financialAidApprover.supervisor.LAST_NAME
+        except (AttributeError, IndexError):
+            financialAidStatus = None
+            FinancialAidApprover = None
+
+        try:
+            SAASStatus = historyForm[0].overloadForm.SAASApproved.statusName
+            SAASApprover = "By " + historyForm[0].overloadForm.SAASApprover.supervisor.FIRST_NAME + " " + historyForm[0].overloadForm.SAASApprover.supervisor.LAST_NAME
+        except (AttributeError, IndexError):
+            SAASStatus = None
+            SAASApprover = None
+
         try:
             currentPendingForm = FormHistory.select().where((FormHistory.formID == historyForm[0].formID) & (FormHistory.status == "Pending")).get()
             if currentPendingForm:
@@ -359,13 +432,16 @@ def getOverloadModalData(formHistoryID):
         except (AttributeError, IndexError):
             pendingForm = False
             pendingFormType = False
+
         departmentStatusInfo.update({
                             'SAASEmail': SAASEmailDate,
                             'SAASStatus': SAASStatus,
                             'financialAidStatus': financialAidStatus,
-                            'financialAidLastEmail': financialAidEmailDate
+                            'financialAidLastEmail': financialAidEmailDate,
+                            'SAASApprover': SAASApprover,
+                            'FinancialAidApprover': FinancialAidApprover,
                             })
-        noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
+        noteTotal = Notes.select().where(Notes.formID == historyForm[0].formID.laborStatusFormID, Notes.noteType == "Labor Note").count()
         return render_template('snips/pendingOverloadModal.html',
                                             historyForm = historyForm,
                                             departmentStatusInfo = departmentStatusInfo,
@@ -373,7 +449,8 @@ def getOverloadModalData(formHistoryID):
                                             laborStatusFormID = historyForm[0].formID.laborStatusFormID,
                                             noteTotal = noteTotal,
                                             pendingForm = pendingForm,
-                                            pendingFormType = pendingFormType
+                                            pendingFormType = pendingFormType,
+                                            formType = globalFormType
                                             )
     except Exception as e:
         print("Error Populating Overload Modal:", e)
@@ -386,7 +463,7 @@ def getReleaseModalData(formHistoryID):
     """
     try:
         historyForm = FormHistory.select().where(FormHistory.formHistoryID == int(formHistoryID))
-        noteTotal = AdminNotes.select().where(AdminNotes.formID == historyForm[0].formID.laborStatusFormID).count()
+        noteTotal = Notes.select().where(Notes.formID == historyForm[0].formID.laborStatusFormID, Notes.noteType == "Labor Note").count()
         return render_template('snips/pendingReleaseModal.html',
                                             historyForm = historyForm,
                                             formHistoryID = historyForm[0].formHistoryID,
@@ -397,6 +474,103 @@ def getReleaseModalData(formHistoryID):
         print("Error Populating Release Modal:", e)
         return render_template('errors/500.html'), 500
 
+def financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate):
+    selectedOverload = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
+    if 'denialReason' in rsp.keys():
+        newNoteEntry = Notes.create(formID=historyForm.formID.laborStatusFormID,
+                                    createdBy=currentUser,
+                                    date=currentDate,
+                                    notesContents=rsp["denialReason"],
+                                    noteType = "Labor Note")
+        newNoteEntry.save()
+    ## Updating the overloadform TableS
+    if currentUser.isFinancialAidAdmin:
+        selectedOverload.financialAidApproved = status.statusName
+        selectedOverload.financialAidApprover = currentUser
+        selectedOverload.financialAidInitials = rsp['initials']
+        selectedOverload.financialAidReviewDate = currentDate
+
+    elif currentUser.isSaasAdmin:
+        selectedOverload.SAASApproved = status.statusName
+        selectedOverload.SAASApprover = currentUser
+        selectedOverload.SAASInitials = rsp['initials']
+        selectedOverload.SAASReviewDate = currentDate
+    selectedOverload.save()
+    return jsonify({"Success": True})
+
+def laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email):
+    if rsp['formType'] == 'Overload':
+        overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
+        overloadForm.laborApproved = status.statusName
+        overloadForm.laborApprover = currentUser
+        overloadForm.laborReviewDate = currentDate
+        overloadForm.save()
+        try:
+            pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending") & (FormHistory.historyType != "Labor Overload Form")).get()
+            if historyForm.adjustedForm and rsp['status'] == "Approved":
+                LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == historyForm.formID)
+                if historyForm.adjustedForm.fieldAdjusted == "weeklyHours":
+                    LSF.weeklyHours = pendingForm.adjustedForm.newValue
+                    LSF.save()
+            if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Labor Adjustment Form" and pendingForm.adjustedForm.fieldAdjusted == "weeklyHours"):
+                if status.statusName == "Approved Reluctantly":
+                    pendingForm.status = "Approved"
+                else:
+                    pendingForm.status = status.statusName
+                pendingForm.reviewedBy = currentUser
+                pendingForm.reviewedDate = currentDate
+                if 'denialReason' in rsp.keys():
+                    pendingForm.rejectReason = rsp['denialReason']
+                    Notes.create(formID = pendingForm.formID.laborStatusFormID,
+                                    createdBy = currentUser,
+                                    date = currentDate,
+                                    notesContents = rsp['denialReason'],
+                                    noteType = "Labor Note")
+                pendingForm.save()
+
+                if pendingForm.historyType.historyTypeName == "Labor Status Form":
+                    email = emailHandler(pendingForm.formHistoryID)
+                    if rsp['status'] in ['Approved', 'Approved Reluctantly']:
+                        email.laborStatusFormApproved()
+                    elif rsp['status'] == 'Denied':
+                        email.laborStatusFormRejected()
+        except DoesNotExist:
+            pass
+        except Exception as e:
+            print(e)
+    if 'denialReason' in rsp.keys():
+        # We only update the reject reason if one was given on the UI
+        historyForm.rejectReason = rsp['denialReason']
+        historyForm.save()
+        Notes.create(formID = historyForm.formID.laborStatusFormID,
+                        createdBy = currentUser,
+                        date = currentDate,
+                        notesContents = rsp['denialReason'],
+                        noteType = "Labor Note")
+    if 'adminNotes' in rsp.keys():
+        # We only add admin notes if there was a note made on the UI
+        Notes.create(formID = historyForm.formID.laborStatusFormID,
+                        createdBy = currentUser,
+                        date = currentDate,
+                        notesContents = rsp['adminNotes'],
+                        noteType = "Labor Note")
+    historyForm.status = status.statusName
+    historyForm.reviewedBy = currentUser
+    historyForm.reviewedDate = currentDate
+    historyForm.save()
+    if rsp['formType'] == 'Overload':
+        if rsp['status'] in ['Approved', 'Approved Reluctantly']:
+            email.LaborOverLoadFormApproved()
+        elif rsp['status'] == 'Denied':
+            email.LaborOverLoadFormRejected()
+    elif rsp['formType'] == 'Release':
+        if rsp['status'] == 'Approved':
+            email.laborReleaseFormApproved()
+        elif rsp['status'] == 'Denied':
+            email.laborReleaseFormRejected()
+    return jsonify({"Success": True})
+
+
 @admin.route('/admin/modalFormUpdate', methods=['POST'])
 def modalFormUpdate():
     """
@@ -405,82 +579,69 @@ def modalFormUpdate():
     """
     try:
         currentUser = require_login()
-        if not currentUser:
-            return render_template('errors/403.html'), 403
-
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
             historyForm = FormHistory.get(FormHistory.formHistoryID == rsp['formHistoryID'])
             email = emailHandler(historyForm.formHistoryID)
             currentDate = datetime.now().strftime("%Y-%m-%d")
             status = Status.get(Status.statusName == rsp['status'])
-            if rsp['formType'] == 'Overload':
-                overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
-                overloadForm.laborApproved = status.statusName
-                overloadForm.laborApprover = currentUser
-                overloadForm.laborReviewDate = currentDate
-                overloadForm.save()
-                try:
-                    pendingForm = FormHistory.select().where((FormHistory.formID == historyForm.formID) & (FormHistory.status == "Pending")).get()
-                    if historyForm.adjustedForm and rsp['status'] == "Approved":
-                        LSF = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == historyForm.formID)
-                        if historyForm.adjustedForm.fieldAdjusted == "weeklyHours":
-                            LSF.weeklyHours = pendingForm.adjustedForm.newValue
-                            LSF.save()
-                    if pendingForm.historyType.historyTypeName == "Labor Status Form" or (pendingForm.historyType.historyTypeName == "Labor Adjustment Form" and pendingForm.adjustedForm.fieldAdjusted == "weeklyHours"):
-                        if status.statusName == "Approved Reluctantly":
-                            pendingForm.status = "Approved"
-                        else:
-                            pendingForm.status = status.statusName
-                        pendingForm.reviewedBy = currentUser
-                        pendingForm.reviewedDate = currentDate
-                        if 'denialReason' in rsp.keys():
-                            pendingForm.rejectReason = rsp['denialReason']
-                            AdminNotes.create(formID = pendingForm.formID.laborStatusFormID,
-                                            createdBy = currentUser,
-                                            date = currentDate,
-                                            notesContents = rsp['denialReason'])
-                        pendingForm.save()
 
-                        if pendingForm.historyType.historyTypeName == "Labor Status Form":
-                            email = emailHandler(pendingForm.formHistoryID)
-                            if rsp['status'] in ['Approved', 'Approved Reluctantly']:
-                                email.laborStatusFormApproved()
-                            elif rsp['status'] == 'Denied':
-                                email.laborStatusFormRejected()
-                except DoesNotExist:
-                    pass
-                except Exception as e:
-                    print(e)
-            if 'denialReason' in rsp.keys():
-                # We only update the reject reason if one was given on the UI
-                historyForm.rejectReason = rsp['denialReason']
-                historyForm.save()
-                AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
-                                createdBy = currentUser,
-                                date = currentDate,
-                                notesContents = rsp['denialReason'])
-            if 'adminNotes' in rsp.keys():
-                # We only add admin notes if there was a note made on the UI
-                AdminNotes.create(formID = historyForm.formID.laborStatusFormID,
-                                createdBy = currentUser,
-                                date = currentDate,
-                                notesContents = rsp['adminNotes'])
-            historyForm.status = status.statusName
-            historyForm.reviewedBy = currentUser
-            historyForm.reviewedDate = currentDate
-            historyForm.save()
-            if rsp['formType'] == 'Overload':
-                if rsp['status'] in ['Approved', 'Approved Reluctantly']:
-                    email.LaborOverLoadFormApproved()
-                elif rsp['status'] == 'Denied':
-                    email.LaborOverLoadFormRejected()
-            elif rsp['formType'] == 'Release':
-                if rsp['status'] == 'Approved':
-                    email.laborReleaseFormApproved()
-                elif rsp['status'] == 'Denied':
-                    email.laborReleaseFormRejected()
+            save_form_status = True
+            if rsp['formType'] == 'Overload' and "Approved" in rsp['status'] and historyForm.formID.POSN_CODE != "S12345":
+                conn = Banner()
+                save_form_status = conn.insert(historyForm)
+
+            # if we are able to save
+            if save_form_status:
+                try:
+                    # This try is to handle Overload Forms
+                    overloadForm = OverloadForm.get(OverloadForm.overloadFormID == historyForm.overloadForm.overloadFormID)
+                    if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin:
+                        financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
+
+                    elif currentUser.isFinancialAidAdmin and currentUser.isLaborAdmin:
+                        if (not overloadForm.financialAidApproved) or (overloadForm.financialAidApproved == "Pending"):
+                            financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
+                        else:
+                            laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
+                    elif currentUser.isSaasAdmin and currentUser.isLaborAdmin:
+                        if (not overloadForm.SAASApproved) or overloadForm.SAASApproved == "Pending":
+                            financialAidSAASOverloadApproval(historyForm, rsp, status, currentUser, currentDate)
+                        else:
+                            laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
+
+                    elif currentUser.isLaborAdmin and (not currentUser.isFinancialAidAdmin or not currentUser.isSaasAdmin):
+                        laborAdminOverloadApproval(rsp, historyForm, status, currentUser, currentDate, email)
+                except:
+                    # This except is to handle Release Forms
+                    historyForm.status = status.statusName
+                    historyForm.reviewedDate = currentDate
+                    historyForm.reviewedBy = currentUser
+                    historyForm.save()
+                    if rsp["status"] == "Denied" or "adminNotes" in rsp:
+                        newNotes = Notes.create(formID = historyForm.formID,
+                                                createdBy = currentUser,
+                                                notesContents = "",
+                                                noteType = "",
+                                                date = currentDate)
+                        if rsp["status"] == "Denied":
+                            newNotes.notesContents = rsp["denialReason"]
+                        elif "adminNotes" in rsp:
+                            newNotes.notesContents = rsp["adminNotes"]
+                        if currentUser.isFinancialAidAdmin:
+                            newNotes.noteType = "Financial Aid Note"
+                        elif currentUser.isSaasAdmin:
+                            newNotes.noteType = "SAAS Note"
+                        elif currentUser.isLaborAdmin:
+                            newNotes.noteType = "Supervisor Note"
+                        newNotes.save()
+
+                    if rsp["status"] == "Denied":
+                        email.laborReleaseFormRejected()
+                    elif rsp["status"] == "Approved":
+                        email.laborReleaseFormApproved()
             return jsonify({"Success": True})
+
     except Exception as e:
         print("Error Updating Release/Overload Forms:", e)
         return jsonify({"Success": False}),500
@@ -504,8 +665,7 @@ def sendEmail():
                 recipient = 'Financial Aid'
                 overloadForm.financialAidApproved = status.statusName
                 overloadForm.save()
-            # Lines 347-349 were left as comments because they require code from PR #89
-            link = '/admin/financialAidOverloadApproval/' + str(rsp['formHistoryID'])
+            link = 'http://{0}/'.format(request.host) + 'admin/financialAidOverloadApproval/' + str(rsp['formHistoryID'])
             email = emailHandler(historyForm.formHistoryID)
             email.overloadVerification(recipient, link)
             currentDate = datetime.now().strftime('%m/%d/%y')
@@ -526,7 +686,7 @@ def getNotesCounter():
     try:
         rsp = eval(request.data.decode("utf-8"))
         if rsp:
-            noteTotal = AdminNotes.select().where(AdminNotes.formID == rsp['laborStatusFormID']).count()
+            noteTotal = Notes.select().where(Notes.formID == rsp['laborStatusFormID'], Notes.noteType == "Labor Note").count()
             noteDictionary = {'noteTotal': noteTotal}
             return jsonify(noteDictionary)
     except Exception as e:

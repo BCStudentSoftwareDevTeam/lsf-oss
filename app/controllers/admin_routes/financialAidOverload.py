@@ -8,13 +8,13 @@ from flask import json, jsonify
 from flask import request, render_template, flash
 from app.models.overloadForm import *
 from app import cfg
-from app.models.adminNotes import AdminNotes
+from app.models.notes import Notes
 from datetime import datetime, date
 from app.models.status import *
 from app.logic.emailHandler import*
 
-@admin.route('/admin/financialAidOverloadApproval/<overloadKey>', methods=['GET']) # we get the form ID when FinancialAid or SAAS clicks on the link they receive via email.
-def financialAidOverload(overloadKey):
+@admin.route('/admin/financialAidOverloadApproval/<formHistoryID>', methods=['GET']) # we get the form ID when FinancialAid or SAAS clicks on the link they receive via email.
+def financialAidOverload(formHistoryID):
     '''
     This function prefills all the information for a student's current job and overload request.
     '''
@@ -25,9 +25,8 @@ def financialAidOverload(overloadKey):
     if not (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin): # Not an admin
         return render_template('errors/403.html'), 403
 
-    overloadForm = FormHistory.get(FormHistory.overloadForm == overloadKey) # get access to overload form
-    lsfForm = LaborStatusForm.get(LaborStatusForm.laborStatusFormID == overloadForm.formID) # get the labor status form that is tied to the overload form
-
+    overloadForm = FormHistory.get(FormHistory.formHistoryID == formHistoryID) # get access to overload form
+    lsfForm = overloadForm.formID # get the labor status form that is tied to the overload form
     totalHours = {}
     ###-------- Popoulate Current Position -------###
     # Get all labor status forms for the same student in the same term and see if they have a primary position.
@@ -96,11 +95,17 @@ def formDenial(status):
         selectedFormHistory = FormHistory.get(FormHistory.formHistoryID == rsp["formHistoryID"])
         selectedOverload = OverloadForm.get(OverloadForm.overloadFormID == selectedFormHistory.overloadForm.overloadFormID)
         formStatus = Status.get(Status.statusName == newStatus)
+        if currentUser.isFinancialAidAdmin:
+            typeOfNote = "Financial Aid Note"
+        else:
+            typeOfNote = "SAAS Note"
         if rsp:
             ## New Entry in AdminNote Table
-            newNoteEntry = AdminNotes.create(formID=selectedFormHistory.formID.laborStatusFormID,
-            createdBy=currentUser, date=currentDate,
-            notesContents=rsp["denialNote"])
+            newNoteEntry = Notes.create(formID=selectedFormHistory.formID.laborStatusFormID,
+            createdBy=currentUser,
+            date=currentDate,
+            notesContents=rsp["denialNote"],
+            noteType = typeOfNote)
             newNoteEntry.save()
             ## Updating the overloadform Table
             if currentUser.isFinancialAidAdmin:

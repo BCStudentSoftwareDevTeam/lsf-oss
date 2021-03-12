@@ -1,5 +1,6 @@
 from app.config.loadConfig import get_secret_cfg
 from peewee import DoesNotExist
+import sqlalchemy
 from app.models.Tracy import db
 from app.models.Tracy.stuposn import STUPOSN
 from app.models.Tracy.studata import STUDATA
@@ -31,7 +32,7 @@ class Tracy():
 
         Throws an InvalidQueryException if the B Number does not exist.
         """
-        student = STUDATA.query.filter(STUDATA.ID == bnumber).first()
+        student = STUDATA.query.filter(sqlalchemy.func.trim(STUDATA.ID) == str(bnumber).strip()).first()
         if student is None:
             raise InvalidQueryException("B# {} not found in STUDATA".format(bnumber))
 
@@ -90,11 +91,11 @@ class Tracy():
         return STUPOSN.query.with_entities(STUPOSN.ORG, STUPOSN.DEPT_NAME, STUPOSN.ACCOUNT) \
                             .distinct().order_by(STUPOSN.DEPT_NAME).all()
 
-    def getPositionsFromDepartment(self, department: str):
+    def getPositionsFromDepartment(self, departmentOrg: str, departmentAcct: str):
         """
         Return a list of position objects for the given department name, sorted by position title
         """
-        return STUPOSN.query.filter(STUPOSN.ORG == department).order_by(STUPOSN.POSN_TITLE).all()
+        return STUPOSN.query.filter((STUPOSN.ORG == departmentOrg) & (STUPOSN.ACCOUNT == departmentAcct)).order_by(STUPOSN.POSN_TITLE).all()
 
     def getPositionFromCode(self, positionCode: str):
         """
@@ -128,6 +129,14 @@ class Tracy():
         else:
             userInput = userInput.split()
             students = STUDATA.query.filter((STUDATA.FIRST_NAME.contains(userInput[0])) & (STUDATA.LAST_NAME.contains(userInput[1]))).all()
+        return students
+
+    def getStudentsFromBNumberSearch(self, bnum_part: str):
+        """
+        Return a list of students searching by bnumber
+        """
+        bnum_search = bnum_part.strip() + "%"
+        students = STUDATA.query.filter(STUDATA.ID.like(bnum_search)).all()
         return students
 
     def checkStudentOrSupervisor(self, username: str):

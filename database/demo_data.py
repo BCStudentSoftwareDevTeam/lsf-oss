@@ -14,14 +14,14 @@ from app.models.user import User
 from app.models.term import Term
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
-from app.models.adminNotes import AdminNotes
+from app.models.notes import Notes
 
 print("Inserting data for demo and testing purposes")
 
 #############################
 # Students (TRACY)
 #############################
-studentsTracy = [
+bothStudents = [
                 {
                 "ID":"B00730361",
                 "PIDM":"1",
@@ -38,6 +38,23 @@ studentsTracy = [
                 "LAST_SUP_PIDM":"7"
                 },
                 {
+                "ID":"B00734292",
+                "PIDM":"3",
+                "FIRST_NAME":"Guillermo",
+                "LAST_NAME":"Adams", # Guillermo's last name is wrong on purpose
+                "CLASS_LEVEL":"Junior",
+                "ACADEMIC_FOCUS":"Computer Science",
+                "MAJOR":"Computer Science",
+                "PROBATION":"0",
+                "ADVISOR":"Jan Pearce",
+                "STU_EMAIL":"cruzg@berea.edu",
+                "STU_CPO":"300",
+                "LAST_POSN":"TA",
+                "LAST_SUP_PIDM":"7"
+                },
+                ]
+localStudents = [
+                {
                 "ID":"B00841417",
                 "PIDM":"2",
                 "FIRST_NAME":"Alex",
@@ -52,21 +69,8 @@ studentsTracy = [
                 "LAST_POSN":"Student Manager",
                 "LAST_SUP_PIDM":"7"
                 },
-                {
-                "ID":"B00734292",
-                "PIDM":"3",
-                "FIRST_NAME":"Guillermo",
-                "LAST_NAME":"Adams",
-                "CLASS_LEVEL":"Junior",
-                "ACADEMIC_FOCUS":"Computer Science",
-                "MAJOR":"Computer Science",
-                "PROBATION":"0",
-                "ADVISOR":"Jan Pearce",
-                "STU_EMAIL":"cruzg@berea.edu",
-                "STU_CPO":"300",
-                "LAST_POSN":"TA",
-                "LAST_SUP_PIDM":"7"
-                },
+        ]
+tracyStudents = [
                 {
                 "ID":"B00785329",
                 "PIDM":"4",
@@ -81,16 +85,35 @@ studentsTracy = [
                 "STU_CPO":"420",
                 "LAST_POSN":"TA",
                 "LAST_SUP_PIDM":"7"
+                },
+                {
+                "ID":"            B00888329",
+                "PIDM":"7",
+                "FIRST_NAME":"Jeremiah",
+                "LAST_NAME":"Bullfrog",
+                "CLASS_LEVEL":"Senior",
+                "ACADEMIC_FOCUS":"Computer Science",
+                "MAJOR":"Computer Science",
+                "PROBATION":"0",
+                "ADVISOR":"Scott Heggen",
+                "STU_EMAIL":"bullfrogj@berea.edu",
+                "STU_CPO":"420",
+                "LAST_POSN":"TA",
+                "LAST_SUP_PIDM":"7"
                 }
 ]
-students = []
-for student in studentsTracy:
-    # Add to Tracy db
+
+# Add students to Tracy db
+for student in (tracyStudents + bothStudents):
     db.session.add(STUDATA(**student))
     db.session.commit()
 
+# Add the Student records
+students = []
+for student in (localStudents + bothStudents):
     # Set up lsf db data
     del student["PIDM"]
+    student['ID'] = student['ID'].strip()
     students.append(student)
 Student.insert_many(students).on_conflict_replace().execute()
 print(" * students (TRACY) added")
@@ -162,6 +185,14 @@ positions = [
             "ORG" : "2107",
             "ACCOUNT":"6740",
             "DEPT_NAME":"Biology"
+            },
+            {
+            "POSN_CODE": "S12345",
+            "POSN_TITLE": "DUMMY POSITION",
+            "WLS": "3",
+            "ORG" : "2114",
+            "ACCOUNT":"6740",
+            "DEPT_NAME":"Computer Science"
             }
 ]
 # Add to Tracy db
@@ -320,14 +351,6 @@ users = [
         "isSaasAdmin": None
         },
         {
-        "student": "B00785329",
-        "supervisor": None,
-        "username": "adamskg",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
         "student": "B00841417",
         "supervisor": "B00841417",
         "username": "bryantal",
@@ -435,21 +458,23 @@ FormHistory.insert([{
 #############################
 # admin Notes
 #############################
-adminNotes = [
+notes = [
             {
             "noteHistoryID": 1,
             "formID_id": 2,
             "date":"2020-01-01",
             "createdBy" : 1,
-            "notesContents": "This is the first note"
+            "notesContents": "This is the first note",
+            "noteType" : "Supervisor Note"
             },
             {
             "noteHistoryID": 2,
             "formID_id": 2,
             "date":"2020-02-01",
             "createdBy" : 1,
-            "notesContents": "This is the second note"
+            "notesContents": "This is the second note",
+            "noteType" : "Labor Note"
             },
        ]
-AdminNotes.insert_many(adminNotes).on_conflict_replace().execute()
+Notes.insert_many(notes).on_conflict_replace().execute()
 print(" * laborOfficeNotes added")

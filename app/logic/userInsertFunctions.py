@@ -18,6 +18,8 @@ from app import cfg
 from app.logic.emailHandler import emailHandler
 from app.logic.tracy import Tracy, InvalidQueryException
 from peewee import DoesNotExist
+from functools import reduce
+import operator
 
 class InvalidUserException(Exception):
     pass
@@ -50,7 +52,7 @@ def createUser(username, student=None, supervisor=None):
 
 def createSupervisorFromTracy(username=None, bnumber=None):
     """
-        Attempts to add a user from the Tracy database to the application, based on the provided username.
+        Attempts to add a supervisor from the Tracy database to the application, based on the provided username or bnumber.
 
         Raises InvalidUserException if this does not succeed.
     """
@@ -60,52 +62,78 @@ def createSupervisorFromTracy(username=None, bnumber=None):
     if bnumber:
         try:
             tracyUser = Tracy().getSupervisorFromID(bnumber)
-        except DoesNotExist as e:
+        except InvalidQueryException as e:
             raise InvalidUserException("{} not found in Tracy database".format(bnumber))
 
     else:    # Executes if no ID is provided
         email = "{}@berea.edu".format(username)
         try:
             tracyUser = Tracy().getSupervisorFromEmail(email)
-        except DoesNotExist as e:
+        except InvalidQueryException as e:
             raise InvalidUserException("{} not found in Tracy database".format(email))
 
     try:
-        return Supervisor.get_or_create(PIDM = tracyUser.PIDM,
-                                        FIRST_NAME = tracyUser.FIRST_NAME,
-                                        LAST_NAME = tracyUser.LAST_NAME,
-                                        ID = tracyUser.ID.strip(),
-                                        EMAIL = tracyUser.EMAIL,
-                                        CPO = tracyUser.CPO,
-                                        ORG = tracyUser.ORG,
-                                        DEPT_NAME = tracyUser.DEPT_NAME)[0]
-    except Exception as e:
-        raise InvalidUserException("Adding {} to Supervisor table failed".format(username), e)
+        return Supervisor.get(Supervisor.ID == tracyUser.ID.strip())
+    except DoesNotExist:
+        return Supervisor.create(PIDM = tracyUser.PIDM,
+                                 FIRST_NAME = tracyUser.FIRST_NAME,
+                                 LAST_NAME = tracyUser.LAST_NAME,
+                                 ID = tracyUser.ID.strip(),
+                                 EMAIL = tracyUser.EMAIL,
+                                 CPO = tracyUser.CPO,
+                                 ORG = tracyUser.ORG,
+                                 DEPT_NAME = tracyUser.DEPT_NAME)
+    else:
+        raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyUser.FIRST_NAME, tracyUser.LAST_NAME))
 
-def createStudentFromTracy(username):
+def getOrCreateStudentRecord(username=None, bnumber=None):
     """
-        Checks to see if username of student is in Tracy database, based on the provided username.
+        Attempts to add a student from the Tracy database to the application, based on the provided username or bnumber.
 
         Raises InvalidUserException if this does not succeed.
     """
-    email = "{}@berea.edu".format(username)
+    if not username and not bnumber:
+        raise ValueError("No arguments provided to getOrCreateStudentRecord()")
+
     try:
-        tracyStudent = Tracy().getStudentFromEmail(email)
-    except DoesNotExist as e:
-        raise InvalidUserException("{} not found in Tracy database".format(email))
+        if bnumber:
+            student = Student.get(Student.ID == bnumber)
+        else:
+            student = Student.get(Student.STU_EMAIL == "{}@berea.edu".format(username))
 
-    return createStudentFromTracyObj(tracyStudent)
+    except DoesNotExist:
+        student = createStudentFromTracy(username,bnumber)
 
-def createStudentFromTracyObj(tracyStudent):
+    return student
+
+
+def createStudentFromTracy(username=None, bnumber=None):
     """
-        Attempts to return a student from our Student table in the application, based on the provided object from the Tracy student database.
+        Attempts to add a student from the Tracy database to the application, based on the provided username or bnumber.
 
         Raises InvalidUserException if this does not succeed.
     """
+    if not username and not bnumber:
+        raise ValueError("No arguments provided to createStudentFromTracy()")
+
+    if bnumber:
+        try:
+            tracyStudent = Tracy().getStudentFromBNumber(bnumber)
+        except InvalidQueryException as e:
+            raise InvalidUserException("{} not found in Tracy database".format(bnumber))
+
+    else:    # Executes if no ID is provided
+        email = "{}@berea.edu".format(username)
+        try:
+            tracyStudent = Tracy().getStudentFromEmail(email)
+        except InvalidQueryException as e:
+            raise InvalidUserException("{} not found in Tracy database".format(email))
+
+    # Create the student in Tracy
     try:
         return Student.get(Student.ID == tracyStudent.ID.strip())
     except DoesNotExist:
-        print('Could not find {0} {1} in Student table, creating new entry.'.format(tracyStudent.FIRST_NAME, tracyStudent.LAST_NAME))
+        #print('Could not find {0} {1} in Student table, creating new entry.'.format(tracyStudent.FIRST_NAME, tracyStudent.LAST_NAME))
         return Student.create(ID = tracyStudent.ID.strip(),
                             PIDM = tracyStudent.PIDM,
                             FIRST_NAME = tracyStudent.FIRST_NAME,
@@ -123,10 +151,9 @@ def createStudentFromTracyObj(tracyStudent):
         raise InvalidUserException("Error: Could not get or create {0} {1}".format(tracyStudent.FIRST_NAME, tracyStudent.LAST_NAME))
 
 
-def createLaborStatusForm(tracyStudent, studentID, primarySupervisor, department, term, rspFunctional):
+def createLaborStatusForm(studentID, primarySupervisor, department, term, rspFunctional):
     """
     Creates a labor status form with the appropriate data passed from userInsert() in laborStatusForm.py
-    tracyStudent: object with all the student's information from Tracy
     studentID: student's primary ID in the database AKA their B#
     primarySupervisor: primary supervisor of the student
     department: department the position is a part of
@@ -169,17 +196,8 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
     """
     # We create a 'Labor Status Form' first, then we check to see if a 'Labor Overload Form'
     # needs to be created
-    historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
-    formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
-                        historyType = historyType.historyTypeName,
-                        overloadForm = None,
-                        createdBy   = creatorID,
-                        createdDate = date.today(),
-                            status      = status.statusName)
-    if not formHistory.formID.termCode.isBreak:
-        email = emailHandler(formHistory.formHistoryID)
-        email.laborStatusFormSubmitted()
     if rspFunctional.get("isItOverloadForm") == "True":
+        status = Status.get(Status.statusName == "Pre-Student Approval")
         overloadHistoryType = HistoryType.get(HistoryType.historyTypeName == "Labor Overload Form")
         newLaborOverloadForm = OverloadForm.create( studentOverloadReason = None,
                                                     financialAidApproved = None,
@@ -199,6 +217,17 @@ def createOverloadFormAndFormHistory(rspFunctional, lsf, creatorID, status):
                                             status      = status.statusName)
         email = emailHandler(formOverload.formHistoryID)
         email.LaborOverLoadFormSubmitted('http://{0}/'.format(request.host) + 'studentOverloadApp/' + str(formOverload.formHistoryID))
+    historyType = HistoryType.get(HistoryType.historyTypeName == "Labor Status Form")
+    formHistory = FormHistory.create( formID = lsf.laborStatusFormID,
+                        historyType = historyType.historyTypeName,
+                        overloadForm = None,
+                        createdBy   = creatorID,
+                        createdDate = date.today(),
+                        status      = status.statusName)
+    if not formHistory.formID.termCode.isBreak:
+        email = emailHandler(formHistory.formHistoryID)
+        email.laborStatusFormSubmitted()
+    return formHistory
 
 
 def emailDuringBreak(secondLSFBreak, term):
@@ -245,13 +274,37 @@ def checkForSecondLSFBreak(termCode, student):
         isMoreLSFDict["showModal"] = False # Do not show the modal when there's not previous lsf
     return json.dumps(isMoreLSFDict)
 
-def checkForPrimaryPosition(termCode, student):
+def checkForPrimaryPosition(termCode, student, currentUser):
     """ Checks if a student has a primary supervisor (which means they have primary position) in the selected term. """
     rsp = (request.data).decode("utf-8")  # This turns byte data into a string
     rspFunctional = json.loads(rsp)
     term = Term.get(Term.termCode == termCode)
+
+    termYear = termCode[:-2]
+    shortCode = termCode[-2:]
+    clauses = []
+    if shortCode == '00':
+        fallTermCode = termYear + '11'
+        springTermCode = termYear + '12'
+        clauses.extend([FormHistory.formID.termCode == fallTermCode,
+                        FormHistory.formID.termCode == springTermCode,
+                        FormHistory.formID.termCode == termCode])
+    else:
+        ayTermCode = termYear + '00'
+        clauses.extend([FormHistory.formID.termCode == ayTermCode,
+                        FormHistory.formID.termCode == termCode])
+    expression = reduce(operator.or_, clauses) # This expression creates SQL OR operator between the conditions added to 'clauses' list
+
     try:
-        lastPrimaryPosition = FormHistory.select().join_from(FormHistory, LaborStatusForm).where(FormHistory.formID.termCode == termCode, FormHistory.formID.studentSupervisee == student, FormHistory.historyType == "Labor Status Form", FormHistory.formID.jobType == "Primary").order_by(FormHistory.formHistoryID.desc()).get()
+        lastPrimaryPosition = FormHistory.select()\
+                                         .join_from(FormHistory, LaborStatusForm)\
+                                         .join_from(FormHistory, HistoryType)\
+                                         .where((expression) &
+                                                 (FormHistory.formID.studentSupervisee == student) &
+                                                 (FormHistory.historyType.historyTypeName == "Labor Status Form") &
+                                                 (FormHistory.formID.jobType == "Primary"))\
+                                         .order_by(FormHistory.formHistoryID.desc())\
+                                         .get()
     except DoesNotExist:
         lastPrimaryPosition = None
 
@@ -259,33 +312,52 @@ def checkForPrimaryPosition(termCode, student):
         approvedRelease = None
     else:
         try:
-            approvedRelease = FormHistory.select().where(FormHistory.formID == lastPrimaryPosition.formID, FormHistory.historyType == "Labor Release Form", FormHistory.status == "Approved").order_by(FormHistory.formHistoryID.desc()).get()
+            approvedRelease = FormHistory.select()\
+                                         .where(FormHistory.formID == lastPrimaryPosition.formID,
+                                                FormHistory.historyType == "Labor Release Form",
+                                                FormHistory.status == "Approved")\
+                                                .order_by(FormHistory.formHistoryID.desc())\
+                                                .get()
         except DoesNotExist:
             approvedRelease = None
 
-    finalStatus = ""
+    finalStatus = {}
     if not term.isBreak:
         if lastPrimaryPosition and not approvedRelease:
             if rspFunctional == "Primary":
                 if lastPrimaryPosition.status.statusName == "Denied":
-                    finalStatus = "hire"
+                    finalStatus["status"] = "hire"
                 else:
-                    finalStatus = "noHire"
+                    finalStatus["status"]  = "noHire"
+                    finalStatus["term"] = lastPrimaryPosition.formID.termCode.termName
+                    finalStatus["primarySupervisor"] = lastPrimaryPosition.formID.supervisor.FIRST_NAME + " " +lastPrimaryPosition.formID.supervisor.LAST_NAME
+                    finalStatus["department"] = lastPrimaryPosition.formID.department.DEPT_NAME + " (" + lastPrimaryPosition.formID.department.ORG + "-" + lastPrimaryPosition.formID.department.ACCOUNT+ ")"
+                    finalStatus["position"] = lastPrimaryPosition.formID.POSN_CODE +" - "+lastPrimaryPosition.formID.POSN_TITLE + " (" + lastPrimaryPosition.formID.WLS + ")"
+                    finalStatus["hours"] = lastPrimaryPosition.formID.jobType + " (" + str(lastPrimaryPosition.formID.weeklyHours) + ")"
+                    finalStatus["isLaborAdmin"] = currentUser.isLaborAdmin
+                    if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
+                        finalStatus["approvedForm"] = True
             else:
-                if lastPrimaryPosition.status.statusName == "Approved" or lastPrimaryPosition.status.statusName == "Approved Reluctantly":
-                    finalStatus = "hire"
+                if lastPrimaryPosition.status.statusName in ["Approved", "Approved Reluctantly", "Pending"]:
+                    lastPrimaryPositionTermCode = str(lastPrimaryPosition.formID.termCode.termCode)[-2:]
+                    # if selected term is AY and student has an approved/pending LSF in spring or fall
+                    if shortCode == '00' and lastPrimaryPositionTermCode in ['11', '12']:
+                        finalStatus["status"] = "noHireForSecondary"
+                    else:
+                        finalStatus["status"]  = "hire"
                 else:
-                    finalStatus = "noHireForSecondary"
+                    finalStatus["status"] = "noHireForSecondary"
+
         elif lastPrimaryPosition and approvedRelease:
             if rspFunctional == "Primary":
-                finalStatus = "hire"
+                finalStatus["status"]  = "hire"
             else:
-                finalStatus = "noHireForSecondary"
+                finalStatus["status"]  = "noHireForSecondary"
         else:
             if rspFunctional == "Primary":
-                finalStatus = "hire"
+                finalStatus["status"]  = "hire"
             else:
-                finalStatus = "noHireForSecondary"
+                finalStatus["status"]  = "noHireForSecondary"
     else:
-        finalStatus = "hire"
+        finalStatus["status"]  = "hire"
     return json.dumps(finalStatus)

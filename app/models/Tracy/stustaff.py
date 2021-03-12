@@ -6,7 +6,7 @@ class STUSTAFF(db.Model):
     __tablename__ = "stustaff"
 
     PIDM        = db.Column(db.Integer, primary_key=True)           # Unique random ID
-    ID          = db.Column(db.String(9)) # B-number
+    ID          = db.Column(db.String(128)) # B-number
     FIRST_NAME  = db.Column(db.String(128))
     LAST_NAME   = db.Column(db.String(128))
     EMAIL       = db.Column(db.String(128))

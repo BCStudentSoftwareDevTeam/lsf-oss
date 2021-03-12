@@ -1,7 +1,7 @@
 // checking the classification of student on page load
 $(document).ready(function () {
   $("#notes").prop("disabled", true);
-  $("#submit").hide();
+  $("#submit").prop("disabled", true);
   if ($("#Classification").val() == "Freshman"){
     $('#freshmanWarning').modal({
      backdrop: 'static',
@@ -19,10 +19,10 @@ function checkBoxCheck(obj,totalFormHours){
   else if(obj.checked == false){
       checkboxCounter = checkboxCounter - 1;
   }
-  if(checkboxCounter >= 8 & totalFormHours >= 20){
+  if(checkboxCounter >= 7 & totalFormHours > 20){
     $("#notes").prop("disabled", false);
   }
-  else if (checkboxCounter >=5 & totalFormHours <20){
+  else if (checkboxCounter >=5 & totalFormHours <= 20){
       $("#notes").prop("disabled", false);
   }
   else{
@@ -33,9 +33,9 @@ function checkBoxCheck(obj,totalFormHours){
 $(document).on('keyup', '#notes', function() {
   // this function makes sure that the text area has at least 1 character
   if ($.trim($(this).val()).length == 0) {
-    $('#submit').hide();
+    $('#submit').prop("disabled", true);
   } else {
-    $('#submit').show();
+    $('#submit').prop("disabled", false);
   }
 })
 

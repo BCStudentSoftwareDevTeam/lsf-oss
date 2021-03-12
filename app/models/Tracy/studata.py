@@ -6,7 +6,7 @@ class STUDATA(db.Model):
     __tablename__ = "studata"
 
     PIDM                    = db.Column(db.String(128), primary_key=True)           # Unique random ID
-    ID                      = db.Column(db.String(9)) #B-number
+    ID                      = db.Column(db.String(128)) #B-number
     FIRST_NAME              = db.Column(db.String(128))
     LAST_NAME               = db.Column(db.String(128))
     CLASS_LEVEL             = db.Column(db.String(128))
