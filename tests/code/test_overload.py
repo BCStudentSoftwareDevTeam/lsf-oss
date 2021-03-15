@@ -59,10 +59,8 @@ def test_approval():
     with app.test_request_context():
         currentUser.isFinancialAidAdmin = 1
         currentUser.save()
-        print("here")
         status = 'approved'
         with app.test_client() as c:
-            print("before adminapp")
             FinancialAidApproval = c.post('/admin/financialAidOverloadApproval/'+status, json={
             'formHistoryID': formHistory.formHistoryID, 'denialNote': "I approve this form for Financial Aid"
             })
@@ -105,10 +103,8 @@ def test_denied(resetApprovalStatus):
     with app.test_request_context():
         currentUser.isFinancialAidAdmin = 1
         currentUser.save()
-        print("here")
         status = 'denied'
         with app.test_client() as c:
-            print("before adminapp")
             FinancialAidDenial = c.post('/admin/financialAidOverloadApproval/'+status, json={
             'formHistoryID': formHistory.formHistoryID, 'denialNote': "I denied this form for Financial Aid"
             })
