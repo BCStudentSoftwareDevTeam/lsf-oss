@@ -905,23 +905,7 @@ label:this.label,title:this.title,cls:this.className||"",titleJs:c.gecko&&!c.hc?
 d._.on=1;d.editorFocus&&!a.focusManager.hasFocus&&a.focus();if(d.onOpen)d.onOpen()};e.onHide=function(b){this.element.removeClass(k);d.setState(d.modes&&d.modes[a.mode]?CKEDITOR.TRISTATE_OFF:CKEDITOR.TRISTATE_DISABLED);d._.on=0;if(!b&&d.onClose)d.onClose()};e.onEscape=function(){e.hide(1)};b.onClick=function(a,b){d.onClick&&d.onClick.call(d,a,b);e.hide()};this._.panel=e;this._.list=b;e.getBlock(this.id).onHide=function(){d._.on=0;d.setState(CKEDITOR.TRISTATE_OFF)};this.init&&this.init()}},setValue:function(a,
 b){this._.value=a;var c=this.document.getById("cke_"+this.id+"_text");c&&(a||b?c.removeClass("cke_combo_inlinelabel"):(b=this.label,c.addClass("cke_combo_inlinelabel")),c.setText("undefined"!=typeof b?b:a))},getValue:function(){return this._.value||""},unmarkAll:function(){this._.list.unmarkAll()},mark:function(a){this._.list.mark(a)},hideItem:function(a){this._.list.hideItem(a)},hideGroup:function(a){this._.list.hideGroup(a)},showAll:function(){this._.list.showAll()},add:function(a,b,c){this._.items[a]=
 c||a;this._.list.add(a,b,c)},startGroup:function(a){this._.list.startGroup(a)},commit:function(){this._.committed||(this._.list.commit(),this._.committed=1,CKEDITOR.ui.fire("ready",this));this._.committed=1},setState:function(a){if(this._.state!=a){var b=this.document.getById("cke_"+this.id);b.setState(a,"cke_combo");a==CKEDITOR.TRISTATE_DISABLED?b.setAttribute("aria-disabled",!0):b.removeAttribute("aria-disabled");this._.state=a}},getState:function(){return this._.state},enable:function(){this._.state==
-CKEDITOR.TRISTATE_DISABLED&&this.setState(this._.lastState)
-},disable:function(){
-    this._.state!=CKEDITOR.TRISTATE_DISABLED&&(this._.lastState=this._.state,this.setState(CKEDITOR.TRISTATE_DISABLED))
-},destroy:function(){
-    CKEDITOR.tools.array.forEach(this._.listeners,function(a){
-        a.removeListener()
-    });
-    this._.listeners=[]
-}
-},statics: {
-handler: {
-    create:function(a){
-      return new CKEDITOR.ui.richCombo(a)
-    }
-}
-}
-});
+
 CKEDITOR.ui.prototype.addRichCombo=function(a,b){
   this.add(a,CKEDITOR.UI_RICHCOMBO,b)
 }
