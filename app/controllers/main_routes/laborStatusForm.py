@@ -79,6 +79,9 @@ def userInsert():
             print(e)
             return "", 500
 
+        if rspFunctional[i]['stuPosition'].upper() == "SNOLAB":     # Exception for SNOLAB positions
+            rspFunctional[i]['stuWeeklyHours'] = 10
+
         department, created = Department.get_or_create(DEPT_NAME = rspFunctional[i]['stuDepartment'])
         term, created = Term.get_or_create(termCode = rspFunctional[i]['stuTermCode'])
         try:
