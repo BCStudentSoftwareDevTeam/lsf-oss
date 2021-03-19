@@ -18,8 +18,8 @@ def testCreateLaborStatusForm():
     assert lsf.POSN_CODE == "S61407"
     assert lsf.contractHours == 60
     assert lsf.weeklyHours == 20
-    assert lsf.startDate == datetime.strptime("04/01/2020", "%m/%d/%Y").strftime("%Y-%m-%d")
-    assert lsf.endDate == datetime.strptime("09/01/2020", "%m/%d/%Y").strftime("%Y-%m-%d")
+    assert lsf.startDate == datetime.strptime("04/01/2020", "%m/%d/%Y").date()
+    assert lsf.endDate == datetime.strptime("09/01/2020", "%m/%d/%Y").date()
     assert lsf.supervisorNotes == "new notes."
     assert lsf.laborDepartmentNotes == None
     assert lsf.studentName == "Alex Bryant"
