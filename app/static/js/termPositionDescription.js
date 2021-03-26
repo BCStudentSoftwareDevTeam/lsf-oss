@@ -64,7 +64,7 @@ function fillPositionDescription(termID) {
       var data = response["description"]
       if (termID == "oldTerm") {
         console.log(data)
-        $("#pastPositionDescription").text(data);
+        $("#pastPositionDescription").html(data);
         console.log("Old term add")
       }
       if (termID == "newTerm") {
