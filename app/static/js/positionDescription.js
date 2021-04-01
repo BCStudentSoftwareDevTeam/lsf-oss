@@ -1,7 +1,7 @@
 function getDepartmentPositions(object, stopSelectRefresh="") { // get department from select picker
    var departmentOrg = $(object).val();
    var departmentAcct = $(object).find('option:selected').attr('value-account');
-   var url = "/positionDescription/getPositions/" + departmentOrg + "/" + departmentAcct;
+   var url = "/positionDescriptions/getPositions/" + departmentOrg + "/" + departmentAcct;
        $.ajax({
          url: url,
          dataType: "json",
@@ -36,15 +36,29 @@ function fillPositions(response, stopSelectRefresh="") { // prefill Position sel
   }
 }
 
-function clearTerms() {
+function updateVersion(positionID) {
   // This method will clear both of the term select pickers.
-  $("#oldTerm").prop("disabled", false);
-  $("#newTerm").prop("disabled", false);
+  $("#preVersion").prop("disabled", false);
+  var data = {"POSN_CODE": positionID}
+  $.ajax({
+    type: "POST",
+    url: "/positionDescriptions/getPositionDescription",
+    data: data,
+    contentType: 'application/json',
+    success: function (response){
+      var data = response["description"]
+      if (termID == "oldTerm") {
+        console.log(data)
+        $("#pastPositionDescription").html(data);
+        console.log("Old term add")
+      }
+      if (termID == "newTerm") {
+        CKEDITOR.instances["editor1"].insertHtml(data);
+      }
+     }
+   });
   $("#oldTerm").val('default');
   $("#oldTerm").selectpicker("refresh");
-  $("#newTerm").val('default');
-  $("#newTerm").selectpicker("refresh");
-  CKEDITOR.instances["editor1"].setData('');
 }
 
 function fillPositionDescription(termID) {
@@ -57,7 +71,7 @@ function fillPositionDescription(termID) {
   data = JSON.stringify(data);
   $.ajax({
     type: "POST",
-    url: "/positionDescription/getPositionDescription",
+    url: "/positionDescriptions/getPositionDescription",
     data: data,
     contentType: 'application/json',
     success: function (response){
@@ -97,7 +111,7 @@ function updatePositionDescription() {
   data = JSON.stringify(data);
   $.ajax({
     type: "POST",
-    url: "/positionDescription/updatePositionDescription",
+    url: "/positionDescriptions/updatePositionDescription",
     data: data,
     contentType: 'application/json',
     success: function (response){

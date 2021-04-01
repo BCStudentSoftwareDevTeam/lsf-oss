@@ -15,7 +15,8 @@ from app.models.term import Term
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
 from app.models.notes import Notes
-from app.models.termPositionDescription import TermPositionDescription
+from app.models.positionDescription import PositionDescription
+from app.models.positionDescriptionItem import PositionDescriptionItem
 from app.models.position import Position
 
 print("Inserting data for demo and testing purposes")
@@ -464,21 +465,23 @@ print(" * positionsadded")
 #############################
 # Position Descritpion
 #############################
-termPositionDescriptions = [
+positionDescriptions = [
                             {
-                            "termPositionDescriptionID": 1,
-                            "termCode": "202000",
+                            "positionDescriptionID": 1,
+                            "createdBy_id": 1,
+                            "status_id": "Pending",
                             "POSN_CODE": "S61407",
-                            "positionDescription": "Working in a team of student software developers"
+                            "createdDate": "2020-04-14"
                             },
                             {
-                            "termPositionDescriptionID": 2,
-                            "termCode": "202001",
+                            "positionDescriptionID": 2,
+                            "createdBy_id": 1,
+                            "status_id": "Pending",
                             "POSN_CODE": "S61408",
-                            "positionDescription": "Working in a team of student software developers again."
+                            "createdDate": "2020-04-14"
                             }
                     ]
-TermPositionDescription.insert_many(termPositionDescriptions).on_conflict_replace().execute()
+PositionDescription.insert_many(positionDescriptions).on_conflict_replace().execute()
 print(" * positionDescriptions added")
 
 #############################
@@ -491,7 +494,6 @@ LaborStatusForm.insert([{
             "studentSupervisee_id": "B00841417",
             "supervisor_id": "B12361006",
             "department_id": 1,
-            "termPositionDescription_id":1,
             "jobType": "Primary",
             "WLS": 1,
             "POSN_TITLE": "Student Programmer",

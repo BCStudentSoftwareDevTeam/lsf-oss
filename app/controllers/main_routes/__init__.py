@@ -22,4 +22,4 @@ from app.controllers.main_routes import contributors
 from app.controllers.main_routes import download
 from app.controllers.main_routes import laborReleaseForm
 from app.controllers.main_routes import contributors
-from app.controllers.main_routes import termPositionDescription
+from app.controllers.main_routes import positionDescription

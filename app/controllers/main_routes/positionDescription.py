@@ -3,7 +3,7 @@ from app.controllers.main_routes import *
 from app.login_manager import require_login
 from app.models.user import *
 from app.models.formHistory import *
-from app.models.termPositionDescription import *
+from app.models.positionDescription import *
 from app.models.position import *
 from flask import json, jsonify
 from flask import request
@@ -13,7 +13,7 @@ from app import cfg
 from app.logic.emailHandler import*
 from app.logic.userInsertFunctions import*
 
-@main_bp.route('/positionDescription', methods=['GET'])
+@main_bp.route('/positionDescriptions', methods=['GET'])
 def PositionDescription():
     """ Render Position Description Form"""
     currentUser = require_login()
@@ -45,14 +45,14 @@ def PositionDescription():
     openTerms = Term.select().where(Term.termEnd > todayDate)
     closedTerms = Term.select().where(Term.termEnd < todayDate)
 
-    return render_template( 'main/termPositionDescription.html',
+    return render_template( 'main/positionDescription.html',
 				            title=('Position Description'),
                             UserID = currentUser,
                             openTerms = openTerms,
                             closedTerms = closedTerms,
                             departments = departments)
 
-@main_bp.route("/positionDescription/getPositions/<departmentOrg>/<departmentAcct>", methods=['GET'])
+@main_bp.route("/positionDescriptions/getPositions/<departmentOrg>/<departmentAcct>", methods=['GET'])
 def getDepartmentPositions(departmentOrg, departmentAcct):
     """ Get all of the positions that are in the selected department """
     positions = Tracy().getPositionsFromDepartment(departmentOrg,departmentAcct)
@@ -61,7 +61,7 @@ def getDepartmentPositions(departmentOrg, departmentAcct):
         positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
     return json.dumps(positionDict)
 
-@main_bp.route("/positionDescription/getPositionDescription", methods=['POST'])
+@main_bp.route("/positionDescriptions/getPositionDescription", methods=['POST'])
 def getPositionDescription():
     """ Get all of the positions that are in the selected department """
     try:
@@ -83,7 +83,7 @@ def getPositionDescription():
     except Exception as e:
         print ("ERROR", e)
 
-@main_bp.route("/positionDescription/updatePositionDescription", methods=['POST'])
+@main_bp.route("/positionDescriptions/updatePositionDescription", methods=['POST'])
 def updatePositionDescription():
     """ Get all of the positions that are in the selected department """
     try:
