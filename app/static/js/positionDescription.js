@@ -39,35 +39,45 @@ function fillPositions(response, stopSelectRefresh="") { // prefill Position sel
 function updateVersion(positionID) {
   // This method will clear both of the term select pickers.
   $("#preVersion").prop("disabled", false);
+  $("#preVersion").val('default');
+  $("#preVersion").selectpicker("refresh");
+  console.log(positionID)
   var data = {"POSN_CODE": positionID}
+  data = JSON.stringify(data);
   $.ajax({
     type: "POST",
-    url: "/positionDescriptions/getPositionDescription",
+    url: "/positionDescriptions/getVersions",
     data: data,
     contentType: 'application/json',
     success: function (response){
-      var data = response["description"]
-      if (termID == "oldTerm") {
-        console.log(data)
-        $("#pastPositionDescription").html(data);
-        console.log("Old term add")
+      var versionCount = 1
+      for (var key in response) {
+       if (response[key].endDate == "None") {
+         var versionStatus = "(Current Version)"
+       }
+       else {
+         var versionStatus = "(" + response[key].createdDate + " - " + response[key].endDate + ")"
+       }
+       $("#preVersion").append(
+         $("<option />")
+            .attr("data-content", "<span> Version " + versionCount
+            + "</span>" + "<small class='text-muted'>" + " " + versionStatus + "</small>")
+            .attr("id", key)
+            .attr("value", key)
+       );
+       versionCount += 1
       }
-      if (termID == "newTerm") {
-        CKEDITOR.instances["editor1"].insertHtml(data);
-      }
+      $("#preVersion").selectpicker("refresh");
      }
    });
-  $("#oldTerm").val('default');
-  $("#oldTerm").selectpicker("refresh");
 }
 
-function fillPositionDescription(termID) {
+function fillPositionDescription(versionID) {
   // This function will fill the position description for both the
   // previous and current
-  CKEDITOR.instances["editor1"].setData('');
-  var term = $("#" + termID).val();
-  var position = $("#position").val();
-  var data = {"positionCode": position, "termCode": term}
+  // CKEDITOR.instances["editor1"].setData('');
+  console.log(versionID)
+  var data = {"positionDescriptionID": versionID}
   data = JSON.stringify(data);
   $.ajax({
     type: "POST",
@@ -75,15 +85,10 @@ function fillPositionDescription(termID) {
     data: data,
     contentType: 'application/json',
     success: function (response){
-      var data = response["description"]
-      if (termID == "oldTerm") {
-        console.log(data)
-        $("#pastPositionDescription").html(data);
-        console.log("Old term add")
-      }
-      if (termID == "newTerm") {
-        CKEDITOR.instances["editor1"].insertHtml(data);
-      }
+      // Need to put all of the text into the textarea now
+      console.log("Made it back here");
+      console.log(response);
+      $("#pastPositionDescription").html(response);
      }
    });
 }

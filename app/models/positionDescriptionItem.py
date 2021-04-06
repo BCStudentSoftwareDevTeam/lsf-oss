@@ -1,9 +1,9 @@
 from app.models import *
-from app.models.position import Position
+from app.models.positionDescription import PositionDescription
 
 class PositionDescriptionItem (baseModel):
     positionDescriptionItemID     = PrimaryKeyField()
-    positionDescription           = ForeignKeyField(Position, on_delete="cascade")
+    positionDescription           = ForeignKeyField(PositionDescription, on_delete="cascade")
     itemDescription               = CharField()
     itemType                      = CharField()
 

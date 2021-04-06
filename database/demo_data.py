@@ -460,7 +460,7 @@ print(" * terms added")
 #             }
 #                     ]
 Position.insert_many(positions).on_conflict_replace().execute()
-print(" * positionsadded")
+print(" * positions added")
 
 #############################
 # Position Descritpion
@@ -471,10 +471,34 @@ positionDescriptions = [
                             "createdBy_id": 1,
                             "status_id": "Pending",
                             "POSN_CODE": "S61407",
-                            "createdDate": "2020-04-14"
+                            "createdDate": "2017-04-14"
+                            # "endDate": "2018-04-14"
                             },
                             {
                             "positionDescriptionID": 2,
+                            "createdBy_id": 1,
+                            "status_id": "Pending",
+                            "POSN_CODE": "S61407",
+                            "createdDate": "2018-04-14"
+                            # "endDate": "2019-04-14"
+                            },
+                            {
+                            "positionDescriptionID": 3,
+                            "createdBy_id": 1,
+                            "status_id": "Pending",
+                            "POSN_CODE": "S61407",
+                            "createdDate": "2019-04-14"
+                            # "endDate": "2020-04-07"
+                            },
+                            {
+                            "positionDescriptionID": 4,
+                            "createdBy_id": 1,
+                            "status_id": "Pending",
+                            "POSN_CODE": "S61407",
+                            "createdDate": "2020-04-14"
+                            },
+                            {
+                            "positionDescriptionID": 5,
                             "createdBy_id": 1,
                             "status_id": "Pending",
                             "POSN_CODE": "S61408",
@@ -483,6 +507,63 @@ positionDescriptions = [
                     ]
 PositionDescription.insert_many(positionDescriptions).on_conflict_replace().execute()
 print(" * positionDescriptions added")
+
+#############################
+# Position Descritpion Items
+#############################
+positionDescriptionItems = [
+                            {
+                            "positionDescriptionItemID": 1,
+                            "positionDescription": 1,
+                            "itemDescription": "Student will learn to code.",
+                            "itemType": "Learning Objective"
+                            },
+                            {
+                            "positionDescriptionItemID": 2,
+                            "positionDescription": 1,
+                            "itemDescription": "Student will learn to code in Python.",
+                            "itemType": "Learning Objective"
+                            },
+                            {
+                            "positionDescriptionItemID": 3,
+                            "positionDescription": 1,
+                            "itemDescription": "Student will learn to code in C++.",
+                            "itemType": "Learning Objective"
+                            },
+                            {
+                            "positionDescriptionItemID": 4,
+                            "positionDescription": 1,
+                            "itemDescription": "Student should know Python.",
+                            "itemType": "Qualification"
+                            },
+                            {
+                            "positionDescriptionItemID": 5,
+                            "positionDescription": 1,
+                            "itemDescription": "Student should know HTML.",
+                            "itemType": "Qualification"
+                            },
+                            {
+                            "positionDescriptionItemID": 6,
+                            "positionDescription": 1,
+                            "itemDescription": "Student should know Java.",
+                            "itemType": "Qualification"
+                            },
+                            {
+                            "positionDescriptionItemID": 7,
+                            "positionDescription": 1,
+                            "itemDescription": "Student will code.",
+                            "itemType": "Duty"
+                            },
+                            {
+                            "positionDescriptionItemID": 8,
+                            "positionDescription": 1,
+                            "itemDescription": "Student will do stuff(stuff may vary).",
+                            "itemType": "Duty"
+                            }
+
+                    ]
+PositionDescriptionItem.insert_many(positionDescriptionItems).on_conflict_replace().execute()
+print(" * positionDescriptionItems added")
 
 #############################
 # Create a Pending Labor Status Form

@@ -4,6 +4,7 @@ from app.login_manager import require_login
 from app.models.user import *
 from app.models.formHistory import *
 from app.models.positionDescription import *
+from app.models.positionDescriptionItem import *
 from app.models.position import *
 from flask import json, jsonify
 from flask import request
@@ -14,7 +15,7 @@ from app.logic.emailHandler import*
 from app.logic.userInsertFunctions import*
 
 @main_bp.route('/positionDescriptions', methods=['GET'])
-def PositionDescription():
+def PositionDescriptionView():
     """ Render Position Description Form"""
     currentUser = require_login()
     if not currentUser:        # Not logged in
@@ -61,25 +62,41 @@ def getDepartmentPositions(departmentOrg, departmentAcct):
         positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
     return json.dumps(positionDict)
 
-@main_bp.route("/positionDescriptions/getPositionDescription", methods=['POST'])
-def getPositionDescription():
+@main_bp.route("/positionDescriptions/getVersions", methods=['POST'])
+def getVersions():
     """ Get all of the positions that are in the selected department """
     try:
         rsp = eval(request.data.decode("utf-8"))
-        # print("Here is my data", rsp)
-        positionDescription, created = TermPositionDescription.get_or_create(termCode = rsp["termCode"],
-                                                                            POSN_CODE = rsp["positionCode"])
-        # print("After I query")
         returnDict = {}
-        if positionDescription:
-            # print("I always go in here")
-            # print(positionDescription)
-            returnDict["description"] = positionDescription.positionDescription
-        # elif created:
-        #     print("Had to create one")
-        #     print(created)
-        #     returnDict["description"] = created.positionDescription
+        versions = PositionDescription.select().where(PositionDescription.POSN_CODE == rsp["POSN_CODE"])
+        for version in versions:
+            if not version.endDate:
+                returnDict[version.positionDescriptionID] = {"createdDate": version.createdDate.strftime('%m/%d/%y'), "endDate": "None"}
+            else:
+                returnDict[version.positionDescriptionID] = {"createdDate": version.createdDate.strftime('%m/%d/%y'), "endDate": version.endDate.strftime('%m/%d/%y')}
         return jsonify(returnDict)
+    except Exception as e:
+        print ("ERROR", e)
+
+@main_bp.route("/positionDescriptions/getPositionDescription", methods=['POST'])
+def getDescription():
+    """ Get all of the positions that are in the selected department """
+    try:
+        rsp = eval(request.data.decode("utf-8"))
+        returnList = []
+        positionDescriptionQualifications = PositionDescriptionItem.select().where((PositionDescriptionItem.positionDescription == rsp["positionDescriptionID"]) and (PositionDescriptionItem.itemType == "Qualification"))
+        positionDescriptionLearningOBJ = PositionDescriptionItem.select().where((PositionDescriptionItem.positionDescription == rsp["positionDescriptionID"]) and (PositionDescriptionItem.itemType == "Learning Objective"))
+        positionDescriptionDuty = PositionDescriptionItem.select().where((PositionDescriptionItem.positionDescription == rsp["positionDescriptionID"]) and (PositionDescriptionItem.itemType == "Duty"))
+        returnList.append("<p><strong>Qualifications</strong></p>")
+        for item in positionDescriptionQualifications:
+            returnList.append("<p>" + item.itemDescription + "</p>")
+        returnList.append("<p><strong>Learning Objectives</strong></p>")
+        for item in positionDescriptionLearningOBJ:
+            returnList.append("<p>" + item.itemDescription + "</p>")
+        returnList.append("<p><strong>Duties</strong></p>")
+        for item in positionDescriptionDuty:
+            returnList.append("<p>" + item.itemDescription + "</p>")
+        return jsonify(returnList)
     except Exception as e:
         print ("ERROR", e)
 

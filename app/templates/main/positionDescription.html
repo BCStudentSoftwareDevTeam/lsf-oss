@@ -81,9 +81,8 @@
                     data-live-search='true'
                     data-width="100%"
                     title="Position"
-                    onchange=updateVersion(this.id)
+                    onchange=updateVersion(this.value)
                     disabled>
-                    <option value = "" disabled selected>Select a Position</option>
             </select>
         </div>
 
@@ -103,12 +102,8 @@
                     data-toggle="tooltip"
                     title="Term"
                     data-width="100%"
-                    onchange=fillPositionDescription(this.id)
+                    onchange=fillPositionDescription(this.value)
                     disabled>
-                <option value = "" disabled selected>Select a Term</option>
-            {% for term in openTerms %}
-                <option value = "{{term.termCode}}" data-termSummer = "{{term.isSummer|lower}}" data-termBreak = "{{term.isBreak|lower}}">{{term.termName}}</option>
-            {% endfor %}
           </select>
         </div>
 
