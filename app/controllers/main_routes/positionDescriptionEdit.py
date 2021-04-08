@@ -44,8 +44,14 @@ def PositionDescriptionEdit(positionDescriptionID):
 
     positionDescriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == positionDescriptionID)
 
+    distinctTypes = PositionDescriptionItem.select(PositionDescriptionItem.itemType).distinct()
+    itemTypes=[]
+    for type in distinctTypes:
+        itemTypes.append(type.itemType)
+
     return render_template( 'main/positionDescriptionEdit.html',
 				            title=('Position Description'),
                             UserID = currentUser,
                             departments = departments,
-                            positionDescriptionItems = positionDescriptionItems)
+                            positionDescriptionItems = positionDescriptionItems,
+                            itemTypes = itemTypes)

@@ -23,6 +23,10 @@ width: 47%;
 height: 310px;
 }
 
+.subHeader {
+  text-align: center;
+}
+
 .floatright {
 float: right;
 width: 47%;
@@ -64,4 +68,24 @@ selectpicker, label {
 #flash_container {
   width: 87%;
   height: 55px;
+}
+
+.card-header {
+  background-color: #efebeb;
+  margin-bottom: 7px;
+}
+
+.mb-0, .collapsed {
+  outline-color: none;
+  color: black;
+  font-size: 18px;
+  font-weight: 525;
+}
+
+.active, .btn-link:focus {
+  background-color: #66c2cc;
+}
+
+.active, .card-header:hover {
+  background-color: #66c2cc;
 }
