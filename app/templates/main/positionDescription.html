@@ -28,7 +28,6 @@
   </h1>
 </div>
 
-<form id="termPositionDescription">
   <div class="container">
     <div>
         <p class="required-mark">* Marked fields are required</p>
@@ -55,12 +54,6 @@
         </select>
       </div>
 
-      <div>
-        <p class="required-mark">
-           Select a position description from a previous term
-        </p>
-      </div>
-
       <div class="form-group" style="height:80%">
         <label for="positionDescription">Previous Position Description</label>
         <div id="pastPositionDescription">
@@ -84,12 +77,6 @@
                     onchange=updateVersion(this.value)
                     disabled>
             </select>
-        </div>
-
-        <div>
-          <p class="required-mark">
-             Select a term to update
-          </p>
         </div>
 
         <div class="form-group">
@@ -119,14 +106,13 @@
         </div> -->
 
         <div class="form-group">
-          <button type="button" class="btn btn-danger">Discard Changes</button>
-          <button type="button" class="btn btn-success" style="float: right" onclick="saveChanges()">Save Changes</button>
+          <!-- <button type="button" class="btn btn-danger">Discard Changes</button> -->
+          <button type="button" class="btn btn-success" onclick="saveChanges()">Edit Version</button>
         </div>
 
     </div>
     <!-- Modal that will be rendered on the click of the submit button -->
     {% include "snips/positionDescriptionModal.html" %}
   </div>
-</form>
 
 {% endblock %}

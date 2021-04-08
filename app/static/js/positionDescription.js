@@ -39,8 +39,10 @@ function fillPositions(response, stopSelectRefresh="") { // prefill Position sel
 function updateVersion(positionID) {
   // This method will clear both of the term select pickers.
   $("#preVersion").prop("disabled", false);
-  $("#preVersion").val('default');
+  $("#preVersion").empty();
   $("#preVersion").selectpicker("refresh");
+  $("#pastPositionDescription").html("");
+  console.log("Cleared the SP")
   console.log(positionID)
   var data = {"POSN_CODE": positionID}
   data = JSON.stringify(data);
@@ -76,6 +78,10 @@ function fillPositionDescription(versionID) {
   // This function will fill the position description for both the
   // previous and current
   // CKEDITOR.instances["editor1"].setData('');
+  var versionID = $("#preVersion").val();
+  console.log(versionID)
+
+
   console.log(versionID)
   var data = {"positionDescriptionID": versionID}
   data = JSON.stringify(data);
@@ -96,8 +102,8 @@ function fillPositionDescription(versionID) {
 function saveChanges() {
   // This function will save the changes made to the
   // select position description
-  if (!$("#newTerm").val()){
-    $("#flash_container").html('<div class="alert alert-danger" role="alert" id="flasher">No changes to be saved.</div>');
+  if (!$("#preVersion").val()){
+    $("#flash_container").html('<div class="alert alert-danger" role="alert" id="flasher">No version has been selected.</div>');
     $("#flasher").delay(5000).fadeOut();
   }
   else{
@@ -105,22 +111,11 @@ function saveChanges() {
   }
 }
 
-function updatePositionDescription() {
+function beginEdit() {
   // This function will send the changes to the database
   // in order to update the given positon description.
-  var newDescription = CKEDITOR.instances.editor1.getData();
-  var positionCode = $("#position").val();
-  var term = $("#newTerm").val();
-  var data = {"positionDescription": newDescription, "POSN_CODE": positionCode, "termCode": term}
-  console.log(data)
-  data = JSON.stringify(data);
-  $.ajax({
-    type: "POST",
-    url: "/positionDescriptions/updatePositionDescription",
-    data: data,
-    contentType: 'application/json',
-    success: function (response){
-      location.reload();
-     }
-   });
+  var versionID = $("#preVersion").val();
+  console.log(versionID)
+  window.location.href = '/positionDescriptionEdit/' + versionID
+
 }

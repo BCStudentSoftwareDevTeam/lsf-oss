@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+{{super()}}
+<script type=text/javascript src="{{url_for('static', filename='js/positionDescriptionEdit.js')}}?u={{lastStaticUpdate}}"></script>
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="/static/css/positionDescription.css?u={{lastStaticUpdate}}" type="text/css"/>
+{% endblock %}
+
+{% block app_content %}
+
+<head>
+  <script src="/static/js/ckeditor/ckeditor.js"></script>
+</head>
+
+<div align="center" style="margin-bottom: 50px;">
+  <h1 id ="title">Position Description
+	  <span class="glyphicon glyphicon-bookmark"
+        data-toggle="tooltip"
+        title="The position description is used to update current and future labor position descriptions."
+        data-placement = "right"
+        id="titleGlyphicon"
+        tabindex="0">
+    </span>
+  </h1>
+</div>
+
+<div class="container">
+  <table class="table table-striped" id="qualifictionsTable">
+    <thead>
+      <tr>
+        <th>Content</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+    <tbody id='qualificationBodyid'></tbody>
+  </table>
+
+  <table class="table table-striped" id="dutiesTable">
+    <thead>
+      <tr>
+        <th>Content</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+    <tbody id='dutiesBodyid'></tbody>
+    {% for item in positionDescriptionItems %}
+      <tr>
+        <td><input type="text" name="" value=""></td>
+        <td><textarea name="name" rows="1" cols="20"></textarea></td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <table class="table table-striped" id="learningObjTable">
+    <thead>
+      <tr>
+        <th>Content</th>
+        <th>Remove</th>
+      </tr>
+    </thead>
+    <tbody id='learningObjBodyid'></tbody>
+  </table>
+
+</div>
+
+
+
+{% endblock %}

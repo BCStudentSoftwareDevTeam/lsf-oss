@@ -100,17 +100,17 @@ def getDescription():
     except Exception as e:
         print ("ERROR", e)
 
-@main_bp.route("/positionDescriptions/updatePositionDescription", methods=['POST'])
-def updatePositionDescription():
-    """ Get all of the positions that are in the selected department """
-    try:
-        rsp = eval(request.data.decode("utf-8"))
-        position = TermPositionDescription.select().where(TermPositionDescription.POSN_CODE == rsp["POSN_CODE"], TermPositionDescription.termCode == int(rsp["termCode"])).get()
-        position.positionDescription = rsp["positionDescription"]
-        position.save()
-        message = "The description for the labor position of {0} for the {1} term has been updated.".format(position.POSN_CODE.POSN_TITLE, position.termCode.termName)
-        flash(message, "success")
-        print("FLASH MESSAGE")
-        return (jsonify({"Success": True}))
-    except Exception as e:
-        print("Error on position description update:", e)
+# @main_bp.route("/positionDescriptions/updatePositionDescription", methods=['POST'])
+# def updatePositionDescription():
+#     """ Get all of the positions that are in the selected department """
+#     try:
+#         rsp = eval(request.data.decode("utf-8"))
+#         position = TermPositionDescription.select().where(TermPositionDescription.POSN_CODE == rsp["POSN_CODE"], TermPositionDescription.termCode == int(rsp["termCode"])).get()
+#         position.positionDescription = rsp["positionDescription"]
+#         position.save()
+#         message = "The description for the labor position of {0} for the {1} term has been updated.".format(position.POSN_CODE.POSN_TITLE, position.termCode.termName)
+#         flash(message, "success")
+#         print("FLASH MESSAGE")
+#         return (jsonify({"Success": True}))
+#     except Exception as e:
+#         print("Error on position description update:", e)
