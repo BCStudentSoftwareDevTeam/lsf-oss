@@ -15,7 +15,8 @@ from app.models.term import Term
 from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
 from app.models.notes import Notes
-from app.models.termPositionDescription import TermPositionDescription
+from app.models.positionDescription import PositionDescription
+from app.models.positionDescriptionItem import PositionDescriptionItem
 from app.models.position import Position
 
 print("Inserting data for demo and testing purposes")
@@ -432,46 +433,137 @@ print(" * terms added")
 #############################
 # Positions
 #############################
-positions = [
-            {
-            "POSN_CODE": "S61407",
-            "POSN_TITLE": "Student Programmer",
-            "WLS": "1",
-            "ORG" : "2114",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Computer Science"
-            },
-            {
-            "POSN_CODE": "S61408",
-            "POSN_TITLE": "Research Associate",
-            "WLS": "5",
-            "ORG" : "2114",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Computer Science"
-            }
-                    ]
+# positions = [
+#             {
+#             "POSN_CODE": "S61407",
+#             "POSN_TITLE": "Student Programmer",
+#             "WLS": "1",
+#             "ORG" : "2114",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Computer Science"
+#             },
+#             {
+#             "POSN_CODE": "S12345",
+#             "POSN_TITLE": "Student Programmer",
+#             "WLS": "1",
+#             "ORG" : "2114",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Computer Science"
+#             },
+#             {
+#             "POSN_CODE": "S61408",
+#             "POSN_TITLE": "Research Associate",
+#             "WLS": "5",
+#             "ORG" : "2114",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Computer Science"
+#             }
+#                     ]
 Position.insert_many(positions).on_conflict_replace().execute()
-print(" * positionsadded")
+print(" * positions added")
 
 #############################
 # Position Descritpion
 #############################
-termPositionDescriptions = [
+positionDescriptions = [
                             {
-                            "termPositionDescriptionID": 1,
-                            "termCode": "202000",
+                            "positionDescriptionID": 1,
+                            "createdBy_id": 1,
+                            "status_id": "Pending",
                             "POSN_CODE": "S61407",
-                            "positionDescription": "Working in a team of student software developers"
+                            "createdDate": "2017-04-14"
+                            # "endDate": "2018-04-14"
                             },
                             {
-                            "termPositionDescriptionID": 2,
-                            "termCode": "202001",
+                            "positionDescriptionID": 2,
+                            "createdBy_id": 1,
+                            "status_id": "Pending",
+                            "POSN_CODE": "S61407",
+                            "createdDate": "2018-04-14"
+                            # "endDate": "2019-04-14"
+                            },
+                            {
+                            "positionDescriptionID": 3,
+                            "createdBy_id": 1,
+                            "status_id": "Pending",
+                            "POSN_CODE": "S61407",
+                            "createdDate": "2019-04-14"
+                            # "endDate": "2020-04-07"
+                            },
+                            {
+                            "positionDescriptionID": 4,
+                            "createdBy_id": 1,
+                            "status_id": "Pending",
+                            "POSN_CODE": "S61407",
+                            "createdDate": "2020-04-14"
+                            },
+                            {
+                            "positionDescriptionID": 5,
+                            "createdBy_id": 1,
+                            "status_id": "Pending",
                             "POSN_CODE": "S61408",
-                            "positionDescription": "Working in a team of student software developers again."
+                            "createdDate": "2020-04-14"
                             }
                     ]
-TermPositionDescription.insert_many(termPositionDescriptions).on_conflict_replace().execute()
+PositionDescription.insert_many(positionDescriptions).on_conflict_replace().execute()
 print(" * positionDescriptions added")
+
+#############################
+# Position Descritpion Items
+#############################
+positionDescriptionItems = [
+                            {
+                            "positionDescriptionItemID": 1,
+                            "positionDescription": 1,
+                            "itemDescription": "Student will learn to code.",
+                            "itemType": "Learning Objective"
+                            },
+                            {
+                            "positionDescriptionItemID": 2,
+                            "positionDescription": 1,
+                            "itemDescription": "Student will learn to code in Python.",
+                            "itemType": "Learning Objective"
+                            },
+                            {
+                            "positionDescriptionItemID": 3,
+                            "positionDescription": 1,
+                            "itemDescription": "Student will learn to code in C++.",
+                            "itemType": "Learning Objective"
+                            },
+                            {
+                            "positionDescriptionItemID": 4,
+                            "positionDescription": 1,
+                            "itemDescription": "Student should know Python.",
+                            "itemType": "Qualification"
+                            },
+                            {
+                            "positionDescriptionItemID": 5,
+                            "positionDescription": 1,
+                            "itemDescription": "Student should know HTML.",
+                            "itemType": "Qualification"
+                            },
+                            {
+                            "positionDescriptionItemID": 6,
+                            "positionDescription": 1,
+                            "itemDescription": "Student should know Java.",
+                            "itemType": "Qualification"
+                            },
+                            {
+                            "positionDescriptionItemID": 7,
+                            "positionDescription": 1,
+                            "itemDescription": "Student will code.",
+                            "itemType": "Duty"
+                            },
+                            {
+                            "positionDescriptionItemID": 8,
+                            "positionDescription": 1,
+                            "itemDescription": "Student will do stuff(stuff may vary).",
+                            "itemType": "Duty"
+                            }
+
+                    ]
+PositionDescriptionItem.insert_many(positionDescriptionItems).on_conflict_replace().execute()
+print(" * positionDescriptionItems added")
 
 #############################
 # Create a Pending Labor Status Form
@@ -483,7 +575,6 @@ LaborStatusForm.insert([{
             "studentSupervisee_id": "B00841417",
             "supervisor_id": "B12361006",
             "department_id": 1,
-            "termPositionDescription_id":1,
             "jobType": "Primary",
             "WLS": 1,
             "POSN_TITLE": "Student Programmer",

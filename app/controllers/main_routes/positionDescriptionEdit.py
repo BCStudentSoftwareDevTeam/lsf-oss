@@ -3,7 +3,9 @@ from app.controllers.main_routes import *
 from app.login_manager import require_login
 from app.models.user import *
 from app.models.formHistory import *
-from app.models.termPositionDescription import *
+from app.models.position import *
+from app.models.positionDescription import *
+from app.models.positionDescriptionItem import *
 from app.models.position import *
 from flask import json, jsonify
 from flask import request
@@ -13,8 +15,8 @@ from app import cfg
 from app.logic.emailHandler import*
 from app.logic.userInsertFunctions import*
 
-@main_bp.route('/positionDescription', methods=['GET'])
-def PositionDescription():
+@main_bp.route('/positionDescriptionEdit/<positionDescriptionID>', methods=['GET'])
+def PositionDescriptionEdit(positionDescriptionID):
     """ Render Position Description Form"""
     currentUser = require_login()
     if not currentUser:        # Not logged in
@@ -31,6 +33,7 @@ def PositionDescription():
                             .order_by(FormHistory.formID.department.DEPT_NAME.asc()) \
                             .distinct()
 
+
     if currentUser.isLaborAdmin:
         # Grabs every single department that currently has at least one labor status form in it
         departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME, FormHistory.formID.department.ACCOUNT, FormHistory.formID.department.ORG) \
@@ -39,38 +42,10 @@ def PositionDescription():
                         .order_by(FormHistory.formID.department.DEPT_NAME.asc()) \
                         .distinct()
 
-    # Logged in
-    todayDate = date.today()
-    print(todayDate)
-    openTerms = Term.select().where(Term.termEnd > todayDate)
-    closedTerms = Term.select().where(Term.termEnd < todayDate)
+    positionDescriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == positionDescriptionID)
 
-    return render_template( 'main/termPositionDescription.html',
+    return render_template( 'main/positionDescriptionEdit.html',
 				            title=('Position Description'),
                             UserID = currentUser,
-                            openTerms = openTerms,
-                            closedTerms = closedTerms,
-                            departments = departments)
-
-@main_bp.route("/positionDescription/getPositions/<departmentOrg>/<departmentAcct>", methods=['GET'])
-def getDepartmentPositions(departmentOrg, departmentAcct):
-    """ Get all of the positions that are in the selected department """
-    positions = Tracy().getPositionsFromDepartment(departmentOrg,departmentAcct)
-    positionDict = {}
-    for position in positions:
-        positionDict[position.POSN_CODE] = {"position": position.POSN_TITLE, "WLS":position.WLS, "positionCode":position.POSN_CODE}
-    return json.dumps(positionDict)
-
-@main_bp.route("/positionDescription/getPositionDescription", methods=['POST'])
-def getPositionDescription():
-    """ Get all of the positions that are in the selected department """
-    try:
-        rsp = eval(request.data.decode("utf-8"))
-        # test = TermPositionDescription.get(TermPositionDescription.termPositionDescriptionID == 1)
-        positionDescription, created = TermPositionDescription.get_or_create(termCode = rsp["termCode"],
-                                                                            POSN_CODE = rsp["positionCode"])
-        print(positionDescription)
-        # print(test)
-        return jsonify({"Success": True})
-    except Exception as e:
-        print ("ERROR", e)
+                            departments = departments,
+                            positionDescriptionItems = positionDescriptionItems)
