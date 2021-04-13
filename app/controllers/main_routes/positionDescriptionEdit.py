@@ -47,7 +47,9 @@ def PositionDescriptionEdit(positionDescriptionID):
     distinctTypes = PositionDescriptionItem.select(PositionDescriptionItem.itemType).distinct()
     itemTypes=[]
     for type in distinctTypes:
+        print(type.itemType)
         itemTypes.append(type.itemType)
+    print(itemTypes)
 
     return render_template( 'main/positionDescriptionEdit.html',
 				            title=('Position Description'),

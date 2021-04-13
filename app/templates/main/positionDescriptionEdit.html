@@ -7,7 +7,7 @@
 
 {% block styles %}
   {{super()}}
-  <link rel="stylesheet" href="/static/css/positionDescription.css?u={{lastStaticUpdate}}" type="text/css"/>
+  <link rel="stylesheet" href="/static/css/positionDescriptionEdit.css?u={{lastStaticUpdate}}" type="text/css"/>
 {% endblock %}
 
 {% block app_content %}
@@ -25,11 +25,24 @@
   <p class="subHeader">Click on the collapsible panel to open and close any item.</p>
 </div>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div class="accordion" id="accordionPosition">
 
-    {% for itemType in itemTypes %}
+  {% for itemType in itemTypes %}
     <div class="card">
-      <div class="card-header" id="header_{{itemType}}">
+      <div class="card-header" id="heading_{{itemType}}">
         <button class="btn btn-link"
           type="button"
           id="positionDescription_{{itemType}}"
@@ -44,9 +57,9 @@
       </div>
       <div id="{{itemType}}"
           class="collapse"
-          aria-labelledby="header_{{itemType}}"
+          aria-labelledby="heading_{{itemType}}"
           data-parent="#accordionPosition">
-        <table class="table table-condensed" class="card-body">
+        <table class="table table-condensed" class="card-body" id="myTable">
           <thead>
             <tr id="Positionheaders">
               <th>Content</th>
