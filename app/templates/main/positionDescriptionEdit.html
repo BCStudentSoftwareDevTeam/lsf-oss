@@ -47,24 +47,49 @@
           class="collapse"
           aria-labelledby="heading_{{itemType}}"
           data-parent="#accordionPosition">
-        <table class="table table-condensed" class="card-body">
+        <table class="table table-bordered table-responsive-md table-striped text-center" class="card-body">
           <thead>
-            <tr id="Positionheaders">
-              <th>Content</th>
-              <th>Remove</th>
+            <tr>
+              <th class="text-center">Content</th>
+              <th class="text-center">Sort</th>
+              <th class="text-center">Remove</th>
             </tr>
           </thead>
           <tbody>
+            {% for positionItem in positionDescriptionItems %}
+              {% if positionItem.itemType == itemName %}
             <tr>
-              <td>Data</td>
-              <td>Data</td>
+              <td class="col-md-10 pt-3-half" contenteditable="true">{{positionItem.itemDescription}}</td>
+              <td class="col-md-1 pt-3-half">
+              <span class="table-up"
+                ><a href="#!" class="indigo-text"
+                  ><i class="glyphicon glyphicon-arrow-up" aria-hidden="true"></i></a
+              ></span>
+              <span class="table-down"
+                ><a href="#!" class="indigo-text"
+                  ><i class="glyphicon glyphicon-arrow-down" aria-hidden="true"></i></a
+              ></span>
+            </td>
+            <td class="col-md-1">
+              <span class="table-remove"
+                ><button type="button" class="btn btn-danger btn-rounded btn-sm my-0">
+                  Remove
+                </button></span
+              >
+            </td>
             </tr>
+              {% endif %}
+            {% endfor %}
           </tbody>
         </table>
       </div>
     </div>
   {% endfor %}
+</div>
 
+<div class="form-group">
+  <button type="button" class="col-md-6 btn btn-danger">Close</button>
+  <button type="button" style="align:right" class=".col-md-4 .col-md-offset-6 btn btn-success">Submit</button>
 </div>
 
 {% endblock %}

@@ -89,3 +89,7 @@ selectpicker, label {
 .active, .card-header:hover {
   background-color: #66c2cc;
 }
+
+.pt-3-half {
+  padding-top: 1.4rem;
+}
