@@ -86,11 +86,6 @@ function updateApproveTableData(returned_details) {
     var student = returned_details[i][0];
     var position = returned_details[i][1];
     var r_hour = returned_details[i][3];
-    console.log("Position", position);
-    console.log("r_hour", r_hour);
-    if (position.toLowerCase() == "snolab"){
-      var r_hour = 10;
-    }
 
     var c_Hours = returned_details[i][4];
     var supervisor = returned_details[i][2];
