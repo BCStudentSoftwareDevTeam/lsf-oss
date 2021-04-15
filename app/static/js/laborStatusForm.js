@@ -270,7 +270,7 @@ function getDepartment(object, stopSelectRefresh="") { // get department from se
       $(".selectpicker").selectpicker("refresh");
     }
     var list = ["10", "12", "15", "20"];
-    if (position.toLowerCase() == "snolab"){
+    if (position.toLowerCase() == "no labor"){
       list = ["0"];
     }
     else if (jobType == "Secondary"){
