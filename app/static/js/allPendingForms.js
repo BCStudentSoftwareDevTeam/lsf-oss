@@ -86,7 +86,6 @@ function updateApproveTableData(returned_details) {
     var student = returned_details[i][0];
     var position = returned_details[i][1];
     var r_hour = returned_details[i][3];
-
     var c_Hours = returned_details[i][4];
     var supervisor = returned_details[i][2];
     var hours = " ";
