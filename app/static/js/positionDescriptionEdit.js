@@ -48,3 +48,16 @@ function saveChanges(currentUser) {
   console.log(currentUser)
   $("#modal").modal("show");
 }
+
+$(".collapse").on('click', '.table-up', function () {
+  var row = $(this).parents('tr');
+  if(row.index() === 0) {
+     return;
+  }
+  row.prev().before(row.get(0));
+});
+
+$(".collapse").on('click','.table-down', function () {
+  var row = $(this).parents('tr');
+  row.next().after(row.get(0));
+});
