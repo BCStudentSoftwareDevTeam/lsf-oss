@@ -47,7 +47,7 @@
           class="collapse"
           aria-labelledby="heading_{{itemType}}"
           data-parent="#accordionPosition">
-        <table class="table table-bordered table-responsive-md table-striped text-center" class="card-body">
+        <table class="table table-bordered table-responsive-md table-striped text-center" class="card-body" id="table_{{itemType}}">
           <thead>
             <tr>
               <th class="text-center">Content</th>
@@ -61,35 +61,52 @@
             <tr>
               <td class="col-md-10 pt-3-half" contenteditable="true">{{positionItem.itemDescription}}</td>
               <td class="col-md-1 pt-3-half">
-              <span class="table-up"
-                ><a href="#!" class="indigo-text"
-                  ><i class="glyphicon glyphicon-arrow-up" aria-hidden="true"></i></a
-              ></span>
-              <span class="table-down"
-                ><a href="#!" class="indigo-text"
-                  ><i class="glyphicon glyphicon-arrow-down" aria-hidden="true"></i></a
-              ></span>
-            </td>
-            <td class="col-md-1">
-              <span class="table-remove"
-                ><button type="button" class="btn btn-danger btn-rounded btn-sm my-0">
-                  Remove
-                </button></span
-              >
-            </td>
+                <span class="table-up">
+                  <a href="#!" class="indigo-text">
+                    <i class="glyphicon glyphicon-arrow-up" aria-hidden="true"></i>
+                  </a>
+                </span>
+                <span class="table-down">
+                  <a href="#!" class="indigo-text">
+                    <i class="glyphicon glyphicon-arrow-down" aria-hidden="true"></i>
+                  </a>
+                </span>
+              </td>
+              <td class="col-md-1">
+                <span class="table-remove">
+                  <button type="button" class="btn btn-danger btn-rounded btn-sm my-0" onclick="deleteRow(this)">
+                    Remove
+                  </button>
+                </span>
+              </td>
             </tr>
               {% endif %}
             {% endfor %}
           </tbody>
+          <div class="col-md-12" style="text-align:right;">
+              <button type="button" class="btn btn-info" style="margin-bottom:7px" onclick="addRow(this)">Add Row</button>
+          </div>
         </table>
       </div>
     </div>
   {% endfor %}
 </div>
 
-<div class="form-group">
-  <button type="button" class="col-md-6 btn btn-danger">Close</button>
-  <button type="button" style="align:right" class=".col-md-4 .col-md-offset-6 btn btn-success">Submit</button>
+<div class="col-md-6" style="margin-top:10px">
+    <button type="button" class="btn btn-danger" onclick="discard()">Discard Changes</button>
 </div>
+
+{% if currentUser.isLaborAdmin %}
+  <div class="col-md-6" style="text-align:right;margin-top:10px">
+      <button type="button" id="submit" class="btn btn-success" onclick="saveChanges()">Save Changes</button>
+  </div>
+{% else %}
+  <div class="col-md-6" style="text-align:right;margin-top:10px">
+      <button type="button" id="submit" class="btn btn-success" onclick="saveChanges()">Save Changes</button>
+  </div>
+{% endif %}
+
+
+{% include "snips/positionDescriptionEditModal.html" %}
 
 {% endblock %}
