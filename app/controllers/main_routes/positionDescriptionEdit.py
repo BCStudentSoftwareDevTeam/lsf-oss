@@ -43,17 +43,29 @@ def PositionDescriptionEdit(positionDescriptionID):
                         .distinct()
 
     positionDescriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == positionDescriptionID)
+    positionDescriptionRecord = PositionDescription.select().where(PositionDescription.positionDescriptionID == positionDescriptionID).get()
+    print("This is the positon", positionDescriptionRecord)
 
     distinctTypes = PositionDescriptionItem.select(PositionDescriptionItem.itemType).distinct()
     itemTypes=[]
     for type in distinctTypes:
-        print(type.itemType)
         itemTypes.append(type.itemType)
-    print(itemTypes)
 
     return render_template( 'main/positionDescriptionEdit.html',
 				            title=('Position Description'),
                             UserID = currentUser,
                             departments = departments,
                             positionDescriptionItems = positionDescriptionItems,
-                            itemTypes = itemTypes)
+                            itemTypes = itemTypes,
+                            positionDescriptionRecord = positionDescriptionRecord)
+
+@main_bp.route("/positionDescriptionEdit/submitRevisions", methods=['POST'])
+def submitRevisions():
+    """ Get all of the positions that are in the selected department """
+    try:
+        rsp = eval(request.data.decode("utf-8"))
+        something = ["Hello world"]
+        print(rsp)
+        return jsonify(something)
+    except Exception as e:
+        print ("ERROR", e)
