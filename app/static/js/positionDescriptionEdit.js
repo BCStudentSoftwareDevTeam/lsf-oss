@@ -19,8 +19,8 @@ function submitChanges() {
     });
   var positionTitle = $("#positionTitle").html();
   var positionCode = positionTitle.slice(-6);
-  var data = {"learningObjective": learningObjectiveList,
-              "qualification": qualificationList,
+  var data = {"learningObjectives": learningObjectiveList,
+              "qualifications": qualificationList,
               "duties": dutyList,
               "positionCode": positionCode}
   data = JSON.stringify(data)
@@ -29,14 +29,15 @@ function submitChanges() {
     url: "/positionDescriptionEdit/submitRevisions",
     data: data,
     contentType: 'application/json',
-    success: function (response){
-      // Need to put all of the text into the textarea now
-      console.log("Made it back here");
-      console.log(response);
-     }
-   });
+    success: function(response){
+      console.log("here");
+      if (response["Success"]) {
+        console.log("here2");
+        window.location.replace("/positionDescriptions");
+      }
+    }
+  })
 }
-
 function addRow(button) {
   var parentTableID = button.parentNode.parentNode.id;
   var tableID = "#table_" + parentTableID + " tr:last"

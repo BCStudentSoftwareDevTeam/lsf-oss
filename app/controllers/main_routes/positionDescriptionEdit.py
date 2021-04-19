@@ -44,7 +44,6 @@ def PositionDescriptionEdit(positionDescriptionID):
 
     positionDescriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == positionDescriptionID)
     positionDescriptionRecord = PositionDescription.select().where(PositionDescription.positionDescriptionID == positionDescriptionID).get()
-    print("This is the positon", positionDescriptionRecord)
 
     distinctTypes = PositionDescriptionItem.select(PositionDescriptionItem.itemType).distinct()
     itemTypes=[]
@@ -62,10 +61,35 @@ def PositionDescriptionEdit(positionDescriptionID):
 @main_bp.route("/positionDescriptionEdit/submitRevisions", methods=['POST'])
 def submitRevisions():
     """ Get all of the positions that are in the selected department """
+    print("beginning1")
     try:
+        print("beginning")
+        currentUser = require_login()
         rsp = eval(request.data.decode("utf-8"))
-        something = ["Hello world"]
-        print(rsp)
-        return jsonify(something)
+        position = Position.select().where(Position.POSN_CODE == rsp["positionCode"])
+        positionDescription = PositionDescription.create( createdBy = currentUser,
+                                                          status = "Pending",
+                                                          POSN_CODE = rsp["positionCode"],
+                                                          createdDate = date.today()
+                                                        )
+        for duty in rsp["duties"]:
+            PositionDescriptionItem.create( positionDescription = positionDescription ,
+                                            itemDescription = duty,
+                                            itemType = "Duty"
+                                          )
+        for qualification in rsp["qualifications"]:
+            PositionDescriptionItem.create( positionDescription = positionDescription ,
+                                            itemDescription = qualification,
+                                            itemType = "Qualification"
+                                          )
+        for learningObjective in rsp["learningObjectives"]:
+            PositionDescriptionItem.create( positionDescription = positionDescription ,
+                                            itemDescription = learningObjective,
+                                            itemType = "Learning Objective"
+                                          )
+        message = "Your position description revision for {0} ({1}) - {2} has been submited.".format(positon.POSN_TITLE, positon.WLS, positon.POSN_CODE)
+        flash(message, "success")
+        return jsonify({"Success":True})
     except Exception as e:
         print ("ERROR", e)
+        return jsonify({"Success": False})
