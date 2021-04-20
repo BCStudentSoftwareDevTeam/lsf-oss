@@ -24,13 +24,14 @@ function submitChanges() {
               "duties": dutyList,
               "positionCode": positionCode}
   data = JSON.stringify(data)
+  console.log("Inside of the AJXA call")
   $.ajax({
     type: "POST",
     url: "/positionDescriptionEdit/submitRevisions",
     data: data,
     contentType: 'application/json',
     success: function(response){
-      console.log("here");
+      console.log("Am I here???");
       if (response["Success"]) {
         console.log("here2");
         window.location.replace("/positionDescriptions");

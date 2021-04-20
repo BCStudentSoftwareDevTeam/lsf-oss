@@ -93,7 +93,7 @@
   {% endfor %}
 </div>
 
-{% if not currentUser.isLaborAdmin %}
+{% if currentUser.isLaborAdmin %}
   <div class="col-md-6" style="margin-top:10px">
       <button type="button" class="btn btn-danger" onclick="discard()">Discard Changes</button>
   </div>

@@ -16,7 +16,7 @@
   <script src="/static/js/ckeditor/ckeditor.js"></script>
 </head>
 
-<div align="center" style="margin-bottom: 50px;">
+<div align="center" style="margin-bottom: 30px;">
   <h1 id ="title">Position Description
 	  <span class="glyphicon glyphicon-bookmark"
         data-toggle="tooltip"
@@ -26,6 +26,10 @@
         tabindex="0">
     </span>
   </h1>
+</div>
+
+<div align="center" style="margin-bottom: 10px;">
+  <h5 class="required-mark" id ="warningTitle">The selected position currently has a 'Pending' revision. You can still view previous versions, but you will be unable to edit any versions.</h5>
 </div>
 
   <div class="container">
@@ -107,7 +111,7 @@
 
         <div class="form-group">
           <!-- <button type="button" class="btn btn-danger">Discard Changes</button> -->
-          <button type="button" class="btn btn-success" onclick="saveChanges()">Edit Version</button>
+          <button id="editButton" type="button" class="btn btn-success" onclick="saveChanges()">Edit Version</button>
         </div>
 
     </div>

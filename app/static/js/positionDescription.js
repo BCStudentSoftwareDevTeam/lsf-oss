@@ -1,3 +1,4 @@
+$("#warningTitle").hide()
 function getDepartmentPositions(object, stopSelectRefresh="") { // get department from select picker
    var departmentOrg = $(object).val();
    var departmentAcct = $(object).find('option:selected').attr('value-account');
@@ -6,7 +7,6 @@ function getDepartmentPositions(object, stopSelectRefresh="") { // get departmen
          url: url,
          dataType: "json",
          success: function (response){
-
            fillPositions(response, stopSelectRefresh);
           }
         });
@@ -42,8 +42,6 @@ function updateVersion(positionID) {
   $("#preVersion").empty();
   $("#preVersion").selectpicker("refresh");
   $("#pastPositionDescription").html("");
-  console.log("Cleared the SP")
-  console.log(positionID)
   var data = {"POSN_CODE": positionID}
   data = JSON.stringify(data);
   $.ajax({
@@ -53,24 +51,38 @@ function updateVersion(positionID) {
     contentType: 'application/json',
     success: function (response){
       var versionCount = 1
+      var disableButton = false
       for (var key in response) {
-       if (response[key].endDate == "None") {
-         var versionStatus = "(Current Version)"
-       }
-       else {
-         var versionStatus = "(" + response[key].createdDate + " - " + response[key].endDate + ")"
-       }
-       $("#preVersion").append(
-         $("<option />")
-            .attr("data-content", "<span> Version " + versionCount
-            + "</span>" + "<small class='text-muted'>" + " " + versionStatus + "</small>")
-            .attr("id", key)
-            .attr("value", key)
-       );
-       versionCount += 1
+        if (response[key].status == "Approved") {
+          if (response[key].endDate == "None") {
+           var versionStatus = "(Current Version)"
+          }
+          else {
+           var versionStatus = "(" + response[key].createdDate + " - " + response[key].endDate + ")"
+          }
+          $("#preVersion").append(
+           $("<option />")
+              .attr("data-content", "<span> Version " + versionCount
+              + "</span>" + "<small class='text-muted'>" + " " + versionStatus + "</small>")
+              .attr("id", key)
+              .attr("value", key)
+          );
+          versionCount += 1
+        }
+        else if (response[key].status == "Pending") {
+          disableButton = true
+        }
       }
       $("#preVersion").selectpicker("refresh");
-     }
+      if (disableButton == false) {
+        $("#editButton").prop('disabled', false)
+        $("#warningTitle").hide()
+      }
+      else if (disableButton == true) {
+        $("#editButton").prop('disabled', true)
+        $("#warningTitle").show()
+      }
+    }
    });
 }
 
@@ -79,10 +91,6 @@ function fillPositionDescription(versionID) {
   // previous and current
   // CKEDITOR.instances["editor1"].setData('');
   var versionID = $("#preVersion").val();
-  console.log(versionID)
-
-
-  console.log(versionID)
   var data = {"positionDescriptionID": versionID}
   data = JSON.stringify(data);
   $.ajax({
@@ -91,9 +99,6 @@ function fillPositionDescription(versionID) {
     data: data,
     contentType: 'application/json',
     success: function (response){
-      // Need to put all of the text into the textarea now
-      console.log("Made it back here");
-      console.log(response);
       $("#pastPositionDescription").html(response);
      }
    });
@@ -115,7 +120,6 @@ function beginEdit() {
   // This function will send the changes to the database
   // in order to update the given positon description.
   var versionID = $("#preVersion").val();
-  console.log(versionID)
   window.location.href = '/positionDescriptionEdit/' + versionID
 
 }

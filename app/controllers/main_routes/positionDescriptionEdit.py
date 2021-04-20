@@ -61,12 +61,10 @@ def PositionDescriptionEdit(positionDescriptionID):
 @main_bp.route("/positionDescriptionEdit/submitRevisions", methods=['POST'])
 def submitRevisions():
     """ Get all of the positions that are in the selected department """
-    print("beginning1")
     try:
-        print("beginning")
         currentUser = require_login()
         rsp = eval(request.data.decode("utf-8"))
-        position = Position.select().where(Position.POSN_CODE == rsp["positionCode"])
+        position = Position.select().where(Position.POSN_CODE == rsp["positionCode"]).get()
         positionDescription = PositionDescription.create( createdBy = currentUser,
                                                           status = "Pending",
                                                           POSN_CODE = rsp["positionCode"],
@@ -87,7 +85,7 @@ def submitRevisions():
                                             itemDescription = learningObjective,
                                             itemType = "Learning Objective"
                                           )
-        message = "Your position description revision for {0} ({1}) - {2} has been submited.".format(positon.POSN_TITLE, positon.WLS, positon.POSN_CODE)
+        message = "Your position description revision for {0} ({1}) - {2} has been submited.".format(position.POSN_TITLE, position.WLS, position.POSN_CODE)
         flash(message, "success")
         return jsonify({"Success":True})
     except Exception as e:

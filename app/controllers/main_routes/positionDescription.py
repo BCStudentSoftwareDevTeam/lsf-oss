@@ -42,7 +42,6 @@ def PositionDescriptionView():
 
     # Logged in
     todayDate = date.today()
-    print(todayDate)
     openTerms = Term.select().where(Term.termEnd > todayDate)
     closedTerms = Term.select().where(Term.termEnd < todayDate)
 
@@ -71,9 +70,9 @@ def getVersions():
         versions = PositionDescription.select().where(PositionDescription.POSN_CODE == rsp["POSN_CODE"])
         for version in versions:
             if not version.endDate:
-                returnDict[version.positionDescriptionID] = {"createdDate": version.createdDate.strftime('%m/%d/%y'), "endDate": "None"}
+                returnDict[version.positionDescriptionID] = {"createdDate": version.createdDate.strftime('%m/%d/%y'), "endDate": "None", "status": version.status.statusName}
             else:
-                returnDict[version.positionDescriptionID] = {"createdDate": version.createdDate.strftime('%m/%d/%y'), "endDate": version.endDate.strftime('%m/%d/%y')}
+                returnDict[version.positionDescriptionID] = {"createdDate": version.createdDate.strftime('%m/%d/%y'), "endDate": version.endDate.strftime('%m/%d/%y'), "status": version.status.statusName}
         return jsonify(returnDict)
     except Exception as e:
         print ("ERROR", e)
@@ -84,9 +83,9 @@ def getDescription():
     try:
         rsp = eval(request.data.decode("utf-8"))
         returnList = []
-        positionDescriptionQualifications = PositionDescriptionItem.select().where((PositionDescriptionItem.positionDescription == rsp["positionDescriptionID"]) and (PositionDescriptionItem.itemType == "Qualification"))
-        positionDescriptionLearningOBJ = PositionDescriptionItem.select().where((PositionDescriptionItem.positionDescription == rsp["positionDescriptionID"]) and (PositionDescriptionItem.itemType == "Learning Objective"))
-        positionDescriptionDuty = PositionDescriptionItem.select().where((PositionDescriptionItem.positionDescription == rsp["positionDescriptionID"]) and (PositionDescriptionItem.itemType == "Duty"))
+        positionDescriptionQualifications = PositionDescriptionItem.select().where((PositionDescriptionItem.itemType == "Qualification") & (PositionDescriptionItem.positionDescription == rsp["positionDescriptionID"]))
+        positionDescriptionLearningOBJ = PositionDescriptionItem.select().where((PositionDescriptionItem.positionDescription == rsp["positionDescriptionID"]) & (PositionDescriptionItem.itemType == "Learning Objective"))
+        positionDescriptionDuty = PositionDescriptionItem.select().where((PositionDescriptionItem.positionDescription == rsp["positionDescriptionID"]) & (PositionDescriptionItem.itemType == "Duty"))
         returnList.append("<p><strong>Qualifications</strong></p>")
         for item in positionDescriptionQualifications:
             returnList.append("<p>" + item.itemDescription + "</p>")
@@ -99,18 +98,3 @@ def getDescription():
         return jsonify(returnList)
     except Exception as e:
         print ("ERROR", e)
-
-# @main_bp.route("/positionDescriptions/updatePositionDescription", methods=['POST'])
-# def updatePositionDescription():
-#     """ Get all of the positions that are in the selected department """
-#     try:
-#         rsp = eval(request.data.decode("utf-8"))
-#         position = TermPositionDescription.select().where(TermPositionDescription.POSN_CODE == rsp["POSN_CODE"], TermPositionDescription.termCode == int(rsp["termCode"])).get()
-#         position.positionDescription = rsp["positionDescription"]
-#         position.save()
-#         message = "The description for the labor position of {0} for the {1} term has been updated.".format(position.POSN_CODE.POSN_TITLE, position.termCode.termName)
-#         flash(message, "success")
-#         print("FLASH MESSAGE")
-#         return (jsonify({"Success": True}))
-#     except Exception as e:
-#         print("Error on position description update:", e)

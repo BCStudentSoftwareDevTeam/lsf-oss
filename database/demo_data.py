@@ -469,7 +469,7 @@ positionDescriptions = [
                             {
                             "positionDescriptionID": 1,
                             "createdBy_id": 1,
-                            "status_id": "Pending",
+                            "status_id": "Approved",
                             "POSN_CODE": "S61407",
                             "createdDate": "2017-04-14"
                             # "endDate": "2018-04-14"
@@ -477,7 +477,7 @@ positionDescriptions = [
                             {
                             "positionDescriptionID": 2,
                             "createdBy_id": 1,
-                            "status_id": "Pending",
+                            "status_id": "Approved",
                             "POSN_CODE": "S61407",
                             "createdDate": "2018-04-14"
                             # "endDate": "2019-04-14"
@@ -485,7 +485,7 @@ positionDescriptions = [
                             {
                             "positionDescriptionID": 3,
                             "createdBy_id": 1,
-                            "status_id": "Pending",
+                            "status_id": "Approved",
                             "POSN_CODE": "S61407",
                             "createdDate": "2019-04-14"
                             # "endDate": "2020-04-07"
@@ -493,14 +493,14 @@ positionDescriptions = [
                             {
                             "positionDescriptionID": 4,
                             "createdBy_id": 1,
-                            "status_id": "Pending",
+                            "status_id": "Approved",
                             "POSN_CODE": "S61407",
                             "createdDate": "2020-04-14"
                             },
                             {
                             "positionDescriptionID": 5,
                             "createdBy_id": 1,
-                            "status_id": "Pending",
+                            "status_id": "Approved",
                             "POSN_CODE": "S61408",
                             "createdDate": "2020-04-14"
                             }
