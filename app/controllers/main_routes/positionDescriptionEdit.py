@@ -91,3 +91,28 @@ def submitRevisions():
     except Exception as e:
         print ("ERROR", e)
         return jsonify({"Success": False})
+
+@main_bp.route("/positionDescriptionEdit/adminUpdate", methods=['POST'])
+def adminUpdate():
+    """ Get all of the positions that are in the selected department """
+    try:
+        currentUser = require_login()
+        rsp = eval(request.data.decode("utf-8"))
+        position = PositionDescription.select().where(PositionDescription.POSN_CODE == rsp["positionCode"]).get()
+        if rsp["adminChoice"] == "Deny":
+            position.status = "Denied"
+            position.save()
+            message = "The position description revision for {0} ({1}) - {2} has been denied.".format(position.POSN_CODE.POSN_TITLE, position.POSN_CODE.WLS, position.POSN_CODE.POSN_CODE)
+            messageType = "danger"
+        elif rsp["adminChoice"] == "Approve":
+            print("Inside Approve")
+            descriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == position.positionDescriptionID)
+            for item in descriptionItems:
+                print(item)
+            message = "The position description revision for {0} ({1}) - {2} has been approved.".format(position.POSN_CODE.POSN_TITLE, position.POSN_CODE.WLS, position.POSN_CODE.POSN_CODE)
+            messageType = "success"
+        # flash(message, messageType)
+        return jsonify({"Success":True})
+    except Exception as e:
+        print ("ERROR", e)
+        return jsonify({"Success": False})

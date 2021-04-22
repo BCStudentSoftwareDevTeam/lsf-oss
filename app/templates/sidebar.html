@@ -66,6 +66,7 @@
                     <a href="/admin/manageDepartments"><li {% if request.path =="/admin/manageDepartments" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="10"><h4>Manage Departments</h4></li></a>
                     <a href="/admin/adminManagement"><li {% if request.path =="/admin/adminManagement" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="11"><h4>Manage Administrators</h4></li></a>
                     <a href="/admin/emailTemplates"><li {% if request.path =="/admin/emailTemplates" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="12"><h4>Manage Email Templates</h4></li></a>
+                    <a href="/admin/viewPositionDescriptions"><li {% if request.path =="/admin/viewPositionDescriptions" %} class="panel-heading active"{% endif %}class="panel-heading" tabindex="12"><h4>Position Descriptions</h4></li></a>
                   </ul>
                   {% endif %}
                   {% if (currentUser.isFinancialAidAdmin or currentUser.isSaasAdmin) and not currentUser.isLaborAdmin %}

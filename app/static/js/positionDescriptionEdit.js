@@ -1,3 +1,26 @@
+function grabTableDate() {
+  var learningObjectiveList = []
+  $("#table_LearningObjective tr:gt(0)").each(function () {
+        var this_row = $(this);
+        var rowContent = $.trim(this_row.find('td:eq(0)').html());
+        learningObjectiveList.push(rowContent)
+    });
+  var qualificationList = []
+  $("#table_Qualification tr:gt(0)").each(function () {
+        var this_row = $(this);
+        var rowContent = $.trim(this_row.find('td:eq(0)').html());
+        qualificationList.push(rowContent)
+    });
+  var dutyList = []
+  $("#table_Duty tr:gt(0)").each(function () {
+        var this_row = $(this);
+        var rowContent = $.trim(this_row.find('td:eq(0)').html());
+        dutyList.push(rowContent)
+    });
+  combinedList = [learningObjectiveList, qualificationList, dutyList]
+  return (combinedList)
+}
+
 function submitChanges() {
   var learningObjectiveList = []
   $("#table_LearningObjective tr:gt(0)").each(function () {
@@ -24,7 +47,6 @@ function submitChanges() {
               "duties": dutyList,
               "positionCode": positionCode}
   data = JSON.stringify(data)
-  console.log("Inside of the AJXA call")
   $.ajax({
     type: "POST",
     url: "/positionDescriptionEdit/submitRevisions",
@@ -39,6 +61,36 @@ function submitChanges() {
     }
   })
 }
+
+function adminUpdate() {
+  var adminChoice = $("#submitModal").val()
+  var positionTitle = $("#positionTitle").html();
+  var positionCode = positionTitle.slice(-6);
+  if (adminChoice == "Deny") {
+    data = {"adminChoice": adminChoice,
+          "positionCode": positionCode}
+  }
+  else if (adminChoice == "Approve") {
+    tableContent = grabTableDate()
+    var data = {"learningObjectives": tableContent[0],
+                "qualifications": tableContent[1],
+                "duties": tableContent[2],
+                "positionCode": positionCode,
+                "adminChoice": adminChoice,}
+  }
+  data = JSON.stringify(data)
+  $.ajax({
+    type: "POST",
+    url: "/positionDescriptionEdit/adminUpdate",
+    data: data,
+    contentType: 'application/json',
+    success: function(response){
+      console.log("Made it back")
+      // window.location.replace("/admin/viewPositionDescriptions");
+    }
+  })
+}
+
 function addRow(button) {
   var parentTableID = button.parentNode.parentNode.id;
   var tableID = "#table_" + parentTableID + " tr:last"
@@ -81,14 +133,23 @@ function saveChanges() {
 }
 
 function adminApprove() {
-  $("#header").html('<h2 class="modal-title" style="text-align:center" id="title"></h2>')
+  $("#header").html('<h2 class="modal-title" style="text-align:center" id="title">Approve Position Description</h2>');
   $("#body").html("<p style='text-align:center'>You are approving</p>" +
                   "<p style='text-align:center'><strong>If your revision is approved, the current position " +
                   "description will be archived and the new position description " +
                   "will be applied to all future labor status forms with the revised description." +
-                  "</strong></p>")
+                  "</strong></p>");
   $("#footer").html('<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:left">Close</button>' +
-                    '<button class="btn btn-success" id="submitModal" onclick="beginEdit()">Submit Supervisor</button>')
+                    '<button class="btn btn-success" id="submitModal" value="Approve" onclick="adminUpdate()">Submit Supervisor</button>');
+  $("#modal").modal("show");
+}
+
+function adminDeny() {
+  $("#header").html('<h2 class="modal-title" style="text-align:center" id="title">Deny Position Description</h2>')
+  $("#body").html("<p style='text-align:center'>Are you sure you want to <strong>Deny</strong> " +
+                  "this position description?</p>")
+  $("#footer").html('<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:left">Close</button>' +
+                    '<button class="btn btn-success" id="submitModal" value="Deny" onclick="adminUpdate()">Submit Supervisor</button>')
   $("#modal").modal("show");
 }
 

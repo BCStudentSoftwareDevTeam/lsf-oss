@@ -94,10 +94,13 @@
 </div>
 
 {% if currentUser.isLaborAdmin %}
-  <div class="col-md-6" style="margin-top:10px">
-      <button type="button" class="btn btn-danger" onclick="discard()">Discard Changes</button>
+  <div class="col-md-4" style="margin-top:10px">
+      <button type="button" class="btn btn-primary" onclick="discard()">Return</button>
   </div>
-  <div class="col-md-6" style="text-align:right;margin-top:10px">
+  <div class="col-md-4" style="margin-top:10px">
+      <button type="button" class="btn btn-danger" onclick="adminDeny()">Deny</button>
+  </div>
+  <div class="col-md-4" style="text-align:right;margin-top:10px">
       <button type="button" id="submit" class="btn btn-success" onclick="adminApprove()">Approve</button>
   </div>
 {% else %}
