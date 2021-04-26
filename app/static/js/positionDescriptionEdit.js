@@ -57,16 +57,16 @@ function adminUpdate() {
                 "adminChoice": adminChoice}
   }
   data = JSON.stringify(data)
-  $.ajax({
-    type: "POST",
-    url: "/positionDescriptionEdit/adminUpdate",
-    data: data,
-    contentType: 'application/json',
-    success: function(response){
-      console.log("Made it back")
-      window.location.replace("/admin/viewPositionDescriptions");
-    }
-  })
+  // $.ajax({
+  //   type: "POST",
+  //   url: "/positionDescriptionEdit/adminUpdate",
+  //   data: data,
+  //   contentType: 'application/json',
+  //   success: function(response){
+  //     console.log("Made it back")
+  //     window.location.replace("/admin/viewPositionDescriptions");
+  //   }
+  // })
 }
 
 function addRow(button) {

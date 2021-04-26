@@ -108,6 +108,9 @@ def adminUpdate():
             position.status = "Approved"
             position.save()
             descriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == position.positionDescriptionID)
+            lastPositionDescription = PositionDescription.select().where((PositionDescription.POSN_CODE == position.POSN_CODE) & (PositionDescription.status == "Approved")).order_by(PositionDescription.createdDate.desc())
+            for i in lastPositionDescription:
+                print(i)
             for item in descriptionItems:
                 item.delete_instance()
             for duty in rsp["duties"]:
