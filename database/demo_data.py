@@ -471,38 +471,40 @@ positionDescriptions = [
                             "createdBy_id": 1,
                             "status_id": "Approved",
                             "POSN_CODE": "S61407",
-                            "createdDate": "2017-04-14"
-                            # "endDate": "2018-04-14"
+                            "createdDate": "2017-04-14",
+                            "endDate": "2018-04-14"
                             },
                             {
                             "positionDescriptionID": 2,
                             "createdBy_id": 1,
                             "status_id": "Approved",
                             "POSN_CODE": "S61407",
-                            "createdDate": "2018-04-14"
-                            # "endDate": "2019-04-14"
+                            "createdDate": "2018-04-14",
+                            "endDate": "2019-04-14"
                             },
                             {
                             "positionDescriptionID": 3,
                             "createdBy_id": 1,
                             "status_id": "Approved",
                             "POSN_CODE": "S61407",
-                            "createdDate": "2019-04-14"
-                            # "endDate": "2020-04-07"
+                            "createdDate": "2019-04-14",
+                            "endDate": "2020-04-07"
                             },
                             {
                             "positionDescriptionID": 4,
                             "createdBy_id": 1,
                             "status_id": "Approved",
                             "POSN_CODE": "S61407",
-                            "createdDate": "2020-04-14"
+                            "createdDate": "2020-04-14",
+                            "endDate": "2020-04-07"
                             },
                             {
                             "positionDescriptionID": 5,
                             "createdBy_id": 1,
                             "status_id": "Approved",
                             "POSN_CODE": "S61408",
-                            "createdDate": "2020-04-14"
+                            "createdDate": "2020-04-14",
+                            "endDate": None
                             }
                     ]
 PositionDescription.insert_many(positionDescriptions).on_conflict_replace().execute()

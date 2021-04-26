@@ -98,21 +98,37 @@ def adminUpdate():
     try:
         currentUser = require_login()
         rsp = eval(request.data.decode("utf-8"))
-        position = PositionDescription.select().where(PositionDescription.POSN_CODE == rsp["positionCode"]).get()
+        position = PositionDescription.select().where(PositionDescription.positionDescriptionID == rsp["recordID"]).get()
         if rsp["adminChoice"] == "Deny":
             position.status = "Denied"
             position.save()
             message = "The position description revision for {0} ({1}) - {2} has been denied.".format(position.POSN_CODE.POSN_TITLE, position.POSN_CODE.WLS, position.POSN_CODE.POSN_CODE)
             messageType = "danger"
         elif rsp["adminChoice"] == "Approve":
-            print("Inside Approve")
+            position.status = "Approved"
+            position.save()
             descriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == position.positionDescriptionID)
             for item in descriptionItems:
-                print(item)
+                item.delete_instance()
+            for duty in rsp["duties"]:
+                PositionDescriptionItem.create( positionDescription = position.positionDescriptionID,
+                                                itemDescription = duty,
+                                                itemType = "Duty"
+                                              )
+            for qualification in rsp["qualifications"]:
+                PositionDescriptionItem.create( positionDescription = position.positionDescriptionID,
+                                                itemDescription = qualification,
+                                                itemType = "Qualification"
+                                              )
+            for learningObjective in rsp["learningObjectives"]:
+                PositionDescriptionItem.create( positionDescription = position.positionDescriptionID,
+                                                itemDescription = learningObjective,
+                                                itemType = "Learning Objective"
+                                              )
             message = "The position description revision for {0} ({1}) - {2} has been approved.".format(position.POSN_CODE.POSN_TITLE, position.POSN_CODE.WLS, position.POSN_CODE.POSN_CODE)
             messageType = "success"
-        # flash(message, messageType)
+        flash(message, messageType)
         return jsonify({"Success":True})
     except Exception as e:
-        print ("ERROR", e)
+        print ("ERROR On Admin Position Description Update:", e)
         return jsonify({"Success": False})

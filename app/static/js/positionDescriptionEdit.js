@@ -22,29 +22,12 @@ function grabTableDate() {
 }
 
 function submitChanges() {
-  var learningObjectiveList = []
-  $("#table_LearningObjective tr:gt(0)").each(function () {
-        var this_row = $(this);
-        var rowContent = $.trim(this_row.find('td:eq(0)').html());
-        learningObjectiveList.push(rowContent)
-    });
-  var qualificationList = []
-  $("#table_Qualification tr:gt(0)").each(function () {
-        var this_row = $(this);
-        var rowContent = $.trim(this_row.find('td:eq(0)').html());
-        qualificationList.push(rowContent)
-    });
-  var dutyList = []
-  $("#table_Duty tr:gt(0)").each(function () {
-        var this_row = $(this);
-        var rowContent = $.trim(this_row.find('td:eq(0)').html());
-        dutyList.push(rowContent)
-    });
+  tableContent = grabTableDate()
   var positionTitle = $("#positionTitle").html();
   var positionCode = positionTitle.slice(-6);
-  var data = {"learningObjectives": learningObjectiveList,
-              "qualifications": qualificationList,
-              "duties": dutyList,
+  var data = {"learningObjectives": tableContent[0],
+              "qualifications": tableContent[1],
+              "duties": tableContent[2],
               "positionCode": positionCode}
   data = JSON.stringify(data)
   $.ajax({
@@ -53,30 +36,25 @@ function submitChanges() {
     data: data,
     contentType: 'application/json',
     success: function(response){
-      console.log("Am I here???");
-      if (response["Success"]) {
-        console.log("here2");
-        window.location.replace("/positionDescriptions");
-      }
+      window.location.replace("/positionDescriptions");
     }
   })
 }
 
+var recordID
 function adminUpdate() {
   var adminChoice = $("#submitModal").val()
-  var positionTitle = $("#positionTitle").html();
-  var positionCode = positionTitle.slice(-6);
   if (adminChoice == "Deny") {
-    data = {"adminChoice": adminChoice,
-          "positionCode": positionCode}
+    var data = {"adminChoice": adminChoice,
+                "recordID": recordID}
   }
   else if (adminChoice == "Approve") {
     tableContent = grabTableDate()
     var data = {"learningObjectives": tableContent[0],
                 "qualifications": tableContent[1],
                 "duties": tableContent[2],
-                "positionCode": positionCode,
-                "adminChoice": adminChoice,}
+                "recordID": recordID,
+                "adminChoice": adminChoice}
   }
   data = JSON.stringify(data)
   $.ajax({
@@ -86,7 +64,7 @@ function adminUpdate() {
     contentType: 'application/json',
     success: function(response){
       console.log("Made it back")
-      // window.location.replace("/admin/viewPositionDescriptions");
+      window.location.replace("/admin/viewPositionDescriptions");
     }
   })
 }
@@ -132,7 +110,8 @@ function saveChanges() {
   $("#modal").modal("show");
 }
 
-function adminApprove() {
+function adminApprove(ID) {
+  recordID = ID
   $("#header").html('<h2 class="modal-title" style="text-align:center" id="title">Approve Position Description</h2>');
   $("#body").html("<p style='text-align:center'>You are approving</p>" +
                   "<p style='text-align:center'><strong>If your revision is approved, the current position " +
@@ -144,7 +123,8 @@ function adminApprove() {
   $("#modal").modal("show");
 }
 
-function adminDeny() {
+function adminDeny(ID) {
+  recordID = ID
   $("#header").html('<h2 class="modal-title" style="text-align:center" id="title">Deny Position Description</h2>')
   $("#body").html("<p style='text-align:center'>Are you sure you want to <strong>Deny</strong> " +
                   "this position description?</p>")
