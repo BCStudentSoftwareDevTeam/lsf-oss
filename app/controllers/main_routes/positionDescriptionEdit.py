@@ -51,6 +51,7 @@ def PositionDescriptionEdit(positionDescriptionID):
         itemTypes.append(type.itemType)
 
     return render_template( 'main/positionDescriptionEdit.html',
+                            showModal=True,
 				            title=('Position Description'),
                             UserID = currentUser,
                             departments = departments,
@@ -105,12 +106,14 @@ def adminUpdate():
             message = "The position description revision for {0} ({1}) - {2} has been denied.".format(position.POSN_CODE.POSN_TITLE, position.POSN_CODE.WLS, position.POSN_CODE.POSN_CODE)
             messageType = "danger"
         elif rsp["adminChoice"] == "Approve":
+            print("approval")
+            descriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == position.positionDescriptionID)
+            lastPositionDescription = PositionDescription.select().where((PositionDescription.POSN_CODE == position.POSN_CODE) & (PositionDescription.status == "Approved")).order_by(PositionDescription.createdDate.desc())[0]
+            if lastPositionDescription:
+                lastPositionDescription.endDate = date.today()
+                lastPositionDescription.save()
             position.status = "Approved"
             position.save()
-            descriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == position.positionDescriptionID)
-            lastPositionDescription = PositionDescription.select().where((PositionDescription.POSN_CODE == position.POSN_CODE) & (PositionDescription.status == "Approved")).order_by(PositionDescription.createdDate.desc())
-            for i in lastPositionDescription:
-                print(i)
             for item in descriptionItems:
                 item.delete_instance()
             for duty in rsp["duties"]:

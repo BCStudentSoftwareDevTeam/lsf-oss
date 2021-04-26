@@ -25,11 +25,6 @@ def viewPositionDescriptions():
             return render_template('errors/403.html'), 403
 
     pendingPositionDescriptions = PositionDescription.select().where(PositionDescription.status == "Pending")
-
-    for i in pendingPositionDescriptions:
-        print(i)
-
-
     return render_template( 'admin/viewPositionDescriptions.html',
                              title='Term Management',
                              pendingPositionDescriptions = pendingPositionDescriptions
