@@ -1,8 +1,7 @@
 #titleGlyphicon{
-      font-size: 29px;
-      color: #337ab7;
+  font-size: 29px;
+  color: #337ab7;
 }
-
 
 .card-header {
   background-color: #efebeb;
@@ -24,18 +23,6 @@
   background-color: #66c2cc;
 }
 
-.floatleft {
-float: left;
-width: 47%;
-margin-bottom: : 100px;
-}
-
 .subHeader {
   text-align: center;
-}
-
-.floatright {
-float: right;
-width: 47%;
-margin-bottom: : 100px;
 }

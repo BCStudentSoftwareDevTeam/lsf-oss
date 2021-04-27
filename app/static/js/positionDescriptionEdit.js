@@ -1,5 +1,10 @@
 $(window).load(function(){
   var wls = $("#buttonWLS").val();
+  wlsDescription(wls)
+});
+
+function wlsDescription(wls){
+
   if (wls == "1") {
     $("#bodyWLS").html('<div class="floatleft"><ul><li><strong>Entry Level: WLS 1</strong></li>' +
                         '<li>Unskilled work</li>'+
@@ -97,9 +102,9 @@ $(window).load(function(){
                         '</ul></div>');
   }
   $("#headerWLS").html('<h2 class="modal-title" style="text-align:center" id="title">WLS (' + wls + ') Requirements</h2>');
-  $("#footerWLS").html('<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:center">Close</button>')
+  $("#footerWLS").html('<button type="button" class="btn btn-primary" data-dismiss="modal" style="float:center">Okay</button>')
   $('#WLSModal').modal('show');
-});
+}
 
 function grabTableDate() {
   var learningObjectiveList = []

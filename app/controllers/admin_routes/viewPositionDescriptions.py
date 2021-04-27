@@ -26,6 +26,6 @@ def viewPositionDescriptions():
 
     pendingPositionDescriptions = PositionDescription.select().where(PositionDescription.status == "Pending")
     return render_template( 'admin/viewPositionDescriptions.html',
-                             title='Term Management',
+                             title='Position Descriptions',
                              pendingPositionDescriptions = pendingPositionDescriptions
                           )

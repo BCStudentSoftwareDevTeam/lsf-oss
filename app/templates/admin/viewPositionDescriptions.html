@@ -3,6 +3,7 @@
 {% block styles %}
   {{super()}}
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.21/b-1.6.2/datatables.min.css"/>
+  <link rel="stylesheet" href="/static/css/viewPositionDescriptions.css?u={{lastStaticUpdate}}" type="text/css"/>
 {% endblock %}
 
 {% block scripts %}
@@ -14,22 +15,14 @@
 {% block app_content %}
 
 <div align="center" style="margin-bottom: 20px;">
-  <h1 id ="title">Position Description
-	  <span class="glyphicon glyphicon-bookmark"
-        data-toggle="tooltip"
-        title="The position description is used to update current and future labor position descriptions."
-        data-placement = "right"
-        id="titleGlyphicon"
-        tabindex="0">
-    </span>
-  </h1>
+  <h1 id ="title">Position Description</h1>
 </div>
 
 <div class="container" id="wrapper">
   <div align="center" class="tab-content clearfix">
     <div class="tab-pane active" id="allPendingForms">
       <div class="col-lg-12" align="center">
-        <table id="pendingDescriptions" class="table table-striped table-bordered">
+        <table id="pendingDescriptions" class="table table-striped table-bordered dataTable">
           <thead id="headTable" text-align="center">
             <tr>
               <th>Department</th>

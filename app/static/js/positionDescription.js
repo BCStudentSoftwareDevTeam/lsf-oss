@@ -86,6 +86,19 @@ function updateVersion(positionID) {
    });
 }
 
+function checkDescription(positionID){
+  var data = {"POSN_CODE": positionID}
+  data = JSON.stringify(data);
+  $.ajax({
+    type: "POST",
+    url: "/positionDescriptions/checkDescription",
+    data: data,
+    contentType: 'application/json',
+    success: function (response){
+      console.log("getting back", response);
+    }
+  });
+}
 function fillPositionDescription(versionID) {
   // This function will fill the position description for both the
   // previous and current
