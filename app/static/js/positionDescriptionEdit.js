@@ -1,6 +1,106 @@
 $(window).load(function(){
-    $('#WLSmodal').modal('show');
+  var wls = $("#buttonWLS").val();
+  if (wls == "1") {
+    $("#bodyWLS").html('<div class="floatleft"><ul><li><strong>Entry Level: WLS 1</strong></li>' +
+                        '<li>Unskilled work</li>'+
+                        '<li>Under supervision or structure</li>' +
+                        '<li>Repetitive or routine in training</li>' +
+                        '</ul></div>' +
+                        '<div class="floatright"><ul><li><strong>Basic Work Habits and Attitudes</strong></li>' +
+                        '<li>Meeting schedules</li>'+
+                        '<li>Meeting standards of performance</li>' +
+                        '<li>Efficient use of time</li>' +
+                        '<li>Healthy attitudes toward work and supervision</li>' +
+                        '<li>Working with others</li>' +
+                        '<li>Sharing responsibility</li>' +
+                        '<li>Recognition of importance of work</li>' +
+                        '<li>Learning basic skills and information</li>' +
+                        '</ul></div>');
+  }
+  else if (wls === "2") {
+    $("#bodyWLS").html('<div class="floatleft"><ul><li><strong>Intermediate Level : WLS 2</strong></li>' +
+                        '<li>Semi-skilled work</li>'+
+                        '<li>Less direct supervision</li>' +
+                        '<li>Some independent judgment</li>' +
+                        '<li>Semi- independent knowledge of position</li>' +
+                        '<li>Some work variety</li>' +
+                        '</ul></div>' +
+                        '<div class="floatright"><ul><li><strong>Responsibility and Skill Development</strong></li>' +
+                        '<li>Taking personal responsibility</li>'+
+                        '<li>Application of knowledge to situation</li>' +
+                        '<li>Self-identification of skills, talents, interests, and limitations</li>' +
+                        '<li>Learning and developing confidence in skills</li>' +
+                        '<li>	Appreciation of work as a process as well as in terms of product</li>' +
+                        '</ul></div>');
+  }
+  else if (wls === "3") {
+    $("#bodyWLS").html('<div class="floatleft"><ul><li><strong>Skilled Level: WLS 3</strong></li>' +
+                        '<li>Skilled work</li>'+
+                        '<li>Little direct supervision</li>' +
+                        '<li>Independent judgment of procedures</li>' +
+                        '<li>Variety and depth</li>' +
+                        '<li>Contributes to improvement</li>' +
+                        '</ul></div>' +
+                        '<div class="floatright"><ul><li><strong>Responsibility and Skill Development</strong></li>' +
+                        '<li>Importance of initiative</li>'+
+                        '<li>Awareness of needs</li>' +
+                        '<li>Problem identification</li>' +
+                        '<li>Analytical ability</li>' +
+                        '<li>Problem solving</li>' +
+                        '<li>Role of standards and leadership</li>' +
+                        '</ul></div>');
+  }
+  else if (wls === "4") {
+    $("#bodyWLS").html('<div class="floatleft"><ul><li><strong>Advanced Level: WLS 4</strong></li>' +
+                        '<li>Program or skill competence at senior level</li>'+
+                        '<li>Only general supervision received</li>' +
+                        '<li>Either provides supervision to others or exercises other skills and judgment</li>' +
+                        '</ul></div>' +
+                        '<div class="floatright"><ul><li><strong>Understanding and Commitment</strong></li>' +
+                        '<li>Understanding relationships between individuals, institutions, and processes</li>'+
+                        '<li>Comprehension of values, realities, and goals</li>' +
+                        '<li>Ability to articulate and interpret observations, experiences, and understanding</li>' +
+                        '<li>Commitment to service essential to the department</li>' +
+                        '</ul></div>');
+  }
+  else if (wls === "5") {
+    $("#bodyWLS").html('<div class="floatleft"><ul><li><strong>Management Level: WLS 5</strong></li>' +
+                        '<li>Senior-level autonomy</li>'+
+                        '<li>Makes independent judgments on application of Policy</li>' +
+                        '<li>Accepts management responsibility</li>' +
+                        '<li>High technical or skill training</li>' +
+                        '</ul></div>' +
+                        '<div class="floatright"><ul><li><strong>Supervision and Management</strong></li>' +
+                        '<li>Understanding of departmental management</li>'+
+                        '<li>Taking responsibility for the effectiveness of others</li>' +
+                        '<li>Awareness of departmental and institutional relationships</li>' +
+                        '<li>Teaching and instruction techniques</li>' +
+                        '<li>Communication and interpersonal skills</li>' +
+                        '<li>Evaluation of workers and procedures</li>' +
+                        '</ul></div>');
+  }
+  else if (wls === "6") {
+    $("#bodyWLS").html('<div class="floatleft"><ul><li><strong>Director Level: WLS 6</strong></li>' +
+                        '<li>Assumes program directing role</li>'+
+                        '<li>Significant management responsibility</li>' +
+                        '<li>Substantial supervisory responsibility</li>' +
+                        '<li>Responsible for planning, training, and instruction</li>' +
+                        '<li>Serves as role model for Berea community</li>' +
+                        '</ul></div>' +
+                        '<div class="floatright"><ul><li><strong>Leadership and Autonomy</strong></li>' +
+                        '<li>Understanding of leadership in community context</li>'+
+                        '<li>Development of responsible autonomy</li>' +
+                        '<li>Ability to transmit values and interpretations to others</li>' +
+                        '<li>Confidence of self-knowledge and value commitments</li>' +
+                        '<li>Living the values of Bereas commitments</li>' +
+                        '<li>High degree of independence</li>' +
+                        '</ul></div>');
+  }
+  $("#headerWLS").html('<h2 class="modal-title" style="text-align:center" id="title">WLS (' + wls + ') Requirements</h2>');
+  $("#footerWLS").html('<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:center">Close</button>')
+  $('#WLSModal').modal('show');
 });
+
 function grabTableDate() {
   var learningObjectiveList = []
   $("#table_LearningObjective tr:gt(0)").each(function () {

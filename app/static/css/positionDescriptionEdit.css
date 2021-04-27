@@ -1,5 +1,3 @@
-
-
 #titleGlyphicon{
       font-size: 29px;
       color: #337ab7;
@@ -24,4 +22,20 @@
 
 .active, .card-header:hover {
   background-color: #66c2cc;
+}
+
+.floatleft {
+float: left;
+width: 47%;
+margin-bottom: : 100px;
+}
+
+.subHeader {
+  text-align: center;
+}
+
+.floatright {
+float: right;
+width: 47%;
+margin-bottom: : 100px;
 }
