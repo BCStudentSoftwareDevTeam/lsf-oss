@@ -61,7 +61,6 @@
       <div class="form-group" style="height:80%">
         <label for="positionDescription">Previous Position Description</label>
         <div id="pastPositionDescription">
-          <!-- <textarea name="notes" rows="13" cols="73" id="pastPositionDescription" disabled></textarea> -->
         </div>
       </div>
 
@@ -98,17 +97,6 @@
           </select>
         </div>
 
-        <!-- <div class="form-group">
-        <label for="Position Description"><span class="tooltip-right" data-tooltip="Required">Position Description<span class="required-mark">*</span></span></label>
-        <textarea name="editor1" id="editor1"></textarea>
-                    <script>
-                            CKEDITOR.replace('editor1',
-                                            {
-                                              removePlugins: "strinsert"
-                                            });
-                    </script>
-        </div> -->
-
         <div class="form-group">
           <!-- <button type="button" class="btn btn-danger">Discard Changes</button> -->
           <button id="editButton" type="button" class="btn btn-success" onclick="saveChanges()">Edit Version</button>
@@ -117,6 +105,7 @@
     </div>
     <!-- Modal that will be rendered on the click of the submit button -->
     {% include "snips/positionDescriptionModal.html" %}
+    {% include "snips/positionDescriptionNewVersionModal.html" %}
   </div>
 
 {% endblock %}

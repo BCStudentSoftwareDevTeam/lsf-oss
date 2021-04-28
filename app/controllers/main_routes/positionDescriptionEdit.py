@@ -16,7 +16,8 @@ from app.logic.emailHandler import*
 from app.logic.userInsertFunctions import*
 
 @main_bp.route('/positionDescriptionEdit/<positionDescriptionID>', methods=['GET'])
-def PositionDescriptionEdit(positionDescriptionID):
+@main_bp.route('/positionDescriptionEdit/newVersion/<positionCode>', methods=['GET'])
+def PositionDescriptionEdit(positionDescriptionID = None, positionCode = None):
     """ Render Position Description Form"""
     currentUser = require_login()
     if not currentUser:        # Not logged in
@@ -24,40 +25,50 @@ def PositionDescriptionEdit(positionDescriptionID):
     if not currentUser.isLaborAdmin:
         if currentUser.student and not currentUser.supervisor:
             return redirect('/laborHistory/' + currentUser.student.ID)
-        if not currentUser.student and currentUser.supervisor:
-            # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
-            departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME, FormHistory.formID.department.ACCOUNT, FormHistory.formID.department.ORG) \
-                            .join_from(FormHistory, LaborStatusForm) \
-                            .join_from(LaborStatusForm, Department) \
-                            .where((FormHistory.formID.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
-                            .order_by(FormHistory.formID.department.DEPT_NAME.asc()) \
-                            .distinct()
 
+    print(positionDescriptionID, positionCode)
+    if positionDescriptionID:
+        positionDescriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == positionDescriptionID)
+        positionDescriptionRecord = PositionDescription.select().where(PositionDescription.positionDescriptionID == positionDescriptionID).get()
+        positionRecord = Position.select().where(Position.POSN_CODE == positionDescriptionRecord.POSN_CODE.POSN_CODE).get()
+    elif positionCode:
+        positionDescriptionItems = None
+        positionDescriptionRecord = None
+        positionRecord = Position.select().where(Position.POSN_CODE == positionCode).get()
 
-    if currentUser.isLaborAdmin:
-        # Grabs every single department that currently has at least one labor status form in it
+    pendingPositionDescription = PositionDescription.select().where(PositionDescription.POSN_CODE == positionRecord.POSN_CODE)
+
+    if not currentUser.isLaborAdmin:
+        # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
+        if pendingPositionDescription:
+            for record in pendingPositionDescription:
+                if record.status.statusName == "Pending":
+                    return render_template('errors/403.html'), 403
+
+        authorizedUser = False
         departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME, FormHistory.formID.department.ACCOUNT, FormHistory.formID.department.ORG) \
                         .join_from(FormHistory, LaborStatusForm) \
                         .join_from(LaborStatusForm, Department) \
+                        .where((FormHistory.formID.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
                         .order_by(FormHistory.formID.department.DEPT_NAME.asc()) \
                         .distinct()
+        for department in departments:
+            if department.formID.department.DEPT_NAME == positionRecord.DEPT_NAME:
+                authorizedUser = True
+                break
+        if not authorizedUser:
+            return render_template('errors/403.html'), 403
 
-    positionDescriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == positionDescriptionID)
-    positionDescriptionRecord = PositionDescription.select().where(PositionDescription.positionDescriptionID == positionDescriptionID).get()
-
-    distinctTypes = PositionDescriptionItem.select(PositionDescriptionItem.itemType).distinct()
-    itemTypes=[]
-    for type in distinctTypes:
-        itemTypes.append(type.itemType)
+    itemTypes = ['Learning Objective', 'Qualification', 'Duty']
 
     return render_template( 'main/positionDescriptionEdit.html',
                             showModal=True,
 				            title=('Position Description'),
                             UserID = currentUser,
-                            departments = departments,
                             positionDescriptionItems = positionDescriptionItems,
                             itemTypes = itemTypes,
-                            positionDescriptionRecord = positionDescriptionRecord)
+                            positionDescriptionRecord = positionDescriptionRecord,
+                            positionRecord = positionRecord)
 
 @main_bp.route("/positionDescriptionEdit/submitRevisions", methods=['POST'])
 def submitRevisions():
@@ -106,9 +117,11 @@ def adminUpdate():
             message = "The position description revision for {0} ({1}) - {2} has been denied.".format(position.POSN_CODE.POSN_TITLE, position.POSN_CODE.WLS, position.POSN_CODE.POSN_CODE)
             messageType = "danger"
         elif rsp["adminChoice"] == "Approve":
-            print("approval")
             descriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == position.positionDescriptionID)
-            lastPositionDescription = PositionDescription.select().where((PositionDescription.POSN_CODE == position.POSN_CODE) & (PositionDescription.status == "Approved")).order_by(PositionDescription.createdDate.desc())[0]
+            try:
+                lastPositionDescription = PositionDescription.select().where((PositionDescription.POSN_CODE == position.POSN_CODE) & (PositionDescription.status == "Approved")).order_by(PositionDescription.createdDate.desc())[0]
+            except:
+                lastPositionDescription = None
             if lastPositionDescription:
                 lastPositionDescription.endDate = date.today()
                 lastPositionDescription.save()

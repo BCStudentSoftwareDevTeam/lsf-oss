@@ -1,4 +1,5 @@
 $("#warningTitle").hide()
+
 function getDepartmentPositions(object, stopSelectRefresh="") { // get department from select picker
    var departmentOrg = $(object).val();
    var departmentAcct = $(object).find('option:selected').attr('value-account');
@@ -50,6 +51,14 @@ function updateVersion(positionID) {
     data: data,
     contentType: 'application/json',
     success: function (response){
+
+      if (Object.keys(response).length == 0) {
+        $("#newVersionFooter").html('<button type="button" class="btn btn-danger" data-dismiss="modal" style="float:left">Close</button>' +
+                                    '<button type="button" class="btn btn-success" value=' + positionID + ' onclick="beginNewVersionEdit(this.value)" style="float:right">Create</button>')
+        $("#newVersion").modal("show");
+      }
+
+
       var versionCount = 1
       var disableButton = false
       for (var key in response) {
@@ -99,6 +108,7 @@ function checkDescription(positionID){
     }
   });
 }
+
 function fillPositionDescription(versionID) {
   // This function will fill the position description for both the
   // previous and current
@@ -135,4 +145,12 @@ function beginEdit() {
   var versionID = $("#preVersion").val();
   window.location.href = '/positionDescriptionEdit/' + versionID
 
+}
+
+function beginNewVersionEdit(positionCode) {
+  // This function will redirect the user to the position
+  // description edit page when creating the first version of a
+  // position description.
+  console.log("Redirect")
+  window.location.href = '/positionDescriptionEdit/newVersion/' + positionCode
 }

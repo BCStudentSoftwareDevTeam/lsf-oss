@@ -77,17 +77,6 @@ def getVersions():
     except Exception as e:
         print ("ERROR", e)
 
-@main_bp.route("/positionDescriptions/checkDescription", methods=['POST'])
-def checkDescription():
-    """ Check to see if there is already a description for a position in the database """
-    try:
-        rsp = eval(request.data.decode("utf-8"))
-        ## TODO will there be an entry for the position in positionDescription table if there are no description?? 
-        selectedPosition = PositionDescription.select().where(PositionDescription.POSN_CODE == rsp["POSN_CODE"])
-
-    except Exception as e:
-        print ("ERROR", e)
-
 @main_bp.route("/positionDescriptions/getPositionDescription", methods=['POST'])
 def getDescription():
     """ Get all of the positions that are in the selected department """
