@@ -27,21 +27,11 @@ height: 310px;
   text-align: center;
 }
 
-.floatright {
-float: right;
-width: 47%;
-height: 310px;
-}
-
 #pastPositionDescription {
   height: 100%;
   border-style: solid;
   overflow: auto;
-  /* overflow-y:auto; */
-  /* width: 100%; */
-  /* -webkit-box-sizing: border-box; */
-  /* -moz-box-sizing: border-box; */
-  /* box-sizing: border-box; */
+  height: 310px;
 }
 
 #titleGlyphicon{

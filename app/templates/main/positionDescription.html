@@ -33,76 +33,68 @@
 </div>
 
   <div class="container">
-    <div>
+    <div class="col-md-12">
         <p class="required-mark">* Marked fields are required</p>
     </div>
-    <!-- everythin on the left -->
-    <div class="floatleft">
 
-      <div class="form-group" id="departmentClass">
-        <!--selectpicker for department-->
-        <label for="selectedDepartment" aria-describedby="departmentInfo"><span class="tooltip-right" data-tooltip="Required">Department <span class="required-mark">*</span> </span>
-        </label>
-        <select class="selectpicker"
-                name='department'
-                id='selectedDepartment'
-                data-live-search='true'
-                title="Department"
-                data-width="100%"
-                onchange="getDepartmentPositions(this);">
-          <option value = "" disabled selected>Select a Department</option>
-          {% for department in departments %}
-            <option value-account="{{department.formID.department.ACCOUNT}}" value="{{department.formID.department.ORG}}" data-content=
-            "<span>{{department.formID.department.DEPT_NAME}}</span><small class='text-muted'> ({{department.formID.department.ORG}}-{{department.formID.department.ACCOUNT}}) </small>">{{department.formID.department.DEPT_NAME}}</option>
-          {% endfor %}
+    <div class="form-group col-md-4" id="departmentClass">
+      <!--selectpicker for department-->
+      <label for="selectedDepartment" aria-describedby="departmentInfo"><span class="tooltip-right" data-tooltip="Required">Department <span class="required-mark">*</span> </span>
+      </label>
+      <select class="selectpicker"
+              name='department'
+              id='selectedDepartment'
+              data-live-search='true'
+              title="Department"
+              data-width="100%"
+              onchange="getDepartmentPositions(this);">
+        <option value = "" disabled selected>Select a Department</option>
+        {% for department in departments %}
+          <option value-account="{{department.formID.department.ACCOUNT}}" value="{{department.formID.department.ORG}}" data-content=
+          "<span>{{department.formID.department.DEPT_NAME}}</span><small class='text-muted'> ({{department.formID.department.ORG}}-{{department.formID.department.ACCOUNT}}) </small>">{{department.formID.department.DEPT_NAME}}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class= "form-group col-md-4" id="Position">
+        <!--selectpicker for position-->
+        <label for="position"><span class="tooltip-right" data-tooltip="Required">Position (WLS) <span class="required-mark">*</span></span></label>
+          <select class="selectpicker"
+                  name='position'
+                  id='position'
+                  data-live-search='true'
+                  data-width="100%"
+                  title="Position"
+                  onchange=updateVersion(this.value);checkDescription(this.value)
+                  disabled>
+          </select>
+      </div>
+
+      <div class="form-group col-md-4">
+        <!-- selectpicker for new term  -->
+          <label for="preVersion" aria-describedby="newTermInfo"><span class="tooltip-right" data-tooltip="Required">Previous Version <span class="required-mark">*</span></span></label>
+          <select class="selectpicker"
+                  name='term'
+                  id='preVersion'
+                  data-live-search="true"
+                  data-toggle="tooltip"
+                  title="Term"
+                  data-width="100%"
+                  onchange=fillPositionDescription(this.value)
+                  disabled>
         </select>
       </div>
 
-      <div class="form-group" style="height:80%">
+      <div class="form-group col-md-12" style="height:80%">
         <label for="positionDescription">Previous Position Description</label>
         <div id="pastPositionDescription">
         </div>
       </div>
 
-    </div>
-    <!-- Everything on the right  -->
-    <div class= "floatright" >
+      <div class="form-group col-md-12">
+        <button id="editButton" type="button" class="btn btn-success" onclick="saveChanges()">Edit Version</button>
+      </div>
 
-      <div class= "form-group " id="Position">
-          <!--selectpicker for position-->
-          <label for="position"><span class="tooltip-right" data-tooltip="Required">Position (WLS) <span class="required-mark">*</span></span></label>
-            <select class="selectpicker"
-                    name='position'
-                    id='position'
-                    data-live-search='true'
-                    data-width="100%"
-                    title="Position"
-                    onchange=updateVersion(this.value);checkDescription(this.value)
-                    disabled>
-            </select>
-        </div>
-
-        <div class="form-group">
-          <!-- selectpicker for new term  -->
-            <label for="preVersion" aria-describedby="newTermInfo"><span class="tooltip-right" data-tooltip="Required">Previous Version <span class="required-mark">*</span></span></label>
-            <select class="selectpicker"
-                    name='term'
-                    id='preVersion'
-                    data-live-search="true"
-                    data-toggle="tooltip"
-                    title="Term"
-                    data-width="100%"
-                    onchange=fillPositionDescription(this.value)
-                    disabled>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <!-- <button type="button" class="btn btn-danger">Discard Changes</button> -->
-          <button id="editButton" type="button" class="btn btn-success" onclick="saveChanges()">Edit Version</button>
-        </div>
-
-    </div>
     <!-- Modal that will be rendered on the click of the submit button -->
     {% include "snips/positionDescriptionModal.html" %}
     {% include "snips/positionDescriptionNewVersionModal.html" %}
