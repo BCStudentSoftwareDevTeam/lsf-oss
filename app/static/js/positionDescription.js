@@ -112,7 +112,6 @@ function checkDescription(positionID){
 function fillPositionDescription(versionID) {
   // This function will fill the position description for both the
   // previous and current
-  // CKEDITOR.instances["editor1"].setData('');
   var versionID = $("#preVersion").val();
   var data = {"positionDescriptionID": versionID}
   data = JSON.stringify(data);
