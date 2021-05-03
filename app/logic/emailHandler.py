@@ -320,7 +320,6 @@ class emailHandler():
                 message = Message(template.subject,
                     recipients=[self.supervisorEmail, self.primaryEmail])
                 recipient = 'Primary Supervisor'
-
         elif sendTo == "Labor Office":
             message = Message(template.subject,
                 recipients=[""]) #TODO: Email for the Labor Office
