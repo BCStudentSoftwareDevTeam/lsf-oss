@@ -53,13 +53,14 @@ class emailHandler():
 
         if not self.term.isBreak:
             try:
+                ayTermCode = str(self.laborStatusForm.termCode.termCode)[:-2] + '00'
                 self.primaryEmail = None
                 self.primaryForm = None
                 self.primaryForm = FormHistory.select().join_from(FormHistory, LaborStatusForm) \
                                               .join_from(FormHistory, HistoryType).join_from(FormHistory, Status) \
                                               .where((FormHistory.formID.jobType == "Primary") &
                                                      (FormHistory.formID.studentSupervisee == self.laborStatusForm.studentSupervisee) &
-                                                     (FormHistory.formID.termCode == self.laborStatusForm.termCode) &
+                                                     ((FormHistory.formID.termCode == self.laborStatusForm.termCode) | (FormHistory.formID.termCode == ayTermCode)) &
                                                      (FormHistory.historyType.historyTypeName == "Labor Status Form") &
                                                      (FormHistory.status.statusName != "Denied")).get()
                 self.primaryEmail = self.primaryForm.formID.supervisor.EMAIL
@@ -319,6 +320,7 @@ class emailHandler():
                 message = Message(template.subject,
                     recipients=[self.supervisorEmail, self.primaryEmail])
                 recipient = 'Primary Supervisor'
+
         elif sendTo == "Labor Office":
             message = Message(template.subject,
                 recipients=[""]) #TODO: Email for the Labor Office
