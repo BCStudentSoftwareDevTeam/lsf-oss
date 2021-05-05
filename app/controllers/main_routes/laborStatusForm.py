@@ -151,7 +151,7 @@ def checkTotalHours(termCode, student, weeklyHours, contractHours):
                            .where(((FormHistory.formID.termCode == termCode) | (FormHistory.formID.termCode == ayTermCode)),
                                   FormHistory.formID.studentSupervisee == student,
                                   FormHistory.historyType == "Labor Status Form",
-                                  (FormHistory.status == "Approved" or FormHistory.status == "Approved Reluctantly")
+                                  ((FormHistory.status == "Approved") | (FormHistory.status == "Approved Reluctantly") | (FormHistory.status == "Pending"))
                                   )
     term = Term.get(Term.termCode == termCode)
     totalHours = 0
