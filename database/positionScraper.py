@@ -6,79 +6,81 @@ from datetime import datetime, date, timedelta
 import os
 import glob
 
-path = 'TODO'
+path = 'positions/chemistry' #TODO
 
 for root, dirs, files in os.walk(path, topdown=False):
     for name in files:
         joined = os.path.join(root, name)
-        f = open(joined, "r")
-        dutyList = []
-        learningList = []
-        qualificationList = []
-        qualificationSection = False
-        learningSection = False
-        dutySection = False
-        for line in f:
-            # Grabbing the position title
-            if "Position Title:" in line:
-                titleSplit = line.split(":", 1)
-                positionTitle = titleSplit[1].strip()
+        fileType = str(joined).split(".", 1)[1]
+        if fileType == "txt":
+            f = open(joined, "r")
+            dutyList = []
+            learningList = []
+            qualificationList = []
+            qualificationSection = False
+            learningSection = False
+            dutySection = False
+            for line in f:
+                # Grabbing the position title
+                if "Position Title:" in line:
+                    titleSplit = line.split(":", 1)
+                    positionTitle = titleSplit[1].strip()
 
-            # Grabbing the position code
-            if "Position Code" in line:
-                tempLine = line.strip()
-                positionCode = tempLine[-6:]
-                wls = tempLine[11:12]
+                # Grabbing the position code
+                if "Position Code" in line:
+                    tempLine = line.strip()
+                    positionCode = tempLine[-6:]
+                    wls = tempLine[11:12]
 
-            # Grabbing the revision year
-            if "Current Revision Year" in line:
-                yearSplit = line.split(":", 1)
-                year = yearSplit[1].strip()
+                # Grabbing the revision year
+                if "Current Revision Year" in line:
+                    yearSplit = line.split(":", 1)
+                    year = yearSplit[1].strip()
 
-            # checking to see what section where in
-            if "Description Of Duties" in line:
-                dutySection = True
-                learningSection, qualificationSection = False, False
-            elif "Learning Opportunities" in line:
-                learningSection = True
-                qualificationSection, dutySection = False, False
-            elif "Qualifications Needed" in line:
-                qualificationSection = True
-                learningSection, dutySection = False, False
+                # checking to see what section where in
+                if "Description Of Duties" in line:
+                    dutySection = True
+                    learningSection, qualificationSection = False, False
+                elif "Learning Opportunities" in line:
+                    learningSection = True
+                    qualificationSection, dutySection = False, False
+                elif "Qualifications Needed" in line:
+                    qualificationSection = True
+                    learningSection, dutySection = False, False
 
-            # appending non empty lines into list based on the section
-            if line.strip() != "":
-                if dutySection:
-                    dutyList.append(line[2:].strip())
-                elif learningSection:
-                    learningList.append(line[2:].strip())
-                elif qualificationSection:
-                    qualificationList.append(line[2:].strip())
+                # appending non empty lines into list based on the section
+                if line.strip() != "":
+                    if dutySection:
+                        dutyList.append(line[2:].strip())
+                    elif learningSection:
+                        learningList.append(line[2:].strip())
+                    elif qualificationSection:
+                        qualificationList.append(line[2:].strip())
 
-        #need to pop off the first item of each list because it is the
-        # section header
-        dutyList.pop(0)
-        learningList.pop(0)
-        qualificationList.pop(0)
+            #need to pop off the first item of each list because it is the
+            # section header
+            dutyList.pop(0)
+            learningList.pop(0)
+            qualificationList.pop(0)
 
-        positionDescription = PositionDescription.create( createdBy = 1,
-                                                          status = "Approved",
-                                                          POSN_CODE = positionCode,
-                                                          createdDate = date.today()
-                                                        )
+            positionDescription = PositionDescription.create( createdBy = 1,
+                                                              status = "Approved",
+                                                              POSN_CODE = positionCode,
+                                                              createdDate = date.today()
+                                                            )
 
-        for duty in dutyList:
-            PositionDescriptionItem.create( positionDescription = positionDescription.positionDescriptionID,
-                                            itemDescription = duty,
-                                            itemType = "Duty"
-                                          )
-        for qualification in qualificationList:
-            PositionDescriptionItem.create( positionDescription = positionDescription.positionDescriptionID,
-                                            itemDescription = qualification,
-                                            itemType = "Qualification"
-                                          )
-        for learningObjective in learningList:
-            PositionDescriptionItem.create( positionDescription = positionDescription.positionDescriptionID,
-                                            itemDescription = learningObjective,
-                                            itemType = "Learning Objective"
-                                          )
+            for duty in dutyList:
+                PositionDescriptionItem.create( positionDescription = positionDescription.positionDescriptionID,
+                                                itemDescription = duty,
+                                                itemType = "Duty"
+                                              )
+            for qualification in qualificationList:
+                PositionDescriptionItem.create( positionDescription = positionDescription.positionDescriptionID,
+                                                itemDescription = qualification,
+                                                itemType = "Qualification"
+                                              )
+            for learningObjective in learningList:
+                PositionDescriptionItem.create( positionDescription = positionDescription.positionDescriptionID,
+                                                itemDescription = learningObjective,
+                                                itemType = "Learning Objective"
+                                              )
