@@ -1,0 +1,131 @@
+
+
+
+
+
+
+
+Department Name: Computer Science       Org. #: 2114
+Position Title: Lead Student Programmer
+WLS Level: 5              Position Code: S61408
+Contract Hours:  As defined by the status form and/or the grade level
+descriptions
+Current Revision Year:  2018
+
+                     WORK-LEARNING-SERVICE LEVELS (WLS)
+    • WLS 1 – Entry Level – This level is assigned to the following:
+     1. All entering students during the first year of enrollment (or first
+        term if entering mid-year); and
+     2. Students of any classification whose work is characterized by highly
+        structured tasks or outcomes, relatively low level or number of
+        skills required, typically repetitive or routine tasks, and
+        requiring direct supervision of worker results
+• WLS 2 – Intermediate Level –This work typically involves less direct
+  supervision than WLS Level 1, perhaps more work variety, and requires
+  some independent exercise of judgment along with an increasing knowledge
+  of the job.
+• WLS 3 – Skilled Level – The work is typically skilled, requires little
+  direct supervision, requires independent judgment on procedures, has
+  variety and depth.  The work includes helping in the training of others
+  and the expectation of contributions toward improvement of the way work
+  is carried out.
+• WLS 4 – Advanced Level –Normally involves the supervision of other
+  students, the ability to apply advanced skills, and the capacity to
+  assume higher levels of responsibilities for departmental operations. As
+  with WLS Level 3, the work is typically skilled, requires little direct
+  supervision, allows for independent judgment on procedures, and has
+  variety and depth.  The work includes helping in the training of others
+  and the expectation of contributions toward improvement of the way work
+  is carried out.  Labor Departments may require WLS level 4 positions to
+  be more than the minimum 10 hour commitment; if so, the Status Form will
+  reflect this requirement.
+• WLS 5 – Management Level – Must be a 15 hour commitment  – Allocation of
+  a WLS Level 5 is limited and must be approved by the Dean of Labor /
+  Labor  Team.  Prerequisite:  One term at WLS level 3 or 4 and no forms of
+  academic, labor, or social probation.
+  This level demands an understanding of departmental policies and
+  relationships.  Students are expected to develop and model strong
+  interpersonal / communication skills in the workplace.  In addition,
+  students must demonstrate autonomy, high level skills, and assume
+  advanced level responsibilities for departmental functions and/or
+  programs.  This level is assigned to the following: 
+     1. Student managers in the department; or
+     2. Students responsible for managing highly technical positions within
+        the department; or
+     3. Master level student artisans
+• WLS 6 – Director Level – Must be a 15 hour commitment – Allocation of a
+  WLS level 6 is limited and must be approved by the Labor Program Council.
+   Prerequisite:  One term at level 4 or 5 and no forms of academic, labor,
+  or social probation.. 
+  Students assigned to this level serve as role models as workers and as
+  students, displaying behaviors and values that are consistent with the
+  Berea College Workplace Expectations -- both on and off the job.  These
+  positions require the highest levels of worker autonomy, advanced skills
+  sets, and supervisory responsibilities for individuals, student managers,
+  and departmental operations.  Students must be involved in the following:
+     1. Supervision of other student managers; or
+     2. Supervision of students in highly technical positions
+• WLS UC -- Unclassified – The positions of Student Government Association
+  President, Campus Activities Board chair, chimes Editor, and pinnacle
+  Editor are unclassified.  These positions involve the highest levels of
+  autonomy and responsibility as in the case of WLS level 6 positions.
+
+
+I.     WLS Level: 5
+
+II.    Description Of Duties For This Position:
+   A. Student Programmers will be responsible for the creation of software
+      systems aimed at improving the usability of technology at Berea
+      College.
+   B. Student Programmers will be involved in all stages of the software
+      engineering process, including design, development, implementation,
+      testing, and revision.
+   C. Student Programmers will also be responsible for keeping open and
+      clear communications with the customer, including gathering customer
+      requirements, responding to their feedback on software iterations, and
+      informing the customer of the status of their requests.
+   D. Lead Student Programmers will also be in a position of leadership,
+      where they'll be guiding other students on various projects
+   E. Plan and lead weekly labor meetings with 6-10 students in attendance.
+   F. Mentoring 6-10 lower WLS labor students.
+   G. Effective collaboration with other student programmers following pair
+      programming principles.
+   H. Effective use of version control systems for software engineering.
+   I. Communicate with supervisors about WLS level student’s performance and
+      concerns.
+
+III.  Learning Opportunities For This Position:
+   A. Student programmers will be able to use computer science concepts to
+      create new technological solutions and address new problems.
+   B. Student Labor Position Description Single WLS Level Form
+   C. Student programmers will be able to analyze large code sets and
+      understand how to modify them to solve problems and troubleshoot
+      issues.
+   D. Student programmers will be able to work effectively as a software
+      engineering team.
+   E. Student programmers will be able to use their experiences as a Berea
+      College students to think critically about how to impact the community
+      in a positive way
+   F. Student programmers will be able to manage large projects.
+   G. Student programmers will be able to work effectively in ambiguous
+      environments.
+   H. Student programmers will be able to communicate effectively with
+      colleagues, customers, and supervisors.
+   I. Lead Student Programmers will be able to motivate and manage teams of
+      students working on complex projects.
+
+IV.   Qualifications Needed For This Position:
+   A. Students at this level must have an advanced understanding of
+      programming logic in more than one programming language.
+   B. Students must be able to work on large software systems, and be able
+      to integrate third-party software libraries into local projects.
+   C. Students must be able to elicit requirements and needs from users, and
+      translate those into technical specifications.
+   D. Students must be able to manage teams of students working in
+      collaboration.
+
+ENDFILE
+-----------------------
+                         Student Labor Position Description
+
+                                                   Single WLS Level Form

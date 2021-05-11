@@ -8,6 +8,9 @@ import glob
 
 path = 'positions/chemistry' #TODO
 
+lineStart = {"A.", "B.", "C.", "D.", "E.", "F.", "G.", "H.", "I.", "J.", "K.", "L.", "M."
+            "O.", "P.", "Q.", "R.", "S.", "T.", "U.", "V.", "W.", "X.", "Y.", "Z."}
+
 for root, dirs, files in os.walk(path, topdown=False):
     for name in files:
         joined = os.path.join(root, name)
@@ -20,7 +23,11 @@ for root, dirs, files in os.walk(path, topdown=False):
             qualificationSection = False
             learningSection = False
             dutySection = False
+            appending = False
+            appendLine = ""
             for line in f:
+                if line.strip() == "ENDFILE":
+                    break
                 # Grabbing the position title
                 if "Position Title:" in line:
                     titleSplit = line.split(":", 1)
@@ -49,13 +56,28 @@ for root, dirs, files in os.walk(path, topdown=False):
                     learningSection, dutySection = False, False
 
                 # appending non empty lines into list based on the section
-                if line.strip() != "":
-                    if dutySection:
-                        dutyList.append(line[2:].strip())
-                    elif learningSection:
-                        learningList.append(line[2:].strip())
-                    elif qualificationSection:
-                        qualificationList.append(line[2:].strip())
+                if dutySection or qualificationSection or learningSection:
+                    line = line.strip()
+                    if line != "":
+                        if line[0:2] in lineStart:
+                            if dutySection:
+                                dutyList.append(appendLine[3:])
+                            elif learningSection:
+                                learningList.append(appendLine[3:])
+                            elif qualificationSection:
+                                qualificationList.append(appendLine[3:])
+                            appendLine = ""
+                            appendLine += line
+                        elif line[0] not in lineStart:
+                            appendLine +=  " " + line
+                    if line == "":
+                        if dutySection:
+                            dutyList.append(appendLine[2:])
+                        elif learningSection:
+                            learningList.append(appendLine[2:])
+                        elif qualificationSection:
+                            qualificationList.append(appendLine[2:])
+                        appendLine = ""
 
             #need to pop off the first item of each list because it is the
             # section header
@@ -63,24 +85,35 @@ for root, dirs, files in os.walk(path, topdown=False):
             learningList.pop(0)
             qualificationList.pop(0)
 
-            positionDescription = PositionDescription.create( createdBy = 1,
-                                                              status = "Approved",
-                                                              POSN_CODE = positionCode,
-                                                              createdDate = date.today()
-                                                            )
+            print("This is duties")
+            for item in dutyList:
+                print(item, "Duty item")
+            print("#########################")
+            print("this is leanring")
+            for item in learningList:
+                print(item, "Learning item")
+            print("#########################")
+            for item in qualificationList:
+                print(item, "Qualification item")
 
-            for duty in dutyList:
-                PositionDescriptionItem.create( positionDescription = positionDescription.positionDescriptionID,
-                                                itemDescription = duty,
-                                                itemType = "Duty"
-                                              )
-            for qualification in qualificationList:
-                PositionDescriptionItem.create( positionDescription = positionDescription.positionDescriptionID,
-                                                itemDescription = qualification,
-                                                itemType = "Qualification"
-                                              )
-            for learningObjective in learningList:
-                PositionDescriptionItem.create( positionDescription = positionDescription.positionDescriptionID,
-                                                itemDescription = learningObjective,
-                                                itemType = "Learning Objective"
-                                              )
+            # positionDescription = PositionDescription.create( createdBy = 1,
+            #                                                   status = "Approved",
+            #                                                   POSN_CODE = positionCode,
+            #                                                   createdDate = date.today()
+            #                                                 )
+            #
+            # for duty in dutyList:
+            #     PositionDescriptionItem.create( positionDescription = positionDescription.positionDescriptionID,
+            #                                     itemDescription = duty,
+            #                                     itemType = "Duty"
+            #                                   )
+            # for qualification in qualificationList:
+            #     PositionDescriptionItem.create( positionDescription = positionDescription.positionDescriptionID,
+            #                                     itemDescription = qualification,
+            #                                     itemType = "Qualification"
+            #                                   )
+            # for learningObjective in learningList:
+            #     PositionDescriptionItem.create( positionDescription = positionDescription.positionDescriptionID,
+            #                                     itemDescription = learningObjective,
+            #                                     itemType = "Learning Objective"
+            #                                   )
