@@ -71,13 +71,14 @@ for root, dirs, files in os.walk(path, topdown=False):
                         elif line[0] not in lineStart:
                             appendLine +=  " " + line
                     if line == "":
-                        if dutySection:
-                            dutyList.append(appendLine[2:])
-                        elif learningSection:
-                            learningList.append(appendLine[2:])
-                        elif qualificationSection:
-                            qualificationList.append(appendLine[2:])
-                        appendLine = ""
+                        if appendLine:
+                            if dutySection:
+                                dutyList.append(appendLine[2:])
+                            elif learningSection:
+                                learningList.append(appendLine[2:])
+                            elif qualificationSection:
+                                qualificationList.append(appendLine[2:])
+                            appendLine = ""
 
             #need to pop off the first item of each list because it is the
             # section header
