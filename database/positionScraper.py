@@ -26,8 +26,6 @@ for root, dirs, files in os.walk(path, topdown=False):
             appending = False
             appendLine = ""
             for line in f:
-                if line.strip() == "ENDFILE":
-                    break
                 # Grabbing the position title
                 if "Position Title:" in line:
                     titleSplit = line.split(":", 1)
@@ -58,14 +56,24 @@ for root, dirs, files in os.walk(path, topdown=False):
                 # appending non empty lines into list based on the section
                 if dutySection or qualificationSection or learningSection:
                     line = line.strip()
-                    if line != "":
-                        if line[0:2] in lineStart:
+                    if "---------" in line:
+                        if appendLine:
                             if dutySection:
                                 dutyList.append(appendLine[3:])
                             elif learningSection:
                                 learningList.append(appendLine[3:])
                             elif qualificationSection:
                                 qualificationList.append(appendLine[3:])
+                        break
+                    if line != "":
+                        if line[0:2] in lineStart:
+                            if appendLine:
+                                if dutySection:
+                                    dutyList.append(appendLine[3:])
+                                elif learningSection:
+                                    learningList.append(appendLine[3:])
+                                elif qualificationSection:
+                                    qualificationList.append(appendLine[3:])
                             appendLine = ""
                             appendLine += line
                         elif line[0] not in lineStart:
@@ -73,11 +81,11 @@ for root, dirs, files in os.walk(path, topdown=False):
                     if line == "":
                         if appendLine:
                             if dutySection:
-                                dutyList.append(appendLine[2:])
+                                dutyList.append(appendLine[3:])
                             elif learningSection:
-                                learningList.append(appendLine[2:])
+                                learningList.append(appendLine[3:])
                             elif qualificationSection:
-                                qualificationList.append(appendLine[2:])
+                                qualificationList.append(appendLine[3:])
                             appendLine = ""
 
             #need to pop off the first item of each list because it is the
@@ -85,17 +93,18 @@ for root, dirs, files in os.walk(path, topdown=False):
             dutyList.pop(0)
             learningList.pop(0)
             qualificationList.pop(0)
-
-            print("This is duties")
+            print("This is DUTIES")
             for item in dutyList:
                 print(item, "Duty item")
-            print("#########################")
-            print("this is leanring")
+            print("----------------------------------------------------------")
+            print("This is LEARNING")
             for item in learningList:
                 print(item, "Learning item")
-            print("#########################")
+            print("----------------------------------------------------------")
+            print("This is QUALIFICATIONS")
             for item in qualificationList:
                 print(item, "Qualification item")
+            print("----------------------------------------------------------")
 
             # positionDescription = PositionDescription.create( createdBy = 1,
             #                                                   status = "Approved",
