@@ -43,19 +43,20 @@ for root, dirs, files in os.walk(path, topdown=False):
                     year = yearSplit[1].strip()
 
                 # checking to see what section where in
-                if "Description Of Duties" in line:
+                if "description of duties" in line.lower():
                     dutySection = True
                     learningSection, qualificationSection = False, False
-                elif "Learning Opportunities" in line:
+                elif "learning opportunities" in line.lower():
                     learningSection = True
                     qualificationSection, dutySection = False, False
-                elif "Qualifications Needed" in line:
+                elif "qualifications needed" in line.lower():
                     qualificationSection = True
                     learningSection, dutySection = False, False
 
                 # appending non empty lines into list based on the section
                 if dutySection or qualificationSection or learningSection:
                     line = line.strip()
+                    print(line, "the stripped line")
                     if "---------" in line:
                         if appendLine:
                             if dutySection:
@@ -93,6 +94,8 @@ for root, dirs, files in os.walk(path, topdown=False):
             dutyList.pop(0)
             learningList.pop(0)
             qualificationList.pop(0)
+            print(positionTitle,
+            "position Title")
             print("This is DUTIES")
             for item in dutyList:
                 print(item, "Duty item")
