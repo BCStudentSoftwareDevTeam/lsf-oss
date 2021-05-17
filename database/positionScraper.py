@@ -7,7 +7,7 @@ from datetime import datetime, date, timedelta
 import os
 import glob
 
-path = 'positions/test' #TODO
+path = 'TODO' #TODO
 
 lineStart = {"A.", "B.", "C.", "D.", "E.", "F.", "G.", "H.", "I.", "J.", "K.", "L.", "M."
             "O.", "P.", "Q.", "R.", "S.", "T.", "U.", "V.", "W.", "X.", "Y.", "Z."}

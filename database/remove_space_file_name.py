@@ -1,6 +1,6 @@
 import os
 
-positionPath = 'positions/test' #TODD
+positionPath = 'TODO' #TODD
 
 for root, dirs, files in os.walk(positionPath, topdown=False):
 

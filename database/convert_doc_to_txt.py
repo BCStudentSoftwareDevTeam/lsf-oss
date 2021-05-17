@@ -1,7 +1,7 @@
 import os
 import docx2txt
 
-positionPath = 'positions/test' #TODO
+positionPath = 'TODO' #TODO
 
 for root, dirs, files in os.walk(positionPath, topdown=False):
 
