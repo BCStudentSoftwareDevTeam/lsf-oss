@@ -124,86 +124,86 @@ print(" * students (TRACY) added")
 #############################
 # Positions (TRACY)
 #############################
-positions = [
-            {
-            "POSN_CODE": "S61407",
-            "POSN_TITLE": "Student Programmer",
-            "WLS": "1",
-            "ORG" : "2114",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Computer Science"
-            },
-            {
-            "POSN_CODE": "S61408",
-            "POSN_TITLE": "Research Associate",
-            "WLS": "5",
-            "ORG" : "2114",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Computer Science"
-            },
-            {
-            "POSN_CODE": "S61419",
-            "POSN_TITLE": "Teaching Associate",
-            "WLS": "3",
-            "ORG" : "2114",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Computer Science"
-            },
-            {
-            "POSN_CODE": "S61420",
-            "POSN_TITLE": "Teaching Associate",
-            "WLS": "5",
-            "ORG" : "2147",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Technology and Applied Design"
-            },
-            {
-            "POSN_CODE": "S61421",
-            "POSN_TITLE": "TA",
-            "WLS": "6",
-            "ORG" : "2114",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Computer Science"
-            },
-            {
-            "POSN_CODE": "S61427",
-            "POSN_TITLE": "Teaching Associate",
-            "WLS": "2",
-            "ORG" : "2150",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Mathematics"
-            },
-            {
-            "POSN_CODE": "S61430",
-            "POSN_TITLE": "Teaching Associate",
-            "WLS": "5",
-            "ORG" : "2107",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Biology"
-            },
-            {
-            "POSN_CODE": "S61443",
-            "POSN_TITLE": "Lab Assistant",
-            "WLS": "6",
-            "ORG" : "2107",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Biology"
-            },
-            {
-            "POSN_CODE": "S12345",
-            "POSN_TITLE": "DUMMY POSITION",
-            "WLS": "3",
-            "ORG" : "2114",
-            "ACCOUNT":"6740",
-            "DEPT_NAME":"Computer Science"
-            }
-]
-# Add to Tracy db
-for position in positions:
-    db.session.add(STUPOSN(**position))
-    db.session.commit()
-
-print(" * positions (TRACY) added")
+# positions = [
+#             {
+#             "POSN_CODE": "S61407",
+#             "POSN_TITLE": "Student Programmer",
+#             "WLS": "1",
+#             "ORG" : "2114",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Computer Science"
+#             },
+#             {
+#             "POSN_CODE": "S61408",
+#             "POSN_TITLE": "Research Associate",
+#             "WLS": "5",
+#             "ORG" : "2114",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Computer Science"
+#             },
+#             {
+#             "POSN_CODE": "S61419",
+#             "POSN_TITLE": "Teaching Associate",
+#             "WLS": "3",
+#             "ORG" : "2114",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Computer Science"
+#             },
+#             {
+#             "POSN_CODE": "S61420",
+#             "POSN_TITLE": "Teaching Associate",
+#             "WLS": "5",
+#             "ORG" : "2147",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Technology and Applied Design"
+#             },
+#             {
+#             "POSN_CODE": "S61421",
+#             "POSN_TITLE": "TA",
+#             "WLS": "6",
+#             "ORG" : "2114",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Computer Science"
+#             },
+#             {
+#             "POSN_CODE": "S61427",
+#             "POSN_TITLE": "Teaching Associate",
+#             "WLS": "2",
+#             "ORG" : "2150",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Mathematics"
+#             },
+#             {
+#             "POSN_CODE": "S61430",
+#             "POSN_TITLE": "Teaching Associate",
+#             "WLS": "5",
+#             "ORG" : "2107",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Biology"
+#             },
+#             {
+#             "POSN_CODE": "S61443",
+#             "POSN_TITLE": "Lab Assistant",
+#             "WLS": "6",
+#             "ORG" : "2107",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Biology"
+#             },
+#             {
+#             "POSN_CODE": "S12345",
+#             "POSN_TITLE": "DUMMY POSITION",
+#             "WLS": "3",
+#             "ORG" : "2114",
+#             "ACCOUNT":"6740",
+#             "DEPT_NAME":"Computer Science"
+#             }
+# ]
+# # Add to Tracy db
+# for position in positions:
+#     db.session.add(STUPOSN(**position))
+#     db.session.commit()
+#
+# print(" * positions (TRACY) added")
 
 #############################
 # TRACY Staff
@@ -459,113 +459,113 @@ print(" * terms added")
 #             "DEPT_NAME":"Computer Science"
 #             }
 #                     ]
-Position.insert_many(positions).on_conflict_replace().execute()
-print(" * positions added")
+# Position.insert_many(positions).on_conflict_replace().execute()
+# print(" * positions added")
 
 #############################
 # Position Descritpion
 #############################
-positionDescriptions = [
-                            {
-                            "positionDescriptionID": 1,
-                            "createdBy_id": 1,
-                            "status_id": "Approved",
-                            "POSN_CODE": "S61407",
-                            "createdDate": "2017-04-14",
-                            "endDate": "2018-04-14"
-                            },
-                            {
-                            "positionDescriptionID": 2,
-                            "createdBy_id": 1,
-                            "status_id": "Approved",
-                            "POSN_CODE": "S61407",
-                            "createdDate": "2018-04-14",
-                            "endDate": "2019-04-14"
-                            },
-                            {
-                            "positionDescriptionID": 3,
-                            "createdBy_id": 1,
-                            "status_id": "Approved",
-                            "POSN_CODE": "S61407",
-                            "createdDate": "2019-04-14",
-                            "endDate": "2020-04-07"
-                            },
-                            {
-                            "positionDescriptionID": 4,
-                            "createdBy_id": 1,
-                            "status_id": "Approved",
-                            "POSN_CODE": "S61407",
-                            "createdDate": "2020-04-14",
-                            "endDate": "2020-04-07"
-                            },
-                            {
-                            "positionDescriptionID": 5,
-                            "createdBy_id": 1,
-                            "status_id": "Approved",
-                            "POSN_CODE": "S61408",
-                            "createdDate": "2020-04-14",
-                            "endDate": None
-                            }
-                    ]
-PositionDescription.insert_many(positionDescriptions).on_conflict_replace().execute()
-print(" * positionDescriptions added")
+# positionDescriptions = [
+#                             {
+#                             "positionDescriptionID": 1,
+#                             "createdBy_id": 1,
+#                             "status_id": "Approved",
+#                             "POSN_CODE": "S61407",
+#                             "createdDate": "2017-04-14",
+#                             "endDate": "2018-04-14"
+#                             },
+#                             {
+#                             "positionDescriptionID": 2,
+#                             "createdBy_id": 1,
+#                             "status_id": "Approved",
+#                             "POSN_CODE": "S61407",
+#                             "createdDate": "2018-04-14",
+#                             "endDate": "2019-04-14"
+#                             },
+#                             {
+#                             "positionDescriptionID": 3,
+#                             "createdBy_id": 1,
+#                             "status_id": "Approved",
+#                             "POSN_CODE": "S61407",
+#                             "createdDate": "2019-04-14",
+#                             "endDate": "2020-04-07"
+#                             },
+#                             {
+#                             "positionDescriptionID": 4,
+#                             "createdBy_id": 1,
+#                             "status_id": "Approved",
+#                             "POSN_CODE": "S61407",
+#                             "createdDate": "2020-04-14",
+#                             "endDate": "2020-04-07"
+#                             },
+#                             {
+#                             "positionDescriptionID": 5,
+#                             "createdBy_id": 1,
+#                             "status_id": "Approved",
+#                             "POSN_CODE": "S61408",
+#                             "createdDate": "2020-04-14",
+#                             "endDate": None
+#                             }
+#                     ]
+# PositionDescription.insert_many(positionDescriptions).on_conflict_replace().execute()
+# print(" * positionDescriptions added")
 
 #############################
 # Position Descritpion Items
 #############################
-positionDescriptionItems = [
-                            {
-                            "positionDescriptionItemID": 1,
-                            "positionDescription": 1,
-                            "itemDescription": "Student will learn to code.",
-                            "itemType": "Learning Objective"
-                            },
-                            {
-                            "positionDescriptionItemID": 2,
-                            "positionDescription": 1,
-                            "itemDescription": "Student will learn to code in Python.",
-                            "itemType": "Learning Objective"
-                            },
-                            {
-                            "positionDescriptionItemID": 3,
-                            "positionDescription": 1,
-                            "itemDescription": "Student will learn to code in C++.",
-                            "itemType": "Learning Objective"
-                            },
-                            {
-                            "positionDescriptionItemID": 4,
-                            "positionDescription": 1,
-                            "itemDescription": "Student should know Python.",
-                            "itemType": "Qualification"
-                            },
-                            {
-                            "positionDescriptionItemID": 5,
-                            "positionDescription": 1,
-                            "itemDescription": "Student should know HTML.",
-                            "itemType": "Qualification"
-                            },
-                            {
-                            "positionDescriptionItemID": 6,
-                            "positionDescription": 1,
-                            "itemDescription": "Student should know Java.",
-                            "itemType": "Qualification"
-                            },
-                            {
-                            "positionDescriptionItemID": 7,
-                            "positionDescription": 1,
-                            "itemDescription": "Student will code.",
-                            "itemType": "Duty"
-                            },
-                            {
-                            "positionDescriptionItemID": 8,
-                            "positionDescription": 1,
-                            "itemDescription": "Student will do stuff(stuff may vary).",
-                            "itemType": "Duty"
-                            }
-
-                    ]
-PositionDescriptionItem.insert_many(positionDescriptionItems).on_conflict_replace().execute()
-print(" * positionDescriptionItems added")
+# positionDescriptionItems = [
+#                             {
+#                             "positionDescriptionItemID": 1,
+#                             "positionDescription": 1,
+#                             "itemDescription": "Student will learn to code.",
+#                             "itemType": "Learning Objective"
+#                             },
+#                             {
+#                             "positionDescriptionItemID": 2,
+#                             "positionDescription": 1,
+#                             "itemDescription": "Student will learn to code in Python.",
+#                             "itemType": "Learning Objective"
+#                             },
+#                             {
+#                             "positionDescriptionItemID": 3,
+#                             "positionDescription": 1,
+#                             "itemDescription": "Student will learn to code in C++.",
+#                             "itemType": "Learning Objective"
+#                             },
+#                             {
+#                             "positionDescriptionItemID": 4,
+#                             "positionDescription": 1,
+#                             "itemDescription": "Student should know Python.",
+#                             "itemType": "Qualification"
+#                             },
+#                             {
+#                             "positionDescriptionItemID": 5,
+#                             "positionDescription": 1,
+#                             "itemDescription": "Student should know HTML.",
+#                             "itemType": "Qualification"
+#                             },
+#                             {
+#                             "positionDescriptionItemID": 6,
+#                             "positionDescription": 1,
+#                             "itemDescription": "Student should know Java.",
+#                             "itemType": "Qualification"
+#                             },
+#                             {
+#                             "positionDescriptionItemID": 7,
+#                             "positionDescription": 1,
+#                             "itemDescription": "Student will code.",
+#                             "itemType": "Duty"
+#                             },
+#                             {
+#                             "positionDescriptionItemID": 8,
+#                             "positionDescription": 1,
+#                             "itemDescription": "Student will do stuff(stuff may vary).",
+#                             "itemType": "Duty"
+#                             }
+#
+#                     ]
+# PositionDescriptionItem.insert_many(positionDescriptionItems).on_conflict_replace().execute()
+# print(" * positionDescriptionItems added")
 
 #############################
 # Create a Pending Labor Status Form
