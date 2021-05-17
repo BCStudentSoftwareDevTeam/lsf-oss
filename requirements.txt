@@ -16,6 +16,7 @@ cx-Oracle==7.3.0
 dnspython==1.16.0
 docopt==0.6.2
 dominate==2.3.5
+docx2txt==0.8
 email-validator==1.0.4
 enum34==1.1.6
 Flask==1.0.3
