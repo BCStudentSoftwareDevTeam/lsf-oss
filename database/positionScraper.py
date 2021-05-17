@@ -124,20 +124,6 @@ for root, dirs, files in os.walk(path, topdown=False):
                     dutyList.pop(0)
                     learningList.pop(0)
                     qualificationList.pop(0)
-                    # print("####################", positionTitle, "####################")
-                    # print("This is DUTIES")
-                    # for item in dutyList:
-                    #     print(item, "Duty item")
-                    # print("----------------------------------------------------------")
-                    # print("This is LEARNING")
-                    # for item in learningList:
-                    #     print(item, "Learning item")
-                    # print("----------------------------------------------------------")
-                    # print("This is QUALIFICATIONS")
-                    # for item in qualificationList:
-                    #     print(item, "Qualification item")
-                    # print("----------------------------------------------------------")
-                    # print("####################", positionTitle, "####################")
 
                     try:
                         duplicatePosition = Position.get(Position.POSN_CODE == positionCode)

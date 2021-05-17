@@ -8,5 +8,5 @@ for root, dirs, files in os.walk(positionPath, topdown=False):
         joined = os.path.join(root, name)
         replacementName = joined.replace(" ","")
 
-        if( replacementName != joined):
+        if(replacementName != joined):
             os.rename(joined,replacementName)

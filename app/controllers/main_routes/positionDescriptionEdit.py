@@ -26,7 +26,6 @@ def PositionDescriptionEdit(positionDescriptionID = None, positionCode = None):
         if currentUser.student and not currentUser.supervisor:
             return redirect('/laborHistory/' + currentUser.student.ID)
 
-    print(positionDescriptionID, positionCode)
     if positionDescriptionID:
         positionDescriptionItems = PositionDescriptionItem.select().where(PositionDescriptionItem.positionDescription == positionDescriptionID)
         positionDescriptionRecord = PositionDescription.select().where(PositionDescription.positionDescriptionID == positionDescriptionID).get()

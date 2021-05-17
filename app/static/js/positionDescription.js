@@ -102,10 +102,7 @@ function checkDescription(positionID){
     type: "POST",
     url: "/positionDescriptions/checkDescription",
     data: data,
-    contentType: 'application/json',
-    success: function (response){
-      console.log("getting back", response);
-    }
+    contentType: 'application/json'
   });
 }
 
@@ -150,6 +147,5 @@ function beginNewVersionEdit(positionCode) {
   // This function will redirect the user to the position
   // description edit page when creating the first version of a
   // position description.
-  console.log("Redirect")
   window.location.href = '/positionDescriptionEdit/newVersion/' + positionCode
 }
