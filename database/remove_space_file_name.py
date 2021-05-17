@@ -1,6 +1,6 @@
 import os
 
-positionPath = 'positions/chemistry' #TODD
+positionPath = 'positions/test' #TODD
 
 for root, dirs, files in os.walk(positionPath, topdown=False):
 
