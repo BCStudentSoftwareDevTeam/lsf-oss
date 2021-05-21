@@ -661,8 +661,12 @@ function isOneLaborStatusForm(studentDict){
 function checkTotalHours(studentDict) {
   var termCode = $("#selectedTerm").val()
   var isBreak = $("#selectedTerm").find("option:selected").data("termbreak");
+  var hours = studentDict.stuWeeklyHours
+  if (isBreak) {
+    hours = studentDict.stuContractHours
+  }
   $.ajax({
-    url: "/laborstatusform/checktotalhours/" + termCode +"/"+ studentDict.stuBNumber +"/"+ studentDict.stuWeeklyHours +"/"+ studentDict.stuContractHours,
+    url: "/laborstatusform/checktotalhours/" + termCode +"/"+ studentDict.stuBNumber +"/"+ hours,
     dataType: "json",
     success: function (response){
       if (response > (15) && !isBreak) {
