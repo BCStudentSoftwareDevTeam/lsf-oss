@@ -3,9 +3,10 @@
 ## Requirements
 Python 3.6+ 
 MySQL Server 8.0.6+
+Ubuntu 20 (or other *nix systems that can run shell scripts)
 
 
-**Packages (Ubuntu)**
+**Required local packages (Ubuntu)**
  * python3-dev
  * python3-pip
  * python3-venv
