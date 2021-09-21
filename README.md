@@ -13,7 +13,7 @@ Ubuntu 20 (or other *nix systems that can run shell scripts)
  * unixodbc-dev
 
 ## Developing on Labor Status Forms
-1. Pull down the repo: git clone <URL>.
+1. Pull down the repo: ```git clone <URL>```.
 2. Run ```source setup.sh```.
 3. Ensure mysql is running. You may need to do ```sudo systemctl start mysql```.
 3.a. (First time) Create an empty database. The default name is ```lsf```.
