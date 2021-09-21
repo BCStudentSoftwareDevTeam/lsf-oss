@@ -16,10 +16,10 @@ Ubuntu 20 (or other *nix systems that can run shell scripts)
 1. Pull down the repo: ```git clone <URL>```.
 2. Run ```source setup.sh```.
 3. Ensure mysql is running. You may need to do ```sudo systemctl start mysql```.
-  3.a. (First time) Create an empty database. The default name is ```lsf```.
-  3.b. (First time) Create another empty database. The default name is ```UTE```.
-  3.c. (First time) Copy the file app/config/example_secret_config.yaml to app/config/secret_config.yaml.
-  3.d. (First time) Edit app/config/secret_config.yaml to include the correct database names, and connecting username and password to access each databases above.
+  - (First time) Create an empty database. The default name is ```lsf```.
+  - (First time) Create another empty database. The default name is ```UTE```.
+  - (First time) Copy the file app/config/example_secret_config.yaml to app/config/secret_config.yaml.
+  - (First time) Edit app/config/secret_config.yaml to include the correct database names, and connecting username and password to access each databases above.
 4. In the database directory, run ```./reset_database.sh```.
 5. Run the app with ```flask run``` in the root directory.
 
