@@ -1,5 +1,5 @@
 # Flask application to manage Labor Status Forms
-
+ 
 ## Requirements
 
 - Python 3.6+ 
@@ -28,13 +28,18 @@ NOTE: You must [install MySQL](INSTALL_MYSQL.md) and know the root password to c
 5. Run ```source install.sh```. 
 6. Run the app with ```flask run``` in the root directory.
 
-### Reseting the application during development
+## Running tests againt your new code
 
-1. ```cd``` to the ```database directory```. 
-2. Run ```source reset_database.sh```
+Test should be added in ```tests/code/```, logically grouped into files named ```test_EXAMPLE.py```. You can run tests individually with ```pytest```, or run the entire suite with ```tests/run_tests.sh```. The most common usage will be to run the non-ui tests continually by running ```tests/monitor.sh no-ui``` from the root directory of the repo. Where possible, use TDD and write your test before the code that makes it pass. Follow the Fail - Implement - Pass cycle.
+
+### Resetting the application during development
+
+1. ```cd``` to the ```database``` directory. 
+2. Run ```source reset_database.sh```.
 3. Return to the root directory and run the app with ```flask run```. 
 
 ### Using the Production database and real Tracy data
+
 1. Set up your computer to access SQL Server databases (Instructions: http://ssdt-documentation.berea.edu/en/database).
 2. Ensure your database connection is working by running ```python db_test.py```.
 3. Check your secret_config.yml and make sure you have the necessary config items (check example_secret_config.yml)

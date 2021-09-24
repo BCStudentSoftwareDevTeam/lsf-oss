@@ -12,13 +12,21 @@ if [ "$1" == "from-backup" ]; then
 	BACKUP=1
 fi
 
+if [ -n "${rootpasswd+x}" ]; then 
+	echo "There is a root password"; 
+else 
+	echo "Please enter root user MySQL password!"
+	echo "Note: password will be hidden when typing"
+	read -s rootpasswd
+fi
+
 echo "Dropping databases"
-mysql -u root -proot --execute="DROP DATABASE \`lsf\`; DROP USER 'lsf_user';"
-mysql -u root -proot --execute="DROP DATABASE \`UTE\`; DROP USER 'tracy_user';"
+mysql -u root -p${rootpasswd} --execute="DROP DATABASE \`lsf\`; DROP USER 'lsf_user';"
+mysql -u root -p${rootpasswd} --execute="DROP DATABASE \`UTE\`; DROP USER 'tracy_user';"
 
 echo "Recreating databases and users"
-mysql -u root -proot --execute="CREATE DATABASE IF NOT EXISTS \`lsf\`; CREATE USER IF NOT EXISTS 'lsf_user'@'%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON *.* TO 'lsf_user'@'%';"
-mysql -u root -proot --execute="CREATE DATABASE IF NOT EXISTS \`UTE\`; CREATE USER IF NOT EXISTS 'tracy_user'@'%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON *.* TO 'tracy_user'@'%';"
+mysql -u root -p${rootpasswd} --execute="CREATE DATABASE IF NOT EXISTS \`lsf\`; CREATE USER IF NOT EXISTS 'lsf_user'@'%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON *.* TO 'lsf_user'@'%';"
+mysql -u root -p${rootpasswd} --execute="CREATE DATABASE IF NOT EXISTS \`UTE\`; CREATE USER IF NOT EXISTS 'tracy_user'@'%' IDENTIFIED BY 'password'; GRANT ALL PRIVILEGES ON *.* TO 'tracy_user'@'%';"
 
 
 rm -rf lsf_migrations
