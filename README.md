@@ -42,7 +42,7 @@ NOTE: You must [install MySQL](INSTALL_MYSQL.md) and know the root password to c
 4. Reset your database from the backup ```./reset_database.sh from-backup```.
 5. Change your environment to ```staging```. Before starting the application, run ```export FLASK_ENV=staging```
 
-## Running tests against your new code
+### Running tests against your new code
 Test should be added in ```tests/code/```, logically grouped into files named ```test_EXAMPLE.py```. You can run tests individually with ```pytest```, or run the entire suite with ```tests/run_tests.sh```. The most common usage will be to run the non-ui tests continually by running ```tests/monitor.sh no-ui``` from the root directory of the repo. Where possible, use TDD and write your test before the code that makes it pass. Follow the Fail - Implement - Pass cycle.
 
 ### Updating pip dependencies (imports)
