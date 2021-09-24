@@ -1,6 +1,6 @@
 # Installing MySQL
 
-1. Download the latest version of MySQL from [https://www.mysql.com/downloads/] (MySQL's website). Alternatively, Ubuntu users can install MySQL server directly: ```sudo apt install mysql-server.```
+1. Download the latest version of MySQL from [MySQL's website](https://www.mysql.com/downloads/). Alternatively, Ubuntu users can install MySQL server directly: ```sudo apt install mysql-server.```
 2. Run the installer, following their instructions.
 
 ## Default username and password
@@ -12,5 +12,5 @@ mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 mysql> FLUSH PRIVILEGES;
 ```
 
-Replace <PASS> with the password you want, or with nothing for an empty password.
+Replace ```<PASS>``` with the password you want, or with nothing for an empty password.
 

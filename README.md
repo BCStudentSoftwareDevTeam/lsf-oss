@@ -17,7 +17,7 @@
 
 ### Initial installation
 
-NOTE: You must (INSTALL_MYSQL.md) [install MySQL] and know the root password to continue. 
+NOTE: You must [install MySQL](INSTALL_MYSQL.md) and know the root password to continue. 
 
 1. Pull down the repo: ```git clone <URL>```.
 2. Ensure mysql is running. You may need to do ```sudo systemctl start mysql```.
