@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-source setup.sh
+rm -rf venv
 
+source setup.sh
 
 if [ -n "${rootpasswd+x}" ]; then 
         echo "There is a MySQL root password stored in the environment"; 
