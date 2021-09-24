@@ -12,6 +12,7 @@
  * python3-pip
  * python3-venv
  * unixodbc-dev
+ * libffi-dev
 
 ## Developers Guide
 
