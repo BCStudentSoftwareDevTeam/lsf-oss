@@ -1,9 +1,10 @@
 # Flask application to manage Labor Status Forms
 
 ## Requirements
-Python 3.6+ 
-MySQL Server 8.0.6+
-Ubuntu 20 (or other *nix systems that can run shell scripts)
+
+- Python 3.6+ 
+- MySQL Server 8.0.6+
+- Ubuntu 20 (or other *nix systems that can run shell scripts)
 
 
 **Required local packages (Ubuntu)**
