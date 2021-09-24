@@ -16,7 +16,7 @@ Ubuntu 20 (or other *nix systems that can run shell scripts)
 
 ### Initial installation
 
-NOTE: You must know the MySQL root password to continue. 
+NOTE: You must (INSTALL_MYSQL.md) [install MySQL] and know the root password to continue. 
 
 1. Pull down the repo: ```git clone <URL>```.
 2. Ensure mysql is running. You may need to do ```sudo systemctl start mysql```.
