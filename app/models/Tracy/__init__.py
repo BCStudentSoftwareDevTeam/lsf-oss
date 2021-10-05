@@ -8,6 +8,8 @@ import os
 # cfg = load_config('app/config/secret_config.yaml')
 
 host = app.config['tracy']['host']
+
+# FIXME: THIS SHOULD PROBABLY TAKE ADVANTAGE OF CONFIG2
 if not os.environ.get("USING_CONTAINER", False):
     host = "localhost"
 
