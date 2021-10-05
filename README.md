@@ -22,11 +22,12 @@ NOTE: You must [install MySQL](INSTALL_MYSQL.md) and know the root password to c
 
 1. Pull down the repo: ```git clone <URL>```.
 2. Ensure mysql is running. You may need to do ```sudo systemctl start mysql```.
-   - (First time) Create another empty database. The default name is ```UTE```.
-3. Copy the file app/config/example_secret_config.yaml to app/config/secret_config.yaml.
-4. Edit ```app/config/secret_config.yaml``` to match your application parameters.
+   - (FIXME) Create another empty database. The default name is ```UTE```.
+3. Edit ```app/config/default.yaml``` to match your application parameters.
+4. Edit ```app/config/local_override.yaml``` for any local environment variables, such as username/passwords for the database. 
 5. Run ```source install.sh```. 
 6. Run the app with ```flask run``` in the root directory.
+
 
 ### Resetting the application during development
 
