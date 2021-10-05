@@ -7,5 +7,6 @@ venv/
 *.swo
 old/
 secret_config.yaml
+local_override.yaml
 geckodriver.log
-local_override.yml
+

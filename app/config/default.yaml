@@ -3,7 +3,7 @@
 secret_key: "123"
 
 # If you have local-only overrides, put them in this file
-override_file: "local_override.yml"
+override_file: "local_override.yaml"
 
 # The default user is the application cannot find a real user
 user:
@@ -14,7 +14,8 @@ user:
 USE_SHIBBOLETH: 0
 
 # Tracy can provide you with student labor data, such as positions, departments, etc.
-# A Tracy Ultratime provider must be installed and access allowed from this server.
+# If set, a Tracy Ultratime provider must be installed and access allowed from this server.
+# Otherwise, the local instance will provide this data.
 USE_TRACY: 0
 
 # Banner can be used as the official hiring database after administrators approve a form.
