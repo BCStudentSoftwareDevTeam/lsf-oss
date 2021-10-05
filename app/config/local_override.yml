@@ -1,0 +1,2 @@
+# Place local environment variables specific to your application in this file.
+# They will override default.yml, and production.yml/development.yml variables.

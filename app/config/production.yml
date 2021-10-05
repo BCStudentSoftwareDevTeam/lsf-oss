@@ -1,0 +1,12 @@
+#####################################################################################################################
+
+# The database for college records, such as where each student is currently employed.
+# This should be removed in the open source version, probably.
+banner:
+ user: "REPLACE"
+ url: "REPLACE"
+ port: REPLACE
+ sid: "REPLACE"
+ password: "REPLACE"
+
+#####################################################################################################################

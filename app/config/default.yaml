@@ -1,6 +1,36 @@
+################################### GLOBAL FLASK SETTINGS ###########################################################
+# Every Flask application has a secret key.
+secret_key: "123"
+
+# If you have local-only overrides, put them in this file
+override_file: "local_override.yml"
+
+# The default user is the application cannot find a real user
+user:
+ debug: "heggens"
+
+# Shibboleth can manage login for you. Set to 1 to turn it on.
+# A shibboleth provider must be installed and configured using the Apache configuration.
+USE_SHIBBOLETH: 0
+
+# Tracy can provide you with student labor data, such as positions, departments, etc.
+# A Tracy Ultratime provider must be installed and access allowed from this server.
+USE_TRACY: 0
+
+# Banner can be used as the official hiring database after administrators approve a form.
+# A Banner ERP must be installed and access allowed from this server.
+USE_BANNER: 0
 
 #####################################################################################################################
-# The database for work study information, such as positions, departments, etc. 
+################################### DATABASE CONNECTIONS ############################################################
+# The local database for the application. This database must exist
+lsfdb:
+ db_name: "test"
+ password: "12345"
+ username: "test"
+ host: "db"
+
+# The database for work study information, such as positions, departments, etc.
 tracy:
  db_name: "UTE"
  host: "db"
@@ -9,36 +39,6 @@ tracy:
  mssql_host: "REPLACE"
  mssql_user: "REPLACE"
  mssql_password: "REPLACE"
-
-# The database for college records, such as where each student is currently employed. 
-# This should be removed in the open source version, probably.
-banner:
- user: "REPLACE"
- url: "REPLACE"
- port: REPLACE
- sid: "REPLACE"
- password: "REPLACE"
-
-#####################################################################################################################
-################################### GLOBAL FLASK SETTINGS ###########################################################
-# Every Flask application has a secret key.
-secret_key: "123"
-
-# The default user is the application cannot find a real user
-user:
- debug: "heggens"
-
-# Shibboleth can manage login for you. Set to 1 to turn it on. 
-# A shibboleth provider must be installed and configured using the Apache configuration.
-USE_SHIBBOLETH: 0
-
-# Tracy can provide you with student labor data, such as positions, departments, etc. 
-# A Tracy Ultratime provider must be installed and access allowed from this server. 
-USE_TRACY: 0
-
-# Banner can be used as the official hiring database after administrators approve a form. 
-# A Banner ERP must be installed and access allowed from this server. 
-USE_BANNER: 0
 
 #####################################################################################################################
 #################################### EMAILER SETTINGS ###############################################################
@@ -60,7 +60,7 @@ MAIL_OVERRIDE_ALL: "j5u6j9w6v1h0p3g1@bereacs.slack.com"
 #####################################################################################################################
 ##################################### APPLICATION FEATURES ##########################################################
 
-# Use the flags in this section to enable or disable features that you want included in your application. 
+# Use the flags in this section to enable or disable features that you want included in your application.
 
 # Provides login ito students so they can see a history of their work at the institution.
 STUDENT_ACCESS: 0
@@ -77,11 +77,11 @@ PAYROLL: 0
 # Allows tracking of hours. Feature not implemented yet.
 TIMECARDS: 0
 
-# Provides an interface for students to review jobs in each department. STUDENT_ACCESS must be set to 1 for this feature. 
+# Provides an interface for students to review jobs in each department. STUDENT_ACCESS must be set to 1 for this feature.
 # Feature not implemented yet.
 # JOB_SEARCH: 0
 
-# Turns on the emailer system, which notifies students and supervisors of changes to work positions. 
+# Turns on the emailer system, which notifies students and supervisors of changes to work positions.
 # Also enables the email templating system.
 EMAILER: 0
 
@@ -95,7 +95,7 @@ EMAILER: 0
 INSTITUTION: Berea College
 
 # The name of your work study program at your institution.
-PROGRAM_NAME: Labor Program 
+PROGRAM_NAME: Labor Program
 
 # The terms used for hiring and firing a student.
 HIRE_TERM: [hire, hiring, hired]
@@ -109,5 +109,3 @@ CHANGE_FORM: Labor Adjustment Form
 
 # List the names of terms, in order. If you hire students specifically for breaks, add those too.
 TERM_NAMES: [Fall, Fall Break, Winter Break, Spring, Spring Break, Summer 1, Summer 2]
-
-

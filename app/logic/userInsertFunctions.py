@@ -14,7 +14,7 @@ from flask import json, jsonify
 from flask import request
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
-from app import cfg
+# from app import app
 from app.logic.emailHandler import emailHandler
 from app.logic.tracy import Tracy, InvalidQueryException
 from peewee import DoesNotExist

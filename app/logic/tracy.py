@@ -1,4 +1,4 @@
-from app.config.loadConfig import get_secret_cfg
+# from app.config.loadConfig import get_secret_cfg
 from peewee import DoesNotExist
 import sqlalchemy
 from app.models.Tracy import db
@@ -16,7 +16,8 @@ class Tracy():
     """
 
     def __init__(self):
-        secret_conf = get_secret_cfg()
+        # secret_conf = get_secret_cfg()
+        pass
 
     #######################################
 

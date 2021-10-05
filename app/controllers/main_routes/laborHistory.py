@@ -14,7 +14,7 @@ from flask import make_response
 import datetime
 import re
 from datetime import date
-from app import cfg
+from app import config as cfg
 from app.controllers.main_routes.download import ExcelMaker
 from fpdf import FPDF
 from app.logic.buttonStatus import ButtonStatus

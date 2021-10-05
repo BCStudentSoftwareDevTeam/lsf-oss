@@ -1,22 +1,24 @@
 # Relying on https://www.oracle.com/technical-resources/articles/database/python-with-database-11g.html
 
 import cx_Oracle
-from app.config.loadConfig import*
+# from app.config.loadConfig import*
 from app import app
 
+##### FIXME: NOT TESTED!!!!!! #################################
 class Banner():
     def __init__(self):
-        secret_conf = get_secret_cfg()
-        banner_cfg = secret_conf["banner"]
+        # secret_conf = get_secret_cfg()
+        # banner_cfg = secret_conf["banner"]
 
         self.database_exists = False
-        if app.config['use_banner']:
+        if app.config['USE_BANNER']:
+            print("NOTE to the developer: This code is untested since migrating to open source model")
             self.database_exists = True
             try:
                 self.conn = cx_Oracle.connect(
-                        banner_cfg["user"],
-                        banner_cfg["password"],
-                        "{url}:{port}/{sid}".format(**banner_cfg))
+                        app.config["banner"]["user"],
+                        app.config["banner"]["password"],
+                        "{url}:{port}/{sid}".format(**app.config["banner"]))
                 print("BANNER connection initialized. Oracle version {}".format(self.conn.version))
 
             except Exception as err:
@@ -93,5 +95,5 @@ class Banner():
             except Exception as err:
                 print("Error inserting into BANNER db:", err)
                 return False
-        
+
         return True # If we got here, we are successful (even if we didn't even try to insert)

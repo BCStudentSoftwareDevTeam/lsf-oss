@@ -8,3 +8,4 @@ venv/
 old/
 secret_config.yaml
 geckodriver.log
+local_override.yml

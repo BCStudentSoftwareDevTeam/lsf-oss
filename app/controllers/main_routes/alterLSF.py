@@ -5,7 +5,7 @@ from app.models.formHistory import FormHistory
 from app.models.user import User
 from app.models.supervisor import Supervisor
 from app.models.adjustedForm import AdjustedForm
-from app import cfg
+from app import config as cfg
 from app.logic.emailHandler import *
 from app.login_manager import require_login
 from app.logic.tracy import Tracy

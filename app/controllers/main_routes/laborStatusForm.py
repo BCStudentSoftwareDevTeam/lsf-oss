@@ -14,7 +14,7 @@ from flask import json, jsonify
 from flask import request
 from datetime import datetime, date, timedelta
 from flask import Flask, redirect, url_for, flash
-from app import cfg
+from app import config as cfg
 from app.logic.emailHandler import*
 from app.logic.userInsertFunctions import*
 from app.models.supervisor import Supervisor

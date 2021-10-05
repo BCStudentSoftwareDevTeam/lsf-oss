@@ -1,5 +1,5 @@
 from flask import request, session
-from app import cfg, app
+from app import app
 from app.controllers.errors_routes.handlers import *
 from app.models.user import User, DoesNotExist
 from app.logic.userInsertFunctions import createUser, createSupervisorFromTracy, createStudentFromTracy, InvalidUserException
@@ -7,11 +7,11 @@ from app.logic.userInsertFunctions import createUser, createSupervisorFromTracy,
 def getUsernameFromEnv(env):
     envK = "eppn"
 
-    if app.config['use_shibboleth'] and envK in env:
+    if app.config['USE_SHIBBOLETH'] and envK in env:
         username = env[envK].split("@")[0].split('/')[-1].lower()
         return username
     else:
-        return cfg['user']['debug']
+        return app.config['user']['debug']
 
 def logout():
     """
@@ -22,7 +22,7 @@ def logout():
     session.clear()
 
     url ="/"
-    if app.config['use_shibboleth']:
+    if app.config['USE_SHIBBOLETH']:
         url = "/Shibboleth.sso/Logout"
     return url
 

@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template
 from flask_mail import Mail, Message
-from app.config.loadConfig import*
+# from app.config.loadConfig import*
 from app.models.emailTemplate import*
 from app.models.laborReleaseForm import*
 from app.models.laborStatusForm import*
@@ -19,19 +19,19 @@ from datetime import datetime, date
 
 class emailHandler():
     def __init__(self, formHistoryKey):
-        secret_conf = get_secret_cfg()
-        app.config.update(
-            MAIL_SERVER=secret_conf['MAIL_SERVER'],
-            MAIL_PORT=secret_conf['MAIL_PORT'],
-            MAIL_USERNAME= secret_conf['MAIL_USERNAME'],
-            MAIL_PASSWORD= secret_conf['MAIL_PASSWORD'],
-            REPLY_TO_ADDRESS= secret_conf['REPLY_TO_ADDRESS'],
-            MAIL_USE_TLS=secret_conf['MAIL_USE_TLS'],
-            MAIL_USE_SSL=secret_conf['MAIL_USE_SSL'],
-            MAIL_DEFAULT_SENDER=secret_conf['MAIL_DEFAULT_SENDER'],
-            MAIL_OVERRIDE_ALL=secret_conf['MAIL_OVERRIDE_ALL'],
-            ALWAYS_SEND_MAIL=secret_conf['ALWAYS_SEND_MAIL']
-        )
+        # secret_conf = get_secret_cfg()
+        # app.config.update(
+        #     MAIL_SERVER=secret_conf['MAIL_SERVER'],
+        #     MAIL_PORT=secret_conf['MAIL_PORT'],
+        #     MAIL_USERNAME= secret_conf['MAIL_USERNAME'],
+        #     MAIL_PASSWORD= secret_conf['MAIL_PASSWORD'],
+        #     REPLY_TO_ADDRESS= secret_conf['REPLY_TO_ADDRESS'],
+        #     MAIL_USE_TLS=secret_conf['MAIL_USE_TLS'],
+        #     MAIL_USE_SSL=secret_conf['MAIL_USE_SSL'],
+        #     MAIL_DEFAULT_SENDER=secret_conf['MAIL_DEFAULT_SENDER'],
+        #     MAIL_OVERRIDE_ALL=secret_conf['MAIL_OVERRIDE_ALL'],
+        #     ALWAYS_SEND_MAIL=secret_conf['ALWAYS_SEND_MAIL']
+        # )
 
         self.mail = Mail(app)
 
