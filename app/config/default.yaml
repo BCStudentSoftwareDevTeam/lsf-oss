@@ -14,12 +14,12 @@ user:
 USE_SHIBBOLETH: 0
 
 # Tracy can provide you with student labor data, such as positions, departments, etc.
-# If set, a Tracy Ultratime provider must be installed and access allowed from this server.
-# Otherwise, the local instance will provide this data.
+# If set, a Tracy Ultratime SQAlchemy provider must be installed and access allowed from this server.
+# Otherwise, the local MySQL instance will provide this data.
 USE_TRACY: 0
 
 # Banner can be used as the official hiring database after administrators approve a form.
-# A Banner ERP must be installed and access allowed from this server.
+# A Banner Oracle db must be installed and access allowed from this server.
 USE_BANNER: 0
 
 #####################################################################################################################
