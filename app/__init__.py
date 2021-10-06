@@ -12,8 +12,8 @@ from flask.helpers import get_env
 app = Flask(__name__, template_folder="templates")
 
 bootstrap = Bootstrap(app)
-# login = LoginManager(app)  #FIXME: needs configured with our dev/prod environment handlers
 
+# login = LoginManager(app)  #FIXME: needs configured with our dev/prod environment handlers
 
 ######### Set up Application Configuration #############
 # Uses config2 - https://pypi.org/project/config2/ - with the addition of an uncommitted
@@ -43,7 +43,7 @@ with open("app/config/" + config.override_file, 'r') as ymlfile:
     except TypeError:
         print(f"There was an error loading the override config file {config.override_file}. It might just be empty.")
 
-# set the secret key after configuration is set up
+# Set the secret key after configuration is set up
 app.secret_key = app.config["secret_key"]
 
 # Registers blueprints (controllers). These are general routes, like /index
@@ -58,6 +58,7 @@ app.register_blueprint(admin_bp)
 from app.controllers.errors_routes import error as errors_bp
 app.register_blueprint(errors_bp)
 
+# Makes the environment available globally
 @app.context_processor
 def inject_environment():
     return dict(env=get_env())
