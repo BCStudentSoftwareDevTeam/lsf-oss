@@ -13,7 +13,7 @@ with app.app_context():
         MAIL_USE_TLS=secret_conf['MAIL_USE_TLS'],
         MAIL_USE_SSL=secret_conf['MAIL_USE_SSL'],
         MAIL_DEFAULT_SENDER=secret_conf['MAIL_DEFAULT_SENDER'],
-        ALWAYS_SEND_MAIL=secret_conf['ALWAYS_SEND_MAIL']
+        USE_EMAILER=secret_conf['USE_EMAILER']
     )
 
     msg = Message("Test Email", recipients=["j5u6j9w6v1h0p3g1@bereacs.slack.com"],html="<h3>Test</h3>Whooo",sender="support@bereacollege.onmicrosoft.com")

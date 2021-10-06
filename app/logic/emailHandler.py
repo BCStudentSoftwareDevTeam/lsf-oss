@@ -30,7 +30,7 @@ class emailHandler():
         #     MAIL_USE_SSL=secret_conf['MAIL_USE_SSL'],
         #     MAIL_DEFAULT_SENDER=secret_conf['MAIL_DEFAULT_SENDER'],
         #     MAIL_OVERRIDE_ALL=secret_conf['MAIL_OVERRIDE_ALL'],
-        #     ALWAYS_SEND_MAIL=secret_conf['ALWAYS_SEND_MAIL']
+        #     USE_EMAILER=secret_conf['USE_EMAILER']
         # )
 
         self.mail = Mail(app)
@@ -101,7 +101,7 @@ class emailHandler():
                 print (e)
 
     def send(self, message: Message):
-        if app.config['ENV'] == 'production' or app.config['ALWAYS_SEND_MAIL']:
+        if app.config['ENV'] == 'production' or app.config['USE_EMAILER']:
 
             # If we have set an override address
             if app.config['MAIL_OVERRIDE_ALL']:
