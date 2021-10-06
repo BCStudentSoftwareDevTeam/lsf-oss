@@ -1,4 +1,4 @@
-# Flask application to manage Labor Status Forms
+# Work Study Software System
  
 ## Requirements
 
