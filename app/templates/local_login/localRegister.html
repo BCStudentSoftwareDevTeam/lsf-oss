@@ -1,0 +1,46 @@
+{% macro render_field(field) %}
+  <dt>{{ field.label }}
+  <dd>{{ field(**kwargs)|safe }}
+  {% if field.errors %}
+    <ul class=errors>
+    {% for error in field.errors %}
+      <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  </dd>
+{% endmacro %}
+
+{% extends "base.html" %}
+
+{% block styles %}
+{{super()}}
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.css"/>
+  <link href="https://cdn.datatables.net/buttons/1.5.6/css/buttons.dataTables.min.css"rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="{{url_for('static', filename ='css/index.css')}}?u={{lastStaticUpdate}}">
+{% endblock %}
+
+{% block scripts %}
+{{super()}}
+  <script type="text/javascript" src="https://cdn.datatables.net/v/bs/jq-3.3.1/dt-1.10.18/r-2.2.2/datatables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.5.4/bootstrap-select.js"></script>
+  <script type="text/javascript" src="{{url_for('static', filename='js/index.js') }}?u={{lastStaticUpdate}}"></script>
+
+{% endblock %}
+
+{% block app_content %}
+  <form method=post>
+    <dl>
+      {{ render_field(form.username) }}
+      {{ render_field(form.email) }}
+      {{ render_field(form.password) }}
+      {{ render_field(form.confirm) }}
+    </dl>
+    <p><input type=submit value=Register>
+  </form>
+
+
+
+
+{% endblock %}

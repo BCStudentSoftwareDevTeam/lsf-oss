@@ -1,4 +1,4 @@
-from flask import flash, send_file
+from flask import flash, send_file, json, jsonify, abort, make_response, url_for
 from app.controllers.main_routes import *
 from app.controllers.main_routes.download import ExcelMaker
 from app.login_manager import *
@@ -9,14 +9,12 @@ from app.models.historyType import HistoryType
 from app.models.formHistory import FormHistory
 from datetime import datetime, date
 from flask import request, redirect
-from flask import json, jsonify
-from flask import make_response
 from app.logic.tracy import Tracy
 from app.logic.tracy import InvalidQueryException
-import app.login_manager as login_manager
-import base64
-import time
-import sys
+import app.login_manager as login_manager  #FIXME: Duplicate import
+import base64, time, sys
+from flask_login import current_user, login_user, login_required
+from app.logic.localLogin import RegistrationForm, LoginForm
 
 currentlyEnrolledBNumbers = []
 
@@ -34,14 +32,13 @@ def isCurrentStudent(bnumber):
 def before_request():
     pass # TODO Do we need to do anything here? User stuff?
 
-@main_bp.route('/logout', methods=['GET'])
-def logout():
-    return redirect(login_manager.logout())
+
 
 @main_bp.route('/', methods=['GET', 'POST'])
 @main_bp.route('/main/students', methods=['GET', 'POST'])
 @main_bp.route('/main/department', methods=['GET', 'POST'])
 @main_bp.route('/main/department/<department>', methods=['GET', 'POST'])
+@login_required
 def index(department = None):
     # try:
     currentUser = require_login()

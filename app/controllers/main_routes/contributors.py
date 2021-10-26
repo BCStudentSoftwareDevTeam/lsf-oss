@@ -7,14 +7,14 @@ from app.models.Tracy.studata import *
 from app import *
 from app.login_manager import *
 
-@app.context_processor
-def injectGlobalData():
-    currentUser = require_login()
-    lastStaticUpdate = str(max(os.path.getmtime(os.path.join(root_path, f))
-                   for root_path, dirs, files in os.walk('app/static')
-                   for f in files))
-    return {'currentUser': currentUser,
-            'lastStaticUpdate': lastStaticUpdate}
+# @app.context_processor
+# def injectGlobalData():
+#     currentUser = require_login()
+#     lastStaticUpdate = str(max(os.path.getmtime(os.path.join(root_path, f))
+#                    for root_path, dirs, files in os.walk('app/static')
+#                    for f in files))
+#     return {'currentUser': currentUser,
+#             'lastStaticUpdate': lastStaticUpdate}
 
 @app.route("/contributors", methods = ["GET"])
 def contributors():

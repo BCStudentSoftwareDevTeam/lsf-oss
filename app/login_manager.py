@@ -10,6 +10,9 @@ def getUsernameFromEnv(env):
     if app.config['USE_SHIBBOLETH'] and envK in env:
         username = env[envK].split("@")[0].split('/')[-1].lower()
         return username
+    elif not app.config['USE_SHIBBOLETH']:
+        pass
+        # FIXME Check local login username
     else:
         return app.config['user']['debug']
 

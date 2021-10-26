@@ -3,7 +3,7 @@
 secret_key: "123"
 
 # If you have local-only overrides, put them in this file
-override_file: "local_override.yaml"
+override_file: "local.yaml"
 
 # The default user is the application cannot find a real user
 user:
@@ -11,6 +11,7 @@ user:
 
 # Shibboleth can manage login for you. Set to 1 to turn it on.
 # A shibboleth provider must be installed and configured using the Apache configuration.
+# If set to 0, local login is enabled. 
 USE_SHIBBOLETH: 0
 
 # Tracy can provide you with student labor data, such as positions, departments, etc.
@@ -58,7 +59,7 @@ MAIL_DEFAULT_SENDER: '' #FIXME: Add sender email address
 MAIL_OVERRIDE_ALL: '' #FIXME: Provide a debug email address, such as a Slack channel
 
 financial_aid:
-  email: `` #FIXME: Provide an email address for Financial Aid matters
+  email: '' #FIXME: Provide an email address for Financial Aid matters
 #####################################################################################################################
 ##################################### APPLICATION FEATURES ##########################################################
 
