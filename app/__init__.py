@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, session
 from config2.config import config
 import yaml
 from flask_bootstrap import Bootstrap
@@ -44,10 +44,11 @@ with open("app/config/" + config.override_file, 'r') as ymlfile:
 # Set the secret key after configuration is set up
 app.secret_key = app.config["secret_key"]
 
+
 # Only use flask-login if Shibboleth is disabled
 if app.config["USE_SHIBBOLETH"] == 0:
-    login = LoginManager(app)  #FIXME: needs configured with our dev/prod environment handlers
-    # login_manager.init_app(app)
+    login_mgr = LoginManager(app)  #FIXME: needs configured with our dev/prod environment handlers
+    login_mgr.init_app(app)
     # Registers the admin interface blueprints
     from app.controllers.local_login_routes import local_login_bp as local_login_bp
     app.register_blueprint(local_login_bp)
@@ -69,9 +70,10 @@ app.register_blueprint(errors_bp)
 def inject_environment():
     return dict(env=get_env())
 
-# Callback for loading the user
-@login.user_loader
+# Callback for loading the user.
+# Function requires an input parameter, but we use session to grab username (instead of the parameter)
+@login_mgr.user_loader
 def load_user(user_id):
-    print("Loading user", user_id)
     from app.models.user import User
-    return User.get(user_id)
+    if session.get("username", None):
+        return User.get_or_none(username = session["username"])

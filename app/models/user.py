@@ -34,3 +34,7 @@ class User(UserMixin, baseModel):
     # For local login only
     def verify_password(self, password):
         return check_password_hash(self.localPassword, password)
+
+    def get_id(self):
+        # print("ID: ", unicode(self.username))
+        return self.username

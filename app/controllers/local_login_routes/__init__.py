@@ -1,6 +1,4 @@
-from flask import render_template
-from flask import Blueprint
-# from app.login_manager import require_login
+from flask import render_template, Blueprint
 import os
 
 local_login_bp = Blueprint('local_login', __name__)

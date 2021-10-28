@@ -1,5 +1,5 @@
 from flask_login import login_required
-from app.controllers.main_routes import *
+# from app.controllers.main_routes import *
 from app.models.user import *
 from app.models.status import *
 from app.models.laborStatusForm import *
@@ -10,8 +10,7 @@ from app.models.term import *
 from app.models.student import Student
 from app.models.supervisor import Supervisor
 from app.models.department import *
-from flask import json, jsonify
-from flask import request
+from flask import json, jsonify, request
 from datetime import datetime, date
 from flask import Flask, redirect, url_for, flash
 # from app import app

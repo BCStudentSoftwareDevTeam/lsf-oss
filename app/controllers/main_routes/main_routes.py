@@ -14,7 +14,8 @@ from app.logic.tracy import InvalidQueryException
 import app.login_manager as login_manager  #FIXME: Duplicate import
 import base64, time, sys
 from flask_login import current_user, login_user, login_required
-from app.logic.localLogin import RegistrationForm, LoginForm
+# from app.controllers.local_login_routes.local_login_routes import RegistrationForm, LoginForm
+from app.login_manager import require_login
 
 currentlyEnrolledBNumbers = []
 
@@ -42,6 +43,7 @@ def before_request():
 def index(department = None):
     # try:
     currentUser = require_login()
+    print("Logged in user", current_user)
     if not currentUser:
         return render_template('errors/403.html'), 403
     if not currentUser.isLaborAdmin:

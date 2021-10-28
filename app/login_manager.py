@@ -4,16 +4,20 @@ from app.controllers.errors_routes.handlers import *
 from app.models.user import User, DoesNotExist
 from app.logic.userInsertFunctions import createUser, createSupervisorFromTracy, createStudentFromTracy, InvalidUserException
 
+
 def getUsernameFromEnv(env):
     envK = "eppn"
 
     if app.config['USE_SHIBBOLETH'] and envK in env:
         username = env[envK].split("@")[0].split('/')[-1].lower()
+        # print("Shib login", username)
         return username
-    elif not app.config['USE_SHIBBOLETH']:
-        pass
-        # FIXME Check local login username
+    elif app.config['USE_SHIBBOLETH'] == 0:
+        from app import load_user
+        # print("Local login. getting username", load_user(None).username)
+        return load_user(None).username
     else:
+        # print("Debug user!")
         return app.config['user']['debug']
 
 def logout():
@@ -32,17 +36,14 @@ def logout():
 def require_login():
     env = request.environ
     username = getUsernameFromEnv(env)
-
     try:
         user = auth_user(env, username)
     except InvalidUserException as e:
         print("Invalid User:", e)
         return False
-
     if 'username' not in session:
         print("Logging in as", user.username)
         session['username'] = user.username
-
     return user
 
 def auth_user(env, username):
@@ -59,14 +60,15 @@ def auth_user(env, username):
         This exception cannot be tested naturally in development env because we cannot run Shibboleth,
         but the demo data is set up so that this exception should never happen inside of development env.
         """
-        description = env['description'].lower()
-        supervisor = student = None
-        if description == 'student':
-            print("Adding {} to student table".format(username))
-            student = createStudentFromTracy(username)
-        else:
-            print("Adding {} to supervisor table".format(username))
-            supervisor = createSupervisorFromTracy(username)
+        if app.config['USE_SHIBBOLETH']:
+            description = env['description'].lower()
+            supervisor = student = None
+            if description == 'student':
+                print("Adding {} to student table".format(username))
+                student = createStudentFromTracy(username)
+            else:
+                print("Adding {} to supervisor table".format(username))
+                supervisor = createSupervisorFromTracy(username)
 
-        print("Creating record for {} in user table".format(username))
-        return createUser(username, student=student, supervisor=supervisor)
+            print("Creating record for {} in user table".format(username))
+            return createUser(username, student=student, supervisor=supervisor)
