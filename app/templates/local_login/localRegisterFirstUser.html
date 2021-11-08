@@ -29,14 +29,19 @@
 {% endblock %}
 
 {% block app_content %}
-  <h1>Log in</h1>
+  <h1>No Administrators Exist!</h1>
+  <p>Add the adminstrative user. This user will have full admin privileges in the application. If this is not your application, please contact the support email in the footer.</p>
   <div class="col-md-6 row">
     <form id="loginForm" class="form form-register" method="POST" action="" role="form">
         {# form.hidden_tag() #}
-        {{ render_field(form.email, placeholder="Enter your email address") }}<br>
-        {{ render_field(form.password, placeholder="Enter your password") }}<br>
+        {{ render_field(form.username) }} <br>
+        {{ render_field(form.firstName) }} <br>
+        {{ render_field(form.lastName) }} <br>
+        {{ render_field(form.email) }} <br>
+        {{ render_field(form.password) }} <br>
+        {{ render_field(form.submit) }}<br>
         <p class="row"></p>
-        <p><input class="btn btn-default btn-submit" type="submit" value="Login"></p>
+        <!-- <p><input class="btn btn-default btn-submit" type="submit" value="Login"></p> -->
         <a href="/">Home</a>
     </form>
   </div>

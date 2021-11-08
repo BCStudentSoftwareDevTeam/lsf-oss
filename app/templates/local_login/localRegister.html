@@ -30,15 +30,24 @@
 {% endblock %}
 
 {% block app_content %}
-  <form method=post>
-    <dl>
-      {{ render_field(form.username) }}
-      {{ render_field(form.email) }}
-      {{ render_field(form.password) }}
-      {{ render_field(form.confirm) }}
-    </dl>
-    <p><input type=submit value=Register>
-  </form>
+    <h2>Register New Users</h2>
+    <p></p>
+    <form method=post>
+      <div class="row">
+        <div class="col-md-6" style="margin-bottom: 15px;">
+          {{ render_field(form.supervisors) }}
+        </div>
+        <div class="col-md-6" style="margin-bottom: 15px;">
+          {{ render_field(form.students) }}
+        </div>
+      </div>
+      <p><strong>Format:</strong> <br />supervisorID, username, email</p>
+      <p> <strong>Example:</strong><br /> B00123, heggens, heggens@berea.edu<br/>B00124, ramsayb2, ramsayb2@berea.edu</p>
+      <div class="text-center">
+        <input class="btn btn-info btn-submit" type="submit" value="Register New Users" />
+      </div>      
+    </form>
+
 
 
 
