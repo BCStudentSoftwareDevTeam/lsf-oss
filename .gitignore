@@ -9,4 +9,3 @@ old/
 secret_config.yaml
 local_override.yaml
 geckodriver.log
-

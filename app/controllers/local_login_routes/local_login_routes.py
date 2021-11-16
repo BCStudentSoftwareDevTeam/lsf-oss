@@ -256,6 +256,7 @@ def login():
                 print("No admins exist yet")
                 return redirect(url_for('local_login.localRegisterFirstUser'))
 
+
 @local_login_bp.route('/localRegisterFirstUser', methods=['GET', 'POST'])
 def localRegisterFirstUser():
     if config["USE_SHIBBOLETH"] == 0: # local login
