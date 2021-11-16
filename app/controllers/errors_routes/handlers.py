@@ -1,9 +1,19 @@
-from flask import render_template
+from flask import render_template, redirect, url_for
 from app.controllers.errors_routes import error
+from app import app
+
 
 @error.app_errorhandler(403)
 def access_denied(error):
+    if app.config["USE_SHIBBOLETH"] == 0:
+        return redirect(url_for("local_login.login"))
     return render_template('errors/403.html'), 403
+
+@error.app_errorhandler(401)
+def access_denied(error):
+    if app.config["USE_SHIBBOLETH"] == 0:
+        return redirect(url_for("local_login.login"))
+    return render_template('errors/401.html'), 401
 
 
 @error.app_errorhandler(404)
