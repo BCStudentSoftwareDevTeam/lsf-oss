@@ -12,9 +12,9 @@ if [ "$1" == "from-backup" ]; then
 	BACKUP=1
 fi
 
-if [ -n "${rootpasswd+x}" ]; then 
-	echo "There is a root password"; 
-else 
+if [ -n "${rootpasswd+x}" ]; then
+	echo "There is a root password";
+else
 	echo "Please enter root user MySQL password!"
 	echo "Note: password will be hidden when typing"
 	read -s rootpasswd
@@ -51,7 +51,7 @@ rm -rf tracy_migrations
 rm -rf migrations.json
 
 # Adding data we need in all environments, unless we are restoring from backup
-if [ $BACKUP -ne 1 ]; then 
+if [ $BACKUP -ne 1 ]; then
     python3 base_data.py
 else
     echo "You have imported the production DB backup. You probably want to enable real Tracy access as well. Set FLASK_ENV to staging or production."
@@ -60,6 +60,10 @@ fi
 # Adding fake data for non-prod, set up admins for prod
 if [ $PRODUCTION -eq 1 ]; then
 	FLASK_ENV=production python3 add_admins.py
-elif [ $BACKUP -ne 1 ]; then 
-	python3 demo_data.py
+elif [ $BACKUP -ne 1 ]; then
+	echo -n "Install demo data? [y|n]"
+	read demo_data
+	if [ $demo_data = "y" ]; then
+		python3 demo_data.py
+	fi
 fi

@@ -3,6 +3,7 @@ Chech phpmyadmin to see if your changes are reflected
 This file will need to be changed if the format of models changes (new fields, dropping fields, renaming...)'''
 
 from datetime import *
+from app import app
 from app.models.Tracy import db
 from app.models.Tracy.studata import STUDATA
 from app.models.Tracy.stuposn import STUPOSN
@@ -16,8 +17,9 @@ from app.models.laborStatusForm import LaborStatusForm
 from app.models.formHistory import FormHistory
 from app.models.notes import Notes
 
+print("###########################################################################")
 print("Inserting data for demo and testing purposes")
-
+print("###########################################################################")
 #############################
 # Students (TRACY)
 #############################
@@ -302,66 +304,64 @@ print(" * staff added")
 # Users
 #############################
 users = [
-        {
-        "student": None,
-        "supervisor": "B12361006",
-        "username": "heggens",
-        "isLaborAdmin": 1,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "student": None,
-        "supervisor": "B12365892",
-        "username": "pearcej",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "student": None,
-        "supervisor": "B12365893",
-        "username": "jonesj",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "student": None,
-        "supervisor": "B00763721",
-        "username": "ramsayb2",
-        "isLaborAdmin": 1,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "student": "B00730361",
-        "supervisor": None,
-        "username": "jamalie",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "student": "B00734292",
-        "supervisor": None,
-        "username": "cruzg",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        },
-        {
-        "student": "B00841417",
-        "supervisor": "B00841417",
-        "username": "bryantal",
-        "isLaborAdmin": None,
-        "isFinancialAidAdmin": None,
-        "isSaasAdmin": None
-        }
+            {
+                "student": None,
+                "supervisor": "B12365892",
+                "username": "pearcej",
+                "isLaborAdmin": None,
+                "isFinancialAidAdmin": None,
+                "isSaasAdmin": None
+            },
+            {
+                "student": None,
+                "supervisor": "B12365893",
+                "username": "jonesj",
+                "isLaborAdmin": None,
+                "isFinancialAidAdmin": None,
+                "isSaasAdmin": None
+            },
+            {
+                "student": "B00730361",
+                "supervisor": None,
+                "username": "jamalie",
+                "isLaborAdmin": None,
+                "isFinancialAidAdmin": None,
+                "isSaasAdmin": None
+            },
+            {
+                "student": "B00734292",
+                "supervisor": None,
+                "username": "cruzg",
+                "isLaborAdmin": None,
+                "isFinancialAidAdmin": None,
+                "isSaasAdmin": None
+            },
+            {
+                "student": "B00841417",
+                "supervisor": "B00841417",
+                "username": "bryantal",
+                "isLaborAdmin": None,
+                "isFinancialAidAdmin": None,
+                "isSaasAdmin": None
+            }
         ]
 User.insert_many(users).on_conflict_replace().execute()
 print(" * users added")
 
+admin = User.create(
+                    student = None,
+                    supervisor = "B12361006",
+                    username = "heggens",
+                    isLaborAdmin = 1,
+                    isFinancialAidAdmin = None,
+                    isSaasAdmin = None
+                   )
+if app.config["USE_SHIBBOLETH"] == 0:
+    pw = "1234"
+    admin.password = pw
+    admin.email ="notreal@example.com"
+    print("Default admin created for local login. \nUsername: {}\nPassword: {}".format(admin.email, pw))
+admin.save()
 
 
 #############################
