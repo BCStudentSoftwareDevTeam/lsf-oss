@@ -15,14 +15,14 @@ ls -al app/config/
 # Install the database(s)
 source db_install.sh
 
-# Building secret_config.yaml
+# Building local_override.yaml
 cp app/config/example_local_override.yaml app/config/local_override.yaml
 
-# FIXME Tracy install if wanted:
+# FIXME? Tracy install if wanted:
 
-# FIXME User Db install if wanted:
+# FIXME? User Db install if wanted:
 
-# FIXME Banner install if wanted:
+# FIXME? Banner install if wanted:
 
 
 # Main db

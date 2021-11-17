@@ -1,7 +1,7 @@
 <div id="sidebar" class="col-sm-2">
     <nav class="navbar">
       <!-- Logo -->
-      <div id="logo"><img src="/static/labor-logo.png" title="Labor Program Logo" /></div>
+      <div id="logo"><img src="/static/logo.png" title="Labor Program Logo" /></div> {# FIXME: Use app.config["LOGO_PATH"] instead of static url #}
       {% if currentUser is defined %}
         {% if currentUser.student %}
         <div class="container-fluid">

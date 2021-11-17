@@ -1,14 +1,4 @@
 ################################### GLOBAL FLASK SETTINGS ###########################################################
-# Every Flask application has a secret key.
-secret_key: "123"
-
-# If you have local-only overrides, put them in this file
-override_file: "local_override.yaml"
-
-# The default user is the application cannot find a real user
-user:
- debug: "heggens"
-
 # Shibboleth can manage login for you. Set to 1 to turn it on.
 # A shibboleth provider must be installed and configured using the Apache configuration.
 # If set to 0, local login is enabled.
@@ -23,9 +13,20 @@ USE_TRACY: 0
 # A Banner Oracle db must be installed and access allowed from this server.
 USE_BANNER: 0
 
+# Every Flask application has a secret key.
+secret_key: "123"
+
+# The default user is the application cannot find a real user
+user:
+ debug: "heggens"
+
+# If you have local-only overrides, put them in this file
+override_file: "local_override.yaml"
+
 #####################################################################################################################
 ################################### DATABASE CONNECTIONS ############################################################
-# The local database for the application. This database must exist
+# The local database for the application. This database must exist.
+# local_override.yaml probably overrides these settings.
 lsfdb:
  db_name: "test"
  password: "12345"
@@ -48,15 +49,15 @@ tracy:
 # Also enables the email templating system
 
 USE_EMAILER: False
-MAIL_SERVER: "smtp.gmail.com" #FIXME: use smtp.gmail.com for gmail
-MAIL_PORT: 465 #: use port 465 for gmail
-MAIL_USERNAME: '' #FIXME: Provide the email of the sender
-MAIL_PASSWORD: '' #FIXME: Provide the password of the sender
-REPLY_TO_ADDRESS: '' #FIXME: Provide a reply_to address
+MAIL_SERVER: "smtp.gmail.com"   # FIXME: use smtp.gmail.com for gmail
+MAIL_PORT: 465                  # FIXME: use port 465 for gmail
+MAIL_USERNAME: ''               # FIXME: Provide the email of the sender
+MAIL_PASSWORD: ''               # FIXME: Provide the password of the sender
+REPLY_TO_ADDRESS: ''            # FIXME: Provide a reply_to address
 MAIL_USE_TLS: False
 MAIL_USE_SSL: True
-MAIL_DEFAULT_SENDER: '' #FIXME: Add sender email address
-MAIL_OVERRIDE_ALL: '' #FIXME: Provide a debug email address, such as a Slack channel
+MAIL_DEFAULT_SENDER: ''         # FIXME: Add sender email address
+MAIL_OVERRIDE_ALL: ''           # FIXME: Provide a debug email address, such as a Slack channel
 
 financial_aid:
   email: '' #FIXME: Provide an email address for Financial Aid matters
@@ -92,6 +93,9 @@ TIMECARDS: 0
 
 # The name of your institution.
 INSTITUTION: Berea College
+
+# Path to the logo in the top left corner
+LOGO_PATH: "/static/logo.png"
 
 # The name of your work study program at your institution.
 PROGRAM_NAME: Labor Program
