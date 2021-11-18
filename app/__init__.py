@@ -1,4 +1,4 @@
-from flask import Flask, session
+from flask import Flask, session, redirect, url_for, g
 from config2.config import config
 import yaml
 from flask_bootstrap import Bootstrap
@@ -6,7 +6,8 @@ from flask_nav import Nav
 from flask_nav.elements import *
 import os
 from flask.helpers import get_env
-from flask_login import LoginManager
+from flask_login import LoginManager, current_user
+
 
 # Initialize our application
 app = Flask(__name__, template_folder="templates")
@@ -32,10 +33,11 @@ os.environ["ENV"] = get_env()
 
 # Update application config from config2
 app.config.update(config.get())
+del(config)
 
 # Override configuration with our local instance configuration
 from app.logic.utils import deep_update
-with open("app/config/" + config.override_file, 'r') as ymlfile:
+with open("app/config/" + app.config["override_file"], 'r') as ymlfile:
     try:
         deep_update(app.config, yaml.load(ymlfile, Loader=yaml.FullLoader))
     except TypeError:
@@ -70,10 +72,24 @@ app.register_blueprint(errors_bp)
 def inject_environment():
     return dict(env=get_env())
 
+@app.before_request
+def before_request():
+    if request.path not in ["/login"]:      # Any paths that don't require login
+        if app.config["USE_SHIBBOLETH"] == 0:
+            g.currentUser = current_user    # Use flask login's current_user
+            if current_user.is_anonymous:
+                return redirect(url_for("local_login.login"))
+        if app.config["USE_SHIBBOLETH"]:
+            from app.login_manager import require_login
+            g.currentUser = require_login()
+
+
+
 # Callback for loading the user.
 # Function requires an input parameter, but we use session to grab username (instead of the parameter)
-@login_mgr.user_loader
-def load_user(user_id):
-    from app.models.user import User
-    if session.get("username", None):
-        return User.get_or_none(username = session["username"])
+if app.config["USE_SHIBBOLETH"] == 0:
+    @login_mgr.user_loader
+    def load_user(user_id):
+        from app.models.user import User
+        if session.get("username", None):
+            return User.get_or_none(username = session["username"])

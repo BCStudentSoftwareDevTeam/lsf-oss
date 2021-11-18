@@ -1,17 +1,16 @@
 from flask import request, flash, redirect, url_for, session, abort
 from peewee import fn
 from is_safe_url import is_safe_url
+from flask_login import login_user, login_required, logout_user
+from wtforms import Form, BooleanField, StringField, PasswordField, validators, SubmitField, TextField, TextAreaField
+from wtforms.validators import DataRequired, Email, EqualTo, Length
+from wtforms import ValidationError
 from app.controllers.local_login_routes import *
-# import app.login_manager as login_manager
-from flask_login import current_user, login_user, login_required, logout_user
 from app import config
 # from app import login_mgr
 from app.models.user import User
 from app.models.supervisor import Supervisor
-from wtforms import Form, BooleanField, StringField, PasswordField, validators, SubmitField, TextField, TextAreaField
-from wtforms.validators import DataRequired, Email, EqualTo, Length
-from wtforms import ValidationError
-from app.login_manager import require_login
+from app.login_manager import require_login, logout
 
 # NOTE: These classes work with Flask Login to generate the forms
 class RegistrationForm(Form):
@@ -120,7 +119,7 @@ class RegistrationForm(Form):
         return True
 
 @local_login_bp.route('/register', methods=['GET', 'POST'])
-@login_required
+# @login_required
 def register():
     currentUser = require_login()
     # print(currentUser)
@@ -225,7 +224,7 @@ def login():
         if request.method == "POST":
             form = LoginForm(request.form)
             if form.validate():
-                print("form validated")
+                # print("form validated")
                 # Login and validate the user.
                 # user should be an instance of your `User` class
                 user = User.get(email=form.email.data)
@@ -285,9 +284,3 @@ def localRegisterFirstUser():
             return render_template("local_login/localRegisterFirstUser.html", form = form)
     flash("Ah crap", "danger")
     return (abort(500))
-
-
-@local_login_bp.route('/logout', methods=['GET'])
-def logout():
-    logout_user()
-    return redirect(url_for("local_login.login"))

@@ -1,8 +1,23 @@
 from flask import request, session
-from app import app
+from app import app, config
 from app.controllers.errors_routes.handlers import *
 from app.models.user import User, DoesNotExist
 from app.logic.userInsertFunctions import createUser, createSupervisorFromTracy, createStudentFromTracy, InvalidUserException
+from flask_login import current_user, logout_user
+
+
+def require_login():
+    env = request.environ
+    username = getUsernameFromEnv(env)
+    try:
+        user = auth_user(env, username)
+    except InvalidUserException as e:
+        print("Invalid User:", e)
+        raise
+    if 'username' not in session:
+        print("Logging in as", user)
+        session['username'] = user
+    return user
 
 
 def getUsernameFromEnv(env):
@@ -13,38 +28,13 @@ def getUsernameFromEnv(env):
         # print("Shib login", username)
         return username
     elif app.config['USE_SHIBBOLETH'] == 0:
-        from app import load_user
-        # print("Local login. getting username", load_user(None).username)
-        return load_user(None).username
+        if not current_user.is_anonymous:
+            return current_user.username
+        return None
     else:
-        # print("Debug user!")
+        print("Debug user!")
         return app.config['user']['debug']
 
-def logout():
-    """
-        Erases the session and returns the URL for redirection
-    """
-    if 'username' in session:
-        print("Logging out", session['username'])
-    session.clear()
-
-    url ="/"
-    if app.config['USE_SHIBBOLETH']:
-        url = "/Shibboleth.sso/Logout"
-    return url
-
-def require_login():
-    env = request.environ
-    username = getUsernameFromEnv(env)
-    try:
-        user = auth_user(env, username)
-    except InvalidUserException as e:
-        print("Invalid User:", e)
-        return False
-    if 'username' not in session:
-        print("Logging in as", user.username)
-        session['username'] = user.username
-    return user
 
 def auth_user(env, username):
     """
@@ -72,3 +62,20 @@ def auth_user(env, username):
 
             print("Creating record for {} in user table".format(username))
             return createUser(username, student=student, supervisor=supervisor)
+        elif app.config['USE_SHIBBOLETH'] == 0:
+            raise InvalidUserException
+
+def logout():
+    """
+        Erases the session and returns the URL for redirection
+    """
+    if 'username' in session:
+        print("Logging out", session['username'])
+    session.clear()
+
+    if app.config["USE_SHIBBOLETH"] == 0:
+        logout_user()       # Call flask_login's logout handler
+        url ="/login"   # url_for("local_login.login")
+    if app.config['USE_SHIBBOLETH']:
+        url = "/Shibboleth.sso/Logout"    
+    return url

@@ -4,6 +4,7 @@ from app.login_manager import require_login
 import os
 
 admin = Blueprint('admin', __name__)
+
 @admin.context_processor
 def injectGlobalData():
     currentUser = require_login()

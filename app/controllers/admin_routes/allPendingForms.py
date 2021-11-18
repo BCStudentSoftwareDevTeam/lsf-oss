@@ -1,5 +1,3 @@
-#from flask import render_template  #, redirect, url_for, request, g, jsonify, current_app
-#from flask_login import current_user, login_required
 from flask import flash, send_file, json, jsonify, redirect, url_for
 from app.login_manager import *
 from app.controllers.admin_routes import admin

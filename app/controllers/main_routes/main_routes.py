@@ -1,4 +1,4 @@
-from flask import flash, send_file, json, jsonify, abort, make_response, url_for
+from flask import request, flash, send_file, json, jsonify, abort, make_response, url_for, g
 from app.controllers.main_routes import *
 from app.controllers.main_routes.download import ExcelMaker
 from app.login_manager import *
@@ -11,11 +11,9 @@ from datetime import datetime, date
 from flask import request, redirect
 from app.logic.tracy import Tracy
 from app.logic.tracy import InvalidQueryException
-import app.login_manager as login_manager  #FIXME: Duplicate import
 import base64, time, sys
-from flask_login import current_user, login_user, login_required
-# from app.controllers.local_login_routes.local_login_routes import RegistrationForm, LoginForm
-from app.login_manager import require_login
+from flask_login import logout_user, login_user, login_required, current_user
+
 
 currentlyEnrolledBNumbers = []
 
@@ -29,34 +27,25 @@ def isCurrentStudent(bnumber):
 
     return (bnumber in currentlyEnrolledBNumbers)
 
-@main_bp.before_app_request
-def before_request():
-    pass # TODO Do we need to do anything here? User stuff?
-
-
 
 @main_bp.route('/', methods=['GET', 'POST'])
 @main_bp.route('/main/students', methods=['GET', 'POST'])
 @main_bp.route('/main/department', methods=['GET', 'POST'])
 @main_bp.route('/main/department/<department>', methods=['GET', 'POST'])
-@login_required
 def index(department = None):
-    # try:
-    currentUser = require_login()
-    print("Logged in user", current_user)
-    if not currentUser:
-        return render_template('errors/403.html'), 403
-    if not currentUser.isLaborAdmin:
-        if currentUser.student and not currentUser.supervisor:   # logged in as a student
-            return redirect('/laborHistory/' + currentUser.student.ID)
-        if currentUser.supervisor:       # logged in as a Supervisor
+    if not g.currentUser.isLaborAdmin:
+        if g.currentUser.student and not g.currentUser.supervisor:   # logged in as a student
+            return redirect('/laborHistory/' + g.currentUser.student.ID)
+        if g.currentUser.supervisor:       # logged in as a Supervisor
             # Checks all the forms where the current user has been the creator or the supervisor, and grabs all the departments associated with those forms. Will only grab each department once.
+
             departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME) \
                             .join_from(FormHistory, LaborStatusForm) \
                             .join_from(LaborStatusForm, Department) \
-                            .where((FormHistory.formID.supervisor == currentUser.supervisor.ID) | (FormHistory.createdBy == currentUser)) \
+                            .where((FormHistory.formID.supervisor == g.currentUser.supervisor.ID) | (FormHistory.createdBy == g.currentUser.userID)) \
                             .order_by(FormHistory.formID.department.DEPT_NAME.asc()) \
                             .distinct()
+
     else:   # logged in as an admin
         # Grabs every single department that currently has at least one labor status form in it
         departments = FormHistory.select(FormHistory.formID.department.DEPT_NAME) \
@@ -64,12 +53,11 @@ def index(department = None):
                         .join_from(LaborStatusForm, Department) \
                         .order_by(FormHistory.formID.department.DEPT_NAME.asc()) \
                         .distinct()
-
     todayDate = date.today()
     # Grabs all the labor status forms where the current user is the supervisor
     formsBySupervisees = []
-    if currentUser.supervisor:
-        formsBySupervisees = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.supervisor == currentUser.supervisor.ID,
+    if g.currentUser.supervisor:
+        formsBySupervisees = FormHistory.select().join_from(FormHistory, LaborStatusForm).join_from(FormHistory, HistoryType).where(FormHistory.formID.supervisor == g.currentUser.supervisor.ID,
         FormHistory.historyType.historyTypeName == "Labor Status Form").order_by(FormHistory.formID.startDate.desc())
         formsBySupervisees = sorted(formsBySupervisees,key=lambda f:f.reviewedDate if f.reviewedDate else f.createdDate, reverse=True)
 
@@ -167,12 +155,14 @@ def index(department = None):
 
         # Returns the file path so the button will download the file
         return send_file(completePath,as_attachment=True, attachment_filename=filename)
+    print("End of index")
+    print(departments)
     return render_template( 'main/index.html',
 				    title=('Home'),
                     currentSupervisees = currentSupervisees,
                     pastSupervisees = pastSupervisees,
                     inactiveSupervisees = inactiveSupervisees,
-                    UserID = currentUser,
+                    # UserID = g.currentUser,
                     currentUserDepartments = departments,
                     department = department
                           )
@@ -287,3 +277,8 @@ def populateDepartment(departmentSelected):
     except Exception as e:
         print('ERROR in Department Students:', e)
         return jsonify({"Success": False})
+
+@main_bp.route('/logout', methods=['GET'])
+def logout_route():
+    # logout()                # Call our logout handler
+    return redirect(logout())

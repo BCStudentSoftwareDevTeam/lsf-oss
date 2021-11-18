@@ -1,5 +1,5 @@
 from flask import render_template , flash, redirect, url_for, request, g, jsonify, current_app, send_file
-from flask_login import current_user, login_required
+from flask_login import login_required
 from app.controllers.main_routes import *
 from app.models.user import *
 from app.models.laborStatusForm import *
