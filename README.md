@@ -1,5 +1,9 @@
 # Work Study Software System
- 
+
+## Code of Conduct
+
+Before engaging with our community, you are expected to understand and abide by our [code of conduct](CODE_OF_CONDUCT.md). 
+
 ## Requirements
 
 - Python 3.6+ 
